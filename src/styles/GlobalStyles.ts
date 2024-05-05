@@ -48,6 +48,11 @@ const GlobalStyles = createGlobalStyle`
 	--font-weight-500: 500;
 	--font-weight-400: 400;
 }
+
+@font-face {
+    font-family: "Pretendard";
+    src: url("/public/assets/fonts/PretendardVariable.woff2") format('font-woff2'); 
+  }
 `;
 
 export default GlobalStyles;
