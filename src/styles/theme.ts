@@ -2,7 +2,7 @@ import { DefaultTheme } from "styled-components";
 
 const colors = {
     white: "#fff",
-    black: "#000",
+    black: "#393939;",
     
     purple100: "#5A42EE",
     purple200: "#9F90F9",
