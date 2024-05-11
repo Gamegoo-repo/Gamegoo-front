@@ -3,6 +3,7 @@
 import GlobalStyles from "@/styles/GlobalStyles";
 import { ThemeProvider } from "styled-components";
 import { theme } from "@/styles/theme";
+import Header from "@/components/common/Header";
 
 export default function RootLayout({
   children,
@@ -16,7 +17,10 @@ export default function RootLayout({
       </head>
       <body>
         <GlobalStyles />
-        <ThemeProvider theme={theme}>{children}</ThemeProvider>
+        <ThemeProvider theme={theme}>
+          <Header />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
