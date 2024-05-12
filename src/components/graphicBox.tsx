@@ -1,13 +1,16 @@
+import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 import styled from "styled-components";
 
 interface GraphicBoxProps {
-    href: string;
+    href?: string | any;
     children: string;
-    width: string;
+    width?: string | any;
+    height: string;
     top: string;
-    left: string
+    left: string,
+    onClick?: any
 }
 
 const GraphicBox = (props: GraphicBoxProps) => {
@@ -15,9 +18,11 @@ const GraphicBox = (props: GraphicBoxProps) => {
         href,
         children,
         width,
+        height,
         top,
-        left
+        left,
     } = props;
+
     return (
         <>
             <Link href={href}>
@@ -26,7 +31,7 @@ const GraphicBox = (props: GraphicBoxProps) => {
                     width={1206}
                     height={227}
                     alt='graphic' /> */}
-                <Box width={width}>
+                <Box width={width} height={height}>
                     <Title top={top} left={left}>{children}</Title>
                 </Box>
 
@@ -37,10 +42,10 @@ const GraphicBox = (props: GraphicBoxProps) => {
 
 export default GraphicBox;
 
-const Box = styled.div<{ width: string }>`
+const Box = styled.div<{ width: string, height: string }>`
     position: relative;
-    width:  ${(props) => props.width};
-    height: 227px;
+    width:  ${(props) => props.width ? props.width : undefined};
+    height: ${(props) => props.height};
     background: #D1CAFF;
     border-radius: 30px;
     margin-bottom: 30px;

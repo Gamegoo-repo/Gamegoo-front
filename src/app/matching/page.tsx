@@ -1,9 +1,11 @@
-'use client'
+'use client';
 
 import GraphicBox from "@/components/graphicBox";
 import styled from "styled-components";
+import GameModePage from "../game-mode-fun/page";
 
 const MatchingPage = () => {
+
     return (
         <Wrapper>
             <div>
@@ -12,15 +14,17 @@ const MatchingPage = () => {
                 </Header>
                 <Main>
                     <GraphicBox
-                        href='/'
+                        href='game-mode-fun'
                         width='600px'
+                        height="380px"
                         top='50%'
                         left='50%'>
                         즐겜
                     </GraphicBox>
                     <GraphicBox
-                        href='/'
+                        href='game-mode-hard'
                         width='600px'
+                        height="380px"
                         top='50%'
                         left='50%'>
                         빡겜

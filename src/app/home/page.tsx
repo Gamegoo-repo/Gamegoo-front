@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import GraphicBox from "@/components/graphicBox";
 import Image from "next/image";
@@ -20,6 +20,7 @@ const HomePage = () => {
                     <GraphicBox
                         href='/'
                         width='1206px'
+                        height='227px'
                         top='36px'
                         left='41px'>
                         바로 매칭하기
@@ -27,6 +28,7 @@ const HomePage = () => {
                     <GraphicBox
                         href='/'
                         width='1206px'
+                        height='227px'
                         top='36px'
                         left='41px'>
                         매칭 게시판에서 찾기
