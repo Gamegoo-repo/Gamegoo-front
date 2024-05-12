@@ -12,6 +12,7 @@ body {
   width: 100vw;
   font-family: "Pretendard";
   white-space: pre-line;
+  padding-top: 70px;
 }
 
 a {
