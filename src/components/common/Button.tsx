@@ -2,7 +2,7 @@ import { theme } from "@/styles/theme";
 import styled from "styled-components";
 
 interface ButtonProps {
-  buttonType: "primary" | "secondary" | "default";
+  buttonType?: "primary" | "secondary" | "default";
   size?: "small" | "medium" | "large";
   text: string;
   onClick?: (e: React.MouseEvent) => void;
