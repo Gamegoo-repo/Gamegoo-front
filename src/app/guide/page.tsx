@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import { useState } from "react";
+import Checkbox from "@/components/common/Checkbox";
 
 const Guide = () => {
   const [inputValue, setInputValue] = useState("Input");
@@ -67,6 +68,9 @@ const Guide = () => {
         }}
         placeholder="placeholder"
       />
+      <H2>Checkbox</H2>
+      <Checkbox value="checkbox1" label="checkbox" />
+      <Checkbox value="checkbox2" label="checkbox" />
     </Layout>
   );
 };
