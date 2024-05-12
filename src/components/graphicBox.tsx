@@ -31,8 +31,8 @@ const GraphicBox = (props: GraphicBoxProps) => {
                     width={1206}
                     height={227}
                     alt='graphic' /> */}
-                <Box width={width} height={height}>
-                    <Title top={top} left={left}>{children}</Title>
+                <Box $width={width} $height={height}>
+                    <Title $top={top} $left={left}>{children}</Title>
                 </Box>
 
             </Link>
@@ -42,21 +42,21 @@ const GraphicBox = (props: GraphicBoxProps) => {
 
 export default GraphicBox;
 
-const Box = styled.div<{ width: string, height: string }>`
+const Box = styled.div<{ $width: string, $height: string }>`
     position: relative;
-    width:  ${(props) => props.width ? props.width : undefined};
-    height: ${(props) => props.height};
+    width:  ${(props) => props.$width ? props.$width : undefined};
+    height: ${(props) => props.$height};
     background: #D1CAFF;
     border-radius: 30px;
     margin-bottom: 30px;
 `
 
-const Title = styled.h1<{ top: string, left: string }>`
+const Title = styled.h1<{ $top: string, $left: string }>`
     position: absolute;
-    top:${(props) => props.top};
-    left:${(props) => props.left};
-    transform:${(props) => props.top !== '50%' ? undefined : `translate(-50%, -50%);`}; 
+    top:${(props) => props.$top};
+    left:${(props) => props.$left};
+    transform:${(props) => props.$top !== '50%' ? undefined : `translate(-50%, -50%);`}; 
     color:#393939;
-  ${(props) => props.theme.fonts.bold32};
-  line-height: 37px;
+   ${(props) => props.theme.fonts.bold32};
+   line-height: 37px;
 `

@@ -13,6 +13,7 @@ const HomePage = () => {
                         src='/assets/icons/logo.svg'
                         width={371}
                         height={117}
+                        priority
                         alt='logo' />
                     <SubTitle>겜구 커뮤니티에 오신 것을 환영합니다.</SubTitle>
                 </Header>

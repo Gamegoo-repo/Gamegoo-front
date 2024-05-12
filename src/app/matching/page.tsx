@@ -2,7 +2,6 @@
 
 import GraphicBox from "@/components/graphicBox";
 import styled from "styled-components";
-import GameModePage from "../game-mode-fun/page";
 
 const MatchingPage = () => {
 
