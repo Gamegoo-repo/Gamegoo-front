@@ -1,7 +1,8 @@
 "use client";
 
 import GlobalStyles from "@/styles/GlobalStyles";
-import "./globals.css";
+import { ThemeProvider } from "styled-components";
+import { theme } from "@/styles/theme";
 
 export default function RootLayout({
   children,
@@ -15,7 +16,7 @@ export default function RootLayout({
       </head>
       <body>
         <GlobalStyles />
-        {children}
+        <ThemeProvider theme={theme}>{children}</ThemeProvider>
       </body>
     </html>
   );
