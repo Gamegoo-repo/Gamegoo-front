@@ -41,6 +41,7 @@ const StyledCheckbox = styled.div`
   cursor: pointer;
   ${(props) => props.theme.fonts.semiBold16};
   color: ${theme.colors.black};
+  cursor: pointer;
 `;
 const Check = styled.input`
   width: 100%;
@@ -55,7 +56,6 @@ const Check = styled.input`
 
   &:hover {
     box-shadow: 0 0 0 max(0px, 0.3em) ${theme.colors.purple500};
-    cursor: pointer;
   }
 
   &:checked {
