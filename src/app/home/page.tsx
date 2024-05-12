@@ -1,7 +1,6 @@
-// "use client";
+'use client'
 
 import GraphicBox from "@/components/graphicBox";
-import { theme } from "@/styles/theme";
 import Image from "next/image";
 import styled from "styled-components";
 
@@ -17,10 +16,22 @@ const HomePage = () => {
                         alt='logo' />
                     <SubTitle>겜구 커뮤니티에 오신 것을 환영합니다.</SubTitle>
                 </Header>
-                <Main>
-                    <GraphicBox href='/'>바로 매칭하기</GraphicBox>
-                    <GraphicBox href='/'>매칭 게시판에서 찾기</GraphicBox>
-                </Main>
+                <main>
+                    <GraphicBox
+                        href='/'
+                        width='1206px'
+                        top='36px'
+                        left='41px'>
+                        바로 매칭하기
+                    </GraphicBox>
+                    <GraphicBox
+                        href='/'
+                        width='1206px'
+                        top='36px'
+                        left='41px'>
+                        매칭 게시판에서 찾기
+                    </GraphicBox>
+                </main>
             </Content>
         </Wrapper>
     )
@@ -28,16 +39,10 @@ const HomePage = () => {
 
 export default HomePage;
 
-const Example = styled.div`
-  color: ${theme.colors.purple100};
-  ${(props) => props.theme.fonts.bold32};
-`;
-
 const Wrapper = styled.div`
-width: 100%;
+  width: 100%;
   display: flex;
   justify-content: center;
-  
 `
 
 const Content = styled.div`
