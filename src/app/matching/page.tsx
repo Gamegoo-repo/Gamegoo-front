@@ -7,10 +7,10 @@ const MatchingPage = () => {
     return (
         <Wrapper>
             <Content>
-                <header>
+                <Header>
                     <Title>바로 매칭하기</Title>
-                </header>
-                <main>
+                </Header>
+                <Main>
                     <GraphicBox
                         href='/'
                         width='600px'
@@ -25,7 +25,7 @@ const MatchingPage = () => {
                         left='50%'>
                         빡겜
                     </GraphicBox>
-                </main>
+                </Main>
             </Content>
         </Wrapper>
     )
@@ -47,7 +47,16 @@ const Content = styled.div`
   align-items: center;
 `
 
+const Header= styled.header`
+    margin-bottom: 32px;
+`
+
 const Title = styled.h1`
   ${(props) => props.theme.fonts.bold32};
-    color:#393939;
+  color:#393939;
+`
+
+const Main = styled.main`
+    display: flex;
+    gap:27px;
 `
