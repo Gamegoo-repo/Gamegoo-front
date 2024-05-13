@@ -6,6 +6,7 @@ import Input from "@/components/common/Input";
 import { useState } from "react";
 import Checkbox from "@/components/common/Checkbox";
 import RadioCard from "@/components/common/RadioCard";
+import Dropdown from "@/components/common/Dropdown";
 
 const Guide = () => {
   /* Input State */
@@ -107,6 +108,8 @@ const Guide = () => {
         onChange={handleOptionChange}
       />
       <p>Selected Option: {isSelected}</p>
+      <H2>Dropdown</H2>
+      <Dropdown />
     </Layout>
   );
 };
