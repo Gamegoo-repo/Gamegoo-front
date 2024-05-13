@@ -10,7 +10,8 @@ interface InputProps {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
-  isValid?: boolean;
+  isValid?: null | boolean;
+  disabled?: boolean;
 }
 
 const Input = (props: InputProps) => {
@@ -22,6 +23,7 @@ const Input = (props: InputProps) => {
     onChange,
     placeholder,
     isValid,
+    disabled,
   } = props;
 
   const handleChange = (event: any) => {
@@ -47,6 +49,7 @@ const Input = (props: InputProps) => {
             onChange={handleChange}
             placeholder={placeholder}
             isValid={isValid}
+            disabled={disabled}
           />
           {isValid !== undefined && (
             <Valid>
@@ -87,7 +90,7 @@ const StyledInput = styled.input<InputProps>`
   width: 100%;
   height: 58px;
   padding: 17px 23px;
-  border-radius: 9px;
+  border-radius: 15px;
   border: ${({ isValid }) =>
     isValid === undefined
       ? `1px solid #b5b5b5`
@@ -103,6 +106,10 @@ const StyledInput = styled.input<InputProps>`
       isValid === undefined && `1px solid ${theme.colors.purple300}`};
   }
 
+  &:disabled {
+    background: ${theme.colors.purple500};
+  }
+
   &::placeholder {
     color: #c0c0c0;
   }
@@ -112,7 +119,7 @@ const StyledTextarea = styled.textarea`
   width: 100%;
   min-height: 100px;
   padding: 11px 20px;
-  border-radius: 14px;
+  border-radius: 15px;
   border: 1px solid #b5b5b5;
   color: ${theme.colors.black};
   ${(props) => props.theme.fonts.regular20};

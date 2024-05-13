@@ -72,6 +72,10 @@ const fonts = {
     }),
 
     /*Regular*/
+    regular35: FONT({
+        weight: 400,
+        size: 35,
+    }),
     regular25: FONT({
         weight: 400,
         size: 25,

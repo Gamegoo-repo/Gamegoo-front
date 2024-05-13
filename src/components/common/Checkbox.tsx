@@ -38,6 +38,7 @@ export default Checkbox;
 const StyledCheckbox = styled.div`
   display: flex;
   align-items: center;
+  gap: 1.7rem;
   cursor: pointer;
   ${(props) => props.theme.fonts.semiBold16};
   color: ${theme.colors.black};
@@ -51,7 +52,6 @@ const Check = styled.input`
   border: 0.3px solid #bebebe;
   background-color: ${theme.colors.white};
   border-radius: 2.8px;
-  margin-right: 1.7rem;
   outline: none;
 
   &:hover {
