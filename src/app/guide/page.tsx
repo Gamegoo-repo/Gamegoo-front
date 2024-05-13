@@ -109,7 +109,16 @@ const Guide = () => {
       />
       <p>Selected Option: {isSelected}</p>
       <H2>Dropdown</H2>
-      <Dropdown />
+      <Dropdown 
+      type='bulletin' 
+      width='138px' 
+      fontSize='${(props) => props.theme.fonts.medium16}'
+      bgColor='#F5F5F5'/>
+      <Dropdown 
+      type='writing'
+      width='243px' 
+      fontSize='${(props) => props.theme.fonts.regular18}'
+      bgColor='${theme.colors.white}'/>
     </Layout>
   );
 };
