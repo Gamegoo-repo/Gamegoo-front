@@ -7,6 +7,7 @@ import { useState } from "react";
 import Checkbox from "@/components/common/Checkbox";
 import RadioCard from "@/components/common/RadioCard";
 import Dropdown from "@/components/common/Dropdown";
+import ChatBox from "@/components/common/ChatBox";
 
 const Guide = () => {
   /* Input State */
@@ -108,17 +109,22 @@ const Guide = () => {
         onChange={handleOptionChange}
       />
       <p>Selected Option: {isSelected}</p>
+
       <H2>Dropdown</H2>
-      <Dropdown 
-      type='type1' 
-      width='138px' 
-      fontSize='${(props) => props.theme.fonts.medium16}'
-      bgColor='#F5F5F5'/>
-      <Dropdown 
-      type='type2'
-      width='243px' 
-      fontSize='${(props) => props.theme.fonts.regular18}'
-      bgColor='${theme.colors.white}'/>
+      <Dropdown
+        type='type1'
+        width='138px'
+        fontSize='${(props) => props.theme.fonts.medium16}'
+        bgColor='#F5F5F5' />
+      <Dropdown
+        type='type2'
+        width='243px'
+        fontSize='${(props) => props.theme.fonts.regular18}'
+        bgColor='${theme.colors.white}' />
+
+      <H2>Chat Box</H2>
+      <ChatBox count={3}/>
+
     </Layout>
   );
 };
