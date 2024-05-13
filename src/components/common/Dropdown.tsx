@@ -18,6 +18,7 @@ interface DropdownProps {
 }
 
 const Dropdown = (props: DropdownProps) => {
+    // type === 'type1', 'type2'
     const { type, width, fontSize, bgColor } = props;
     const [isOpen, setIsOpen] = useState(false);
     const [selectedOption, setSelectedOption] = useState<string>('솔로 탱크');
@@ -33,7 +34,7 @@ const Dropdown = (props: DropdownProps) => {
 
     return (
         <div>
-            <DropDownHeader
+            <DropdownHeader
                 onClick={toggling}
                 type={type}
                 $width={width}
@@ -47,23 +48,26 @@ const Dropdown = (props: DropdownProps) => {
                     width={16}
                     height={9}
                     alt='down-arrow' />
-            </DropDownHeader>
+            </DropdownHeader>
             {isOpen && (
                 <div>
-                    <DropDownList
+                    <DropdownListContent
+                        type={type}
                         $width={width}
                         $bgColor={bgColor}
                     >
                         {DROP_DATA.map(data => (
                             <ListItem
                                 onClick={() => handleDropValue(data.value)} key={data.id}
+                                className={type}
+                                type={type}
                                 $width={width}
                                 $fontSize={fontSize}
                                 $bgColor={bgColor}>
                                 {data.value}
                             </ListItem>
                         ))}
-                    </DropDownList>
+                    </DropdownListContent>
                 </div>
             )}
         </div>
@@ -73,16 +77,20 @@ const Dropdown = (props: DropdownProps) => {
 export default Dropdown;
 
 
-const DropDownHeader = styled.div<{ type: string, $width: string, $fontSize: string, $bgColor: string }>`
+const DropdownHeader = styled.div<{ type: string, $width: string, $fontSize: string, $bgColor: string }>`
   display: flex;
   align-items: center;
+  font-size:${({ type }) =>
+        type === 'type2'
+            ? `${theme.fonts.regular18}`
+            : `${theme.fonts.medium16}`};
   color:${theme.colors.black};
   border-radius: 10px;
   padding:18px 0;
   padding-left: 1em;
   background: ${(props) => props.$bgColor};
   border:${({ type }) =>
-        type === 'writing'
+        type === 'type2'
             ? `1px solid ${theme.colors.gray300}`
             : 'none'};
   width:${(props) => props.$width};
@@ -91,25 +99,40 @@ const DropDownHeader = styled.div<{ type: string, $width: string, $fontSize: str
 `;
 
 const Title = styled.p<{ type: string }>`
-    padding-right: ${(props) => props.type === 'bulletin' ? '20px' : '127px'};
+    padding-right: ${(props) => props.type === 'type1' ? '20px' : '120px'};
 `;
 
-const DropDownList = styled.ul<{ $width: string, $bgColor: string }>`
+const DropdownListContent = styled.ul<{ type: string, $width: string, $bgColor: string }>`
   padding: 0;
   margin: 0;
-  padding-left: 1em;
   border-radius: 10px;
   background: ${(props) => props.$bgColor};
-  border: 1px solid ${(props) => props.$bgColor};
+  border:${({ type }) =>
+        type === 'type2'
+            ? `1px solid ${theme.colors.gray300}`
+            : 'none'};
   box-sizing: border-box;
-  padding: 0.8em;
   width:${(props) => props.$width};
 `;
 
-const ListItem = styled.li<{ $width: string, $fontSize: string, $bgColor: string }>`
+const ListItem = styled.li<{ type: string, $width: string, $fontSize: string, $bgColor: string }>`
+  line-height: 27px;
   list-style: none;
-  border-radius: 10px;
   color:${theme.colors.black};
   ${(props) => props.$fontSize};
+  padding:10px 16px;
   cursor: pointer;
+  &.type1{
+    &:hover{
+        color:${theme.colors.white};
+    background: ${theme.colors.purple100};
+    }
+  }
+
+  &.type2{
+    &:hover{
+        color:${theme.colors.purple100};
+    background: #F9F8FF;
+    }
+  }
 `;
