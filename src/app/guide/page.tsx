@@ -8,6 +8,7 @@ import Checkbox from "@/components/common/Checkbox";
 import RadioCard from "@/components/common/RadioCard";
 import Dropdown from "@/components/common/Dropdown";
 import ChatBox from "@/components/common/ChatBox";
+import ConfirmModal from "@/components/common/ConfirmModal";
 
 const Guide = () => {
   /* Input State */
@@ -116,14 +117,28 @@ const Guide = () => {
         width='138px'
         fontSize='${(props) => props.theme.fonts.medium16}'
         bgColor='#F5F5F5' />
+      <p>TYPE 1</p>
+
       <Dropdown
         type='type2'
         width='243px'
         fontSize='${(props) => props.theme.fonts.regular18}'
         bgColor='${theme.colors.white}' />
+      <p>TYPE 2</p>
+
 
       <H2>Chat Box</H2>
-      <ChatBox count={3}/>
+      <ChatBox count={3} />
+
+      <H2>Confirm Modal</H2>
+      <ConfirmModal type='img' width='315px' height='156px' />
+      <p>Image Modal</p>
+
+      <ConfirmModal type='confirm' width='540px' height='268px' />
+      <p>Confirm Modal</p>
+
+      <ConfirmModal type='yesOrNo' width='540px' height='268px' />
+      <p>Yes or No Modal</p>
 
     </Layout>
   );

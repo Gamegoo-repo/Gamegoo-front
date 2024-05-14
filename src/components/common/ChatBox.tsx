@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import styled from "styled-components";
 
 interface msgCountProps {
-  count: number
+  count: number;
 }
 
 let _width = 418;

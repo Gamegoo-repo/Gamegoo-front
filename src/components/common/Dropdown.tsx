@@ -11,10 +11,10 @@ const DROP_DATA = [
 ];
 
 interface DropdownProps {
-    type: string
-    width: string
-    fontSize: string,
-    bgColor: string
+    type: string;
+    width: string;
+    fontSize: string;
+    bgColor: string;
 }
 
 const Dropdown = (props: DropdownProps) => {
