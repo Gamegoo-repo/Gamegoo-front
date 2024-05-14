@@ -123,7 +123,7 @@ const Guide = () => {
         bgColor='${theme.colors.white}' />
 
       <H2>Chat Box</H2>
-      {/* <ChatBox count={3}/> */}
+      <ChatBox count={3}/>
 
     </Layout>
   );
