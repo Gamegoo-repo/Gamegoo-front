@@ -2,7 +2,7 @@ import { DefaultTheme } from "styled-components";
 
 const colors = {
     white: "#fff",
-    black: "#000",
+    black: "#393939;",
     
     purple100: "#5A42EE",
     purple200: "#9F90F9",
@@ -62,12 +62,20 @@ const fonts = {
     }),
 
     /*SemiBold*/
+    semiBold16: FONT({
+        weight: 600,
+        size: 16,
+    }),
     semiBold14: FONT({
         weight: 600,
         size: 14,
     }),
 
     /*Regular*/
+    regular35: FONT({
+        weight: 400,
+        size: 35,
+    }),
     regular25: FONT({
         weight: 400,
         size: 25,
@@ -80,9 +88,17 @@ const fonts = {
         weight: 400,
         size: 18,
     }),
+    regular16: FONT({
+        weight: 400,
+        size: 16,
+    }),
     regular14: FONT({
         weight: 400,
         size: 14,
+    }),
+    regular12: FONT({
+        weight: 400,
+        size: 12,
     }),
     regular11: FONT({
         weight: 500,
