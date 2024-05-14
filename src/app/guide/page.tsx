@@ -131,13 +131,15 @@ const Guide = () => {
       <ChatBox count={3} />
 
       <H2>Confirm Modal</H2>
-      <ConfirmModal type='img' width='315px' height='156px' />
+      <ConfirmModal type='img' width='315px' />
       <p>Image Modal</p>
 
-      <ConfirmModal type='confirm' width='540px' height='268px' />
+      <ConfirmModal type='confirm' width='540px'>계속해서 매칭을 시도하시겠습니까?</ConfirmModal>
       <p>Confirm Modal</p>
 
-      <ConfirmModal type='yesOrNo' width='540px' height='268px' />
+      <ConfirmModal type='yesOrNo' width='540px'>
+        조건에 맞는 사람이 없습니다.<br/>
+        같은 조건으로 글을 올린 사람이 있어요!</ConfirmModal>
       <p>Yes or No Modal</p>
 
     </Layout>

@@ -62,6 +62,10 @@ const fonts = {
     }),
 
     /*SemiBold*/
+    semiBold18: FONT({
+        weight: 600,
+        size: 18,
+    }),
     semiBold16: FONT({
         weight: 600,
         size: 16,

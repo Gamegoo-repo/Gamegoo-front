@@ -75,11 +75,11 @@ const Dropdown = (props: DropdownProps) => {
 export default Dropdown;
 
 
-const DropdownHeader = styled.div<{ type: string, $width: string, $fontSize: string, $bgColor: string }>`
+const DropdownHeader = styled.div<{ $type: string, $width: string, $fontSize: string, $bgColor: string }>`
   display: flex;
   align-items: center;
-  font-size:${({ type }) =>
-        type === 'type2'
+  ${({ $type }) =>
+        $type === 'type2'
             ? `${theme.fonts.regular18}`
             : `${theme.fonts.medium16}`};
   color:${theme.colors.black};
@@ -87,8 +87,8 @@ const DropdownHeader = styled.div<{ type: string, $width: string, $fontSize: str
   padding:18px 0;
   padding-left: 1em;
   background: ${(props) => props.$bgColor};
-  border:${({ type }) =>
-        type === 'type2'
+  border:${({ $type }) =>
+        $type === 'type2'
             ? `1px solid ${theme.colors.gray300}`
             : 'none'};
   width:${(props) => props.$width};
