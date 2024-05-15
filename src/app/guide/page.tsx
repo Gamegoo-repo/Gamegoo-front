@@ -6,6 +6,11 @@ import Input from "@/components/common/Input";
 import { useState } from "react";
 import Checkbox from "@/components/common/Checkbox";
 import RadioCard from "@/components/common/RadioCard";
+import Dropdown from "@/components/common/Dropdown";
+import ChatBox from "@/components/common/ChatBox";
+import ConfirmModal from "@/components/common/ConfirmModal";
+import FormModal from "@/components/common/FormModal";
+import PositionCategory from "@/components/common/PositionCategory";
 
 const Guide = () => {
   /* Input State */
@@ -18,10 +23,39 @@ const Guide = () => {
   /* RadioCard State */
   const [isSelected, setIsSelected] = useState<string>("option1");
 
+  /* Modal */
+  const [openConfirmModal, setOpenConfirmModal] = useState(false);
+  const [openFormModal, setOpenFormModal] = useState(false);
+
+  /* Position category */
+  const [openPosition, setOpenPosition] = useState(false);
+
   const handleOptionChange = (value: string) => {
     setIsSelected(value);
     console.log(value);
   };
+
+  /* Modal (confirmModal) */
+  const handleConfirmModalClose = () => {
+    setOpenConfirmModal(false);
+  };
+
+  const handleConfirmModalOpen = () => {
+    setOpenConfirmModal(true);
+  };
+
+  /* Modal (formModal) */
+  const handleFormModalClose = () => {
+    setOpenFormModal(false);
+  };
+
+  const handleFormModalOpen = () => {
+    setOpenFormModal(true);
+  };
+
+  const handlePositionClose = () => {
+    setOpenPosition(false);
+  }
 
   return (
     <Layout>
@@ -107,6 +141,109 @@ const Guide = () => {
         onChange={handleOptionChange}
       />
       <p>Selected Option: {isSelected}</p>
+
+      <H2>Dropdown</H2>
+      <Dropdown
+        type='type1'
+        width='138px'
+        fontSize='${(props) => props.theme.fonts.medium16}'
+        bgColor='#F5F5F5' />
+      <p>TYPE 1</p>
+
+      <Dropdown
+        type='type2'
+        width='243px'
+        fontSize='${(props) => props.theme.fonts.regular18}'
+        bgColor='${theme.colors.white}' />
+      <p>TYPE 2</p>
+
+
+      <H2>Chat Box</H2>
+      <ChatBox count={3} />
+
+      <H2>Confirm Modal</H2>
+      <button
+        style={{ border: '1px solid black', padding: '10px' }}
+        onClick={handleConfirmModalOpen}>매너 평가 모달 열기 버튼
+      </button>
+
+      {openConfirmModal &&
+        <ConfirmModal type='img' width='315px' onClose={handleConfirmModalClose} />
+      }
+      <p>Image Modal</p>
+
+      {/* 같은 변수 사용으로 주석처리 해놨습니다.*/}
+      {/* {openConfirmModal &&
+        <ConfirmModal type='confirm' width='540px' onClose={handleConfirmModalClose}>계속해서 매칭을 시도하시겠습니까?</ConfirmModal>
+      }
+
+      <p>Confirm Modal</p> */}
+
+      {/* {openConfirmModal &&
+        <ConfirmModal type='yesOrNo' width='540px' onClose={handleConfirmModalClose}>
+          조건에 맞는 사람이 없습니다.<br />
+          같은 조건으로 글을 올린 사람이 있어요!</ConfirmModal>
+      }
+      <p>Yes or No Modal</p> */}
+
+
+      <H2>Form Modal</H2>
+      <button
+        style={{ border: '1px solid black', padding: '10px' }}
+        onClick={handleFormModalOpen}>텍스트 모달 열기 버튼
+      </button>
+
+      {/* {openFormModal &&
+        <FormModal
+          type='text'
+          title='비밀번호 재설정하기'
+          width='492px'
+          height="616px"
+          closeButtonWidth={15}
+          closeButtonHeight={15}
+          borderRadius='20px'
+          buttonText="비밀번호 재설정"
+          onClose={handleFormModalClose}>
+          <Input
+            inputType="password"
+            value={passwordValue}
+            label="label"
+            onChange={(value) => {
+              setPasswordValue(value);
+            }}
+            placeholder="placeholder"
+          />
+        </FormModal>
+      }
+      <p>Text Modal</p> */}
+
+      {/* 같은 변수 사용으로 주석처리 해놨습니다.*/}
+      {openFormModal &&
+        <FormModal
+          type='checkbox'
+          title='매너 평가하기'
+          width='418px'
+          height="434px"
+          closeButtonWidth={17}
+          closeButtonHeight={17}
+          borderRadius='10px'
+          buttonText="완료"
+          onClose={handleFormModalClose}
+          disabled>
+          <Checkbox value="checkbox1" label="checkbox" />
+        </FormModal>
+      }
+      <p>Checkbox Modal</p>
+
+      <H2>Position</H2>
+      <button
+        style={{ border: '1px solid black', padding: '10px' }}
+        onClick={() => setOpenPosition(true)}>포지션 열기 버튼
+      </button>
+      {openPosition &&
+        <PositionCategory onClose={handlePositionClose} />}
+
+
     </Layout>
   );
 };

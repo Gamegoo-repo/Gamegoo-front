@@ -25,6 +25,11 @@ ul {
   list-style: none;
 }
 
+button {
+  border: none;
+  background: transparent;
+}
+
 
 @font-face {
     font-family: "Pretendard";
