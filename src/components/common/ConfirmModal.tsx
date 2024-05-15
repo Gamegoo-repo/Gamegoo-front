@@ -160,9 +160,9 @@ const Button = styled.button<{ $type: string }>`
             : '#44515C'};
     width:100%;
     padding:15px 0;
-   &:disabled{
-    color:${theme.colors.gray300};
-   }
+    &:disabled{
+        color:${theme.colors.gray300};
+    }
 
     &.noButton{    
         border-radius:0 0 11px 0;
