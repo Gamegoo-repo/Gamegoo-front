@@ -42,7 +42,7 @@ const ConfirmModal = (props: ConfirmModalProps) => {
                         </CloseButton>
                         <ImageWrapper>
                             <ClickArea onClick={handleMannerEvaluate}>
-                                <StyledImage
+                                <Image
                                     src={mannerStatus ? clickedSadIcon : smileIcon}
                                     width={33}
                                     height={33}
@@ -50,7 +50,7 @@ const ConfirmModal = (props: ConfirmModalProps) => {
                                 <MannerText>매너 평가하기</MannerText>
                             </ClickArea>
                             <ClickArea onClick={handleBadMannerEvaluate}>
-                                <StyledImage
+                                <Image
                                     src={badMannerStatus ? clickedSadIcon : sadIcon}
                                     width={33}
                                     height={33}
@@ -65,7 +65,7 @@ const ConfirmModal = (props: ConfirmModalProps) => {
                     </TextTop>}
             </Main>
             <Footer>
-                <Buttons $type={type}>
+                <Buttons>
                     <Button
                         className={type === 'img' ? undefined : 'noButton'}
                         disabled={type === 'img' && !mannerStatus && !badMannerStatus}
@@ -132,9 +132,6 @@ const ClickArea = styled.div`
     cursor: pointer;
 `
 
-const StyledImage = styled(Image)``
-
-
 const MannerText = styled.p`
     ${(props) => props.theme.fonts.regular14};
     color:#2D2D2D;
@@ -144,7 +141,7 @@ const MannerText = styled.p`
 const Footer = styled.footer`
 `
 
-const Buttons = styled.div<{ $type: string }>`
+const Buttons = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;

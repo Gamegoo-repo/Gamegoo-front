@@ -9,6 +9,7 @@ import RadioCard from "@/components/common/RadioCard";
 import Dropdown from "@/components/common/Dropdown";
 import ChatBox from "@/components/common/ChatBox";
 import ConfirmModal from "@/components/common/ConfirmModal";
+import FormModal from "@/components/common/FormModal";
 
 const Guide = () => {
   /* Input State */
@@ -156,6 +157,41 @@ const Guide = () => {
         조건에 맞는 사람이 없습니다.<br />
         같은 조건으로 글을 올린 사람이 있어요!</ConfirmModal>
       <p>Yes or No Modal</p>
+
+      <H2>Form Modal</H2>
+      <FormModal
+        type='text'
+        title='비밀번호 재설정하기'
+        width='418px'
+        closeButtonWidth={15}
+        closeButtonHeight={15}
+        borderRadius='20px'
+        buttonText="완료">
+        <div style={{ width: "100px" }}>
+          <Input
+            inputType="password"
+            value={passwordValue}
+            label="label"
+            onChange={(value) => {
+              setPasswordValue(value);
+            }}
+            placeholder="placeholder"
+          />
+        </div>
+      </FormModal>
+      <p>Text Modal</p>
+
+      <FormModal
+        type='checkbox'
+        title='매너 평가하기'
+        width='492px'
+        closeButtonWidth={17}
+        closeButtonHeight={17}
+        borderRadius='10px'
+        buttonText="비밀번호 재설정">
+        <Checkbox value="checkbox1" label="checkbox" />
+      </FormModal>
+      <p>Checkbox Modal</p>
 
     </Layout>
   );
