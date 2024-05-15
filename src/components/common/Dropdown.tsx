@@ -35,7 +35,7 @@ const Dropdown = (props: DropdownProps) => {
         <div>
             <DropdownHeader
                 onClick={toggling}
-                type={type}
+                $type={type}
                 $width={width}
                 $fontSize={fontSize}
                 $bgColor={bgColor}>

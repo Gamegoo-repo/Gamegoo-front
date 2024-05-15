@@ -1,14 +1,31 @@
 import { theme } from "@/styles/theme";
 import Image from "next/image";
+import { useState } from "react";
 import styled from "styled-components";
+import smileIcon from "../../../public/assets/icons/smile.svg";
+import sadIcon from "../../../public/assets/icons/sad.svg";
+import clickedSadIcon from "../../../public/assets/icons/clicked_smile.svg";
 
 interface ConfirmModalProps {
     type: 'yesOrNo' | 'confirm' | 'img';
     children?: string | React.ReactNode;
     width: string;
+    onClose: () => void;
 }
 const ConfirmModal = (props: ConfirmModalProps) => {
-    const { type, children, width } = props;
+    const { type, children, width, onClose } = props;
+    const [mannerStatus, setMannerStatus] = useState(false);
+    const [badMannerStatus, setBadMannerStatus] = useState(false);
+
+    const handleMannerEvaluate = () => {
+        setMannerStatus((prevState) => !prevState);
+        setBadMannerStatus(false);
+    };
+
+    const handleBadMannerEvaluate = () => {
+        setBadMannerStatus((prevState) => !prevState);
+        setMannerStatus(false);
+    };
 
     return (
         <Wrapper $width={width}>
@@ -17,28 +34,29 @@ const ConfirmModal = (props: ConfirmModalProps) => {
                     <ImageTop>
                         <CloseButton>
                             <Image
+                                onClick={onClose}
                                 src="/assets/icons/close.svg"
                                 width={10}
                                 height={10}
                                 alt="close button" />
                         </CloseButton>
                         <ImageWrapper>
-                            <ImageBox>
-                                <Image
-                                    src='/assets/icons/smile.svg'
+                            <ClickArea onClick={handleMannerEvaluate}>
+                                <StyledImage
+                                    src={mannerStatus ? clickedSadIcon : smileIcon}
                                     width={33}
                                     height={33}
-                                    alt='smile' />
+                                    alt="smile icon" />
                                 <MannerText>매너 평가하기</MannerText>
-                            </ImageBox>
-                            <ImageBox>
-                                <Image
-                                    src='/assets/icons/sad.svg'
+                            </ClickArea>
+                            <ClickArea onClick={handleBadMannerEvaluate}>
+                                <StyledImage
+                                    src={badMannerStatus ? clickedSadIcon : sadIcon}
                                     width={33}
                                     height={33}
-                                    alt='sad' />
+                                    alt="smile icon" />
                                 <MannerText>비매너 평가하기</MannerText>
-                            </ImageBox>
+                            </ClickArea>
                         </ImageWrapper>
                     </ImageTop>
                     :
@@ -48,8 +66,15 @@ const ConfirmModal = (props: ConfirmModalProps) => {
             </Main>
             <Footer>
                 <Buttons $type={type}>
-                    <Button className={type === 'img' ? 'yesButton' : 'noButton'} $type={type}>{type === 'yesOrNo' ? '예' : '확인'}</Button>
-                    {type === 'yesOrNo' && <Button className='noButton' $type={type}>아니요</Button>}
+                    <Button
+                        className={type === 'img' ? undefined : 'noButton'}
+                        disabled={type === 'img' && !mannerStatus && !badMannerStatus}
+                        $type={type}>
+                        {type === 'yesOrNo' ? '예' : '확인'}
+                    </Button>
+                    {type === 'yesOrNo' &&
+                        <Button className='noButton' $type={type}>아니요
+                        </Button>}
                 </Buttons>
             </Footer>
         </Wrapper>
@@ -79,8 +104,7 @@ const TextTop = styled.div`
     align-items: center;
     justify-content: center;
     text-align: center;
-    border-bottom: 0.58px solid rgba(197,197, 199, 1);
-    
+    border-bottom: 0.58px solid rgba(197,197, 199, 1);  
 `
 
 const CloseButton = styled.p`
@@ -100,11 +124,16 @@ const ImageWrapper = styled.div`
     margin-bottom: 15px;
 `
 
-const ImageBox = styled.div`
+const ClickArea = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    cursor: pointer;
 `
+
+const StyledImage = styled(Image)``
+
 
 const MannerText = styled.p`
     ${(props) => props.theme.fonts.regular14};
@@ -113,7 +142,6 @@ const MannerText = styled.p`
 `
 
 const Footer = styled.footer`
-    height: auto;
 `
 
 const Buttons = styled.div<{ $type: string }>`
@@ -129,12 +157,16 @@ const Button = styled.button<{ $type: string }>`
             ? `${theme.fonts.bold11}`
             : `${theme.fonts.semiBold18}`};
     cursor: pointer;
-    color:#44515C;
+    color:${({ $type }) =>
+        $type === 'img'
+            ? '#2D2D2D'
+            : '#44515C'};
     width:100%;
     padding:15px 0;
-    &.yesButton {
+   &:disabled{
+    color:${theme.colors.gray300};
+   }
 
-    }
     &.noButton{    
         border-radius:0 0 11px 0;
         &:hover,

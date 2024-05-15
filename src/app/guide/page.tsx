@@ -18,6 +18,9 @@ const Guide = () => {
   const [passwordValue, setPasswordValue] = useState("Password");
   const [textareaValue, setTextareaValue] = useState("Textarea");
 
+  /* Modal (confirmModal) */
+  const [openConfirmModal, setOpenConfirmModal] = useState(false);
+
   /* RadioCard State */
   const [isSelected, setIsSelected] = useState<string>("option1");
 
@@ -25,6 +28,15 @@ const Guide = () => {
     setIsSelected(value);
     console.log(value);
   };
+
+  /* Modal (confirmModal) */
+  const handleModalClose = () => {
+    setOpenConfirmModal(false);
+  }
+
+  const handleModalOpen = () => {
+    setOpenConfirmModal(true);
+  }
 
   return (
     <Layout>
@@ -131,14 +143,17 @@ const Guide = () => {
       <ChatBox count={3} />
 
       <H2>Confirm Modal</H2>
-      <ConfirmModal type='img' width='315px' />
+      <button onClick={handleModalOpen}>매너 평가 모달 열기 버튼</button>
+      {openConfirmModal &&
+        <ConfirmModal type='img' width='315px' onClose={handleModalClose} />
+      }
       <p>Image Modal</p>
 
-      <ConfirmModal type='confirm' width='540px'>계속해서 매칭을 시도하시겠습니까?</ConfirmModal>
+      <ConfirmModal type='confirm' width='540px' onClose={handleModalClose}>계속해서 매칭을 시도하시겠습니까?</ConfirmModal>
       <p>Confirm Modal</p>
 
-      <ConfirmModal type='yesOrNo' width='540px'>
-        조건에 맞는 사람이 없습니다.<br/>
+      <ConfirmModal type='yesOrNo' width='540px' onClose={handleModalClose}>
+        조건에 맞는 사람이 없습니다.<br />
         같은 조건으로 글을 올린 사람이 있어요!</ConfirmModal>
       <p>Yes or No Modal</p>
 
