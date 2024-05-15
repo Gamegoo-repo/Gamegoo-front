@@ -23,6 +23,7 @@ const PositionCategory = (props: PositionCategoryProps) => {
                     {POSITION_ICONS.map(icon => {
                         return (
                             <StyledImage
+                                onClick={props.onClose}
                                 key={icon.id}
                                 src={icon.path}
                                 width={icon.width}
@@ -77,9 +78,10 @@ const Box = styled.div`
 const StyledImage = styled(Image)`
    cursor: pointer;
    &:hover{
-    filter: hue-rotate(180deg); 
+    filter: invert(27%) sepia(5%) saturate(27%) hue-rotate(6deg) brightness(100%) contrast(89%);
    }
+   &:active,
    &:focus{
-    filter: invert(16%) sepia(89%) saturate(6054%) hue-rotate(358deg) brightness(97%) contrast(113%);
+    filter: invert(18%) sepia(64%) saturate(1326%) hue-rotate(223deg) brightness(97%) contrast(89%);
    }
 `
