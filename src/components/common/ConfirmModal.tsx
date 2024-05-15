@@ -28,60 +28,75 @@ const ConfirmModal = (props: ConfirmModalProps) => {
     };
 
     return (
-        <Wrapper $width={width}>
-            <Main>
-                {type === 'img' ?
-                    <ImageTop>
-                        <CloseButton>
-                            <Image
+        <Overlay>
+            <Wrapper $width={width} onClick={(e) => e.stopPropagation()}>
+                <Main>
+                    {type === 'img' ?
+                        <ImageTop>
+                            <CloseButton>
+                                <Image
+                                    onClick={onClose}
+                                    src="/assets/icons/close.svg"
+                                    width={10}
+                                    height={10}
+                                    alt="close button" />
+                            </CloseButton>
+                            <ImageWrapper>
+                                <ClickArea onClick={handleMannerEvaluate}>
+                                    <Image
+                                        src={mannerStatus ? clickedSadIcon : smileIcon}
+                                        width={33}
+                                        height={33}
+                                        alt="smile icon" />
+                                    <MannerText>매너 평가하기</MannerText>
+                                </ClickArea>
+                                <ClickArea onClick={handleBadMannerEvaluate}>
+                                    <Image
+                                        src={badMannerStatus ? clickedSadIcon : sadIcon}
+                                        width={33}
+                                        height={33}
+                                        alt="smile icon" />
+                                    <MannerText>비매너 평가하기</MannerText>
+                                </ClickArea>
+                            </ImageWrapper>
+                        </ImageTop>
+                        :
+                        <TextTop>
+                            {children}
+                        </TextTop>}
+                </Main>
+                <Footer>
+                    <Buttons>
+                        <Button
+                            onClick={onClose}
+                            className={type === 'img' ? undefined : 'noButton'}
+                            disabled={type === 'img' && !mannerStatus && !badMannerStatus}
+                            $type={type}>
+                            {type === 'yesOrNo' ? '예' : '확인'}
+                        </Button>
+                        {type === 'yesOrNo' &&
+                            <Button
                                 onClick={onClose}
-                                src="/assets/icons/close.svg"
-                                width={10}
-                                height={10}
-                                alt="close button" />
-                        </CloseButton>
-                        <ImageWrapper>
-                            <ClickArea onClick={handleMannerEvaluate}>
-                                <Image
-                                    src={mannerStatus ? clickedSadIcon : smileIcon}
-                                    width={33}
-                                    height={33}
-                                    alt="smile icon" />
-                                <MannerText>매너 평가하기</MannerText>
-                            </ClickArea>
-                            <ClickArea onClick={handleBadMannerEvaluate}>
-                                <Image
-                                    src={badMannerStatus ? clickedSadIcon : sadIcon}
-                                    width={33}
-                                    height={33}
-                                    alt="smile icon" />
-                                <MannerText>비매너 평가하기</MannerText>
-                            </ClickArea>
-                        </ImageWrapper>
-                    </ImageTop>
-                    :
-                    <TextTop>
-                        {children}
-                    </TextTop>}
-            </Main>
-            <Footer>
-                <Buttons>
-                    <Button
-                        className={type === 'img' ? undefined : 'noButton'}
-                        disabled={type === 'img' && !mannerStatus && !badMannerStatus}
-                        $type={type}>
-                        {type === 'yesOrNo' ? '예' : '확인'}
-                    </Button>
-                    {type === 'yesOrNo' &&
-                        <Button className='noButton' $type={type}>아니요
-                        </Button>}
-                </Buttons>
-            </Footer>
-        </Wrapper>
+                                className='noButton'
+                                $type={type}>
+                                아니요
+                            </Button>}
+                    </Buttons>
+                </Footer>
+            </Wrapper>
+        </Overlay>
     )
 };
 
 export default ConfirmModal;
+
+const Overlay = styled.div`
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    position:fixed;
+    inset: 0;
+`
 
 const Wrapper = styled.div<{ $width: string }>`
     width:${(props) => props.$width};

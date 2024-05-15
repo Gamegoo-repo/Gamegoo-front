@@ -32,34 +32,50 @@ const FormModal = (props: FormModalProps) => {
         disabled
     } = props;
     return (
-        <Wrapper $type={type} $width={width} $height={height} $borderRadius={borderRadius}>
-            <Header $type={type}>
-                {type === 'checkbox' && <CheckboxTitle>{title}</CheckboxTitle>}
-                <CloseButton>
-                    <CloseImage
-                        onClick={onClose}
-                        src='/assets/icons/close.svg'
-                        width={closeButtonWidth}
-                        height={closeButtonHeight}
-                        alt='close button' />
-                </CloseButton>
-            </Header>
-            <Main>
-                <TitleContent>
-                    {type === 'text' && <TextTitle>{title}</TextTitle>}
-                </TitleContent>
-                <MainContent $type={type}>{children}</MainContent>
-            </Main>
-            <Footer>
-                <ButtonContent>
-                    <Button buttonType="primary" text={buttonText} />
-                </ButtonContent>
-            </Footer>
-        </Wrapper >
+        <Overlay>
+            <Wrapper
+                onClick={(e) => e.stopPropagation()}
+                $type={type}
+                $width={width}
+                $height={height}
+                $borderRadius={borderRadius}
+            >
+                <Header $type={type}>
+                    {type === 'checkbox' && <CheckboxTitle>{title}</CheckboxTitle>}
+                    <CloseButton>
+                        <CloseImage
+                            onClick={onClose}
+                            src='/assets/icons/close.svg'
+                            width={closeButtonWidth}
+                            height={closeButtonHeight}
+                            alt='close button' />
+                    </CloseButton>
+                </Header>
+                <Main>
+                    <TitleContent>
+                        {type === 'text' && <TextTitle>{title}</TextTitle>}
+                    </TitleContent>
+                    <MainContent $type={type}>{children}</MainContent>
+                </Main>
+                <Footer>
+                    <ButtonContent>
+                        <Button onClick={onClose} buttonType="primary" text={buttonText} />
+                    </ButtonContent>
+                </Footer>
+            </Wrapper>
+        </Overlay>
     )
 };
 
 export default FormModal;
+
+const Overlay = styled.div`
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    position:fixed;
+    inset: 0;
+`
 
 const Wrapper = styled.div<{ $type: string, $width: string, $height: string, $borderRadius: string }>`
     box-shadow: 0 0 21.3px 0 rgba(0, 0, 0, 0.15);
