@@ -10,6 +10,7 @@ import Dropdown from "@/components/common/Dropdown";
 import ChatBox from "@/components/common/ChatBox";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import FormModal from "@/components/common/FormModal";
+import PositionCategory from "@/components/common/PositionCategory";
 
 const Guide = () => {
   /* Input State */
@@ -19,12 +20,15 @@ const Guide = () => {
   const [passwordValue, setPasswordValue] = useState("Password");
   const [textareaValue, setTextareaValue] = useState("Textarea");
 
+  /* RadioCard State */
+  const [isSelected, setIsSelected] = useState<string>("option1");
+
   /* Modal */
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
   const [openFormModal, setOpenFormModal] = useState(false);
 
-  /* RadioCard State */
-  const [isSelected, setIsSelected] = useState<string>("option1");
+  /* Position category */
+  const [openPosition, setOpenPosition] = useState(false);
 
   const handleOptionChange = (value: string) => {
     setIsSelected(value);
@@ -214,6 +218,15 @@ const Guide = () => {
         <Checkbox value="checkbox1" label="checkbox" />
       </FormModal>
       <p>Checkbox Modal</p>
+
+      <H2>Position</H2>
+      <button
+        style={{ border: '1px solid black', padding: '10px' }}
+        onClick={() => setOpenPosition(true)}>포지션 열기 버튼
+      </button>
+      {openPosition &&
+        <PositionCategory />}
+
 
     </Layout>
   );
