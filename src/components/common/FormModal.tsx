@@ -62,7 +62,7 @@ const FormModal = (props: FormModalProps) => {
 export default FormModal;
 
 const Wrapper = styled.div<{ $type: string, $width: string, $height: string, $borderRadius: string }>`
-    box-shadow: 0 0 21.3px 0px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 21.3px 0 rgba(0, 0, 0, 0.15);
     background: ${theme.colors.white};
     max-width:${(props) => props.$width};
     width: 100%;
