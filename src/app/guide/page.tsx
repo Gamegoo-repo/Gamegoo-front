@@ -46,12 +46,16 @@ const Guide = () => {
 
   /* Modal (formModal) */
   const handleFormModalClose = () => {
-    setOpenFormModal(false)
+    setOpenFormModal(false);
   };
 
   const handleFormModalOpen = () => {
-    setOpenFormModal(true)
+    setOpenFormModal(true);
   };
+
+  const handlePositionClose = () => {
+    setOpenPosition(false);
+  }
 
   return (
     <Layout>
@@ -225,7 +229,7 @@ const Guide = () => {
         onClick={() => setOpenPosition(true)}>포지션 열기 버튼
       </button>
       {openPosition &&
-        <PositionCategory />}
+        <PositionCategory onClose={handlePositionClose} />}
 
 
     </Layout>
