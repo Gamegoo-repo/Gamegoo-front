@@ -1,17 +1,23 @@
 'use client';
 
 import ChatBox from "@/components/common/ChatBox";
-import GraphicBox from "@/components/matching/GraphicBox";
+import GraphicBox from "@/components/match/GraphicBox";
 import Image from "next/image";
 import styled from "styled-components";
 
+const BOXS_DATA = [
+    { id: 1, pathname: 'game-mode', width: '1206px', height: '227px', top: '36px', left: '41px', title: '바로 매칭하기' },
+    { id: 2, pathname: 'board', width: '1206px', height: '227px', top: '36px', left: '41px', title: '매칭 게시판에서 찾기' },
+];
+
 const HomePage = () => {
+
     return (
         <Wrapper>
             <HomeContent>
                 <Header>
                     <Image
-                        src='/assets/icons/logo.svg'
+                        src='/assets/icons/logo_m.svg'
                         width={371}
                         height={117}
                         priority
@@ -19,22 +25,20 @@ const HomePage = () => {
                     <SubTitle>겜구 커뮤니티에 오신 것을 환영합니다.</SubTitle>
                 </Header>
                 <Main>
-                    <GraphicBox
-                        href='/'
-                        width='1206px'
-                        height='227px'
-                        top='36px'
-                        left='41px'>
-                        바로 매칭하기
-                    </GraphicBox>
-                    <GraphicBox
-                        href='/'
-                        width='1206px'
-                        height='227px'
-                        top='36px'
-                        left='41px'>
-                        매칭 게시판에서 찾기
-                    </GraphicBox>
+                    {BOXS_DATA.map((box) => {
+                        return (
+                            <GraphicBox
+                                key={box.id}
+                                pathname={box.pathname}
+                                height={box.height}
+                                top={box.top}
+                                left={box.left}
+                            >
+                                {box.title}
+                            </GraphicBox>
+
+                        )
+                    })}
                 </Main>
                 <Footer>
                     <ChatBoxContent>
@@ -55,8 +59,9 @@ const Wrapper = styled.div`
 `
 
 const HomeContent = styled.div`
-    max-width: 1206px;
+    max-width: 1440px;
     width: 100%;
+    padding: 0 80px;
 `
 
 const Header = styled.header`
