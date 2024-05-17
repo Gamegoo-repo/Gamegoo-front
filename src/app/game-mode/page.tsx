@@ -13,7 +13,7 @@ const MATCH_MODE_DATA = [
 
 const GAME_MODE_DATA = [
   { id: 1, type: 'game', pathname: 'game-mode', height: '377px', top: '50%', left: '50%', title: '빠른 대전' },
-  { id: 2, type: 'game', pathname: 'game-mode', height: '377px', top: '50%', left: '50%', title: '빡솔랭겜' },
+  { id: 2, type: 'game', pathname: 'game-mode', height: '377px', top: '50%', left: '50%', title: '솔랭' },
   { id: 3, type: 'game', pathname: 'game-mode', height: '377px', top: '50%', left: '50%', title: '자랭' },
   { id: 4, type: 'game', pathname: 'game-mode', height: '377px', top: '50%', left: '50%', title: '칼바람' },
 ];
