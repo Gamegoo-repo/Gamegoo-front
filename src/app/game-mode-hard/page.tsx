@@ -1,6 +1,6 @@
 'use client';
 
-import GraphicBox from "@/components/graphicBox";
+import GraphicBox from "@/components/matching/GraphicBox";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";

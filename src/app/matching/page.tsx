@@ -1,6 +1,6 @@
 'use client';
 
-import GraphicBox from "@/components/graphicBox";
+import GraphicBox from "@/components/matching/GraphicBox";
 import styled from "styled-components";
 
 const MatchingPage = () => {

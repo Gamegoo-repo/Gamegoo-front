@@ -1,13 +1,14 @@
 'use client';
 
-import GraphicBox from "@/components/graphicBox";
+import ChatBox from "@/components/common/ChatBox";
+import GraphicBox from "@/components/matching/GraphicBox";
 import Image from "next/image";
 import styled from "styled-components";
 
 const HomePage = () => {
     return (
         <Wrapper>
-            <div>
+            <HomeContent>
                 <Header>
                     <Image
                         src='/assets/icons/logo.svg'
@@ -35,7 +36,12 @@ const HomePage = () => {
                         매칭 게시판에서 찾기
                     </GraphicBox>
                 </Main>
-            </div>
+                <Footer>
+                    <ChatBoxContent>
+                        <ChatBox count={3} />
+                    </ChatBoxContent>
+                </Footer>
+            </HomeContent>
         </Wrapper>
     )
 };
@@ -43,28 +49,41 @@ const HomePage = () => {
 export default HomePage;
 
 const Wrapper = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+`
+
+const HomeContent = styled.div`
+    max-width: 1206px;
+    width: 100%;
 `
 
 const Header = styled.header`
-  max-width: 1440px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  margin-bottom:60px;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    margin-bottom:60px;
 `
 const SubTitle = styled.div`
-  ${(props) => props.theme.fonts.regular25};
-  color:#44515C;
+    ${(props) => props.theme.fonts.regular25};
+    color:#44515C;
 `
 
 const Main = styled.main`
- max-width: 1440px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap:30px;
+    margin-bottom:37px;
 `
+const Footer = styled.footer`
+    display: flex;
+    margin-bottom:78px;
+`
+
+const ChatBoxContent = styled.div`
+    margin-left: auto;
+    margin-bottom: 37px;
+`
+

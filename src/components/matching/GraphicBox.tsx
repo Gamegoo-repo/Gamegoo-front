@@ -25,31 +25,33 @@ const GraphicBox = (props: GraphicBoxProps) => {
 
     return (
         <>
-            <Link href={href}>
+            <StyledLink href={href} $width={width} $height={height}>
                 {/* <Image
                     src='/assets/icons/logo.svg'
                     width={1206}
                     height={227}
                     alt='graphic' /> */}
-                <Box $width={width} $height={height}>
+                <Box>
                     <Title $top={top} $left={left}>{children}</Title>
                 </Box>
 
-            </Link>
+            </StyledLink>
         </>
     )
 }
 
 export default GraphicBox;
 
-const Box = styled.div<{ $width: string, $height: string }>`
+const StyledLink = styled(Link)<{ $width: string, $height: string }>`
     position: relative;
-    width:  ${(props) => props.$width ? props.$width : undefined};
+    /* max-width:  ${(props) => props.$width ? props.$width : undefined}; */
+    width:100%;
     height: ${(props) => props.$height};
     background: #D1CAFF;
     border-radius: 30px;
-    margin-bottom: 30px;
 `
+
+const Box =styled.div``
 
 const Title = styled.h1<{ $top: string, $left: string }>`
     position: absolute;
