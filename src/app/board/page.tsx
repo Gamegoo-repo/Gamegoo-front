@@ -93,7 +93,6 @@ const BoardPage = () => {
                                             alt={image.name}
                                             unoptimized
                                         />
-                                        {/* <TierRandom /> */}
                                     </PositionButton>
                                 )
                             })}
@@ -216,7 +215,7 @@ const MicButton = styled.button`
     cursor: pointer;
 `
 
-const SecondBlock = styled.div`  `
+const SecondBlock = styled.div``
 
 const Main = styled.main`
     max-width:1440px;

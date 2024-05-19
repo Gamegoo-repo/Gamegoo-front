@@ -28,15 +28,7 @@ interface TableProps {
 
 const Table = (props: TableProps) => {
     const { title, content } = props;
-    function setPosition(tier: number) {
-        switch (tier) {
-            case 0:
-                return '/assets/icons/position_main.svg';
-            case 1:
-                return '/assets/icons/position_sub.svg';
 
-        }
-    }
     return (
         <TableWrapper>
             <TableHead>
@@ -48,8 +40,6 @@ const Table = (props: TableProps) => {
             </TableHead>
             <TableContent>
                 {content.map(value => {
-                    const position_main = setPosition(value.main_position);
-
                     return (
                         <Row key={value.id}>
                             <First className="table_width">
@@ -65,6 +55,7 @@ const Table = (props: TableProps) => {
                                 <P>LV.{value.manner_lev}</P>
                             </Second>
                             <Third className="table_width">
+                                {/* TODO 추후 이미지 변경 필요 */}
                                 <Image
                                     src="/assets/icons/tier_bronze.svg"
                                     width={26}
@@ -74,27 +65,27 @@ const Table = (props: TableProps) => {
                                 <P>{value.tier}</P>
                             </Third>
                             <Fourth className="table_width">
-                                <P>{value.main_position}</P>
-                                <P>{value.sub_position}</P>
-                                {/* <Image
-                                    src={position_main}
+                                {/* TODO 추후 변경 필요 */}
+                                <Image
+                                    src={value.main_position === 0 ? '/assets/icons/position4.svg' : '/assets/icons/position2.svg'}
                                     width={35}
                                     height={28}
-                                    alt="main position icon"
+                                    alt="main position image"
                                 />
                                 <Image
-                                    src={$h.setPosition(value.sub_position)}
-                                    width={26}
-                                    height={25}
-                                    alt="sub position icon"
-                                /> */}
+                                    src={value.sub_position === 0 ? '/assets/icons/position3.svg' : '/assets/icons/position5.svg'}
+                                    width={35}
+                                    height={28}
+                                    alt="main position image"
+                                />
                             </Fourth>
                             <Fifth className="table_width">
+                                {/* TODO 추후 변경 필요 */}
                                 <Image
                                     src='/assets/icons/position3.svg'
                                     width={26}
                                     height={25}
-                                    alt="sub position icon"
+                                    alt="sub position image"
                                 />
                             </Fifth>
                             <Sixth className="table_width">
@@ -168,32 +159,8 @@ const Title = styled.p`
         text-align: left;
     }  
 `
-const TableContent = styled.div`
-/* .table_width {
- &:first-child{
-        width: 17%;
-    
-}
-&:nth-child(2){
-        width: 13%;
-}
-&:nth-child(3){
-        width: 10%;
-}
-&:nth-child(4){
-        width: 12%;
-}
-&:nth-child(5){
-        width: 13%;
-}
-&:nth-child(6){
-        width: 20%;
-}
-&:nth-child(7){
-        width: 9%;
-}
-    }  */
-`
+const TableContent = styled.div``
+
 const Row = styled.div`
     display: flex;
     align-items: center;
@@ -201,7 +168,6 @@ const Row = styled.div`
     padding:22px 21px;
     border-bottom: 1px solid #D4D4D4;
     cursor: pointer;
-
 `
 
 const First = styled.div`
@@ -210,7 +176,7 @@ const First = styled.div`
     gap:22px;
 `
 const Second = styled.div`
-    p{
+    p {
         color:${theme.colors.purple100};
         ${(props) => props.theme.fonts.bold16};
     }
@@ -220,7 +186,6 @@ const Third = styled.div`
     align-items: center;
     justify-content: center;
     gap:2px;
-
 `
 const Fourth = styled.div`
     display: flex;

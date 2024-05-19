@@ -7,13 +7,21 @@ interface msgCountProps {
   count: number;
 }
 
-let _width = 418;
-let _height = 716;
-let _left = Math.ceil((window.screen.width - _width) / 2);
-let _top = Math.ceil((window.screen.height - _height) / 2);
+let _width: number;
+let _height: number;
+let _left: number;
+let _top: number;
 
 const ChatBox = (props: msgCountProps) => {
   const chatRef = useRef<Window | null>(null);
+
+  useEffect(() => {
+    _width = 418;
+    _height = 716;
+    _left = Math.ceil((window.screen.width - _width) / 2);
+    _top = Math.ceil((window.screen.height - _height) / 2);
+  }, []);
+
   const toggleChat = () => {
     if (chatRef.current && !chatRef.current.closed) {
       chatRef.current.close();
@@ -35,19 +43,17 @@ const ChatBox = (props: msgCountProps) => {
   }, []);
 
   return (
-    <div onClick={toggleChat}>
-      <MsgButton>
-        <Image
-          src='/assets/icons/chat_box.svg'
-          width={36}
-          height={34}
-          alt='chat box'
-        />
-        <MsgCount>
-          <Count>{props.count}</Count>
-        </MsgCount>
-      </MsgButton>
-    </div>
+    <MsgButton onClick={toggleChat}>
+      <Image
+        src='/assets/icons/chat_box.svg'
+        width={36}
+        height={34}
+        alt='chat box'
+      />
+      <MsgCount>
+        <Count>{props.count}</Count>
+      </MsgCount>
+    </MsgButton>
   )
 };
 
