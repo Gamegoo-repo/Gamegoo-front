@@ -115,6 +115,12 @@ const Table = (props: TableProps) => {
 
 export default Table;
 
+const Flex = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+`
+
 const TableWrapper = styled.div`
     width: 100%;
     text-align: center;
@@ -140,13 +146,14 @@ const TableWrapper = styled.div`
     &:nth-child(7){
             width: 9%;
     }
+    &:last-child{
+        width: 11%;
+    }
         }
 
 `
-const TableHead = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+
+const TableHead = styled(Flex)`
     padding:14px 21px;
     ${(props) => props.theme.fonts.bold16};
     background:#5C5C5C;
@@ -161,10 +168,7 @@ const Title = styled.p`
 `
 const TableContent = styled.div``
 
-const Row = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+const Row = styled(Flex)`
     padding:22px 21px;
     border-bottom: 1px solid #D4D4D4;
     cursor: pointer;
@@ -181,23 +185,15 @@ const Second = styled.div`
         ${(props) => props.theme.fonts.bold16};
     }
 `
-const Third = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
+const Third = styled(Flex)`
     gap:2px;
 `
-const Fourth = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
+const Fourth = styled(Flex)`
     gap:21px;
 `
-const Fifth = styled.div``
-const Sixth = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
+const Fifth = styled(Flex)``
+
+const Sixth = styled(Flex)`
     gap:5px;
 `
 const Seventh = styled.div``

@@ -31,12 +31,12 @@ const BOARD_TITLE = [
 ];
 
 const BOARD_CONTENT = [
-    { id: 1, image: '/assets/icons/gray_circle.svg', account: '소환사명1', manner_lev: 5, tier: 'UR', main_position: 0, sub_position: 1, hope_position: 1, champion: ['/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg'], odds: 32, date: '20분 전' },
-    { id: 2, image: '/assets/icons/gray_circle.svg', account: '소환사명1', manner_lev: 5, tier: 'UR', main_position: 0, sub_position: 1, hope_position: 1, champion: ['/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg'], odds: 97, date: '20분 전' },
-    { id: 3, image: '/assets/icons/gray_circle.svg', account: '소환사명1', manner_lev: 5, tier: 'UR', main_position: 0, sub_position: 1, hope_position: 1, champion: ['/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg'], odds: 50, date: '20분 전' },
-    { id: 4, image: '/assets/icons/gray_circle.svg', account: '소환사명1', manner_lev: 5, tier: 'UR', main_position: 0, sub_position: 1, hope_position: 1, champion: ['/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg'], odds: 32, date: '20분 전' },
-    { id: 5, image: '/assets/icons/gray_circle.svg', account: '소환사명1', manner_lev: 5, tier: 'UR', main_position: 0, sub_position: 1, hope_position: 1, champion: ['/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg'], odds: 60, date: '20분 전' },
-    { id: 6, image: '/assets/icons/gray_circle.svg', account: '소환사명1', manner_lev: 5, tier: 'UR', main_position: 0, sub_position: 1, hope_position: 1, champion: ['/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg'], odds: 32, date: '20분 전' }
+    { id: 1, image: '/assets/icons/gray_circle.svg', account: '소환사명1', manner_lev: 5, tier: 'UR', main_position: 0, sub_position: 1, hope_position: 1, champion: ['/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg'], odds: 32, date: '2024-05-20 02:59' },
+    { id: 2, image: '/assets/icons/gray_circle.svg', account: '소환사명1', manner_lev: 5, tier: 'UR', main_position: 0, sub_position: 1, hope_position: 1, champion: ['/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg'], odds: 97, date: '2024-05-20 01:39' },
+    { id: 3, image: '/assets/icons/gray_circle.svg', account: '소환사명1', manner_lev: 5, tier: 'UR', main_position: 0, sub_position: 1, hope_position: 1, champion: ['/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg'], odds: 50, date: '2024-05-19 23:27' },
+    { id: 4, image: '/assets/icons/gray_circle.svg', account: '소환사명1', manner_lev: 5, tier: 'UR', main_position: 0, sub_position: 1, hope_position: 1, champion: ['/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg'], odds: 32, date: '2024-05-19 03:27' },
+    { id: 5, image: '/assets/icons/gray_circle.svg', account: '소환사명1', manner_lev: 5, tier: 'UR', main_position: 0, sub_position: 1, hope_position: 1, champion: ['/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg'], odds: 60, date: '2024-05-18 12:27' },
+    { id: 6, image: '/assets/icons/gray_circle.svg', account: '소환사명1', manner_lev: 5, tier: 'UR', main_position: 0, sub_position: 1, hope_position: 1, champion: ['/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg'], odds: 32, date: '2024-04-04 23:27' }
 ];
 
 const POSITION_IMAGES = [
