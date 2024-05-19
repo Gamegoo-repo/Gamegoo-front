@@ -24,7 +24,7 @@ const Header = () => {
             />
           </Link>
           <Menus>
-            <Menu href="match" selected={pathname === "/match"}>
+            <Menu href="match" selected={pathname === "/match" || pathname === "/game-mode"}>
               바로 매칭
             </Menu>
             <Bar />
@@ -76,7 +76,7 @@ const Menus = styled.div`
   display: flex;
   gap: 25px;
 `;
-const Menu = styled(Link)<HeaderProps>`
+const Menu = styled(Link) <HeaderProps>`
   font-weight: ${({ selected }) => (selected ? "700" : "400")};
 `;
 
