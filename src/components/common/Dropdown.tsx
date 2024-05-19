@@ -3,25 +3,24 @@ import { useState } from "react";
 import { theme } from "@/styles/theme";
 import styled from "styled-components";
 
-const DROP_DATA = [
-    { id: null, value: '솔로 랭크' },
-    { id: 1, value: '솔로 랭크1' },
-    { id: 2, value: '솔로 랭크3' },
-    { id: 3, value: '솔로 랭크3' },
-];
+interface ListProps {
+    id: number;
+    value: string;
+};
 
 interface DropdownProps {
-    type: string;
+    type: 'type1' | 'type2';
+    name: string;
+    list: ListProps[];
     width: string;
     fontSize: string;
     bgColor: string;
 }
 
 const Dropdown = (props: DropdownProps) => {
-    // type === 'type1', 'type2'
-    const { type, width, fontSize, bgColor } = props;
+    const { type, name, list, width, fontSize, bgColor } = props;
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedOption, setSelectedOption] = useState<string>('솔로 탱크');
+    const [selectedOption, setSelectedOption] = useState<string>(name);
 
     const toggling = () => setIsOpen((prevState) => !prevState);
 
@@ -32,7 +31,7 @@ const Dropdown = (props: DropdownProps) => {
     };
 
     return (
-        <div>
+        <Wrapper>
             <DropdownHeader
                 onClick={toggling}
                 $type={type}
@@ -40,7 +39,7 @@ const Dropdown = (props: DropdownProps) => {
                 $fontSize={fontSize}
                 $bgColor={bgColor}>
                 <Title type={type}>
-                    {selectedOption || '솔로 랭크'}
+                    {selectedOption || name}
                 </Title>
                 <Image
                     src='/assets/icons/down_arrow.svg'
@@ -49,13 +48,13 @@ const Dropdown = (props: DropdownProps) => {
                     alt='down-arrow' />
             </DropdownHeader>
             {isOpen && (
-                <div>
+                <DropBox>
                     <DropdownListContent
                         $type={type}
                         $width={width}
                         $bgColor={bgColor}
                     >
-                        {DROP_DATA.map(data => (
+                        {list.map(data => (
                             <ListItem
                                 onClick={() => handleDropValue(data.value)} key={data.id}
                                 className={type}
@@ -66,14 +65,18 @@ const Dropdown = (props: DropdownProps) => {
                             </ListItem>
                         ))}
                     </DropdownListContent>
-                </div>
+                </DropBox>
             )}
-        </div>
+        </Wrapper>
     )
 };
 
 export default Dropdown;
 
+
+const Wrapper = styled.div`
+    
+`
 
 const DropdownHeader = styled.div<{ $type: string, $width: string, $fontSize: string, $bgColor: string }>`
   display: flex;
@@ -99,6 +102,12 @@ const DropdownHeader = styled.div<{ $type: string, $width: string, $fontSize: st
 const Title = styled.p<{ type: string }>`
   padding-right: ${(props) => props.type === 'type1' ? '20px' : '120px'};
 `;
+
+const DropBox = styled.div`
+    position: absolute;
+    background: ${theme.colors.white};
+    z-index:1;
+`
 
 const DropdownListContent = styled.ul<{ $type: string, $width: string, $bgColor: string }>`
   padding: 0;
