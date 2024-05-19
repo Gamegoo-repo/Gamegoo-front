@@ -5,6 +5,7 @@ import Image from "next/image";
 import { theme } from "@/styles/theme";
 import Button from "@/components/common/Button";
 import Dropdown from "@/components/common/Dropdown";
+import Table from "@/components/board/Table";
 
 const DROP_DATA1 = [
     { id: 1, value: '솔로1' },
@@ -116,6 +117,10 @@ const BoardPage = () => {
                 </SecondRow>
             </Header>
             <Main>
+                <Table
+                    title={BOARD_TITLE}
+                    content={BOARD_CONTENT}
+                />
             </Main>
             <Footer>
                 페이지네이션
