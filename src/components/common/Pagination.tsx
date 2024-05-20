@@ -3,48 +3,47 @@ import Image from "next/image";
 import styled from "styled-components";
 
 interface PaginationProps {
-    total: number;
-    limit: number;
-    page: number;
-    setPage: any;
-};
-const MAX_PAGE_COUNT = 5;
+    currentPage: number;
+    totalItems: number;
+    itemsPerPage: number;
+    pageButtonCount: number;
+    onPageChange: (page: number) => void;
+}
 
 const Pagination = (props: PaginationProps) => {
-    const { total, limit, page, setPage } = props;
+    const {
+        currentPage,
+        totalItems,
+        itemsPerPage,
+        pageButtonCount,
+        onPageChange } = props;
 
-    const numPages = Math.ceil(total / limit);
-    let firstPage = Math.ceil((page / MAX_PAGE_COUNT) - 1) * MAX_PAGE_COUNT;
-    let lastPage = firstPage + 5;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-    if (numPages < lastPage) {
-        lastPage = numPages;
-    }
+    const getPageNumbers = () => {
+        const pages = [];
+        const halfPageButtonCount = Math.floor(pageButtonCount / 2);
+        let startPage = Math.max(1, currentPage - halfPageButtonCount);
+        let endPage = Math.min(totalPages, currentPage + halfPageButtonCount);
 
-    const getPaginationArray = (startPage: number, pageLength: number) => {
-        let pageNumbers: number[] = [];
-
-        if ((startPage + 1) % MAX_PAGE_COUNT === 1) {
-            let idx = 1;
-            pageNumbers = [startPage];
-            while (pageNumbers.length < MAX_PAGE_COUNT && startPage + idx < pageLength) {
-                pageNumbers.push(startPage + idx);
-                idx++;
-            }
-        } else if (startPage % MAX_PAGE_COUNT === MAX_PAGE_COUNT - 1) {
-            let idx = 1;
-            pageNumbers = [startPage];
-            while (pageNumbers.length < MAX_PAGE_COUNT) {
-                pageNumbers.unshift(startPage - idx);
-                idx++;
-            }
+        if (endPage - startPage + 1 < pageButtonCount) {
+            startPage = Math.max(1, endPage - pageButtonCount + 1);
         }
-        return pageNumbers;
+
+        for (let i = startPage; i <= endPage; i++) {
+            pages.push(i);
+        }
+
+        return pages;
     };
+
     return (
         <>
             <Wrapper>
-                <Button>
+                <Button
+                    disabled={currentPage === 1}
+                    onClick={() => onPageChange(1)}
+                >
                     <Image
                         src="/assets/icons/paging_left_arrow.svg"
                         width={14}
@@ -52,16 +51,17 @@ const Pagination = (props: PaginationProps) => {
                         alt="previous page" />
                 </Button>
                 <PageList>
-                    {getPaginationArray(firstPage, lastPage).map(i => {
-                        return (
-                            <PageButton key={i + 1}
-                                onClick={() => setPage(i + 1)}>
-                                {i + 1}
-                            </PageButton>
-                        )
-                    })}
+                    {getPageNumbers().map(page => (
+                        <PageButton
+                            key={page}
+                            className={page === currentPage ? 'active' : ''}
+                            onClick={() => onPageChange(page)}
+                        >
+                            {page}
+                        </PageButton>
+                    ))}
                 </PageList>
-                <Button>
+                <Button disabled={currentPage === totalPages} onClick={() => onPageChange(totalPages)}>
                     <Image
                         src="/assets/icons/paging_right_arrow.svg"
                         width={14}
@@ -82,7 +82,10 @@ const Wrapper = styled.div`
     justify-content: center;
 `
 const Button = styled.button`
-    
+    cursor: pointer;
+    &:disabled{
+        cursor: unset;
+    }
 `
 const PageList = styled.div`
     display: flex;
@@ -99,7 +102,7 @@ const PageButton = styled.button`
     &:hover{
         background: #F9F8FF;
     }
-    &:focus{
+    &.active {
         color:${theme.colors.purple100};
         ${(props) => props.theme.fonts.bold14};
     }

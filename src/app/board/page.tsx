@@ -51,9 +51,18 @@ const POSITION_IMAGES = [
 ];
 
 const BoardPage = () => {
-    const [page, setPage] = useState(1);
-    const [limit, setLimit] = useState(5);
-    const [total, setTotal] = useState(17);
+    const [currentPage, setCurrentPage] = useState(1);
+    //TODO: itemsPerPage 추후 수정
+    const itemsPerPage = 5;
+    const pageButtonCount = 5;
+
+    const indexOfLastPost = currentPage * itemsPerPage;
+    const indexOfFirstPost = indexOfLastPost - itemsPerPage;
+    const currentPosts = BOARD_CONTENT.slice(indexOfFirstPost, indexOfLastPost);
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+    };
 
     return (
         <Wrapper>
@@ -124,15 +133,17 @@ const BoardPage = () => {
             <Main>
                 <Table
                     title={BOARD_TITLE}
-                    content={BOARD_CONTENT}
+                    content={currentPosts}
                 />
             </Main>
             <Footer>
                 <Pagination
-                    total={total}
-                    limit={limit}
-                    page={page}
-                    setPage={setPage} />
+                    currentPage={currentPage}
+                    totalItems={BOARD_CONTENT.length}
+                    itemsPerPage={itemsPerPage}
+                    pageButtonCount={pageButtonCount}
+                    onPageChange={handlePageChange}
+                />
             </Footer>
         </Wrapper>
     )
