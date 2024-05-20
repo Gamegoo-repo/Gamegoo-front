@@ -87,7 +87,7 @@ const DropdownHeader = styled.div<{ $type: string, $width: string, $fontSize: st
             : `${theme.fonts.medium16}`};
   color:${theme.colors.black};
   border-radius: 10px;
-  padding:18px 0;
+  padding:16.5px 0;
   padding-left: 1em;
   background: ${(props) => props.$bgColor};
   border:${({ $type }) =>

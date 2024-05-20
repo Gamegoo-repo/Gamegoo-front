@@ -8,6 +8,7 @@ import Dropdown from "@/components/common/Dropdown";
 import Table from "@/components/board/Table";
 import Pagination from "@/components/common/Pagination";
 import { useState } from "react";
+import PositionFilter from "@/components/board/PositionFilter";
 
 const DROP_DATA1 = [
     { id: 1, value: '솔로1' },
@@ -64,6 +65,15 @@ const BoardPage = () => {
         setCurrentPage(page);
     };
 
+    const [fillColor, setFillColor] = useState('#000');
+    const [isPosition, setIsPosition] = useState(0);
+    const handlePositionFilter = (id: number) => {
+        setIsPosition(id);
+    }
+
+
+
+
     return (
         <Wrapper>
             <Header>
@@ -95,7 +105,7 @@ const BoardPage = () => {
                             list={DROP_DATA2}
                         />
                         <PositionBox>
-                            {POSITION_IMAGES.map(image => {
+                            {/* {POSITION_IMAGES.map(image => {
                                 return (
                                     <PositionButton
                                         key={image.id}
@@ -110,7 +120,11 @@ const BoardPage = () => {
                                         />
                                     </PositionButton>
                                 )
-                            })}
+                            })} */}
+                            <PositionFilter
+                                onPositionFilter={handlePositionFilter}
+                                isPosition={isPosition}
+                            />
                         </PositionBox>
                         <MicButton>
                             <Image
@@ -195,7 +209,6 @@ const PositionBox = styled.div`
     border-radius: 10px;
 `
 const PositionButton = styled.button`
-    cursor: pointer;
     &:focus{
         background: ${theme.colors.purple100};
     }
@@ -229,11 +242,9 @@ const PositionImage = styled(Image)`
 // `;
 
 const MicButton = styled.button`
-    width: 56px;
     padding:15px 17px;
     border-radius: 10px;
     background: ${theme.colors.purple100};
-    cursor: pointer;
 `
 
 const SecondBlock = styled.div``

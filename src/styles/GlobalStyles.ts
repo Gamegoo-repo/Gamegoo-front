@@ -27,6 +27,7 @@ li {
 }
 
 button {
+  cursor:pointer;
   border: none;
   background: transparent;
 }

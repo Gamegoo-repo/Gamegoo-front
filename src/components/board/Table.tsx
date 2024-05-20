@@ -50,6 +50,7 @@ const Table = (props: TableProps) => {
             </TableHead>
             <TableContent>
                 {content.map(value => {
+
                     return (
                         <Row key={value.id}>
                             <First className="table_width">

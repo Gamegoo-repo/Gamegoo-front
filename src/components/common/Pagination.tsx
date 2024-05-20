@@ -82,7 +82,6 @@ const Wrapper = styled.div`
     justify-content: center;
 `
 const Button = styled.button`
-    cursor: pointer;
     &:disabled{
         cursor: unset;
     }
@@ -94,7 +93,6 @@ const PageList = styled.div`
     margin:0 36px;
 `
 const PageButton = styled.button`
-    cursor: pointer;
     color:#A1A1A8;
     padding:8px 11px;
     border-radius: 9px;
