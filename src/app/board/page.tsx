@@ -61,15 +61,20 @@ const BoardPage = () => {
     const indexOfFirstPost = indexOfLastPost - itemsPerPage;
     const currentPosts = BOARD_CONTENT.slice(indexOfFirstPost, indexOfLastPost);
 
+    const [isPosition, setIsPosition] = useState(0);
+    const [micOn, setMicOn] = useState(true);
+
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
 
-    const [fillColor, setFillColor] = useState('#000');
-    const [isPosition, setIsPosition] = useState(0);
     const handlePositionFilter = (id: number) => {
         setIsPosition(id);
-    }
+    };
+
+    const handleMic = () => {
+        setMicOn((prevStatus) => !prevStatus);
+    };
 
 
 
@@ -126,7 +131,9 @@ const BoardPage = () => {
                                 isPosition={isPosition}
                             />
                         </PositionBox>
-                        <MicButton>
+                        <MicButton
+                            onClick={handleMic}
+                            className={micOn ? 'clicked' : 'unClicked'}>
                             <Image
                                 src='/assets/icons/mic.svg'
                                 width={21}
@@ -242,9 +249,14 @@ const PositionImage = styled(Image)`
 // `;
 
 const MicButton = styled.button`
-    padding:15px 17px;
+    padding:13px 17px;
     border-radius: 10px;
-    background: ${theme.colors.purple100};
+    &.clicked{
+        background: ${theme.colors.purple100};
+    }
+    &.unClicked{
+        background: ${theme.colors.gray300};
+    }
 `
 
 const SecondBlock = styled.div``

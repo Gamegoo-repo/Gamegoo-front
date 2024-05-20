@@ -87,11 +87,9 @@ const Button = styled.button`
     border-right: 1px solid #E4E4E4;
 
     &:first-child{
-        padding-left:15px;
         border-radius: 10px 0 0 10px;
     }
     &:last-child{
-        padding-right:15px;
         border-right:unset;
         border-radius: 0 10px 10px 0;
     }

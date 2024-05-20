@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import dayjs from "@/libs/dayjs";
+import { setPositionImg } from "@/utils/custom";
 
 interface TableTitleProps {
     id: number;
@@ -50,7 +51,8 @@ const Table = (props: TableProps) => {
             </TableHead>
             <TableContent>
                 {content.map(value => {
-
+                    // const mainPositionSrc=`/assets/icons/${value.main_position}.svg`;
+                    const mainPositionSrc = setPositionImg(value.main_position);
                     return (
                         <Row key={value.id}>
                             <First className="table_width">
@@ -77,8 +79,14 @@ const Table = (props: TableProps) => {
                             </Third>
                             <Fourth className="table_width">
                                 {/* TODO 추후 변경 필요 */}
-                                <Image
+                                {/* <Image
                                     src={value.main_position === 0 ? '/assets/icons/position4.svg' : '/assets/icons/position2.svg'}
+                                    width={35}
+                                    height={28}
+                                    alt="main position image"
+                                /> */}
+                                <Image
+                                    src={mainPositionSrc}
                                     width={35}
                                     height={28}
                                     alt="main position image"
