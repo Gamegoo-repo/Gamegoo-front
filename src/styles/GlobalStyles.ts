@@ -21,7 +21,8 @@ a {
 }
 
 ol,
-ul {
+ul,
+li {
   list-style: none;
 }
 

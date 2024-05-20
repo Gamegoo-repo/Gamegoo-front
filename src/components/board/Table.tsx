@@ -84,8 +84,8 @@ const Table = (props: TableProps) => {
                                 />
                                 <Image
                                     src={value.sub_position === 0 ? '/assets/icons/position3.svg' : '/assets/icons/position5.svg'}
-                                    width={35}
-                                    height={28}
+                                    width={26}
+                                    height={25}
                                     alt="main position image"
                                 />
                             </Fourth>
@@ -125,12 +125,6 @@ const Table = (props: TableProps) => {
 
 export default Table;
 
-const Flex = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-`
-
 const TableWrapper = styled.div`
     width: 100%;
     text-align: center;
@@ -157,13 +151,15 @@ const TableWrapper = styled.div`
             width: 9%;
     }
     &:last-child{
-        width: 11%;
+            width: 11%;
     }
         }
 
 `
-
-const TableHead = styled(Flex)`
+const TableHead = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding:14px 21px;
     ${(props) => props.theme.fonts.bold16};
     background:#5C5C5C;
@@ -173,15 +169,20 @@ const TableHead = styled(Flex)`
 
 const Title = styled.p`
     &:first-child{
-        text-align: left;
+      text-align: left;
     }  
 `
+
 const TableContent = styled.div``
 
-const Row = styled(Flex)`
+const Row = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding:22px 21px;
     border-bottom: 1px solid #D4D4D4;
-    cursor: pointer;
+    cursor: pointer;    
+
 `
 
 const First = styled.div`
@@ -194,31 +195,43 @@ const Second = styled.div`
         color:${theme.colors.purple100};
         ${(props) => props.theme.fonts.bold16};
     }
+
 `
-const Third = styled(Flex)`
+const Third = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
     gap:2px;
+
 `
-const Fourth = styled(Flex)`
+const Fourth = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
     gap:21px;
 `
-const Fifth = styled(Flex)``
-
-const Sixth = styled(Flex)`
+const Fifth = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`
+const Sixth = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
     gap:5px;
 `
 const Seventh = styled.div``
 const Eighth = styled.div``
-
 const P = styled.p`
     ${(props) => props.theme.fonts.medium16};
     color:${theme.colors.black};
     &.emph{
         color:${theme.colors.purple100};
         ${(props) => props.theme.fonts.bold16};
-
     }
     &.basic{
     color:${theme.colors.black};
     ${(props) => props.theme.fonts.medium16};
-}
+    }
 `

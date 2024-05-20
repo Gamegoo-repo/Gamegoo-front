@@ -6,6 +6,8 @@ import { theme } from "@/styles/theme";
 import Button from "@/components/common/Button";
 import Dropdown from "@/components/common/Dropdown";
 import Table from "@/components/board/Table";
+import Pagination from "@/components/common/Pagination";
+import { useState } from "react";
 
 const DROP_DATA1 = [
     { id: 1, value: '솔로1' },
@@ -49,6 +51,10 @@ const POSITION_IMAGES = [
 ];
 
 const BoardPage = () => {
+    const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(5);
+    const [total, setTotal] = useState(17);
+
     return (
         <Wrapper>
             <Header>
@@ -122,7 +128,11 @@ const BoardPage = () => {
                 />
             </Main>
             <Footer>
-                페이지네이션
+                <Pagination
+                    total={total}
+                    limit={limit}
+                    page={page}
+                    setPage={setPage} />
             </Footer>
         </Wrapper>
     )
@@ -227,4 +237,5 @@ const Main = styled.main`
 const Footer = styled.footer`
     max-width:1440px;
     width: 100%;
+    margin-bottom: 123px;
     `
