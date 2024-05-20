@@ -4,7 +4,8 @@ import { useState } from "react";
 import styled from "styled-components";
 import smileIcon from "../../../public/assets/icons/smile.svg";
 import sadIcon from "../../../public/assets/icons/sad.svg";
-import clickedSadIcon from "../../../public/assets/icons/clicked_smile.svg";
+import clickedSadIcon from "../../../public/assets/icons/clicked_sad.svg";
+import clickedSmileIcon from "../../../public/assets/icons/clicked_smile.svg";
 
 interface ConfirmModalProps {
     type: 'yesOrNo' | 'confirm' | 'img';
@@ -44,7 +45,7 @@ const ConfirmModal = (props: ConfirmModalProps) => {
                             <ImageWrapper>
                                 <ClickArea onClick={handleMannerEvaluate}>
                                     <Image
-                                        src={mannerStatus ? clickedSadIcon : smileIcon}
+                                        src={mannerStatus ? clickedSmileIcon : smileIcon}
                                         width={33}
                                         height={33}
                                         alt="smile icon" />
