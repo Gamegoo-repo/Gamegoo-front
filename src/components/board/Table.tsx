@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import dayjs from "@/libs/dayjs";
-import { setPositionImg } from "@/utils/custom";
+import { setPositionImg, setTierImg } from "@/utils/custom";
 
 interface TableTitleProps {
     id: number;
@@ -14,6 +14,7 @@ interface TableContentProps {
     image: string;
     account: string;
     manner_lev: number;
+    tierImg: number;
     tier: string;
     main_position: number;
     sub_position: number;
@@ -51,8 +52,6 @@ const Table = (props: TableProps) => {
             </TableHead>
             <TableContent>
                 {content.map(value => {
-                    // const mainPositionSrc=`/assets/icons/${value.main_position}.svg`;
-                    const mainPositionSrc = setPositionImg(value.main_position);
                     return (
                         <Row key={value.id}>
                             <First className="table_width">
@@ -68,9 +67,8 @@ const Table = (props: TableProps) => {
                                 <P>LV.{value.manner_lev}</P>
                             </Second>
                             <Third className="table_width">
-                                {/* TODO 추후 이미지 변경 필요 */}
                                 <Image
-                                    src="/assets/icons/tier_bronze.svg"
+                                    src={setTierImg(value.tierImg)}
                                     width={26}
                                     height={13}
                                     alt="profile image"

@@ -34,21 +34,12 @@ const BOARD_TITLE = [
 ];
 
 const BOARD_CONTENT = [
-    { id: 1, image: '/assets/icons/gray_circle.svg', account: '소환사명1', manner_lev: 5, tier: 'UR', main_position: 0, sub_position: 1, hope_position: 1, champion: ['/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg'], odds: 32, date: '2024-05-20 02:59' },
-    { id: 2, image: '/assets/icons/gray_circle.svg', account: '소환사명1', manner_lev: 5, tier: 'UR', main_position: 0, sub_position: 1, hope_position: 1, champion: ['/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg'], odds: 97, date: '2024-05-20 01:39' },
-    { id: 3, image: '/assets/icons/gray_circle.svg', account: '소환사명1', manner_lev: 5, tier: 'UR', main_position: 0, sub_position: 1, hope_position: 1, champion: ['/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg'], odds: 50, date: '2024-05-19 23:27' },
-    { id: 4, image: '/assets/icons/gray_circle.svg', account: '소환사명1', manner_lev: 5, tier: 'UR', main_position: 0, sub_position: 1, hope_position: 1, champion: ['/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg'], odds: 32, date: '2024-05-19 03:27' },
-    { id: 5, image: '/assets/icons/gray_circle.svg', account: '소환사명1', manner_lev: 5, tier: 'UR', main_position: 0, sub_position: 1, hope_position: 1, champion: ['/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg'], odds: 60, date: '2024-05-18 12:27' },
-    { id: 6, image: '/assets/icons/gray_circle.svg', account: '소환사명1', manner_lev: 5, tier: 'UR', main_position: 0, sub_position: 1, hope_position: 1, champion: ['/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg'], odds: 32, date: '2024-04-04 23:27' }
-];
-
-const POSITION_IMAGES = [
-    { id: 1, image: '/assets/icons/position1.svg', name: 'random' },
-    { id: 2, image: '/assets/icons/position2.svg', name: 'bot' },
-    { id: 3, image: '/assets/icons/position3.svg', name: 'jungle' },
-    { id: 4, image: '/assets/icons/position4.svg', name: 'mid' },
-    { id: 5, image: '/assets/icons/position5.svg', name: 'top' },
-    { id: 6, image: '/assets/icons/position6.svg', name: 'supporter' },
+    { id: 1, image: '/assets/icons/gray_circle.svg', account: '소환사명1', manner_lev: 5, tierImg: 0, tier: 'UR', main_position: 0, sub_position: 1, hope_position: 1, champion: ['/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg'], odds: 32, date: '2024-05-20 02:59' },
+    { id: 2, image: '/assets/icons/gray_circle.svg', account: '소환사명1', manner_lev: 5, tierImg: 1, tier: 'UR', main_position: 0, sub_position: 1, hope_position: 1, champion: ['/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg'], odds: 97, date: '2024-05-20 01:39' },
+    { id: 3, image: '/assets/icons/gray_circle.svg', account: '소환사명1', manner_lev: 5, tierImg: 2, tier: 'UR', main_position: 0, sub_position: 1, hope_position: 1, champion: ['/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg'], odds: 50, date: '2024-05-19 23:27' },
+    { id: 4, image: '/assets/icons/gray_circle.svg', account: '소환사명1', manner_lev: 5, tierImg: 3, tier: 'UR', main_position: 0, sub_position: 1, hope_position: 1, champion: ['/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg'], odds: 32, date: '2024-05-19 03:27' },
+    { id: 5, image: '/assets/icons/gray_circle.svg', account: '소환사명1', manner_lev: 5, tierImg: 4, tier: 'UR', main_position: 0, sub_position: 1, hope_position: 1, champion: ['/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg'], odds: 60, date: '2024-05-18 12:27' },
+    { id: 6, image: '/assets/icons/gray_circle.svg', account: '소환사명1', manner_lev: 5, tierImg: 5, tier: 'UR', main_position: 0, sub_position: 1, hope_position: 1, champion: ['/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg', '/assets/icons/gray_circle.svg'], odds: 32, date: '2024-04-04 23:27' }
 ];
 
 const BoardPage = () => {
@@ -75,9 +66,6 @@ const BoardPage = () => {
     const handleMic = () => {
         setMicOn((prevStatus) => !prevStatus);
     };
-
-
-
 
     return (
         <Wrapper>
@@ -110,22 +98,6 @@ const BoardPage = () => {
                             list={DROP_DATA2}
                         />
                         <PositionBox>
-                            {/* {POSITION_IMAGES.map(image => {
-                                return (
-                                    <PositionButton
-                                        key={image.id}
-                                    >
-                                        <PositionImage
-                                            key={image.id}
-                                            src={image.image}
-                                            width={17}
-                                            height={17}
-                                            alt={image.name}
-                                            unoptimized
-                                        />
-                                    </PositionButton>
-                                )
-                            })} */}
                             <PositionFilter
                                 onPositionFilter={handlePositionFilter}
                                 isPosition={isPosition}
@@ -220,34 +192,6 @@ const PositionButton = styled.button`
         background: ${theme.colors.purple100};
     }
 `
-
-const PositionImage = styled(Image)`
-     &:focus{
-        /* fill:${theme.colors.white};
-        stroke:${theme.colors.white}; */
-        /* color:${theme.colors.white};
-        background: ${theme.colors.white}; */
-        fill: white;
-        stroke: white;
-    }
-
-`
-
-// const TierRandom = styled.svg`
-//   /* &:hover .path1 {
-//     fill: #E5E5E5;
-//   }
-//   &:hover .path2 {
-//     fill: #8B8B8B;
-//   }
-//   &:focus .rect1 {
-//     fill: #E5E5E5;
-//   } */
-//   &:focus {
-//     fill:${theme.colors.white};
-//   }
-// `;
-
 const MicButton = styled.button`
     padding:13px 17px;
     border-radius: 10px;
