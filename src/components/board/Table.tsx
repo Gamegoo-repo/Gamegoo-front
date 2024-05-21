@@ -78,30 +78,22 @@ const Table = (props: TableProps) => {
                                 <P>{value.tier}</P>
                             </Third>
                             <Fourth className="table_width">
-                                {/* TODO 추후 변경 필요 */}
-                                {/* <Image
-                                    src={value.main_position === 0 ? '/assets/icons/position4.svg' : '/assets/icons/position2.svg'}
-                                    width={35}
-                                    height={28}
-                                    alt="main position image"
-                                /> */}
                                 <Image
-                                    src={mainPositionSrc}
+                                    src={setPositionImg(value.main_position)}
                                     width={35}
                                     height={28}
                                     alt="main position image"
                                 />
                                 <Image
-                                    src={value.sub_position === 0 ? '/assets/icons/position3.svg' : '/assets/icons/position5.svg'}
-                                    width={26}
-                                    height={25}
+                                    src={setPositionImg(value.sub_position)}
+                                    width={35}
+                                    height={28}
                                     alt="main position image"
                                 />
                             </Fourth>
                             <Fifth className="table_width">
-                                {/* TODO 추후 변경 필요 */}
                                 <Image
-                                    src='/assets/icons/position3.svg'
+                                    src={setPositionImg(value.hope_position)}
                                     width={26}
                                     height={25}
                                     alt="sub position image"
