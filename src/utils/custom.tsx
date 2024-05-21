@@ -1,3 +1,6 @@
+import dayjs from "@/libs/dayjs";
+
+
 export function setPositionImg(position: number) {
     //TODO: api 작업 시 수정
     switch (position) {
@@ -16,7 +19,7 @@ export function setPositionImg(position: number) {
         default:
             return '/assets/icons/position_supporter_purple.svg';
     }
-}
+};
 
 export function setTierImg(tier: number) {
     //TODO: api 작업 시 수정
@@ -36,4 +39,14 @@ export function setTierImg(tier: number) {
         default:
             return '/assets/icons/tier_diamond.svg';
     }
-}
+};
+
+export function setDateFormatter(date: string) {
+    const now = dayjs();
+    const diff = now.diff(date, 'day')
+    if (diff >= 7) {
+        return dayjs(date).format("YYYY-MM-DD");
+    } else {
+        return dayjs(date).fromNow();
+    }
+};

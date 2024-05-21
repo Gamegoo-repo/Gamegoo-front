@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import dayjs from "@/libs/dayjs";
-import { setPositionImg, setTierImg } from "@/utils/custom";
+import { setDateFormatter, setPositionImg, setTierImg } from "@/utils/custom";
 
 interface TableTitleProps {
     id: number;
@@ -32,15 +32,15 @@ interface TableProps {
 const Table = (props: TableProps) => {
     const { title, content } = props;
 
-    const handleDateFormatter = (date: string) => {
-        const now = dayjs();
-        const diff = now.diff(date, 'day')
-        if (diff >= 7) {
-            return dayjs(date).format("YYYY-MM-DD");
-        } else {
-            return dayjs(date).fromNow();
-        }
-    };
+    // const handleDateFormatter = (date: string) => {
+    //     const now = dayjs();
+    //     const diff = now.diff(date, 'day')
+    //     if (diff >= 7) {
+    //         return dayjs(date).format("YYYY-MM-DD");
+    //     } else {
+    //         return dayjs(date).fromNow();
+    //     }
+    // };
     return (
         <TableWrapper>
             <TableHead>
@@ -112,7 +112,7 @@ const Table = (props: TableProps) => {
                                 <P className={value.odds >= 50 ? 'emph' : 'basic'}>{value.odds}%</P>
                             </Seventh>
                             <Eighth className="table_width">
-                                <P>{handleDateFormatter(value.date)}</P>
+                                <P>{setDateFormatter(value.date)}</P>
                             </Eighth>
                         </Row>
                     )
