@@ -6,7 +6,7 @@ import Image from "next/image";
 import styled from "styled-components";
 
 const BOXS_DATA = [
-    { id: 1, pathname: 'game-mode', width: '1206px', height: '227px', top: '36px', left: '41px', title: '바로 매칭하기' },
+    { id: 1, pathname: 'match/type', width: '1206px', height: '227px', top: '36px', left: '41px', title: '바로 매칭하기' },
     { id: 2, pathname: 'board', width: '1206px', height: '227px', top: '36px', left: '41px', title: '매칭 게시판에서 찾기' },
 ];
 
