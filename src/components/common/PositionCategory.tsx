@@ -1,37 +1,36 @@
 import { theme } from "@/styles/theme";
 import Image from "next/image";
+import { useState } from "react";
 import styled from "styled-components";
+import Random from "../../../public/assets/icons/position_random_unclicked.svg"
+import Top from "../../../public/assets/icons/position_top_unclicked.svg"
+import Jungle from "../../../public/assets/icons/position_jungle_unclicked.svg"
+import Mid from "../../../public/assets/icons/position_mid_unclicked.svg"
+import Bottom from "../../../public/assets/icons/position_bottom_unclicked.svg"
+import Supporter from "../../../public/assets/icons/position_supporter_unclicked.svg"
 
-const POSITION_ICONS = [
-    { id: 1, name: '랜덤', path: '/assets/icons/position_random_unclicked.svg', width: 19, height: 16 },
-    { id: 2, name: '원딜', path: '/assets/icons/position_bottom_unclicked.svg', width: 26, height: 25 },
-    { id: 3, name: '정글', path: '/assets/icons/position_jungle_unclicked.svg', width: 29, height: 28 },
-    { id: 4, name: '미들', path: '/assets/icons/position_mid_unclicked.svg', width: 26, height: 25 },
-    { id: 5, name: '탑', path: '/assets/icons/position_top_unclicked.svg', width: 26, height: 25 },
-    { id: 6, name: '서폿', path: '/assets/icons/position_supporter_unclicked.svg', width: 34, height: 28 }
-]
 
 interface PositionCategoryProps {
     onClose: () => void;
 }
 const PositionCategory = (props: PositionCategoryProps) => {
+    const [isClicked, setIsClicked] = useState(false);
+
+    const handleClick = () => {
+        setIsClicked(prevState => !prevState);
+    };
 
     return (
         <Overlay onClick={props.onClose}>
             <Wrapper onClick={(e) => e.stopPropagation()}>
                 <Box>
-                    {POSITION_ICONS.map(icon => {
-                        return (
-                            <StyledImage
-                                onClick={props.onClose}
-                                key={icon.id}
-                                src={icon.path}
-                                width={icon.width}
-                                height={icon.height}
-                                alt={icon.name} />
-                        )
-                    })}
-
+                    <StyledRandom  isClicked={isClicked}
+      onClick={handleClick} />
+                    <StyledTop />
+                    <StyledJungle />
+                    <StyledMid />
+                    <StyledBottom />
+                    <StyledSupporter />
                 </Box>
             </Wrapper>
         </Overlay>
@@ -75,16 +74,35 @@ const Box = styled.div`
 }
 `
 
-const StyledImage = styled(Image)`
-   cursor: pointer;
-   &:hover{
-    /* filter: invert(59%) sepia(13%) saturate(1769%) hue-rotate(208deg) brightness(101%) contrast(95%); */
-    path1 {
+const StyledRandom = styled(Random)`
+    &:hover path{
+        stroke:#9F90F9;
+    }
+
+`
+
+const StyledTop = styled(Top)`
+    &:hover path:first-child{
         fill:#9F90F9;
     }
-   }
-   &:active,
-   &:focus{
-    filter: invert(18%) sepia(64%) saturate(1326%) hue-rotate(223deg) brightness(97%) contrast(89%);
-   }
 `
+
+const StyledJungle = styled(Jungle)`
+    &:hover path{
+        fill:#9F90F9;
+    }`
+
+const StyledMid = styled(Mid)`
+    &:hover path:nth-child(2){
+        fill:#9F90F9;
+    }`
+
+const StyledBottom = styled(Bottom)`
+    &:hover path:nth-child(2){
+        fill:#9F90F9;
+    }`
+
+const StyledSupporter = styled(Supporter)`
+    &:hover path{
+        fill:#9F90F9;
+    }`
