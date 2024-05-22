@@ -3,12 +3,12 @@ import Image from "next/image";
 import styled from "styled-components";
 
 const POSITION_ICONS = [
-    { id: 1, name: '랜덤', path: '/assets/icons/position1.svg', width: 19, height: 16 },
-    { id: 2, name: '원딜', path: '/assets/icons/position2.svg', width: 26, height: 25 },
-    { id: 3, name: '정글', path: '/assets/icons/position3.svg', width: 29, height: 28 },
-    { id: 4, name: '미들', path: '/assets/icons/position4.svg', width: 26, height: 25 },
-    { id: 5, name: '탑', path: '/assets/icons/position5.svg', width: 26, height: 25 },
-    { id: 6, name: '서폿', path: '/assets/icons/position6.svg', width: 34, height: 28 }
+    { id: 1, name: '랜덤', path: '/assets/icons/position_random_unclicked.svg', width: 19, height: 16 },
+    { id: 2, name: '원딜', path: '/assets/icons/position_bottom_unclicked.svg', width: 26, height: 25 },
+    { id: 3, name: '정글', path: '/assets/icons/position_jungle_unclicked.svg', width: 29, height: 28 },
+    { id: 4, name: '미들', path: '/assets/icons/position_mid_unclicked.svg', width: 26, height: 25 },
+    { id: 5, name: '탑', path: '/assets/icons/position_top_unclicked.svg', width: 26, height: 25 },
+    { id: 6, name: '서폿', path: '/assets/icons/position_supporter_unclicked.svg', width: 34, height: 28 }
 ]
 
 interface PositionCategoryProps {
@@ -78,7 +78,10 @@ const Box = styled.div`
 const StyledImage = styled(Image)`
    cursor: pointer;
    &:hover{
-    filter: invert(27%) sepia(5%) saturate(27%) hue-rotate(6deg) brightness(100%) contrast(89%);
+    /* filter: invert(59%) sepia(13%) saturate(1769%) hue-rotate(208deg) brightness(101%) contrast(95%); */
+    path1 {
+        fill:#9F90F9;
+    }
    }
    &:active,
    &:focus{
