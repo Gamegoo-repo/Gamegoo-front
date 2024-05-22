@@ -24,7 +24,7 @@ const Header = () => {
             />
           </Link>
           <Menus>
-            <Menu href="match" selected={pathname === "/match" || pathname === "/game-mode"}>
+            <Menu href="/match" selected={pathname === "/match" || pathname === '/match/type' || pathname === "/game-mode"}>
               바로 매칭
             </Menu>
             <Bar />
