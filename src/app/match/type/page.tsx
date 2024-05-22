@@ -3,12 +3,7 @@
 import styled from "styled-components";
 import ChatBox from "@/components/common/ChatBox";
 import GraphicBox from "@/components/match/GraphicBox";
-
-
-const MATCH_MODE_DATA = [
-    { id: 1, type:'fun',pathname: '/game-mode', width: '600px', height: '380px', top: '50%', left: '50%', title: '즐겜' },
-    { id: 2, type:'hard',pathname: '/game-mode', width: '600px', height: '380px', top: '50%', left: '50%', title: '빡겜' },
-];
+import { MATCH_TYPE_PAGE_DATA } from "@/data/match";
 
 const MatchTypePage = () => {
 
@@ -19,7 +14,7 @@ const MatchTypePage = () => {
                     <Title>바로 매칭하기</Title>
                 </Header>
                 <Main>
-                    {MATCH_MODE_DATA.map((box) => {
+                    {MATCH_TYPE_PAGE_DATA.map((box) => {
                         return (
                             <BoxWrapper
                                 key={box.id}

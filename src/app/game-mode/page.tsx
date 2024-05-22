@@ -6,27 +6,21 @@ import Image from "next/image";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-
-const GAME_MODE_DATA = [
-  { id: 1, type: 'game', pathname: 'profile', height: '377px', top: '50%', left: '50%', title: '빠른 대전' },
-  { id: 2, type: 'game', pathname: 'profile', height: '377px', top: '50%', left: '50%', title: '솔랭' },
-  { id: 3, type: 'game', pathname: 'profile', height: '377px', top: '50%', left: '50%', title: '자랭' },
-  { id: 4, type: 'game', pathname: 'profile', height: '377px', top: '50%', left: '50%', title: '칼바람' },
-];
+import { GAME_MODE_PAGE_DATA } from "@/data/match";
 
 const GameModePage = () => {
   const router = useRouter();
-  const [displayedData, setDisplayedData] = useState(GAME_MODE_DATA);
+  const [displayedData, setDisplayedData] = useState(GAME_MODE_PAGE_DATA);
   const searchParams = useSearchParams();
   const params = searchParams.get('type');
 
   useEffect(() => {
     if (params === 'fun') {
-      setDisplayedData(GAME_MODE_DATA);
+      setDisplayedData(GAME_MODE_PAGE_DATA);
       return;
     }
     if (params === 'hard') {
-      setDisplayedData(GAME_MODE_DATA.slice(0, -1));
+      setDisplayedData(GAME_MODE_PAGE_DATA.slice(0, -1));
       return;
     }
   }, [params]);
