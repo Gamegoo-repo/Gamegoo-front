@@ -4,8 +4,8 @@ import ChatBox from "@/components/common/ChatBox";
 import GraphicBox from "@/components/match/GraphicBox";
 import Image from "next/image";
 import styled from "styled-components";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const GAME_MODE_DATA = [
   { id: 1, type: 'game', pathname: 'game-mode', height: '377px', top: '50%', left: '50%', title: '빠른 대전' },
@@ -16,19 +16,30 @@ const GAME_MODE_DATA = [
 
 const GameModePage = () => {
   const router = useRouter();
-  const [isPageType, setIsPageType] = useState('match');
   const [displayedData, setDisplayedData] = useState(GAME_MODE_DATA);
+  const searchParams = useSearchParams();
+  const params = searchParams.get('type');
 
-  const handleType = (type: string, id: number) => {
-    if (id === 1) {
+  useEffect(() => {
+    if (params === 'fun') {
       setDisplayedData(GAME_MODE_DATA);
       return;
     }
-    if (id === 2) {
+    if (params === 'hard') {
       setDisplayedData(GAME_MODE_DATA.slice(0, -1));
       return;
     }
-  };
+  }, [params]);
+  // const handleType = (type: string, id: number) => {
+  //   if (id === 1) {
+  //     setDisplayedData(GAME_MODE_DATA);
+  //     return;
+  //   }
+  //   if (id === 2) {
+  //     setDisplayedData(GAME_MODE_DATA.slice(0, -1));
+  //     return;
+  //   }
+  // };
 
   return (
     <Wrapper>

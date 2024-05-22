@@ -4,17 +4,19 @@ import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
 interface GraphicBoxProps {
+    type?: string;
     pathname: string;
     children: string;
     width?: string;
     height: string;
     top: string;
     left: string;
-}
+};
 
 const GraphicBox = (props: GraphicBoxProps) => {
     const router = useRouter();
     const {
+        type,
         pathname,
         children,
         width,
@@ -23,10 +25,13 @@ const GraphicBox = (props: GraphicBoxProps) => {
         left,
     } = props;
 
+    const hadleClick = () => {
+        router.push(type ? `${pathname}?type=${type}` : pathname)
+    };
     return (
         <>
             <Wrapper
-                onClick={() => router.push(pathname)}
+                onClick={hadleClick}
                 $width={width}
                 $height={height}>
                 {/* <Image

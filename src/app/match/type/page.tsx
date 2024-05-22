@@ -3,16 +3,15 @@
 import styled from "styled-components";
 import ChatBox from "@/components/common/ChatBox";
 import GraphicBox from "@/components/match/GraphicBox";
-import { useRouter } from "next/navigation";
 
 
 const MATCH_MODE_DATA = [
-    { id: 1, pathname: '/game-mode', width: '600px', height: '380px', top: '50%', left: '50%', title: '즐겜' },
-    { id: 2, pathname: '/game-mode', width: '600px', height: '380px', top: '50%', left: '50%', title: '빡겜' },
+    { id: 1, type:'fun',pathname: '/game-mode', width: '600px', height: '380px', top: '50%', left: '50%', title: '즐겜' },
+    { id: 2, type:'hard',pathname: '/game-mode', width: '600px', height: '380px', top: '50%', left: '50%', title: '빡겜' },
 ];
 
 const MatchTypePage = () => {
-    const router = useRouter();
+
     return (
         <Wrapper>
             <MatchContent>
@@ -26,6 +25,7 @@ const MatchTypePage = () => {
                                 key={box.id}
                             >
                                 <GraphicBox
+                                    type={box.type}
                                     pathname={box.pathname}
                                     width={box.width}
                                     height={box.height}
