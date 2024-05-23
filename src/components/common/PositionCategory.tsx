@@ -10,29 +10,31 @@ import Supporter from "../../../public/assets/icons/position_supporter_unclicked
 
 interface PositionCategoryProps {
     onClose: () => void;
+    onSetPosition: (value: string) => void;
 }
 const PositionCategory = (props: PositionCategoryProps) => {
+    const { onClose, onSetPosition } = props;
 
     return (
-        <Overlay onClick={props.onClose}>
+        <Overlay onClick={onClose}>
             <Wrapper onClick={(e) => e.stopPropagation()}>
                 <Box>
-                    <RandomButton>
+                    <RandomButton onClick={() => onSetPosition('random')}>
                         <Random />
                     </RandomButton>
-                    <TopButton>
+                    <TopButton onClick={() => onSetPosition('top')}>
                         <Top />
                     </TopButton>
-                    <JungleButton>
+                    <JungleButton onClick={() => onSetPosition('jungle')}>
                         <Jungle />
                     </JungleButton>
-                    <MidButton>
+                    <MidButton onClick={() => onSetPosition('mid')}>
                         <Mid />
                     </MidButton>
-                    <BottomButton>
+                    <BottomButton onClick={() => onSetPosition('bottom')}>
                         <Bottom />
                     </BottomButton>
-                    <SupporterButton>
+                    <SupporterButton onClick={() => onSetPosition('supporter')}>
                         <Supporter />
                     </SupporterButton>
                 </Box>

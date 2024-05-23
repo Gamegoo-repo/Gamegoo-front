@@ -29,6 +29,7 @@ const Guide = () => {
 
   /* Position category */
   const [openPosition, setOpenPosition] = useState(false);
+  const [isPosition, setIsPosition] = useState('');
 
   const handleOptionChange = (value: string) => {
     setIsSelected(value);
@@ -53,9 +54,15 @@ const Guide = () => {
     setOpenFormModal(true);
   };
 
+  /* Position */
   const handlePositionClose = () => {
     setOpenPosition(false);
-  }
+  };
+
+  const handlePosition = (value: string) => {
+    setIsPosition(value)
+    setOpenPosition(false);
+  };
 
   return (
     <Layout>
@@ -241,7 +248,9 @@ const Guide = () => {
         onClick={() => setOpenPosition(true)}>포지션 열기 버튼
       </button>
       {openPosition &&
-        <PositionCategory onClose={handlePositionClose} />}
+        <PositionCategory 
+        onClose={handlePositionClose}
+        onSetPosition={handlePosition} />}
 
 
     </Layout>
