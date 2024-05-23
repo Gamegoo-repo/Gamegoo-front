@@ -28,6 +28,7 @@ ul {
 button {
   border: none;
   background: transparent;
+  cursor:pointer;
 }
 
 

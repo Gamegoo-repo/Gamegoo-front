@@ -1,6 +1,4 @@
 import { theme } from "@/styles/theme";
-import Image from "next/image";
-import { useState } from "react";
 import styled from "styled-components";
 import Random from "../../../public/assets/icons/position_random_unclicked.svg"
 import Top from "../../../public/assets/icons/position_top_unclicked.svg"
@@ -14,23 +12,29 @@ interface PositionCategoryProps {
     onClose: () => void;
 }
 const PositionCategory = (props: PositionCategoryProps) => {
-    const [isClicked, setIsClicked] = useState(false);
-
-    const handleClick = () => {
-        setIsClicked(prevState => !prevState);
-    };
 
     return (
         <Overlay onClick={props.onClose}>
             <Wrapper onClick={(e) => e.stopPropagation()}>
                 <Box>
-                    <StyledRandom  isClicked={isClicked}
-      onClick={handleClick} />
-                    <StyledTop />
-                    <StyledJungle />
-                    <StyledMid />
-                    <StyledBottom />
-                    <StyledSupporter />
+                    <RandomButton>
+                        <Random />
+                    </RandomButton>
+                    <TopButton>
+                        <Top />
+                    </TopButton>
+                    <JungleButton>
+                        <Jungle />
+                    </JungleButton>
+                    <MidButton>
+                        <Mid />
+                    </MidButton>
+                    <BottomButton>
+                        <Bottom />
+                    </BottomButton>
+                    <SupporterButton>
+                        <Supporter />
+                    </SupporterButton>
                 </Box>
             </Wrapper>
         </Overlay>
@@ -74,35 +78,62 @@ const Box = styled.div`
 }
 `
 
-const StyledRandom = styled(Random)`
-    &:hover path{
+const RandomButton = styled.button`
+     &:hover path{
         stroke:#9F90F9;
     }
-
+    &:active,
+    &:focus path{
+        stroke:${theme.colors.purple100};
+    }
 `
 
-const StyledTop = styled(Top)`
+const TopButton = styled.button`
     &:hover path:first-child{
         fill:#9F90F9;
     }
+    &:active,
+    &:focus path:first-child{
+        fill:${theme.colors.purple100};
+    }
 `
 
-const StyledJungle = styled(Jungle)`
+const JungleButton = styled.button`
     &:hover path{
         fill:#9F90F9;
-    }`
+    }
+    &:active,
+    &:focus path{
+        fill:${theme.colors.purple100};
+    }
+`
 
-const StyledMid = styled(Mid)`
+const MidButton = styled.button`
     &:hover path:nth-child(2){
         fill:#9F90F9;
-    }`
+    }
+    &:active,
+    &:focus path:nth-child(2){
+        fill:${theme.colors.purple100};
+    }
+`
 
-const StyledBottom = styled(Bottom)`
+const BottomButton = styled.button`
     &:hover path:nth-child(2){
         fill:#9F90F9;
-    }`
+    }
+    &:active,
+    &:focus path:nth-child(2){
+        fill:${theme.colors.purple100};
+    }
+`
 
-const StyledSupporter = styled(Supporter)`
+const SupporterButton = styled.button`
     &:hover path{
         fill:#9F90F9;
-    }`
+    }
+    &:active,
+    &:focus path{
+        fill:${theme.colors.purple100};
+    }
+`
