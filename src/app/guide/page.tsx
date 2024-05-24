@@ -3,7 +3,7 @@
 import styled from "styled-components";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Checkbox from "@/components/common/Checkbox";
 import RadioCard from "@/components/common/RadioCard";
 import Dropdown from "@/components/common/Dropdown";
@@ -12,7 +12,20 @@ import ConfirmModal from "@/components/common/ConfirmModal";
 import FormModal from "@/components/common/FormModal";
 import PositionCategory from "@/components/common/PositionCategory";
 
+const DROP_DATA1 = [
+  { id: 1, value: '솔로1' },
+  { id: 2, value: '솔로2' },
+  { id: 3, value: '솔로3' },
+];
+
+const DROP_DATA2 = [
+  { id: 1, value: '티어1' },
+  { id: 2, value: '티어2' },
+  { id: 3, value: '티어3' },
+];
+
 const Guide = () => {
+  const dropdownRef = useRef();
   /* Input State */
   const [inputValue, setInputValue] = useState("Input");
   const [inputValid, setInputValid] = useState("Input Valid");
@@ -152,16 +165,20 @@ const Guide = () => {
       <H2>Dropdown</H2>
       <Dropdown
         type='type1'
+        name='솔로 랭크'
         width='138px'
-        fontSize='${(props) => props.theme.fonts.medium16}'
-        bgColor='#F5F5F5' />
+        fontSize='20px'
+        bgColor="#F5F5F5"
+        list={DROP_DATA1} />
       <p>TYPE 1</p>
 
       <Dropdown
         type='type2'
+        name='티어 선택'
         width='243px'
         fontSize='${(props) => props.theme.fonts.regular18}'
-        bgColor='${theme.colors.white}' />
+        bgColor='${theme.colors.white}'
+        list={DROP_DATA2} />
       <p>TYPE 2</p>
 
 
