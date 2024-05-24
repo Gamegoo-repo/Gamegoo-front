@@ -21,11 +21,13 @@ a {
 }
 
 ol,
-ul {
+ul,
+li {
   list-style: none;
 }
 
 button {
+  cursor:pointer;
   border: none;
   background: transparent;
 }

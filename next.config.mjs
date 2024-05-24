@@ -4,12 +4,10 @@ const nextConfig = {
   compiler: {
     styledComponents: true,
   },
-
   experimental: {
     forceSwcTransforms: true,
   },
-    output: 'export',
-
+  output: 'export',
 };
 
 export default nextConfig;

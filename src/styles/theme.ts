@@ -3,7 +3,7 @@ import { DefaultTheme } from "styled-components";
 const colors = {
     white: "#fff",
     black: "#393939",
-    
+
     purple100: "#5A42EE",
     purple200: "#9F90F9",
     purple300: "#C1B7FF",
@@ -15,7 +15,7 @@ const colors = {
     gray300: "#C5C5C7",
     gray400: "#E2E2E2",
     gray500: "#F7F7F9",
-        
+
     error100: "#FF5252",
     error200: "#FF7474",
 } as const;
@@ -25,7 +25,7 @@ interface Font {
     size: number;
 }
 
-const FONT = ({weight, size}: Font): string => {
+const FONT = ({ weight, size }: Font): string => {
     return `
     font-family : "Pretendard";
     font-weight : ${weight};
@@ -53,8 +53,12 @@ const fonts = {
         size: 20,
     }),
     bold18: FONT({
-        weight: 600,
+        weight: 700,
         size: 18,
+    }),
+    bold16: FONT({
+        weight: 700,
+        size: 16,
     }),
     bold14: FONT({
         weight: 700,
