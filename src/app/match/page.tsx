@@ -2,13 +2,9 @@
 
 import ChatBox from "@/components/common/ChatBox";
 import GraphicBox from "@/components/match/GraphicBox";
+import { MATCH_PAGE_DATA } from "@/data/match";
 import Image from "next/image";
 import styled from "styled-components";
-
-const BOXS_DATA = [
-    { id: 1, pathname: 'game-mode', width: '1206px', height: '227px', top: '36px', left: '41px', title: '바로 매칭하기' },
-    { id: 2, pathname: 'board', width: '1206px', height: '227px', top: '36px', left: '41px', title: '매칭 게시판에서 찾기' },
-];
 
 const HomePage = () => {
 
@@ -25,7 +21,7 @@ const HomePage = () => {
                     <SubTitle>겜구 커뮤니티에 오신 것을 환영합니다.</SubTitle>
                 </Header>
                 <Main>
-                    {BOXS_DATA.map((box) => {
+                    {MATCH_PAGE_DATA.map((box) => {
                         return (
                             <GraphicBox
                                 key={box.id}

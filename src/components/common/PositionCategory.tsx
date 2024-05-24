@@ -1,37 +1,42 @@
 import { theme } from "@/styles/theme";
-import Image from "next/image";
 import styled from "styled-components";
+import Random from "../../../public/assets/icons/position_random_unclicked.svg"
+import Top from "../../../public/assets/icons/position_top_unclicked.svg"
+import Jungle from "../../../public/assets/icons/position_jungle_unclicked.svg"
+import Mid from "../../../public/assets/icons/position_mid_unclicked.svg"
+import Bottom from "../../../public/assets/icons/position_bottom_unclicked.svg"
+import Supporter from "../../../public/assets/icons/position_supporter_unclicked.svg"
 
-const POSITION_ICONS = [
-    { id: 1, name: '랜덤', path: '/assets/icons/position1.svg', width: 19, height: 16 },
-    { id: 2, name: '원딜', path: '/assets/icons/position2.svg', width: 26, height: 25 },
-    { id: 3, name: '정글', path: '/assets/icons/position3.svg', width: 29, height: 28 },
-    { id: 4, name: '미들', path: '/assets/icons/position4.svg', width: 26, height: 25 },
-    { id: 5, name: '탑', path: '/assets/icons/position5.svg', width: 26, height: 25 },
-    { id: 6, name: '서폿', path: '/assets/icons/position6.svg', width: 34, height: 28 }
-]
 
 interface PositionCategoryProps {
     onClose: () => void;
+    onSetPosition: (value: string) => void;
 }
 const PositionCategory = (props: PositionCategoryProps) => {
+    const { onClose, onSetPosition } = props;
 
     return (
-        <Overlay onClick={props.onClose}>
+        <Overlay onClick={onClose}>
             <Wrapper onClick={(e) => e.stopPropagation()}>
                 <Box>
-                    {POSITION_ICONS.map(icon => {
-                        return (
-                            <StyledImage
-                                onClick={props.onClose}
-                                key={icon.id}
-                                src={icon.path}
-                                width={icon.width}
-                                height={icon.height}
-                                alt={icon.name} />
-                        )
-                    })}
-
+                    <RandomButton onClick={() => onSetPosition('random')}>
+                        <Random />
+                    </RandomButton>
+                    <TopButton onClick={() => onSetPosition('top')}>
+                        <Top />
+                    </TopButton>
+                    <JungleButton onClick={() => onSetPosition('jungle')}>
+                        <Jungle />
+                    </JungleButton>
+                    <MidButton onClick={() => onSetPosition('mid')}>
+                        <Mid />
+                    </MidButton>
+                    <BottomButton onClick={() => onSetPosition('bottom')}>
+                        <Bottom />
+                    </BottomButton>
+                    <SupporterButton onClick={() => onSetPosition('supporter')}>
+                        <Supporter />
+                    </SupporterButton>
                 </Box>
             </Wrapper>
         </Overlay>
@@ -75,13 +80,62 @@ const Box = styled.div`
 }
 `
 
-const StyledImage = styled(Image)`
-   cursor: pointer;
-   &:hover{
-    filter: invert(27%) sepia(5%) saturate(27%) hue-rotate(6deg) brightness(100%) contrast(89%);
-   }
-   &:active,
-   &:focus{
-    filter: invert(18%) sepia(64%) saturate(1326%) hue-rotate(223deg) brightness(97%) contrast(89%);
-   }
+const RandomButton = styled.button`
+     &:hover path{
+        stroke:#9F90F9;
+    }
+    &:active,
+    &:focus path{
+        stroke:${theme.colors.purple100};
+    }
+`
+
+const TopButton = styled.button`
+    &:hover path:first-child{
+        fill:#9F90F9;
+    }
+    &:active,
+    &:focus path:first-child{
+        fill:${theme.colors.purple100};
+    }
+`
+
+const JungleButton = styled.button`
+    &:hover path{
+        fill:#9F90F9;
+    }
+    &:active,
+    &:focus path{
+        fill:${theme.colors.purple100};
+    }
+`
+
+const MidButton = styled.button`
+    &:hover path:nth-child(2){
+        fill:#9F90F9;
+    }
+    &:active,
+    &:focus path:nth-child(2){
+        fill:${theme.colors.purple100};
+    }
+`
+
+const BottomButton = styled.button`
+    &:hover path:nth-child(2){
+        fill:#9F90F9;
+    }
+    &:active,
+    &:focus path:nth-child(2){
+        fill:${theme.colors.purple100};
+    }
+`
+
+const SupporterButton = styled.button`
+    &:hover path{
+        fill:#9F90F9;
+    }
+    &:active,
+    &:focus path{
+        fill:${theme.colors.purple100};
+    }
 `

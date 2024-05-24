@@ -30,6 +30,7 @@ button {
   cursor:pointer;
   border: none;
   background: transparent;
+  cursor:pointer;
 }
 
 
