@@ -4,6 +4,7 @@ import GlobalStyles from "@/styles/GlobalStyles";
 import { ThemeProvider } from "styled-components";
 import { theme } from "@/styles/theme";
 import Header from "@/components/common/Header";
+import StyledComponentsRegistry from "@/libs/registry";
 
 export default function RootLayout({
   children,
@@ -16,11 +17,13 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body>
-        <GlobalStyles />
-        <ThemeProvider theme={theme}>
-          <Header />
-          {children}
-        </ThemeProvider>
+        <StyledComponentsRegistry>
+          <GlobalStyles />
+          <ThemeProvider theme={theme}>
+            <Header />
+            {children}
+          </ThemeProvider>
+        </StyledComponentsRegistry>
       </body>
     </html>
   );

@@ -84,8 +84,8 @@ const Table = (props: TableProps) => {
                                 />
                                 <Image
                                     src={setPositionImg(value.sub_position)}
-                                    width={35}
-                                    height={28}
+                                    width={26}
+                                    height={25}
                                     alt="main position image"
                                 />
                             </Fourth>
