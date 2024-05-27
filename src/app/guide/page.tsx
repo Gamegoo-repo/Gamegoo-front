@@ -11,17 +11,18 @@ import ChatBox from "@/components/common/ChatBox";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import FormModal from "@/components/common/FormModal";
 import PositionCategory from "@/components/common/PositionCategory";
+import Toggle from "@/components/common/Toggle";
 
 const DROP_DATA1 = [
-  { id: 1, value: '솔로1' },
-  { id: 2, value: '솔로2' },
-  { id: 3, value: '솔로3' },
+  { id: 1, value: "솔로1" },
+  { id: 2, value: "솔로2" },
+  { id: 3, value: "솔로3" },
 ];
 
 const DROP_DATA2 = [
-  { id: 1, value: '티어1' },
-  { id: 2, value: '티어2' },
-  { id: 3, value: '티어3' },
+  { id: 1, value: "티어1" },
+  { id: 2, value: "티어2" },
+  { id: 3, value: "티어3" },
 ];
 
 const Guide = () => {
@@ -42,7 +43,10 @@ const Guide = () => {
 
   /* Position category */
   const [openPosition, setOpenPosition] = useState(false);
-  const [isPosition, setIsPosition] = useState('');
+  const [isPosition, setIsPosition] = useState("");
+
+  /* Toggle */
+  const [isOn, setisOn] = useState(false);
 
   const handleOptionChange = (value: string) => {
     setIsSelected(value);
@@ -72,8 +76,12 @@ const Guide = () => {
     setOpenPosition(false);
   };
 
+  /* Toggle */
+  const toggleHandler = () => {
+    setisOn(!isOn);
+  };
   const handlePosition = (value: string) => {
-    setIsPosition(value)
+    setIsPosition(value);
     setOpenPosition(false);
   };
 
@@ -164,36 +172,43 @@ const Guide = () => {
 
       <H2>Dropdown</H2>
       <Dropdown
-        type='type1'
-        name='솔로 랭크'
-        width='138px'
-        fontSize='20px'
+        type="type1"
+        name="솔로 랭크"
+        width="138px"
+        fontSize="20px"
         bgColor="#F5F5F5"
-        list={DROP_DATA1} />
+        list={DROP_DATA1}
+      />
       <p>TYPE 1</p>
 
       <Dropdown
-        type='type2'
-        name='티어 선택'
-        width='243px'
-        fontSize='${(props) => props.theme.fonts.regular18}'
-        bgColor='${theme.colors.white}'
-        list={DROP_DATA2} />
+        type="type2"
+        name="티어 선택"
+        width="243px"
+        fontSize="${(props) => props.theme.fonts.regular18}"
+        bgColor="${theme.colors.white}"
+        list={DROP_DATA2}
+      />
       <p>TYPE 2</p>
-
 
       <H2>Chat Box</H2>
       <ChatBox count={3} />
 
       <H2>Confirm Modal</H2>
       <button
-        style={{ border: '1px solid black', padding: '10px' }}
-        onClick={handleConfirmModalOpen}>매너 평가 모달 열기 버튼
+        style={{ border: "1px solid black", padding: "10px" }}
+        onClick={handleConfirmModalOpen}
+      >
+        매너 평가 모달 열기 버튼
       </button>
 
-      {openConfirmModal &&
-        <ConfirmModal type='img' width='315px' onClose={handleConfirmModalClose} />
-      }
+      {openConfirmModal && (
+        <ConfirmModal
+          type="img"
+          width="315px"
+          onClose={handleConfirmModalClose}
+        />
+      )}
       <p>Image Modal</p>
 
       {/* 같은 변수 사용으로 주석처리 해놨습니다.*/}
@@ -210,11 +225,12 @@ const Guide = () => {
       }
       <p>Yes or No Modal</p> */}
 
-
       <H2>Form Modal</H2>
       <button
-        style={{ border: '1px solid black', padding: '10px' }}
-        onClick={handleFormModalOpen}>텍스트 모달 열기 버튼
+        style={{ border: "1px solid black", padding: "10px" }}
+        onClick={handleFormModalOpen}
+      >
+        텍스트 모달 열기 버튼
       </button>
 
       {/* {openFormModal &&
@@ -242,34 +258,39 @@ const Guide = () => {
       <p>Text Modal</p> */}
 
       {/* 같은 변수 사용으로 주석처리 해놨습니다.*/}
-      {openFormModal &&
+      {openFormModal && (
         <FormModal
-          type='checkbox'
-          title='매너 평가하기'
-          width='418px'
+          type="checkbox"
+          title="매너 평가하기"
+          width="418px"
           height="434px"
           closeButtonWidth={17}
           closeButtonHeight={17}
-          borderRadius='10px'
+          borderRadius="10px"
           buttonText="완료"
           onClose={handleFormModalClose}
-          disabled>
+          disabled
+        >
           <Checkbox value="checkbox1" label="checkbox" />
         </FormModal>
-      }
+      )}
       <p>Checkbox Modal</p>
 
       <H2>Position</H2>
       <button
-        style={{ border: '1px solid black', padding: '10px' }}
-        onClick={() => setOpenPosition(true)}>포지션 열기 버튼
+        style={{ border: "1px solid black", padding: "10px" }}
+        onClick={() => setOpenPosition(true)}
+      >
+        포지션 열기 버튼
       </button>
-      {openPosition &&
-        <PositionCategory 
-        onClose={handlePositionClose}
-        onSetPosition={handlePosition} />}
-
-
+      {openPosition && (
+        <PositionCategory
+          onClose={handlePositionClose}
+          onSetPosition={handlePosition}
+        />
+      )}
+      <H2>Toggle</H2>
+      <Toggle isOn={isOn} onToggle={toggleHandler} />
     </Layout>
   );
 };
