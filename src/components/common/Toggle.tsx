@@ -50,7 +50,7 @@ const ToggleContainer = styled.div`
     background-color: rgb(255, 254, 255);
     transition: 0.5s;
   }
-  > .toggle--checked {
+  > .toggle--unchecked {
     left: 46px;
     transition: 0.5s;
   }
