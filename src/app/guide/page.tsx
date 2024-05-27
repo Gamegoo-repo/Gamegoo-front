@@ -45,6 +45,9 @@ const Guide = () => {
   const [openPosition, setOpenPosition] = useState(false);
   const [isPosition, setIsPosition] = useState("");
 
+  /* Toggle */
+  const [isOn, setisOn] = useState(false);
+
   const handleOptionChange = (value: string) => {
     setIsSelected(value);
     console.log(value);
@@ -73,6 +76,10 @@ const Guide = () => {
     setOpenPosition(false);
   };
 
+  /* Toggle */
+  const toggleHandler = () => {
+    setisOn(!isOn);
+  };
   const handlePosition = (value: string) => {
     setIsPosition(value);
     setOpenPosition(false);
@@ -283,7 +290,7 @@ const Guide = () => {
         />
       )}
       <H2>Toggle</H2>
-      <Toggle />
+      <Toggle isOn={isOn} onToggle={toggleHandler} />
     </Layout>
   );
 };

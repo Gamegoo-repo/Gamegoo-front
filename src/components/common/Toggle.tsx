@@ -1,12 +1,16 @@
 import { theme } from "@/styles/theme";
-import { useState } from "react";
 import styled from "styled-components";
 
-const Toggle = () => {
-  const [isOn, setisOn] = useState(false);
+interface ToggleProps {
+  isOn: boolean;
+  onToggle: (state: boolean) => void;
+}
+
+const Toggle = (props: ToggleProps) => {
+  const { isOn = false, onToggle } = props;
 
   const toggleHandler = () => {
-    setisOn(!isOn);
+    onToggle(!isOn);
   };
 
   return (
