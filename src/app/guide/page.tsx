@@ -3,7 +3,7 @@
 import styled from "styled-components";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Checkbox from "@/components/common/Checkbox";
 import RadioCard from "@/components/common/RadioCard";
 import Dropdown from "@/components/common/Dropdown";
@@ -25,7 +25,6 @@ const DROP_DATA2 = [
 ];
 
 const Guide = () => {
-  const dropdownRef = useRef();
   /* Input State */
   const [inputValue, setInputValue] = useState("Input");
   const [inputValid, setInputValid] = useState("Input Valid");
@@ -36,13 +35,17 @@ const Guide = () => {
   /* RadioCard State */
   const [isSelected, setIsSelected] = useState<string>("option1");
 
-  /* Modal */
+  /* Modal State*/
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
   const [openFormModal, setOpenFormModal] = useState(false);
 
-  /* Position category */
+  /* Position category State */
   const [openPosition, setOpenPosition] = useState(false);
   const [isPosition, setIsPosition] = useState('');
+
+  /* Dropdown State*/
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleOptionChange = (value: string) => {
     setIsSelected(value);
@@ -76,6 +79,20 @@ const Guide = () => {
     setIsPosition(value)
     setOpenPosition(false);
   };
+
+  /* Dropdown */
+  const handleClickOutside = (event: MouseEvent) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <Layout>
@@ -167,15 +184,21 @@ const Guide = () => {
         type='type1'
         name='솔로 랭크'
         width='138px'
-        list={DROP_DATA1} />
+        list={DROP_DATA1}
+        ref={dropdownRef}
+        open={isOpen}
+        setOpen={setIsOpen} />
       <p>TYPE 1</p>
 
-      <Dropdown
+      {/* <Dropdown
         type='type2'
         name='티어 선택'
         width='243px'
-        list={DROP_DATA2} />
-      <p>TYPE 2</p>
+        list={DROP_DATA2}
+        ref={dropdownRef}
+        open={isOpen}
+        setOpen={setIsOpen} />
+      <p>TYPE 2</p> */}
 
 
       <H2>Chat Box</H2>
@@ -261,9 +284,9 @@ const Guide = () => {
         onClick={() => setOpenPosition(true)}>포지션 열기 버튼
       </button>
       {openPosition &&
-        <PositionCategory 
-        onClose={handlePositionClose}
-        onSetPosition={handlePosition} />}
+        <PositionCategory
+          onClose={handlePositionClose}
+          onSetPosition={handlePosition} />}
 
 
     </Layout>

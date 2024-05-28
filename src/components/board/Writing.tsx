@@ -4,10 +4,11 @@ import Modal from "./Modal";
 import Dropdown from "../common/Dropdown";
 import Image from "next/image";
 import Input from "../common/Input";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import PositionBox from "./PositionBox";
 import UserInfo from "./UserInfo";
 import GameStyle from "./GameStyle";
+import DropTest from "../common/DropTest";
 
 interface WritingProps {
     onClose: () => void;
@@ -22,6 +23,8 @@ const DROP_DATA = [
 const WritePost = (props: WritingProps) => {
     const { onClose } = props;
 
+    const [isOpen, setIsOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
     const [textareaValue, setTextareaValue] = useState("");
 
     // const [pickedImage, setPickedImage] = useState('/assets/icons/profile_img.svg' || null);
@@ -56,6 +59,18 @@ const WritePost = (props: WritingProps) => {
     //     form.append("pickedImage", pickedImage);
     // },
 
+    const handleClickOutside = (event: MouseEvent) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+            setIsOpen(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     return (
         <Modal
@@ -63,17 +78,19 @@ const WritePost = (props: WritingProps) => {
             width='565px'
             height='959px'
             onClose={onClose}
-            buttonText='확인'
-        >
+            buttonText='확인'>
             <UserInfo />
-
             <QueSection>
                 <Title>큐타입</Title>
                 <Dropdown
+                    ref={dropdownRef}
                     type='type2'
                     name='솔로 랭크'
                     width='243px'
-                    list={DROP_DATA} />
+                    list={DROP_DATA}
+                    open={isOpen}
+                    setOpen={setIsOpen}
+                />
             </QueSection>
             <PositionSection>
                 <Title>포지션</Title>

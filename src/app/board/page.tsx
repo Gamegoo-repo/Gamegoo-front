@@ -3,7 +3,7 @@
 import styled from "styled-components";
 import Image from "next/image";
 import { theme } from "@/styles/theme";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BOARD_TITLE } from "@/data/board";
 import Button from "@/components/common/Button";
 import Dropdown from "@/components/common/Dropdown";
@@ -47,6 +47,11 @@ const BoardPage = () => {
     const [micOn, setMicOn] = useState(true);
     const [isWritingOpen, setIsWritingOpen] = useState(false);
 
+    const [isDropdownOpen1, setIsDropdownOpen1] = useState(false);
+    const [isDropdownOpen2, setIsDropdownOpen2] = useState(false);
+    const dropdownRef1 = useRef<HTMLDivElement>(null);
+    const dropdownRef2 = useRef<HTMLDivElement>(null);
+
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
@@ -67,17 +72,38 @@ const BoardPage = () => {
         setIsWritingOpen(false);
     };
 
+    const handleDropdownClickOutside1 = (event: MouseEvent) => {
+        if (dropdownRef1.current && !dropdownRef1.current.contains(event.target as Node)) {
+            setIsDropdownOpen1(false);
+        }
+    };
+
+    const handleDropdownClickOutside2 = (event: MouseEvent) => {
+        if (dropdownRef2.current && !dropdownRef2.current.contains(event.target as Node)) {
+            setIsDropdownOpen2(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleDropdownClickOutside1);
+        document.addEventListener('mousedown', handleDropdownClickOutside2);
+        return () => {
+            document.removeEventListener('mousedown', handleDropdownClickOutside1);
+            document.removeEventListener('mousedown', handleDropdownClickOutside2);
+        };
+    }, []);
+
     useEffect(() => {
         if (isWritingOpen) {
-          document.body.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden';
         } else {
-          document.body.style.overflow = 'unset';
+            document.body.style.overflow = 'unset';
         }
-    
+
         return () => {
-          document.body.style.overflow = 'unset';
+            document.body.style.overflow = 'unset';
         };
-      }, [isWritingOpen]);
+    }, [isWritingOpen]);
 
     return (
         <>
@@ -100,12 +126,18 @@ const BoardPage = () => {
                                 width='138px'
                                 name='솔로 랭크'
                                 list={DROP_DATA1}
+                                ref={dropdownRef1}
+                                open={isDropdownOpen1}
+                                setOpen={setIsDropdownOpen1}
                             />
                             <Dropdown
                                 type='type1'
                                 width='138px'
                                 name='티어 선택'
                                 list={DROP_DATA2}
+                                ref={dropdownRef2}
+                                open={isDropdownOpen2}
+                                setOpen={setIsDropdownOpen2}
                             />
                             <PositionBox>
                                 <PositionFilter
