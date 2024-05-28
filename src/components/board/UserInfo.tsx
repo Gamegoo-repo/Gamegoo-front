@@ -1,20 +1,36 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import { forwardRef } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 
-const UserInfo = () => {
+interface FileInputProps {
+    onFileSelect: (file: File) => void;
+};
+
+const UserInfo = (props: FileInputProps) => {
+    const { onFileSelect } = props;
+    const [preview, setPreview] = useState<string>('/assets/icons/profile_img.svg');
+    const inputRef = useRef<HTMLInputElement | null>(null);
+
+    const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            setPreview(URL.createObjectURL(file));
+            onFileSelect(file);
+        }
+    };
 
     return (
         <UserProfile>
             <ProfileImgBg>
                 <ProfileImage
-                    src='/assets/icons/profile_img.svg'
+                    src={preview}
                     width={54}
                     height={51}
                     alt='profile image' />
                 <Label htmlFor="profileImg">
-                    <CameraImgBg>
+                    <CameraImgBg
+                        onClick={() => inputRef.current?.click()}>
                         <CameraImage
                             src="/assets/icons/camera_white.svg"
                             width={13}
@@ -27,6 +43,7 @@ const UserInfo = () => {
                     name="profileImg"
                     type="file"
                     accept="image/*"
+                    onChange={handleFileChange}
                     required />
             </ProfileImgBg>
             <UserDetail>

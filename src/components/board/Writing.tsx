@@ -8,7 +8,6 @@ import { useEffect, useRef, useState } from "react";
 import PositionBox from "./PositionBox";
 import UserInfo from "./UserInfo";
 import GameStyle from "./GameStyle";
-import DropTest from "../common/DropTest";
 
 interface WritingProps {
     onClose: () => void;
@@ -22,55 +21,50 @@ const DROP_DATA = [
 
 const WritePost = (props: WritingProps) => {
     const { onClose } = props;
-
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const [textareaValue, setTextareaValue] = useState("");
 
-    // const [pickedImage, setPickedImage] = useState('/assets/icons/profile_img.svg' || null);
-    // const imageInput = useRef();
-
-    // function handlePickClick() {
-    //     imageInput.current.click();
-    // }
-
-    // const fileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    //     handleInputFile(event.target.files)
-    // }
-
-    // const handleInputFile=(files: React.ChangeEvent<HTMLInputElement>)=> {
-    //     if (files.length) {
-    //         let file = pickedImage[0];
-    //         setPickedImage(file);
-    //         filePreview(file);
-    //     }
-    // }
-
-    // const filePreview = (file:Blob) => {
-    //     let reader = new FileReader()
-    //     reader.onload = () => {
-    //         setPickedImage(reader.result);
-    //     }
-    //     reader.readAsDataURL(file)
-    // },
-
-    // const save = ()=>{
-    //     const form = new FormData();
-    //     form.append("pickedImage", pickedImage);
-    // },
-
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleDropdownClickOutside = (event: MouseEvent) => {
         if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
             setIsOpen(false);
         }
     };
 
     useEffect(() => {
-        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('mousedown', handleDropdownClickOutside);
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('mousedown', handleDropdownClickOutside);
         };
     }, []);
+
+    const [image, setImage] = useState<File | null>(null);
+    const [imageUploadResult, setImageUploadResult] = useState<any>(null);
+
+    const handleFileSelect = (file: File) => {
+        setImage(file);
+    };
+
+    // TODO: api 연결
+    // const handleProfileUpload = async () => {
+    //     if (!image) return;
+
+    //     const formData = new FormData();
+    //     formData.append('file', image);
+
+    //     try {
+    //         const response = await axios.post('/api/', formData, {
+    //             headers: {
+    //                 'Content-Type': 'multipart/form-data',
+    //             },
+    //         });
+
+    //         console.log('Success:', response.data);
+    //         setImageUploadResult(response.data);
+    //     } catch (error) {
+    //         console.error('Error:', error);
+    //     }
+    // };
 
     return (
         <Modal
@@ -79,7 +73,8 @@ const WritePost = (props: WritingProps) => {
             height='959px'
             onClose={onClose}
             buttonText='확인'>
-            <UserInfo />
+            <UserInfo
+                onFileSelect={handleFileSelect} />
             <QueSection>
                 <Title>큐타입</Title>
                 <Dropdown

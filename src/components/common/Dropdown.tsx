@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { forwardRef, useEffect, useState } from "react";
+import { forwardRef, useState } from "react";
 import { theme } from "@/styles/theme";
 import styled from "styled-components";
 
@@ -15,9 +15,9 @@ interface DropdownProps {
     width: string;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
+};
 
-const Dropdown = forwardRef(function Dropdown(props: DropdownProps, ref: any) {
+const Dropdown = forwardRef(function Dropdown(props: DropdownProps, ref: React.ForwardedRef<HTMLDivElement>) {
     const { type, name, list, width, open, setOpen } = props;
     const [selectedOption, setSelectedOption] = useState<string>(name);
 
