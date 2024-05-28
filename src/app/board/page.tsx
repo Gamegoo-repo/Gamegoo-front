@@ -35,7 +35,7 @@ const BOARD_CONTENT = [
 
 const BoardPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
-    //TODO: itemsPerPage 추후 수정
+    //TODO: itemsPerPage 추후 20개로 수정
     const itemsPerPage = 5;
     const pageButtonCount = 5;
 
@@ -113,27 +113,29 @@ const BoardPage = () => {
                     <FirstRow>
                         <Title>게시판</Title>
                         <RefreshImage
-                            src='/assets/icons/refresh.svg'
+                            src="/assets/icons/refresh.svg"
                             width={30}
                             height={27}
-                            alt='refresh button'
+                            alt="refresh button"
                         />
                     </FirstRow>
                     <SecondRow>
                         <FirstBlock>
                             <Dropdown
-                                type='type1'
-                                width='138px'
-                                name='솔로 랭크'
+                                type="type1"
+                                width="138px"
+                                name="솔로 랭크"
+                                padding="18px 21px"
                                 list={DROP_DATA1}
                                 ref={dropdownRef1}
                                 open={isDropdownOpen1}
                                 setOpen={setIsDropdownOpen1}
                             />
                             <Dropdown
-                                type='type1'
-                                width='138px'
-                                name='티어 선택'
+                                type="type1"
+                                width="138px"
+                                name="티어 선택"
+                                padding="18px 21px"
                                 list={DROP_DATA2}
                                 ref={dropdownRef2}
                                 open={isDropdownOpen2}

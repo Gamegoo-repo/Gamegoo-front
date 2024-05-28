@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { theme } from "@/styles/theme";
 import Image from "next/image";
 
 const PositionBox = () => {
@@ -52,7 +51,7 @@ const FirstBox = styled.div`
     text-align: center;
     background: #F6F6F6;
     border-radius: 10px;
-    padding: 22px 44px;
+    padding: 22px 36px;
     gap:52px;
 `
 

@@ -19,10 +19,24 @@ const DROP_DATA = [
     { id: 3, value: '솔로3' },
 ];
 
+interface UserInterface {
+    image: File | null;
+    account: string;
+    tag: string;
+    tier: string;
+};
+
 const WritePost = (props: WritingProps) => {
     const { onClose } = props;
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const [userInfo, setUserInfo] = useState<UserInterface>({
+        image: null,
+        account: "유니콘의 비밀",
+        tag: "KR1",
+        tier: 'B3'
+    });
+    const [imageUploadResult, setImageUploadResult] = useState<any>(null);
     const [textareaValue, setTextareaValue] = useState("");
 
     const handleDropdownClickOutside = (event: MouseEvent) => {
@@ -38,11 +52,10 @@ const WritePost = (props: WritingProps) => {
         };
     }, []);
 
-    const [image, setImage] = useState<File | null>(null);
-    const [imageUploadResult, setImageUploadResult] = useState<any>(null);
+
 
     const handleFileSelect = (file: File) => {
-        setImage(file);
+        setUserInfo({ ...userInfo, image: file });
     };
 
     // TODO: api 연결
@@ -74,14 +87,16 @@ const WritePost = (props: WritingProps) => {
             onClose={onClose}
             buttonText='확인'>
             <UserInfo
-                onFileSelect={handleFileSelect} />
+                onFileSelect={handleFileSelect}
+                userInfo={userInfo} />
             <QueSection>
                 <Title>큐타입</Title>
                 <Dropdown
                     ref={dropdownRef}
-                    type='type2'
-                    name='솔로 랭크'
-                    width='243px'
+                    type="type2"
+                    name="솔로 랭크"
+                    padding="10px 13px"
+                    width="243px"
                     list={DROP_DATA}
                     open={isOpen}
                     setOpen={setIsOpen}

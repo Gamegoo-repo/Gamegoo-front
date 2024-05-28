@@ -181,9 +181,10 @@ const Guide = () => {
 
       <H2>Dropdown</H2>
       <Dropdown
-        type='type1'
-        name='솔로 랭크'
-        width='138px'
+        type="type1"
+        name="솔로 랭크"
+        width="138px"
+        padding="16.5px 21px"
         list={DROP_DATA1}
         ref={dropdownRef}
         open={isOpen}
@@ -191,9 +192,10 @@ const Guide = () => {
       <p>TYPE 1</p>
 
       {/* <Dropdown
-        type='type2'
-        name='티어 선택'
-        width='243px'
+        type="type2"
+        name="티어 선택"
+        width="243px"
+        padding="16.5px 21px"
         list={DROP_DATA2}
         ref={dropdownRef}
         open={isOpen}

@@ -3,12 +3,19 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { ChangeEvent, useRef, useState } from "react";
 
+interface UserInfo {
+    account: string;
+    tag: string;
+    tier: string;
+}
+
 interface FileInputProps {
     onFileSelect: (file: File) => void;
+    userInfo: UserInfo
 };
 
 const UserInfo = (props: FileInputProps) => {
-    const { onFileSelect } = props;
+    const { onFileSelect, userInfo } = props;
     const [preview, setPreview] = useState<string>('/assets/icons/profile_img.svg');
     const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -48,17 +55,18 @@ const UserInfo = (props: FileInputProps) => {
             </ProfileImgBg>
             <UserDetail>
                 <UserAccount>
-                    <Account>유니콘의 비밀</Account>
-                    <Tag>#KR1</Tag>
+                    <Account>{userInfo.account}</Account>
+                    <Tag>#{userInfo.tag}</Tag>
                 </UserAccount>
                 <UserTier>
+                    {/* TODO:api 연결 후 수정 필 */}
                     <Image
                         src="/assets/icons/tier_bronze.svg"
                         width={32}
                         height={21}
                         alt="tier image"
                     />
-                    <Tier>B3</Tier>
+                    <Tier>{userInfo.tier}</Tier>
                 </UserTier>
             </UserDetail>
         </UserProfile>

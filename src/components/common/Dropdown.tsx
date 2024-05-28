@@ -11,6 +11,7 @@ interface ListProps {
 interface DropdownProps {
     type: 'type1' | 'type2';
     name: string;
+    padding: string;
     list: ListProps[];
     width: string;
     open: boolean;
@@ -18,7 +19,7 @@ interface DropdownProps {
 };
 
 const Dropdown = forwardRef(function Dropdown(props: DropdownProps, ref: React.ForwardedRef<HTMLDivElement>) {
-    const { type, name, list, width, open, setOpen } = props;
+    const { type, name, list, width, open, setOpen, padding } = props;
     const [selectedOption, setSelectedOption] = useState<string>(name);
 
     const toggling = () => setOpen((prevState) => !prevState);
@@ -36,7 +37,8 @@ const Dropdown = forwardRef(function Dropdown(props: DropdownProps, ref: React.F
             <DropdownHeader
                 onClick={toggling}
                 $type={type}
-                $width={width}>
+                $width={width}
+                $padding={padding}>
                 <Title>
                     {selectedOption || name}
                 </Title>
@@ -74,13 +76,13 @@ const Wrapper = styled.div<{ $width: string }>`
     width:${({ $width }) => $width};
 `
 
-const DropdownHeader = styled.div<{ $type: string, $width: string }>`
+const DropdownHeader = styled.div<{ $type: string, $width: string, $padding: string }>`
     display: flex;
     align-items: center;
     justify-content: space-between;
     color:${theme.colors.black};
     border-radius: 10px;
-    padding:16.5px 21px;
+    padding:${({ $padding }) => $padding};
     background: ${({ $type }) => $type === 'type1' ? '#F5F5F5' : `${theme.colors.white}`};
     border:${({ $type }) =>
         $type === 'type2'
