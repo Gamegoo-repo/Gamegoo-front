@@ -28,7 +28,8 @@ interface UserInterface {
 
 const WritePost = (props: WritingProps) => {
     const { onClose } = props;
-    const [isOpen, setIsOpen] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [imageUploadResult, setImageUploadResult] = useState<any>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const [userInfo, setUserInfo] = useState<UserInterface>({
         image: null,
@@ -36,12 +37,13 @@ const WritePost = (props: WritingProps) => {
         tag: "KR1",
         tier: 'B3'
     });
-    const [imageUploadResult, setImageUploadResult] = useState<any>(null);
+    const [openPosition, setOpenPosition] = useState(false);
+    const [isPosition, setIsPosition] = useState('');
     const [textareaValue, setTextareaValue] = useState("");
 
     const handleDropdownClickOutside = (event: MouseEvent) => {
         if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-            setIsOpen(false);
+            setIsDropdownOpen(false);
         }
     };
 
@@ -51,8 +53,6 @@ const WritePost = (props: WritingProps) => {
             document.removeEventListener('mousedown', handleDropdownClickOutside);
         };
     }, []);
-
-
 
     const handleFileSelect = (file: File) => {
         setUserInfo({ ...userInfo, image: file });
@@ -79,6 +79,15 @@ const WritePost = (props: WritingProps) => {
     //     }
     // };
 
+    const handlePositionClose = () => {
+        setOpenPosition(false);
+    };
+
+    const handlePosition = (value: string) => {
+        setIsPosition(value)
+        setOpenPosition(false);
+    };
+
     return (
         <Modal
             type='writing'
@@ -98,13 +107,15 @@ const WritePost = (props: WritingProps) => {
                     padding="10px 13px"
                     width="243px"
                     list={DROP_DATA}
-                    open={isOpen}
-                    setOpen={setIsOpen}
+                    open={isDropdownOpen}
+                    setOpen={setIsDropdownOpen}
                 />
             </QueSection>
             <PositionSection>
                 <Title>포지션</Title>
-                <PositionBox />
+                <PositionBox
+                    onClose={handlePositionClose}
+                    onSetPosition={handlePosition} />
             </PositionSection>
             <StyleSection>
                 <Title>게임 스타일</Title>

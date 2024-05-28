@@ -1,22 +1,40 @@
 import styled from "styled-components";
 import Image from "next/image";
+import PositionFilter from "../common/PositionFilter";
+import { useState } from "react";
 
 const PositionBox = () => {
+    const [isSelectPositionOpen, setIsSelectPositionOpen] = useState({
+        main: false,
+        sub: false,
+        want: false
+    });
+
+    const togglePosition = (position: 'main' | 'sub' | 'want') => {
+        setIsSelectPositionOpen(prevState => ({
+            ...prevState,
+            [position]: !prevState[position]
+        }));
+    };
+
     return (
         <PositionWrapper>
             <FirstBox>
                 <Section>
                     <Title>주 포지션</Title>
                     <Image
+                        onClick={() => togglePosition('main')}
                         src='/assets/icons/position_supporter_purple.svg'
                         width={35}
                         height={28}
                         alt="main position image"
                     />
+                    {isSelectPositionOpen.main && <PositionFilter />}
                 </Section>
                 <Section>
                     <Title>부 포지션</Title>
                     <Image
+                        onClick={() => togglePosition('sub')}
                         src='/assets/icons/position_bot_purple.svg'
                         width={35}
                         height={28}
@@ -27,6 +45,7 @@ const PositionBox = () => {
             <SecondBox>
                 <Title>찾는 포지션</Title>
                 <Image
+                    onClick={() => togglePosition('want')}
                     src='/assets/icons/position_supporter_purple.svg'
                     width={35}
                     height={28}
