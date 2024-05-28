@@ -167,8 +167,6 @@ const Guide = () => {
         type='type1'
         name='솔로 랭크'
         width='138px'
-        fontSize='20px'
-        bgColor="#F5F5F5"
         list={DROP_DATA1} />
       <p>TYPE 1</p>
 
@@ -176,8 +174,6 @@ const Guide = () => {
         type='type2'
         name='티어 선택'
         width='243px'
-        fontSize='${(props) => props.theme.fonts.regular18}'
-        bgColor='${theme.colors.white}'
         list={DROP_DATA2} />
       <p>TYPE 2</p>
 

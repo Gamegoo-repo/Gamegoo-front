@@ -13,12 +13,10 @@ interface DropdownProps {
     name: string;
     list: ListProps[];
     width: string;
-    fontSize: string;
-    bgColor: string;
 }
 
 const Dropdown = (props: DropdownProps) => {
-    const { type, name, list, width, fontSize, bgColor } = props;
+    const { type, name, list, width } = props;
     const [isOpen, setIsOpen] = useState(false);
     const [selectedOption, setSelectedOption] = useState<string>(name);
 
@@ -35,10 +33,8 @@ const Dropdown = (props: DropdownProps) => {
             <DropdownHeader
                 onClick={toggling}
                 $type={type}
-                $width={width}
-                $fontSize={fontSize}
-                $bgColor={bgColor}>
-                <Title type={type}>
+                $width={width}>
+                <Title>
                     {selectedOption || name}
                 </Title>
                 <Image
@@ -52,15 +48,13 @@ const Dropdown = (props: DropdownProps) => {
                     <DropdownListContent
                         $type={type}
                         $width={width}
-                        $bgColor={bgColor}
                     >
                         {list.map(data => (
                             <ListItem
                                 onClick={() => handleDropValue(data.value)} key={data.id}
                                 className={type}
-                                $width={width}
-                                $fontSize={fontSize}
-                                $bgColor={bgColor}>
+                                $type={type}
+                                $width={width}>
                                 {data.value}
                             </ListItem>
                         ))}
@@ -73,35 +67,29 @@ const Dropdown = (props: DropdownProps) => {
 
 export default Dropdown;
 
+const Wrapper = styled.div``
 
-const Wrapper = styled.div`
-    
-`
-
-const DropdownHeader = styled.div<{ $type: string, $width: string, $fontSize: string, $bgColor: string }>`
+const DropdownHeader = styled.div<{ $type: string, $width: string }>`
   display: flex;
   align-items: center;
-  ${({ $type }) =>
-        $type === 'type2'
-            ? `${theme.fonts.regular18}`
-            : `${theme.fonts.medium16}`};
+  justify-content: space-between;
   color:${theme.colors.black};
   border-radius: 10px;
-  padding:16.5px 0;
-  padding-left: 1em;
-  background: ${(props) => props.$bgColor};
+  padding:16.5px 21px;
+  background: ${({ $type }) => $type === 'type1' ? '#F5F5F5' : `${theme.colors.white}`};
   border:${({ $type }) =>
         $type === 'type2'
             ? `1px solid ${theme.colors.gray300}`
             : 'none'};
-  width:${(props) => props.$width};
-  ${(props) => props.$fontSize};
+  width:${({ $width }) => $width};
+  ${({ $type }) =>
+        $type === 'type1'
+            ? `${theme.fonts.medium16}`
+            : `${theme.fonts.regular18}`};
   cursor: pointer;
 `;
 
-const Title = styled.p<{ type: string }>`
-  padding-right: ${(props) => props.type === 'type1' ? '20px' : '120px'};
-`;
+const Title = styled.p``;
 
 const DropBox = styled.div`
     position: absolute;
@@ -109,11 +97,11 @@ const DropBox = styled.div`
     z-index:1;
 `
 
-const DropdownListContent = styled.ul<{ $type: string, $width: string, $bgColor: string }>`
+const DropdownListContent = styled.ul<{ $type: string, $width: string }>`
   padding: 0;
   margin: 0;
   border-radius: 10px;
-  background: ${(props) => props.$bgColor};
+  background: ${({ $type }) => $type === 'type1' ? '#F5F5F5' : `${theme.colors.white}`};
   border:${({ $type }) =>
         $type === 'type2'
             ? `1px solid ${theme.colors.gray300}`
@@ -122,11 +110,13 @@ const DropdownListContent = styled.ul<{ $type: string, $width: string, $bgColor:
   width:${(props) => props.$width};
 `;
 
-const ListItem = styled.li<{ $width: string, $fontSize: string, $bgColor: string }>`
-  line-height: 27px;
+const ListItem = styled.li<{ $type: string, $width: string }>`
   list-style: none;
   color:${theme.colors.black};
-  ${(props) => props.$fontSize};
+  ${({ $type }) =>
+        $type === 'type1'
+            ? `${theme.fonts.medium16}`
+            : `${theme.fonts.regular18}`};
   padding:10px 16px;
   cursor: pointer;
   &.type1{

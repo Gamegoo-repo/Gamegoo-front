@@ -18,6 +18,7 @@ export default function RootLayout({
       </head>
       <body>
         <StyledComponentsRegistry>
+          <div id="modal-root"></div>
           <GlobalStyles />
           <ThemeProvider theme={theme}>
             <Header />

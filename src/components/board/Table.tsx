@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import dayjs from "@/libs/dayjs";
 import { setDateFormatter, setPositionImg, setTierImg } from "@/utils/custom";
 
 interface TableTitleProps {
@@ -32,15 +31,6 @@ interface TableProps {
 const Table = (props: TableProps) => {
     const { title, content } = props;
 
-    // const handleDateFormatter = (date: string) => {
-    //     const now = dayjs();
-    //     const diff = now.diff(date, 'day')
-    //     if (diff >= 7) {
-    //         return dayjs(date).format("YYYY-MM-DD");
-    //     } else {
-    //         return dayjs(date).fromNow();
-    //     }
-    // };
     return (
         <TableWrapper>
             <TableHead>

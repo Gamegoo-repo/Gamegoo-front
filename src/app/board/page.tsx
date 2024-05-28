@@ -3,13 +3,14 @@
 import styled from "styled-components";
 import Image from "next/image";
 import { theme } from "@/styles/theme";
+import { useEffect, useState } from "react";
+import { BOARD_TITLE } from "@/data/board";
 import Button from "@/components/common/Button";
 import Dropdown from "@/components/common/Dropdown";
 import Table from "@/components/board/Table";
 import Pagination from "@/components/common/Pagination";
-import { useState } from "react";
 import PositionFilter from "@/components/board/PositionFilter";
-import { BOARD_TITLE } from "@/data/board";
+import WritePost from "@/components/board/Writing";
 
 const DROP_DATA1 = [
     { id: 1, value: '솔로1' },
@@ -44,6 +45,7 @@ const BoardPage = () => {
 
     const [isPosition, setIsPosition] = useState(0);
     const [micOn, setMicOn] = useState(true);
+    const [isWritingOpen, setIsWritingOpen] = useState(false);
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
@@ -57,78 +59,98 @@ const BoardPage = () => {
         setMicOn((prevStatus) => !prevStatus);
     };
 
+    const handleWritingOpen = () => {
+        setIsWritingOpen(true);
+    };
+
+    const handleWritingClose = () => {
+        setIsWritingOpen(false);
+    };
+
+    useEffect(() => {
+        if (isWritingOpen) {
+          document.body.style.overflow = 'hidden';
+        } else {
+          document.body.style.overflow = 'unset';
+        }
+    
+        return () => {
+          document.body.style.overflow = 'unset';
+        };
+      }, [isWritingOpen]);
+
     return (
-        <Wrapper>
-            <Header>
-                <FirstRow>
-                    <Title>게시판</Title>
-                    <RefreshImage
-                        src='/assets/icons/refresh.svg'
-                        width={30}
-                        height={27}
-                        alt='refresh button'
+        <>
+            {isWritingOpen && <WritePost onClose={handleWritingClose} />}
+            <Wrapper>
+                <Header>
+                    <FirstRow>
+                        <Title>게시판</Title>
+                        <RefreshImage
+                            src='/assets/icons/refresh.svg'
+                            width={30}
+                            height={27}
+                            alt='refresh button'
+                        />
+                    </FirstRow>
+                    <SecondRow>
+                        <FirstBlock>
+                            <Dropdown
+                                type='type1'
+                                width='138px'
+                                name='솔로 랭크'
+                                list={DROP_DATA1}
+                            />
+                            <Dropdown
+                                type='type1'
+                                width='138px'
+                                name='티어 선택'
+                                list={DROP_DATA2}
+                            />
+                            <PositionBox>
+                                <PositionFilter
+                                    onPositionFilter={handlePositionFilter}
+                                    isPosition={isPosition}
+                                />
+                            </PositionBox>
+                            <MicButton
+                                onClick={handleMic}
+                                className={micOn ? 'clicked' : 'unClicked'}>
+                                <Image
+                                    src='/assets/icons/mic.svg'
+                                    width={21}
+                                    height={26}
+                                    alt='mic button'
+                                />
+                            </MicButton>
+                        </FirstBlock>
+                        <SecondBlock>
+                            <Button
+                                onClick={handleWritingOpen}
+                                buttonType='primary'
+                                size='large'
+                                text='글 작성하기'
+                            />
+                        </SecondBlock>
+                    </SecondRow>
+                </Header>
+                <Main>
+                    <Table
+                        title={BOARD_TITLE}
+                        content={currentPosts}
                     />
-                </FirstRow>
-                <SecondRow>
-                    <FirstBlock>
-                        <Dropdown
-                            type='type1'
-                            width='138px'
-                            name='솔로 랭크'
-                            fontSize='20px'
-                            bgColor="#F5F5F5"
-                            list={DROP_DATA1}
-                        />
-                        <Dropdown
-                            type='type1'
-                            width='138px'
-                            name='티어 선택'
-                            fontSize='20px'
-                            bgColor='#F5F5F5'
-                            list={DROP_DATA2}
-                        />
-                        <PositionBox>
-                            <PositionFilter
-                                onPositionFilter={handlePositionFilter}
-                                isPosition={isPosition}
-                            />
-                        </PositionBox>
-                        <MicButton
-                            onClick={handleMic}
-                            className={micOn ? 'clicked' : 'unClicked'}>
-                            <Image
-                                src='/assets/icons/mic.svg'
-                                width={21}
-                                height={26}
-                                alt='mic button'
-                            />
-                        </MicButton>
-                    </FirstBlock>
-                    <SecondBlock>
-                        <Button
-                            buttonType='primary'
-                            size='large'
-                            text='글 작성하기'
-                        />
-                    </SecondBlock>
-                </SecondRow>
-            </Header>
-            <Main>
-                <Table
-                    title={BOARD_TITLE}
-                    content={currentPosts}
-                />
-            </Main>
-            <Footer>
-                <Pagination
-                    currentPage={currentPage}
-                    totalItems={BOARD_CONTENT.length}
-                    itemsPerPage={itemsPerPage}
-                    pageButtonCount={pageButtonCount}
-                    onPageChange={handlePageChange}
-                />
-            </Footer>
-        </Wrapper>
+                </Main>
+                <Footer>
+                    <Pagination
+                        currentPage={currentPage}
+                        totalItems={BOARD_CONTENT.length}
+                        itemsPerPage={itemsPerPage}
+                        pageButtonCount={pageButtonCount}
+                        onPageChange={handlePageChange}
+                    />
+                </Footer>
+            </Wrapper>
+        </>
     )
 };
 
