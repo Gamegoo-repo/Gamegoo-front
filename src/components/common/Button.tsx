@@ -4,13 +4,21 @@ import styled from "styled-components";
 interface ButtonProps {
   buttonType?: "primary" | "secondary" | "default";
   size?: "small" | "medium" | "large";
+  width?: string;
   text: string;
   onClick?: (e: React.MouseEvent) => void;
   disabled?: boolean;
 }
 
 const Button = (props: ButtonProps) => {
-  const { buttonType = "default", size, text, onClick, disabled } = props;
+  const {
+    buttonType = "default",
+    size,
+    width,
+    text,
+    onClick,
+    disabled,
+  } = props;
 
   let buttonClassName = buttonType;
   if (size) {
@@ -18,7 +26,12 @@ const Button = (props: ButtonProps) => {
   }
 
   return (
-    <StyledButton className={buttonType} onClick={onClick} disabled={disabled}>
+    <StyledButton
+      className={buttonType}
+      onClick={onClick}
+      disabled={disabled}
+      width={width}
+    >
       {text}
     </StyledButton>
   );
@@ -26,8 +39,8 @@ const Button = (props: ButtonProps) => {
 
 export default Button;
 
-const StyledButton = styled.button`
-  width: 100%;
+const StyledButton = styled.button<{ width?: string }>`
+  width: ${({ width }) => width || "100%"};
   padding: 19px 60px;
   border: none;
   border-radius: 15px;
