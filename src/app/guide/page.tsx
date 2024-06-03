@@ -12,6 +12,7 @@ import ConfirmModal from "@/components/common/ConfirmModal";
 import FormModal from "@/components/common/FormModal";
 import PositionCategory from "@/components/common/PositionCategory";
 import Toggle from "@/components/common/Toggle";
+import CompleteProfile from "@/components/match/CompleteProfile";
 
 const DROP_DATA1 = [
   { id: 1, value: "솔로1" },
@@ -291,6 +292,8 @@ const Guide = () => {
       )}
       <H2>Toggle</H2>
       <Toggle isOn={isOn} onToggle={toggleHandler} />
+      <H2>매칭완료 프로필</H2>
+      <CompleteProfile />
     </Layout>
   );
 };
