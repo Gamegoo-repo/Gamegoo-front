@@ -1,4 +1,5 @@
 "use client";
+import StyledJsxRegistry from "./registry";
 
 import GlobalStyles from "@/styles/GlobalStyles";
 import { ThemeProvider } from "styled-components";
@@ -16,11 +17,13 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body>
-        <GlobalStyles />
-        <ThemeProvider theme={theme}>
-          <Header />
-          {children}
-        </ThemeProvider>
+        <StyledJsxRegistry>
+          <GlobalStyles />
+          <ThemeProvider theme={theme}>
+            <Header />
+            {children}
+          </ThemeProvider>
+        </StyledJsxRegistry>
       </body>
     </html>
   );
