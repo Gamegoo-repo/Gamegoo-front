@@ -4,48 +4,67 @@ import { useEffect, useRef, useState } from "react";
 import PositionCategory from "../common/PositionCategory";
 
 interface PositionBoxProps {
-    // onClose: () => void;
- 
-    handlePositionValue:(value:string)=>void;
-};
+    onPositionChange: (newPositionValue: PositionState) => void;
+}
 
-const PositionBox = (props: PositionBoxProps) => {
-    const { handlePositionValue} = props;
+export interface PositionState {
+    main: string;
+    sub: string;
+    want: string;
+}
 
-    const boxRefs = useRef<HTMLDivElement>(null);
-
-    // const handlePositionClickOutside = (event: MouseEvent) => {
-    //     if (boxRefs.current && !boxRefs.current.contains(event.target as Node)) {
-    //         setIsSelectPositionOpen({
-    //             ...isSelectPositionOpen,
-    //             [isPositionType]: false
-    //         })
-    //     }
-    // };
-
-    // useEffect(() => {
-    //     document.addEventListener('mousedown', handlePositionClickOutside);
-    //     console.log(1)
-    //     return () => {
-    //         document.removeEventListener('mousedown', handlePositionClickOutside);
-    //         console.log(2)
-    //     };
-    // });
-
-    const [isPositionType, setIsPositionType] = useState("")
-    const [isSelectPositionOpen, setIsSelectPositionOpen] = useState({
-        main: false,
-        sub: false,
-        want: false
+const PositionBox = ({ onPositionChange }: PositionBoxProps) => {
+    const [selectedBox, setSelectedBox] = useState<string | null>(null);
+    const [positionValue, setPositionValue] = useState<PositionState>({
+        main: '',
+        sub: '',
+        want: ''
     });
 
-    const togglePosition = (position: 'main' | 'sub' | 'want') => {
-        setIsPositionType(position);
-        setIsSelectPositionOpen(prevState => ({
-            ...prevState,
-            [position]: !prevState[position]
-        }));
+    const handleCategoryButtonClick = (boxName: string, buttonLabel: string) => {
+        const newPositionValue = { ...positionValue, [boxName]: buttonLabel };
+        setPositionValue(newPositionValue);
+        onPositionChange(newPositionValue);
+        setSelectedBox(null);
     };
+
+    const positionRef = useRef<HTMLDivElement>(null);
+
+    const handleBoxClick = (boxName: string) => {
+        setSelectedBox(prevSelectedBox => (prevSelectedBox === boxName ? null : boxName));
+    };
+
+    const handlePositionImgSet = (buttonLabel: string) => {
+        switch (buttonLabel) {
+            case 'random':
+                return '/assets/icons/position_bot_purple.svg';
+            case 'top':
+                return '/assets/icons/position_supporter_purple.svg';
+            case 'jungle':
+                return '/assets/icons/position_bot_purple.svg';
+            case 'mid':
+                return '/assets/icons/position_bot_purple.svg';
+            case 'bottom':
+                return '/assets/icons/position_supporter_purple.svg';
+            case 'supporter':
+                return '/assets/icons/position_supporter_purple.svg';
+            default:
+                return '/assets/icons/position_supporter_purple.svg';
+        }
+    };
+
+    const handleClickOutside = (event: MouseEvent) => {
+        if (positionRef.current && !positionRef.current.contains(event.target as Node)) {
+            setSelectedBox(null);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     return (
         <PositionWrapper>
@@ -53,59 +72,41 @@ const PositionBox = (props: PositionBoxProps) => {
                 <Section>
                     <Title>주 포지션</Title>
                     <Image
-                        onClick={() => togglePosition('main')}
-                        src='/assets/icons/position_supporter_purple.svg'
+                        onClick={() => handleBoxClick('main')}
+                        src={handlePositionImgSet(positionValue.main)}
                         width={35}
                         height={28}
                         alt="main position image"
                     />
-                    {isSelectPositionOpen.main &&
-                        <PositionCategory
-                            type="main"
-                            ref={boxRefs}
-                            // onClose={onClose}
-                            onSetPosition={handlePositionValue} />}
-                    {/* {openBox === 'main' && (<PositionCategory ref={(el) => {
-                        boxRefs.current['main'] = el;
-                    }}
-                        onClose={onClose}
-                        onSetPosition={onSetPosition} />)} */}
                 </Section>
                 <Section>
                     <Title>부 포지션</Title>
                     <Image
-                        onClick={() => togglePosition('sub')}
-                        src='/assets/icons/position_bot_purple.svg'
+                        onClick={() => handleBoxClick('sub')}
+                        src={handlePositionImgSet(positionValue.sub)}
                         width={35}
                         height={28}
-                        alt="main position image"
+                        alt="sub position image"
                     />
-                    {isSelectPositionOpen.sub &&
-                        <PositionCategory
-                            type="sub"
-                            ref={boxRefs}
-                            // onClose={onClose}
-                            onSetPosition={handlePositionValue} />}
                 </Section>
             </FirstBox>
             <SecondBox>
                 <Title>찾는 포지션</Title>
                 <Image
-                    onClick={() => togglePosition('want')}
-                    src='/assets/icons/position_supporter_purple.svg'
+                    onClick={() => handleBoxClick('want')}
+                    src={handlePositionImgSet(positionValue.want)}
                     width={35}
                     height={28}
-                    alt="main position image"
+                    alt="want position image"
                 />
-                {isSelectPositionOpen.want &&
-                    <PositionCategory
-                        type="want"
-                        ref={boxRefs}
-                        // onClose={onClose}
-                        onSetPosition={handlePositionValue} />}
             </SecondBox>
+            {selectedBox !== null && (
+                <div ref={positionRef}>
+                    <PositionCategory boxName={selectedBox} onButtonClick={handleCategoryButtonClick} />
+                </div>
+            )}
         </PositionWrapper>
-    )
+    );
 };
 
 export default PositionBox;
@@ -113,28 +114,28 @@ export default PositionBox;
 const PositionWrapper = styled.div`
     display: flex;
     align-items: center;
-    gap:13px;
-`
+    gap: 13px;
+`;
 
 const FirstBox = styled.div`
     display: flex;
     align-items: center;
     text-align: center;
-    background: #F6F6F6;
+    background: #f6f6f6;
     border-radius: 10px;
     padding: 22px 36px;
-    gap:52px;
-`
+    gap: 52px;
+`;
 
-const Section = styled.div``
+const Section = styled.div``;
 
 const SecondBox = styled.div`
     text-align: center;
-    background: #F6F6F6;
+    background: #f6f6f6;
     border-radius: 10px;
     padding: 22px 44px;
-`
+`;
 
 const Title = styled.p`
     margin-bottom: 5px;
-`
+`;

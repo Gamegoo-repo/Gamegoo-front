@@ -4,9 +4,8 @@ import Dropdown from "../common/Dropdown";
 import Image from "next/image";
 import Input from "../common/Input";
 import { useEffect, useRef, useState } from "react";
-import PositionBox from "./PositionBox";
+import PositionBox, { PositionState } from "./PositionBox";
 import UserInfo from "./UserInfo";
-import Test from "./Test";
 
 interface WritingProps {
     onClose: () => void;
@@ -18,7 +17,6 @@ const DROP_DATA = [
     { id: 3, value: '솔로3' },
 ];
 
-
 const WritePost = (props: WritingProps) => {
     const { onClose } = props;
 
@@ -28,8 +26,6 @@ const WritePost = (props: WritingProps) => {
 
     const [imageUploadResult, setImageUploadResult] = useState<any>(null);
     const [profileImg, setProfileImg] = useState<File | null>(null);
-    const [openPosition, setOpenPosition] = useState(false);
-    const [isPositionValue, setIsPositionValue] = useState("");
     const [textareaValue, setTextareaValue] = useState("");
 
     const handleDropValue = (value: string) => {
@@ -80,14 +76,18 @@ const WritePost = (props: WritingProps) => {
     //     }
     // };
 
-    const handlePositionClose = () => {
-        setOpenPosition(false);
+
+    const handlePositionChange = (newPositionValue: PositionState) => {
+        setPositionValue(newPositionValue);
     };
 
-    const handlePosition = (value: string) => {
-        setIsPositionValue(value)
-        setOpenPosition(false);
-    };
+    const [positionValue, setPositionValue] = useState<PositionState>({
+        main: '',
+        sub: '',
+        want: ''
+    });
+
+    console.log(positionValue)
 
     return (
         <Modal
@@ -117,7 +117,8 @@ const WritePost = (props: WritingProps) => {
                 {/* <PositionBox
                     // onClose={handlePositionClose}
                     handlePositionValue={handlePosition}/> */}
-                    <Test/>
+                <PositionBox onPositionChange={handlePositionChange} />
+                {/* <Test onPositionChange={handlePositionChange} /> */}
             </PositionSection>
             <StyleSection>
                 <Title>게임 스타일</Title>

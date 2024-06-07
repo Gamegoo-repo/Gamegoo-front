@@ -3,25 +3,34 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import PositionCategory from "../common/PositionCategory";
 
-const Test = () => {
+interface TestProps {
+    onPositionChange: (newPositionValue: PositionState) => void;
+}
+
+export interface PositionState {
+    main: string;
+    sub: string;
+    want: string;
+}
+
+const Test = ({ onPositionChange }: TestProps) => {
     const [selectedBox, setSelectedBox] = useState<string | null>(null);
-    const [clickedButton, setClickedButton] = useState<string | null>(null);
-    const [positionValue, setPositionValue] = useState<string>("");
+    const [positionValue, setPositionValue] = useState<PositionState>({
+        main: '',
+        sub: '',
+        want: ''
+    });
+
+    const handleButtonClick = (boxNumber: string, buttonLabel: string) => {
+        const newPositionValue = { ...positionValue, [boxNumber]: buttonLabel };
+        setPositionValue(newPositionValue);
+        onPositionChange(newPositionValue);
+        setSelectedBox(null);
+    };
     const positionRef = useRef<HTMLDivElement>(null);
 
     const handleBoxClick = (boxNumber: string) => {
-        if (selectedBox === boxNumber) {
-            setSelectedBox(null); 
-        } else {
-            setSelectedBox(boxNumber);
-        }
-        setClickedButton(null); 
-    };
-
-    const handleButtonClick = (boxNumber: string, buttonLabel: string) => {
-        setClickedButton(`Box ${boxNumber}: ${buttonLabel}`);
-        setPositionValue(buttonLabel)
-        setSelectedBox(null); 
+        setSelectedBox(prevSelectedBox => (prevSelectedBox === boxNumber ? null : boxNumber));
     };
 
     const handlePositionImgSet = (buttonLabel: string) => {
@@ -56,7 +65,6 @@ const Test = () => {
         };
     }, []);
 
-    console.log(clickedButton)
     return (
         <PositionWrapper>
             <FirstBox>
@@ -64,8 +72,7 @@ const Test = () => {
                     <Title>주 포지션</Title>
                     <Image
                         onClick={() => handleBoxClick('main')}
-                        // src='/assets/icons/position_supporter_purple.svg'
-                        src={handlePositionImgSet(positionValue)}
+                        src={handlePositionImgSet(positionValue.main)}
                         width={35}
                         height={28}
                         alt="main position image"
@@ -75,10 +82,10 @@ const Test = () => {
                     <Title>부 포지션</Title>
                     <Image
                         onClick={() => handleBoxClick('sub')}
-                        src='/assets/icons/position_bot_purple.svg'
+                        src={handlePositionImgSet(positionValue.sub)}
                         width={35}
                         height={28}
-                        alt="main position image"
+                        alt="sub position image"
                     />
                 </Section>
             </FirstBox>
@@ -86,20 +93,19 @@ const Test = () => {
                 <Title>찾는 포지션</Title>
                 <Image
                     onClick={() => handleBoxClick('want')}
-                    src='/assets/icons/position_supporter_purple.svg'
+                    src={handlePositionImgSet(positionValue.want)}
                     width={35}
                     height={28}
-                    alt="main position image"
+                    alt="want position image"
                 />
             </SecondBox>
             {selectedBox !== null && (
                 <div ref={positionRef}>
                     <PositionCategory boxNumber={selectedBox} onButtonClick={handleButtonClick} />
                 </div>
-            )
-            }
-        </PositionWrapper >
-    )
+            )}
+        </PositionWrapper>
+    );
 };
 
 export default Test;
@@ -107,28 +113,28 @@ export default Test;
 const PositionWrapper = styled.div`
     display: flex;
     align-items: center;
-    gap:13px;
-`
+    gap: 13px;
+`;
 
 const FirstBox = styled.div`
     display: flex;
     align-items: center;
     text-align: center;
-    background: #F6F6F6;
+    background: #f6f6f6;
     border-radius: 10px;
     padding: 22px 36px;
-    gap:52px;
-`
+    gap: 52px;
+`;
 
-const Section = styled.div``
+const Section = styled.div``;
 
 const SecondBox = styled.div`
     text-align: center;
-    background: #F6F6F6;
+    background: #f6f6f6;
     border-radius: 10px;
     padding: 22px 44px;
-`
+`;
 
 const Title = styled.p`
     margin-bottom: 5px;
-`
+`;
