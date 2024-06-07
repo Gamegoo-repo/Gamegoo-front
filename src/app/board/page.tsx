@@ -10,7 +10,7 @@ import Dropdown from "@/components/common/Dropdown";
 import Table from "@/components/board/Table";
 import Pagination from "@/components/common/Pagination";
 import PositionFilter from "@/components/board/PositionFilter";
-import WritePost from "@/components/board/Writing";
+import WritePost from "@/components/crBoard/Writing";
 
 const DROP_DATA1 = [
     { id: 1, value: '솔로1' },
@@ -49,8 +49,23 @@ const BoardPage = () => {
 
     const [isDropdownOpen1, setIsDropdownOpen1] = useState(false);
     const [isDropdownOpen2, setIsDropdownOpen2] = useState(false);
+    const [selectedDropOption1, setSelectedDropOption1] = useState('솔로 랭크');
+    const [selectedDropOption2, setSelectedDropOption2] = useState('티어 선택');
+
     const dropdownRef1 = useRef<HTMLDivElement>(null);
     const dropdownRef2 = useRef<HTMLDivElement>(null);
+
+    const handleFirstDropValue = (value: string) => {
+        console.log(value)
+        setSelectedDropOption1(value);
+        setIsDropdownOpen1(false);
+    };
+
+    const handleSecondDropValue = (value: string) => {
+        console.log(value)
+        setSelectedDropOption2(value);
+        setIsDropdownOpen2(false);
+    };
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
@@ -124,22 +139,24 @@ const BoardPage = () => {
                             <Dropdown
                                 type="type1"
                                 width="138px"
-                                name="솔로 랭크"
                                 padding="18px 21px"
                                 list={DROP_DATA1}
                                 ref={dropdownRef1}
                                 open={isDropdownOpen1}
                                 setOpen={setIsDropdownOpen1}
+                                onDropValue={handleFirstDropValue}
+                                defaultValue={selectedDropOption1}
                             />
                             <Dropdown
                                 type="type1"
                                 width="138px"
-                                name="티어 선택"
                                 padding="18px 21px"
                                 list={DROP_DATA2}
                                 ref={dropdownRef2}
                                 open={isDropdownOpen2}
                                 setOpen={setIsDropdownOpen2}
+                                onDropValue={handleSecondDropValue}
+                                defaultValue={selectedDropOption2}
                             />
                             <PositionBox>
                                 <PositionFilter

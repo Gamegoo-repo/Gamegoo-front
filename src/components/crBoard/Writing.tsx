@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { theme } from "@/styles/theme";
 import Modal from "./Modal";
 import Dropdown from "../common/Dropdown";
 import Image from "next/image";
@@ -7,7 +6,7 @@ import Input from "../common/Input";
 import { useEffect, useRef, useState } from "react";
 import PositionBox from "./PositionBox";
 import UserInfo from "./UserInfo";
-import GameStyle from "./GameStyle";
+import Test from "./Test";
 
 interface WritingProps {
     onClose: () => void;
@@ -19,27 +18,25 @@ const DROP_DATA = [
     { id: 3, value: '솔로3' },
 ];
 
-interface UserInterface {
-    image: File | null;
-    account: string;
-    tag: string;
-    tier: string;
-};
 
 const WritePost = (props: WritingProps) => {
     const { onClose } = props;
+
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [imageUploadResult, setImageUploadResult] = useState<any>(null);
+    const [selectedDropOption, setSelectedDropOption] = useState('솔로 랭크');
     const dropdownRef = useRef<HTMLDivElement>(null);
-    const [userInfo, setUserInfo] = useState<UserInterface>({
-        image: null,
-        account: "유니콘의 비밀",
-        tag: "KR1",
-        tier: 'B3'
-    });
+
+    const [imageUploadResult, setImageUploadResult] = useState<any>(null);
+    const [profileImg, setProfileImg] = useState<File | null>(null);
     const [openPosition, setOpenPosition] = useState(false);
-    const [isPosition, setIsPosition] = useState('');
+    const [isPositionValue, setIsPositionValue] = useState("");
     const [textareaValue, setTextareaValue] = useState("");
+
+    const handleDropValue = (value: string) => {
+        console.log(value)
+        setSelectedDropOption(value);
+        setIsDropdownOpen(false);
+    };
 
     const handleDropdownClickOutside = (event: MouseEvent) => {
         if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -55,23 +52,27 @@ const WritePost = (props: WritingProps) => {
     }, []);
 
     const handleFileSelect = (file: File) => {
-        setUserInfo({ ...userInfo, image: file });
+        setProfileImg(file);
     };
 
     // TODO: api 연결
     // const handleProfileUpload = async () => {
-    //     if (!image) return;
+    //     if (!profileImg) return;
 
     //     const formData = new FormData();
-    //     formData.append('file', image);
+
+    //     const config = {
+    //         header: { "content-type": "multipart/form-data" },
+    //     };
+
+    //     formData.append('file', profileImg);
 
     //     try {
-    //         const response = await axios.post('/api/', formData, {
-    //             headers: {
-    //                 'Content-Type': 'multipart/form-data',
-    //             },
-    //         });
-
+    //         const response = await axios.post(
+    //             '/api/',
+    //             formData,
+    //             config
+    //         );
     //         console.log('Success:', response.data);
     //         setImageUploadResult(response.data);
     //     } catch (error) {
@@ -84,7 +85,7 @@ const WritePost = (props: WritingProps) => {
     };
 
     const handlePosition = (value: string) => {
-        setIsPosition(value)
+        setIsPositionValue(value)
         setOpenPosition(false);
     };
 
@@ -96,30 +97,30 @@ const WritePost = (props: WritingProps) => {
             onClose={onClose}
             buttonText='확인'>
             <UserInfo
-                onFileSelect={handleFileSelect}
-                userInfo={userInfo} />
-            <QueSection>
+                onFileSelect={handleFileSelect} />
+            <QueueSection>
                 <Title>큐타입</Title>
                 <Dropdown
                     ref={dropdownRef}
                     type="type2"
-                    name="솔로 랭크"
                     padding="10px 13px"
                     width="243px"
                     list={DROP_DATA}
                     open={isDropdownOpen}
                     setOpen={setIsDropdownOpen}
+                    onDropValue={handleDropValue}
+                    defaultValue={selectedDropOption}
                 />
-            </QueSection>
+            </QueueSection>
             <PositionSection>
                 <Title>포지션</Title>
-                <PositionBox
-                    onClose={handlePositionClose}
-                    onSetPosition={handlePosition} />
+                {/* <PositionBox
+                    // onClose={handlePositionClose}
+                    handlePositionValue={handlePosition}/> */}
+                    <Test/>
             </PositionSection>
             <StyleSection>
                 <Title>게임 스타일</Title>
-                <GameStyle />
             </StyleSection>
             <MicSection>
                 <Title>마이크</Title>
@@ -146,7 +147,7 @@ const Title = styled.p`
     margin-bottom:4px;
 `
 
-const QueSection = styled.div`
+const QueueSection = styled.div`
     margin-top:24px;    
 `
 

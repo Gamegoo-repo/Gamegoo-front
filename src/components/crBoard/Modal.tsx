@@ -69,6 +69,7 @@ const Overlay = styled.div`
     top:50%;
     left:50%;
     transform: translate(-50%, -50%);
+    z-index: 1;
 `
 
 const Wrapper = styled.div<{ $type: string, $width: string, $height: string }>`

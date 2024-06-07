@@ -6,56 +6,75 @@ import Jungle from "../../../public/assets/icons/position_jungle_unclicked.svg"
 import Mid from "../../../public/assets/icons/position_mid_unclicked.svg"
 import Bottom from "../../../public/assets/icons/position_bottom_unclicked.svg"
 import Supporter from "../../../public/assets/icons/position_supporter_unclicked.svg"
+import { forwardRef } from "react";
 
+// interface PositionCategoryProps {
+//     type: string;
+//     // onClose: () => void;
+//     onSetPosition: (value: string) => void;
+// };
 
-interface PositionCategoryProps {
-    onClose: () => void;
-    onSetPosition: (value: string) => void;
-}
-const PositionCategory = (props: PositionCategoryProps) => {
-    const { onClose, onSetPosition } = props;
+interface PositionProps {
+    boxNumber: string;
+    onButtonClick: (boxNumber: string, buttonLabel: string) => void;
+};
+
+const PositionCategory = forwardRef(function PositionCategory(props: PositionProps, ref: any) {
+    // const { type, onSetPosition } = props;
+    const { boxNumber, onButtonClick } = props;
+
+    // const handlePositionCategory = (value: string) => {
+    //     onSetPosition(value);
+    //     // onClose();
+    // }
+
+    const handlePositionCategory = (label: string) => {
+        onButtonClick(boxNumber, label);
+      };
 
     return (
-        <Overlay onClick={onClose}>
-            <Wrapper onClick={(e) => e.stopPropagation()}>
-                <Box>
-                    <RandomButton onClick={() => onSetPosition('random')}>
-                        <Random />
-                    </RandomButton>
-                    <TopButton onClick={() => onSetPosition('top')}>
-                        <Top />
-                    </TopButton>
-                    <JungleButton onClick={() => onSetPosition('jungle')}>
-                        <Jungle />
-                    </JungleButton>
-                    <MidButton onClick={() => onSetPosition('mid')}>
-                        <Mid />
-                    </MidButton>
-                    <BottomButton onClick={() => onSetPosition('bottom')}>
-                        <Bottom />
-                    </BottomButton>
-                    <SupporterButton onClick={() => onSetPosition('supporter')}>
-                        <Supporter />
-                    </SupporterButton>
-                </Box>
-            </Wrapper>
-        </Overlay>
+        <Wrapper ref={ref} className={boxNumber}>
+            <Box>
+                <RandomButton onClick={() => handlePositionCategory('random')}>
+                    <Random />
+                </RandomButton>
+                <TopButton onClick={() => handlePositionCategory('top')}>
+                    <Top />
+                </TopButton>
+                <JungleButton onClick={() => handlePositionCategory('jungle')}>
+                    <Jungle />
+                </JungleButton>
+                <MidButton onClick={() => handlePositionCategory('mid')}>
+                    <Mid />
+                </MidButton>
+                <BottomButton onClick={() => handlePositionCategory('bottom')}>
+                    <Bottom />
+                </BottomButton>
+                <SupporterButton onClick={() => handlePositionCategory('supporter')}>
+                    <Supporter />
+                </SupporterButton>
+            </Box>
+        </Wrapper>
     )
-}
+});
 
 export default PositionCategory;
 
-const Overlay = styled.div`
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    position:fixed;
-    inset: 0;
-`
-
 const Wrapper = styled.div`
     position: absolute;
-    z-index: 1;
+    z-index: 10;
+    &.main {
+        top: 46.5%;
+        left: 13.5%
+    }
+    &.sub {
+        top: 46.5%;
+        left: 35.5%;
+    }
+    &.want {
+        top: 46.5%;
+        left: 66.7%;
+    }
 `
 
 const Box = styled.div`
@@ -63,9 +82,8 @@ const Box = styled.div`
     align-items: center;
     column-gap: 50px;
     position:relative; 
-    margin: 50px;
     width:482px; 
-    padding:29px;
+    padding:18px 27px;
     background:${theme.colors.black};
     border-radius: 16.3px;
         &:after { 

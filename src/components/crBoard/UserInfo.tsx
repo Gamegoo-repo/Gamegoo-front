@@ -1,23 +1,36 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import { ChangeEvent, useRef, useState } from "react";
-
-interface UserInfo {
-    account: string;
-    tag: string;
-    tier: string;
-}
+import { ChangeEvent, useEffect, useRef, useState } from "react";
+import axios from 'axios';
 
 interface FileInputProps {
     onFileSelect: (file: File) => void;
-    userInfo: UserInfo
 };
+const user = {
+    account: "유니콘의 비밀",
+    tag: "KR1",
+    tier: "B3"
+}
+
+interface userInfo { account: string; tag: string; tier: string };
 
 const UserInfo = (props: FileInputProps) => {
-    const { onFileSelect, userInfo } = props;
+    const { onFileSelect } = props;
     const [preview, setPreview] = useState<string>('/assets/icons/profile_img.svg');
     const inputRef = useRef<HTMLInputElement | null>(null);
+    // const [user, setUser] = useState<userInfo>()
+
+    // TODO: api 연결
+    // useEffect(() => {
+    //     axios.get('http://localhost:3001/user')
+    //         .then(response => {
+    //             setUser(response.data)
+    //         })
+    //         .catch(error => {
+    //             console.error('Error fetching data:', error);
+    //         });
+    // }, [])
 
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -55,8 +68,8 @@ const UserInfo = (props: FileInputProps) => {
             </ProfileImgBg>
             <UserDetail>
                 <UserAccount>
-                    <Account>{userInfo.account}</Account>
-                    <Tag>#{userInfo.tag}</Tag>
+                    <Account>{user?.account}</Account>
+                    <Tag>#{user?.tag}</Tag>
                 </UserAccount>
                 <UserTier>
                     {/* TODO:api 연결 후 수정 필 */}
@@ -66,7 +79,7 @@ const UserInfo = (props: FileInputProps) => {
                         height={21}
                         alt="tier image"
                     />
-                    <Tier>{userInfo.tier}</Tier>
+                    <Tier>{user?.tier}</Tier>
                 </UserTier>
             </UserDetail>
         </UserProfile>

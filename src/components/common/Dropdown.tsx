@@ -10,25 +10,19 @@ interface ListProps {
 
 interface DropdownProps {
     type: 'type1' | 'type2';
-    name: string;
     padding: string;
     list: ListProps[];
     width: string;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    onDropValue: (value: string) => void;
+    defaultValue: string;
 };
 
 const Dropdown = forwardRef(function Dropdown(props: DropdownProps, ref: React.ForwardedRef<HTMLDivElement>) {
-    const { type, name, list, width, open, setOpen, padding } = props;
-    const [selectedOption, setSelectedOption] = useState<string>(name);
+    const { type, list, width, open, padding, setOpen, onDropValue, defaultValue } = props;
 
     const toggling = () => setOpen((prevState) => !prevState);
-
-    const handleDropValue = (value: string) => {
-        console.log(value)
-        setSelectedOption(value);
-        setOpen(false);
-    };
 
     return (
         <Wrapper
@@ -40,7 +34,7 @@ const Dropdown = forwardRef(function Dropdown(props: DropdownProps, ref: React.F
                 $width={width}
                 $padding={padding}>
                 <Title>
-                    {selectedOption || name}
+                    {defaultValue}
                 </Title>
                 <Image
                     src='/assets/icons/down_arrow.svg'
@@ -56,7 +50,7 @@ const Dropdown = forwardRef(function Dropdown(props: DropdownProps, ref: React.F
                     >
                         {list.map(data => (
                             <ListItem
-                                onClick={() => handleDropValue(data.value)} key={data.id}
+                                onClick={() => onDropValue(data.value)} key={data.id}
                                 className={type}
                                 $type={type}
                                 $width={width}>
@@ -88,7 +82,6 @@ const DropdownHeader = styled.div<{ $type: string, $width: string, $padding: str
         $type === 'type2'
             ? `1px solid ${theme.colors.gray300}`
             : 'none'};
-    width:${({ $width }) => $width};
     ${({ $type }) =>
         $type === 'type1'
             ? `${theme.fonts.medium16}`

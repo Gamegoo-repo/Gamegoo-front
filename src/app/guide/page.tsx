@@ -44,8 +44,9 @@ const Guide = () => {
   const [isPosition, setIsPosition] = useState('');
 
   /* Dropdown State*/
-  const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedDropOption, setSelectedDropOption] = useState('솔로 랭크');
 
   const handleOptionChange = (value: string) => {
     setIsSelected(value);
@@ -81,9 +82,15 @@ const Guide = () => {
   };
 
   /* Dropdown */
+  const handleDropValue = (value: string) => {
+    console.log(value)
+    setSelectedDropOption(value);
+    setIsDropdownOpen(false);
+  };
+
   const handleClickOutside = (event: MouseEvent) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-      setIsOpen(false);
+      setIsDropdownOpen(false);
     }
   };
 
@@ -182,24 +189,26 @@ const Guide = () => {
       <H2>Dropdown</H2>
       <Dropdown
         type="type1"
-        name="솔로 랭크"
         width="138px"
         padding="16.5px 21px"
         list={DROP_DATA1}
         ref={dropdownRef}
-        open={isOpen}
-        setOpen={setIsOpen} />
+        setOpen={setIsDropdownOpen}
+        open={isDropdownOpen}
+        onDropValue={handleDropValue}
+        defaultValue={selectedDropOption} />
       <p>TYPE 1</p>
 
       {/* <Dropdown
         type="type2"
-        name="티어 선택"
         width="243px"
         padding="16.5px 21px"
         list={DROP_DATA2}
         ref={dropdownRef}
-        open={isOpen}
-        setOpen={setIsOpen} />
+        setOpen={setIsDropdownOpen}
+        open={isDropdownOpen}
+        onDropValue={handleDropValue}
+        defaultValue={selectedDropOption} />
       <p>TYPE 2</p> */}
 
 
