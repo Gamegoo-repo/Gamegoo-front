@@ -87,6 +87,7 @@ const WritePost = (props: WritingProps) => {
         want: ''
     });
 
+
     console.log(positionValue)
 
     return (
@@ -114,14 +115,11 @@ const WritePost = (props: WritingProps) => {
             </QueueSection>
             <PositionSection>
                 <Title>포지션</Title>
-                {/* <PositionBox
-                    // onClose={handlePositionClose}
-                    handlePositionValue={handlePosition}/> */}
-                <PositionBox onPositionChange={handlePositionChange} />
-                {/* <Test onPositionChange={handlePositionChange} /> */}
+                <PositionBox onPositionChange={handlePositionChange}/>
             </PositionSection>
             <StyleSection>
                 <Title>게임 스타일</Title>
+                {/* 게임 스타일 컴포넌트 */}
             </StyleSection>
             <MicSection>
                 <Title>마이크</Title>

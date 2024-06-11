@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import PositionCategory from "../common/PositionCategory";
 
 interface PositionBoxProps {
@@ -14,24 +14,25 @@ export interface PositionState {
 }
 
 const PositionBox = ({ onPositionChange }: PositionBoxProps) => {
-    const [selectedBox, setSelectedBox] = useState<string | null>(null);
+    const [selectedBox, setSelectedBox] = useState("");
+    // TODO: api 연결 후 기존 data 가져오기
     const [positionValue, setPositionValue] = useState<PositionState>({
         main: '',
         sub: '',
         want: ''
     });
+    const [isPositionOpen, setIsPositionOpen] = useState(false);
 
     const handleCategoryButtonClick = (boxName: string, buttonLabel: string) => {
         const newPositionValue = { ...positionValue, [boxName]: buttonLabel };
         setPositionValue(newPositionValue);
         onPositionChange(newPositionValue);
-        setSelectedBox(null);
     };
 
-    const positionRef = useRef<HTMLDivElement>(null);
 
     const handleBoxClick = (boxName: string) => {
-        setSelectedBox(prevSelectedBox => (prevSelectedBox === boxName ? null : boxName));
+        setSelectedBox(boxName)
+        togglePosition();
     };
 
     const handlePositionImgSet = (buttonLabel: string) => {
@@ -53,25 +54,21 @@ const PositionBox = ({ onPositionChange }: PositionBoxProps) => {
         }
     };
 
-    const handleClickOutside = (event: MouseEvent) => {
-        if (positionRef.current && !positionRef.current.contains(event.target as Node)) {
-            setSelectedBox(null);
-        }
+    const togglePosition = () => {
+        setIsPositionOpen(prev => !prev);
     };
 
-    useEffect(() => {
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
+    const closePosition = () => {
+        setIsPositionOpen(false);
+    };
+
 
     return (
         <PositionWrapper>
             <FirstBox>
                 <Section>
                     <Title>주 포지션</Title>
-                    <Image
+                    <StyledImage
                         onClick={() => handleBoxClick('main')}
                         src={handlePositionImgSet(positionValue.main)}
                         width={35}
@@ -81,7 +78,7 @@ const PositionBox = ({ onPositionChange }: PositionBoxProps) => {
                 </Section>
                 <Section>
                     <Title>부 포지션</Title>
-                    <Image
+                    <StyledImage
                         onClick={() => handleBoxClick('sub')}
                         src={handlePositionImgSet(positionValue.sub)}
                         width={35}
@@ -92,7 +89,7 @@ const PositionBox = ({ onPositionChange }: PositionBoxProps) => {
             </FirstBox>
             <SecondBox>
                 <Title>찾는 포지션</Title>
-                <Image
+                <StyledImage
                     onClick={() => handleBoxClick('want')}
                     src={handlePositionImgSet(positionValue.want)}
                     width={35}
@@ -100,11 +97,7 @@ const PositionBox = ({ onPositionChange }: PositionBoxProps) => {
                     alt="want position image"
                 />
             </SecondBox>
-            {selectedBox !== null && (
-                <div ref={positionRef}>
-                    <PositionCategory boxName={selectedBox} onButtonClick={handleCategoryButtonClick} />
-                </div>
-            )}
+            {isPositionOpen && <PositionCategory onClose={closePosition} boxName={selectedBox} onButtonClick={handleCategoryButtonClick} />}
         </PositionWrapper>
     );
 };
@@ -138,4 +131,8 @@ const SecondBox = styled.div`
 
 const Title = styled.p`
     margin-bottom: 5px;
+`;
+
+const StyledImage = styled(Image)`
+    cursor: pointer;  
 `;

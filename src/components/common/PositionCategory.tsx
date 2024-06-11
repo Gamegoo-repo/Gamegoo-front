@@ -6,45 +6,61 @@ import Jungle from "../../../public/assets/icons/position_jungle_unclicked.svg";
 import Mid from "../../../public/assets/icons/position_mid_unclicked.svg";
 import Bottom from "../../../public/assets/icons/position_bottom_unclicked.svg";
 import Supporter from "../../../public/assets/icons/position_supporter_unclicked.svg";
-import { forwardRef } from "react";
+import { useRef } from "react";
 
-interface PositionProps {
-    boxName: string;
-    onButtonClick: (boxName: string, buttonLabel: string) => void;
+interface PositionComponentProps {
+  onClose: () => void;
+  boxName: string;
+  onButtonClick: (boxName: string, buttonLabel: string) => void;
 }
 
-const PositionCategory = forwardRef(function PositionCategory(props: PositionProps, ref: any) {
-    const { boxName, onButtonClick } = props;
+const PositionCategory = (props: PositionComponentProps) => {
+  const { onClose, boxName, onButtonClick } = props;
+  const ref = useRef<HTMLDivElement>(null);
 
-    const handlePositionCategory = (label: string) => {
-        onButtonClick(boxName, label);
-    };
+  const handlePositionCategory = (positionName: string) => {
+    onButtonClick(boxName, positionName);
+    onClose();
+  };
 
-    return (
-        <Wrapper ref={ref} className={boxName}>
-            <Box>
-                <RandomButton onClick={() => handlePositionCategory('random')}>
-                    <Random />
-                </RandomButton>
-                <TopButton onClick={() => handlePositionCategory('top')}>
-                    <Top />
-                </TopButton>
-                <JungleButton onClick={() => handlePositionCategory('jungle')}>
-                    <Jungle />
-                </JungleButton>
-                <MidButton onClick={() => handlePositionCategory('mid')}>
-                    <Mid />
-                </MidButton>
-                <BottomButton onClick={() => handlePositionCategory('bottom')}>
-                    <Bottom />
-                </BottomButton>
-                <SupporterButton onClick={() => handlePositionCategory('supporter')}>
-                    <Supporter />
-                </SupporterButton>
-            </Box>
-        </Wrapper>
-    );
-});
+  // useEffect(() => {
+  //   const handleClickOutside = (event: MouseEvent) => {
+  //     if (ref.current && !ref.current.contains(event.target as Node)) {
+  //       onClose();
+  //     }
+  //   };
+
+  //   document.addEventListener('mousedown', handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener('mousedown', handleClickOutside);
+  //   };
+  // }, [ref, onClose]);
+
+  return (
+    <Wrapper ref={ref} className={boxName}>
+      <Box>
+        <RandomButton onClick={() => handlePositionCategory('random')}>
+          <Random />
+        </RandomButton>
+        <TopButton onClick={() => handlePositionCategory('top')}>
+          <Top />
+        </TopButton>
+        <JungleButton onClick={() => handlePositionCategory('jungle')}>
+          <Jungle />
+        </JungleButton>
+        <MidButton onClick={() => handlePositionCategory('mid')}>
+          <Mid />
+        </MidButton>
+        <BottomButton onClick={() => handlePositionCategory('bottom')}>
+          <Bottom />
+        </BottomButton>
+        <SupporterButton onClick={() => handlePositionCategory('supporter')}>
+          <Supporter />
+        </SupporterButton>
+      </Box>
+    </Wrapper>
+  );
+};
 
 export default PositionCategory;
 
@@ -52,15 +68,15 @@ const Wrapper = styled.div`
   position: absolute;
   z-index: 10;
   &.main {
-    top: 50%;
+    top: 47%;
     left: 13.5%;
   }
   &.sub {
-    top: 50%;
+    top: 47%;
     left: 35.5%;
   }
   &.want {
-    top: 50%;
+    top: 47%;
     left: 66.7%;
   }
 `;
@@ -69,7 +85,6 @@ const Box = styled.div`
   display: flex;
   align-items: center;
   column-gap: 50px;
-  position: relative; 
   width: 482px; 
   padding: 18px 27px;
   background: ${theme.colors.black};
