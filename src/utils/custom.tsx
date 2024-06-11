@@ -7,15 +7,15 @@ export function setPositionImg(position: number) {
         case 0:
             return '/assets/icons/position_supporter_purple.svg';
         case 1:
-            return '/assets/icons/position_bot_purple.svg';
+            return '/assets/icons/position_bottom_purple.svg';
         case 2:
-            return '/assets/icons/position_bot_purple.svg';
+            return '/assets/icons/position_bottom_purple.svg';
         case 3:
-            return '/assets/icons/position_bot_purple.svg';
+            return '/assets/icons/position_bottom_purple.svg';
         case 4:
-            return '/assets/icons/position_bot_purple.svg';
+            return '/assets/icons/position_bottom_purple.svg';
         case 4:
-            return '/assets/icons/position_bot_purple.svg';
+            return '/assets/icons/position_bottom_purple.svg';
         default:
             return '/assets/icons/position_supporter_purple.svg';
     }

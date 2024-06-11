@@ -38,19 +38,19 @@ const PositionBox = ({ onPositionChange }: PositionBoxProps) => {
     const handlePositionImgSet = (buttonLabel: string) => {
         switch (buttonLabel) {
             case 'random':
-                return '/assets/icons/position_bot_purple.svg';
+                return '/assets/icons/position_random_purple.svg';
             case 'top':
-                return '/assets/icons/position_supporter_purple.svg';
+                return '/assets/icons/position_top_purple.svg';
             case 'jungle':
-                return '/assets/icons/position_bot_purple.svg';
+                return '/assets/icons/position_jungle_purple.svg';
             case 'mid':
-                return '/assets/icons/position_bot_purple.svg';
+                return '/assets/icons/position_mid_purple.svg';
             case 'bottom':
-                return '/assets/icons/position_supporter_purple.svg';
+                return '/assets/icons/position_bottom_purple.svg';
             case 'supporter':
                 return '/assets/icons/position_supporter_purple.svg';
             default:
-                return '/assets/icons/position_supporter_purple.svg';
+                return '/assets/icons/position_random_purple.svg';
         }
     };
 
