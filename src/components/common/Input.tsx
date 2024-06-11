@@ -5,6 +5,7 @@ import styled from "styled-components";
 
 interface InputProps {
   inputType?: "input" | "password" | "textarea";
+  id?: string;
   size?: "small" | "medium" | "large";
   label?: string;
   value: string;
@@ -17,6 +18,7 @@ interface InputProps {
 const Input = (props: InputProps) => {
   const {
     inputType = "input",
+    id,
     size,
     label,
     value,
@@ -32,10 +34,12 @@ const Input = (props: InputProps) => {
 
   return (
     <Element>
-      {label && <StyledLabel>{label}</StyledLabel>}
+      {label && <StyledLabel htmlFor={id}>{label}</StyledLabel>}
       {inputType === "textarea" ? (
         <StyledTextarea
           className={size}
+          id={id}
+          name={id}
           value={value}
           onChange={handleChange}
           placeholder={placeholder}
@@ -95,15 +99,15 @@ const StyledInput = styled.input<InputProps>`
     isValid === undefined
       ? `1px solid #b5b5b5`
       : isValid === true
-      ? `1px solid ${theme.colors.purple300}`
-      : `1px solid ${theme.colors.error100}`};
+        ? `1px solid ${theme.colors.purple300}`
+        : `1px solid ${theme.colors.error100}`};
   color: ${theme.colors.black};
   ${(props) => props.theme.fonts.regular16}
 
   &:focus {
     outline: none;
     border: ${({ isValid }) =>
-      isValid === undefined && `1px solid ${theme.colors.purple300}`};
+    isValid === undefined && `1px solid ${theme.colors.purple300}`};
   }
 
   &:disabled {

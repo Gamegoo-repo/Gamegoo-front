@@ -92,7 +92,7 @@ const UserProfile = styled.div`
     display:flex;
     align-items: center;
     gap:17px;
-`
+`;
 
 const ProfileImgBg = styled.div`
     position: relative;
@@ -100,7 +100,7 @@ const ProfileImgBg = styled.div`
     height: 79px;
     background: #C3B9FF;
     border-radius: 50%;
-`
+`;
 
 const UserDetail = styled.div``
 
@@ -109,15 +109,15 @@ const ProfileImage = styled(Image)`
     top:50%;
     left:50%;
     transform: translate(-50%, -50%);
-`
+`;
 
 const HiddenInput = styled.input`
     display: none;
-`
+`;
 
 const Label = styled.label`
     cursor: pointer;
-`
+`;
 
 const CameraImgBg = styled.div`
     position: relative;
@@ -127,39 +127,37 @@ const CameraImgBg = styled.div`
     box-shadow: 0px 0px 3.06px 0px #00000040;
     border-radius: 50%;
     top:69%; 
-`
+`;
 
 const CameraImage = styled(Image)`
     position: absolute;
     top:50%;
     left:50%;
     transform: translate(-50%, -50%);
-`
+`;
 
 const UserAccount = styled.div`
     display: flex;
     align-items: center;
     gap:5px;
-`
+`;
 
 const Account = styled.p`
    ${(props) => props.theme.fonts.bold22};
    color:${theme.colors.black};
-
-`
+`;
 const Tag = styled.p`
    ${(props) => props.theme.fonts.regular25};
    color:${theme.colors.gray300};
-
-`
+`;
 
 const UserTier = styled.div`
     display: flex;
     align-items: center;
     gap:2px;
-`
+`;
 
 const Tier = styled.p`
     ${(props) => props.theme.fonts.regular20};
     color:#44515C;
-`
+`;

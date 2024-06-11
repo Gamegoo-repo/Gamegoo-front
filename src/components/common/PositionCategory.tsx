@@ -23,6 +23,7 @@ const PositionCategory = (props: PositionComponentProps) => {
     onClose();
   };
 
+  // 포지션 컴포넌트 외부 클릭 시 
   // useEffect(() => {
   //   const handleClickOutside = (event: MouseEvent) => {
   //     if (ref.current && !ref.current.contains(event.target as Node)) {
