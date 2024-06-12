@@ -5,7 +5,8 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 import axios from 'axios';
 
 interface FileInputProps {
-    onFileSelect: (file: File) => void;
+    status: "posting" | "reading";
+    onFileSelect?: (file: File) => void;
 };
 const user = {
     account: "유니콘의 비밀",
@@ -16,7 +17,7 @@ const user = {
 interface userInfo { account: string; tag: string; tier: string };
 
 const UserInfo = (props: FileInputProps) => {
-    const { onFileSelect } = props;
+    const { onFileSelect, status } = props;
     const [preview, setPreview] = useState<string>('/assets/icons/profile_img.svg');
     const inputRef = useRef<HTMLInputElement | null>(null);
     // const [user, setUser] = useState<userInfo>()
@@ -48,16 +49,18 @@ const UserInfo = (props: FileInputProps) => {
                     width={54}
                     height={51}
                     alt='profile image' />
-                <Label htmlFor="profileImg">
-                    <CameraImgBg
-                        onClick={() => inputRef.current?.click()}>
-                        <CameraImage
-                            src="/assets/icons/camera_white.svg"
-                            width={13}
-                            height={10}
-                            alt="edit profile image" />
-                    </CameraImgBg>
-                </Label>
+                {status === "posting" &&
+                    <Label htmlFor="profileImg">
+                        <CameraImgBg
+                            onClick={() => inputRef.current?.click()}>
+                            <CameraImage
+                                src="/assets/icons/camera_white.svg"
+                                width={13}
+                                height={10}
+                                alt="edit profile image" />
+                        </CameraImgBg>
+                    </Label>
+                }
                 <HiddenInput
                     id="profileImg"
                     name="profileImg"

@@ -10,7 +10,7 @@ import Dropdown from "@/components/common/Dropdown";
 import Table from "@/components/board/Table";
 import Pagination from "@/components/common/Pagination";
 import PositionFilter from "@/components/board/PositionFilter";
-import WritePost from "@/components/crBoard/Writing";
+import PostBoard from "@/components/crBoard/PostBoard";
 
 const DROP_DATA1 = [
     { id: 1, value: '솔로1' },
@@ -122,7 +122,7 @@ const BoardPage = () => {
 
     return (
         <>
-            {isWritingOpen && <WritePost onClose={handleWritingClose} />}
+            {isWritingOpen && <PostBoard onClose={handleWritingClose} />}
             <Wrapper>
                 <Header>
                     <FirstRow>

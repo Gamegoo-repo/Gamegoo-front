@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import Modal from "./Modal";
 import Dropdown from "../common/Dropdown";
 import Input from "../common/Input";
 import { useEffect, useRef, useState } from "react";
@@ -8,8 +7,9 @@ import UserInfo from "./UserInfo";
 import Button from "../common/Button";
 import axios from "axios";
 import dayjs from "dayjs";
+import CRModal from "./CRModal";
 
-interface WritingProps {
+interface PostBoardProps {
     onClose: () => void;
 }
 
@@ -19,7 +19,7 @@ const DROP_DATA = [
     { id: 3, value: '솔로3' },
 ];
 
-const WritePost = (props: WritingProps) => {
+const PostBoard = (props: PostBoardProps) => {
     const { onClose } = props;
 
     const [imageUploadResult, setImageUploadResult] = useState<any>(null);
@@ -117,14 +117,12 @@ const WritePost = (props: WritingProps) => {
     };
 
     return (
-        <Modal
-            type='writing'
-            width='565px'
-            height='959px'
-            onClose={onClose}
-            buttonText='확인'>
+        <CRModal
+            type='posting'
+            onClose={onClose}>
             <form onSubmit={handlePost}>
                 <UserInfo
+                status="posting"
                     onFileSelect={handleFileSelect} />
                 <QueueSection>
                     <Title>큐타입</Title>
@@ -142,7 +140,9 @@ const WritePost = (props: WritingProps) => {
                 </QueueSection>
                 <PositionSection>
                     <Title>포지션</Title>
-                    <PositionBox onPositionChange={handlePositionChange} />
+                    <PositionBox 
+                    status="posting"
+                    onPositionChange={handlePositionChange} />
                 </PositionSection>
                 <StyleSection>
                     <Title>게임 스타일</Title>
@@ -166,11 +166,11 @@ const WritePost = (props: WritingProps) => {
                     <Button type="submit" buttonType="primary" text="확인" />
                 </ButtonContent>
             </form>
-        </Modal>
+        </CRModal>
     )
 };
 
-export default WritePost;
+export default PostBoard;
 
 const Title = styled.p`
     ${(props) => props.theme.fonts.semiBold18};

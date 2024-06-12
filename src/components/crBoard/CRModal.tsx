@@ -1,20 +1,16 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
-import Button from "../common/Button";
 import Image from "next/image";
 import { createPortal } from 'react-dom';
 
 interface BoardModalProps {
-    type: 'writing' | 'reading';
-    width: string;
-    height: string;
+    type: 'posting' | 'reading';
     onClose: () => void;
     children: string | React.ReactNode;
-    buttonText: string;
     disabled?: boolean
 }
 
-const Modal = (props: BoardModalProps) => {
+const CRModal = (props: BoardModalProps) => {
     const {
         type,
         children,
@@ -28,7 +24,7 @@ const Modal = (props: BoardModalProps) => {
         <Overlay>
             <Wrapper>
                 <Header $type={type}>
-                    {type === 'reading' && <CheckboxTitle>게시일 : 24.05.06. 12:45</CheckboxTitle>}
+                    {type === 'reading' && <UpdatedDate>게시일 : 24.05.06. 12:45</UpdatedDate>}
                     <CloseButton>
                         <CloseImage
                             onClick={onClose}
@@ -47,7 +43,7 @@ const Modal = (props: BoardModalProps) => {
     )
 };
 
-export default Modal;
+export default CRModal;
 
 const Overlay = styled.div`
     display:flex;
@@ -68,17 +64,24 @@ const Wrapper = styled.div`
 
 const Header = styled.header<{ $type: string }>` 
     display: ${({ $type }) =>
-        $type === 'checkbox'
+        $type === 'reading'
             ? 'flex'
             : 'block'};
     align-items: center;
     justify-content:space-between;
-    padding:24px 23px 0 0;
+    padding: ${({ $type }) =>
+        $type === 'reading'
+            ? '24px 23px 0 43px'
+            : '24px 23px 0 0'};
+    margin-bottom:${({ $type }) =>
+        $type === 'reading'
+            ? '24px'
+            : 'unset'};
 `;
 
-const CheckboxTitle = styled.p`
-    ${(props) => props.theme.fonts.bold22};
-    color:${theme.colors.black};
+const UpdatedDate = styled.p`
+    ${(props) => props.theme.fonts.medium14};
+    color:${theme.colors.gray200};
 `;
 
 const CloseButton = styled.p`

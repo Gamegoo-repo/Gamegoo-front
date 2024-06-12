@@ -4,7 +4,8 @@ import { useState } from "react";
 import PositionCategory from "../common/PositionCategory";
 
 interface PositionBoxProps {
-    onPositionChange: (newPositionValue: PositionState) => void;
+    status: "posting" | "reading";
+    onPositionChange?: (newPositionValue: PositionState) => void;
 }
 
 export interface PositionState {
@@ -13,7 +14,8 @@ export interface PositionState {
     want: string;
 }
 
-const PositionBox = ({ onPositionChange }: PositionBoxProps) => {
+const PositionBox = (props: PositionBoxProps) => {
+    const { status, onPositionChange } = props;
     const [selectedBox, setSelectedBox] = useState("");
     // TODO: api 연결 후 기존 data 가져오기
     const [positionValue, setPositionValue] = useState<PositionState>({
@@ -31,6 +33,7 @@ const PositionBox = ({ onPositionChange }: PositionBoxProps) => {
 
 
     const handleBoxClick = (boxName: string) => {
+        if (status === "reading") return;
         setSelectedBox(boxName)
         togglePosition();
     };
@@ -64,11 +67,12 @@ const PositionBox = ({ onPositionChange }: PositionBoxProps) => {
 
 
     return (
-        <PositionWrapper>
-            <FirstBox>
+        <PositionWrapper $status={status}>
+            <FirstBox $status={status}>
                 <Section>
                     <Title>주 포지션</Title>
                     <StyledImage
+                        $status={status}
                         onClick={() => handleBoxClick('main')}
                         src={handlePositionImgSet(positionValue.main)}
                         width={35}
@@ -79,6 +83,7 @@ const PositionBox = ({ onPositionChange }: PositionBoxProps) => {
                 <Section>
                     <Title>부 포지션</Title>
                     <StyledImage
+                        $status={status}
                         onClick={() => handleBoxClick('sub')}
                         src={handlePositionImgSet(positionValue.sub)}
                         width={35}
@@ -87,9 +92,10 @@ const PositionBox = ({ onPositionChange }: PositionBoxProps) => {
                     />
                 </Section>
             </FirstBox>
-            <SecondBox>
+            <SecondBox $status={status}>
                 <Title>찾는 포지션</Title>
                 <StyledImage
+                    $status={status}
                     onClick={() => handleBoxClick('want')}
                     src={handlePositionImgSet(positionValue.want)}
                     width={35}
@@ -104,35 +110,57 @@ const PositionBox = ({ onPositionChange }: PositionBoxProps) => {
 
 export default PositionBox;
 
-const PositionWrapper = styled.div`
+const PositionWrapper = styled.div<{ $status: string }>`
     display: flex;
     align-items: center;
-    gap: 13px;
+    gap: ${({ $status }) =>
+        $status === 'posting'
+            ? '13px'
+            : '15px'
+    };
 `;
 
-const FirstBox = styled.div`
+const FirstBox = styled.div<{ $status: string }>`
     display: flex;
     align-items: center;
     text-align: center;
+    white-space: nowrap;
     background: #f6f6f6;
     border-radius: 10px;
-    padding: 22px 36px;
-    gap: 52px;
+    padding: ${({ $status }) =>
+        $status === 'posting'
+            ? '22px 36px'
+            : '22px 52px'
+    };
+    gap: ${({ $status }) =>
+        $status === 'posting'
+            ? '52px'
+            : '90px'
+    };
 `;
 
 const Section = styled.div``;
 
-const SecondBox = styled.div`
+const SecondBox = styled.div<{ $status: string }>`
     text-align: center;
     background: #f6f6f6;
+    white-space: nowrap;
     border-radius: 10px;
-    padding: 22px 44px;
+    padding:  ${({ $status }) =>
+        $status === 'posting'
+            ? '22px 44px'
+            : '22px 113px'
+    };
 `;
 
 const Title = styled.p`
     margin-bottom: 5px;
 `;
 
-const StyledImage = styled(Image)`
-    cursor: pointer;  
+const StyledImage = styled(Image) <{ $status: string }>`
+    cursor : ${({ $status }) =>
+        $status === 'posting'
+            ? 'pointer'
+            : 'unset'
+    };
 `;

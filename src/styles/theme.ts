@@ -122,6 +122,10 @@ const fonts = {
         weight: 500,
         size: 16,
     }),
+    medium14: FONT({
+        weight: 500,
+        size: 14,
+    }),
 }
 
 export type ColorsTypes = typeof colors;
