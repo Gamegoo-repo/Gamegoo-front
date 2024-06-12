@@ -17,10 +17,7 @@ interface BoardModalProps {
 const Modal = (props: BoardModalProps) => {
     const {
         type,
-        width,
-        height,
         children,
-        buttonText,
         onClose,
         disabled
     } = props;
@@ -29,11 +26,7 @@ const Modal = (props: BoardModalProps) => {
 
     return createPortal(
         <Overlay>
-            <Wrapper
-                $type={type}
-                $width={width}
-                $height={height}
-            >
+            <Wrapper>
                 <Header $type={type}>
                     {type === 'reading' && <CheckboxTitle>게시일 : 24.05.06. 12:45</CheckboxTitle>}
                     <CloseButton>
@@ -48,11 +41,6 @@ const Modal = (props: BoardModalProps) => {
                 <Main>
                     <MainContent>{children}</MainContent>
                 </Main>
-                <Footer>
-                    <ButtonContent>
-                        <Button onClick={onClose} buttonType="primary" text={buttonText} />
-                    </ButtonContent>
-                </Footer>
             </Wrapper>
         </Overlay>
         , modalRoot
@@ -72,12 +60,9 @@ const Overlay = styled.div`
     z-index: 1;
 `;
 
-const Wrapper = styled.div<{ $type: string, $width: string, $height: string }>`
+const Wrapper = styled.div`
     box-shadow: 0 0 21.3px 0 rgba(0, 0, 0, 0.15);
     background: ${theme.colors.white};
-    /* max-width:${({ $width }) => $width}; */
-    /* width: 100%; */
-    /* max-height: ${({ $height }) => $height}; */
     border-radius: 20px;
 `;
 
@@ -110,13 +95,4 @@ const Main = styled.main`
 `;
 
 const MainContent = styled.div`
-`;
-
-const Footer = styled.footer`
-padding:0 45px 36px;
-margin-top:37px;
-`;
-
-const ButtonContent = styled.p`
-    text-align: center;
 `;

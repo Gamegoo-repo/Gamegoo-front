@@ -1,12 +1,12 @@
 import styled from "styled-components";
 import Modal from "./Modal";
 import Dropdown from "../common/Dropdown";
-import Image from "next/image";
 import Input from "../common/Input";
 import { useEffect, useRef, useState } from "react";
 import PositionBox, { PositionState } from "./PositionBox";
 import UserInfo from "./UserInfo";
 import Button from "../common/Button";
+import axios from "axios";
 import dayjs from "dayjs";
 
 interface WritingProps {
@@ -42,6 +42,7 @@ const WritePost = (props: WritingProps) => {
         setSelectedDropOption(value);
         setIsDropdownOpen(false);
     };
+
 
     const handleDropdownClickOutside = (event: MouseEvent) => {
         if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -90,23 +91,30 @@ const WritePost = (props: WritingProps) => {
         setPositionValue(newPositionValue);
     };
 
-    async function handlePost(formData: FormData) {
-        'use server'
+    const handlePost = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
 
-        const now = dayjs();
-        const postData = {
-            date: now,
-            profileImage: formData.get('profileImg'),
-            queueType: selectedDropOption,
-            position: positionValue,
-            gameStyle: 1,
-            mic: 0,
-            memo: formData.get('memo'),
+        const formData = new FormData();
+        const updatedDate = dayjs().format();
+        formData.append('updateTime', updatedDate);
+        if (profileImg) {
+            formData.append('profileImg', profileImg);
         }
+        formData.append('queueType', selectedDropOption);
+        formData.append('position', JSON.stringify(positionValue));
+        formData.append('memo', textareaValue);
 
-        // mutate data
-        // revalidate cache
-    }
+        // try {
+        //     const response = await axios.post('/api/', formData, {
+        //         headers: {
+        //             'Content-Type': 'multipart/form-data',
+        //         },
+        //     });
+        //     console.log('Success:', response.data);
+        // } catch (error) {
+        //     console.error('Error:', error);
+        // }
+    };
 
     return (
         <Modal
@@ -115,7 +123,7 @@ const WritePost = (props: WritingProps) => {
             height='959px'
             onClose={onClose}
             buttonText='확인'>
-            <form action={handlePost}>
+            <form onSubmit={handlePost}>
                 <UserInfo
                     onFileSelect={handleFileSelect} />
                 <QueueSection>

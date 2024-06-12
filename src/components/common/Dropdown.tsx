@@ -68,7 +68,7 @@ export default Dropdown;
 
 const Wrapper = styled.div<{ $width: string }>`
     width:${({ $width }) => $width};
-`
+`;
 
 const DropdownHeader = styled.div<{ $type: string, $width: string, $padding: string }>`
     display: flex;
@@ -95,7 +95,7 @@ const DropBox = styled.div`
     position: absolute;
     background: ${theme.colors.white};
     z-index:1;
-`
+`;
 
 const DropdownListContent = styled.ul<{ $type: string, $width: string }>`
     padding: 0;
