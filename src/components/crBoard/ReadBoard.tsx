@@ -6,6 +6,7 @@ import Button from "../common/Button";
 import PositionBox from "./PositionBox";
 import Image from "next/image";
 import { useState } from "react";
+import ProgressBar from "@ramonak/react-progress-bar";
 
 interface ReadBoardProps {
     onClose: () => void;
@@ -67,11 +68,20 @@ const ReadBoard = (props: ReadBoardProps) => {
                         </History>
                     </Right>
                 </RateFirstRow>
+                <RateSecondRow>
+                    <ProgressBar
+                        completed={76}
+                        maxCompleted={100}
+                        className="wrapper"
+                        barContainerClassName="container"
+                        completedClassName="barCompleted"
+                        labelClassName="label"
+                    />
+                </RateSecondRow>
 
             </WinningRate>
             <StyleSection>
                 <Title>게임 스타일</Title>
-                {/* 게임 스타일 컴포넌트 */}
             </StyleSection>
             <MemoSection>
                 <Title>메모</Title>
@@ -138,6 +148,24 @@ const RateFirstRow = styled.div`
     align-items: center;
     justify-content: space-between;
     margin-bottom:6px;
+`;
+
+const RateSecondRow = styled.div`
+.wrapper{
+    height: 20px;
+}
+.container {
+    background: linear-gradient(90deg, #FF7474 63.45%, #FF5252 100%);
+    border-radius: 11px;
+}
+.barCompleted {
+   background: linear-gradient(90deg, #342688 0, #5A42EE 100%);
+   border-radius: 11px 0 0 11px;
+   width: 76%;
+} 
+.label{
+    color:transparent;
+}
 `;
 
 const Left = styled.div`

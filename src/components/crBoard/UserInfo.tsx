@@ -7,7 +7,8 @@ import axios from 'axios';
 interface FileInputProps {
     status: "posting" | "reading";
     onFileSelect?: (file: File) => void;
-};
+}
+
 const user = {
     account: "유니콘의 비밀",
     tag: "KR1",
@@ -73,6 +74,13 @@ const UserInfo = (props: FileInputProps) => {
                 <UserAccount>
                     <Account>{user?.account}</Account>
                     <Tag>#{user?.tag}</Tag>
+                    {status==="reading" && 
+                        <Manner>
+                            <Level>
+                                LV.5
+                            </Level>
+                        </Manner>
+                    }
                 </UserAccount>
                 <UserTier>
                     {/* TODO:api 연결 후 수정 필 */}
@@ -142,16 +150,31 @@ const CameraImage = styled(Image)`
 const UserAccount = styled.div`
     display: flex;
     align-items: center;
-    gap:5px;
 `;
 
 const Account = styled.p`
-   ${(props) => props.theme.fonts.bold22};
-   color:${theme.colors.black};
+    ${(props) => props.theme.fonts.bold22};
+    color:${theme.colors.black};
 `;
+
 const Tag = styled.p`
-   ${(props) => props.theme.fonts.regular25};
-   color:${theme.colors.gray300};
+    ${(props) => props.theme.fonts.regular25};
+    color:${theme.colors.gray300};
+    margin-left: 5px;
+`;
+
+const Manner = styled.div`
+    background: #000000A6;
+    padding:5px 11px;
+    box-shadow: 0px 4px 4px 0px #00000040;
+    border-radius: 57px;
+    margin-left: 10px;
+    cursor: pointer;
+`;
+
+const Level = styled.p`
+    ${(props) => props.theme.fonts.bold14};
+    color:${theme.colors.purple300};
 `;
 
 const UserTier = styled.div`
