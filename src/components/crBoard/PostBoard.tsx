@@ -8,6 +8,8 @@ import Button from "../common/Button";
 import axios from "axios";
 import dayjs from "dayjs";
 import CRModal from "./CRModal";
+import UpdateProfileImage from "./UpdateProfileImage";
+import User from "./User";
 
 interface PostBoardProps {
     onClose: () => void;
@@ -18,6 +20,15 @@ const DROP_DATA = [
     { id: 2, value: '솔로2' },
     { id: 3, value: '솔로3' },
 ];
+
+const userData = {
+    image: "/assets/icons/profile_img.svg",
+    account: "유니콘의 비밀",
+    tag: "KR1",
+    tier: "B3",
+    manner_level: 5,
+    mic: 0,
+};
 
 const PostBoard = (props: PostBoardProps) => {
     const { onClose } = props;
@@ -114,16 +125,27 @@ const PostBoard = (props: PostBoardProps) => {
         // } catch (error) {
         //     console.error('Error:', error);
         // }
+
+        onClose();
     };
 
     return (
         <CRModal
             type='posting'
             onClose={onClose}>
-            <form onSubmit={handlePost}>
-                <UserInfo
-                status="posting"
-                    onFileSelect={handleFileSelect} />
+            <Form onSubmit={handlePost}>
+                <UserSection>
+                    <UpdateProfileImage
+                        onFileSelect={handleFileSelect} />
+                    <User
+                        account={userData.account}
+                        tag={userData.tag}
+                        tier={userData.tier}
+                    />
+                </UserSection>
+                {/* <UserInfo
+                    status="posting"
+                    onFileSelect={handleFileSelect} /> */}
                 <QueueSection>
                     <Title>큐타입</Title>
                     <Dropdown
@@ -140,9 +162,9 @@ const PostBoard = (props: PostBoardProps) => {
                 </QueueSection>
                 <PositionSection>
                     <Title>포지션</Title>
-                    <PositionBox 
-                    status="posting"
-                    onPositionChange={handlePositionChange} />
+                    <PositionBox
+                        status="posting"
+                        onPositionChange={handlePositionChange} />
                 </PositionSection>
                 <StyleSection>
                     <Title>게임 스타일</Title>
@@ -165,19 +187,25 @@ const PostBoard = (props: PostBoardProps) => {
                 <ButtonContent>
                     <Button type="submit" buttonType="primary" text="확인" />
                 </ButtonContent>
-            </form>
+            </Form>
         </CRModal>
     )
 };
 
 export default PostBoard;
 
+const Form = styled.form``;
 const Title = styled.p`
     ${(props) => props.theme.fonts.semiBold18};
     color: #222222;
     margin-bottom:4px;
 `;
 
+const UserSection = styled.div`
+    display: flex;
+    align-items: center;
+    gap:22px;
+`
 const QueueSection = styled.div`
     margin-top:24px;    
 `;

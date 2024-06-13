@@ -1,12 +1,16 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import CRModal from "./CRModal";
-import UserInfo from "./UserInfo";
 import Button from "../common/Button";
 import PositionBox from "./PositionBox";
 import Image from "next/image";
 import { useState } from "react";
 import ProgressBar from "@ramonak/react-progress-bar";
+import ProfileImage from "./ProfileImage";
+import User from "./User";
+import MannerLevel from "./MannerLevel";
+import Mic from "./Mic";
+import Report from "./Report";
 
 interface ReadBoardProps {
     onClose: () => void;
@@ -19,18 +23,66 @@ const champions = [
     '/assets/icons/gray_circle.svg'
 ];
 
+interface userInfo {
+    image: string;
+    account: string;
+    tag: string;
+    tier: string;
+    manner_level: number;
+    mic: number;
+}
+
+const userData = {
+    image: "/assets/icons/profile_img.svg",
+    account: "유니콘의 비밀",
+    tag: "KR1",
+    tier: "B3",
+    manner_level: 5,
+    mic: 0,
+};
+
 const ReadBoard = (props: ReadBoardProps) => {
     const { onClose, postId } = props;
 
     const [textareaValue, setTextareaValue] = useState("");
 
+    // const [user, setUser] = useState<userInfo>()
+
+    // TODO: api 연결
+    // useEffect(() => {
+    //     axios.get('http://localhost:3001/user')
+    //         .then(response => {
+    //             setUser(response.data)
+    //         })
+    //         .catch(error => {
+    //             console.error('Error fetching data:', error);
+    //         });
+    // }, [])
 
     return (
         <CRModal
             type='reading'
             onClose={onClose}>
-            <UserInfo status="reading" />
-            <FirstSection>
+            <UserSection>
+                <UserLeft>
+                    <ProfileImage
+                        image={userData.image} />
+                    <UserNManner>
+                        <User
+                            account={userData.account}
+                            tag={userData.tag}
+                            tier={userData.tier} />
+                        <MannerLevel
+                            level={userData.manner_level} />
+                    </UserNManner>
+                </UserLeft>
+                <UserRight>
+                    <Mic
+                        status={userData.mic} />
+                    <Report />
+                </UserRight>
+            </UserSection>
+            <QueueSection>
                 <Champions>
                     <Title>최근 선호 챔피언</Title>
                     <Champion>
@@ -51,7 +103,7 @@ const ReadBoard = (props: ReadBoardProps) => {
                         <P>솔로 랭크</P>
                     </Type>
                 </Queue>
-            </FirstSection>
+            </QueueSection>
             <PositionSection>
                 <Title>포지션</Title>
                 <PositionBox status="reading" />
@@ -100,13 +152,30 @@ const ReadBoard = (props: ReadBoardProps) => {
 
 export default ReadBoard;
 
+const UserSection = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap:176px;
+`;
+
+const UserLeft = styled.div`
+    display:flex;
+    align-items: center;
+`;
+const UserNManner = styled.div`
+    display:flex;
+`;
+const UserRight = styled.div`
+    display:flex;
+`;
 const Title = styled.p`
     ${(props) => props.theme.fonts.semiBold18};
     color: #222222;
     margin-bottom:4px;
 `;
 
-const FirstSection = styled.div`
+const QueueSection = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;

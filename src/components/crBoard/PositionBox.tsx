@@ -65,7 +65,6 @@ const PositionBox = (props: PositionBoxProps) => {
         setIsPositionOpen(false);
     };
 
-
     return (
         <PositionWrapper $status={status}>
             <FirstBox $status={status}>

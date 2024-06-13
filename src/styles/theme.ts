@@ -68,6 +68,10 @@ const fonts = {
         weight: 700,
         size: 11,
     }),
+    bold10: FONT({
+        weight: 700,
+        size: 10,
+    }),
 
     /*SemiBold*/
     semiBold18: FONT({

@@ -95,7 +95,6 @@ const StyledInput = styled.input<InputProps>`
   min-height: 100px;
   padding: 11px 20px;
   border-radius: 15px;
-  border-radius: 15px;
   border: ${({ isValid }) =>
     isValid === undefined
       ? `1px solid #b5b5b5`
