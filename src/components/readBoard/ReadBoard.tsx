@@ -3,25 +3,21 @@ import { theme } from "@/styles/theme";
 import CRModal from "../crBoard/CRModal";
 import Button from "../common/Button";
 import PositionBox from "../crBoard/PositionBox";
-import Image from "next/image";
 import { useState } from "react";
-import ProgressBar from "@ramonak/react-progress-bar";
 import ProfileImage from "./ProfileImage";
 import User from "../crBoard/User";
 import MannerLevel from "./MannerLevel";
 import Mic from "./Mic";
 import Report from "./Report";
+import Champion from "./Champion";
+import QueueType from "./QueueType";
+import Progressbar from "./Progressbar";
+import WinningRate from "./WinningRate";
 
 interface ReadBoardProps {
     onClose: () => void;
     postId: number;
 }
-
-const champions = [
-    '/assets/icons/gray_circle.svg',
-    '/assets/icons/gray_circle.svg',
-    '/assets/icons/gray_circle.svg'
-];
 
 interface userInfo {
     image: string;
@@ -39,6 +35,16 @@ const userData = {
     tier: "B3",
     manner_level: 5,
     mic: 0,
+    champions: [
+        { id: 1, value: "/assets/icons/gray_circle.svg" },
+        { id: 2, value: "/assets/icons/gray_circle.svg" },
+        { id: 3, value: "/assets/icons/gray_circle.svg" },
+    ],
+    queue: "솔로1",
+    winning_rate: {
+        completed: 76,
+        history: 20
+    }
 };
 
 const ReadBoard = (props: ReadBoardProps) => {
@@ -83,55 +89,20 @@ const ReadBoard = (props: ReadBoardProps) => {
                 </UserRight>
             </UserSection>
             <QueueSection>
-                <Champions>
-                    <Title>최근 선호 챔피언</Title>
-                    <Champion>
-                        {champions.map((champion, index) => (
-                            <Image
-                                key={index}
-                                src={champion}
-                                width={50}
-                                height={50}
-                                alt="champion image"
-                            />
-                        ))}
-                    </Champion>
-                </Champions>
-                <Queue>
-                    <Title>큐타입</Title>
-                    <Type>
-                        <P>솔로 랭크</P>
-                    </Type>
-                </Queue>
+                <Champion
+                    list={userData.champions} />
+                <QueueType
+                    value={userData.queue} />
             </QueueSection>
             <PositionSection>
                 <Title>포지션</Title>
                 <PositionBox status="reading" />
             </PositionSection>
-            <WinningRate>
-                <RateFirstRow>
-                    <Left>
-                        <WinningTitle>승률</WinningTitle>
-                        <Percent>76%</Percent>
-                    </Left>
-                    <Right>
-                        <History>
-                            글 작성 시점 최근 20게임
-                        </History>
-                    </Right>
-                </RateFirstRow>
-                <RateSecondRow>
-                    <ProgressBar
-                        completed={76}
-                        maxCompleted={100}
-                        className="wrapper"
-                        barContainerClassName="container"
-                        completedClassName="barCompleted"
-                        labelClassName="label"
-                    />
-                </RateSecondRow>
-
-            </WinningRate>
+            <WinningRateSection>
+                <WinningRate
+                    completed={userData.winning_rate.completed}
+                    history={userData.winning_rate.history} />
+            </WinningRateSection>
             <StyleSection>
                 <Title>게임 스타일</Title>
             </StyleSection>
@@ -183,81 +154,12 @@ const QueueSection = styled.div`
     margin-top:24px;    
 `;
 
-const Champions = styled.div``;
-
-const Champion = styled.div`
-    display: flex;
-    align-items: center;
-    gap:9px;
-`;
-
-const Queue = styled.div``;
-
-const Type = styled.div`
-    border: 1px solid ${theme.colors.gray300};  
-    border-radius: 11px;
-    padding:11px 202px 11px 21px;  
-`;
-
-const P = styled.p`
-    ${(props) => props.theme.fonts.regular18};
-    color: #606060;
-`;
-
 const PositionSection = styled.div`
     margin-top:19px;    
 `;
 
-const WinningRate = styled.div`
+const WinningRateSection = styled.div`
     margin-top:23px;    
-`;
-
-const RateFirstRow = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom:6px;
-`;
-
-const RateSecondRow = styled.div`
-.wrapper{
-    height: 20px;
-}
-.container {
-    background: linear-gradient(90deg, #FF7474 63.45%, #FF5252 100%);
-    border-radius: 11px;
-}
-.barCompleted {
-   background: linear-gradient(90deg, #342688 0, #5A42EE 100%);
-   border-radius: 11px 0 0 11px;
-   width: 76%;
-} 
-.label{
-    color:transparent;
-}
-`;
-
-const Left = styled.div`
-    display: flex;
-    align-items: center;
-    gap:11px;
-`;
-
-const Right = styled.div``;
-
-const WinningTitle = styled.p`
-    ${(props) => props.theme.fonts.semiBold18};
-    color: #222222;
-`;
-
-const Percent = styled.p`
-    color: ${theme.colors.purple100};
-    ${(props) => props.theme.fonts.semiBold18};
-`;
-
-const History = styled.p`
-    ${(props) => props.theme.fonts.regular14};
-    color: ${theme.colors.gray300};;
 `;
 
 const StyleSection = styled.div`

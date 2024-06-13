@@ -3,7 +3,6 @@ import Dropdown from "../common/Dropdown";
 import Input from "../common/Input";
 import { useEffect, useRef, useState } from "react";
 import PositionBox, { PositionState } from "../crBoard/PositionBox";
-import UserInfo from "./UserInfo";
 import Button from "../common/Button";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -143,9 +142,6 @@ const PostBoard = (props: PostBoardProps) => {
                         tier={userData.tier}
                     />
                 </UserSection>
-                {/* <UserInfo
-                    status="posting"
-                    onFileSelect={handleFileSelect} /> */}
                 <QueueSection>
                     <Title>큐타입</Title>
                     <Dropdown
