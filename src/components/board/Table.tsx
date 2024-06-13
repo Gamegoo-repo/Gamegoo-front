@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { setDateFormatter, setPositionImg, setTierImg } from "@/utils/custom";
-import ReadBoard from "../crBoard/ReadBoard";
+import ReadBoard from "../readBoard/ReadBoard";
 import { useState } from "react";
 
 interface TableTitleProps {

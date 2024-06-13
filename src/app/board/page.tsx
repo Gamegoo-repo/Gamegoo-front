@@ -10,7 +10,7 @@ import Dropdown from "@/components/common/Dropdown";
 import Table from "@/components/board/Table";
 import Pagination from "@/components/common/Pagination";
 import PositionFilter from "@/components/board/PositionFilter";
-import PostBoard from "@/components/crBoard/PostBoard";
+import PostBoard from "@/components/createBoard/PostBoard";
 
 const DROP_DATA1 = [
     { id: 1, value: '솔로1' },

@@ -1,13 +1,13 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
-import CRModal from "./CRModal";
+import CRModal from "../crBoard/CRModal";
 import Button from "../common/Button";
-import PositionBox from "./PositionBox";
+import PositionBox from "../crBoard/PositionBox";
 import Image from "next/image";
 import { useState } from "react";
 import ProgressBar from "@ramonak/react-progress-bar";
 import ProfileImage from "./ProfileImage";
-import User from "./User";
+import User from "../crBoard/User";
 import MannerLevel from "./MannerLevel";
 import Mic from "./Mic";
 import Report from "./Report";

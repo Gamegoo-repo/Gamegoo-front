@@ -2,14 +2,14 @@ import styled from "styled-components";
 import Dropdown from "../common/Dropdown";
 import Input from "../common/Input";
 import { useEffect, useRef, useState } from "react";
-import PositionBox, { PositionState } from "./PositionBox";
+import PositionBox, { PositionState } from "../crBoard/PositionBox";
 import UserInfo from "./UserInfo";
 import Button from "../common/Button";
 import axios from "axios";
 import dayjs from "dayjs";
-import CRModal from "./CRModal";
+import CRModal from "../crBoard/CRModal";
 import UpdateProfileImage from "./UpdateProfileImage";
-import User from "./User";
+import User from "../crBoard/User";
 
 interface PostBoardProps {
     onClose: () => void;
