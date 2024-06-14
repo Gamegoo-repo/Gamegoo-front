@@ -146,7 +146,11 @@ const ReadBoard = (props: ReadBoardProps) => {
                 </Memo>
             </MemoSection>
             <ButtonContent>
-                <Button type="submit" buttonType="primary" text="말 걸어보기" />
+                <Button
+                    type="submit"
+                    buttonType="primary"
+                    text="말 걸어보기"
+                    onClick={onClose} />
             </ButtonContent>
         </CRModal>
     )

@@ -5,7 +5,7 @@ import PositionCategory from "../common/PositionCategory";
 
 interface PositionBoxProps {
     status: "posting" | "reading";
-    onPositionChange?: (newPositionValue: PositionState) => void;
+    onPositionChange?: ((newPositionValue: PositionState) => void);
 }
 
 export interface PositionState {
@@ -28,7 +28,9 @@ const PositionBox = (props: PositionBoxProps) => {
     const handleCategoryButtonClick = (boxName: string, buttonLabel: string) => {
         const newPositionValue = { ...positionValue, [boxName]: buttonLabel };
         setPositionValue(newPositionValue);
-        onPositionChange(newPositionValue);
+        if (onPositionChange) {
+            onPositionChange(newPositionValue);
+        }
     };
 
 

@@ -27,7 +27,6 @@ const UpdateProfileImage = (props: FileInputProps) => {
                 width={54}
                 height={51}
                 alt='profile image' />
-            {/* {status === "posting" && */}
                 <Label htmlFor="profileImg">
                     <CameraImgBg
                         onClick={() => inputRef.current?.click()}>
@@ -38,14 +37,13 @@ const UpdateProfileImage = (props: FileInputProps) => {
                             alt="edit profile image" />
                     </CameraImgBg>
                 </Label>
-            {/* } */}
             <HiddenInput
                 id="profileImg"
                 name="profileImg"
                 type="file"
                 accept="image/*"
                 onChange={handleFileChange}
-                required />
+                 />
         </Wrapper>
     )
 };
@@ -80,7 +78,7 @@ const CameraImgBg = styled.div`
     width: 23px;
     height: 23px; 
     background: #000000A1;
-    box-shadow: 0px 0px 3.06px 0px #00000040;
+    box-shadow: 0 0 3.06px 0 #00000040;
     border-radius: 50%;
     top:69%; 
 `;

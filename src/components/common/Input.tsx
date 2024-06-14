@@ -33,7 +33,7 @@ const Input = (props: InputProps) => {
   const handleChange = (event: any) => {
     onChange(event.target.value);
   };
-  console.log(height)
+  
   return (
     <Element>
       {label && <StyledLabel htmlFor={id}>{label}</StyledLabel>}

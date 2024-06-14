@@ -103,7 +103,6 @@ const PostBoard = (props: PostBoardProps) => {
 
     const handlePost = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
         const formData = new FormData();
         const updatedDate = dayjs().format();
         formData.append('updateTime', updatedDate);

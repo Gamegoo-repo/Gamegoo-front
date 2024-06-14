@@ -311,5 +311,5 @@ const Layout = styled.div`
 `;
 
 const H2 = styled.h2`
-  margin: 20px 0px;
+  margin: 20px 0;
 `;
