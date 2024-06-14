@@ -1,10 +1,17 @@
 import styled from "styled-components";
 import Image from "next/image";
 
-const Report = () => {
+interface ReportProps {
+    onClick: (e: React.MouseEvent) => void;
+}
+
+const Report = (props: ReportProps) => {
+    const { onClick } = props;
+
     return (
         <Wrapper>
             <ReportImage
+                onClick={onClick}
                 src="/assets/icons/three_dots_button.svg"
                 width={3}
                 height={15}

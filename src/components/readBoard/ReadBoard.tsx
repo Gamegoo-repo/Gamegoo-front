@@ -11,7 +11,6 @@ import Mic from "./Mic";
 import Report from "./Report";
 import Champion from "./Champion";
 import QueueType from "./QueueType";
-import Progressbar from "./Progressbar";
 import WinningRate from "./WinningRate";
 
 interface ReadBoardProps {
@@ -52,6 +51,16 @@ const ReadBoard = (props: ReadBoardProps) => {
 
     const [textareaValue, setTextareaValue] = useState("");
 
+    const [isReportBoxOpen, setIsReportBoxOpen] = useState(false);
+
+    const handleReportBoxOpen = () => {
+        setIsReportBoxOpen(prevState => !prevState)
+    };
+
+    const handleReport = () => {
+        // 신고하기 api
+        setIsReportBoxOpen(false);
+    }
     // const [user, setUser] = useState<userInfo>()
 
     // TODO: api 연결
@@ -69,6 +78,14 @@ const ReadBoard = (props: ReadBoardProps) => {
         <CRModal
             type='reading'
             onClose={onClose}>
+            {isReportBoxOpen &&
+                <ReportBox>
+                    <ReportText
+                        onClick={handleReport}>
+                        신고하기
+                    </ReportText>
+                </ReportBox>
+            }
             <UserSection>
                 <UserLeft>
                     <ProfileImage
@@ -85,7 +102,8 @@ const ReadBoard = (props: ReadBoardProps) => {
                 <UserRight>
                     <Mic
                         status={userData.mic} />
-                    <Report />
+                    <Report
+                        onClick={handleReportBoxOpen} />
                 </UserRight>
             </UserSection>
             <QueueSection>
@@ -122,6 +140,10 @@ const ReadBoard = (props: ReadBoardProps) => {
 };
 
 export default ReadBoard;
+
+const ModalWrapper = styled.div`
+    position: relative;
+`;
 
 const UserSection = styled.div`
     display: flex;
@@ -187,4 +209,21 @@ const ButtonContent = styled.p`
     padding:0 45px 36px;
     margin-top:22px;    
     text-align: center;
+`;
+
+const ReportBox = styled.div`
+    position: absolute;
+    top: 8.5%;
+    right: -24%;
+    z-index: 100;
+    box-shadow: 0 0 21.3px 0 #00000026;
+    background: ${theme.colors.white}; 
+    padding:10px 103px 10px 20px;
+    border-radius: 10px;
+`;
+
+const ReportText = styled.p`
+    ${(props) => props.theme.fonts.medium15};
+    color: #606060;
+    cursor: pointer;
 `;

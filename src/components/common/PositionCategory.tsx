@@ -91,7 +91,7 @@ const Box = styled.div`
   background: ${theme.colors.black};
   border-radius: 16.3px;
   &:after { 
-    border-top: 0px solid transparent;
+    border-top: 0 solid transparent;
     border-left: 9px solid transparent;
     border-right: 9px solid transparent;
     border-bottom: 18px solid ${theme.colors.black};
