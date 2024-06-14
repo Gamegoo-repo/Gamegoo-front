@@ -11,7 +11,6 @@ import Table from "@/components/board/Table";
 import Pagination from "@/components/common/Pagination";
 import PositionFilter from "@/components/board/PositionFilter";
 import PostBoard from "@/components/createBoard/PostBoard";
-import Filter from "@/components/board/Filter";
 
 const DROP_DATA1 = [
     { id: 1, value: '솔로1' },
@@ -160,19 +159,18 @@ const BoardPage = () => {
                                 defaultValue={selectedDropOption2}
                             />
                             <PositionBox>
-                                {/* <PositionFilter
+                                <PositionFilter
                                     onPositionFilter={handlePositionFilter}
                                     isPosition={isPosition}
-                                /> */}
-                                <Filter/>
+                                />
                             </PositionBox>
                             <MicButton
                                 onClick={handleMic}
                                 className={micOn ? 'clicked' : 'unClicked'}>
                                 <Image
-                                    src={micOn?
-                                   "/assets/icons/availabled_mic.svg":
-                                   "/assets/icons/unavailabled_mic.svg" }
+                                    src={micOn ?
+                                        "/assets/icons/availabled_mic.svg" :
+                                        "/assets/icons/unavailabled_mic.svg"}
                                     width={21}
                                     height={26}
                                     alt='mic button'
@@ -254,11 +252,7 @@ const PositionBox = styled.div`
     background: #F5F5F5;
     border-radius: 10px;
 `;
-const PositionButton = styled.button`
-    &:focus{
-        background: ${theme.colors.purple100};
-    }
-`;
+
 const MicButton = styled.button`
     padding:13px 17px;
     border-radius: 10px;
