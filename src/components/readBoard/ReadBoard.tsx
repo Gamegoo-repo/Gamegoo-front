@@ -16,7 +16,7 @@ import MannerLevelBox from "../common/MannerLevelBox";
 
 interface ReadBoardProps {
     onClose: () => void;
-    postId: number;
+    postId: number | null;
 }
 
 interface userInfo {

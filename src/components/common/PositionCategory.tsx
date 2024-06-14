@@ -69,15 +69,15 @@ const Wrapper = styled.div`
   position: absolute;
   z-index: 10;
   &.main {
-    top: 47%;
+    top: 44%;
     left: 13.5%;
   }
   &.sub {
-    top: 47%;
+    top: 44%;
     left: 35.5%;
   }
   &.want {
-    top: 47%;
+    top: 44%;
     left: 66.7%;
   }
 `;
