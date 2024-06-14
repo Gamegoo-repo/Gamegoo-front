@@ -3,14 +3,15 @@ import { theme } from "@/styles/theme";
 
 interface MannerLevelProps {
     level: number;
+    onClick: (e: React.MouseEvent) => void;
 }
 
 const MannerLevel = (props: MannerLevelProps) => {
-    const { level } = props;
+    const { level, onClick } = props;
 
     return (
         <>
-            <LevelWrapper style={{ display: 'relative' }}>
+            <LevelWrapper onClick={onClick}>
                 <Level>
                     <Text>
                         LV.{level}

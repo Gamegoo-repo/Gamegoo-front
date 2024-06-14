@@ -116,10 +116,6 @@ const fonts = {
         weight: 400,
         size: 12,
     }),
-    regular11: FONT({
-        weight: 500,
-        size: 11,
-    }),
 
     /*Medium*/
     medium16: FONT({

@@ -12,6 +12,7 @@ import Report from "./Report";
 import Champion from "./Champion";
 import QueueType from "./QueueType";
 import WinningRate from "./WinningRate";
+import MannerLevelBox from "../common/MannerLevelBox";
 
 interface ReadBoardProps {
     onClose: () => void;
@@ -52,6 +53,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     const [textareaValue, setTextareaValue] = useState("");
 
     const [isReportBoxOpen, setIsReportBoxOpen] = useState(false);
+    const [isMannerLevelBoxOpen, setIsMannerLevelBoxOpen] = useState(false);
 
     const handleReportBoxOpen = () => {
         setIsReportBoxOpen(prevState => !prevState)
@@ -60,7 +62,12 @@ const ReadBoard = (props: ReadBoardProps) => {
     const handleReport = () => {
         // 신고하기 api
         setIsReportBoxOpen(false);
-    }
+    };
+
+    const handleMannerLevelBoxOpen = () => {
+        setIsMannerLevelBoxOpen(prevState => !prevState)
+    };
+
     // const [user, setUser] = useState<userInfo>()
 
     // TODO: api 연결
@@ -86,6 +93,11 @@ const ReadBoard = (props: ReadBoardProps) => {
                     </ReportText>
                 </ReportBox>
             }
+            {isMannerLevelBoxOpen &&
+                <MannerLevelBox
+                    top="14%"
+                    right="-6%" />
+            }
             <UserSection>
                 <UserLeft>
                     <ProfileImage
@@ -96,7 +108,8 @@ const ReadBoard = (props: ReadBoardProps) => {
                             tag={userData.tag}
                             tier={userData.tier} />
                         <MannerLevel
-                            level={userData.manner_level} />
+                            level={userData.manner_level}
+                            onClick={handleMannerLevelBoxOpen} />
                     </UserNManner>
                 </UserLeft>
                 <UserRight>
@@ -140,10 +153,6 @@ const ReadBoard = (props: ReadBoardProps) => {
 };
 
 export default ReadBoard;
-
-const ModalWrapper = styled.div`
-    position: relative;
-`;
 
 const UserSection = styled.div`
     display: flex;
