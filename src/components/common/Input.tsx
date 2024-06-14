@@ -94,7 +94,7 @@ const StyledLabel = styled.label`
 
 const StyledInput = styled.input<InputProps>`
   width: 100%;
-  min-height: 100px;
+  min-height: 58px;
   padding: 11px 20px;
   border-radius: 15px;
   border: ${({ isValid }) =>
