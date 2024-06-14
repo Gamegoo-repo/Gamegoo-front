@@ -11,6 +11,7 @@ import Table from "@/components/board/Table";
 import Pagination from "@/components/common/Pagination";
 import PositionFilter from "@/components/board/PositionFilter";
 import PostBoard from "@/components/createBoard/PostBoard";
+import Filter from "@/components/board/Filter";
 
 const DROP_DATA1 = [
     { id: 1, value: '솔로1' },
@@ -159,16 +160,19 @@ const BoardPage = () => {
                                 defaultValue={selectedDropOption2}
                             />
                             <PositionBox>
-                                <PositionFilter
+                                {/* <PositionFilter
                                     onPositionFilter={handlePositionFilter}
                                     isPosition={isPosition}
-                                />
+                                /> */}
+                                <Filter/>
                             </PositionBox>
                             <MicButton
                                 onClick={handleMic}
                                 className={micOn ? 'clicked' : 'unClicked'}>
                                 <Image
-                                    src='/assets/icons/availabled_mic.svg'
+                                    src={micOn?
+                                   "/assets/icons/availabled_mic.svg":
+                                   "/assets/icons/unavailabled_mic.svg" }
                                     width={21}
                                     height={26}
                                     alt='mic button'
@@ -209,52 +213,52 @@ export default BoardPage;
 
 const Wrapper = styled.div`
     width: 100%;
-`
+`;
 
 const Header = styled.header`
     max-width:1440px;
     width: 100%;
     padding:0 80px;
-`
+`;
 
 const FirstRow = styled.div`
     display: flex;
     align-items: center;
     justify-content:space-between;
     margin-bottom: 38px;
-`
+`;
 
 const Title = styled.p`
     ${(props) => props.theme.fonts.regular35};
-        color:#44515C;
-`
+    color:#44515C;
+`;
 
 const RefreshImage = styled(Image)`
     cursor: pointer;
-`
+`;
 
 const SecondRow = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 25px;
-`
+`;
 
 const FirstBlock = styled.div`
     display: flex;
     align-items: center;
     gap:15px;
-`
+`;
 
 const PositionBox = styled.div`
     background: #F5F5F5;
     border-radius: 10px;
-`
+`;
 const PositionButton = styled.button`
     &:focus{
         background: ${theme.colors.purple100};
     }
-`
+`;
 const MicButton = styled.button`
     padding:13px 17px;
     border-radius: 10px;
@@ -264,19 +268,19 @@ const MicButton = styled.button`
     &.unClicked{
         background: ${theme.colors.gray300};
     }
-`
+`;
 
-const SecondBlock = styled.div``
+const SecondBlock = styled.div``;
 
 const Main = styled.main`
     max-width:1440px;
     width: 100%;
     padding:0 80px;
     margin-bottom: 64px;
-`
+`;
 
 const Footer = styled.footer`
     max-width:1440px;
     width: 100%;
     margin-bottom: 123px;
-    `
+`;

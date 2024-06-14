@@ -28,11 +28,11 @@ const PositionFilter = (props: SvgProps) => {
             <Button
                 className={isPosition === 1 ? 'active' : 'default'}
                 onClick={() => onPositionFilter(1)}>
-                <BotSvg
+                <TopSvg
                     width='17'
                     height='17'
-                    currentColor1={isPosition === 1 ? 'white' : '#8B8B8B'}
-                    currentColor2={isPosition === 1 ? 'white' : '#4B4B4B'} />
+                    currentColor1={isPosition === 1 ? 'white' : '#4B4B4B'}
+                    currentColor2={isPosition === 1 ? 'white' : '#8B8B8B'} />
             </Button>
             <Button
                 className={isPosition === 2 ? 'active' : 'default'}
@@ -54,11 +54,11 @@ const PositionFilter = (props: SvgProps) => {
             <Button
                 className={isPosition === 4 ? 'active' : 'default'}
                 onClick={() => onPositionFilter(4)}>
-                <TopSvg
+                <BotSvg
                     width='17'
                     height='17'
-                    currentColor1={isPosition === 4 ? 'white' : '#4B4B4B'}
-                    currentColor2={isPosition === 4 ? 'white' : '#8B8B8B'} />
+                    currentColor1={isPosition === 4 ? 'white' : '#8B8B8B'}
+                    currentColor2={isPosition === 4 ? 'white' : '#4B4B4B'} />
             </Button>
             <Button
                 className={isPosition === 5 ? 'active' : 'default'}
@@ -79,7 +79,7 @@ const Wrapper = styled.div`
     align-items: center;
     justify-content: center;
     width: 100%;
-`
+`;
 
 const Button = styled.button`
     height: 56px;
@@ -105,4 +105,4 @@ const Button = styled.button`
             border-radius: 0 10px 10px 0;
         }
     }
-`
+`;
