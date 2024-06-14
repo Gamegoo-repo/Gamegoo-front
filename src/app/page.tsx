@@ -3,6 +3,7 @@
 import Button from "@/components/common/Button";
 import Checkbox from "@/components/common/Checkbox";
 import Input from "@/components/common/Input";
+import { theme } from "@/styles/theme";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -12,9 +13,22 @@ import styled from "styled-components";
 const Login = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
+  const [emailDisable, setEmailDisable] = useState(false);
+  const [password, setPassword] = useState("");
+
+  /* 이메일 존재 여부 검사 */
+  // API 연동
+
+  /* 이메일 수정하기 */
+  const handleModify = () => {
+    setEmailDisable(false);
+  };
+
+  /* 로그인 */
   const handleLogin = () => {
     router.push("/home");
   };
+
   return (
     <Container>
       <Box>
@@ -35,7 +49,19 @@ const Login = () => {
                 setEmail(value);
               }}
               placeholder="이메일 주소"
+              disabled={emailDisable}
             />
+            {email && <Modify onClick={handleModify}>수정</Modify>}
+            {email && (
+              <Input
+                inputType="password"
+                value={password}
+                onChange={(value) => {
+                  setPassword(value);
+                }}
+                placeholder="비밀번호"
+              />
+            )}
             <Button
               buttonType="primary"
               text="이메일로 시작하기"
@@ -122,6 +148,18 @@ const Div = styled.div`
   display: flex;
   flex-direction: column;
   gap: 17px;
+  position: relative;
+`;
+
+const Modify = styled.div`
+  position: absolute;
+  top: 30px;
+  right: 20px;
+  transform: translate(0, -50%);
+  color: ${theme.colors.purple100};
+  font-size: ${theme.fonts.semiBold14};
+  z-index: 100;
+  cursor: pointer;
 `;
 
 const Check = styled.div`
@@ -154,4 +192,3 @@ const Join = styled(Link)`
   font-weight: 500;
   text-decoration-line: underline;
 `;
-
