@@ -298,8 +298,6 @@ const Guide = () => {
         <PositionCategory
           onClose={handlePositionClose}
           onSetPosition={handlePosition} />}
-
-
     </Layout>
   );
 };

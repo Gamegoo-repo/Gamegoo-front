@@ -168,7 +168,7 @@ const BoardPage = () => {
                                 onClick={handleMic}
                                 className={micOn ? 'clicked' : 'unClicked'}>
                                 <Image
-                                    src='/assets/icons/mic.svg'
+                                    src='/assets/icons/availabled_mic.svg'
                                     width={21}
                                     height={26}
                                     alt='mic button'
