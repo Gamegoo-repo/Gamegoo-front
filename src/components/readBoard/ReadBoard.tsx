@@ -203,7 +203,7 @@ const MemoSection = styled.div`
 
 const Memo = styled.div`
     width: 100%;
-    min-height: 100px;
+    min-height: 160px;
     padding: 11px 20px;
     border-radius: 15px;
     border: 1px solid ${theme.colors.purple300};  

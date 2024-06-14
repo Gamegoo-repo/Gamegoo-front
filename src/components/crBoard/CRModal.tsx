@@ -54,12 +54,18 @@ const Overlay = styled.div`
     left:50%;
     transform: translate(-50%, -50%);
     z-index: 1;
+    /* height: 100%; */
 `;
 
 const Wrapper = styled.div`
     box-shadow: 0 0 21.3px 0 rgba(0, 0, 0, 0.15);
     background: ${theme.colors.white};
-    border-radius: 20px;
+    border-radius: 19px;
+    /* height: 989px;
+    display: flex;
+    flex-direction: column;
+    max-height: 100%; 
+    position: relative; */
 `;
 
 const Header = styled.header<{ $type: string }>` 
@@ -94,8 +100,10 @@ const CloseImage = styled(Image)`
 `;
 
 const Main = styled.main`
-    padding:0 45px;
+    /* overflow-y: auto;
+    flex-grow: 1; */
 `;
 
 const MainContent = styled.div`
+    padding: 0 45px;
 `;

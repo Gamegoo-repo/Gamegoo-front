@@ -173,6 +173,7 @@ const PostBoard = (props: PostBoardProps) => {
                 <MemoSection>
                     <Title>메모</Title>
                     <Input
+                        height="160px"
                         inputType="textarea"
                         value={textareaValue}
                         id="memo"

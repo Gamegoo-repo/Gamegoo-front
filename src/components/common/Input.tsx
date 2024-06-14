@@ -13,6 +13,7 @@ interface InputProps {
   placeholder?: string;
   isValid?: null | boolean;
   disabled?: boolean;
+  height?: string;
 }
 
 const Input = (props: InputProps) => {
@@ -26,18 +27,19 @@ const Input = (props: InputProps) => {
     placeholder,
     isValid,
     disabled,
+    height
   } = props;
 
   const handleChange = (event: any) => {
     onChange(event.target.value);
   };
-
+  console.log(height)
   return (
     <Element>
       {label && <StyledLabel htmlFor={id}>{label}</StyledLabel>}
       {inputType === "textarea" ? (
         <StyledTextarea
-          className={size}
+          className={`${height ? 'containerHeight' : 'height'} ${size}`}
           id={id}
           name={id}
           value={value}
@@ -121,14 +123,18 @@ const StyledInput = styled.input<InputProps>`
 
 const StyledTextarea = styled.textarea`
   width: 100%;
-  min-height: 100px;
   padding: 11px 20px;
   border-radius: 15px;
   border: 1px solid #b5b5b5;
   color: ${theme.colors.black};
   ${(props) => props.theme.fonts.regular20};
   resize: none;
-
+  &.containerHeight{
+    min-height: 160px;
+  }
+  &.height {
+    min-height: 100px;
+  }
   &:focus {
     outline: none;
     border: 1px solid ${theme.colors.purple300};

@@ -3,7 +3,7 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { setDateFormatter, setPositionImg, setTierImg } from "@/utils/custom";
 import ReadBoard from "../readBoard/ReadBoard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface TableTitleProps {
     id: number;
@@ -39,11 +39,23 @@ const Table = (props: TableProps) => {
     const handlePostOpen = (id: number) => {
         setIsOpenReadBoard(true);
         setIsReadBoardId(id);
-    }
+    };
 
     const handlePostClose = () => {
         setIsOpenReadBoard(false);
-    }
+    };
+
+    useEffect(() => {
+        if (isOpenReadBoard) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isOpenReadBoard]);
 
     return (
         <>
