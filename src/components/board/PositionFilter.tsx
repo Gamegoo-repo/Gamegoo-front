@@ -1,11 +1,11 @@
-import styled from "styled-components";
 import { theme } from "@/styles/theme";
-import RandomSvg from "../svg/RandomPosition"
-import BotSvg from "../svg/BotPosition";
-import JungleSvg from "../svg/JunglePosition";
-import MidSvg from "../svg/MidPosition";
-import TopSvg from "../svg/TopPosition";
-import SupporterSvg from "../svg/SupporterPosition";
+import styled from "styled-components";
+import Random from "../../../public/assets/icons/default_random.svg";
+import Top from "../../../public/assets/icons/default_top.svg";
+import Jungle from "../../../public/assets/icons/default_jungle.svg";
+import Mid from "../../../public/assets/icons/default_mid.svg";
+import Bottom from "../../../public/assets/icons/default_bottom.svg";
+import Supporter from "../../../public/assets/icons/default_supporter.svg";
 
 interface SvgProps {
     onPositionFilter: (id: number) => void;
@@ -17,59 +17,33 @@ const PositionFilter = (props: SvgProps) => {
 
     return (
         <Wrapper>
-            <Button
-                className={isPosition === 0 ? 'active' : 'default'}
-                onClick={() => onPositionFilter(0)}>
-                <RandomSvg
-                    width='13'
-                    height='11'
-                    currentColor={isPosition === 0 ? 'white' : '#4B4B4B'} />
-            </Button>
-            <Button
-                className={isPosition === 1 ? 'active' : 'default'}
+            <RandomButton
+                onClick={() => onPositionFilter(0)}
+                $isPosition={isPosition}>
+                <Random />
+            </RandomButton>
+            <TopButton
                 onClick={() => onPositionFilter(1)}>
-                <BotSvg
-                    width='17'
-                    height='17'
-                    currentColor1={isPosition === 1 ? 'white' : '#8B8B8B'}
-                    currentColor2={isPosition === 1 ? 'white' : '#4B4B4B'} />
-            </Button>
-            <Button
-                className={isPosition === 2 ? 'active' : 'default'}
+                <Top />
+            </TopButton>
+            <JungleButton
                 onClick={() => onPositionFilter(2)}>
-                <JungleSvg
-                    width='19'
-                    height='19'
-                    currentColor={isPosition === 2 ? 'white' : '#8B8B8B'} />
-            </Button>
-            <Button
-                className={isPosition === 3 ? 'active' : 'default'}
+                <Jungle />
+            </JungleButton>
+            <MidButton
                 onClick={() => onPositionFilter(3)}>
-                <MidSvg
-                    width='17'
-                    height='17'
-                    currentColor1={isPosition === 3 ? 'white' : '#4B4B4B'}
-                    currentColor2={isPosition === 3 ? 'white' : '#8B8B8B'} />
-            </Button>
-            <Button
-                className={isPosition === 4 ? 'active' : 'default'}
+                <Mid />
+            </MidButton>
+            <BottomButton
                 onClick={() => onPositionFilter(4)}>
-                <TopSvg
-                    width='17'
-                    height='17'
-                    currentColor1={isPosition === 4 ? 'white' : '#4B4B4B'}
-                    currentColor2={isPosition === 4 ? 'white' : '#8B8B8B'} />
-            </Button>
-            <Button
-                className={isPosition === 5 ? 'active' : 'default'}
+                <Bottom />
+            </BottomButton>
+            <SupporterButton
                 onClick={() => onPositionFilter(5)}>
-                <SupporterSvg
-                    width='22'
-                    height='18'
-                    currentColor={isPosition === 5 ? 'white' : '#8B8B8B'} />
-            </Button>
+                <Supporter />
+            </SupporterButton>
         </Wrapper>
-    )
+    );
 };
 
 export default PositionFilter;
@@ -79,30 +53,148 @@ const Wrapper = styled.div`
     align-items: center;
     justify-content: center;
     width: 100%;
-`
+`;
 
-const Button = styled.button`
+const RandomButton = styled.button<{ $isPosition: number }>`
+    max-width: 48px;
     height: 56px;
     padding:0 15px;
-    border-right: 1px solid #E4E4E4;
+    border-right: 1px solid ${theme.colors.gray400};
+    border-radius: 10px 0 0 10px;
+    
+    stroke: ${({ $isPosition }) =>
+        $isPosition === 0
+            ? `${theme.colors.white}`
+            : 'unset'
+    };
 
-    &:first-child{
-        border-radius: 10px 0 0 10px;
+    background: ${({ $isPosition }) =>
+        $isPosition === 0
+            ? `${theme.colors.purple100}`
+            : 'unset'
+    };
+
+    &:hover {
+        ${({ $isPosition }) =>
+        $isPosition === 0
+            ? `unset`
+            : `background: ${theme.colors.gray300}`
+    };
     }
-    &:last-child{
-        border-right:unset;
-        border-radius: 0 10px 10px 0;
+
+    &:active,
+    &:focus path {
+        stroke: ${theme.colors.white};
     }
-    &.default {
-        background:#F5F5F5;
+
+    &:active,
+    &:focus {
+        background: ${theme.colors.purple100};
     }
-    &.active{
-        background:${theme.colors.purple100};
-        &:first-child{
-            border-radius: 10px 0 0 10px;
-        }
-        &:last-child{
-            border-radius: 0 10px 10px 0;
-        }
+`;
+
+const TopButton = styled.button`
+    max-width: 48px;
+    height: 56px;
+    padding:0 15px;
+    border-right: 1px solid ${theme.colors.gray400};
+
+    &:hover {
+        background: ${theme.colors.gray300};
     }
-`
+
+    &:active,
+    &:focus path:first-child {
+        fill: ${theme.colors.white};
+    }
+
+    &:active,
+    &:focus {
+        background: ${theme.colors.purple100};
+    }
+`;
+
+const JungleButton = styled.button`
+    max-width: 48px;
+    height: 56px;
+    padding:0 15px;
+    border-right: 1px solid ${theme.colors.gray400};
+
+    &:hover {
+        background: ${theme.colors.gray300};
+    }
+
+    &:active,
+    &:focus path {
+        fill: ${theme.colors.white};
+    }
+
+    &:active,
+    &:focus {
+        background: ${theme.colors.purple100};
+    }
+`;
+
+const MidButton = styled.button`
+    max-width: 48px;
+    height: 56px;
+    padding:0 15px;
+    border-right: 1px solid ${theme.colors.gray400};
+
+    &:hover {
+        background: ${theme.colors.gray300};
+    }
+
+    &:active,
+    &:focus path:nth-child(2) {
+        fill: ${theme.colors.white};
+    }
+
+    &:active,
+    &:focus {
+        background: ${theme.colors.purple100};
+    }
+`;
+
+const BottomButton = styled.button`
+    max-width: 48px;
+    height: 56px;
+    padding:0 15px;
+    border-right: 1px solid ${theme.colors.gray400};
+
+    &:hover {
+        background: ${theme.colors.gray300};
+    }
+
+    &:active,
+    &:focus path:nth-child(2) {
+        fill: ${theme.colors.white};
+    }
+
+    &:active,
+    &:focus {
+        background: ${theme.colors.purple100};
+    }
+`;
+
+const SupporterButton = styled.button`
+    max-width: 48px;
+    height: 56px;
+    padding:0 15px;
+    border-radius: 0 10px 10px 0;
+
+    &:hover {
+        background: ${theme.colors.gray300};
+    }
+
+    &:active,
+    &:focus path {
+        fill: ${theme.colors.white};
+    }
+
+    &:active,
+    &:focus {
+        background: ${theme.colors.purple100};
+    }
+`;
+

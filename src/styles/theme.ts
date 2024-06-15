@@ -68,6 +68,10 @@ const fonts = {
         weight: 700,
         size: 11,
     }),
+    bold10: FONT({
+        weight: 700,
+        size: 10,
+    }),
 
     /*SemiBold*/
     semiBold18: FONT({
@@ -112,15 +116,23 @@ const fonts = {
         weight: 400,
         size: 12,
     }),
-    regular11: FONT({
-        weight: 500,
-        size: 11,
-    }),
 
     /*Medium*/
     medium16: FONT({
         weight: 500,
         size: 16,
+    }),
+    medium15: FONT({
+        weight: 500,
+        size: 15,
+    }),
+    medium14: FONT({
+        weight: 500,
+        size: 14,
+    }),
+    medium11: FONT({
+        weight: 500,
+        size: 11,
     }),
 }
 

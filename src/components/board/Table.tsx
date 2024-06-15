@@ -1,8 +1,9 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import dayjs from "@/libs/dayjs";
 import { setDateFormatter, setPositionImg, setTierImg } from "@/utils/custom";
+import ReadBoard from "../readBoard/ReadBoard";
+import { useEffect, useState } from "react";
 
 interface TableTitleProps {
     id: number;
@@ -32,93 +33,114 @@ interface TableProps {
 const Table = (props: TableProps) => {
     const { title, content } = props;
 
-    // const handleDateFormatter = (date: string) => {
-    //     const now = dayjs();
-    //     const diff = now.diff(date, 'day')
-    //     if (diff >= 7) {
-    //         return dayjs(date).format("YYYY-MM-DD");
-    //     } else {
-    //         return dayjs(date).fromNow();
-    //     }
-    // };
+    const [isOpenReadBoard, setIsOpenReadBoard] = useState(false);
+    const [isReadBoardId, setIsReadBoardId] = useState<number | null>(null);
+
+    const handlePostOpen = (id: number) => {
+        setIsOpenReadBoard(true);
+        setIsReadBoardId(id);
+    };
+
+    const handlePostClose = () => {
+        setIsOpenReadBoard(false);
+    };
+
+    useEffect(() => {
+        if (isOpenReadBoard) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isOpenReadBoard]);
+
     return (
-        <TableWrapper>
-            <TableHead>
-                {title.map(value => {
-                    return (
-                        <Title key={value.id} className="table_width">{value.name}</Title>
-                    )
-                })}
-            </TableHead>
-            <TableContent>
-                {content.map(value => {
-                    return (
-                        <Row key={value.id}>
-                            <First className="table_width">
-                                <Image
-                                    src={value.image}
-                                    width={50}
-                                    height={50}
-                                    alt="profile image"
-                                />
-                                <P>{value.account}</P>
-                            </First>
-                            <Second className="table_width">
-                                <P>LV.{value.manner_lev}</P>
-                            </Second>
-                            <Third className="table_width">
-                                <Image
-                                    src={setTierImg(value.tierImg)}
-                                    width={26}
-                                    height={13}
-                                    alt="profile image"
-                                />
-                                <P>{value.tier}</P>
-                            </Third>
-                            <Fourth className="table_width">
-                                <Image
-                                    src={setPositionImg(value.main_position)}
-                                    width={35}
-                                    height={28}
-                                    alt="main position image"
-                                />
-                                <Image
-                                    src={setPositionImg(value.sub_position)}
-                                    width={35}
-                                    height={28}
-                                    alt="main position image"
-                                />
-                            </Fourth>
-                            <Fifth className="table_width">
-                                <Image
-                                    src={setPositionImg(value.hope_position)}
-                                    width={26}
-                                    height={25}
-                                    alt="sub position image"
-                                />
-                            </Fifth>
-                            <Sixth className="table_width">
-                                {value.champion.map((data, index) => (
+        <>
+            {isOpenReadBoard &&
+                <ReadBoard onClose={handlePostClose} postId={isReadBoardId} />
+            }
+            <TableWrapper>
+                <TableHead>
+                    {title.map(value => {
+                        return (
+                            <Title key={value.id} className="table_width">{value.name}</Title>
+                        )
+                    })}
+                </TableHead>
+                <TableContent>
+                    {content.map(value => {
+                        return (
+                            <Row key={value.id}
+                                onClick={() => handlePostOpen(value.id)}>
+                                <First className="table_width">
                                     <Image
-                                        key={index}
-                                        src={data}
+                                        src={value.image}
                                         width={50}
                                         height={50}
-                                        alt="champion image"
+                                        alt="profile image"
                                     />
-                                ))}
-                            </Sixth>
-                            <Seventh className="table_width">
-                                <P className={value.odds >= 50 ? 'emph' : 'basic'}>{value.odds}%</P>
-                            </Seventh>
-                            <Eighth className="table_width">
-                                <P>{setDateFormatter(value.date)}</P>
-                            </Eighth>
-                        </Row>
-                    )
-                })}
-            </TableContent>
-        </TableWrapper>
+                                    <P>{value.account}</P>
+                                </First>
+                                <Second className="table_width">
+                                    <P>LV.{value.manner_lev}</P>
+                                </Second>
+                                <Third className="table_width">
+                                    <Image
+                                        src={setTierImg(value.tierImg)}
+                                        width={26}
+                                        height={13}
+                                        alt="profile image"
+                                    />
+                                    <P>{value.tier}</P>
+                                </Third>
+                                <Fourth className="table_width">
+                                    <Image
+                                        src={setPositionImg(value.main_position)}
+                                        width={35}
+                                        height={28}
+                                        alt="main position image"
+                                    />
+                                    <Image
+                                        src={setPositionImg(value.sub_position)}
+                                        width={26}
+                                        height={25}
+                                        alt="main position image"
+                                    />
+                                </Fourth>
+                                <Fifth className="table_width">
+                                    <Image
+                                        src={setPositionImg(value.hope_position)}
+                                        width={26}
+                                        height={25}
+                                        alt="sub position image"
+                                    />
+                                </Fifth>
+                                <Sixth className="table_width">
+                                    {value.champion.map((data, index) => (
+                                        <Image
+                                            key={index}
+                                            src={data}
+                                            width={50}
+                                            height={50}
+                                            alt="champion image"
+                                        />
+                                    ))}
+                                </Sixth>
+                                <Seventh className="table_width">
+                                    <P className={value.odds >= 50 ? 'emph' : 'basic'}>{value.odds}%</P>
+                                </Seventh>
+                                <Eighth className="table_width">
+                                    <P>{setDateFormatter(value.date)}</P>
+                                </Eighth>
+                            </Row>
+                        )
+                    })}
+                </TableContent>
+            </TableWrapper>
+        </>
     )
 };
 
@@ -153,8 +175,8 @@ const TableWrapper = styled.div`
             width: 11%;
     }
         }
+`;
 
-`
 const TableHead = styled.div`
     display: flex;
     align-items: center;
@@ -164,15 +186,15 @@ const TableHead = styled.div`
     background:#5C5C5C;
     color:${theme.colors.white};
     border-radius:8px;
-`
+`;
 
 const Title = styled.p`
     &:first-child{
       text-align: left;
     }  
-`
+`;
 
-const TableContent = styled.div``
+const TableContent = styled.div``;
 
 const Row = styled.div`
     display: flex;
@@ -181,47 +203,46 @@ const Row = styled.div`
     padding:22px 21px;
     border-bottom: 1px solid #D4D4D4;
     cursor: pointer;    
-
-`
+`;
 
 const First = styled.div`
     display: flex;
     align-items: center;
     gap:22px;
-`
+`;
 const Second = styled.div`
     p {
         color:${theme.colors.purple100};
         ${(props) => props.theme.fonts.bold16};
     }
+`;
 
-`
 const Third = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
     gap:2px;
+`;
 
-`
 const Fourth = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
     gap:21px;
-`
+`;
 const Fifth = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-`
+`;
 const Sixth = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
     gap:5px;
-`
-const Seventh = styled.div``
-const Eighth = styled.div``
+`;
+const Seventh = styled.div``;
+const Eighth = styled.div``;
 const P = styled.p`
     ${(props) => props.theme.fonts.medium16};
     color:${theme.colors.black};
@@ -233,4 +254,4 @@ const P = styled.p`
     color:${theme.colors.black};
     ${(props) => props.theme.fonts.medium16};
     }
-`
+`;

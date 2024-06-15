@@ -55,7 +55,7 @@ const Check = styled.input`
   outline: none;
 
   &:hover {
-    box-shadow: 0 0 0 max(0px, 0.3em) ${theme.colors.purple500};
+    box-shadow: 0 0 0 max(0, 0.3em) ${theme.colors.purple500};
   }
 
   &:checked {

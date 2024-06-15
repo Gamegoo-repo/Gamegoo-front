@@ -2,10 +2,6 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useState } from "react";
 import styled from "styled-components";
-import smileIcon from "../../../public/assets/icons/smile.svg";
-import sadIcon from "../../../public/assets/icons/sad.svg";
-import clickedSadIcon from "../../../public/assets/icons/clicked_sad.svg";
-import clickedSmileIcon from "../../../public/assets/icons/clicked_smile.svg";
 
 interface ConfirmModalProps {
     type: 'yesOrNo' | 'confirm' | 'img';
@@ -45,7 +41,7 @@ const ConfirmModal = (props: ConfirmModalProps) => {
                             <ImageWrapper>
                                 <ClickArea onClick={handleMannerEvaluate}>
                                     <Image
-                                        src={mannerStatus ? clickedSmileIcon : smileIcon}
+                                        src={mannerStatus ? "/assets/icons/clicked_smile.svg" : "/assets/icons/smile.svg"}
                                         width={33}
                                         height={33}
                                         alt="smile icon" />
@@ -53,10 +49,10 @@ const ConfirmModal = (props: ConfirmModalProps) => {
                                 </ClickArea>
                                 <ClickArea onClick={handleBadMannerEvaluate}>
                                     <Image
-                                        src={badMannerStatus ? clickedSadIcon : sadIcon}
+                                        src={badMannerStatus ? "/assets/icons/clicked_sad.svg" : "/assets/icons/sad.svg"}
                                         width={33}
                                         height={33}
-                                        alt="smile icon" />
+                                        alt="sad icon" />
                                     <MannerText>비매너 평가하기</MannerText>
                                 </ClickArea>
                             </ImageWrapper>
@@ -103,7 +99,7 @@ const Wrapper = styled.div<{ $width: string }>`
     width:${(props) => props.$width};
     background: ${theme.colors.white};
     border-radius: 11px;
-    box-shadow: 0px 0px 14.76px 0px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 14.76px 0 rgba(0, 0, 0, 0.15);
 `
 
 const Main = styled.main`

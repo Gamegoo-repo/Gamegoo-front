@@ -44,7 +44,7 @@ const Container = styled.div`
   border-radius: 30px;
   margin-bottom: 8px;
   background: ${theme.colors.purple300};
-  box-shadow: 0px 4px 7.7px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 7.7px 0 rgba(0, 0, 0, 0.25);
 `;
 
 const Label = styled.label`

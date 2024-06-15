@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 interface ButtonProps {
   buttonType?: "primary" | "secondary" | "default";
+  type?: 'submit' | 'reset' | 'button' | undefined;
   size?: "small" | "medium" | "large";
   text: string;
   onClick?: (e: React.MouseEvent) => void;
@@ -10,7 +11,7 @@ interface ButtonProps {
 }
 
 const Button = (props: ButtonProps) => {
-  const { buttonType = "default", size, text, onClick, disabled } = props;
+  const { buttonType = "default", type, size, text, onClick, disabled } = props;
 
   let buttonClassName = buttonType;
   if (size) {
@@ -18,7 +19,7 @@ const Button = (props: ButtonProps) => {
   }
 
   return (
-    <StyledButton className={buttonType} onClick={onClick} disabled={disabled}>
+    <StyledButton className={buttonType} type={type} onClick={onClick} disabled={disabled}>
       {text}
     </StyledButton>
   );
