@@ -24,7 +24,7 @@ const GameModePage = () => {
           <Title>프로필 설정</Title>
         </Header>
         <Main>
-          <Profile />
+          <Profile profileType="hard" />
           <Button
             buttonType="primary"
             width="380px"

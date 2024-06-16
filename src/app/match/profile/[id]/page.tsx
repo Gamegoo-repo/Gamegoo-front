@@ -2,11 +2,13 @@
 
 import Image from "next/image";
 import styled from "styled-components";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Profile from "@/components/match/Profile";
 
 const UserProfile = () => {
   const router = useRouter();
+  const params = useParams();
+  const id = +params.id;
 
   return (
     <Wrapper>
@@ -22,7 +24,7 @@ const UserProfile = () => {
           <Title>장시은 님의 프로필</Title>
         </Header>
         <Main>
-          <Profile />
+          <Profile profileType="hard" />
           <Title>장시은 님의 매너레벨</Title>
           <Title>매너 키워드</Title>
           <Title>비매너 키워드</Title>

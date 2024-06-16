@@ -15,7 +15,7 @@ const Header = () => {
     <Head>
       <HeaderBar>
         <Left>
-          <Link href="/">
+          <Link href="/home">
             <Image
               src="/assets/icons/logo.svg"
               width={102}
@@ -24,7 +24,14 @@ const Header = () => {
             />
           </Link>
           <Menus>
-            <Menu href="/match" selected={pathname === "/match" || pathname === '/match/type' || pathname === "/game-mode"}>
+            <Menu
+              href="/match"
+              selected={
+                pathname === "/match" ||
+                pathname === "/match/type" ||
+                pathname === "/game-mode"
+              }
+            >
               바로 매칭
             </Menu>
             <Bar />
@@ -76,7 +83,7 @@ const Menus = styled.div`
   display: flex;
   gap: 25px;
 `;
-const Menu = styled(Link) <HeaderProps>`
+const Menu = styled(Link)<HeaderProps>`
   font-weight: ${({ selected }) => (selected ? "700" : "400")};
 `;
 
