@@ -30,7 +30,7 @@ const GameModePage = () => {
             width="380px"
             text="매칭 시작하기"
             onClick={() => {
-              router.push("/matching");
+              router.push("/matching/progress");
             }}
           />
         </Main>
