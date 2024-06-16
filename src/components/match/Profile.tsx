@@ -1,28 +1,17 @@
+import React from "react";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import React, { useState } from "react";
 import styled from "styled-components";
-import Toggle from "../common/Toggle";
-import { EX_GAME_STYLE } from "@/data/profile";
-import Box from "../common/Box";
-import GameStylePopup from "../common/GameStylePopup";
+import GameStyle from "./GameStyle";
+import { POSITIONS } from "@/data/profile";
 
-const Profile = () => {
-  const [isMike, setIsMike] = useState(false);
-  const [styledPopup, setStyledPopup] = useState(false);
+type profileType = "fun" | "hard";
 
-  const handleMike = () => {
-    setIsMike(!isMike);
-  };
+interface Profile {
+  profileType: profileType;
+}
 
-  const handleStylePopup = () => {
-    setStyledPopup(!styledPopup);
-  };
-
-  const handleClosePopup = () => {
-    setStyledPopup(false);
-  };
-
+const Profile: React.FC<Profile> = ({ profileType = "hard" }) => {
   return (
     <Container>
       <Row>
@@ -54,59 +43,26 @@ const Profile = () => {
               B3
             </Rank>
           </Top>
-          <Position>
-            <Posi>
-              주 포지션
-              <Image
-                src="/assets/icons/position_supporter_purple.svg"
-                width={55}
-                height={44}
-                alt="포지션"
-              />
-            </Posi>
-            <Posi>
-              부 포지션
-              <Image
-                src="/assets/icons/position_supporter_purple.svg"
-                width={55}
-                height={44}
-                alt="포지션"
-              />
-            </Posi>
-            <Posi>
-              내가 찾는 포지션
-              <Image
-                src="/assets/icons/position_supporter_purple.svg"
-                width={55}
-                height={44}
-                alt="포지션"
-              />
-            </Posi>
-            <Mike>
-              마이크
-              <Toggle isOn={isMike} onToggle={handleMike} />
-            </Mike>
-          </Position>
+          {profileType === "fun" ? (
+            <GameStyle />
+          ) : (
+            <Position>
+              {POSITIONS.map((position, index) => (
+                <Posi key={index}>
+                  {position.label}
+                  <Image
+                    src={`/assets/icons/position_${position.position}_purple.svg`}
+                    width={55}
+                    height={44}
+                    alt="포지션"
+                  />
+                </Posi>
+              ))}
+            </Position>
+          )}
         </StyledBox>
       </Row>
-      <Style>
-        게임 스타일
-        <GameBox>
-          {EX_GAME_STYLE.map((data) => (
-            <Box key={data.id} text={data.text} shape="round" />
-          ))}
-          <AddGameStyle>
-            <Image
-              src="/assets/icons/plus.svg"
-              width={21}
-              height={21}
-              alt="추가"
-              onClick={handleStylePopup}
-            />
-          </AddGameStyle>
-        </GameBox>
-      </Style>
-      {styledPopup && <GameStylePopup onClose={handleClosePopup} />}
+      {profileType === "hard" && <GameStyle />}
     </Container>
   );
 };
@@ -114,7 +70,7 @@ const Profile = () => {
 export default Profile;
 
 const Container = styled.div`
-  width: 1224px;
+  width: 100%;
   border-radius: 30px;
   padding: 40px 44px;
   background: ${theme.colors.gray500};
@@ -122,10 +78,11 @@ const Container = styled.div`
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 38px;
+  gap: 15px;
 `;
 
 const Row = styled.div`
+  width: 100%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -143,6 +100,7 @@ const CameraImage = styled(Image)`
 `;
 
 const StyledBox = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -162,6 +120,7 @@ const Span = styled.span`
   color: ${theme.colors.gray300};
   font-size: ${theme.fonts.regular25};
 `;
+
 const Rank = styled.div`
   display: flex;
   align-items: center;
@@ -182,33 +141,4 @@ const Posi = styled.div`
   flex-direction: column;
   gap: 15px;
   align-items: center;
-`;
-
-const Mike = styled(Posi)`
-  align-items: flex-start;
-  gap: 12px;
-`;
-
-const Style = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 11px;
-`;
-
-const GameBox = styled.div`
-  display: flex;
-  gap: 15px;
-`;
-
-const AddGameStyle = styled.div`
-  display: flex;
-  width: 62px;
-  height: 50px;
-  padding: 13px 30px;
-  justify-content: center;
-  align-items: center;
-  border-radius: 25px;
-  background: ${theme.colors.purple300};
-  cursor: pointer;
 `;
