@@ -22,3 +22,9 @@ export const GAME_STYLE = [
     { id: 11, text: '뚝심있는 탑 라이너' },
     { id: 12, text: '마이크 안해요' },
 ];
+
+export const POSITIONS = [
+    { label: "주 포지션", position: "supporter" },
+    { label: "부 포지션", position: "jungle" },
+    { label: "내가 찾는 포지션", position: "jungle" },
+]
