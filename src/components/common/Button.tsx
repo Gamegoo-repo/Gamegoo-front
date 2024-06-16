@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 interface ButtonProps {
   buttonType?: "primary" | "secondary" | "default";
+  type?: "submit" | "reset" | "button" | undefined;
   size?: "small" | "medium" | "large";
   width?: string;
   text: string;

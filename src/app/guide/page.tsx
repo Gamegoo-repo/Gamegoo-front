@@ -3,7 +3,7 @@
 import styled from "styled-components";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Checkbox from "@/components/common/Checkbox";
 import RadioCard from "@/components/common/RadioCard";
 import Dropdown from "@/components/common/Dropdown";
@@ -27,7 +27,6 @@ const DROP_DATA2 = [
 ];
 
 const Guide = () => {
-  const dropdownRef = useRef();
   /* Input State */
   const [inputValue, setInputValue] = useState("Input");
   const [inputValid, setInputValid] = useState("Input Valid");
@@ -38,16 +37,21 @@ const Guide = () => {
   /* RadioCard State */
   const [isSelected, setIsSelected] = useState<string>("option1");
 
-  /* Modal */
+  /* Modal State*/
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
   const [openFormModal, setOpenFormModal] = useState(false);
 
-  /* Position category */
+  /* Position category State */
   const [openPosition, setOpenPosition] = useState(false);
   const [isPosition, setIsPosition] = useState("");
 
   /* Toggle */
   const [isOn, setisOn] = useState(false);
+
+  /* Dropdown State*/
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedDropOption, setSelectedDropOption] = useState("솔로 랭크");
 
   const handleOptionChange = (value: string) => {
     setIsSelected(value);
@@ -85,6 +89,29 @@ const Guide = () => {
     setIsPosition(value);
     setOpenPosition(false);
   };
+
+  /* Dropdown */
+  const handleDropValue = (value: string) => {
+    console.log(value);
+    setSelectedDropOption(value);
+    setIsDropdownOpen(false);
+  };
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node)
+    ) {
+      setIsDropdownOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <Layout>
@@ -174,23 +201,28 @@ const Guide = () => {
       <H2>Dropdown</H2>
       <Dropdown
         type="type1"
-        name="솔로 랭크"
         width="138px"
-        fontSize="20px"
-        bgColor="#F5F5F5"
+        padding="16.5px 21px"
         list={DROP_DATA1}
+        ref={dropdownRef}
+        setOpen={setIsDropdownOpen}
+        open={isDropdownOpen}
+        onDropValue={handleDropValue}
+        defaultValue={selectedDropOption}
       />
       <p>TYPE 1</p>
 
-      <Dropdown
+      {/* <Dropdown
         type="type2"
-        name="티어 선택"
         width="243px"
-        fontSize="${(props) => props.theme.fonts.regular18}"
-        bgColor="${theme.colors.white}"
+        padding="16.5px 21px"
         list={DROP_DATA2}
-      />
-      <p>TYPE 2</p>
+        ref={dropdownRef}
+        setOpen={setIsDropdownOpen}
+        open={isDropdownOpen}
+        onDropValue={handleDropValue}
+        defaultValue={selectedDropOption} />
+      <p>TYPE 2</p> */}
 
       <H2>Chat Box</H2>
       <ChatBox count={3} />
@@ -287,7 +319,8 @@ const Guide = () => {
       {openPosition && (
         <PositionCategory
           onClose={handlePositionClose}
-          onSetPosition={handlePosition}
+          onButtonClick={handlePosition}
+          boxName="position"
         />
       )}
       <H2>Toggle</H2>
@@ -305,5 +338,5 @@ const Layout = styled.div`
 `;
 
 const H2 = styled.h2`
-  margin: 20px 0px;
+  margin: 20px 0;
 `;

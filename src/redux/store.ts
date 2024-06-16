@@ -1,12 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import exampleSlice from "./slices/exampleSlice";
 
-export const store = configureStore({
-  reducer: {
-    // slice
-    example: exampleSlice,
-  },
-});
+export const store = () => {
+  return configureStore({
+    reducer: {
+      example: exampleSlice,
+    },
+  })
+}
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export type AppStore = ReturnType<typeof store>;
+export type RootState = ReturnType<AppStore['getState']>;
+export type AppDispatch = AppStore['dispatch'];

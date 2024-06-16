@@ -5,6 +5,7 @@ import styled from "styled-components";
 
 interface InputProps {
   inputType?: "input" | "password" | "textarea";
+  id?: string;
   size?: "small" | "medium" | "large";
   label?: string;
   value: string;
@@ -12,11 +13,13 @@ interface InputProps {
   placeholder?: string;
   isValid?: null | boolean;
   disabled?: boolean;
+  height?: string;
 }
 
 const Input = (props: InputProps) => {
   const {
     inputType = "input",
+    id,
     size,
     label,
     value,
@@ -24,18 +27,21 @@ const Input = (props: InputProps) => {
     placeholder,
     isValid,
     disabled,
+    height
   } = props;
 
   const handleChange = (event: any) => {
     onChange(event.target.value);
   };
-
+  
   return (
     <Element>
-      {label && <StyledLabel>{label}</StyledLabel>}
+      {label && <StyledLabel htmlFor={id}>{label}</StyledLabel>}
       {inputType === "textarea" ? (
         <StyledTextarea
-          className={size}
+          className={`${height ? 'containerHeight' : 'height'} ${size}`}
+          id={id}
+          name={id}
           value={value}
           onChange={handleChange}
           placeholder={placeholder}
@@ -88,22 +94,22 @@ const StyledLabel = styled.label`
 
 const StyledInput = styled.input<InputProps>`
   width: 100%;
-  height: 58px;
-  padding: 17px 23px;
+  min-height: 58px;
+  padding: 11px 20px;
   border-radius: 15px;
   border: ${({ isValid }) =>
     isValid === undefined
       ? `1px solid #b5b5b5`
       : isValid === true
-      ? `1px solid ${theme.colors.purple300}`
-      : `1px solid ${theme.colors.error100}`};
+        ? `1px solid ${theme.colors.purple300}`
+        : `1px solid ${theme.colors.error100}`};
   color: ${theme.colors.black};
   ${(props) => props.theme.fonts.regular16}
 
   &:focus {
     outline: none;
     border: ${({ isValid }) =>
-      isValid === undefined && `1px solid ${theme.colors.purple300}`};
+    isValid === undefined && `1px solid ${theme.colors.purple300}`};
   }
 
   &:disabled {
@@ -117,14 +123,18 @@ const StyledInput = styled.input<InputProps>`
 
 const StyledTextarea = styled.textarea`
   width: 100%;
-  min-height: 100px;
   padding: 11px 20px;
   border-radius: 15px;
   border: 1px solid #b5b5b5;
   color: ${theme.colors.black};
   ${(props) => props.theme.fonts.regular20};
   resize: none;
-
+  &.containerHeight{
+    min-height: 160px;
+  }
+  &.height {
+    min-height: 100px;
+  }
   &:focus {
     outline: none;
     border: 1px solid ${theme.colors.purple300};
