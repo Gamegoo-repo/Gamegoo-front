@@ -4,6 +4,7 @@ import Image from "next/image";
 import styled from "styled-components";
 import { useParams, useRouter } from "next/navigation";
 import Profile from "@/components/match/Profile";
+import HeaderTitle from "@/components/common/HeaderTitle";
 
 const UserProfile = () => {
   const router = useRouter();
@@ -13,16 +14,7 @@ const UserProfile = () => {
   return (
     <Wrapper>
       <MatchContent>
-        <Header>
-          <StyledImage
-            onClick={() => router.back()}
-            src="/assets/icons/left_arrow.svg"
-            width={20}
-            height={39}
-            alt="back button"
-          />
-          <Title>장시은 님의 프로필</Title>
-        </Header>
+        <HeaderTitle title="장시은 님의 프로필" />
         <Main>
           <Profile profileType="hard" />
           <Title>장시은 님의 매너레벨</Title>

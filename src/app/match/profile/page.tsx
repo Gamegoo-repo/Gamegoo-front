@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { useRouter } from "next/navigation";
 import Profile from "@/components/match/Profile";
 import Button from "@/components/common/Button";
+import HeaderTitle from "@/components/common/HeaderTitle";
 
 const GameModePage = () => {
   const router = useRouter();
@@ -13,16 +14,7 @@ const GameModePage = () => {
   return (
     <Wrapper>
       <MatchContent>
-        <Header>
-          <StyledImage
-            onClick={() => router.back()}
-            src="/assets/icons/left_arrow.svg"
-            width={20}
-            height={39}
-            alt="back button"
-          />
-          <Title>프로필 설정</Title>
-        </Header>
+        <HeaderTitle title="프로필 설정" />
         <Main>
           <Profile profileType="hard" />
           <Button
