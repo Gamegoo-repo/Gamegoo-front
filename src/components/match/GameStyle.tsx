@@ -100,6 +100,7 @@ const Div = styled.div`
   border-radius: 25px;
   position: relative;
 `;
+
 const AddGameStyle = styled.button`
   display: flex;
   width: 62px;
@@ -109,4 +110,5 @@ const AddGameStyle = styled.button`
   align-items: center;
   border-radius: 25px;
   background: ${theme.colors.purple300};
+  outline: none;
 `;
