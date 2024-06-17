@@ -15,6 +15,8 @@ const colors = {
     gray300: "#C5C5C7",
     gray400: "#E2E2E2",
     gray500: "#F7F7F9",
+    gray600: "#2D2D2D",
+    gray700: "#44515C",
 
     error100: "#FF5252",
     error200: "#FF7474",
@@ -36,6 +38,10 @@ const FONT = ({ weight, size }: Font): string => {
 
 const fonts = {
     /*Bold*/
+    bold45: FONT({
+        weight: 700,
+        size: 45,
+    }),
     bold32: FONT({
         weight: 700,
         size: 32,
@@ -46,7 +52,7 @@ const fonts = {
     }),
     bold22: FONT({
         weight: 700,
-        size: 25,
+        size: 22,
     }),
     bold20: FONT({
         weight: 700,
@@ -91,6 +97,10 @@ const fonts = {
     regular35: FONT({
         weight: 400,
         size: 35,
+    }),
+    regular28: FONT({
+        weight: 400,
+        size: 28,
     }),
     regular25: FONT({
         weight: 400,

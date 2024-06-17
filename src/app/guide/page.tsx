@@ -12,6 +12,7 @@ import ConfirmModal from "@/components/common/ConfirmModal";
 import FormModal from "@/components/common/FormModal";
 import PositionCategory from "@/components/common/PositionCategory";
 import Toggle from "@/components/common/Toggle";
+import CompleteProfile from "@/components/match/CompleteProfile";
 
 const DROP_DATA1 = [
   { id: 1, value: "솔로1" },
@@ -50,7 +51,7 @@ const Guide = () => {
   /* Dropdown State*/
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedDropOption, setSelectedDropOption] = useState('솔로 랭크');
+  const [selectedDropOption, setSelectedDropOption] = useState("솔로 랭크");
 
   const handleOptionChange = (value: string) => {
     setIsSelected(value);
@@ -91,21 +92,24 @@ const Guide = () => {
 
   /* Dropdown */
   const handleDropValue = (value: string) => {
-    console.log(value)
+    console.log(value);
     setSelectedDropOption(value);
     setIsDropdownOpen(false);
   };
 
   const handleClickOutside = (event: MouseEvent) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node)
+    ) {
       setIsDropdownOpen(false);
     }
   };
 
   useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -204,7 +208,8 @@ const Guide = () => {
         setOpen={setIsDropdownOpen}
         open={isDropdownOpen}
         onDropValue={handleDropValue}
-        defaultValue={selectedDropOption} />
+        defaultValue={selectedDropOption}
+      />
       <p>TYPE 1</p>
 
       {/* <Dropdown
@@ -311,10 +316,17 @@ const Guide = () => {
       >
         포지션 열기 버튼
       </button>
-      {openPosition &&
+      {openPosition && (
         <PositionCategory
           onClose={handlePositionClose}
-          onSetPosition={handlePosition} />}
+          onButtonClick={handlePosition}
+          boxName="position"
+        />
+      )}
+      <H2>Toggle</H2>
+      <Toggle isOn={isOn} onToggle={toggleHandler} />
+      <H2>매칭완료 프로필</H2>
+      <CompleteProfile />
     </Layout>
   );
 };

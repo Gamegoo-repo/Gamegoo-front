@@ -1,38 +1,34 @@
 'use client';
 
+import styled from "styled-components";
 import ChatBox from "@/components/common/ChatBox";
 import GraphicBox from "@/components/match/GraphicBox";
-import { MATCH_PAGE_DATA } from "@/data/match";
-import Image from "next/image";
-import styled from "styled-components";
+import { MATCH_TYPE_PAGE_DATA } from "@/data/match";
 
-const HomePage = () => {
+const MatchTypePage = () => {
 
     return (
         <Wrapper>
-            <HomeContent>
+            <MatchContent>
                 <Header>
-                    <Image
-                        src='/assets/icons/logo_m.svg'
-                        width={371}
-                        height={117}
-                        priority
-                        alt='logo' />
-                    <SubTitle>겜구 커뮤니티에 오신 것을 환영합니다.</SubTitle>
+                    <Title>바로 매칭하기</Title>
                 </Header>
                 <Main>
-                    {MATCH_PAGE_DATA.map((box) => {
+                    {MATCH_TYPE_PAGE_DATA.map((box) => {
                         return (
-                            <GraphicBox
+                            <BoxWrapper
                                 key={box.id}
-                                pathname={box.pathname}
-                                height={box.height}
-                                top={box.top}
-                                left={box.left}
                             >
-                                {box.title}
-                            </GraphicBox>
-
+                                <GraphicBox
+                                    type={box.type}
+                                    pathname={box.pathname}
+                                    width={box.width}
+                                    height={box.height}
+                                    top={box.top}
+                                    left={box.left}>
+                                    {box.title}
+                                </GraphicBox>
+                            </BoxWrapper>
                         )
                     })}
                 </Main>
@@ -41,50 +37,56 @@ const HomePage = () => {
                         <ChatBox count={3} />
                     </ChatBoxContent>
                 </Footer>
-            </HomeContent>
+            </MatchContent>
         </Wrapper>
     )
 };
 
-export default HomePage;
+export default MatchTypePage;
 
 const Wrapper = styled.div`
-    width: 100%;
-    display: flex;
-    justify-content: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 `
 
-const HomeContent = styled.div`
-    max-width: 1440px;
-    width: 100%;
-    padding: 0 80px;
+const MatchContent = styled.div`
+  max-width: 1440px;
+  width: 100%;;
+  padding: 0 80px;
 `
 
 const Header = styled.header`
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    margin-bottom:60px;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  width: 100%;
+  margin-bottom: 32px;
 `
-const SubTitle = styled.div`
-    ${(props) => props.theme.fonts.regular25};
-    color:#44515C;
+
+const Title = styled.h1`
+  ${(props) => props.theme.fonts.bold32};
+  color:#393939;
 `
 
 const Main = styled.main`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    row-gap:30px;
-    margin-bottom:37px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap:27px;
+  margin-bottom:37px;
 `
+
+const BoxWrapper = styled.div`
+  display: contents;
+`
+
 const Footer = styled.footer`
-    display: flex;
-    margin-bottom:78px;
+  display: flex;
+  margin-bottom:78px;
 `
 
 const ChatBoxContent = styled.div`
-    margin-left: auto;
-    margin-bottom: 37px;
+  margin-left: auto;
+  margin-bottom: 37px;
 `
-
