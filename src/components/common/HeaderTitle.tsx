@@ -6,9 +6,10 @@ import styled from "styled-components";
 
 interface HeaderTitleProps {
   title: string;
+  sub?: string;
 }
 
-const HeaderTitle: React.FC<HeaderTitleProps> = ({ title }) => {
+const HeaderTitle: React.FC<HeaderTitleProps> = ({ title, sub }) => {
   const router = useRouter();
 
   return (
@@ -21,6 +22,7 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({ title }) => {
         alt="back button"
       />
       <Title>{title}</Title>
+      {sub && <Sub>{sub}</Sub>}
     </Header>
   );
 };
@@ -42,4 +44,10 @@ const StyledImage = styled(Image)`
 const Title = styled.h1`
   ${(props) => props.theme.fonts.bold32};
   color: ${theme.colors.gray100};
+  margin-right: 40px;
+`;
+
+const Sub = styled.h1`
+  ${(props) => props.theme.fonts.regular28};
+  color: ${theme.colors.gray600};
 `;
