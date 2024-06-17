@@ -1,14 +1,26 @@
 import { POSITIONS } from "@/data/profile";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Mic from "../readBoard/Mic";
 import Box from "../common/Box";
+import MannerLevelBox from "../common/MannerLevelBox";
+import MannerLevel from "../readBoard/MannerLevel";
 
-const SquareProfile = () => {
+interface SquareProfileProps {
+  opponent?: boolean;
+}
+
+const SquareProfile: React.FC<SquareProfileProps> = ({ opponent = false }) => {
+  const [mannerPopup, setMannerPopup] = useState<boolean>(false);
+
+  const handleMannerLevel = () => {
+    setMannerPopup(!mannerPopup);
+  };
+
   return (
-    <Container>
+    <Container opponent={opponent}>
       <Column>
         <Top>
           유니콘의 비밀
@@ -29,6 +41,12 @@ const SquareProfile = () => {
             height={144}
             alt="프로필"
           />
+          {opponent && (
+            <>
+              <Level onClick={handleMannerLevel}>LV. 5</Level>
+              {mannerPopup && <MannerLevelBox top="20px" right="-17%" />}
+            </>
+          )}
         </ImageContainer>
         <Mic status={0} />
         <RowBox>
@@ -70,12 +88,14 @@ const SquareProfile = () => {
 
 export default SquareProfile;
 
-const Container = styled.div`
+const Container = styled.div<{ opponent: boolean }>`
   width: 100%;
   height: 580px;
   padding: 30px 40px;
   border-radius: 30px;
-  border: 1px solid ${theme.colors.gray400};
+  border: 1px solid
+    ${({ opponent }) =>
+      opponent ? theme.colors.purple100 : theme.colors.gray400};
   background: ${theme.colors.white};
 
   display: flex;
@@ -98,8 +118,36 @@ const Column = styled.div`
 `;
 
 const ImageContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
   position: relative;
+  overflow-x: visible;
 `;
+
+const Level = styled.button`
+  width: 53px;
+  height: 26px;
+  border-radius: 57px;
+  background: rgba(0, 0, 0, 0.64);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  color: ${theme.colors.purple300};
+  ${(props) => props.theme.fonts.bold14};
+  position: absolute;
+  bottom: 130px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+// const StyledMannerLevel = styled(MannerLevel)`
+//   position: absolute;
+//   bottom: 155x;
+//   left: 50%;
+//   transform: translateX(-50%);
+// `;
 
 const Top = styled.div`
   display: flex;

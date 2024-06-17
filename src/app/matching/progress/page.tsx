@@ -74,7 +74,7 @@ const Span = styled.span`
 const Main = styled.main`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  align-items: center;
+  align-items: flex-start;
   width: 100%;
   gap: 72px;
   margin-bottom: 37px;
