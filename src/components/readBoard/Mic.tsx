@@ -15,11 +15,11 @@ const Mic = (props: MicProps) => {
                 src={status === 0 ?
                     "/assets/icons/mic_on_no_bg.svg"
                     :
-                    "/assets/icons/sad.svg"}
+                    "/assets/icons/mic_off_no_bg.svg"}
                 width={27}
                 height={33}
-                alt="mic on" />
-            <MicText>마이크 {status === 0 ? "ON" : "OFF"}</MicText>
+                alt={`mic ${status === 0 ? "on" : "off"}`} />
+            <MicText className={status === 0 ? 'on' : 'off'}>마이크 {status === 0 ? "ON" : "OFF"}</MicText>
         </Wrapper>
     )
 };
@@ -34,7 +34,12 @@ const Wrapper = styled.div`
 
 const MicText = styled.p`
     ${(props) => props.theme.fonts.bold10};
-    color:${theme.colors.purple100};
     margin-top: 6px;
+    &.on {
+        color:${theme.colors.purple100};
+    }
+    &.off {
+        color:#606060;
+    }
 `;
 

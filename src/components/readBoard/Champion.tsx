@@ -38,14 +38,14 @@ const Wrapper = styled.div`
 `;
 
 const Title = styled.p`
-    ${(props) => props.theme.fonts.semiBold18};
+    ${(props) => props.theme.fonts.semiBold14};
     color: #222222;
-    margin-bottom:4px;
+    margin-bottom:5px;
 `;
 
 const Images = styled.div`
     display: flex;
     align-items: center;
-    gap:9px;
+    gap:7px;
 `;
 
