@@ -6,7 +6,7 @@ import PositionBox from "../crBoard/PositionBox";
 import { useState } from "react";
 import ProfileImage from "./ProfileImage";
 import User from "../crBoard/User";
-import MannerLevel from "./MannerLevel";
+import MannerLevel from "../common/MannerLevel";
 import Mic from "./Mic";
 import Report from "./Report";
 import Champion from "./Champion";
@@ -225,7 +225,7 @@ const ButtonContent = styled.p`
 const ReportBox = styled.div`
     position: absolute;
     top: 8.5%;
-    right: -24%;
+    right: -31%;
     z-index: 100;
     box-shadow: 0 0 21.3px 0 #00000026;
     background: ${theme.colors.white}; 

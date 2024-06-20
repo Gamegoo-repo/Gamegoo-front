@@ -6,7 +6,7 @@ import styled from "styled-components";
 import Mic from "../readBoard/Mic";
 import Box from "../common/Box";
 import MannerLevelBox from "../common/MannerLevelBox";
-import MannerLevel from "../readBoard/MannerLevel";
+import MannerLevel from "../common/MannerLevel";
 
 interface SquareProfileProps {
   opponent?: boolean;
