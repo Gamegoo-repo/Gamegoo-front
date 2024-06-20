@@ -12,8 +12,8 @@ const ProfileImage = (props: ProfileImageProps) => {
         <Wrapper>
             <StyledImage
                 src={image}
-                width={54}
-                height={51}
+                width={51}
+                height={48}
                 alt='profile image' />
         </Wrapper>
     )
@@ -23,11 +23,11 @@ export default ProfileImage;
 
 const Wrapper = styled.div`
     position: relative;
-    width: 79px;
-    height: 79px;
+    width: 75px;
+    height: 75px;
     background: #C3B9FF;
     border-radius: 50%;
-    margin-right: 23px;
+    margin-right: 17px;
 `;
 const StyledImage = styled(Image)`
     position: absolute;

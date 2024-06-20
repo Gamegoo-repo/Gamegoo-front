@@ -20,18 +20,20 @@ const QueueType = (props: QueueTypeProps) => {
 
 export default QueueType;
 
-const Queue = styled.div``;
+const Queue = styled.div`
+    width: 234px;
+`;
 
 const Title = styled.p`
-    ${(props) => props.theme.fonts.semiBold18};
+    ${(props) => props.theme.fonts.semiBold14};
     color: #222222;
-    margin-bottom:4px;
+    margin-bottom:5px;
 `;
 
 const Type = styled.div`
     border: 1px solid ${theme.colors.gray300};  
     border-radius: 11px;
-    padding:11px 202px 11px 21px;  
+    padding:11px 0 11px 21px;  
 `;
 
 const P = styled.p`

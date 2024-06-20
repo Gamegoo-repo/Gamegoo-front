@@ -72,16 +72,16 @@ const Left = styled.div`
 const Right = styled.div``;
 
 const WinningTitle = styled.p`
-    ${(props) => props.theme.fonts.semiBold18};
+    ${(props) => props.theme.fonts.semiBold14};
     color: #222222;
 `;
 
 const Percent = styled.p`
+    ${(props) => props.theme.fonts.semiBold14};
     color: ${theme.colors.purple100};
-    ${(props) => props.theme.fonts.semiBold18};
 `;
 
 const History = styled.p`
-    ${(props) => props.theme.fonts.regular14};
-    color: ${theme.colors.gray300};;
+    ${(props) => props.theme.fonts.medium11};
+    color: ${theme.colors.gray300};
 `;

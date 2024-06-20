@@ -71,13 +71,13 @@ const P = styled.p`
 `;
 
 const Level = styled.div`
+  margin-left: 23px;
   width: 53px;
   height: 26px;
   background: #000000a6;
   padding: 5px 11px;
   box-shadow: 0 4px 4px 0 #00000040;
   border-radius: 57px;
-  margin-left: 10px;
   cursor: pointer;
   display: flex;
   justify-content: center;

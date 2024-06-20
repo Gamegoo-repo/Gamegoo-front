@@ -89,31 +89,34 @@ const ReadBoard = (props: ReadBoardProps) => {
         </ReportBox>
       )}
       {isMannerLevelBoxOpen && <MannerLevelBox top="14%" right="-6%" />}
+      <UpdatedDate>게시일 : 24.05.06. 12:45</UpdatedDate>
       <UserSection>
         <UserLeft>
-          <ProfileImage image={userData.image} />
+          <ProfileImage
+            image={userData.image} />
           <UserNManner>
             <User
               account={userData.account}
               tag={userData.tag}
-              tier={userData.tier}
-            />
+              tier={userData.tier} />
             <MannerLevel
               level={userData.manner_level}
-              onClick={handleMannerLevelBoxOpen}
-              position="top"
-            />
+              onClick={handleMannerLevelBoxOpen} />
           </UserNManner>
         </UserLeft>
         <UserRight>
-          <Mic status={userData.mic} />
-          <Report onClick={handleReportBoxOpen} />
+          <Mic
+            status={userData.mic} />
+          <Report
+            onClick={handleReportBoxOpen} />
         </UserRight>
       </UserSection>
-      <QueueSection>
-        <Champion list={userData.champions} />
-        <QueueType value={userData.queue} />
-      </QueueSection>
+      <ChampionNQueueSection>
+        <Champion
+          list={userData.champions} />
+        <QueueType
+          value={userData.queue} />
+      </ChampionNQueueSection>
       <PositionSection>
         <Title>포지션</Title>
         <PositionBox status="reading" />
@@ -121,8 +124,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       <WinningRateSection>
         <WinningRate
           completed={userData.winning_rate.completed}
-          history={userData.winning_rate.history}
-        />
+          history={userData.winning_rate.history} />
       </WinningRateSection>
       <StyleSection>
         <Title>게임 스타일</Title>
@@ -130,7 +132,9 @@ const ReadBoard = (props: ReadBoardProps) => {
       <MemoSection>
         <Title>메모</Title>
         <Memo>
-          <MemoData>가볍게 같이 즐기실 분 구해요 !</MemoData>
+          <MemoData>
+            가볍게 같이 즐기실 분 구해요 !
+          </MemoData>
         </Memo>
       </MemoSection>
       <ButtonContent>
@@ -138,8 +142,7 @@ const ReadBoard = (props: ReadBoardProps) => {
           type="submit"
           buttonType="primary"
           text="말 걸어보기"
-          onClick={onClose}
-        />
+          onClick={onClose} />
       </ButtonContent>
     </CRModal>
   );
@@ -147,85 +150,91 @@ const ReadBoard = (props: ReadBoardProps) => {
 
 export default ReadBoard;
 
+const UpdatedDate = styled.p`
+  ${(props) => props.theme.fonts.medium11};
+  color: ${theme.colors.gray200};
+  margin:1px 0 12px;
+`;
+
 const UserSection = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 176px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    white-space: nowrap;
+    gap:90px;
 `;
 
 const UserLeft = styled.div`
-  display: flex;
-  align-items: center;
+    display:flex;
+    align-items: center;
 `;
 const UserNManner = styled.div`
-  display: flex;
+    display:flex;
 `;
 const UserRight = styled.div`
-  display: flex;
+    display:flex;
 `;
 const Title = styled.p`
-  ${(props) => props.theme.fonts.semiBold18};
-  color: #222222;
-  margin-bottom: 4px;
+    ${(props) => props.theme.fonts.semiBold14};
+    color: #222222;
+    margin-bottom:5px;
 `;
 
-const QueueSection = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 118px;
-  margin-top: 24px;
+const ChampionNQueueSection = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap:89px;
+    margin-top:33px;    
 `;
 
 const PositionSection = styled.div`
-  margin-top: 19px;
+    margin-top:33px;    
 `;
 
 const WinningRateSection = styled.div`
-  margin-top: 23px;
+    margin-top:33px;    
 `;
 
 const StyleSection = styled.div`
-  margin-top: 31px;
+    margin-top:33px;    
 `;
 
 const MemoSection = styled.div`
-  margin-top: 27px;
+    margin-top:33px;    
 `;
 
 const Memo = styled.div`
-  width: 100%;
-  min-height: 160px;
-  padding: 11px 20px;
-  border-radius: 15px;
-  border: 1px solid ${theme.colors.purple300};
+    width: 100%;
+    min-height: 77px;
+    padding: 11px 20px;
+    border-radius: 15px;
+    border: 1px solid ${theme.colors.purple300};  
 `;
 
 const MemoData = styled.p`
-  color: #606060;
-  ${(props) => props.theme.fonts.regular20}
+    color: #606060;
+    ${(props) => props.theme.fonts.regular18}
 `;
 
 const ButtonContent = styled.p`
-  padding: 0 45px 36px;
-  margin-top: 22px;
-  text-align: center;
+    margin:30px 0 28px;    
+    text-align: center;
 `;
 
 const ReportBox = styled.div`
-  position: absolute;
-  top: 8.5%;
-  right: -24%;
-  z-index: 100;
-  box-shadow: 0 0 21.3px 0 #00000026;
-  background: ${theme.colors.white};
-  padding: 10px 103px 10px 20px;
-  border-radius: 10px;
+    position: absolute;
+    top: 8.5%;
+    right: -24%;
+    z-index: 100;
+    box-shadow: 0 0 21.3px 0 #00000026;
+    background: ${theme.colors.white}; 
+    padding:10px 103px 10px 20px;
+    border-radius: 10px;
 `;
 
 const ReportText = styled.p`
-  ${(props) => props.theme.fonts.medium15};
-  color: #606060;
-  cursor: pointer;
+    ${(props) => props.theme.fonts.medium15};
+    color: #606060;
+    cursor: pointer;
 `;
