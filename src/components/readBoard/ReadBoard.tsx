@@ -88,7 +88,7 @@ const ReadBoard = (props: ReadBoardProps) => {
           <ReportText onClick={handleReport}>신고하기</ReportText>
         </ReportBox>
       )}
-      {isMannerLevelBoxOpen && <MannerLevelBox top="14%" right="-6%" />}
+      {isMannerLevelBoxOpen && <MannerLevelBox top="14%" right="-28%" />}
       <UpdatedDate>게시일 : 24.05.06. 12:45</UpdatedDate>
       <UserSection>
         <UserLeft>
@@ -101,7 +101,8 @@ const ReadBoard = (props: ReadBoardProps) => {
               tier={userData.tier} />
             <MannerLevel
               level={userData.manner_level}
-              onClick={handleMannerLevelBoxOpen} />
+              onClick={handleMannerLevelBoxOpen}
+              position="top" />
           </UserNManner>
         </UserLeft>
         <UserRight>

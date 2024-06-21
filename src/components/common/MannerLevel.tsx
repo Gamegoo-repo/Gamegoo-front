@@ -36,7 +36,7 @@ const LevelWrapper = styled.div`
 const BubbleWrapper = styled.div<{ position: positionType }>`
   position: absolute;
   bottom: ${({ position }) => (position === "top" ? "45px" : "10px")};
-  right: ${({ position }) => (position === "top" ? "-12px" : "-150px")};
+  right: ${({ position }) => (position === "top" ? "-6px" : "-150px")};
 `;
 
 const Bubble = styled.div`
@@ -45,23 +45,28 @@ const Bubble = styled.div`
   background: ${theme.colors.purple500};
   border-radius: 46px;
   white-space: nowrap;
-  &:after {
-    content: "";
-    display: block;
+  &:before {
+    content: '';
     position: absolute;
-    bottom: -6px;
-    right: 32px;
-    width: 12px;
-    height: 12px;
-    /* top: 50%;
-    left: -6px;
-    width: 12px;
-    height: 12px;
-    transform: rotate(45deg) translateY(-50%); */
-    background: #f2f0fc;
-    border-left: 1px solid ${theme.colors.purple200};
-    border-bottom: 1px solid ${theme.colors.purple200};
-    transform: rotate(-45deg);
+    bottom: -11.5px;
+    left: 100px;
+    width: 0;
+    height: 0;
+    border-width: 12px 8px 0;
+    border-style: solid;
+    border-color: ${theme.colors.purple200} transparent transparent transparent;
+  }
+
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 101px;
+    width: 0;
+    height: 0;
+    border-width: 11px 7px 0;
+    border-style: solid;
+    border-color: ${theme.colors.purple500} transparent transparent transparent;
   }
 `;
 
