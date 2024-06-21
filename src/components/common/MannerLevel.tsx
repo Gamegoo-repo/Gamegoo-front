@@ -13,9 +13,11 @@ const MannerLevel = (props: MannerLevelProps) => {
 
   return (
     <>
-      <LevelWrapper onClick={onClick}>
+      <LevelWrapper>
         <Level>
+          <ClickArea onClick={onClick}>
           <Text>LV.{level}</Text>
+          </ClickArea>
           <BubbleWrapper position={position}>
             <Bubble>
               <P>클릭해서 매너키워드 보기</P>
@@ -77,6 +79,10 @@ const P = styled.p`
 
 const Level = styled.div`
   margin-left: 23px;
+  position: relative;
+`;
+
+const ClickArea = styled.div`
   width: 53px;
   height: 26px;
   background: #000000a6;
@@ -87,7 +93,6 @@ const Level = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
 `;
 
 const Text = styled.p`
