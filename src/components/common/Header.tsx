@@ -112,7 +112,7 @@ export default Header;
 
 const Head = styled.div`
   width: 100%;
-  height: 50px;
+  margin-top: 68px;
   display: flex;
   align-items: center;
   justify-content: center;

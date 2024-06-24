@@ -81,6 +81,7 @@ const Boxs = styled.div`
   justify-content: flex-start;
   align-items: center;
   gap: 14px;
+  outline: none;
 `;
 
 const Box = styled.button<{ selected: boolean }>`
