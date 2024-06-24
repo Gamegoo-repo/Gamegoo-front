@@ -9,20 +9,24 @@ import styled from "styled-components";
 
 const Find = () => {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [emailValid, setEmailValid] = useState<boolean | undefined>(undefined);
+  const [auth, setAuth] = useState("");
+  const [authValid, setAuthValid] = useState<boolean | undefined>(undefined);
   const [isSend, setIsSend] = useState(false);
 
   const emailRegEx =
     /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
 
-  const validateEmail = (email: string) => {
-    setEmailValid(emailRegEx.test(email));
+  const validateAuth = (auth: string) => {
+    if (auth.length === 6) {
+      setAuthValid(true);
+    } else {
+      setAuthValid(false);
+    }
   };
 
   const handleSendEmail = () => {
     setIsSend(true);
-    router.push("/password/auth");
+    router.push("/password/new");
   };
 
   return (
@@ -30,24 +34,25 @@ const Find = () => {
       <Div>
         <Title>
           비밀번호 재설정하기
-          <Sub>비밀번호 찾기를 위한 이메일 주소를 입력해주세요.</Sub>
+          <Sub>이메일로 전송된 인증 코드를 입력해주세요.</Sub>
         </Title>
         <Input
           inputType="input"
-          value={email}
+          value={auth}
           onChange={(value) => {
-            setEmail(value);
-            validateEmail(value);
+            setAuth(value);
+            validateAuth(value);
           }}
-          placeholder="이메일 주소"
-          isValid={emailValid}
+          placeholder="인증코드 입력"
+          isValid={authValid}
           disabled={isSend}
+          errorMsg="잘못된 인증 코드입니다."
         />
         <Button
           buttonType="primary"
-          text="비밀번호 재설정하기"
+          text="인증 완료"
           onClick={handleSendEmail}
-          disabled={!emailValid}
+          disabled={!authValid}
         />
       </Div>
     </Container>

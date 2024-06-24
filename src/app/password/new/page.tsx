@@ -59,11 +59,10 @@ const New = () => {
         />
         <Button
           buttonType="primary"
-          text="비밀번호 재설정하기"
+          text="확인"
           onClick={handleComplete}
           disabled={!passwordValid || !repasswordValid}
         />
-        {/* {isPopup && <Popup/>} */}
       </Div>
     </Container>
   );
