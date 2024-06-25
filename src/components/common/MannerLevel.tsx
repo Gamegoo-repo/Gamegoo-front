@@ -6,23 +6,26 @@ interface MannerLevelProps {
   level: number;
   onClick: (e: React.MouseEvent) => void;
   position?: positionType;
+  isBalloon: boolean;
 }
 
 const MannerLevel = (props: MannerLevelProps) => {
-  const { level, onClick, position = "top" } = props;
+  const { level, onClick, position = "top", isBalloon } = props;
 
   return (
     <>
       <LevelWrapper>
         <Level>
           <ClickArea onClick={onClick}>
-          <Text>LV.{level}</Text>
+            <Text>LV.{level}</Text>
           </ClickArea>
-          <BubbleWrapper position={position}>
-            <Bubble>
-              <P>클릭해서 매너키워드 보기</P>
-            </Bubble>
-          </BubbleWrapper>
+          {isBalloon &&
+            <BubbleWrapper position={position}>
+              <Bubble>
+                <P>클릭해서 매너키워드 보기</P>
+              </Bubble>
+            </BubbleWrapper>
+          }
         </Level>
       </LevelWrapper>
     </>

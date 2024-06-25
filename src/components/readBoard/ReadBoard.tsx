@@ -3,7 +3,7 @@ import { theme } from "@/styles/theme";
 import CRModal from "../crBoard/CRModal";
 import Button from "../common/Button";
 import PositionBox from "../crBoard/PositionBox";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProfileImage from "./ProfileImage";
 import User from "../crBoard/User";
 import MannerLevel from "../common/MannerLevel";
@@ -55,7 +55,17 @@ const ReadBoard = (props: ReadBoardProps) => {
   const [textareaValue, setTextareaValue] = useState("");
 
   const [isReportBoxOpen, setIsReportBoxOpen] = useState(false);
+  const [isMannerBalloonVisible, setIsMannerBalloonVisible] = useState(true);
   const [isMannerLevelBoxOpen, setIsMannerLevelBoxOpen] = useState(false);
+
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsMannerBalloonVisible(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleReportBoxOpen = () => {
     setIsReportBoxOpen((prevState) => !prevState);
@@ -69,6 +79,8 @@ const ReadBoard = (props: ReadBoardProps) => {
   const handleMannerLevelBoxOpen = () => {
     setIsMannerLevelBoxOpen((prevState) => !prevState);
   };
+
+
 
   // const [user, setUser] = useState<userInfo>()
 
@@ -101,10 +113,11 @@ const ReadBoard = (props: ReadBoardProps) => {
               account={userData.account}
               tag={userData.tag}
               tier={userData.tier} />
-            <MannerLevel
-              level={userData.manner_level}
-              onClick={handleMannerLevelBoxOpen}
-              position="top" />
+              <MannerLevel
+                level={userData.manner_level}
+                onClick={handleMannerLevelBoxOpen}
+                position="top" 
+                isBalloon={isMannerBalloonVisible}/>
           </UserNManner>
         </UserLeft>
         <UserRight>
@@ -131,7 +144,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       </WinningRateSection>
       <StyleSection>
         <Title>게임 스타일</Title>
-        <GameStyle styles={EX_GAME_STYLE}/>
+        <GameStyle styles={EX_GAME_STYLE} />
       </StyleSection>
       <MemoSection>
         <Title>메모</Title>
