@@ -13,6 +13,8 @@ import Champion from "./Champion";
 import QueueType from "./QueueType";
 import WinningRate from "./WinningRate";
 import MannerLevelBox from "../common/MannerLevelBox";
+import GameStyle from "./GameStyle";
+import { EX_GAME_STYLE } from "@/data/profile";
 
 interface ReadBoardProps {
   onClose: () => void;
@@ -129,6 +131,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       </WinningRateSection>
       <StyleSection>
         <Title>게임 스타일</Title>
+        <GameStyle styles={EX_GAME_STYLE}/>
       </StyleSection>
       <MemoSection>
         <Title>메모</Title>
