@@ -33,13 +33,13 @@ const Input = (props: InputProps) => {
   const handleChange = (event: any) => {
     onChange(event.target.value);
   };
-  
+
   return (
     <Element>
       {label && <StyledLabel htmlFor={id}>{label}</StyledLabel>}
       {inputType === "textarea" ? (
         <StyledTextarea
-          className={`${height ? 'containerHeight' : 'height'} ${size}`}
+          $height={height}
           id={id}
           name={id}
           value={value}
@@ -121,20 +121,21 @@ const StyledInput = styled.input<InputProps>`
   }
 `;
 
-const StyledTextarea = styled.textarea`
+const StyledTextarea = styled.textarea<{ $height: string | undefined }>`
   width: 100%;
   padding: 11px 20px;
   border-radius: 15px;
   border: 1px solid #b5b5b5;
   color: ${theme.colors.black};
-  ${(props) => props.theme.fonts.regular20};
-  resize: none;
-  &.containerHeight{
-    min-height: 160px;
-  }
-  &.height {
-    min-height: 100px;
-  }
+  ${({ $height }) =>
+    $height
+      ? `${theme.fonts.regular18}`
+      : `${theme.fonts.regular20}`};
+  resize: none; 
+  min-height: ${({ $height }) =>
+    $height
+      ? $height
+      : '160px'};
   &:focus {
     outline: none;
     border: 1px solid ${theme.colors.purple300};
