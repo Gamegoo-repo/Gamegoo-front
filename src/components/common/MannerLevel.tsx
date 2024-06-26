@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes, css } from "styled-components";
 import { theme } from "@/styles/theme";
 
 type positionType = "top" | "right";
@@ -50,6 +50,7 @@ const Bubble = styled.div`
   background: ${theme.colors.purple500};
   border-radius: 46px;
   white-space: nowrap;
+
   &:before {
     content: '';
     position: absolute;
@@ -102,3 +103,4 @@ const Text = styled.p`
   ${(props) => props.theme.fonts.bold14};
   color: ${theme.colors.purple300};
 `;
+

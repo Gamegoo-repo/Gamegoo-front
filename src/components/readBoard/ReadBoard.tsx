@@ -19,6 +19,7 @@ import { EX_GAME_STYLE } from "@/data/profile";
 interface ReadBoardProps {
   onClose: () => void;
   postId: number | null;
+  gameType: 'canyon' | 'wind';
 }
 
 interface userInfo {
@@ -50,14 +51,13 @@ const userData = {
 };
 
 const ReadBoard = (props: ReadBoardProps) => {
-  const { onClose, postId } = props;
+  const { onClose, postId, gameType } = props;
 
   const [textareaValue, setTextareaValue] = useState("");
 
   const [isReportBoxOpen, setIsReportBoxOpen] = useState(false);
   const [isMannerBalloonVisible, setIsMannerBalloonVisible] = useState(true);
   const [isMannerLevelBoxOpen, setIsMannerLevelBoxOpen] = useState(false);
-
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -113,11 +113,11 @@ const ReadBoard = (props: ReadBoardProps) => {
               account={userData.account}
               tag={userData.tag}
               tier={userData.tier} />
-              <MannerLevel
-                level={userData.manner_level}
-                onClick={handleMannerLevelBoxOpen}
-                position="top" 
-                isBalloon={isMannerBalloonVisible}/>
+            <MannerLevel
+              level={userData.manner_level}
+              onClick={handleMannerLevelBoxOpen}
+              position="top"
+              isBalloon={isMannerBalloonVisible} />
           </UserNManner>
         </UserLeft>
         <UserRight>
@@ -133,20 +133,22 @@ const ReadBoard = (props: ReadBoardProps) => {
         <QueueType
           value={userData.queue} />
       </ChampionNQueueSection>
-      <PositionSection>
-        <Title>포지션</Title>
-        <PositionBox status="reading" />
-      </PositionSection>
-      <WinningRateSection>
+      {gameType === 'canyon' &&
+        <PositionSection>
+          <Title>포지션</Title>
+          <PositionBox status="reading" />
+        </PositionSection>
+      }
+      <WinningRateSection gameType={gameType}>
         <WinningRate
           completed={userData.winning_rate.completed}
           history={userData.winning_rate.history} />
       </WinningRateSection>
-      <StyleSection>
+      <StyleSection gameType={gameType}>
         <Title>게임 스타일</Title>
         <GameStyle styles={EX_GAME_STYLE} />
       </StyleSection>
-      <MemoSection>
+      <MemoSection gameType={gameType}>
         <Title>메모</Title>
         <Memo>
           <MemoData>
@@ -154,7 +156,7 @@ const ReadBoard = (props: ReadBoardProps) => {
           </MemoData>
         </Memo>
       </MemoSection>
-      <ButtonContent>
+      <ButtonContent gameType={gameType}>
         <Button
           type="submit"
           buttonType="primary"
@@ -202,23 +204,23 @@ const ChampionNQueueSection = styled.div`
     align-items: center;
     justify-content: space-between;
     gap:89px;
-    margin-top:33px;    
+    margin-top:33px;
 `;
 
 const PositionSection = styled.div`
     margin-top:33px;    
 `;
 
-const WinningRateSection = styled.div`
-    margin-top:33px;    
+const WinningRateSection = styled.div<{ gameType: string }>`
+    margin-top:${({ gameType }) => (gameType === "canyon" ? "33px" : "46px")};  
 `;
 
-const StyleSection = styled.div`
-    margin-top:33px;    
+const StyleSection = styled.div<{ gameType: string }>`
+    margin-top:${({ gameType }) => (gameType === "canyon" ? "33px" : "46px")};  
 `;
 
-const MemoSection = styled.div`
-    margin-top:33px;    
+const MemoSection = styled.div<{ gameType: string }>`
+    margin-top:${({ gameType }) => (gameType === "canyon" ? "33px" : "46px")};   
 `;
 
 const Memo = styled.div`
@@ -234,8 +236,8 @@ const MemoData = styled.p`
     ${(props) => props.theme.fonts.regular18}
 `;
 
-const ButtonContent = styled.p`
-    margin:30px 0 28px;    
+const ButtonContent = styled.p<{ gameType: string }>`
+    margin:${({ gameType }) => (gameType === "canyon" ? "30px" : "150px")} 0 28px;    
     text-align: center;
 `;
 
