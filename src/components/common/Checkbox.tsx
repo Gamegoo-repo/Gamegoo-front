@@ -6,9 +6,10 @@ interface CheckboxProps {
   value: string;
   label?: string;
   onChange?: (isChecked: boolean) => void;
+  fontSize?: string;
 }
 const Checkbox = (props: CheckboxProps) => {
-  const { value, label, onChange } = props;
+  const { value, label, onChange, fontSize } = props;
   const [isChecked, setIsChecked] = useState<boolean>(false);
 
   const handleChange = () => {
@@ -21,7 +22,7 @@ const Checkbox = (props: CheckboxProps) => {
   };
 
   return (
-    <StyledCheckbox>
+    <StyledCheckbox fontSize={fontSize || "semiBold16"}>
       <Check
         value={value}
         type="checkbox"
@@ -35,12 +36,15 @@ const Checkbox = (props: CheckboxProps) => {
 
 export default Checkbox;
 
-const StyledCheckbox = styled.div`
+const StyledCheckbox = styled.div<{ fontSize: string }>`
   display: flex;
   align-items: center;
   gap: 1.7rem;
   cursor: pointer;
-  ${(props) => props.theme.fonts.semiBold16};
+  ${(props) =>
+    props.fontSize
+      ? props.theme.fonts[props.fontSize as keyof typeof props.theme.fonts]
+      : props.theme.fonts.semiBold16};
   color: ${theme.colors.black};
   cursor: pointer;
 `;

@@ -76,6 +76,7 @@ const Overlay = styled.div`
   align-items: center;
   position: fixed;
   inset: 0;
+  z-index: 100;
 `;
 
 const Wrapper = styled.div<{
@@ -119,7 +120,7 @@ const Main = styled.main``;
 const TitleContent = styled.div``;
 
 const MainContent = styled.div<{ $type: string }>`
-  margin: ${({ $type }) => ($type === "checkbox" ? "33px 0 51px" : "32px 0")};
+  margin: ${({ $type }) => ($type === "checkbox" ? "20px 0 32px" : "32px 0")};
 `;
 const TextTitle = styled.p`
   ${(props) => props.theme.fonts.regular25};
