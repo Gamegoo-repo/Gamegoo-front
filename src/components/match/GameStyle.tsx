@@ -7,7 +7,16 @@ import Toggle from "../common/Toggle";
 import { theme } from "@/styles/theme";
 import SelectedStylePopup from "./SelectedStylePopup";
 
-const GameStyle = () => {
+type profileType = "me" | "other" | "none";
+
+interface GameStyleProps {
+  gameStyle: string[];
+  profileType: profileType;
+}
+
+const GameStyle = (props: GameStyleProps) => {
+  const { gameStyle, profileType = "none" } = props;
+
   const [isMike, setIsMike] = useState(false);
   const [styledPopup, setStyledPopup] = useState(false);
   const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
@@ -41,32 +50,36 @@ const GameStyle = () => {
       <LeftLabel>
         게임 스타일
         <GameBox>
-          {EX_GAME_STYLE.map((data) => (
-            <Box key={data.id} text={data.text} shape="round" />
+          {gameStyle.map((data, index) => (
+            <Box key={index} text={data} shape="round" />
           ))}
-          <Div>
-            <AddGameStyle onClick={handleStylePopup}>
-              <Image
-                src="/assets/icons/plus.svg"
-                width={21}
-                height={21}
-                alt="추가"
-              />
-            </AddGameStyle>
-            {styledPopup && (
-              <SelectedStylePopup
-                onClose={handleClosePopup}
-                selectedStyles={selectedStyles}
-                onSelectStyle={handleSelectStyle}
-              />
-            )}
-          </Div>
+          {profileType !== "other" && (
+            <Div>
+              <AddGameStyle onClick={handleStylePopup}>
+                <Image
+                  src="/assets/icons/plus.svg"
+                  width={21}
+                  height={21}
+                  alt="추가"
+                />
+              </AddGameStyle>
+              {styledPopup && (
+                <SelectedStylePopup
+                  onClose={handleClosePopup}
+                  selectedStyles={selectedStyles}
+                  onSelectStyle={handleSelectStyle}
+                />
+              )}
+            </Div>
+          )}
         </GameBox>
       </LeftLabel>
-      <LeftLabel>
-        마이크
-        <Toggle isOn={isMike} onToggle={handleMike} />
-      </LeftLabel>
+      {profileType === "none" && (
+        <LeftLabel>
+          마이크
+          <Toggle isOn={isMike} onToggle={handleMike} />
+        </LeftLabel>
+      )}
     </Style>
   );
 };
