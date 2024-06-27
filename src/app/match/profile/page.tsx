@@ -3,10 +3,12 @@
 import ChatBox from "@/components/common/ChatBox";
 import Image from "next/image";
 import styled from "styled-components";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Profile from "@/components/match/Profile";
 import Button from "@/components/common/Button";
 import HeaderTitle from "@/components/common/HeaderTitle";
+import { useEffect, useState } from "react";
+import { profileType } from "@/interface/profile";
 
 const userData = {
   image: "/assets/images/profile.svg",
@@ -24,13 +26,30 @@ const userData = {
 
 const GameModePage = () => {
   const router = useRouter();
+  const [profileType, setProfileType] = useState<profileType | undefined>();
+  const searchParams = useSearchParams();
+  const params = searchParams.get("type");
+
+  useEffect(() => {
+    if (
+      params &&
+      (params === "fun" ||
+        params === "hard" ||
+        params === "other" ||
+        params === "me")
+    ) {
+      setProfileType(params as profileType);
+    } else {
+      setProfileType(undefined);
+    }
+  }, [params]);
 
   return (
     <Wrapper>
       <MatchContent>
         <HeaderTitle title="프로필 설정" />
         <Main>
-          <Profile profileType="fun" user={userData} />
+          <Profile profileType={profileType ?? "fun"} user={userData} />
           <Button
             buttonType="primary"
             width="380px"

@@ -35,6 +35,7 @@ const GameModePage = () => {
             return (
               <BoxWrapper key={box.id}>
                 <GraphicBox
+                  type={params || ""}
                   pathname={box.pathname}
                   height={box.height}
                   top={box.top}
