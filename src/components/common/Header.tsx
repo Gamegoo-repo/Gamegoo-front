@@ -90,13 +90,16 @@ const Header = () => {
           </MyProfile>
           <TabMenu>
             {HEADER_MODAL_TAB.map((data, index) => (
-              <Line key={data.id} className={index === 2 ? "with-border" : ""}>
+              <Line
+                key={data.id}
+                className={index === 2 ? "with-border" : ""}
+                onClick={() => router.push(`${data.url}`)}
+              >
                 <Image
                   src={`/assets/icons/${data.icon}.svg`}
                   width={20}
                   height={20}
                   alt={`${data.icon}`}
-                  onClick={() => router.push(`${data.url}`)}
                 />
                 {data.menu}
               </Line>
@@ -211,6 +214,7 @@ const Line = styled.div`
   align-items: center;
   padding-left: 9px;
   gap: 18px;
+  cursor: pointer;
 
   &.with-border {
     border-bottom: 1px solid #d4d4d4;
