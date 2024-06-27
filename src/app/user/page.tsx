@@ -33,7 +33,7 @@ const userData = {
   tag: "KR1",
   tier: "B3",
   manner_level: 5,
-  mic: 0,
+  mic: true,
   champions: [
     { id: 1, value: "/assets/icons/gray_circle.svg" },
     { id: 2, value: "/assets/icons/gray_circle.svg" },

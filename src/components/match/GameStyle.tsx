@@ -2,22 +2,23 @@ import Image from "next/image";
 import { useState } from "react";
 import styled from "styled-components";
 import Box from "../common/Box";
-import { EX_GAME_STYLE } from "@/data/profile";
 import Toggle from "../common/Toggle";
 import { theme } from "@/styles/theme";
 import SelectedStylePopup from "./SelectedStylePopup";
+import { css } from "styled-components";
 
 type profileType = "me" | "other" | "none";
 
 interface GameStyleProps {
   gameStyle: string[];
   profileType: profileType;
+  mic: boolean;
 }
 
 const GameStyle = (props: GameStyleProps) => {
-  const { gameStyle, profileType = "none" } = props;
+  const { gameStyle, profileType = "none", mic } = props;
 
-  const [isMike, setIsMike] = useState(false);
+  const [isMike, setIsMike] = useState(mic);
   const [styledPopup, setStyledPopup] = useState(false);
   const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
 
@@ -47,7 +48,7 @@ const GameStyle = (props: GameStyleProps) => {
 
   return (
     <Style>
-      <LeftLabel>
+      <LeftLabel profileType={profileType}>
         게임 스타일
         <GameBox>
           {gameStyle.map((data, index) => (
@@ -75,7 +76,7 @@ const GameStyle = (props: GameStyleProps) => {
         </GameBox>
       </LeftLabel>
       {profileType === "none" && (
-        <LeftLabel>
+        <LeftLabel profileType={profileType}>
           마이크
           <Toggle isOn={isMike} onToggle={handleMike} />
         </LeftLabel>
@@ -93,11 +94,16 @@ const Style = styled.div`
   align-items: flex-start;
 `;
 
-const LeftLabel = styled.div`
+const LeftLabel = styled.div<{ profileType: profileType }>`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 12px;
+  ${({ profileType }) =>
+    profileType !== "none" &&
+    css`
+      font: ${theme.fonts.semiBold14};
+    `}
 `;
 
 const GameBox = styled.div`

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import styled from "styled-components";
@@ -14,7 +14,7 @@ import { REPORT_REASON } from "@/data/report";
 import Input from "../common/Input";
 import ConfirmModal from "../common/ConfirmModal";
 
-type profileType = "fun" | "hard" | "other";
+type profileType = "fun" | "hard" | "other" | "me";
 
 interface Champion {
   id: number;
@@ -26,8 +26,8 @@ interface User {
   account: string;
   tag: string;
   tier: string;
-  mic: number;
-  champions: Champion[];
+  mic: boolean;
+  champions?: Champion[];
   gameStyle: string[];
 }
 
@@ -36,13 +36,17 @@ interface Profile {
   profileType: profileType;
 }
 
-const Profile: React.FC<Profile> = ({ profileType = "hard", user }) => {
-  const [isMike, setIsMike] = useState(false);
+const Profile: React.FC<Profile> = ({ profileType, user }) => {
+  const [isMike, setIsMike] = useState(user.mic);
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
   const [isReportBoxOpen, setIsReportBoxOpen] = useState(false);
   const [isBlockBoxOpen, setIsBlockBoxOpen] = useState(false);
   const [isBlockConfirmOpen, setIsBlockConfrimOpen] = useState(false);
   const [reportDetail, setReportDetail] = useState<string>("");
+
+  useEffect(() => {
+    setIsMike(user.mic);
+  }, [user.mic]);
 
   const handleMike = () => {
     setIsMike(!isMike);
@@ -55,11 +59,13 @@ const Profile: React.FC<Profile> = ({ profileType = "hard", user }) => {
   const handleReport = () => {
     // 신고하기 api
     setIsReportBoxOpen(!isReportBoxOpen);
+    setIsMoreBoxOpen(false);
   };
 
   const handleBlock = () => {
     // 차단하기 api
     setIsBlockBoxOpen(!isBlockBoxOpen);
+    setIsMoreBoxOpen(false);
   };
 
   return (
@@ -91,96 +97,115 @@ const Profile: React.FC<Profile> = ({ profileType = "hard", user }) => {
                 {user.tier}
               </Rank>
             </Top>
-            <More>
-              <Admit>
-                <Button
-                  buttonType="primary"
-                  width="218px"
-                  text="친구 요청 수락하기"
-                />
-                {/* <Button buttonType="secondary" width="218px" text="친구 추가" />
+            {profileType === "other" && (
+              <More>
+                <Admit>
+                  <Button
+                    buttonType="primary"
+                    width="218px"
+                    text="친구 요청 수락하기"
+                  />
+                  {/* <Button buttonType="secondary" width="218px" text="친구 추가" />
                 <Button
                   buttonType="secondary"
                   width="218px"
                   disabled={true}
                   text="친구 요청 전송됨"
                 /> */}
-              </Admit>
-              {/* 더보기 버튼 */}
-              <Report onClick={handleMoreBoxOpen} />
-              {isMoreBoxOpen && (
-                <ReportBox>
-                  <ReportText onClick={handleReport}>신고하기</ReportText>
-                  <ReportText onClick={handleBlock}>차단하기</ReportText>
-                </ReportBox>
-              )}
-              {/* 신고하기 팝업 */}
-              {isReportBoxOpen && (
-                <FormModal
-                  type="checkbox"
-                  title="유저 신고하기"
-                  width="494px"
-                  height="721px"
-                  closeButtonWidth={17}
-                  closeButtonHeight={17}
-                  borderRadius="20px"
-                  buttonText="신고하기"
-                  onClose={handleReport}
-                  disabled
-                >
-                  <div>
-                    <ReportLabel>신고 사유</ReportLabel>
-                    <ReportReasonContent>
-                      {REPORT_REASON.map((data) => (
-                        <Checkbox
-                          key={data.id}
-                          value={data.text}
-                          label={data.text}
+                </Admit>
+                {/* 더보기 버튼 */}
+                <Report onClick={handleMoreBoxOpen} />
+                {isMoreBoxOpen && (
+                  <ReportBox>
+                    <ReportText onClick={handleReport}>신고하기</ReportText>
+                    <Bar />
+                    <ReportText onClick={handleBlock}>차단하기</ReportText>
+                  </ReportBox>
+                )}
+                {/* 신고하기 팝업 */}
+                {isReportBoxOpen && (
+                  <FormModal
+                    type="checkbox"
+                    title="유저 신고하기"
+                    width="494px"
+                    height="721px"
+                    closeButtonWidth={17}
+                    closeButtonHeight={17}
+                    borderRadius="20px"
+                    buttonText="신고하기"
+                    onClose={handleReport}
+                    disabled
+                  >
+                    <div>
+                      <ReportLabel>신고 사유</ReportLabel>
+                      <ReportReasonContent>
+                        {REPORT_REASON.map((data) => (
+                          <Checkbox
+                            key={data.id}
+                            value={data.text}
+                            label={data.text}
+                            fontSize="regular18"
+                          />
+                        ))}
+                      </ReportReasonContent>
+                      <ReportLabel>상세 내용</ReportLabel>
+                      <ReportContent>
+                        <Input
+                          inputType="textarea"
+                          value={reportDetail}
+                          onChange={(value) => {
+                            setReportDetail(value);
+                          }}
+                          placeholder="내용을 입력하세요. (선택)"
+                          borderRadius="8px"
                           fontSize="regular18"
+                          height="134px"
                         />
-                      ))}
-                    </ReportReasonContent>
-                    <ReportLabel>상세 내용</ReportLabel>
-                    <ReportContent>
-                      <Input
-                        inputType="textarea"
-                        value={reportDetail}
-                        onChange={(value) => {
-                          setReportDetail(value);
-                        }}
-                        placeholder="내용을 입력하세요. (선택)"
-                        borderRadius="8px"
-                        fontSize="regular18"
-                        height="134px"
-                      />
-                    </ReportContent>
-                  </div>
-                </FormModal>
-              )}
-              {/* 차단하기 팝업 */}
-              {isBlockBoxOpen && (
-                <ConfirmModal type="yesOrNo" width="540px" onClose={() => {}}>
-                  <Msg>
-                    {`차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다.\n\n또한, 다시 차단 해제할 수 없습니다.\n차단하시겠습니까?`}
-                  </Msg>
-                </ConfirmModal>
-              )}
-              {/* 차단하기 확인 팝업 */}
-              {isBlockConfirmOpen && (
-                <ConfirmModal
-                  type="confirm"
-                  width="540px"
-                  onClose={() => {
-                    setIsBlockConfrimOpen(false);
-                  }}
-                >
-                  <MsgConfirm>{`차단이 완료되었습니다.`}</MsgConfirm>
-                </ConfirmModal>
-              )}
-            </More>
+                      </ReportContent>
+                    </div>
+                  </FormModal>
+                )}
+                {/* 차단하기 팝업 */}
+                {isBlockBoxOpen && (
+                  <ConfirmModal
+                    type="yesOrNo"
+                    width="540px"
+                    borderRadius="20px"
+                    onCheck={() => {
+                      setIsBlockBoxOpen(false);
+                      setIsBlockConfrimOpen(true);
+                    }}
+                    onClose={() => {
+                      setIsBlockBoxOpen(false);
+                    }}
+                  >
+                    <Msg>
+                      {`차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다.\n\n또한, 다시 차단 해제할 수 없습니다.\n차단하시겠습니까?`}
+                    </Msg>
+                  </ConfirmModal>
+                )}
+                {/* 차단하기 확인 팝업 */}
+                {isBlockConfirmOpen && (
+                  <ConfirmModal
+                    type="confirm"
+                    width="540px"
+                    borderRadius="20px"
+                    onClose={() => {
+                      setIsBlockConfrimOpen(false);
+                    }}
+                  >
+                    <MsgConfirm>{`차단이 완료되었습니다.`}</MsgConfirm>
+                  </ConfirmModal>
+                )}
+              </More>
+            )}
           </TopContainer>
           {profileType === "fun" ? (
-            <GameStyle profileType="none" gameStyle={user.gameStyle} />
+            <GameStyle
+              profileType="none"
+              gameStyle={user.gameStyle}
+              mic={user.mic}
+            />
           ) : (
             <UnderRow>
               <Position>
@@ -199,17 +224,23 @@ const Profile: React.FC<Profile> = ({ profileType = "hard", user }) => {
                   </Posi>
                 ))}
               </Position>
-              <Champion size={14} list={user.champions} />
-              <Mike>
-                마이크
-                <Toggle isOn={isMike} onToggle={handleMike} />
-              </Mike>
+              {user.champions && <Champion size={14} list={user.champions} />}
+              {profileType === "other" && (
+                <Mike>
+                  마이크
+                  <Toggle isOn={isMike} onToggle={handleMike} disabled={true} />
+                </Mike>
+              )}
             </UnderRow>
           )}
         </StyledBox>
       </Row>
-      {(profileType === "hard" || "other") && (
-        <GameStyle profileType="other" gameStyle={user.gameStyle} />
+      {(profileType === "hard" || profileType === "other") && (
+        <GameStyle
+          profileType={profileType === "hard" ? "none" : profileType}
+          gameStyle={user.gameStyle}
+          mic={user.mic}
+        />
       )}
     </Container>
   );
@@ -307,22 +338,30 @@ const More = styled.div`
 const Admit = styled.div``;
 
 const ReportBox = styled.div`
+  width: 175px;
+  height: 84px;
   position: absolute;
-  top: 50%;
+  top: 60px;
   left: 300px;
   transform: translateY(-50%);
   z-index: 100;
   box-shadow: 0 0 21.3px 0 #00000026;
   background: ${theme.colors.white};
-  padding: 10px 103px 10px 20px;
   border-radius: 10px;
 `;
 
 const ReportText = styled.p`
+  padding: 10px 20px;
   ${(props) => props.theme.fonts.medium15};
   color: #606060;
   white-space: nowrap;
   cursor: pointer;
+`;
+
+const Bar = styled.div`
+  width: 100%;
+  height: 1px;
+  background: ${theme.colors.gray400};
 `;
 
 const ReportLabel = styled.p`

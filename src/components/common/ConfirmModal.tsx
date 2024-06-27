@@ -7,10 +7,12 @@ interface ConfirmModalProps {
   type: "yesOrNo" | "confirm" | "img";
   children?: string | React.ReactNode;
   width: string;
+  borderRadius?: string;
+  onCheck?: () => void;
   onClose: () => void;
 }
 const ConfirmModal = (props: ConfirmModalProps) => {
-  const { type, children, width, onClose } = props;
+  const { type, children, width, borderRadius, onCheck, onClose } = props;
   const [mannerStatus, setMannerStatus] = useState(false);
   const [badMannerStatus, setBadMannerStatus] = useState(false);
 
@@ -26,7 +28,11 @@ const ConfirmModal = (props: ConfirmModalProps) => {
 
   return (
     <Overlay>
-      <Wrapper $width={width} onClick={(e) => e.stopPropagation()}>
+      <Wrapper
+        $width={width}
+        $borderRadius={borderRadius || "11px"}
+        onClick={(e) => e.stopPropagation()}
+      >
         <Main>
           {type === "img" ? (
             <ImageTop>
@@ -75,7 +81,7 @@ const ConfirmModal = (props: ConfirmModalProps) => {
         <Footer>
           <Buttons>
             <Button
-              onClick={onClose}
+              onClick={onCheck || onClose}
               className={type === "img" ? undefined : "noButton"}
               disabled={type === "img" && !mannerStatus && !badMannerStatus}
               $type={type}
@@ -105,10 +111,10 @@ const Overlay = styled.div`
   z-index: 100;
 `;
 
-const Wrapper = styled.div<{ $width: string }>`
+const Wrapper = styled.div<{ $width: string; $borderRadius: string }>`
   width: ${(props) => props.$width};
   background: ${theme.colors.white};
-  border-radius: 11px;
+  border-radius: ${(props) => props.$borderRadius};
   box-shadow: 0 0 14.76px 0 rgba(0, 0, 0, 0.15);
 `;
 

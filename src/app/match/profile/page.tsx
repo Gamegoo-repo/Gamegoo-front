@@ -8,6 +8,20 @@ import Profile from "@/components/match/Profile";
 import Button from "@/components/common/Button";
 import HeaderTitle from "@/components/common/HeaderTitle";
 
+const userData = {
+  image: "/assets/images/profile.svg",
+  account: "유니콘의 비밀",
+  tag: "KR1",
+  tier: "B3",
+  manner_level: 5,
+  mic: true,
+  gameStyle: [
+    "이기기만 하면 뭔들",
+    "과도한 핑은 사절이에요",
+    "랭크 올리고 싶어요",
+  ],
+};
+
 const GameModePage = () => {
   const router = useRouter();
 
@@ -16,7 +30,7 @@ const GameModePage = () => {
       <MatchContent>
         <HeaderTitle title="프로필 설정" />
         <Main>
-          <Profile profileType="hard" />
+          <Profile profileType="fun" user={userData} />
           <Button
             buttonType="primary"
             width="380px"
