@@ -9,8 +9,8 @@ export const MATCH_TYPE_PAGE_DATA = [
 ];
 
 export const GAME_MODE_PAGE_DATA = [
-    { id: 1, type: 'game', pathname: 'profile', height: '377px', top: '50%', left: '50%', title: '빠른 대전' },
-    { id: 2, type: 'game', pathname: 'profile', height: '377px', top: '50%', left: '50%', title: '솔랭' },
-    { id: 3, type: 'game', pathname: 'profile', height: '377px', top: '50%', left: '50%', title: '자랭' },
-    { id: 4, type: 'game', pathname: 'profile', height: '377px', top: '50%', left: '50%', title: '칼바람' },
+    { id: 1, type: 'fun', pathname: 'profile', height: '377px', top: '50%', left: '50%', title: '빠른 대전' },
+    { id: 2, type: 'fun', pathname: 'profile', height: '377px', top: '50%', left: '50%', title: '솔랭' },
+    { id: 3, type: 'fun', pathname: 'profile', height: '377px', top: '50%', left: '50%', title: '자랭' },
+    { id: 4, type: 'fun', pathname: 'profile', height: '377px', top: '50%', left: '50%', title: '칼바람' },
   ];

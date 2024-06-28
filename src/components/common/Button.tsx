@@ -42,7 +42,7 @@ export default Button;
 
 const StyledButton = styled.button<{ width?: string }>`
   width: ${({ width }) => width || "100%"};
-  padding: 19px 60px;
+  padding: 19px 30px;
   border: none;
   border-radius: 15px;
   color: ${theme.colors.white};
@@ -66,7 +66,8 @@ const StyledButton = styled.button<{ width?: string }>`
       color: rgba(255, 255, 255, 0.42);
     }
     &:disabled {
-      background: #c5c5c7;
+      background: #606060;
+      color: rgba(255, 255, 255, 0.42);
     }
   }
   &.default {

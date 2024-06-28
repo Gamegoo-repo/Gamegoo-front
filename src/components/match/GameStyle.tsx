@@ -2,13 +2,23 @@ import Image from "next/image";
 import { useState } from "react";
 import styled from "styled-components";
 import Box from "../common/Box";
-import { EX_GAME_STYLE } from "@/data/profile";
 import Toggle from "../common/Toggle";
 import { theme } from "@/styles/theme";
 import SelectedStylePopup from "./SelectedStylePopup";
+import { css } from "styled-components";
 
-const GameStyle = () => {
-  const [isMike, setIsMike] = useState(false);
+type profileType = "me" | "other" | "none";
+
+interface GameStyleProps {
+  gameStyle: string[];
+  profileType: profileType;
+  mic: boolean;
+}
+
+const GameStyle = (props: GameStyleProps) => {
+  const { gameStyle, profileType = "none", mic } = props;
+
+  const [isMike, setIsMike] = useState(mic);
   const [styledPopup, setStyledPopup] = useState(false);
   const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
 
@@ -38,35 +48,39 @@ const GameStyle = () => {
 
   return (
     <Style>
-      <LeftLabel>
+      <LeftLabel profileType={profileType}>
         게임 스타일
         <GameBox>
-          {EX_GAME_STYLE.map((data) => (
-            <Box key={data.id} text={data.text} shape="round" />
+          {gameStyle.map((data, index) => (
+            <Box key={index} text={data} shape="round" />
           ))}
-          <Div>
-            <AddGameStyle onClick={handleStylePopup}>
-              <Image
-                src="/assets/icons/plus.svg"
-                width={21}
-                height={21}
-                alt="추가"
-              />
-            </AddGameStyle>
-            {styledPopup && (
-              <SelectedStylePopup
-                onClose={handleClosePopup}
-                selectedStyles={selectedStyles}
-                onSelectStyle={handleSelectStyle}
-              />
-            )}
-          </Div>
+          {profileType !== "other" && (
+            <Div>
+              <AddGameStyle onClick={handleStylePopup}>
+                <Image
+                  src="/assets/icons/plus.svg"
+                  width={21}
+                  height={21}
+                  alt="추가"
+                />
+              </AddGameStyle>
+              {styledPopup && (
+                <SelectedStylePopup
+                  onClose={handleClosePopup}
+                  selectedStyles={selectedStyles}
+                  onSelectStyle={handleSelectStyle}
+                />
+              )}
+            </Div>
+          )}
         </GameBox>
       </LeftLabel>
-      <LeftLabel>
-        마이크
-        <Toggle isOn={isMike} onToggle={handleMike} />
-      </LeftLabel>
+      {profileType === "none" && (
+        <LeftLabel profileType={profileType}>
+          마이크
+          <Toggle isOn={isMike} onToggle={handleMike} />
+        </LeftLabel>
+      )}
     </Style>
   );
 };
@@ -80,11 +94,16 @@ const Style = styled.div`
   align-items: flex-start;
 `;
 
-const LeftLabel = styled.div`
+const LeftLabel = styled.div<{ profileType: profileType }>`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 12px;
+  ${({ profileType }) =>
+    profileType !== "none" &&
+    css`
+      font: ${theme.fonts.semiBold14};
+    `}
 `;
 
 const GameBox = styled.div`

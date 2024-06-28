@@ -15,6 +15,8 @@ interface InputProps {
   disabled?: boolean;
   height?: string;
   errorMsg?: string;
+  fontSize?: string;
+  borderRadius?: string;
 }
 
 const Input = (props: InputProps) => {
@@ -30,6 +32,8 @@ const Input = (props: InputProps) => {
     disabled,
     height,
     errorMsg = "사용불가",
+    fontSize,
+    borderRadius,
   } = props;
 
   const handleChange = (event: any) => {
@@ -47,6 +51,9 @@ const Input = (props: InputProps) => {
           value={value}
           onChange={handleChange}
           placeholder={placeholder}
+          fontSize={fontSize || "regular20"}
+          borderRadius={borderRadius || "15px"}
+          height={height}
         />
       ) : (
         <Box>
@@ -58,6 +65,8 @@ const Input = (props: InputProps) => {
             placeholder={placeholder}
             isValid={isValid}
             disabled={disabled}
+            borderRadius={borderRadius || "15px"}
+            height={height}
           />
           {isValid !== undefined && (
             <Valid>
@@ -96,9 +105,10 @@ const StyledLabel = styled.label`
 
 const StyledInput = styled.input<InputProps>`
   width: 100%;
-  min-height: 58px;
+  min-height: ${({ height }) => (height ? height : "58px")};
   padding: 11px 20px;
-  border-radius: 15px;
+  border-radius: ${({ borderRadius }) =>
+    borderRadius ? borderRadius : "15px"};
   border: ${({ isValid }) =>
     isValid === undefined
       ? `1px solid #b5b5b5`
@@ -123,16 +133,20 @@ const StyledInput = styled.input<InputProps>`
   }
 `;
 
-const StyledTextarea = styled.textarea`
+const StyledTextarea = styled.textarea<InputProps>`
   width: 100%;
   padding: 11px 20px;
-  border-radius: 15px;
+  border-radius: ${({ borderRadius }) =>
+    borderRadius ? borderRadius : "15px"};
   border: 1px solid #b5b5b5;
   color: ${theme.colors.black};
-  ${(props) => props.theme.fonts.regular20};
+  ${(props) =>
+    props.fontSize
+      ? props.theme.fonts[props.fontSize as keyof typeof props.theme.fonts]
+      : props.theme.fonts.regular20};
   resize: none;
   &.containerHeight {
-    min-height: 160px;
+    min-height: ${({ height }) => (height ? height : "160px")};
   }
   &.height {
     min-height: 100px;
