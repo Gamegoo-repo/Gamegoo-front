@@ -12,7 +12,6 @@ import Toggle from "../common/Toggle";
 import PositionBox, { PositionState } from "../crBoard/PositionBox";
 import GameStyle from "./GameStyle";
 import { EX_GAME_STYLE } from "@/data/profile";
-import PositionBox2 from "../crBoard/PositionBox2";
 
 interface PostBoardProps {
     onClose: () => void;
