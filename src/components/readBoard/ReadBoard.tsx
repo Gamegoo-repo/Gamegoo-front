@@ -236,8 +236,8 @@ const MemoData = styled.p`
     ${(props) => props.theme.fonts.regular18}
 `;
 
-const ButtonContent = styled.p<{ gameType: string }>`
-    margin:${({ gameType }) => (gameType === "canyon" ? "30px" : "150px")} 0 28px;    
+const ButtonContent = styled.p<{ $gameType: string }>`
+    margin:${({ $gameType }) => ($gameType === "canyon" ? "30px" : "150px")} 0 28px;    
     text-align: center;
 `;
 
