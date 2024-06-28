@@ -133,22 +133,22 @@ const ReadBoard = (props: ReadBoardProps) => {
         <QueueType
           value={userData.queue} />
       </ChampionNQueueSection>
-      {gameType === 'canyon' &&
+      {gameType === "canyon" &&
         <PositionSection>
           <Title>포지션</Title>
           <PositionBox status="reading" />
         </PositionSection>
       }
-      <WinningRateSection gameType={gameType}>
+      <WinningRateSection $gameType={gameType}>
         <WinningRate
           completed={userData.winning_rate.completed}
           history={userData.winning_rate.history} />
       </WinningRateSection>
-      <StyleSection gameType={gameType}>
+      <StyleSection $gameType={gameType}>
         <Title>게임 스타일</Title>
         <GameStyle styles={EX_GAME_STYLE} />
       </StyleSection>
-      <MemoSection gameType={gameType}>
+      <MemoSection $gameType={gameType}>
         <Title>메모</Title>
         <Memo>
           <MemoData>
@@ -156,7 +156,7 @@ const ReadBoard = (props: ReadBoardProps) => {
           </MemoData>
         </Memo>
       </MemoSection>
-      <ButtonContent gameType={gameType}>
+      <ButtonContent $gameType={gameType}>
         <Button
           type="submit"
           buttonType="primary"
@@ -211,16 +211,16 @@ const PositionSection = styled.div`
     margin-top:33px;    
 `;
 
-const WinningRateSection = styled.div<{ gameType: string }>`
-    margin-top:${({ gameType }) => (gameType === "canyon" ? "33px" : "46px")};  
+const WinningRateSection = styled.div<{ $gameType: string }>`
+    margin-top:${({ $gameType }) => ($gameType === "canyon" ? "33px" : "46px")};  
 `;
 
-const StyleSection = styled.div<{ gameType: string }>`
-    margin-top:${({ gameType }) => (gameType === "canyon" ? "33px" : "46px")};  
+const StyleSection = styled.div<{ $gameType: string }>`
+    margin-top:${({ $gameType }) => ($gameType === "canyon" ? "33px" : "46px")};  
 `;
 
-const MemoSection = styled.div<{ gameType: string }>`
-    margin-top:${({ gameType }) => (gameType === "canyon" ? "33px" : "46px")};   
+const MemoSection = styled.div<{ $gameType: string }>`
+    margin-top:${({ $gameType }) => ($gameType === "canyon" ? "33px" : "46px")};   
 `;
 
 const Memo = styled.div`

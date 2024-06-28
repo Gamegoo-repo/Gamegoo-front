@@ -20,7 +20,7 @@ const MannerLevel = (props: MannerLevelProps) => {
             <Text>LV.{level}</Text>
           </ClickArea>
           {isBalloon &&
-            <BubbleWrapper position={position}>
+            <BubbleWrapper $position={position}>
               <Bubble>
                 <P>클릭해서 매너키워드 보기</P>
               </Bubble>
@@ -38,10 +38,10 @@ const LevelWrapper = styled.div`
   position: relative;
 `;
 
-const BubbleWrapper = styled.div<{ position: positionType }>`
+const BubbleWrapper = styled.div<{ $position: positionType }>`
   position: absolute;
-  bottom: ${({ position }) => (position === "top" ? "45px" : "10px")};
-  right: ${({ position }) => (position === "top" ? "-6px" : "-150px")};
+  bottom: ${({ $position }) => ($position === "top" ? "45px" : "10px")};
+  right: ${({ $position }) => ($position === "top" ? "-6px" : "-150px")};
 `;
 
 const Bubble = styled.div`
