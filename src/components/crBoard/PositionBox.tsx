@@ -2,11 +2,14 @@ import styled from "styled-components";
 import Image from "next/image";
 import { useState } from "react";
 import PositionCategory from "../common/PositionCategory";
+import PositionCategory2 from "../common/PositionCategory2";
 
 interface PositionBoxProps {
     status: "posting" | "reading";
     onPositionChange?: ((newPositionValue: PositionState) => void);
 }
+
+type Position = 'main' | 'sub' | 'want';
 
 export interface PositionState {
     main: string;
@@ -17,27 +20,19 @@ export interface PositionState {
 const PositionBox = (props: PositionBoxProps) => {
     const { status, onPositionChange } = props;
     const [selectedBox, setSelectedBox] = useState("");
-    // TODO: api 연결 후 기존 data 가져오기
     const [positionValue, setPositionValue] = useState<PositionState>({
         main: '',
         sub: '',
         want: ''
     });
-    const [isPositionOpen, setIsPositionOpen] = useState(false);
 
     const handleCategoryButtonClick = (boxName: string, buttonLabel: string) => {
+        console.log(boxName, buttonLabel)
         const newPositionValue = { ...positionValue, [boxName]: buttonLabel };
         setPositionValue(newPositionValue);
         if (onPositionChange) {
             onPositionChange(newPositionValue);
         }
-    };
-
-
-    const handleBoxClick = (boxName: string) => {
-        if (status === "reading") return;
-        setSelectedBox(boxName)
-        togglePosition();
     };
 
     const handlePositionImgSet = (buttonLabel: string) => {
@@ -59,12 +54,16 @@ const PositionBox = (props: PositionBoxProps) => {
         }
     };
 
-    const togglePosition = () => {
-        setIsPositionOpen(prev => !prev);
-    };
+    const [openPosition, setOpenPosition] = useState<Position | null>(null);
+
+    const handleBoxClick = (position: Position) => {
+        if (status === "reading") return;
+        setOpenPosition(prevPosition => (prevPosition === position ? null : position));
+        setSelectedBox(position);
+    }
 
     const closePosition = () => {
-        setIsPositionOpen(false);
+        setOpenPosition(null);
     };
 
     return (
@@ -80,6 +79,11 @@ const PositionBox = (props: PositionBoxProps) => {
                         height={34}
                         alt="main position image"
                     />
+                    {openPosition === 'main' && <PositionCategory
+                        onClose={closePosition}
+                        boxName={selectedBox}
+                        onButtonClick={handleCategoryButtonClick}
+                    />}
                 </Section>
                 <Section>
                     <Title>부 포지션</Title>
@@ -91,6 +95,11 @@ const PositionBox = (props: PositionBoxProps) => {
                         height={34}
                         alt="sub position image"
                     />
+                    {openPosition === 'sub' && <PositionCategory
+                        onClose={closePosition}
+                        boxName={selectedBox}
+                        onButtonClick={handleCategoryButtonClick}
+                    />}
                 </Section>
             </FirstBox>
             <SecondBox>
@@ -103,12 +112,17 @@ const PositionBox = (props: PositionBoxProps) => {
                     height={34}
                     alt="want position image"
                 />
+                {openPosition === 'want' && <PositionCategory
+                    onClose={closePosition}
+                    boxName={selectedBox}
+                    onButtonClick={handleCategoryButtonClick}
+                />}
             </SecondBox>
-            {isPositionOpen &&
+            {/* {isPositionOpen &&
                 <PositionCategory
                     onClose={closePosition}
                     boxName={selectedBox}
-                    onButtonClick={handleCategoryButtonClick} />}
+                    onButtonClick={handleCategoryButtonClick} />} */}
         </PositionWrapper>
     );
 };

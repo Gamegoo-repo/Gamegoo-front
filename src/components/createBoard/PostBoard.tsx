@@ -12,6 +12,7 @@ import Toggle from "../common/Toggle";
 import PositionBox, { PositionState } from "../crBoard/PositionBox";
 import GameStyle from "./GameStyle";
 import { EX_GAME_STYLE } from "@/data/profile";
+import PositionBox2 from "../crBoard/PositionBox2";
 
 interface PostBoardProps {
     onClose: () => void;
@@ -178,8 +179,9 @@ const PostBoard = (props: PostBoardProps) => {
                 <PositionSection>
                     <Title className="positionTitle">포지션</Title>
                     <PositionBox
-                        status="posting"
-                        onPositionChange={handlePositionChange} />
+                    status="posting"
+                    onPositionChange={handlePositionChange} 
+                    />
                 </PositionSection>
                 <StyleSection>
                     <Title className="gameStyleTitle">게임 스타일</Title>
