@@ -10,6 +10,8 @@ import UpdateProfileImage from "./UpdateProfileImage";
 import User from "../crBoard/User";
 import Toggle from "../common/Toggle";
 import PositionBox, { PositionState } from "../crBoard/PositionBox";
+import GameStyle from "./GameStyle";
+import { EX_GAME_STYLE } from "@/data/profile";
 
 interface PostBoardProps {
     onClose: () => void;
@@ -138,7 +140,8 @@ const PostBoard = (props: PostBoardProps) => {
     return (
         <CRModal
             type='posting'
-            onClose={onClose}>
+            onClose={onClose}
+            >
             <Form onSubmit={handlePost}>
                 <UserSection>
                     <UpdateProfileImage
@@ -180,7 +183,7 @@ const PostBoard = (props: PostBoardProps) => {
                 </PositionSection>
                 <StyleSection>
                     <Title className="gameStyleTitle">게임 스타일</Title>
-                    {/* 게임 스타일 컴포넌트 */}
+                    <GameStyle styles={EX_GAME_STYLE} />
                 </StyleSection>
                 <MemoSection>
                     <Title className="memoTitle">메모</Title>
