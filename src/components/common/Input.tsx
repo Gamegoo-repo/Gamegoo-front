@@ -14,6 +14,9 @@ interface InputProps {
   isValid?: null | boolean;
   disabled?: boolean;
   height?: string;
+  errorMsg?: string;
+  fontSize?: string;
+  borderRadius?: string;
 }
 
 const Input = (props: InputProps) => {
@@ -27,7 +30,10 @@ const Input = (props: InputProps) => {
     placeholder,
     isValid,
     disabled,
-    height
+    height,
+    errorMsg = "사용불가",
+    fontSize,
+    borderRadius,
   } = props;
 
   const handleChange = (event: any) => {
@@ -40,11 +46,14 @@ const Input = (props: InputProps) => {
       {inputType === "textarea" ? (
         <StyledTextarea
           $height={height}
+          className={`${height ? "containerHeight" : "height"} ${size}`}
           id={id}
           name={id}
           value={value}
           onChange={handleChange}
           placeholder={placeholder}
+          fontSize={fontSize || "regular20"}
+          borderRadius={borderRadius || "15px"}
         />
       ) : (
         <Box>
@@ -56,6 +65,8 @@ const Input = (props: InputProps) => {
             placeholder={placeholder}
             isValid={isValid}
             disabled={disabled}
+            borderRadius={borderRadius || "15px"}
+            height={height}
           />
           {isValid !== undefined && (
             <Valid>
@@ -67,7 +78,7 @@ const Input = (props: InputProps) => {
                   alt="check"
                 />
               )}
-              {isValid === false && <Error>사용불가</Error>}
+              {isValid === false && <Error>{errorMsg}</Error>}
             </Valid>
           )}
         </Box>
@@ -94,22 +105,23 @@ const StyledLabel = styled.label`
 
 const StyledInput = styled.input<InputProps>`
   width: 100%;
-  min-height: 58px;
+  min-height: ${({ height }) => (height ? height : "58px")};
   padding: 11px 20px;
-  border-radius: 15px;
+  border-radius: ${({ borderRadius }) =>
+    borderRadius ? borderRadius : "15px"};
   border: ${({ isValid }) =>
     isValid === undefined
       ? `1px solid #b5b5b5`
       : isValid === true
-        ? `1px solid ${theme.colors.purple300}`
-        : `1px solid ${theme.colors.error100}`};
+      ? `1px solid ${theme.colors.purple300}`
+      : `1px solid ${theme.colors.error100}`};
   color: ${theme.colors.black};
   ${(props) => props.theme.fonts.regular16}
 
   &:focus {
     outline: none;
     border: ${({ isValid }) =>
-    isValid === undefined && `1px solid ${theme.colors.purple300}`};
+      isValid === undefined && `1px solid ${theme.colors.purple300}`};
   }
 
   &:disabled {
@@ -121,10 +133,12 @@ const StyledInput = styled.input<InputProps>`
   }
 `;
 
-const StyledTextarea = styled.textarea<{ $height: string | undefined }>`
+
+const StyledTextarea = styled.textarea<InputProps>`
   width: 100%;
   padding: 11px 20px;
-  border-radius: 15px;
+  border-radius: ${({ borderRadius }) =>
+    borderRadius ? borderRadius : "15px"};
   border: 1px solid #b5b5b5;
   color: ${theme.colors.black};
   ${({ $height }) =>
@@ -136,6 +150,11 @@ const StyledTextarea = styled.textarea<{ $height: string | undefined }>`
     $height
       ? $height
       : '160px'};
+  ${(props) =>
+    props.fontSize
+      ? props.theme.fonts[props.fontSize as keyof typeof props.theme.fonts]
+      : props.theme.fonts.regular20};
+  resize: none;
   &:focus {
     outline: none;
     border: 1px solid ${theme.colors.purple300};

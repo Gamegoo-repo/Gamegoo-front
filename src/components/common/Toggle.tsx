@@ -1,21 +1,24 @@
 import { theme } from "@/styles/theme";
 import styled from "styled-components";
+import { css } from "styled-components";
 
 interface ToggleProps {
   isOn: boolean;
   onToggle: (state: boolean) => void;
+  disabled?: boolean;
   type?: 'board';
 }
 
 const Toggle = (props: ToggleProps) => {
-  const { isOn = false, onToggle, type } = props;
+  const { isOn, onToggle, disabled = false, type } = props;
+
   const toggleHandler = () => {
     onToggle(!isOn);
   };
 
   return (
     <>
-      <ToggleContainer onClick={toggleHandler} $type={type}>
+      <ToggleContainer onClick={toggleHandler} disabled={disabled} $type={type}>
         <div className={`toggle-circle ${isOn ? null : "toggle--unchecked"}`} />
         <div
           className={`toggle-container ${isOn ? null : "toggle--unchecked"}`}
@@ -27,9 +30,11 @@ const Toggle = (props: ToggleProps) => {
 
 export default Toggle;
 
-const ToggleContainer = styled.div<{ $type: string | undefined }>`
+const ToggleContainer = styled.div<{ disabled: boolean, $type: string | undefined }>`
+
   position: relative;
   cursor: pointer;
+  pointer-events: ${({ disabled }) => (disabled ? "none" : "auto")};
 
   > .toggle-container {
     width: ${({ $type }) =>
@@ -42,11 +47,21 @@ const ToggleContainer = styled.div<{ $type: string | undefined }>`
       : '46px'};
     border-radius: 49px;
     background-color: ${theme.colors.purple200};
+    /* ${({ disabled }) =>
+      disabled &&
+      css`
+        background-color: ${theme.colors.gray200};
+      `} */
   }
 
   > .toggle--unchecked {
     background-color: ${theme.colors.gray300};
     transition: 0.5s;
+    /* ${({ disabled }) =>
+      disabled &&
+      css`
+        background-color: ${theme.colors.gray200};
+      `} */
   }
 
   > .toggle-circle {
@@ -65,6 +80,11 @@ const ToggleContainer = styled.div<{ $type: string | undefined }>`
     border-radius: 50%;
     background-color: rgb(255, 254, 255);
     transition: 0.5s;
+    /* ${({ disabled }) =>
+      disabled &&
+      css`
+        background-color: ${theme.colors.gray300};
+      `} */
   }
   > .toggle--unchecked {
     left: ${({ $type }) =>

@@ -4,12 +4,19 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import styled from "styled-components";
 
+type fontSize = "bold" | "regular";
+
 interface HeaderTitleProps {
   title: string;
   sub?: string;
+  size?: fontSize;
 }
 
-const HeaderTitle: React.FC<HeaderTitleProps> = ({ title, sub }) => {
+const HeaderTitle: React.FC<HeaderTitleProps> = ({
+  title,
+  sub,
+  size = "bold",
+}) => {
   const router = useRouter();
 
   return (
@@ -21,7 +28,7 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({ title, sub }) => {
         height={39}
         alt="back button"
       />
-      <Title>{title}</Title>
+      <Title className={size}>{title}</Title>
       {sub && <Sub>{sub}</Sub>}
     </Header>
   );
@@ -42,9 +49,16 @@ const StyledImage = styled(Image)`
 `;
 
 const Title = styled.h1`
-  ${(props) => props.theme.fonts.bold32};
   color: ${theme.colors.gray100};
   margin-right: 40px;
+
+  &.bold {
+    ${(props) => props.theme.fonts.bold32};
+  }
+
+  &.regular {
+    ${(props) => props.theme.fonts.regular25};
+  }
 `;
 
 const Sub = styled.h1`

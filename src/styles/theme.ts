@@ -93,6 +93,24 @@ const fonts = {
         size: 14,
     }),
 
+    /*Medium*/
+    medium16: FONT({
+        weight: 500,
+        size: 16,
+    }),
+    medium15: FONT({
+        weight: 500,
+        size: 15,
+    }),
+    medium14: FONT({
+        weight: 500,
+        size: 14,
+    }),
+    medium11: FONT({
+        weight: 500,
+        size: 11,
+    }),
+    
     /*Regular*/
     regular35: FONT({
         weight: 400,
@@ -125,24 +143,6 @@ const fonts = {
     regular12: FONT({
         weight: 400,
         size: 12,
-    }),
-
-    /*Medium*/
-    medium16: FONT({
-        weight: 500,
-        size: 16,
-    }),
-    medium15: FONT({
-        weight: 500,
-        size: 15,
-    }),
-    medium14: FONT({
-        weight: 500,
-        size: 14,
-    }),
-    medium11: FONT({
-        weight: 500,
-        size: 11,
     }),
 }
 
