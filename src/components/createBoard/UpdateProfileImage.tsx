@@ -24,8 +24,8 @@ const UpdateProfileImage = (props: FileInputProps) => {
         <Wrapper>
             <ProfileImage
                 src={preview}
-                width={54}
-                height={51}
+                width={51}
+                height={48}
                 alt='profile image' />
                 <Label htmlFor="profileImg">
                     <CameraImgBg
@@ -52,8 +52,8 @@ export default UpdateProfileImage;
 
 const Wrapper = styled.div`
     position: relative;
-    width: 79px;
-    height: 79px;
+    width: 74.98px;
+    height: 74.98px;
     background: #C3B9FF;
     border-radius: 50%;
 `;

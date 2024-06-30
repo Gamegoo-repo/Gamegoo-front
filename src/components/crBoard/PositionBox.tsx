@@ -8,6 +8,8 @@ interface PositionBoxProps {
     onPositionChange?: ((newPositionValue: PositionState) => void);
 }
 
+type Position = 'main' | 'sub' | 'want';
+
 export interface PositionState {
     main: string;
     sub: string;
@@ -17,27 +19,19 @@ export interface PositionState {
 const PositionBox = (props: PositionBoxProps) => {
     const { status, onPositionChange } = props;
     const [selectedBox, setSelectedBox] = useState("");
-    // TODO: api 연결 후 기존 data 가져오기
     const [positionValue, setPositionValue] = useState<PositionState>({
         main: '',
         sub: '',
         want: ''
     });
-    const [isPositionOpen, setIsPositionOpen] = useState(false);
 
     const handleCategoryButtonClick = (boxName: string, buttonLabel: string) => {
+        console.log(boxName, buttonLabel)
         const newPositionValue = { ...positionValue, [boxName]: buttonLabel };
         setPositionValue(newPositionValue);
         if (onPositionChange) {
             onPositionChange(newPositionValue);
         }
-    };
-
-
-    const handleBoxClick = (boxName: string) => {
-        if (status === "reading") return;
-        setSelectedBox(boxName)
-        togglePosition();
     };
 
     const handlePositionImgSet = (buttonLabel: string) => {
@@ -59,17 +53,21 @@ const PositionBox = (props: PositionBoxProps) => {
         }
     };
 
-    const togglePosition = () => {
-        setIsPositionOpen(prev => !prev);
-    };
+    const [openPosition, setOpenPosition] = useState<Position | null>(null);
+
+    const handleBoxClick = (position: Position) => {
+        if (status === "reading") return;
+        setOpenPosition(prevPosition => (prevPosition === position ? null : position));
+        setSelectedBox(position);
+    }
 
     const closePosition = () => {
-        setIsPositionOpen(false);
+        setOpenPosition(null);
     };
 
     return (
-        <PositionWrapper $status={status}>
-            <FirstBox $status={status}>
+        <PositionWrapper>
+            <FirstBox>
                 <Section>
                     <Title>주 포지션</Title>
                     <StyledImage
@@ -77,9 +75,14 @@ const PositionBox = (props: PositionBoxProps) => {
                         onClick={() => handleBoxClick('main')}
                         src={handlePositionImgSet(positionValue.main)}
                         width={35}
-                        height={28}
+                        height={34}
                         alt="main position image"
                     />
+                    {openPosition === 'main' && <PositionCategory
+                        onClose={closePosition}
+                        boxName={selectedBox}
+                        onButtonClick={handleCategoryButtonClick}
+                    />}
                 </Section>
                 <Section>
                     <Title>부 포지션</Title>
@@ -88,74 +91,74 @@ const PositionBox = (props: PositionBoxProps) => {
                         onClick={() => handleBoxClick('sub')}
                         src={handlePositionImgSet(positionValue.sub)}
                         width={35}
-                        height={28}
+                        height={34}
                         alt="sub position image"
                     />
+                    {openPosition === 'sub' && <PositionCategory
+                        onClose={closePosition}
+                        boxName={selectedBox}
+                        onButtonClick={handleCategoryButtonClick}
+                    />}
                 </Section>
             </FirstBox>
-            <SecondBox $status={status}>
+            <SecondBox>
                 <Title>찾는 포지션</Title>
                 <StyledImage
                     $status={status}
                     onClick={() => handleBoxClick('want')}
                     src={handlePositionImgSet(positionValue.want)}
                     width={35}
-                    height={28}
+                    height={34}
                     alt="want position image"
                 />
+                {openPosition === 'want' && <PositionCategory
+                    onClose={closePosition}
+                    boxName={selectedBox}
+                    onButtonClick={handleCategoryButtonClick}
+                />}
             </SecondBox>
-            {isPositionOpen && <PositionCategory onClose={closePosition} boxName={selectedBox} onButtonClick={handleCategoryButtonClick} />}
+            {/* {isPositionOpen &&
+                <PositionCategory
+                    onClose={closePosition}
+                    boxName={selectedBox}
+                    onButtonClick={handleCategoryButtonClick} />} */}
         </PositionWrapper>
     );
 };
 
 export default PositionBox;
 
-const PositionWrapper = styled.div<{ $status: string }>`
+const PositionWrapper = styled.div`
     display: flex;
     align-items: center;
-    gap: ${({ $status }) =>
-        $status === 'posting'
-            ? '13px'
-            : '15px'
-    };
+    justify-content: space-between;
+    gap: 12px;
 `;
 
-const FirstBox = styled.div<{ $status: string }>`
+const FirstBox = styled.div`
     display: flex;
     align-items: center;
-    text-align: center;
+    justify-content: space-between;
+    width: 100%;
     white-space: nowrap;
     background: #f6f6f6;
     border-radius: 10px;
-    padding: ${({ $status }) =>
-        $status === 'posting'
-            ? '22px 36px'
-            : '22px 52px'
-    };
-    gap: ${({ $status }) =>
-        $status === 'posting'
-            ? '52px'
-            : '90px'
-    };
+    padding: 24px 54px 24px 47px;
 `;
 
 const Section = styled.div``;
 
-const SecondBox = styled.div<{ $status: string }>`
+const SecondBox = styled.div`
     text-align: center;
     background: #f6f6f6;
     white-space: nowrap;
     border-radius: 10px;
-    padding:  ${({ $status }) =>
-        $status === 'posting'
-            ? '22px 44px'
-            : '22px 113px'
-    };
+    padding: 24px 91px;
 `;
 
 const Title = styled.p`
-    margin-bottom: 5px;
+    ${(props) => props.theme.fonts.medium11};
+    margin-bottom: 6px;
 `;
 
 const StyledImage = styled(Image) <{ $status: string }>`

@@ -6,7 +6,6 @@ import Jungle from "../../../public/assets/icons/position_jungle_unclicked.svg";
 import Mid from "../../../public/assets/icons/position_mid_unclicked.svg";
 import Bottom from "../../../public/assets/icons/position_bottom_unclicked.svg";
 import Supporter from "../../../public/assets/icons/position_supporter_unclicked.svg";
-import { useRef } from "react";
 
 interface PositionComponentProps {
   onClose: () => void;
@@ -16,29 +15,14 @@ interface PositionComponentProps {
 
 const PositionCategory = (props: PositionComponentProps) => {
   const { onClose, boxName, onButtonClick } = props;
-  const ref = useRef<HTMLDivElement>(null);
 
   const handlePositionCategory = (positionName: string) => {
     onButtonClick(boxName, positionName);
     onClose();
   };
 
-  // 포지션 컴포넌트 외부 클릭 시 
-  // useEffect(() => {
-  //   const handleClickOutside = (event: MouseEvent) => {
-  //     if (ref.current && !ref.current.contains(event.target as Node)) {
-  //       onClose();
-  //     }
-  //   };
-
-  //   document.addEventListener('mousedown', handleClickOutside);
-  //   return () => {
-  //     document.removeEventListener('mousedown', handleClickOutside);
-  //   };
-  // }, [ref, onClose]);
-
   return (
-    <Wrapper ref={ref} className={boxName}>
+    <Wrapper className={boxName}>
       <Box>
         <RandomButton onClick={() => handlePositionCategory('random')}>
           <Random />
@@ -69,16 +53,16 @@ const Wrapper = styled.div`
   position: absolute;
   z-index: 10;
   &.main {
-    top: 44%;
-    left: 13.5%;
+    top: 47%;
+    left: 10%;
   }
   &.sub {
-    top: 44%;
-    left: 35.5%;
+    top: 47%;
+    left: 28.5%;
   }
   &.want {
-    top: 44%;
-    left: 66.7%;
+    top: 47%;
+    left: 65.5%;
   }
 `;
 

@@ -4,18 +4,22 @@ import Image from "next/image";
 import React, { useState } from "react";
 import styled from "styled-components";
 
+type positionType = "top" | "left";
 interface SelectedStylePopupProps {
   onClose: () => void;
   selectedStyles: string[];
-  onSelectStyle: (style: string) => void;
+  onSelectStyle: (style: string, event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+  position?: positionType;
 }
 const SelectedStylePopup: React.FC<SelectedStylePopupProps> = ({
   onClose,
   selectedStyles,
   onSelectStyle,
+  position = "top"
 }) => {
+
   return (
-    <Container>
+    <Container $position={position}>
       <Top>
         3개까지 선택가능
         <Image
@@ -30,7 +34,7 @@ const SelectedStylePopup: React.FC<SelectedStylePopupProps> = ({
         {GAME_STYLE.map((data) => (
           <Box
             key={data.id}
-            onClick={() => onSelectStyle(data.text)}
+            onClick={(e) => onSelectStyle(data.text, e)}
             selected={selectedStyles.includes(data.text)}
           >
             {data.text}
@@ -43,8 +47,8 @@ const SelectedStylePopup: React.FC<SelectedStylePopupProps> = ({
 
 export default SelectedStylePopup;
 
-const Container = styled.div`
-  width: 760px;
+const Container = styled.div<{ $position: positionType }>`
+  width: 796px;
   height: 310px;
   padding: 20px 30px;
   display: flex;
@@ -55,13 +59,12 @@ const Container = styled.div`
   background: rgba(0, 0, 0, 0.64);
 
   /* Background Blur */
-  box-shadow: 0px 4px 8.9px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 8.9px 0 rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(7.5px);
 
   position: absolute;
-  top: 60px;
-  left: 0;
-
+  top: ${({ $position }) => ($position === "top" ? "0" : "60px")};
+  left: ${({ $position }) => ($position === "top" ? "52px" : "0")};
   z-index: 100;
 `;
 

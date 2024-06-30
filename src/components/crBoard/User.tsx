@@ -22,7 +22,7 @@ const User = (props: UserProps) => {
                 <Image
                     src="/assets/icons/tier_bronze.svg"
                     width={32}
-                    height={21}
+                    height={20}
                     alt="tier image"
                 />
                 <Tier>{tier}</Tier>
@@ -42,12 +42,12 @@ const UserAccount = styled.div`
 `;
 
 const Account = styled.p`
-    ${(props) => props.theme.fonts.bold22};
+    ${(props) => props.theme.fonts.bold20};
     color:${theme.colors.black};
 `;
 
 const Tag = styled.p`
-    ${(props) => props.theme.fonts.regular25};
+    ${(props) => props.theme.fonts.regular20};
     color:${theme.colors.gray300};
     margin-left: 5px;
 `;
@@ -59,6 +59,6 @@ const UserTier = styled.div`
 `;
 
 const Tier = styled.p`
-    ${(props) => props.theme.fonts.regular20};
+    ${(props) => props.theme.fonts.regular18};
     color:#44515C;
 `;

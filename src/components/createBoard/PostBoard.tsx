@@ -2,13 +2,16 @@ import styled from "styled-components";
 import Dropdown from "../common/Dropdown";
 import Input from "../common/Input";
 import { useEffect, useRef, useState } from "react";
-import PositionBox, { PositionState } from "../crBoard/PositionBox";
 import Button from "../common/Button";
 import axios from "axios";
 import dayjs from "dayjs";
 import CRModal from "../crBoard/CRModal";
 import UpdateProfileImage from "./UpdateProfileImage";
 import User from "../crBoard/User";
+import Toggle from "../common/Toggle";
+import PositionBox, { PositionState } from "../crBoard/PositionBox";
+import GameStyle from "./GameStyle";
+import { EX_GAME_STYLE } from "@/data/profile";
 
 interface PostBoardProps {
     onClose: () => void;
@@ -44,6 +47,9 @@ const PostBoard = (props: PostBoardProps) => {
         sub: '',
         want: ''
     });
+
+    const [isOn, setisOn] = useState(false);
+
 
     const [textareaValue, setTextareaValue] = useState("");
 
@@ -101,6 +107,10 @@ const PostBoard = (props: PostBoardProps) => {
         setPositionValue(newPositionValue);
     };
 
+    const toggleHandler = () => {
+        setisOn(!isOn);
+    };
+
     const handlePost = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData();
@@ -130,7 +140,8 @@ const PostBoard = (props: PostBoardProps) => {
     return (
         <CRModal
             type='posting'
-            onClose={onClose}>
+            onClose={onClose}
+            >
             <Form onSubmit={handlePost}>
                 <UserSection>
                     <UpdateProfileImage
@@ -141,38 +152,44 @@ const PostBoard = (props: PostBoardProps) => {
                         tier={userData.tier}
                     />
                 </UserSection>
-                <QueueSection>
-                    <Title>큐타입</Title>
-                    <Dropdown
-                        ref={dropdownRef}
-                        type="type2"
-                        padding="10px 13px"
-                        width="243px"
-                        list={DROP_DATA}
-                        open={isDropdownOpen}
-                        setOpen={setIsDropdownOpen}
-                        onDropValue={handleDropValue}
-                        defaultValue={selectedDropOption}
-                    />
-                </QueueSection>
+                <QueueNMicSection>
+                    <Div>
+                        <Title className="micTitle">마이크</Title>
+                        <Toggle
+                            isOn={isOn}
+                            onToggle={toggleHandler}
+                            type="board" />
+                    </Div>
+                    <Div>
+                        <Title className="queueTitle">큐타입</Title>
+                        <Dropdown
+                            ref={dropdownRef}
+                            type="type2"
+                            padding="11px 21px"
+                            width="234px"
+                            list={DROP_DATA}
+                            open={isDropdownOpen}
+                            setOpen={setIsDropdownOpen}
+                            onDropValue={handleDropValue}
+                            defaultValue={selectedDropOption}
+                        />
+                    </Div>
+                </QueueNMicSection>
                 <PositionSection>
-                    <Title>포지션</Title>
+                    <Title className="positionTitle">포지션</Title>
                     <PositionBox
-                        status="posting"
-                        onPositionChange={handlePositionChange} />
+                    status="posting"
+                    onPositionChange={handlePositionChange} 
+                    />
                 </PositionSection>
                 <StyleSection>
-                    <Title>게임 스타일</Title>
-                    {/* 게임 스타일 컴포넌트 */}
+                    <Title className="gameStyleTitle">게임 스타일</Title>
+                    <GameStyle styles={EX_GAME_STYLE} />
                 </StyleSection>
-                <MicSection>
-                    <Title>마이크</Title>
-                    {/* 마이크 컴포넌트 */}
-                </MicSection>
                 <MemoSection>
-                    <Title>메모</Title>
+                    <Title className="memoTitle">메모</Title>
                     <Input
-                        height="160px"
+                        height="77px"
                         inputType="textarea"
                         value={textareaValue}
                         id="memo"
@@ -192,35 +209,53 @@ export default PostBoard;
 
 const Form = styled.form``;
 const Title = styled.p`
-    ${(props) => props.theme.fonts.semiBold18};
-    color: #222222;
-    margin-bottom:4px;
+    ${(props) => props.theme.fonts.semiBold14};
+    color: #2D2D2D;
+    &.micTitle {
+        margin-bottom: 11px;
+    }
+    &.queueTitle {
+        margin-bottom: 5px;
+    }
+    &.positionTitle {
+        margin-bottom: 5px;
+    }
+    &.gameStyleTitle {
+        margin-bottom: 5px;
+    }
+    &.memoTitle{
+        margin-bottom: 5px;
+    }
 `;
 
 const UserSection = styled.div`
     display: flex;
     align-items: center;
-    gap:22px;
+    gap:17px;
 `
-const QueueSection = styled.div`
+const QueueNMicSection = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap:187px;
     margin-top:24px;    
 `;
 
+const Div = styled.div``;
+
 const PositionSection = styled.div`
-    margin-top:17px;    
+    margin-top:33px;    
 `;
 
 const StyleSection = styled.div`
     margin-top:34px;    
 `;
-const MicSection = styled.div`
-    margin-top:31px;    
-`;
+
 const MemoSection = styled.div`
-    margin-top:30px;    
+    margin-top:34px;    
 `;
 const ButtonContent = styled.p`
-    padding:0 45px 36px;
-    margin-top:37px;    
+    padding:0 0 28px;
+    margin-top:74px;    
     text-align: center;
 `;

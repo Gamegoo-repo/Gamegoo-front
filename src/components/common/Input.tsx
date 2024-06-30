@@ -45,6 +45,7 @@ const Input = (props: InputProps) => {
       {label && <StyledLabel htmlFor={id}>{label}</StyledLabel>}
       {inputType === "textarea" ? (
         <StyledTextarea
+          $height={height}
           className={`${height ? "containerHeight" : "height"} ${size}`}
           id={id}
           name={id}
@@ -53,7 +54,6 @@ const Input = (props: InputProps) => {
           placeholder={placeholder}
           fontSize={fontSize || "regular20"}
           borderRadius={borderRadius || "15px"}
-          height={height}
         />
       ) : (
         <Box>
@@ -133,6 +133,7 @@ const StyledInput = styled.input<InputProps>`
   }
 `;
 
+
 const StyledTextarea = styled.textarea<InputProps>`
   width: 100%;
   padding: 11px 20px;
@@ -140,17 +141,20 @@ const StyledTextarea = styled.textarea<InputProps>`
     borderRadius ? borderRadius : "15px"};
   border: 1px solid #b5b5b5;
   color: ${theme.colors.black};
+  ${({ $height }) =>
+    $height
+      ? `${theme.fonts.regular18}`
+      : `${theme.fonts.regular20}`};
+  resize: none; 
+  min-height: ${({ $height }) =>
+    $height
+      ? $height
+      : '160px'};
   ${(props) =>
     props.fontSize
       ? props.theme.fonts[props.fontSize as keyof typeof props.theme.fonts]
       : props.theme.fonts.regular20};
   resize: none;
-  &.containerHeight {
-    min-height: ${({ height }) => (height ? height : "160px")};
-  }
-  &.height {
-    min-height: 100px;
-  }
   &:focus {
     outline: none;
     border: 1px solid ${theme.colors.purple300};

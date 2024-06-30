@@ -17,10 +17,10 @@ export const GAME_STYLE = [
     { id: 10, text: '원챔이에요' },
     { id: 11, text: '욕하면 던질거예요' },
     { id: 12, text: '뚝심있는 탑 라이너' },
-    { id: 9, text: '프로 정글러' },
-    { id: 10, text: '칼바람 장인' },
-    { id: 11, text: '뚝심있는 탑 라이너' },
-    { id: 12, text: '마이크 안해요' },
+    { id: 13, text: '프로 정글러' },
+    { id: 14, text: '칼바람 장인' },
+    { id: 15, text: '뚝심있는 탑 라이너' },
+    { id: 16, text: '마이크 안해요' },
 ];
 
 export const POSITIONS = [
