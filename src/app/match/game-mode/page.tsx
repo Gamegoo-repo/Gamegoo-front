@@ -28,7 +28,7 @@ const GameModePage = () => {
   }, [params]);
 
   return (
-    <Suspense>
+    <Suspense fallback={<>Loading...</>}>
       <Wrapper>
         <MatchContent>
           <HeaderTitle title="게임 모드 선택" />

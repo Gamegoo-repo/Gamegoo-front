@@ -46,7 +46,7 @@ const GameModePage = () => {
   }, [params]);
 
   return (
-    <Suspense>
+    <Suspense fallback={<>Loading...</>}>
       <Wrapper>
         <MatchContent>
           <HeaderTitle title="프로필 설정" />
