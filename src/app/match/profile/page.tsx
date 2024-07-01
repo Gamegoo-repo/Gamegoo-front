@@ -70,9 +70,9 @@ const ProfilePage = () => {
   );
 };
 
-export function ProfilePaging() {
+export default function ProfilePaging() {
   return (
-    <Suspense>
+    <Suspense fallback={<div>Loading...</div>}>
       <ProfilePage />
     </Suspense>
   );

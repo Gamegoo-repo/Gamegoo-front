@@ -58,9 +58,9 @@ const GameModePage = () => {
   );
 };
 
-export function GameModePaging() {
+export default function GameModePaging() {
   return (
-    <Suspense>
+    <Suspense fallback={<div>Loading...</div>}>
       <GameModePage />
     </Suspense>
   );
