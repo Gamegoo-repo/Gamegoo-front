@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { GAME_MODE_PAGE_DATA } from "@/data/match";
 import HeaderTitle from "@/components/common/HeaderTitle";
+import { Suspense } from "react";
 
 const GameModePage = () => {
   const router = useRouter();
@@ -57,7 +58,13 @@ const GameModePage = () => {
   );
 };
 
-export default GameModePage;
+export default function GameModePaging() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <GameModePage />
+    </Suspense>
+  );
+}
 
 const Wrapper = styled.div`
   width: 100%;

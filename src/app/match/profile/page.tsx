@@ -9,6 +9,7 @@ import Button from "@/components/common/Button";
 import HeaderTitle from "@/components/common/HeaderTitle";
 import { useEffect, useState } from "react";
 import { profileType } from "@/interface/profile";
+import { Suspense } from "react";
 
 const userData = {
   image: "/assets/images/profile.svg",
@@ -24,7 +25,7 @@ const userData = {
   ],
 };
 
-const GameModePage = () => {
+const ProfilePage = () => {
   const router = useRouter();
   const [profileType, setProfileType] = useState<profileType | undefined>();
   const searchParams = useSearchParams();
@@ -69,7 +70,13 @@ const GameModePage = () => {
   );
 };
 
-export default GameModePage;
+export default function ProfilePaging() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ProfilePage />
+    </Suspense>
+  );
+}
 
 const Wrapper = styled.div`
   width: 100%;
