@@ -46,29 +46,27 @@ const ProfilePage = () => {
   }, [params]);
 
   return (
-    <Suspense fallback={<>Loading...</>}>
-      <Wrapper>
-        <MatchContent>
-          <HeaderTitle title="프로필 설정" />
-          <Main>
-            <Profile profileType={profileType ?? "fun"} user={userData} />
-            <Button
-              buttonType="primary"
-              width="380px"
-              text="매칭 시작하기"
-              onClick={() => {
-                router.push("/matching/progress");
-              }}
-            />
-          </Main>
-          <Footer>
-            <ChatBoxContent>
-              <ChatBox count={3} />
-            </ChatBoxContent>
-          </Footer>
-        </MatchContent>
-      </Wrapper>
-    </Suspense>
+    <Wrapper>
+      <MatchContent>
+        <HeaderTitle title="프로필 설정" />
+        <Main>
+          <Profile profileType={profileType ?? "fun"} user={userData} />
+          <Button
+            buttonType="primary"
+            width="380px"
+            text="매칭 시작하기"
+            onClick={() => {
+              router.push("/matching/progress");
+            }}
+          />
+        </Main>
+        <Footer>
+          <ChatBoxContent>
+            <ChatBox count={3} />
+          </ChatBoxContent>
+        </Footer>
+      </MatchContent>
+    </Wrapper>
   );
 };
 
