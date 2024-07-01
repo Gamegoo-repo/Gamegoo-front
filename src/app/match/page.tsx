@@ -1,7 +1,7 @@
 'use client';
 
 import styled from "styled-components";
-import ChatBox from "@/components/common/ChatBox";
+import ChatBox from "@/components/common/ChatButton";
 import GraphicBox from "@/components/match/GraphicBox";
 import { MATCH_TYPE_PAGE_DATA } from "@/data/match";
 

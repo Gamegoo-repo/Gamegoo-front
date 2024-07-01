@@ -1,6 +1,6 @@
 "use client";
 
-import ChatBox from "@/components/common/ChatBox";
+import ChatBox from "@/components/common/ChatButton";
 import styled from "styled-components";
 import HeaderTitle from "@/components/common/HeaderTitle";
 import SquareProfile from "@/components/match/SquareProfile";

@@ -1,6 +1,6 @@
 "use client";
 
-import ChatBox from "@/components/common/ChatBox";
+import ChatBox from "@/components/common/ChatButton";
 import GraphicBox from "@/components/match/GraphicBox";
 import Image from "next/image";
 import styled from "styled-components";

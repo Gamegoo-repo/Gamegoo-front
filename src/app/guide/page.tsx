@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import Checkbox from "@/components/common/Checkbox";
 import RadioCard from "@/components/common/RadioCard";
 import Dropdown from "@/components/common/Dropdown";
-import ChatBox from "@/components/common/ChatBox";
+import ChatBox from "@/components/common/ChatButton";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import FormModal from "@/components/common/FormModal";
 import PositionCategory from "@/components/common/PositionCategory";

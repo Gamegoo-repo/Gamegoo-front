@@ -1,6 +1,6 @@
 'use client';
 
-import ChatBox from "@/components/common/ChatBox";
+import ChatButton from "@/components/common/ChatButton";
 import GraphicBox from "@/components/match/GraphicBox";
 import { MATCH_PAGE_DATA } from "@/data/match";
 import Image from "next/image";
@@ -38,7 +38,7 @@ const HomePage = () => {
                 </Main>
                 <Footer>
                     <ChatBoxContent>
-                        <ChatBox count={3} />
+                        <ChatButton count={3} />
                     </ChatBoxContent>
                 </Footer>
             </HomeContent>
