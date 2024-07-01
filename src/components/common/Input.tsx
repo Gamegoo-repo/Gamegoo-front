@@ -52,8 +52,8 @@ const Input = (props: InputProps) => {
           value={value}
           onChange={handleChange}
           placeholder={placeholder}
-          fontSize={fontSize || "regular20"}
-          borderRadius={borderRadius || "15px"}
+          $fontSize={fontSize || "regular20"}
+          $borderRadius={borderRadius || "15px"}
         />
       ) : (
         <Box>
@@ -113,15 +113,15 @@ const StyledInput = styled.input<InputProps>`
     isValid === undefined
       ? `1px solid #b5b5b5`
       : isValid === true
-      ? `1px solid ${theme.colors.purple300}`
-      : `1px solid ${theme.colors.error100}`};
+        ? `1px solid ${theme.colors.purple300}`
+        : `1px solid ${theme.colors.error100}`};
   color: ${theme.colors.black};
   ${(props) => props.theme.fonts.regular16}
 
   &:focus {
     outline: none;
     border: ${({ isValid }) =>
-      isValid === undefined && `1px solid ${theme.colors.purple300}`};
+    isValid === undefined && `1px solid ${theme.colors.purple300}`};
   }
 
   &:disabled {
@@ -134,11 +134,15 @@ const StyledInput = styled.input<InputProps>`
 `;
 
 
-const StyledTextarea = styled.textarea<InputProps>`
+const StyledTextarea = styled.textarea<{
+  $height: string | undefined,
+  $borderRadius: string | undefined,
+  $fontSize: string | undefined
+}>`
   width: 100%;
   padding: 11px 20px;
-  border-radius: ${({ borderRadius }) =>
-    borderRadius ? borderRadius : "15px"};
+  border-radius: ${({ $borderRadius }) =>
+    $borderRadius ? $borderRadius : "15px"};
   border: 1px solid #b5b5b5;
   color: ${theme.colors.black};
   ${({ $height }) =>
@@ -151,8 +155,8 @@ const StyledTextarea = styled.textarea<InputProps>`
       ? $height
       : '160px'};
   ${(props) =>
-    props.fontSize
-      ? props.theme.fonts[props.fontSize as keyof typeof props.theme.fonts]
+    props.$fontSize
+      ? props.theme.fonts[props.$fontSize as keyof typeof props.theme.fonts]
       : props.theme.fonts.regular20};
   resize: none;
   &:focus {
