@@ -24,13 +24,12 @@ const CRModal = (props: BoardModalProps) => {
         <Overlay>
             <Wrapper>
                 <Header $type={type}>
-                    {type === 'reading' && <UpdatedDate>게시일 : 24.05.06. 12:45</UpdatedDate>}
-                    <CloseButton>
+                    <CloseButton $type={type}>
                         <CloseImage
                             onClick={onClose}
                             src='/assets/icons/close.svg'
-                            width={17}
-                            height={17}
+                            width={15}
+                            height={15}
                             alt='close button' />
                     </CloseButton>
                 </Header>
@@ -54,44 +53,24 @@ const Overlay = styled.div`
     left:50%;
     transform: translate(-50%, -50%);
     z-index: 1;
-    /* height: 100%; */
 `;
 
 const Wrapper = styled.div`
     box-shadow: 0 0 21.3px 0 rgba(0, 0, 0, 0.15);
     background: ${theme.colors.white};
     border-radius: 19px;
-    /* height: 989px;
-    display: flex;
-    flex-direction: column;
-    max-height: 100%; 
-    position: relative; */
 `;
 
 const Header = styled.header<{ $type: string }>` 
-    display: ${({ $type }) =>
-        $type === 'reading'
-            ? 'flex'
-            : 'block'};
-    align-items: center;
-    justify-content:space-between;
-    padding: ${({ $type }) =>
-        $type === 'reading'
-            ? '24px 23px 0 43px'
-            : '24px 23px 0 0'};
+    padding: 26px 30px 0 0;
+`;
+
+const CloseButton = styled.p<{ $type: string }>`
+    display:flex;
     margin-bottom:${({ $type }) =>
         $type === 'reading'
-            ? '24px'
-            : 'unset'};
-`;
-
-const UpdatedDate = styled.p`
-    ${(props) => props.theme.fonts.medium14};
-    color:${theme.colors.gray200};
-`;
-
-const CloseButton = styled.p`
-    display:flex;
+            ? '1px'
+            : '8px'};
 `;
 
 const CloseImage = styled(Image)`
@@ -99,11 +78,8 @@ const CloseImage = styled(Image)`
     cursor: pointer;
 `;
 
-const Main = styled.main`
-    /* overflow-y: auto;
-    flex-grow: 1; */
-`;
+const Main = styled.main``;
 
 const MainContent = styled.div`
-    padding: 0 45px;
+    padding: 0 34px;
 `;

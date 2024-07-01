@@ -6,10 +6,11 @@ interface ToggleProps {
   isOn: boolean;
   onToggle: (state: boolean) => void;
   disabled?: boolean;
+  type?: 'board';
 }
 
 const Toggle = (props: ToggleProps) => {
-  const { isOn, onToggle, disabled = false } = props;
+  const { isOn, onToggle, disabled = false, type } = props;
 
   const toggleHandler = () => {
     onToggle(!isOn);
@@ -17,7 +18,7 @@ const Toggle = (props: ToggleProps) => {
 
   return (
     <>
-      <ToggleContainer onClick={toggleHandler} disabled={disabled}>
+      <ToggleContainer onClick={toggleHandler} disabled={disabled} $type={type}>
         <div className={`toggle-circle ${isOn ? null : "toggle--unchecked"}`} />
         <div
           className={`toggle-container ${isOn ? null : "toggle--unchecked"}`}
@@ -29,14 +30,21 @@ const Toggle = (props: ToggleProps) => {
 
 export default Toggle;
 
-const ToggleContainer = styled.div<{ disabled: boolean }>`
+const ToggleContainer = styled.div<{ disabled: boolean, $type: string | undefined }>`
+
   position: relative;
   cursor: pointer;
   pointer-events: ${({ disabled }) => (disabled ? "none" : "auto")};
 
   > .toggle-container {
-    width: 87px;
-    height: 46px;
+    width: ${({ $type }) =>
+    $type === 'board'
+      ? '67px'
+      : '87px'};
+    height: ${({ $type }) =>
+    $type === 'board'
+      ? '37px'
+      : '46px'};
     border-radius: 49px;
     background-color: ${theme.colors.purple200};
     /* ${({ disabled }) =>
@@ -61,8 +69,14 @@ const ToggleContainer = styled.div<{ disabled: boolean }>`
     top: 50%;
     left: 8px;
     transform: translate(0, -50%);
-    width: 33px;
-    height: 33px;
+    width: ${({ $type }) =>
+    $type === 'board'
+      ? '27px'
+      : '33px'};
+    height: ${({ $type }) =>
+    $type === 'board'
+      ? '27px'
+      : '33px'};
     border-radius: 50%;
     background-color: rgb(255, 254, 255);
     transition: 0.5s;
@@ -73,7 +87,10 @@ const ToggleContainer = styled.div<{ disabled: boolean }>`
       `} */
   }
   > .toggle--unchecked {
-    left: 46px;
+    left: ${({ $type }) =>
+    $type === 'board'
+      ? '35px'
+      : '46px'};
     transition: 0.5s;
   }
 `;

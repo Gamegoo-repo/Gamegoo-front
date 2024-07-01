@@ -60,7 +60,7 @@ const Table = (props: TableProps) => {
     return (
         <>
             {isOpenReadBoard &&
-                <ReadBoard onClose={handlePostClose} postId={isReadBoardId} />
+                <ReadBoard onClose={handlePostClose} postId={isReadBoardId} gameType="canyon"/>
             }
             <TableWrapper>
                 <TableHead>
