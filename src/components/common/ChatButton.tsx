@@ -1,13 +1,12 @@
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import ChatWindow from "../chat/ChatWIndow";
 
 interface msgCountProps {
   count: number;
 }
-
 
 const ChatButton = (props: msgCountProps) => {
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -19,6 +18,18 @@ const ChatButton = (props: msgCountProps) => {
   const handleChatWindowClose = () => {
     setIsChatOpen(false);
   };
+
+  useEffect(() => {
+    if (isChatOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isChatOpen]);
 
   return (
     <>
@@ -55,7 +66,7 @@ const MsgButton = styled.div`
             left:50%;
             transform: translate(-50%, -50%);
             }
-            `
+            `;
 
 const MsgCount = styled.div`
             position: relative;
@@ -65,7 +76,7 @@ const MsgCount = styled.div`
             border:1px solid ${theme.colors.purple200};
             background: ${theme.colors.white};
             left:72%;
-            `
+            `;
 
 const Count = styled.p`
             ${(props) => props.theme.fonts.semiBold14};
@@ -74,5 +85,5 @@ const Count = styled.p`
             top:50%;
             left:50%;
             transform: translate(-50%, -50%);
-            `
+            `;
 
