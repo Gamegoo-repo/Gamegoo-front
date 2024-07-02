@@ -1,6 +1,6 @@
 "use client";
 
-import ChatBox from "@/components/common/ChatButton";
+import ChatButton from "@/components/common/ChatButton";
 import styled from "styled-components";
 import HeaderTitle from "@/components/common/HeaderTitle";
 import SquareProfile from "@/components/match/SquareProfile";
@@ -31,7 +31,7 @@ const Progress = () => {
         </Main>
         <Footer>
           <ChatBoxContent>
-            <ChatBox count={3} />
+            <ChatButton count={3} />
           </ChatBoxContent>
         </Footer>
       </MatchContent>

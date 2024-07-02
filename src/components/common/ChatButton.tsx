@@ -16,10 +16,15 @@ const ChatButton = (props: msgCountProps) => {
     setIsChatOpen(prevState => !prevState);
   };
 
+  const handleChatWindowClose = () => {
+    setIsChatOpen(false);
+  };
+
   return (
     <>
       {isChatOpen &&
-        <ChatWindow />}
+        <ChatWindow
+          onClose={handleChatWindowClose} />}
       <MsgButton onClick={toggleChat}>
         <Image
           src='/assets/icons/chat_box.svg'

@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import Checkbox from "@/components/common/Checkbox";
 import RadioCard from "@/components/common/RadioCard";
 import Dropdown from "@/components/common/Dropdown";
-import ChatBox from "@/components/common/ChatButton";
+import ChatButton from "@/components/common/ChatButton";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import FormModal from "@/components/common/FormModal";
 import PositionCategory from "@/components/common/PositionCategory";
@@ -225,7 +225,7 @@ const Guide = () => {
       <p>TYPE 2</p> */}
 
       <H2>Chat Box</H2>
-      <ChatBox count={3} />
+      <ChatButton count={3} />
 
       <H2>Confirm Modal</H2>
       <button

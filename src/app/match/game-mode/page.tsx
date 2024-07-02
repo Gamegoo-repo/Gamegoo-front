@@ -1,6 +1,6 @@
 "use client";
 
-import ChatBox from "@/components/common/ChatButton";
+import ChatButton from "@/components/common/ChatButton";
 import GraphicBox from "@/components/match/GraphicBox";
 import Image from "next/image";
 import styled from "styled-components";
@@ -50,7 +50,7 @@ const GameModePage = () => {
         </Main>
         <Footer>
           <ChatBoxContent>
-            <ChatBox count={3} />
+            <ChatButton count={3} />
           </ChatBoxContent>
         </Footer>
       </MatchContent>
