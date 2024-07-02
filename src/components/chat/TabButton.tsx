@@ -1,33 +1,33 @@
-import React, { useState } from 'react';
 import styled from 'styled-components';
 import { theme } from "@/styles/theme";
 
-const Tabs: React.FC = () => {
-    const [activeTab, setActiveTab] = useState<string>('friends');
+interface TabButtonProps {
+    onActive: string;
+    handleActiveTab: React.Dispatch<React.SetStateAction<string>>;
+}
 
+const TabButton = (props: TabButtonProps) => {
+    const { onActive, handleActiveTab } = props;
     return (
         <>
             <TabContainer>
-                <Tab $isActive={activeTab === 'friends'} onClick={() => setActiveTab('friends')}>
+                <Tab $isActive={onActive === 'friends'} onClick={() => handleActiveTab('friends')}>
                     친구 목록
                 </Tab>
-                <Tab $isActive={activeTab === 'chat'} onClick={() => setActiveTab('chat')}>
+                <Tab $isActive={onActive === 'chat'} onClick={() => handleActiveTab('chat')}>
                     대화방
                 </Tab>
             </TabContainer>
-            <Content>
-                {activeTab === 'friends' && <div>친구 목록</div>}
-                {activeTab === 'chat' && <div>대화방</div>}
-            </Content>
         </>
     );
 };
 
-export default Tabs;
+export default TabButton;
 
 const TabContainer = styled.div`
   display: flex;
   gap:40px;
+  padding: 0 30px;
 `;
 
 const Tab = styled.div<{ $isActive: boolean }>`
@@ -48,7 +48,4 @@ const Tab = styled.div<{ $isActive: boolean }>`
     transform: translateX(-50%);
     transition: width 0.3s ease;
   }
-`;
-
-const Content = styled.div`
 `;
