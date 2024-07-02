@@ -59,8 +59,9 @@ const FriendsList = (props: FriendListProps) => {
                                         alt="온라인" />
                                 }
                             </Left>
-                            <Right onClick={() => toggleFavorite(friend.id)}>
+                            {/* <Right onClick={() => toggleFavorite(friend.id)}> */}
                                 <Image
+                                    onClick={() => toggleFavorite(friend.id)}
                                     src={
                                         friend.favorites === 1
                                             ? "assets/icons/favorites.svg"
@@ -70,7 +71,7 @@ const FriendsList = (props: FriendListProps) => {
                                     height={15}
                                     alt="즐겨찾기 버튼"
                                 />
-                            </Right>
+                            {/* </Right> */}
                         </UserContent>
                     )
                 })}
@@ -93,19 +94,21 @@ const FavoritesList = styled.div`
 const Title = styled.p`
     ${(props) => props.theme.fonts.medium11};
     color:${theme.colors.gray200}; 
-    padding:6px 0 11px;  
+    padding: 6px 16px 11px 18px;
 `;
 
 const UserContent = styled.div`
   display: flex;  
+  align-items: center;
   justify-content: space-between;
   cursor: pointer;
+  padding:5px 0;
   &:last-child {
-    margin-bottom: 11px;
+    padding: 5px 0 11px 0;
+    }
+  &:hover {
+    background: ${theme.colors.gray500}; 
   }
-  &:not(:last-child){
-    margin-bottom: 14px;
-}
 `;
 
 const Left = styled.div`
@@ -113,6 +116,7 @@ const Left = styled.div`
     display:flex;
     align-items: center;
     gap:16px;
+    padding: 0 16px 0 18px;
 `;
 
 const UserName = styled.p`
@@ -123,9 +127,5 @@ const UserName = styled.p`
 const Online = styled(Image)`
     position: absolute;
     top: 22%;
-    right: -5%;
-`;
-
-const Right = styled.button`
-    cursor: pointer;
+    right: 8%;
 `;

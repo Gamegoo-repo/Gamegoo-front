@@ -66,21 +66,21 @@ const ChatWindow = (props: ChatWindowProps) => {
                         </SearchInput>
                     </ChatSearch>
                 }
-                <ChatMain>
-                    <Content>
-                        {activeTab === 'friends' &&
-                            <div>
-                                <FriendsList
-                                    list={favoriteFriends}
-                                    isFavorites={true} />
-                                <FriendsList
-                                    list={nonFavoriteFriends}
-                                    isFavorites={false} />
-                            </div>
-                        }
-                        {activeTab === 'chat' && <div>대화방</div>}
-                    </Content>
-                </ChatMain>
+                    <ChatMain>
+                        <Content>
+                            {activeTab === 'friends' &&
+                                <div>
+                                    <FriendsList
+                                        list={favoriteFriends}
+                                        isFavorites={true} />
+                                    <FriendsList
+                                        list={nonFavoriteFriends}
+                                        isFavorites={false} />
+                                </div>
+                            }
+                            {activeTab === 'chat' && <div>대화방</div>}
+                        </Content>
+                    </ChatMain>
             </Wrapper>
         </Overlay>
     )
@@ -184,7 +184,7 @@ const Input = styled.input`
 `;
 
 const ChatMain = styled.div`
-    padding:11px 6px 13px 0;
+    padding:11px 6px 0 0;
     box-shadow: 0 13px 15px 0 #0000001A;
     border-radius: 0 0 20px 20px;
 `;
@@ -192,18 +192,17 @@ const ChatMain = styled.div`
 const Content = styled.main`
     height: 533px; 
     overflow-y: auto; 
-    padding: 0 16px 0 18px;
     &::-webkit-scrollbar {
-    width: 5px;
-  }
-  &::-webkit-scrollbar-thumb {
-    border-radius: 66px;
-    background: ${theme.colors.gray300};
-  }
-  &::-webkit-scrollbar-track {
-    border-radius: 66px;
-    background: transparent;
-  }
+        width: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+        border-radius: 66px;
+        background: ${theme.colors.gray300};
+    }
+    &::-webkit-scrollbar-track {
+        border-radius: 66px;
+        background: transparent;
+    }
 `;
 
 
