@@ -2,7 +2,7 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import ChatWindow from "../chat/ChatWIndow";
+import ChatWindow from "../chat/ChatWindow";
 import List from "../chat/List";
 
 interface msgCountProps {

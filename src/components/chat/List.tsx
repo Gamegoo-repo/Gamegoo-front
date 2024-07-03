@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useState } from 'react';
-import ChatWindow from './ChatWIndow';
+import ChatWindow from './ChatWindow';
 import FriendsList from "./FriendsList";
 import MiniModal from "./MiniModal";
 import ChatList from "./ChatList";
@@ -70,7 +70,7 @@ const List = (props: ListProps) => {
                 </ChatSearch>
             }
             <ChatMain>
-                <Content>
+                <Content className={activeTab==='friends'?'friends':'chat'}>
                     {activeTab === 'friends' &&
                         <div>
                             <FriendsList
@@ -162,7 +162,12 @@ const ChatMain = styled.div`
 `;
 
 const Content = styled.main`
-    height: 533px; 
+    &.friends{
+        height: 533px; 
+    }
+    &.chat{
+        height: 603px; 
+    }
     overflow-y: auto; 
     &::-webkit-scrollbar {
         width: 5px;

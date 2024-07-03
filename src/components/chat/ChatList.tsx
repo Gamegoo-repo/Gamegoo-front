@@ -33,7 +33,10 @@ const ChatList = (props: ChatListProps) => {
                                     height={45}
                                     alt="사용자 프로필" />
                                 <Middle>
-                                    <UserName>{chat.userName}</UserName>
+                                    <Row>
+                                        <UserName>{chat.userName}</UserName>
+                                        <Unread>10</Unread>
+                                    </Row>
                                     <Row>
                                         <Msg>{chat.msg}</Msg>
                                         <Date>{setChatDateFormatter(chat.date)}</Date>
@@ -89,18 +92,28 @@ const ProfileImage = styled(Image)`
     margin-right: 14px;
 `;
 
-const Middle = styled.div``;
+const Middle = styled.div`
+    min-width: 284px;
+`;
 
 const UserName = styled.p`
     ${(props) => props.theme.fonts.semiBold14};
     color:${theme.colors.gray600};  
 `;
 
+const Unread = styled.p`
+    ${(props) => props.theme.fonts.medium11};
+    color:${theme.colors.white};  
+    margin-right: 12px;
+    padding:0 5px;
+    border-radius: 38px;
+    background:${theme.colors.purple100};
+`;
+
 const Row = styled.div`
     display:flex;
     align-items: center;
     justify-content: space-between;
-    min-width: 284px;
 `;
 
 const Msg = styled.p`
