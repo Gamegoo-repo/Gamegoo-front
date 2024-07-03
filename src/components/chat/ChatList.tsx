@@ -1,9 +1,8 @@
 import styled from 'styled-components';
 import { theme } from "@/styles/theme";
 import Image from 'next/image';
-import { Dispatch, useState } from 'react';
 import MiniModal from './MiniModal';
-import dayjs from 'dayjs';
+import { setChatDateFormatter } from '@/utils/custom';
 
 interface ChatListInterface {
     id: number;
@@ -20,7 +19,6 @@ interface ChatListProps {
 const ChatList = (props: ChatListProps) => {
     const { list } = props;
 
-    console.log(dayjs('2019-01-25').add(1, 'day').subtract(1, 'year').year(2009).toString())
     return (
         <>
             <List>
@@ -34,14 +32,14 @@ const ChatList = (props: ChatListProps) => {
                                     width={45}
                                     height={45}
                                     alt="사용자 프로필" />
+                                <Middle>
+                                    <UserName>{chat.userName}</UserName>
+                                    <Row>
+                                        <Msg>{chat.msg}</Msg>
+                                        <Date>{setChatDateFormatter(chat.date)}</Date>
+                                    </Row>
+                                </Middle>
                             </Left>
-                            <Middle>
-                                <UserName>{chat.userName}</UserName>
-                                <Row>
-                                    <p>{chat.msg}</p>
-                                    <p>{chat.date}</p>
-                                </Row>
-                            </Middle>
                             <Right>
                                 <Image
                                     src="/assets/icons/three_dots_button.svg"
@@ -71,8 +69,7 @@ const List = styled.div`
 
 const UserContent = styled.div`
   display: flex;  
-  align-items: center;
-  /* justify-content: space-between; */
+  justify-content: space-between;
   cursor: pointer;
   padding:18px 19px 18px 0;
   &:last-child {
@@ -83,6 +80,9 @@ const UserContent = styled.div`
   }
 `;
 const Left = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding-left: 21px;
 `;
 
@@ -90,22 +90,30 @@ const ProfileImage = styled(Image)`
     margin-right: 14px;
 `;
 
-const Middle = styled.div`
-    margin-right: 12px;
-    min-width: 284px;
-`;
+const Middle = styled.div``;
+
 const UserName = styled.p`
     ${(props) => props.theme.fonts.semiBold14};
-    color:${theme.colors.black};  
+    color:${theme.colors.gray600};  
 `;
 
 const Row = styled.div`
     display:flex;
     align-items: center;
     justify-content: space-between;
+    min-width: 284px;
 `;
 
-const Right = styled.div`
-
+const Msg = styled.p`
+    ${(props) => props.theme.fonts.regular14};
+    color:${theme.colors.gray600};  
 `;
+
+const Date = styled.p`
+    ${(props) => props.theme.fonts.medium11};
+    color:#C1C1C1;
+    margin-right: 12px;
+`;
+
+const Right = styled.div``;
 

@@ -133,7 +133,7 @@ const Left = styled.div`
 
 const UserName = styled.p`
     ${(props) => props.theme.fonts.semiBold14};
-    color:${theme.colors.black};  
+    color:${theme.colors.gray600};  
 `;
 
 const Online = styled(Image)`

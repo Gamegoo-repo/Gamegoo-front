@@ -48,3 +48,7 @@ export function setDateFormatter(date: string) {
         return dayjs(date).fromNow();
     }
 };
+
+export function setChatDateFormatter(date: string) {
+    return dayjs(date).format('A hh:mm');
+};

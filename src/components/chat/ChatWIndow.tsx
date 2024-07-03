@@ -28,7 +28,7 @@ const FRIENDS = [
 
 const CHAT = [
     { id: 1, image: "/assets/icons/gray_circle.svg", userName: "김철수", msg: '마지막 메시지', date: "2024-07-01 23:27" },
-    { id: 2, image: "/assets/icons/gray_circle.svg", userName: "김철수", msg: '마지막 메시지', date: "2024-06-25 23:27" },
+    { id: 2, image: "/assets/icons/gray_circle.svg", userName: "김철수", msg: '마지막 메시지', date: "2024-06-25 09:27" },
     { id: 3, image: "/assets/icons/gray_circle.svg", userName: "김철수", msg: '마지막 메시지', date: "2024-05-19 23:27" },
     { id: 4, image: "/assets/icons/gray_circle.svg", userName: "김철수", msg: '마지막 메시지', date: "2024-05-19 11:27" },
 ];
