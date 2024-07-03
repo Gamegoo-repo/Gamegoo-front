@@ -66,7 +66,6 @@ const List = styled.div`
     }
 `;
 
-
 const UserContent = styled.div`
   display: flex;  
   justify-content: space-between;
