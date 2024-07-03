@@ -15,7 +15,7 @@ const Report = (props: ReportProps) => {
                 src="/assets/icons/three_dots_button.svg"
                 width={3}
                 height={15}
-                alt="report button" />
+                alt="신고하기 버튼" />
         </Wrapper>
     )
 };

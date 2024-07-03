@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import { theme } from "@/styles/theme";
 import Image from 'next/image';
-import { useState } from 'react';
+import { Dispatch, useState } from 'react';
+import MiniModal from './MiniModal';
 
 interface FriendListInterface {
     id: number;
@@ -14,10 +15,11 @@ interface FriendListInterface {
 interface FriendListProps {
     list: FriendListInterface[];
     isFavorites: boolean;
+    setIsDeleteBox?: Dispatch<React.SetStateAction<boolean>>;
 }
 
 const FriendsList = (props: FriendListProps) => {
-    const { list, isFavorites } = props;
+    const { list, isFavorites, setIsDeleteBox } = props;
 
     const [friends, setFriends] = useState(list);
 
@@ -35,15 +37,27 @@ const FriendsList = (props: FriendListProps) => {
         return null;
     }
 
+    const onClickDeleteFriend = (e: React.MouseEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        console.log(setIsDeleteBox)
+        if (setIsDeleteBox) {
+            setIsDeleteBox(true);
+        console.log('ffff')
+
+        }
+    };
+
     return (
         <>
-            <FavoritesList className={isFavorites ? 'border' : 'none'}>
+            <List className={isFavorites ? 'border' : 'none'}>
                 <Title>
                     {isFavorites ? '즐겨찾기' : `친구 ${friends.length}`}
                 </Title>
                 {friends.map(friend => {
                     return (
-                        <UserContent key={friend.id}>
+                        <UserContent
+                            onContextMenu={onClickDeleteFriend}
+                            key={friend.id}>
                             <Left>
                                 <Image
                                     src={friend.image}
@@ -59,30 +73,28 @@ const FriendsList = (props: FriendListProps) => {
                                         alt="온라인" />
                                 }
                             </Left>
-                            {/* <Right onClick={() => toggleFavorite(friend.id)}> */}
-                                <Image
-                                    onClick={() => toggleFavorite(friend.id)}
-                                    src={
-                                        friend.favorites === 1
-                                            ? "assets/icons/favorites.svg"
-                                            : "assets/icons/nonFavorites.svg"
-                                    }
-                                    width={15}
-                                    height={15}
-                                    alt="즐겨찾기 버튼"
-                                />
-                            {/* </Right> */}
+                            <Image
+                                onClick={() => toggleFavorite(friend.id)}
+                                src={
+                                    friend.favorites === 1
+                                        ? "assets/icons/favorites.svg"
+                                        : "assets/icons/nonFavorites.svg"
+                                }
+                                width={15}
+                                height={15}
+                                alt="즐겨찾기 버튼"
+                            />
                         </UserContent>
                     )
                 })}
-            </FavoritesList>
+            </List>
         </>
     )
 };
 
 export default FriendsList;
 
-const FavoritesList = styled.div`
+const List = styled.div`
     &.border {
         border-bottom: 1px solid ${theme.colors.gray400};
     }
@@ -102,9 +114,9 @@ const UserContent = styled.div`
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
-  padding:5px 0;
+  padding: 5px 16px 5px 0;
   &:last-child {
-    padding: 5px 0 11px 0;
+    padding: 5px 16px 11px 0;
     }
   &:hover {
     background: ${theme.colors.gray500}; 
@@ -116,7 +128,7 @@ const Left = styled.div`
     display:flex;
     align-items: center;
     gap:16px;
-    padding: 0 16px 0 18px;
+    padding-left: 18px;
 `;
 
 const UserName = styled.p`
@@ -126,6 +138,6 @@ const UserName = styled.p`
 
 const Online = styled(Image)`
     position: absolute;
-    top: 22%;
-    right: 8%;
+    top: 19%;
+    right: -4%;
 `;

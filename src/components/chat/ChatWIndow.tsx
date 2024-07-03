@@ -3,6 +3,8 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useState } from "react";
 import FriendsList from "./FriendsList";
+import MiniModal from "./MiniModal";
+import ChatList from "./ChatList";
 
 interface ChatWindowProps {
     onClose: () => void;
@@ -24,6 +26,13 @@ const FRIENDS = [
     { id: 13, image: "/assets/icons/gray_circle.svg", userName: "김철수", online: 'off', favorites: 0 },
 ];
 
+const CHAT = [
+    { id: 1, image: "/assets/icons/gray_circle.svg", userName: "김철수", msg: '마지막 메시지', date: "2024-07-01 23:27" },
+    { id: 2, image: "/assets/icons/gray_circle.svg", userName: "김철수", msg: '마지막 메시지', date: "2024-06-25 23:27" },
+    { id: 3, image: "/assets/icons/gray_circle.svg", userName: "김철수", msg: '마지막 메시지', date: "2024-05-19 23:27" },
+    { id: 4, image: "/assets/icons/gray_circle.svg", userName: "김철수", msg: '마지막 메시지', date: "2024-05-19 11:27" },
+];
+
 const ChatWindow = (props: ChatWindowProps) => {
     const { onClose } = props;
 
@@ -32,8 +41,13 @@ const ChatWindow = (props: ChatWindowProps) => {
     const favoriteFriends = FRIENDS.filter(friend => friend.favorites === 1);
     const nonFavoriteFriends = FRIENDS.filter(friend => friend.favorites === 0);
 
+    const [isFriendDeleteBox, setIsFriendDeleteBox] = useState(false);
+
     return (
         <Overlay>
+            {/* {isFriendDeleteBox &&
+                <MiniModal />
+            } */}
             <Wrapper>
                 <ChatHeader>
                     <CloseButton>
@@ -66,21 +80,24 @@ const ChatWindow = (props: ChatWindowProps) => {
                         </SearchInput>
                     </ChatSearch>
                 }
-                    <ChatMain>
-                        <Content>
-                            {activeTab === 'friends' &&
-                                <div>
-                                    <FriendsList
-                                        list={favoriteFriends}
-                                        isFavorites={true} />
-                                    <FriendsList
-                                        list={nonFavoriteFriends}
-                                        isFavorites={false} />
-                                </div>
-                            }
-                            {activeTab === 'chat' && <div>대화방</div>}
-                        </Content>
-                    </ChatMain>
+                <ChatMain>
+                    <Content>
+                        {activeTab === 'friends' &&
+                            <div>
+                                <FriendsList
+                                    list={favoriteFriends}
+                                    isFavorites={true}
+                                />
+                                <FriendsList
+                                    list={nonFavoriteFriends}
+                                    isFavorites={false}
+                                    setIsDeleteBox={setIsFriendDeleteBox} />
+                            </div>
+                        }
+                        {activeTab === 'chat' &&
+                            <ChatList list={CHAT} />}
+                    </Content>
+                </ChatMain>
             </Wrapper>
         </Overlay>
     )
