@@ -40,9 +40,7 @@ const FriendsList = (props: FriendListProps) => {
 
     return (
         <>
-
             <List className={isFavorites ? 'border' : 'none'}>
-
                 <Title>
                     {isFavorites ? '즐겨찾기' : `친구 ${friends.length}`}
                 </Title>

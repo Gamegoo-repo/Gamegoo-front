@@ -2,14 +2,43 @@ import styled from 'styled-components';
 import { theme } from "@/styles/theme";
 import Image from 'next/image';
 import ChatWindow from './ChatWindow';
+import { useEffect, useState } from 'react';
+import MessageContainer from './MessageContainer';
 
 interface ChatRoomProps {
     id: number;
 }
 
+const MESSAGE_LIST = [
+    { user: "me", msg: '안녕하세요 저는 안녕하세요 저는 안녕하세요 저는', msgId: 1, userId: 1, date: "2024-07-01 23:27" },
+    { user: "me", msg: '텍스트 텍스', msgId: 2, userId: 1, date: "2024-07-01 23:27" },
+    { user: "you", msg: '아 네, 안녕하세요 하이하이라라', msgId: 3, userId: 2, date: "2024-07-02 01:11" },
+    { user: "you", msg: '하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라', msgId: 4, userId: 2, date: "2024-07-02 01:11" },
+];
+
 const ChatRoom = (props: ChatRoomProps) => {
     const { id } = props;
-    console.log(id)
+
+    const [message, setMessage] = useState("");
+    const [messageList, setMessageList] = useState([]);
+
+
+    // useEffect(() => {
+    //     socket.on(“message”, (message) => {
+    //     setMessageList((prevState)=> prevState.concat(message));
+    // });
+    // },[]);
+
+    const sendMessage = (event: any) => {
+        event.preventDefault();
+        // socket.emit(“sendMessage”, message, (res) => {
+        //     console.log(“res”, res);
+        // })
+        console.log(message)
+    };
+
+
+
     return (
         <ChatWindow>
             <ChatHeader>
@@ -43,10 +72,30 @@ const ChatRoom = (props: ChatRoomProps) => {
             <ChatBorder>
                 <ChatMain>
                     <System>매칭이 이루어졌어요 !</System>
-                    <Date>2024년 5월 7일</Date>
+                    <Date>2024년 4월 5일</Date>
+                    <MessageContainer
+                        messageList={MESSAGE_LIST} />
                 </ChatMain>
             </ChatBorder>
-            <ChatFooter></ChatFooter>
+            <ChatFooter>
+                <div className="input-area">
+                    <form onSubmit={sendMessage} className="input-container">
+                        <input
+                            placeholder="Type in here…"
+                            value={message}
+                            onChange={(event) => setMessage(event.target.value)}
+                        />
+
+                        <button
+                            disabled={message === ""}
+                            type="submit"
+                            className="send-button"
+                        >
+                            전송
+                        </button>
+                    </form>
+                </div>
+            </ChatFooter>
         </ChatWindow>
     )
 
@@ -60,7 +109,7 @@ const ChatHeader = styled.header`
     padding:10px 27px 19px 12px;
 `;
 
-const ChatBorder = styled.p`
+const ChatBorder = styled.div`
     padding: 0 12px;
 `;
 
@@ -71,17 +120,25 @@ const ChatMain = styled.main`
 const System = styled.p`
     width: 100%;
     text-align: center;
-    padding:11px 0%;
+    padding:11px 0px;
     background: #000000A3;
     ${(props) => props.theme.fonts.regular12};
     color: ${theme.colors.white}; 
     border-radius: 14px;
+    margin-bottom: 11px;
 `;
 
 const Date = styled.p`
-    color: ${theme.colors.white}; 
+    max-width: 79px;
+    margin: 0 auto 10px auto;
+    text-align: center;
+    background: #000000A3;
+    border-radius: 14px;
     padding: 4px 10px;
+    ${(props) => props.theme.fonts.regular8};
+    color: ${theme.colors.white}; 
 `;
+
 const ChatFooter = styled.footer``;
 
 const PrevImage = styled(Image)`
