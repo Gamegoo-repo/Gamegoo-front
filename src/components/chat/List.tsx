@@ -70,7 +70,7 @@ const List = (props: ListProps) => {
                 </ChatSearch>
             }
             <ChatMain>
-                <Content className={activeTab==='friends'?'friends':'chat'}>
+                <Content className={activeTab === 'friends' ? 'friends' : 'chat'}>
                     {activeTab === 'friends' &&
                         <div>
                             <FriendsList
@@ -156,17 +156,19 @@ const Input = styled.input`
 `;
 
 const ChatMain = styled.div`
-    padding:11px 6px 0 0;
-    box-shadow: 0 13px 15px 0 #0000001A;
+    padding:18px 6px 0 0;
     border-radius: 0 0 20px 20px;
+    background:${theme.colors.white};
+    box-shadow: inset -3px 5px 9.7px -7px #00000026;
+
 `;
 
 const Content = styled.main`
     &.friends{
-        height: 533px; 
+        height: 507px; 
     }
     &.chat{
-        height: 603px; 
+        height: 577px; 
     }
     overflow-y: auto; 
     &::-webkit-scrollbar {

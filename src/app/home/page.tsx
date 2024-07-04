@@ -64,7 +64,7 @@ const Header = styled.header`
     display: flex;
     flex-direction: column;
     align-items: start;
-    margin-bottom:60px;
+    margin-bottom:52px;
 `
 const SubTitle = styled.div`
     ${(props) => props.theme.fonts.regular25};
@@ -85,6 +85,5 @@ const Footer = styled.footer`
 
 const ChatBoxContent = styled.div`
     margin-left: auto;
-    margin-bottom: 37px;
 `
 

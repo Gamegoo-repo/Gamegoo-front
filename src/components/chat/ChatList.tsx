@@ -48,7 +48,7 @@ const ChatList = (props: ChatListProps) => {
                                     src="/assets/icons/three_dots_button.svg"
                                     width={3}
                                     height={15}
-                                    alt="신고하기 버튼" />
+                                    alt="상세보기" />
                             </Right>
                         </UserContent>
                     )

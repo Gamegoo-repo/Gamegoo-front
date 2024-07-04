@@ -3,7 +3,7 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 
 interface ChatWindowProps {
-    onClose: () => void;
+    onClose?: () => void;
     children: false | React.ReactNode;
 }
 
@@ -32,9 +32,6 @@ const ChatWindow = (props: ChatWindowProps) => {
 export default ChatWindow;
 
 const Overlay = styled.div`
-    display:flex;
-    justify-content: center;
-    align-items: center;
     position:fixed;
     top: 50%;
     right: 8%;
@@ -48,12 +45,11 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     width: 400px;
-    height: 716px;
 `;
 
 const Shadow = styled.div`
     box-shadow: 0 -1px 10.7px 0 #00000026;
-    border-radius: 20px 20px 0 0;
+    border-radius: 20px;
 `;
 
 const CloseButton = styled.p`
