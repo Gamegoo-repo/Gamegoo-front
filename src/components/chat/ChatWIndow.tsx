@@ -49,7 +49,7 @@ const Wrapper = styled.div`
 
 const Shadow = styled.div`
     box-shadow: 0 -1px 10.7px 0 #00000026;
-    border-radius: 20px;
+    border-radius: 20px 20px 20px 20px;
 `;
 
 const CloseButton = styled.p`

@@ -9,11 +9,11 @@ interface ChatRoomProps {
 
 const ChatRoom = (props: ChatRoomProps) => {
     const { id } = props;
-
+    console.log(id)
     return (
         <ChatWindow>
             <ChatHeader>
-                <Image
+                <PrevImage
                     src="/assets/icons/left_arrow.svg"
                     width={9}
                     height={18}
@@ -40,7 +40,12 @@ const ChatRoom = (props: ChatRoomProps) => {
                     height={15}
                     alt="상세보기" />
             </ChatHeader>
-            <ChatMain></ChatMain>
+            <ChatBorder>
+                <ChatMain>
+                    <System>매칭이 이루어졌어요 !</System>
+                    <Date>2024년 5월 7일</Date>
+                </ChatMain>
+            </ChatBorder>
             <ChatFooter></ChatFooter>
         </ChatWindow>
     )
@@ -54,15 +59,44 @@ const ChatHeader = styled.header`
     align-items: center;
     padding:10px 27px 19px 12px;
 `;
-const ChatMain = styled.main``;
+
+const ChatBorder = styled.p`
+    padding: 0 12px;
+`;
+
+const ChatMain = styled.main`
+    border-top: 1px solid #C1B7FF;
+    padding:10px 20px;
+`;
+const System = styled.p`
+    width: 100%;
+    text-align: center;
+    padding:11px 0%;
+    background: #000000A3;
+    ${(props) => props.theme.fonts.regular12};
+    color: ${theme.colors.white}; 
+    border-radius: 14px;
+`;
+
+const Date = styled.p`
+    color: ${theme.colors.white}; 
+    padding: 4px 10px;
+`;
 const ChatFooter = styled.footer``;
+
+const PrevImage = styled(Image)`
+    margin-right:18px;
+    cursor: pointer;
+`;
 
 const Middle = styled.div`
     display: flex;
     align-items: center;
+    width: 100%;
 `;
 const Div = styled.div`
     position: relative;
+    margin-left:9px;
 `;
 const UserName = styled.p`
     ${(props) => props.theme.fonts.semiBold18};
@@ -74,6 +108,6 @@ const Online = styled.p`
 `;
 const OnlineImage = styled(Image)`
     position: absolute;
-    top: 19%;
-    right: -4%;
+    top: 1%;
+    right: -11%;
 `;

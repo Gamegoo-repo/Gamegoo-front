@@ -6,6 +6,7 @@ import ChatWindow from './ChatWindow';
 import FriendsList from "./FriendsList";
 import MiniModal from "./MiniModal";
 import ChatList from "./ChatList";
+import ChatRoom from './ChatRoom';
 
 interface ListProps {
     onClose: () => void;
@@ -43,8 +44,14 @@ const List = (props: ListProps) => {
     const nonFavoriteFriends = FRIENDS.filter(friend => friend.favorites === 0);
 
     const [isFriendDeleteBox, setIsFriendDeleteBox] = useState(false);
-
+    const [chatId, setChatId] = useState<number | null>(null);
+    
+    const handleMoveToChatRoom = (id: number) => {
+        setChatId(id);
+    };
+    
     return (
+        <>
         <ChatWindow onClose={onClose}>
             <ChatHeader>
                 <HeaderTitle>메신저</HeaderTitle>
@@ -74,10 +81,13 @@ const List = (props: ListProps) => {
                     {activeTab === 'friends' &&
                         <div>
                             <FriendsList
+                            onMoveToRoom={handleMoveToChatRoom}
                                 list={favoriteFriends}
                                 isFavorites={true}
                             />
                             <FriendsList
+                            onMoveToRoom={handleMoveToChatRoom}
+
                                 list={nonFavoriteFriends}
                                 isFavorites={false}
                                 setIsDeleteBox={setIsFriendDeleteBox} />
@@ -88,6 +98,11 @@ const List = (props: ListProps) => {
                 </Content>
             </ChatMain>
         </ChatWindow>
+        {chatId !== null &&
+                <ChatRoom
+                    id={chatId} />
+            }
+        </>
     )
 };
 
@@ -129,7 +144,7 @@ const Tab = styled.div<{ $isActive: boolean }>`
 `;
 
 const ChatSearch = styled.div`
-    box-shadow: inset 0 12px 10px -11px #00000026;
+    box-shadow: inset -3px 5px 9.7px -7px #00000026;
     padding:15px 18px 11px;
     border-bottom: 1px solid ${theme.colors.gray400};
 `;
@@ -160,7 +175,6 @@ const ChatMain = styled.div`
     border-radius: 0 0 20px 20px;
     background:${theme.colors.white};
     box-shadow: inset -3px 5px 9.7px -7px #00000026;
-
 `;
 
 const Content = styled.main`

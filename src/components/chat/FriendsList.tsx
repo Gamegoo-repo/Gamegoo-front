@@ -17,14 +17,13 @@ interface FriendListProps {
     list: FriendListInterface[];
     isFavorites: boolean;
     setIsDeleteBox?: Dispatch<React.SetStateAction<boolean>>;
+    onMoveToRoom: (id: number) => void;
 }
 
 const FriendsList = (props: FriendListProps) => {
-    const { list, isFavorites, setIsDeleteBox } = props;
-
+    const { list, isFavorites, setIsDeleteBox, onMoveToRoom } = props;
     const [friends, setFriends] = useState(list);
-    const [chatId, setChatId] = useState<number | null>(null);
-    const [activeChatUserId, setActiveChatUserId] = useState<number | null>(null);
+    
     const toggleFavorite = (id: number) => {
         setFriends(prevFriends =>
             prevFriends.map(friend =>
@@ -39,30 +38,17 @@ const FriendsList = (props: FriendListProps) => {
         return null;
     }
 
-    const handleMoveToChatRoom = (id: number) => {
-        setChatId(id);
-    };
-
-    const handleUserClick = (id: number) => {
-        setActiveChatUserId(id); // Set the active chat window to the clicked user
-    };
-
-    const handleCloseChat = () => {
-        setActiveChatUserId(null); // Close the chat window
-    };
     return (
         <>
-            {chatId !== null &&
-                <ChatRoom
-                    id={chatId} />
-            }
+
             <List className={isFavorites ? 'border' : 'none'}>
+
                 <Title>
                     {isFavorites ? '즐겨찾기' : `친구 ${friends.length}`}
                 </Title>
                 {friends.map(friend => (
                     <UserContent
-                        onClick={() => handleUserClick(friend.id)}
+                        onClick={() => onMoveToRoom(friend.id)}
                         key={friend.id}>
                         <Left>
                             <Image
@@ -93,12 +79,6 @@ const FriendsList = (props: FriendListProps) => {
                     </UserContent>
                 ))}
             </List>
-            {activeChatUserId !== null && (
-                <ChatWindow onClose={handleCloseChat}>
-                    {/* Content of the chat window goes here */}
-                    Chat with user {activeChatUserId}
-                </ChatWindow>
-            )}
         </>
     );
 };
