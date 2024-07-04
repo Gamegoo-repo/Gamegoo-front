@@ -48,26 +48,28 @@ const MessageContainer = (props: MessageContainerProps) => {
                     </Container>
                 )
             })}
-            <FeedbackContainer>
-                <Image
-                    src="/assets/icons/gray_circle.svg"
-                    width={47.43}
-                    height={47.43}
-                    alt="프로필 이미지" />
-                <Feedback>
-                    <Text>매칭은 어떠셨나요?</Text>
-                    <Text>상대방의 매너를 평가해주세요!</Text>
-                    <SmileImage
-                        src="/assets/icons/clicked_smile.svg"
-                        width={22}
-                        height={22}
-                        alt="스마일 이모티콘" />
-                    <Button>
-                        <p>매너평가 하기</p>
-                    </Button>
-
-                </Feedback>
-            </FeedbackContainer>
+            <FeedbackDiv>
+                <FeedbackContainer>
+                    <Image
+                        src="/assets/icons/gray_circle.svg"
+                        width={47.43}
+                        height={47.43}
+                        alt="프로필 이미지" />
+                    <Feedback>
+                        <Text>매칭은 어떠셨나요?</Text>
+                        <Text>상대방의 매너를 평가해주세요!</Text>
+                        <SmileImage
+                            src="/assets/icons/clicked_smile.svg"
+                            width={22}
+                            height={22}
+                            alt="스마일 이모티콘" />
+                        <Button>
+                            매너평가 하기
+                        </Button>
+                    </Feedback>
+                </FeedbackContainer>
+                <FeedbackDate>{setChatDateFormatter("2024-07-02 02:11")}</FeedbackDate>
+            </FeedbackDiv>
         </div>
     )
 };
@@ -92,9 +94,9 @@ const YourDiv = styled.div`
 const YourMessage = styled.div`
   ${(props) => props.theme.fonts.regular14};
   color: ${theme.colors.gray600}; 
-  background: ${theme.colors.black}; 
+  background: ${theme.colors.white}; 
   border-radius: 13px;
-  padding: 8px 0 8px 13px;
+  padding: 8px 13px;
   max-width: 229px;
 `;
 
@@ -130,6 +132,11 @@ const MyDate = styled.p`
   color: ${theme.colors.gray700}; 
 `;
 
+const FeedbackDiv = styled.div`
+  display: flex;
+  align-items: end;
+`;
+
 const FeedbackContainer = styled.div`
   display: flex;
   justify-content: flex-start;
@@ -142,6 +149,10 @@ const Feedback = styled.div`
   flex-direction: column;
   align-items: center;
   max-width: 229px;
+  padding: 18px 15px 10px;
+  background: ${theme.colors.white}; 
+  border-radius: 13px;
+  margin-left: 11px;
 `;
 
 const SmileImage = styled(Image)`
@@ -155,5 +166,17 @@ const Text = styled.p`
 `;
 
 const Button = styled.button`
+  width: 100%;
+  border-radius: 53px;
   margin-top:12px;
+  ${(props) => props.theme.fonts.semiBold12};
+  background: ${theme.colors.purple100}; 
+  color: ${theme.colors.white}; 
+  padding: 10px 0;
+`;
+
+const FeedbackDate = styled.p`
+  margin-left:9px;
+  ${(props) => props.theme.fonts.regular8};
+  color: ${theme.colors.gray700}; 
 `;

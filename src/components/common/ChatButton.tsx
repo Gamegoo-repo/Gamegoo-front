@@ -3,7 +3,6 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import ChatWindow from "../chat/ChatWindow";
-import List from "../chat/List";
 
 interface msgCountProps {
   count: number;
@@ -35,7 +34,7 @@ const ChatButton = (props: msgCountProps) => {
   return (
     <>
       {isChatOpen &&
-        <List
+        <ChatWindow
           onClose={handleChatWindowClose} />}
       <MsgButton onClick={toggleChat}>
         <Image

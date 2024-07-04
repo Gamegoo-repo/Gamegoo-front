@@ -1,12 +1,12 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 import { theme } from "@/styles/theme";
-import Image from 'next/image';
-import ChatWindow from './ChatWindow';
-import { useEffect, useState } from 'react';
-import MessageContainer from './MessageContainer';
+import Image from "next/image";
+import { useState } from "react";
+import MessageContainer from "./MessageContainer";
 
 interface ChatRoomProps {
     id: number;
+    onClose: () => void;
 }
 
 const MESSAGE_LIST = [
@@ -17,11 +17,10 @@ const MESSAGE_LIST = [
 ];
 
 const ChatRoom = (props: ChatRoomProps) => {
-    const { id } = props;
+    const { id, onClose } = props;
 
     const [message, setMessage] = useState("");
     const [messageList, setMessageList] = useState([]);
-
 
     // useEffect(() => {
     //     socket.on(“message”, (message) => {
@@ -37,71 +36,106 @@ const ChatRoom = (props: ChatRoomProps) => {
         console.log(message)
     };
 
-
-
     return (
-        <ChatWindow>
-            <ChatHeader>
-                <PrevImage
-                    src="/assets/icons/left_arrow.svg"
-                    width={9}
-                    height={18}
-                    alt="뒤로가기" />
-                <Middle>
-                    <Image
-                        src="/assets/icons/gray_circle.svg"
-                        width={47.43}
-                        height={47.43}
-                        alt="프로필 이미지" />
-                    <Div>
-                        <UserName>김철수</UserName>
-                        <Online>온라인</Online>
-                        <OnlineImage
-                            src="/assets/icons/online.svg"
-                            width={5}
-                            height={5}
-                            alt="온라인" />
-                    </Div>
-                </Middle>
-                <Image
-                    src="/assets/icons/three_dots_button.svg"
-                    width={3}
-                    height={15}
-                    alt="상세보기" />
-            </ChatHeader>
-            <ChatBorder>
-                <ChatMain>
-                    <System>매칭이 이루어졌어요 !</System>
-                    <Date>2024년 4월 5일</Date>
-                    <MessageContainer
-                        messageList={MESSAGE_LIST} />
-                </ChatMain>
-            </ChatBorder>
-            <ChatFooter>
-                <div className="input-area">
-                    <form onSubmit={sendMessage} className="input-container">
-                        <input
-                            placeholder="Type in here…"
-                            value={message}
-                            onChange={(event) => setMessage(event.target.value)}
-                        />
-
-                        <button
-                            disabled={message === ""}
-                            type="submit"
-                            className="send-button"
-                        >
-                            전송
-                        </button>
-                    </form>
-                </div>
-            </ChatFooter>
-        </ChatWindow>
+        <>
+            <Overlay>
+                <Wrapper>
+                    <CloseButton>
+                        <CloseImage
+                            onClick={onClose}
+                            src='/assets/icons/close.svg'
+                            width={11}
+                            height={11}
+                            alt='close button' />
+                    </CloseButton>
+                    <ChatHeader>
+                        <PrevImage
+                            src="/assets/icons/left_arrow.svg"
+                            width={9}
+                            height={18}
+                            alt="뒤로가기" />
+                        <Middle>
+                            <Image
+                                src="/assets/icons/gray_circle.svg"
+                                width={47.43}
+                                height={47.43}
+                                alt="프로필 이미지" />
+                            <Div>
+                                <UserName>김철수</UserName>
+                                <Online>온라인</Online>
+                                <OnlineImage
+                                    src="/assets/icons/online.svg"
+                                    width={5}
+                                    height={5}
+                                    alt="온라인" />
+                            </Div>
+                        </Middle>
+                        <Image
+                            src="/assets/icons/three_dots_button.svg"
+                            width={3}
+                            height={15}
+                            alt="상세보기" />
+                    </ChatHeader>
+                    <ChatBorder>
+                        <ChatMain>
+                            <System>매칭이 이루어졌어요 !</System>
+                            <Date>2024년 4월 5일</Date>
+                            <MessageContainer
+                                messageList={MESSAGE_LIST} />
+                        </ChatMain>
+                    </ChatBorder>
+                    <ChatFooter>
+                        <TextareaContainer>
+                            <Form onSubmit={sendMessage}>
+                                <Textarea
+                                    maxLength={1000}
+                                    value={message}
+                                    onChange={(event) => setMessage(event.target.value)}
+                                />
+                                <SubmitButton
+                                    disabled={message === ""}
+                                    type="submit"
+                                    className="send-button"
+                                >
+                                    전송
+                                </SubmitButton>
+                            </Form>
+                        </TextareaContainer>
+                    </ChatFooter>
+                </Wrapper>
+            </Overlay>
+        </>
     )
-
 };
 
 export default ChatRoom;
+
+const Overlay = styled.div`
+    position:fixed;
+    top: 50%;
+    right: 8%;
+    transform: translate(0, -50%);
+    z-index: 1;
+`;
+
+const Wrapper = styled.div`
+    background: ${theme.colors.purple400};
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+`;
+
+const CloseButton = styled.p`
+    display:flex;
+    margin-bottom:1px;
+    padding:12px 13px 0 0;
+`;
+
+const CloseImage = styled(Image)`
+    margin-left:auto;
+    cursor: pointer;
+`;
 
 const ChatHeader = styled.header`
     display: flex;
@@ -168,3 +202,46 @@ const OnlineImage = styled(Image)`
     top: 1%;
     right: -11%;
 `;
+
+const TextareaContainer = styled.div`
+    position: relative;
+    background: ${theme.colors.white};
+    height: 135px;
+    width: 100%;
+    border-radius: 0 0 20px 20px;
+`;
+
+const Form = styled.form`
+    height: 100%;
+    border-radius: 0 0 20px 20px;
+`;
+
+
+const Textarea = styled.textarea`
+    border:none;
+    width: 100%;
+    padding: 14px 17px;
+    ${(props) => props.theme.fonts.regular14};
+    color: ${theme.colors.gray600}; 
+    resize: none; 
+    &:focus{
+    outline:none;
+  }
+`;
+
+const SubmitButton = styled.button`
+  position: absolute;
+  right:20px;
+  bottom: 19px;
+  ${(props) => props.theme.fonts.semiBold15};
+  color: ${theme.colors.white}; 
+  background: ${theme.colors.purple100};
+  border-radius: 25px;
+  padding: 12px 20px;
+`;
+
+
+
+
+
+

@@ -88,6 +88,10 @@ const fonts = {
         weight: 600,
         size: 16,
     }),
+    semiBold15: FONT({
+        weight: 600,
+        size: 15,
+    }),
     semiBold14: FONT({
         weight: 600,
         size: 14,
