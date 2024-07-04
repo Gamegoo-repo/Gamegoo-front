@@ -110,7 +110,7 @@ const fonts = {
         weight: 500,
         size: 11,
     }),
-    
+
     /*Regular*/
     regular35: FONT({
         weight: 400,
@@ -143,6 +143,10 @@ const fonts = {
     regular12: FONT({
         weight: 400,
         size: 12,
+    }),
+    regular8: FONT({
+        weight: 400,
+        size: 8,
     }),
 }
 
