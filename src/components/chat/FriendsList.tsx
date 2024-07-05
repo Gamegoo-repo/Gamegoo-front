@@ -2,8 +2,6 @@ import styled from 'styled-components';
 import { theme } from "@/styles/theme";
 import Image from 'next/image';
 import { Dispatch, useState } from 'react';
-import ChatRoom from './ChatRoom';
-import ChatWindow from './ChatWindow';
 
 interface FriendListInterface {
     id: number;
@@ -17,13 +15,13 @@ interface FriendListProps {
     list: FriendListInterface[];
     isFavorites: boolean;
     setIsDeleteBox?: Dispatch<React.SetStateAction<boolean>>;
-    onMoveToRoom: (id: number) => void;
+    onChatRoom: (id: number) => void;
 }
 
 const FriendsList = (props: FriendListProps) => {
-    const { list, isFavorites, setIsDeleteBox, onMoveToRoom } = props;
+    const { list, isFavorites, setIsDeleteBox, onChatRoom } = props;
     const [friends, setFriends] = useState(list);
-    
+
     const toggleFavorite = (id: number) => {
         setFriends(prevFriends =>
             prevFriends.map(friend =>
@@ -46,7 +44,7 @@ const FriendsList = (props: FriendListProps) => {
                 </Title>
                 {friends.map(friend => (
                     <UserContent
-                        onClick={() => onMoveToRoom(friend.id)}
+                        onClick={() => onChatRoom(friend.id)}
                         key={friend.id}>
                         <Left>
                             <Image

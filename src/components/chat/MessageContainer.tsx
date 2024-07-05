@@ -16,14 +16,25 @@ interface MessageContainerProps {
 
 const MessageContainer = (props: MessageContainerProps) => {
     const { messageList } = props;
-    console.log(messageList[0].date)
-
 
     return (
-        <div>
-            {messageList.map(message => {
+        <>
+            {messageList.map((message, index) => {
+
+                let displayTime = true;
+                const timeValue = setChatDateFormatter(message.date);
+                if (index !== messageList.length - 1) {
+                    const nextSender = messageList[index + 1].userId;
+
+                    if (nextSender === message.userId) {
+                        const nextTimeValue = setChatDateFormatter(messageList[index + 1].date);
+
+                        if (nextTimeValue === timeValue)
+                            displayTime = false;
+                    }
+                }
                 return (
-                    <Container key={message.msgId}>
+                    <MsgContainer key={message.msgId}>
                         {message.user === "you" ? (
                             <YourMessageContainer>
                                 <Image
@@ -33,19 +44,19 @@ const MessageContainer = (props: MessageContainerProps) => {
                                     alt="프로필 이미지" />
                                 <YourDiv>
                                     <YourMessage>{message.msg}</YourMessage>
-                                    <YourDate>{setChatDateFormatter(message.date)}</YourDate>
+                                    {displayTime ? <YourDate>{setChatDateFormatter(message.date)}</YourDate> : null}
                                 </YourDiv>
                             </YourMessageContainer>
                         ) : (
                             <MyMessageContainer>
                                 <MyDiv>
-                                    <MyDate>{setChatDateFormatter(message.date)}</MyDate>
+                                    {displayTime ? <MyDate>{setChatDateFormatter(message.date)}</MyDate> : null}
                                     <MyMessage>{message.msg}</MyMessage>
                                 </MyDiv>
                             </MyMessageContainer>
                         )
                         }
-                    </Container>
+                    </MsgContainer>
                 )
             })}
             <FeedbackDiv>
@@ -70,14 +81,13 @@ const MessageContainer = (props: MessageContainerProps) => {
                 </FeedbackContainer>
                 <FeedbackDate>{setChatDateFormatter("2024-07-02 02:11")}</FeedbackDate>
             </FeedbackDiv>
-        </div>
+        </>
     )
 };
 
 export default MessageContainer;
 
-const Container = styled.div``;
-
+const MsgContainer = styled.div``;
 const YourMessageContainer = styled.div`
   display: flex;
   justify-content: flex-start;

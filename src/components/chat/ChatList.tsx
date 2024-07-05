@@ -14,10 +14,11 @@ interface ChatListInterface {
 
 interface ChatListProps {
     list: ChatListInterface[];
+    onChatRoom: (id: number) => void;
 }
 
 const ChatList = (props: ChatListProps) => {
-    const { list } = props;
+    const { list, onChatRoom } = props;
 
     return (
         <>
@@ -25,6 +26,7 @@ const ChatList = (props: ChatListProps) => {
                 {list.map(chat => {
                     return (
                         <UserContent
+                            onClick={() => onChatRoom(chat.id)}
                             key={chat.id}>
                             <Left>
                                 <ProfileImage

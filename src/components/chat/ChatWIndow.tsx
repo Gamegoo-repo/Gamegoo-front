@@ -37,15 +37,20 @@ const ChatWindow = (props: ChatWindowProps) => {
     const { onClose } = props;
 
     const [activeTab, setActiveTab] = useState<string>('friends');
-
+    const [isChatRoomVisible, setIsChatRoomVisible] = useState(false);
     const favoriteFriends = FRIENDS.filter(friend => friend.favorites === 1);
     const nonFavoriteFriends = FRIENDS.filter(friend => friend.favorites === 0);
 
     const [isFriendDeleteBox, setIsFriendDeleteBox] = useState(false);
     const [chatId, setChatId] = useState<number | null>(null);
 
-    const handleMoveToChatRoom = (id: number) => {
+    const handleGoToChatRoom = (id: number) => {
         setChatId(id);
+        setIsChatRoomVisible(true);
+    };
+
+    const handleBackToChatWindow = () => {
+        setIsChatRoomVisible(false);
     };
 
     return (
@@ -71,7 +76,6 @@ const ChatWindow = (props: ChatWindowProps) => {
                             </Tab>
                         </TabContainer>
                     </ChatHeader>
-
                     {activeTab === 'friends' &&
                         <ChatSearch>
                             <SearchInput>
@@ -84,31 +88,34 @@ const ChatWindow = (props: ChatWindowProps) => {
                             </SearchInput>
                         </ChatSearch>
                     }
-                    <ChatMain>
+                    <ChatMain className={activeTab === 'friends' ? 'friends' : 'chat'}>
                         <Content className={activeTab === 'friends' ? 'friends' : 'chat'}>
                             {activeTab === 'friends' &&
                                 <div>
                                     <FriendsList
-                                        onMoveToRoom={handleMoveToChatRoom}
+                                        onChatRoom={handleGoToChatRoom}
                                         list={favoriteFriends}
                                         isFavorites={true}
                                     />
                                     <FriendsList
-                                        onMoveToRoom={handleMoveToChatRoom}
+                                        onChatRoom={handleGoToChatRoom}
                                         list={nonFavoriteFriends}
                                         isFavorites={false}
                                         setIsDeleteBox={setIsFriendDeleteBox} />
                                 </div>
                             }
                             {activeTab === 'chat' &&
-                                <ChatList list={CHAT} />}
+                                <ChatList 
+                                list={CHAT}
+                                onChatRoom={handleGoToChatRoom}
+                                />}
                         </Content>
                     </ChatMain>
                 </Wrapper>
             </Overlay>
-            {chatId !== null &&
+            {isChatRoomVisible && chatId !== null &&
                 <ChatRoom
-                    onClose={onClose}
+                onClose={handleBackToChatWindow}
                     id={chatId} />
             }
         </>
@@ -131,6 +138,7 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     width: 400px;
+    box-shadow: 0 4px 46.7px 0 #0000001A;
 `;
 
 const CloseButton = styled.p`
@@ -145,9 +153,10 @@ const CloseImage = styled(Image)`
 `;
 
 const ChatHeader = styled.header`
-    box-shadow: 0px -1px 10.7px 0px #00000026;
     border-radius: 20px 20px 0 0;
     background: ${theme.colors.white};
+    box-shadow: 0 -1px 10.7px 0 #00000026;
+
 `;
 
 const HeaderTitle = styled.p`
@@ -213,7 +222,13 @@ const ChatMain = styled.div`
     padding:18px 6px 0 0;
     border-radius: 0 0 20px 20px;
     background:${theme.colors.white};
-    box-shadow: inset -3px 5px 9.7px -7px #00000026;
+    &.friends{
+        box-shadow: none;
+    }
+    &.chat{
+        box-shadow: 0 -1px 10.7px 0 #00000026;
+    }
+
 `;
 
 const Content = styled.main`

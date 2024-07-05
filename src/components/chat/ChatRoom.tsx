@@ -3,6 +3,7 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useState } from "react";
 import MessageContainer from "./MessageContainer";
+import ChatWindow from "./ChatWindow";
 
 interface ChatRoomProps {
     id: number;
@@ -10,10 +11,14 @@ interface ChatRoomProps {
 }
 
 const MESSAGE_LIST = [
-    { user: "me", msg: '안녕하세요 저는 안녕하세요 저는 안녕하세요 저는', msgId: 1, userId: 1, date: "2024-07-01 23:27" },
+    { user: "me", msg: '안녕하세요 저는 안녕하세요 저는 안녕하세요 저는', msgId: 1, userId: 1, date: "2024-07-01 23:25" },
     { user: "me", msg: '텍스트 텍스', msgId: 2, userId: 1, date: "2024-07-01 23:27" },
     { user: "you", msg: '아 네, 안녕하세요 하이하이라라', msgId: 3, userId: 2, date: "2024-07-02 01:11" },
     { user: "you", msg: '하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라', msgId: 4, userId: 2, date: "2024-07-02 01:11" },
+    { user: "me", msg: '안녕하세요 저는 안녕하세요 저는 안녕하세요 저는', msgId: 5, userId: 1, date: "2024-07-01 23:27" },
+    { user: "me", msg: '텍스트 텍스', msgId: 6, userId: 1, date: "2024-07-01 23:27" },
+    { user: "you", msg: '아 네, 안녕하세요 하이하이라라', msgId: 7, userId: 2, date: "2024-07-02 01:11" },
+    { user: "you", msg: '하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라', msgId: 8, userId: 2, date: "2024-07-02 01:11" },
 ];
 
 const ChatRoom = (props: ChatRoomProps) => {
@@ -40,16 +45,17 @@ const ChatRoom = (props: ChatRoomProps) => {
         <>
             <Overlay>
                 <Wrapper>
-                    <CloseButton>
+                    {/* <CloseButton>
                         <CloseImage
                             onClick={onClose}
                             src='/assets/icons/close.svg'
                             width={11}
                             height={11}
                             alt='close button' />
-                    </CloseButton>
+                    </CloseButton> */}
                     <ChatHeader>
                         <PrevImage
+                            onClick={onClose}
                             src="/assets/icons/left_arrow.svg"
                             width={9}
                             height={18}
@@ -140,7 +146,7 @@ const CloseImage = styled(Image)`
 const ChatHeader = styled.header`
     display: flex;
     align-items: center;
-    padding:10px 27px 19px 12px;
+    padding:38px 27px 20px 12px;
 `;
 
 const ChatBorder = styled.div`
@@ -149,8 +155,17 @@ const ChatBorder = styled.div`
 
 const ChatMain = styled.main`
     border-top: 1px solid #C1B7FF;
-    padding:10px 20px;
+    padding:10px 8px;
+    height: 476px;
+    overflow-y: auto;
+    -ms-overflow-style: none;
+    ::-webkit-scrollbar {
+    display: none;
+    }
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 `;
+
 const System = styled.p`
     width: 100%;
     text-align: center;
@@ -206,7 +221,7 @@ const OnlineImage = styled(Image)`
 const TextareaContainer = styled.div`
     position: relative;
     background: ${theme.colors.white};
-    height: 135px;
+    height: 138px;
     width: 100%;
     border-radius: 0 0 20px 20px;
 `;
@@ -214,6 +229,7 @@ const TextareaContainer = styled.div`
 const Form = styled.form`
     height: 100%;
     border-radius: 0 0 20px 20px;
+    box-shadow: 0 4px 46.7px 0 #0000001A;
 `;
 
 
