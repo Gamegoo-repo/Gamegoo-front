@@ -49,6 +49,10 @@ export function setDateFormatter(date: string) {
     }
 };
 
-export function setChatDateFormatter(date: string) {
+export function setChatTimeFormatter(date: string) {
     return dayjs(date).format('A h:m');
+};
+
+export function setChatDateFormatter(date: string) {
+    return dayjs(date).format('YYYY년 M월 D일');
 };

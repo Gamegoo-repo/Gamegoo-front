@@ -3,6 +3,7 @@ import { theme } from "@/styles/theme";
 import Image from 'next/image';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
+import { setChatDateFormatter, setChatTimeFormatter } from '@/utils/custom';
 
 interface MessageInterface {
     user: string;
@@ -54,28 +55,29 @@ const MessageContainer = (props: MessageContainerProps) => {
     useEffect(() => {
         const lastMessage = messageList[messageList.length - 1];
         const feedbackTimestamp = dayjs(lastMessage.date).add(1, 'hour');
+        const feedbackFullDate = dayjs(feedbackTimestamp).format('YYYY-MM-DDTHH:mm:ss');
 
         const feedbackDate = dayjs(feedbackTimestamp).format('YYYY-M-D');
         const lastMessageDate = dayjs(lastMessage.date).format('YYYY-M-D');
 
-        setIsFeedbackDate(feedbackDate);
+        setIsFeedbackDate(feedbackFullDate);
 
         if (feedbackDate !== lastMessageDate) {
             setIsFeedbackDateVisible(true);
         }
     }, [])
 
-
     return (
         <>
             {messageList.map((message, index) => {
                 const hasProfileImage = handleDisplayProfileImage(messageList, index);
                 const showTime = handleDisplayTime(messageList, index);
+
                 return (
                     <MsgContainer
                         key={message.msgId}>
                         {handleDisplayDate(messageList, index) && (
-                            <Timestamp>{dayjs(message.date).format('YYYY년 M월 D일')}</Timestamp>
+                            <Timestamp>{setChatDateFormatter(message.date)}</Timestamp>
                         )}
                         {message.user === "you" ? (
                             <YourMessageContainer>
@@ -88,13 +90,13 @@ const MessageContainer = (props: MessageContainerProps) => {
                                 )}
                                 <YourDiv $hasProfileImage={hasProfileImage}>
                                     <YourMessage>{message.msg}</YourMessage>
-                                    {showTime ? <YourDate>{dayjs(message.date).format('A h:m')}</YourDate> : null}
+                                    {showTime ? <YourDate>{setChatTimeFormatter(message.date)}</YourDate> : null}
                                 </YourDiv>
                             </YourMessageContainer>
                         ) : (
                             <MyMessageContainer>
                                 <MyDiv>
-                                    {showTime ? <MyDate>{dayjs(message.date).format('A h:m')}</MyDate> : null}
+                                    {showTime ? <MyDate>{setChatTimeFormatter(message.date)}</MyDate> : null}
                                     <MyMessage>{message.msg}</MyMessage>
                                 </MyDiv>
                             </MyMessageContainer>
@@ -103,9 +105,10 @@ const MessageContainer = (props: MessageContainerProps) => {
                     </MsgContainer>
                 )
             })}
+
             {isFeedbackDateVisible &&
                 <FeedbackDate className={isFeedbackDateVisible ? 'visibleDate' : 'invisibleDate'}>
-                    <Timestamp>{dayjs(isFeedbackDate).format('YYYY년 M월 D일')}</Timestamp>
+                    <Timestamp>{setChatDateFormatter(isFeedbackDate)}</Timestamp>
                 </FeedbackDate>
             }
             <FeedbackDiv className={isFeedbackDateVisible ? 'visibleDate' : 'invisibleDate'}>
@@ -128,7 +131,7 @@ const MessageContainer = (props: MessageContainerProps) => {
                         </Button>
                     </Feedback>
                 </FeedbackContainer>
-                <FeedbackTime>{isFeedbackDate}</FeedbackTime>
+                <FeedbackTime>{setChatTimeFormatter(isFeedbackDate)}</FeedbackTime>
             </FeedbackDiv>
         </>
     )
