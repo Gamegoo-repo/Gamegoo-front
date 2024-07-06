@@ -96,8 +96,7 @@ const ConfirmModal = (props: ConfirmModalProps) => {
         <Footer>
           <Buttons>
             <Button
-              // onClick={type === "manner" ? onCheck || onClose}
-              onClick={handleCheck}
+              onClick={handleCheck || onCheck || onClose}
               className={type === "manner" ? undefined : "noButton"}
               disabled={type === "manner" && !mannerStatusClicked && !badMannerStatusClicked}
               $type={type}
