@@ -5,6 +5,9 @@ import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { setChatDateFormatter, setChatTimeFormatter } from '@/utils/custom';
 import ConfirmModal from '../common/ConfirmModal';
+import { useDispatch, useSelector } from 'react-redux';
+import { setOpenConfirmModal } from '@/redux/slices/confirmModalSlice';
+import { RootState } from '@/redux/store';
 
 interface MessageInterface {
     user: string;
@@ -20,6 +23,10 @@ interface MessageContainerProps {
 
 const MessageContainer = (props: MessageContainerProps) => {
     const { messageList } = props;
+
+    const dispatch = useDispatch();
+
+    const isFeedbackModalOpen = useSelector((state: RootState) => state.confirmModal.isOpen);
 
     const [isFeedbackDateVisible, setIsFeedbackDateVisible] = useState(false);
     const [isFeedbackDate, setIsFeedbackDate] = useState("");
@@ -128,16 +135,16 @@ const MessageContainer = (props: MessageContainerProps) => {
                             width={22}
                             height={22}
                             alt="스마일 이모티콘" />
-                        <Button onClick={() => setIsFeedbackOpen(true)}>
+                        <Button onClick={() => dispatch(setOpenConfirmModal())}>
                             매너평가 하기
                         </Button>
                     </Feedback>
                 </FeedbackContainer>
                 <FeedbackTime>{setChatTimeFormatter(isFeedbackDate)}</FeedbackTime>
             </FeedbackDiv>
-            {isFeedbackOpen &&
+            {isFeedbackModalOpen &&
                 <ConfirmModal
-                    type="img"
+                    type="manner"
                     width="315px"
                     onClose={() => setIsFeedbackOpen(false)} />
             }
@@ -162,9 +169,9 @@ const Timestamp = styled.p`
 
 const YourMessageContainer = styled.div`
   display: flex;
+  align-items: center;
   justify-content: flex-start;
   margin-bottom: 10px;
-  align-items: center;
 `;
 
 const YourDiv = styled.div<{ $hasProfileImage: boolean }>`
@@ -179,8 +186,10 @@ const YourMessage = styled.div`
   color: ${theme.colors.gray600}; 
   background: ${theme.colors.white}; 
   border-radius: 13px;
-  padding: 8px 13px;
+  padding: 5px 13px;
   max-width: 229px;
+  word-break:keep-all;
+  overflow-wrap: break-word;
 `;
 
 
@@ -192,6 +201,7 @@ const YourDate = styled.p`
 
 const MyMessageContainer = styled.div`
   display: flex;
+  align-items: center;
   justify-content: flex-end;
   margin-bottom: 10px;
 `;
@@ -206,8 +216,10 @@ const MyMessage = styled.div`
   color: ${theme.colors.gray600}; 
   background: ${theme.colors.purple300}; 
   border-radius: 13px;
-  padding: 8px;
+  padding: 5px 13px;
   max-width: 196px;
+  word-break:keep-all;
+  overflow-wrap: break-word;
 `;
 
 const MyDate = styled.p`

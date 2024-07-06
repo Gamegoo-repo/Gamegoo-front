@@ -39,7 +39,7 @@ const FriendsList = (props: FriendListProps) => {
     return (
         <>
             <List className={isFavorites ? 'border' : 'none'}>
-                <Title>
+                <Title className={isFavorites ? 'none' : 'padding'}>
                     {isFavorites ? '즐겨찾기' : `친구 ${friends.length}`}
                 </Title>
                 {friends.map(friend => (
@@ -93,7 +93,12 @@ const List = styled.div`
 const Title = styled.p`
     ${(props) => props.theme.fonts.medium11};
     color: ${theme.colors.gray200}; 
-    padding: 6px 16px 11px 18px;
+    &.padding{
+        padding: 11px 16px 11px 18px;
+    }
+    &.none {
+        padding: 0 16px 11px 18px;
+    }
 `;
 
 const UserContent = styled.div`

@@ -1,29 +1,44 @@
+import { setOpenEvaluationModal, setCloseConfirmModal } from "@/redux/slices/confirmModalSlice";
+import { setMannerStatus } from "@/redux/slices/mannerStatusSlice";
+import { AppDispatch } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 interface ConfirmModalProps {
-  type: "yesOrNo" | "confirm" | "img";
+  type: "yesOrNo" | "confirm" | "manner";
   children?: string | React.ReactNode;
   width: string;
   borderRadius?: string;
   onCheck?: () => void;
   onClose: () => void;
 }
+
 const ConfirmModal = (props: ConfirmModalProps) => {
   const { type, children, width, borderRadius, onCheck, onClose } = props;
-  const [mannerStatus, setMannerStatus] = useState(false);
-  const [badMannerStatus, setBadMannerStatus] = useState(false);
+
+  const dispatch: AppDispatch = useDispatch();
+
+  const [mannerStatusClicked, setMannerStatusClicked] = useState(false);
+  const [badMannerStatusClicked, setBadMannerStatusClicked] = useState(false);
 
   const handleMannerEvaluate = () => {
-    setMannerStatus((prevState) => !prevState);
-    setBadMannerStatus(false);
+    setMannerStatusClicked((prevState) => !prevState);
+    setBadMannerStatusClicked(false);
+    dispatch(setMannerStatus("manner"));
   };
 
   const handleBadMannerEvaluate = () => {
-    setBadMannerStatus((prevState) => !prevState);
-    setMannerStatus(false);
+    setBadMannerStatusClicked((prevState) => !prevState);
+    setMannerStatusClicked(false);
+    dispatch(setMannerStatus("badManner"));
+  };
+
+  const handleCheck = () => {
+    dispatch(setOpenEvaluationModal());
+    dispatch(setCloseConfirmModal());
   };
 
   return (
@@ -34,11 +49,11 @@ const ConfirmModal = (props: ConfirmModalProps) => {
         onClick={(e) => e.stopPropagation()}
       >
         <Main>
-          {type === "img" ? (
+          {type === "manner" ? (
             <ImageTop>
               <CloseButton>
                 <Image
-                  onClick={onClose}
+                  onClick={() => dispatch(setCloseConfirmModal())}
                   src="/assets/icons/close.svg"
                   width={10}
                   height={10}
@@ -49,26 +64,26 @@ const ConfirmModal = (props: ConfirmModalProps) => {
                 <ClickArea onClick={handleMannerEvaluate}>
                   <Image
                     src={
-                      mannerStatus
+                      mannerStatusClicked
                         ? "/assets/icons/clicked_smile.svg"
                         : "/assets/icons/smile.svg"
                     }
                     width={33}
                     height={33}
-                    alt="smile icon"
+                    alt="매너"
                   />
                   <MannerText>매너 평가하기</MannerText>
                 </ClickArea>
                 <ClickArea onClick={handleBadMannerEvaluate}>
                   <Image
                     src={
-                      badMannerStatus
+                      badMannerStatusClicked
                         ? "/assets/icons/clicked_sad.svg"
                         : "/assets/icons/sad.svg"
                     }
                     width={33}
                     height={33}
-                    alt="sad icon"
+                    alt="비매너"
                   />
                   <MannerText>비매너 평가하기</MannerText>
                 </ClickArea>
@@ -81,9 +96,10 @@ const ConfirmModal = (props: ConfirmModalProps) => {
         <Footer>
           <Buttons>
             <Button
-              onClick={onCheck || onClose}
-              className={type === "img" ? undefined : "noButton"}
-              disabled={type === "img" && !mannerStatus && !badMannerStatus}
+              // onClick={type === "manner" ? onCheck || onClose}
+              onClick={handleCheck}
+              className={type === "manner" ? undefined : "noButton"}
+              disabled={type === "manner" && !mannerStatusClicked && !badMannerStatusClicked}
               $type={type}
             >
               {type === "yesOrNo" ? "예" : "확인"}
@@ -177,7 +193,7 @@ const Buttons = styled.div`
 const Button = styled.button<{ $type: string }>`
   text-align: center;
   ${({ $type }) =>
-    $type === "img" ? `${theme.fonts.bold11}` : `${theme.fonts.semiBold18}`};
+    $type === "manner" ? `${theme.fonts.bold11}` : `${theme.fonts.semiBold18}`};
   cursor: pointer;
   color: ${({ $type }) => ($type === "img" ? "#2D2D2D" : "#44515C")};
   width: 100%;

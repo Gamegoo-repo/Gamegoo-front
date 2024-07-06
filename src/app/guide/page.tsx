@@ -237,7 +237,7 @@ const Guide = () => {
 
       {openConfirmModal && (
         <ConfirmModal
-          type="img"
+          type="manner"
           width="315px"
           onClose={handleConfirmModalClose}
         />

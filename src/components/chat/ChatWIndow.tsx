@@ -105,9 +105,9 @@ const ChatWindow = (props: ChatWindowProps) => {
                                 </div>
                             }
                             {activeTab === 'chat' &&
-                                <ChatList 
-                                list={CHAT}
-                                onChatRoom={handleGoToChatRoom}
+                                <ChatList
+                                    list={CHAT}
+                                    onChatRoom={handleGoToChatRoom}
                                 />}
                         </Content>
                     </ChatMain>
@@ -115,8 +115,8 @@ const ChatWindow = (props: ChatWindowProps) => {
             </Overlay>
             {isChatRoomVisible && chatId !== null &&
                 <ChatRoom
-                onClose={onClose}
-                onGoback={handleBackToChatWindow}
+                    onClose={onClose}
+                    onGoback={handleBackToChatWindow}
                     id={chatId} />
             }
         </>
@@ -157,7 +157,6 @@ const ChatHeader = styled.header`
     border-radius: 20px 20px 0 0;
     background: ${theme.colors.white};
     box-shadow: 0 -1px 10.7px 0 #00000026;
-
 `;
 
 const HeaderTitle = styled.p`
@@ -202,6 +201,7 @@ const SearchInput = styled.div`
     position: relative;
     width:100%;
 `;
+
 const SearchImage = styled(Image)`
     position : absolute;
     top: 13px;
@@ -220,14 +220,16 @@ const Input = styled.input`
 `;
 
 const ChatMain = styled.div`
-    padding:18px 6px 0 0;
     border-radius: 0 0 20px 20px;
     background:${theme.colors.white};
+
     &.friends{
         box-shadow: none;
+        padding:11px 6px 0 0;
     }
     &.chat{
-        box-shadow: 0 -1px 10.7px 0 #00000026;
+        box-shadow: inset 0 0px 4.7px 0 #00000026;
+        padding:0 6px 0 0;
     }
 
 `;

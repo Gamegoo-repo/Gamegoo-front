@@ -3,7 +3,11 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useState } from "react";
 import MessageContainer from "./MessageContainer";
-import ChatWindow from "./ChatWindow";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import FormModal from "../common/FormModal";
+import Checkbox from "../common/Checkbox";
+import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
 
 interface ChatRoomProps {
     id: number;
@@ -28,6 +32,10 @@ const ChatRoom = (props: ChatRoomProps) => {
     const [message, setMessage] = useState("");
     const [messageList, setMessageList] = useState([]);
 
+    const isEvaluationModalOpen = useSelector((state: RootState) => state.confirmModal.evaluationModal);
+    const isFeedbackModalOpen = useSelector((state: RootState) => state.confirmModal.isOpen);
+    const isMannerStatus = useSelector((state: RootState) => state.mannerStatus.mannerStatus);
+
     // useEffect(() => {
     //     socket.on(“message”, (message) => {
     //     setMessageList((prevState)=> prevState.concat(message));
@@ -45,7 +53,7 @@ const ChatRoom = (props: ChatRoomProps) => {
     return (
         <>
             <Overlay>
-                <Wrapper>
+                <Wrapper $isFeedbackModalOpen={isFeedbackModalOpen}>
                     <CloseButton>
                         <CloseImage
                             onClick={onClose}
@@ -109,6 +117,40 @@ const ChatRoom = (props: ChatRoomProps) => {
                         </TextareaContainer>
                     </ChatFooter>
                 </Wrapper>
+                {isEvaluationModalOpen &&
+                    <FormModal
+                        type="checkbox"
+                        title={isMannerStatus === "manner" ? "매너 평가하기" : "비매너 평가하기"}
+                        width="418px"
+                        height="434px"
+                        closeButtonWidth={17}
+                        closeButtonHeight={17}
+                        borderRadius="10px"
+                        buttonText="완료"
+                        disabled
+                    >
+                        <CheckContent>
+                            {isMannerStatus === "manner" && MANNER_TYPES.map((data) => (
+                                <Checkbox
+                                    key={data.id}
+                                    value={data.text}
+                                    label={data.text}
+                                    fontSize="semiBold16"
+                                />
+                            ))}
+                        </CheckContent>
+                        <CheckContent>
+                            {isMannerStatus === "badManner" && BAD_MANNER_TYPES.map((data) => (
+                                <Checkbox
+                                    key={data.id}
+                                    value={data.text}
+                                    label={data.text}
+                                    fontSize="semiBold16"
+                                />
+                            ))}
+                        </CheckContent>
+                    </FormModal>
+                }
             </Overlay>
         </>
     )
@@ -124,12 +166,23 @@ const Overlay = styled.div`
     z-index: 1;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ $isFeedbackModalOpen: boolean }>`
     background: ${theme.colors.purple400};
     border-radius: 20px;
     display: flex;
     flex-direction: column;
     width: 418px;
+    &:before {
+        content: '';
+        position: ${({ $isFeedbackModalOpen }) => $isFeedbackModalOpen ? 'fixed' : 'unset'};
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: ${({ $isFeedbackModalOpen }) => $isFeedbackModalOpen ? '#0000009C' : 'transparent'};
+        z-index: 100;
+        border-radius: 20px;
+    }
 `;
 
 const CloseButton = styled.p`
@@ -254,6 +307,13 @@ const SubmitButton = styled.button`
   background: ${theme.colors.purple100};
   border-radius: 25px;
   padding: 12px 20px;
+`;
+
+const CheckContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
 `;
 
 
