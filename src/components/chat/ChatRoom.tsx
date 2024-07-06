@@ -18,8 +18,8 @@ const MESSAGE_LIST = [
     { user: "you", msg: '하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라', msgId: 4, userId: 2, date: "2024-07-02T01:11:00" },
     { user: "me", msg: '안녕하세요 저는 안녕하세요 저는 안녕하세요 저는22', msgId: 5, userId: 1, date: "2024-07-02T23:27:00" },
     { user: "me", msg: '텍스트 텍스22', msgId: 6, userId: 1, date: "2024-07-02T23:27:00" },
-    { user: "you", msg: '아 네, 안녕하세요 하이하이라라22', msgId: 7, userId: 2, date: "2024-07-05T01:11:00" },
-    { user: "you", msg: '하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라22', msgId: 8, userId: 2, date: "2024-07-05T01:11:00" },
+    { user: "you", msg: '아 네, 안녕하세요 하이하이라라22', msgId: 7, userId: 2, date: "2024-07-04T22:52:00" },
+    { user: "you", msg: '하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라22', msgId: 8, userId: 2, date: "2024-07-04T23:52:00" },
 ];
 
 const ChatRoom = (props: ChatRoomProps) => {
@@ -52,7 +52,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                             src='/assets/icons/close.svg'
                             width={11}
                             height={11}
-                            alt='close button' />
+                            alt='닫기' />
                     </CloseButton>
                     <ChatHeader>
                         <PrevImage
@@ -62,7 +62,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                             height={18}
                             alt="뒤로가기" />
                         <Middle>
-                            <Image
+                            <ProfileImage
                                 src="/assets/icons/gray_circle.svg"
                                 width={47.43}
                                 height={47.43}
@@ -188,6 +188,10 @@ const Middle = styled.div`
     display: flex;
     align-items: center;
     width: 100%;
+`;
+
+const ProfileImage = styled(Image)`
+    cursor: pointer;
 `;
 
 const DetailImage = styled(Image)`

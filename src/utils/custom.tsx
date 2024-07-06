@@ -50,5 +50,5 @@ export function setDateFormatter(date: string) {
 };
 
 export function setChatDateFormatter(date: string) {
-    return dayjs(date).format('A hh:mm');
+    return dayjs(date).format('A h:m');
 };

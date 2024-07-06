@@ -1,10 +1,8 @@
 import styled from 'styled-components';
 import { theme } from "@/styles/theme";
 import Image from 'next/image';
-import { setChatDateFormatter } from '@/utils/custom';
-import ChatDate from './ChatDate';
 import dayjs from 'dayjs';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface MessageInterface {
     user: string;
@@ -13,12 +11,16 @@ interface MessageInterface {
     userId: number;
     date: string;
 }
+
 interface MessageContainerProps {
     messageList: MessageInterface[];
 }
 
 const MessageContainer = (props: MessageContainerProps) => {
     const { messageList } = props;
+
+    const [isFeedbackDateVisible, setIsFeedbackDateVisible] = useState(false);
+    const [isFeedbackDate, setIsFeedbackDate] = useState("");
 
     const handleDisplayDate = (messages: MessageInterface[], index: number): boolean => {
         if (index === 0) return true;
@@ -36,33 +38,49 @@ const MessageContainer = (props: MessageContainerProps) => {
     };
 
     const handleDisplayTime = (messages: MessageInterface[], index: number): boolean => {
-        if (index === 0) return true;
+        if (index === messages.length - 1) return true;
 
-        const currentTime = dayjs(messages[index].date).format('A h:m');
-        const previousTime = dayjs(messages[index - 1].date).format('A h:m');
+        const currentTime = dayjs(messages[index].date).format('A h:mm');
+        const nextTime = dayjs(messages[index + 1].date).format('A h:mm');
 
-        const isSameTime = currentTime === previousTime;
-        const isSameSender = messages[index].userId === messages[index - 1].userId;
+        const isSameTime = currentTime === nextTime;
+        const isSameSender = messages[index].userId === messages[index + 1].userId;
 
+        /* 시간과 보낸 사람이 같으면 마지막 메시지에만 시간 표시 */
         return !isSameTime || !isSameSender;
     };
+
+    /* 마지막 채팅을 보낸 날짜에서 1시간을 더했을 때, 마지막 보낸 채팅 날짜랑 피드백 날짜가 다를 때만 보여주기 */
+    useEffect(() => {
+        const lastMessage = messageList[messageList.length - 1];
+        const feedbackTimestamp = dayjs(lastMessage.date).add(1, 'hour');
+
+        const feedbackDate = dayjs(feedbackTimestamp).format('YYYY-M-D');
+        const lastMessageDate = dayjs(lastMessage.date).format('YYYY-M-D');
+
+        setIsFeedbackDate(feedbackDate);
+
+        if (feedbackDate !== lastMessageDate) {
+            setIsFeedbackDateVisible(true);
+        }
+    }, [])
+
 
     return (
         <>
             {messageList.map((message, index) => {
                 const hasProfileImage = handleDisplayProfileImage(messageList, index);
                 const showTime = handleDisplayTime(messageList, index);
-
                 return (
-
-                    <MsgContainer key={message.msgId}>
+                    <MsgContainer
+                        key={message.msgId}>
                         {handleDisplayDate(messageList, index) && (
                             <Timestamp>{dayjs(message.date).format('YYYY년 M월 D일')}</Timestamp>
                         )}
                         {message.user === "you" ? (
                             <YourMessageContainer>
                                 {handleDisplayProfileImage(messageList, index) && (
-                                    <ProfileImage
+                                    <Image
                                         src="/assets/icons/gray_circle.svg"
                                         width={47.43}
                                         height={47.43}
@@ -70,13 +88,13 @@ const MessageContainer = (props: MessageContainerProps) => {
                                 )}
                                 <YourDiv $hasProfileImage={hasProfileImage}>
                                     <YourMessage>{message.msg}</YourMessage>
-                                    {showTime && <YourDate>{dayjs(message.date).format('A h:m')}</YourDate>}
+                                    {showTime ? <YourDate>{dayjs(message.date).format('A h:m')}</YourDate> : null}
                                 </YourDiv>
                             </YourMessageContainer>
                         ) : (
                             <MyMessageContainer>
                                 <MyDiv>
-                                    {showTime && <MyDate>{dayjs(message.date).format('A h:m')}</MyDate>}
+                                    {showTime ? <MyDate>{dayjs(message.date).format('A h:m')}</MyDate> : null}
                                     <MyMessage>{message.msg}</MyMessage>
                                 </MyDiv>
                             </MyMessageContainer>
@@ -85,9 +103,14 @@ const MessageContainer = (props: MessageContainerProps) => {
                     </MsgContainer>
                 )
             })}
-            <FeedbackDiv>
+            {isFeedbackDateVisible &&
+                <FeedbackDate className={isFeedbackDateVisible ? 'visibleDate' : 'invisibleDate'}>
+                    <Timestamp>{dayjs(isFeedbackDate).format('YYYY년 M월 D일')}</Timestamp>
+                </FeedbackDate>
+            }
+            <FeedbackDiv className={isFeedbackDateVisible ? 'visibleDate' : 'invisibleDate'}>
                 <FeedbackContainer>
-                    <ProfileImage
+                    <Image
                         src="/assets/icons/gray_circle.svg"
                         width={47.43}
                         height={47.43}
@@ -105,13 +128,15 @@ const MessageContainer = (props: MessageContainerProps) => {
                         </Button>
                     </Feedback>
                 </FeedbackContainer>
-                <FeedbackDate>{setChatDateFormatter("2024-07-02 02:11")}</FeedbackDate>
+                <FeedbackTime>{isFeedbackDate}</FeedbackTime>
             </FeedbackDiv>
         </>
     )
 };
 
 export default MessageContainer;
+
+const MsgContainer = styled.div``;
 
 const Timestamp = styled.p`
     max-width: 79px;
@@ -123,7 +148,7 @@ const Timestamp = styled.p`
     ${(props) => props.theme.fonts.regular8};
     color: ${theme.colors.white}; 
 `;
-const MsgContainer = styled.div``;
+
 const YourMessageContainer = styled.div`
   display: flex;
   justify-content: flex-start;
@@ -131,15 +156,11 @@ const YourMessageContainer = styled.div`
   align-items: center;
 `;
 
-const ProfileImage = styled(Image)`
-    cursor: pointer;
-`;
-
 const YourDiv = styled.div<{ $hasProfileImage: boolean }>`
   display: flex;
   align-items: end;
   margin-left: ${(props) =>
-        props.$hasProfileImage ? "11px" : "58.43px"}
+        props.$hasProfileImage ? "11px" : "58.43px"};
 `;
 
 const YourMessage = styled.div`
@@ -184,15 +205,29 @@ const MyDate = styled.p`
   color: ${theme.colors.gray700}; 
 `;
 
+const FeedbackDate = styled.div`
+    &.visibleDate{
+    margin-top: 35px;
+  }
+  &.invisibleDate{
+    margin-top: unset;
+  }
+
+`;
 const FeedbackDiv = styled.div`
   display: flex;
   align-items: end;
+  &.visibleDate{
+    margin-top: 10px;
+  }
+  &.invisibleDate{
+    margin-top: 35px;
+  }
 `;
 
 const FeedbackContainer = styled.div`
   display: flex;
   justify-content: flex-start;
-  margin-top: 35px;
 `;
 
 const Feedback = styled.div`
@@ -228,7 +263,7 @@ const Button = styled.button`
   padding: 10px 0;
 `;
 
-const FeedbackDate = styled.p`
+const FeedbackTime = styled.p`
   margin-left:9px;
   ${(props) => props.theme.fonts.regular8};
   color: ${theme.colors.gray700}; 
