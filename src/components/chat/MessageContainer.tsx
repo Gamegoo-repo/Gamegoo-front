@@ -4,6 +4,7 @@ import Image from 'next/image';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { setChatDateFormatter, setChatTimeFormatter } from '@/utils/custom';
+import ConfirmModal from '../common/ConfirmModal';
 
 interface MessageInterface {
     user: string;
@@ -22,6 +23,7 @@ const MessageContainer = (props: MessageContainerProps) => {
 
     const [isFeedbackDateVisible, setIsFeedbackDateVisible] = useState(false);
     const [isFeedbackDate, setIsFeedbackDate] = useState("");
+    const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
     const handleDisplayDate = (messages: MessageInterface[], index: number): boolean => {
         if (index === 0) return true;
@@ -126,13 +128,19 @@ const MessageContainer = (props: MessageContainerProps) => {
                             width={22}
                             height={22}
                             alt="스마일 이모티콘" />
-                        <Button>
+                        <Button onClick={() => setIsFeedbackOpen(true)}>
                             매너평가 하기
                         </Button>
                     </Feedback>
                 </FeedbackContainer>
                 <FeedbackTime>{setChatTimeFormatter(isFeedbackDate)}</FeedbackTime>
             </FeedbackDiv>
+            {isFeedbackOpen &&
+                <ConfirmModal
+                    type="img"
+                    width="315px"
+                    onClose={() => setIsFeedbackOpen(false)} />
+            }
         </>
     )
 };
