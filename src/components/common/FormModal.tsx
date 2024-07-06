@@ -7,6 +7,7 @@ import { setCloseEvaluationModal } from "@/redux/slices/confirmModalSlice";
 
 interface FormModalProps {
   type: "checkbox" | "text";
+  position?: "manner";
   title: string;
   width: string;
   height?: string;
@@ -22,6 +23,7 @@ interface FormModalProps {
 const FormModal = (props: FormModalProps) => {
   const {
     type,
+    position,
     title,
     width,
     height = "auto",
@@ -41,7 +43,7 @@ const FormModal = (props: FormModalProps) => {
   };
 
   return (
-    <Overlay>
+    <Overlay $position={position}>
       <Wrapper
         onClick={(e) => e.stopPropagation()}
         $type={type}
@@ -79,11 +81,14 @@ const FormModal = (props: FormModalProps) => {
 
 export default FormModal;
 
-const Overlay = styled.div`
+const Overlay = styled.div<{ $position: "manner" | undefined }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  position: fixed;
+  position:  ${({ $position }) => ($position === "manner" ? "absolute" : "fixed")};
+  top:  ${({ $position }) => ($position === "manner" ? "50%" : "unset")};
+  left:  ${({ $position }) => ($position === "manner" ? "50%" : "unset")};
+  transform:  ${({ $position }) => ($position === "manner" ? "translate(-50%,-50%)" : "unset")};
   inset: 0;
   z-index: 100;
 `;
@@ -141,3 +146,4 @@ const Footer = styled.footer``;
 const ButtonContent = styled.p`
   text-align: center;
 `;
+

@@ -53,7 +53,8 @@ const ChatRoom = (props: ChatRoomProps) => {
     return (
         <>
             <Overlay>
-                <Wrapper $isFeedbackModalOpen={isFeedbackModalOpen}>
+                <Wrapper
+                    $isFeedbackModalOpen={isFeedbackModalOpen}>
                     <CloseButton>
                         <CloseImage
                             onClick={onClose}
@@ -117,7 +118,10 @@ const ChatRoom = (props: ChatRoomProps) => {
                         </TextareaContainer>
                     </ChatFooter>
                 </Wrapper>
-                {isEvaluationModalOpen &&
+
+            </Overlay>
+            {isEvaluationModalOpen &&
+                <FormContainer>
                     <FormModal
                         type="checkbox"
                         title={isMannerStatus === "manner" ? "매너 평가하기" : "비매너 평가하기"}
@@ -150,8 +154,9 @@ const ChatRoom = (props: ChatRoomProps) => {
                             ))}
                         </CheckContent>
                     </FormModal>
-                }
-            </Overlay>
+                </FormContainer>
+
+            }
         </>
     )
 };
@@ -174,7 +179,7 @@ const Wrapper = styled.div<{ $isFeedbackModalOpen: boolean }>`
     width: 418px;
     &:before {
         content: '';
-        position: ${({ $isFeedbackModalOpen }) => $isFeedbackModalOpen ? 'fixed' : 'unset'};
+        position: ${({ $isFeedbackModalOpen, }) => $isFeedbackModalOpen ? 'fixed' : 'unset'};
         top: 0;
         left: 0;
         width: 100%;
@@ -309,15 +314,13 @@ const SubmitButton = styled.button`
   padding: 12px 20px;
 `;
 
+const FormContainer = styled.div`
+  position:relative;
+`;
+
 const CheckContent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
 `;
-
-
-
-
-
-

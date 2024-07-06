@@ -44,6 +44,7 @@ const ChatWindow = (props: ChatWindowProps) => {
     const [isFriendDeleteBox, setIsFriendDeleteBox] = useState(false);
     const [chatId, setChatId] = useState<number | null>(null);
 
+
     const handleGoToChatRoom = (id: number) => {
         setChatId(id);
         setIsChatRoomVisible(true);
