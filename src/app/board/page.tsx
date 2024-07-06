@@ -41,7 +41,7 @@ const BOARD_CONTENT = [
       "/assets/icons/gray_circle.svg",
     ],
     odds: 32,
-    date: "2024-05-20 02:59",
+    date: "2024-07-06 16:59",
   },
   {
     id: 2,
@@ -59,7 +59,7 @@ const BOARD_CONTENT = [
       "/assets/icons/gray_circle.svg",
     ],
     odds: 97,
-    date: "2024-05-20 01:39",
+    date: "2024-07-06 01:39",
   },
   {
     id: 3,
@@ -77,7 +77,7 @@ const BOARD_CONTENT = [
       "/assets/icons/gray_circle.svg",
     ],
     odds: 50,
-    date: "2024-05-19 23:27",
+    date: "2024-07-04 23:27",
   },
   {
     id: 4,

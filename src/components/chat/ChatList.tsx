@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { theme } from "@/styles/theme";
 import Image from 'next/image';
 import MiniModal from './MiniModal';
-import { setChatDateFormatter } from '@/utils/custom';
+import { setChatRoomDateFormatter } from '@/utils/custom';
 
 interface ChatListInterface {
     id: number;
@@ -41,7 +41,7 @@ const ChatList = (props: ChatListProps) => {
                                     </Row>
                                     <Row>
                                         <Msg>{chat.msg}</Msg>
-                                        <Date>{setChatDateFormatter(chat.date)}</Date>
+                                        <Date>{setChatRoomDateFormatter(chat.date)}</Date>
                                     </Row>
                                 </Middle>
                             </Left>
@@ -95,7 +95,7 @@ const ProfileImage = styled(Image)`
 `;
 
 const Middle = styled.div`
-    min-width: 284px;
+    min-width: 304px;
 `;
 
 const UserName = styled.p`
