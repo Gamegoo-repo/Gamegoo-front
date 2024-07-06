@@ -115,7 +115,8 @@ const ChatWindow = (props: ChatWindowProps) => {
             </Overlay>
             {isChatRoomVisible && chatId !== null &&
                 <ChatRoom
-                onClose={handleBackToChatWindow}
+                onClose={onClose}
+                onGoback={handleBackToChatWindow}
                     id={chatId} />
             }
         </>
@@ -137,7 +138,7 @@ const Wrapper = styled.div`
     border-radius: 20px;
     display: flex;
     flex-direction: column;
-    width: 400px;
+    width: 418px;
     box-shadow: 0 4px 46.7px 0 #0000001A;
 `;
 

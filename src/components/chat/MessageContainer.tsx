@@ -2,6 +2,9 @@ import styled from 'styled-components';
 import { theme } from "@/styles/theme";
 import Image from 'next/image';
 import { setChatDateFormatter } from '@/utils/custom';
+import ChatDate from './ChatDate';
+import dayjs from 'dayjs';
+import { useState } from 'react';
 
 interface MessageInterface {
     user: string;
@@ -17,40 +20,63 @@ interface MessageContainerProps {
 const MessageContainer = (props: MessageContainerProps) => {
     const { messageList } = props;
 
+    const handleDisplayDate = (messages: MessageInterface[], index: number): boolean => {
+        if (index === 0) return true;
+
+        const currentDate = dayjs(messages[index].date).format('YYYY-M-D');
+        const previousDate = dayjs(messages[index - 1].date).format('YYYY-M-D');
+
+        return currentDate !== previousDate;
+    };
+
+    const handleDisplayProfileImage = (messages: MessageInterface[], index: number): boolean => {
+        if (index === 0) return true;
+
+        return messages[index].userId !== messages[index - 1].userId;
+    };
+
+    const handleDisplayTime = (messages: MessageInterface[], index: number): boolean => {
+        if (index === 0) return true;
+
+        const currentTime = dayjs(messages[index].date).format('A h:m');
+        const previousTime = dayjs(messages[index - 1].date).format('A h:m');
+
+        const isSameTime = currentTime === previousTime;
+        const isSameSender = messages[index].userId === messages[index - 1].userId;
+
+        return !isSameTime || !isSameSender;
+    };
+
     return (
         <>
             {messageList.map((message, index) => {
+                const hasProfileImage = handleDisplayProfileImage(messageList, index);
+                const showTime = handleDisplayTime(messageList, index);
 
-                let displayTime = true;
-                const timeValue = setChatDateFormatter(message.date);
-                if (index !== messageList.length - 1) {
-                    const nextSender = messageList[index + 1].userId;
-
-                    if (nextSender === message.userId) {
-                        const nextTimeValue = setChatDateFormatter(messageList[index + 1].date);
-
-                        if (nextTimeValue === timeValue)
-                            displayTime = false;
-                    }
-                }
                 return (
+
                     <MsgContainer key={message.msgId}>
+                        {handleDisplayDate(messageList, index) && (
+                            <Timestamp>{dayjs(message.date).format('YYYY년 M월 D일')}</Timestamp>
+                        )}
                         {message.user === "you" ? (
                             <YourMessageContainer>
-                                <Image
-                                    src="/assets/icons/gray_circle.svg"
-                                    width={47.43}
-                                    height={47.43}
-                                    alt="프로필 이미지" />
-                                <YourDiv>
+                                {handleDisplayProfileImage(messageList, index) && (
+                                    <ProfileImage
+                                        src="/assets/icons/gray_circle.svg"
+                                        width={47.43}
+                                        height={47.43}
+                                        alt="프로필 이미지" />
+                                )}
+                                <YourDiv $hasProfileImage={hasProfileImage}>
                                     <YourMessage>{message.msg}</YourMessage>
-                                    {displayTime ? <YourDate>{setChatDateFormatter(message.date)}</YourDate> : null}
+                                    {showTime && <YourDate>{dayjs(message.date).format('A h:m')}</YourDate>}
                                 </YourDiv>
                             </YourMessageContainer>
                         ) : (
                             <MyMessageContainer>
                                 <MyDiv>
-                                    {displayTime ? <MyDate>{setChatDateFormatter(message.date)}</MyDate> : null}
+                                    {showTime && <MyDate>{dayjs(message.date).format('A h:m')}</MyDate>}
                                     <MyMessage>{message.msg}</MyMessage>
                                 </MyDiv>
                             </MyMessageContainer>
@@ -61,7 +87,7 @@ const MessageContainer = (props: MessageContainerProps) => {
             })}
             <FeedbackDiv>
                 <FeedbackContainer>
-                    <Image
+                    <ProfileImage
                         src="/assets/icons/gray_circle.svg"
                         width={47.43}
                         height={47.43}
@@ -87,6 +113,16 @@ const MessageContainer = (props: MessageContainerProps) => {
 
 export default MessageContainer;
 
+const Timestamp = styled.p`
+    max-width: 79px;
+    margin: 0 auto 10px auto;
+    text-align: center;
+    background: #000000A3;
+    border-radius: 14px;
+    padding: 4px 10px;
+    ${(props) => props.theme.fonts.regular8};
+    color: ${theme.colors.white}; 
+`;
 const MsgContainer = styled.div``;
 const YourMessageContainer = styled.div`
   display: flex;
@@ -95,10 +131,15 @@ const YourMessageContainer = styled.div`
   align-items: center;
 `;
 
-const YourDiv = styled.div`
+const ProfileImage = styled(Image)`
+    cursor: pointer;
+`;
+
+const YourDiv = styled.div<{ $hasProfileImage: boolean }>`
   display: flex;
   align-items: end;
-  margin-left: 11px;
+  margin-left: ${(props) =>
+        props.$hasProfileImage ? "11px" : "58.43px"}
 `;
 
 const YourMessage = styled.div`
@@ -109,6 +150,7 @@ const YourMessage = styled.div`
   padding: 8px 13px;
   max-width: 229px;
 `;
+
 
 const YourDate = styled.p`
   margin-left:9px;
@@ -150,7 +192,6 @@ const FeedbackDiv = styled.div`
 const FeedbackContainer = styled.div`
   display: flex;
   justify-content: flex-start;
-  align-items: center;
   margin-top: 35px;
 `;
 
@@ -158,7 +199,7 @@ const Feedback = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 229px;
+  width: 229px;
   padding: 18px 15px 10px;
   background: ${theme.colors.white}; 
   border-radius: 13px;
@@ -170,8 +211,10 @@ const SmileImage = styled(Image)`
 `;
 
 const Text = styled.p`
+  ${(props) => props.theme.fonts.regular14};
+  color: ${theme.colors.gray600}; 
   &:first-child {
-    margin-bottom: 8px;
+    margin-bottom: 5px;
     }
 `;
 

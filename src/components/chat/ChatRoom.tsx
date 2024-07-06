@@ -8,21 +8,22 @@ import ChatWindow from "./ChatWindow";
 interface ChatRoomProps {
     id: number;
     onClose: () => void;
+    onGoback: () => void;
 }
 
 const MESSAGE_LIST = [
-    { user: "me", msg: '안녕하세요 저는 안녕하세요 저는 안녕하세요 저는', msgId: 1, userId: 1, date: "2024-07-01 23:25" },
-    { user: "me", msg: '텍스트 텍스', msgId: 2, userId: 1, date: "2024-07-01 23:27" },
-    { user: "you", msg: '아 네, 안녕하세요 하이하이라라', msgId: 3, userId: 2, date: "2024-07-02 01:11" },
-    { user: "you", msg: '하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라', msgId: 4, userId: 2, date: "2024-07-02 01:11" },
-    { user: "me", msg: '안녕하세요 저는 안녕하세요 저는 안녕하세요 저는', msgId: 5, userId: 1, date: "2024-07-01 23:27" },
-    { user: "me", msg: '텍스트 텍스', msgId: 6, userId: 1, date: "2024-07-01 23:27" },
-    { user: "you", msg: '아 네, 안녕하세요 하이하이라라', msgId: 7, userId: 2, date: "2024-07-02 01:11" },
-    { user: "you", msg: '하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라', msgId: 8, userId: 2, date: "2024-07-02 01:11" },
+    { user: "me", msg: '안녕하세요 저는 안녕하세요 저는 안녕하세요 저는', msgId: 1, userId: 1, date: "2024-05-01T23:25:00" },
+    { user: "me", msg: '텍스트 텍스', msgId: 2, userId: 1, date: "2024-05-11T23:27:00" },
+    { user: "you", msg: '아 네, 안녕하세요 하이하이라라', msgId: 3, userId: 2, date: "2024-07-02T01:08:00" },
+    { user: "you", msg: '하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라', msgId: 4, userId: 2, date: "2024-07-02T01:11:00" },
+    { user: "me", msg: '안녕하세요 저는 안녕하세요 저는 안녕하세요 저는22', msgId: 5, userId: 1, date: "2024-07-02T23:27:00" },
+    { user: "me", msg: '텍스트 텍스22', msgId: 6, userId: 1, date: "2024-07-02T23:27:00" },
+    { user: "you", msg: '아 네, 안녕하세요 하이하이라라22', msgId: 7, userId: 2, date: "2024-07-05T01:11:00" },
+    { user: "you", msg: '하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라22', msgId: 8, userId: 2, date: "2024-07-05T01:11:00" },
 ];
 
 const ChatRoom = (props: ChatRoomProps) => {
-    const { id, onClose } = props;
+    const { id, onClose, onGoback } = props;
 
     const [message, setMessage] = useState("");
     const [messageList, setMessageList] = useState([]);
@@ -45,17 +46,17 @@ const ChatRoom = (props: ChatRoomProps) => {
         <>
             <Overlay>
                 <Wrapper>
-                    {/* <CloseButton>
+                    <CloseButton>
                         <CloseImage
                             onClick={onClose}
                             src='/assets/icons/close.svg'
                             width={11}
                             height={11}
                             alt='close button' />
-                    </CloseButton> */}
+                    </CloseButton>
                     <ChatHeader>
                         <PrevImage
-                            onClick={onClose}
+                            onClick={onGoback}
                             src="/assets/icons/left_arrow.svg"
                             width={9}
                             height={18}
@@ -76,7 +77,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                                     alt="온라인" />
                             </Div>
                         </Middle>
-                        <Image
+                        <DetailImage
                             src="/assets/icons/three_dots_button.svg"
                             width={3}
                             height={15}
@@ -85,7 +86,6 @@ const ChatRoom = (props: ChatRoomProps) => {
                     <ChatBorder>
                         <ChatMain>
                             <System>매칭이 이루어졌어요 !</System>
-                            <Date>2024년 4월 5일</Date>
                             <MessageContainer
                                 messageList={MESSAGE_LIST} />
                         </ChatMain>
@@ -129,7 +129,7 @@ const Wrapper = styled.div`
     border-radius: 20px;
     display: flex;
     flex-direction: column;
-    width: 400px;
+    width: 418px;
 `;
 
 const CloseButton = styled.p`
@@ -146,7 +146,7 @@ const CloseImage = styled(Image)`
 const ChatHeader = styled.header`
     display: flex;
     align-items: center;
-    padding:38px 27px 20px 12px;
+    padding:11px 27px 20px 12px;
 `;
 
 const ChatBorder = styled.div`
@@ -177,17 +177,6 @@ const System = styled.p`
     margin-bottom: 11px;
 `;
 
-const Date = styled.p`
-    max-width: 79px;
-    margin: 0 auto 10px auto;
-    text-align: center;
-    background: #000000A3;
-    border-radius: 14px;
-    padding: 4px 10px;
-    ${(props) => props.theme.fonts.regular8};
-    color: ${theme.colors.white}; 
-`;
-
 const ChatFooter = styled.footer``;
 
 const PrevImage = styled(Image)`
@@ -200,18 +189,26 @@ const Middle = styled.div`
     align-items: center;
     width: 100%;
 `;
+
+const DetailImage = styled(Image)`
+    cursor: pointer;
+`;
+
 const Div = styled.div`
     position: relative;
     margin-left:9px;
 `;
+
 const UserName = styled.p`
     ${(props) => props.theme.fonts.semiBold18};
     color: ${theme.colors.gray600}; 
 `;
+
 const Online = styled.p`
    ${(props) => props.theme.fonts.medium11};
     color: ${theme.colors.gray200}; 
 `;
+
 const OnlineImage = styled(Image)`
     position: absolute;
     top: 1%;
@@ -231,7 +228,6 @@ const Form = styled.form`
     border-radius: 0 0 20px 20px;
     box-shadow: 0 4px 46.7px 0 #0000001A;
 `;
-
 
 const Textarea = styled.textarea`
     border:none;
