@@ -56,9 +56,8 @@ const Overlay = styled.div`
 `;
 
 const Wrapper = styled.div`
-    box-shadow: 0 0 21.3px 0 rgba(0, 0, 0, 0.15);
     background: ${theme.colors.white};
-    border-radius: 19px;
+    border-radius: 20px;
 `;
 
 const Header = styled.header<{ $type: string }>` 

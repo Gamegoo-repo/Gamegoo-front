@@ -55,12 +55,12 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
               {MANNER_TYPES.map((type, index) => {
                 return (
                   <Type
-                    key={index}
+                    key={type.id}
                     className={
                       mannerEvaluations[index][1] > 0 ? "mannerEmph" : "default"
                     }
                   >
-                    {type}
+                    {type.text}
                   </Type>
                 );
               })}
@@ -86,12 +86,12 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
               {BAD_MANNER_TYPES.map((type, index) => {
                 return (
                   <Type
-                    key={index}
+                    key={type.id}
                     className={
                       badMannerEvaluations[index][1] > 0 ? "badEmph" : "default"
                     }
                   >
-                    {type}
+                    {type.text}
                   </Type>
                 );
               })}

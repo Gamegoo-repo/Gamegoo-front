@@ -48,3 +48,24 @@ export function setDateFormatter(date: string) {
         return dayjs(date).fromNow();
     }
 };
+
+export function setChatTimeFormatter(date: string) {
+    return dayjs(date).format('A h:m');
+};
+
+export function setChatDateFormatter(date: string) {
+    return dayjs(date).format('YYYY년 M월 D일');
+};
+
+export function setChatRoomDateFormatter(date:string){
+    const now = dayjs();
+    const diffHours = now.diff(date, 'hour');
+
+    if (diffHours < 24) {
+        return dayjs(date).format('A h:m');
+    } else if (diffHours < 36) {
+        return '어제';
+    } else {
+        return dayjs(date).format('YYYY-MM-DD');
+    }
+};

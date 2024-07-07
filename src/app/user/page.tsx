@@ -90,17 +90,17 @@ const UserProfile = () => {
                     })}
                   </ValueWrapper>
                   <TypeWrapper>
-                    {MANNER_TYPES.map((type, index) => {
+                    {MANNER_TYPES.map((type,index) => {
                       return (
                         <Type
-                          key={index}
+                          key={type.id}
                           className={
                             mannerEvaluations[index][1] > 0
                               ? "mannerEmph"
                               : "default"
                           }
                         >
-                          {type}
+                          {type.text}
                         </Type>
                       );
                     })}
@@ -128,14 +128,14 @@ const UserProfile = () => {
                     {BAD_MANNER_TYPES.map((type, index) => {
                       return (
                         <Type
-                          key={index}
+                          key={type.id}
                           className={
                             badMannerEvaluations[index][1] > 0
                               ? "badEmph"
                               : "default"
                           }
                         >
-                          {type}
+                          {type.text}
                         </Type>
                       );
                     })}
