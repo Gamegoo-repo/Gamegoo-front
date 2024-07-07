@@ -54,36 +54,36 @@ const ChatButton = (props: msgCountProps) => {
 export default ChatButton;
 
 const MsgButton = styled.div`
-            position: relative;
-            width: 89px;
-            height: 89px;
-            border-radius: 50%;
-            background: #7967EB;
-            cursor: pointer;
-            img{
-                position: absolute;
-            top:50%;
-            left:50%;
-            transform: translate(-50%, -50%);
-            }
-            `;
+  position: relative;
+  width: 89px;
+  height: 89px;
+  border-radius: 50%;
+  background: #7967EB;
+  cursor: pointer;
+     img{
+       position: absolute;
+       top:50%;
+       left:50%;
+       transform: translate(-50%, -50%);
+       }
+`;
 
 const MsgCount = styled.div`
-            position: relative;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            border:1px solid ${theme.colors.purple200};
-            background: ${theme.colors.white};
-            left:72%;
-            `;
+  position: relative;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border:1px solid ${theme.colors.purple200};
+  background: ${theme.colors.white};
+  left:72%;          
+`;
 
 const Count = styled.p`
-            ${(props) => props.theme.fonts.semiBold14};
-            color:${theme.colors.purple100};
-            position: absolute;
-            top:50%;
-            left:50%;
-            transform: translate(-50%, -50%);
-            `;
+    ${(props) => props.theme.fonts.semiBold14};
+    color:${theme.colors.purple100};
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+  `;
 
