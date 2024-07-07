@@ -38,12 +38,12 @@ const ChatWindow = (props: ChatWindowProps) => {
 
     const [activeTab, setActiveTab] = useState<string>('friends');
     const [isChatRoomVisible, setIsChatRoomVisible] = useState(false);
+
     const favoriteFriends = FRIENDS.filter(friend => friend.favorites === 1);
     const nonFavoriteFriends = FRIENDS.filter(friend => friend.favorites === 0);
 
     const [isFriendDeleteBox, setIsFriendDeleteBox] = useState(false);
     const [chatId, setChatId] = useState<number | null>(null);
-
 
     const handleGoToChatRoom = (id: number) => {
         setChatId(id);
@@ -232,7 +232,6 @@ const ChatMain = styled.div`
         box-shadow: inset 0 0px 4.7px 0 #00000026;
         padding:0 6px 0 0;
     }
-
 `;
 
 const Content = styled.main`
