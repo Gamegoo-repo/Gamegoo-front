@@ -3,19 +3,25 @@ import React from "react";
 import styled, { css } from "styled-components";
 
 type ShapeType = "round" | "square";
+type profileType = "me" | "other" | "none" | "mini";
 
 interface BoxProps {
   text: string;
   shape: ShapeType;
+  profileType?: profileType;
 }
 
-const Box: React.FC<BoxProps> = ({ text, shape = "round" }) => {
-  return <StyledBox shape={shape}>{text}</StyledBox>;
+const Box: React.FC<BoxProps> = ({ text, shape = "round", profileType }) => {
+  return (
+    <StyledBox shape={shape} profileType={profileType}>
+      {text}
+    </StyledBox>
+  );
 };
 
 export default Box;
 
-const StyledBox = styled.div<{ shape: ShapeType }>`
+const StyledBox = styled.div<{ shape: ShapeType; profileType?: profileType }>`
   display: inline-flex;
   padding: 10px 35px;
   justify-content: center;
@@ -35,5 +41,13 @@ const StyledBox = styled.div<{ shape: ShapeType }>`
     props.shape === "square" &&
     css`
       border-radius: 0;
+    `}
+
+  ${(props) =>
+    props.profileType === "mini" &&
+    css`
+      height: 25px;
+      padding: 5px 17px;
+      ${(props) => props.theme.fonts.bold12}
     `}
 `;

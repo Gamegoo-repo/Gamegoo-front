@@ -41,6 +41,7 @@ const Tab = styled.div<{ selected: boolean }>`
   background: ${({ selected }) =>
     selected ? theme.colors.gray500 : "transparent"};
   color: ${theme.colors.gray600};
-  ${(props) => props.theme.fonts.bold16};
+  ${({ selected, theme }) =>
+    selected ? theme.fonts.bold16 : theme.fonts.regular16};
   cursor: pointer;
 `;
