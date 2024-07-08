@@ -10,6 +10,18 @@ export const EX_ALARM = [
     { content: '알림 내용9', time: '10시간', read:true},
 ];
 
+export const EX_REQUEST_ALARM = [
+    { content: '친구요청 내용1', time: '1시간', read:true},
+    { content: '친구요청 내용2', time: '2시간', read:false},
+    { content: '친구요청 내용3', time: '5시간', read:false},
+    { content: '친구요청 내용4', time: '10시간', read:true},
+    { content: '친구요청 내용5', time: '10시간', read:false},
+    { content: '친구요청 내용6', time: '10시간', read:true},
+    { content: '친구요청 내용7', time: '10시간', read:true},
+    { content: '친구요청 내용8', time: '10시간', read:true},
+    { content: '친구요청 내용9', time: '10시간', read:true},
+];
+
   
 export const EX_POST = [
     {

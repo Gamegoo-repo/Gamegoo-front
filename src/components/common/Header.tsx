@@ -3,8 +3,9 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
+import AlertWindow from "../alert/AlertWindow";
 
 interface HeaderProps {
   selected: boolean;
@@ -13,7 +14,37 @@ interface HeaderProps {
 const Header = () => {
   const router = useRouter();
   const pathname = usePathname();
+  const [isAlertWindow, setIsAlertWindow] = useState<Boolean>(false);
   const [isMyPage, setIsMyPage] = useState<Boolean>(false);
+
+  const myPageRef = useRef<HTMLDivElement>(null);
+
+  /* 알림창 열고 닫는 함수 */
+  const handleAlertWindow = () => {
+    setIsAlertWindow(!isAlertWindow);
+  };
+
+  /* 외부 영역 클릭시 팝업 닫힘 */
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      myPageRef.current &&
+      !myPageRef.current.contains(event.target as Node)
+    ) {
+      setIsMyPage(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isMyPage) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+  }, [isMyPage]);
+
+  /* 페이지 이동 시 팝업창 닫음 */
+  useEffect(() => {
+    setIsAlertWindow(false);
+    setIsMyPage(false);
+  }, [pathname]);
 
   return (
     <Head>
@@ -50,7 +81,7 @@ const Header = () => {
             width={24}
             height={30}
             alt="noti"
-            onClick={() => router.push("/")}
+            onClick={handleAlertWindow}
           />
           <Profile>
             <Image
@@ -71,8 +102,9 @@ const Header = () => {
           </Profile>
         </Right>
       </HeaderBar>
+      {isAlertWindow && <AlertWindow onClose={() => setIsAlertWindow(false)} />}
       {isMyPage && (
-        <MyPageModal>
+        <MyPageModal ref={myPageRef}>
           <MyProfile>
             <Image
               src="/assets/images/profile.svg"
@@ -177,7 +209,7 @@ const MyPageModal = styled.div`
   box-shadow: 2px 11px 44.1px 0px rgba(0, 0, 0, 0.15);
   position: absolute;
   top: 50px;
-  right: 10px;
+  right: 50px;
   z-index: 100;
 `;
 
