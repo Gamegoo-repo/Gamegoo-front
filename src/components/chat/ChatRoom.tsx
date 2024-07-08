@@ -8,6 +8,7 @@ import { RootState } from "@/redux/store";
 import FormModal from "../common/FormModal";
 import Checkbox from "../common/Checkbox";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
+import MiniModal from "./MiniModal";
 
 interface ChatRoomProps {
     id: number;
@@ -31,6 +32,7 @@ const ChatRoom = (props: ChatRoomProps) => {
 
     const [message, setMessage] = useState("");
     const [messageList, setMessageList] = useState([]);
+    const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
     const isEvaluationModalOpen = useSelector((state: RootState) => state.confirmModal.evaluationModal);
     const isFeedbackModalOpen = useSelector((state: RootState) => state.confirmModal.isOpen);
@@ -50,11 +52,25 @@ const ChatRoom = (props: ChatRoomProps) => {
         console.log(message)
     };
 
+    const handleDetailOpen = () => {
+        setIsDetailModalOpen(prevState => !prevState);
+    };
+
+    const handleOutsideModalClick = (event: React.MouseEvent<HTMLDivElement>) => {
+        event.stopPropagation();
+        if (isDetailModalOpen) {
+            setIsDetailModalOpen(false);
+        }
+    };
+
     return (
         <>
             <Overlay>
                 <Wrapper
-                    $isFeedbackModalOpen={isFeedbackModalOpen}>
+                    $isFeedbackModalOpen={isFeedbackModalOpen}
+                    onClick={handleOutsideModalClick}>
+                    {isDetailModalOpen &&
+                        <MiniModal />}
                     <CloseButton>
                         <CloseImage
                             onClick={onClose}
@@ -87,6 +103,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                             </Div>
                         </Middle>
                         <DetailImage
+                            onClick={handleDetailOpen}
                             src="/assets/icons/three_dots_button.svg"
                             width={3}
                             height={15}
@@ -118,7 +135,6 @@ const ChatRoom = (props: ChatRoomProps) => {
                         </TextareaContainer>
                     </ChatFooter>
                 </Wrapper>
-
             </Overlay>
             {isEvaluationModalOpen &&
                 <FormContainer>
@@ -172,6 +188,7 @@ const Overlay = styled.div`
 `;
 
 const Wrapper = styled.div<{ $isFeedbackModalOpen: boolean }>`
+    position: relative;
     background: ${theme.colors.purple400};
     border-radius: 20px;
     display: flex;
