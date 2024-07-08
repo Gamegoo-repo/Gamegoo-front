@@ -40,6 +40,7 @@ const StyledCheckbox = styled.div<{ fontSize: string }>`
   display: flex;
   align-items: center;
   gap: 1.7rem;
+  row-gap: 20rem;
   cursor: pointer;
   ${(props) =>
     props.fontSize

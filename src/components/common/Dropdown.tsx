@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { forwardRef, useState } from "react";
+import { Dispatch, forwardRef } from "react";
 import { theme } from "@/styles/theme";
 import styled from "styled-components";
 
@@ -14,7 +14,7 @@ interface DropdownProps {
     list: ListProps[];
     width: string;
     open: boolean;
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    setOpen: Dispatch<React.SetStateAction<boolean>>;
     onDropValue: (value: string) => void;
     defaultValue: string;
 };

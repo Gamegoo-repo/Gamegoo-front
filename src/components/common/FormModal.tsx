@@ -2,9 +2,12 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 import styled from "styled-components";
 import Button from "./Button";
+import { useDispatch } from "react-redux";
+import { setCloseEvaluationModal } from "@/redux/slices/confirmModalSlice";
 
 interface FormModalProps {
   type: "checkbox" | "text";
+  position?: "manner";
   title: string;
   width: string;
   height?: string;
@@ -13,13 +16,14 @@ interface FormModalProps {
   borderRadius: string;
   children: string | React.ReactNode;
   buttonText: string;
-  onClose: () => void;
+  onClose?: () => void;
   disabled?: boolean;
 }
 
 const FormModal = (props: FormModalProps) => {
   const {
     type,
+    position,
     title,
     width,
     height = "auto",
@@ -31,8 +35,15 @@ const FormModal = (props: FormModalProps) => {
     onClose,
     disabled,
   } = props;
+
+  const dispatch = useDispatch();
+
+  const handleFormClose = () => {
+    dispatch(setCloseEvaluationModal())
+  };
+
   return (
-    <Overlay>
+    <Overlay $position={position}>
       <Wrapper
         onClick={(e) => e.stopPropagation()}
         $type={type}
@@ -44,7 +55,7 @@ const FormModal = (props: FormModalProps) => {
           {type === "checkbox" && <CheckboxTitle>{title}</CheckboxTitle>}
           <CloseButton>
             <CloseImage
-              onClick={onClose}
+              onClick={handleFormClose}
               src="/assets/icons/close.svg"
               width={closeButtonWidth}
               height={closeButtonHeight}
@@ -60,7 +71,7 @@ const FormModal = (props: FormModalProps) => {
         </Main>
         <Footer>
           <ButtonContent>
-            <Button onClick={onClose} buttonType="primary" text={buttonText} />
+            <Button onClick={onClose ? onClose : handleFormClose} buttonType="primary" text={buttonText} />
           </ButtonContent>
         </Footer>
       </Wrapper>
@@ -70,11 +81,14 @@ const FormModal = (props: FormModalProps) => {
 
 export default FormModal;
 
-const Overlay = styled.div`
+const Overlay = styled.div<{ $position: "manner" | undefined }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  position: fixed;
+  position:  ${({ $position }) => ($position === "manner" ? "absolute" : "fixed")};
+  top:  ${({ $position }) => ($position === "manner" ? "50%" : "unset")};
+  left:  ${({ $position }) => ($position === "manner" ? "50%" : "unset")};
+  transform:  ${({ $position }) => ($position === "manner" ? "translate(-50%,-50%)" : "unset")};
   inset: 0;
   z-index: 100;
 `;
@@ -132,3 +146,4 @@ const Footer = styled.footer``;
 const ButtonContent = styled.p`
   text-align: center;
 `;
+
