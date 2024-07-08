@@ -71,6 +71,10 @@ const fonts = {
         weight: 700,
         size: 14,
     }),
+    bold12: FONT({
+        weight: 700,
+        size: 12,
+    }),
     bold11: FONT({
         weight: 700,
         size: 11,
