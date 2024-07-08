@@ -72,7 +72,7 @@ const MyReviewPage = () => {
                               : "default"
                           }
                         >
-                          {type}
+                          {type.text}
                         </Type>
                       );
                     })}
