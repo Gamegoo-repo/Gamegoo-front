@@ -14,14 +14,14 @@ const initialState: ModalState = {
     evaluationModal: false
 };
 
-const confirmModalSlice = createSlice({
-    name: 'confirmModalSlice',
+const modalSlice = createSlice({
+    name: 'modalSlice',
     initialState,
     reducers: {
-        setOpenConfirmModal: (state) => {
+        setOpenMannerStatusModal: (state) => {
             state.isOpen = true;
         },
-        setCloseConfirmModal: (state) => {
+        setCloseMannerStatusModal: (state) => {
             state.isOpen = false;
         },
         setOpenEvaluationModal: (state) => {
@@ -46,14 +46,14 @@ const confirmModalSlice = createSlice({
 });
 
 export const {
-    setOpenConfirmModal,
-    setCloseConfirmModal,
+    setOpenMannerStatusModal,
+    setCloseMannerStatusModal,
     setOpenMannerModal,
     setCloseMannerModal,
     setOpenBadMannerModal,
     setCloseBadMannerModal,
     setOpenEvaluationModal,
     setCloseEvaluationModal
-} = confirmModalSlice.actions;
+} = modalSlice.actions;
 
-export default confirmModalSlice.reducer;
+export default modalSlice.reducer;

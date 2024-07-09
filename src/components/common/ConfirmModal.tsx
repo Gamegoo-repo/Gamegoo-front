@@ -1,4 +1,4 @@
-import { setOpenEvaluationModal, setCloseConfirmModal } from "@/redux/slices/confirmModalSlice";
+import { setOpenEvaluationModal, setCloseMannerStatusModal } from "@/redux/slices/modalSlice";
 import { setMannerStatus } from "@/redux/slices/mannerStatusSlice";
 import { AppDispatch } from "@/redux/store";
 import { theme } from "@/styles/theme";
@@ -7,17 +7,43 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
+type ButtonText =
+  | '취소'
+  | '나가기'
+  | '차단'
+  | '확인'
+  | '예'
+  | '아니요'
+  | '닫기'
+  | '글 작성하기'
+  | '글 보러하기';
+
 interface ConfirmModalProps {
   type: "yesOrNo" | "confirm" | "manner";
   children?: string | React.ReactNode;
   width: string;
   borderRadius?: string;
   onCheck?: () => void;
-  onClose: () => void;
+  onClose?: () => void;
+  primaryButtonText: ButtonText;
+  secondaryButtonText?: ButtonText;
+  onPrimaryClick: () => void;
+  onSecondaryClick?: () => void;
 }
 
 const ConfirmModal = (props: ConfirmModalProps) => {
-  const { type, children, width, borderRadius, onCheck, onClose } = props;
+  const {
+    type,
+    children,
+    width,
+    borderRadius,
+    onCheck,
+    onClose,
+    primaryButtonText,
+    secondaryButtonText,
+    onPrimaryClick,
+    onSecondaryClick
+  } = props;
 
   const dispatch: AppDispatch = useDispatch();
 
@@ -38,7 +64,7 @@ const ConfirmModal = (props: ConfirmModalProps) => {
 
   const handleCheck = () => {
     dispatch(setOpenEvaluationModal());
-    dispatch(setCloseConfirmModal());
+    dispatch(setCloseMannerStatusModal());
   };
 
   return (
@@ -53,7 +79,7 @@ const ConfirmModal = (props: ConfirmModalProps) => {
             <ImageTop>
               <CloseButton>
                 <Image
-                  onClick={() => dispatch(setCloseConfirmModal())}
+                  onClick={() => dispatch(setCloseMannerStatusModal())}
                   src="/assets/icons/close.svg"
                   width={10}
                   height={10}
@@ -94,21 +120,38 @@ const ConfirmModal = (props: ConfirmModalProps) => {
           )}
         </Main>
         <Footer>
-          <Buttons>
+          <ButtonWrapper>
+            <Button
+              onClick={onPrimaryClick || handleCheck}
+              className={type === "manner" ? undefined : "leftButton"}
+              disabled={type === "manner" && !mannerStatusClicked && !badMannerStatusClicked}
+              $type={type}>
+              {primaryButtonText}
+            </Button>
+            {secondaryButtonText && onSecondaryClick && (
+              <Button
+                onClick={onSecondaryClick}
+                className="rightButton"
+                $type={type}>
+                {secondaryButtonText}
+              </Button>
+            )}
+          </ButtonWrapper>
+          {/* <Buttons>
             <Button
               onClick={handleCheck || onCheck || onClose}
-              className={type === "manner" ? undefined : "noButton"}
+              className={type === "manner" ? undefined : "leftButton"}
               disabled={type === "manner" && !mannerStatusClicked && !badMannerStatusClicked}
               $type={type}
             >
-              {type === "yesOrNo" ? "예" : "확인"}
+              {buttonText[0]}
+              {type === "yesOrNo" ? `${noButtonText}` : "확인"}
             </Button>
             {type === "yesOrNo" && (
-              <Button onClick={onClose} className="noButton" $type={type}>
-                아니요
+              <Button onClick={onClose} className="rightButton" $type={type}>
               </Button>
             )}
-          </Buttons>
+          </Buttons> */}
         </Footer>
       </Wrapper>
     </Overlay>
@@ -183,7 +226,7 @@ const MannerText = styled.p`
 
 const Footer = styled.footer``;
 
-const Buttons = styled.div`
+const ButtonWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -194,20 +237,30 @@ const Button = styled.button<{ $type: string }>`
   ${({ $type }) =>
     $type === "manner" ? `${theme.fonts.bold11}` : `${theme.fonts.semiBold18}`};
   cursor: pointer;
-  color: ${({ $type }) => ($type === "img" ? "#2D2D2D" : "#44515C")};
+  color: ${({ $type }) => ($type === "img" ? `${theme.colors.gray600}` : `${theme.colors.gray700}`)};
   width: 100%;
   padding: 15px 0;
   &:disabled {
     color: ${theme.colors.gray300};
   }
 
-  &.noButton {
-    border-radius: 0 0 11px 0;
+  &.leftButton {
     &:hover,
     &:active,
     &:focus {
       color: ${theme.colors.purple100};
       background: ${theme.colors.gray500};
+      border-radius: 0 0 0 20px;
+    }
+  }
+
+  &.rightButton {
+    &:hover,
+    &:active,
+    &:focus {
+      color: ${theme.colors.purple100};
+      background: ${theme.colors.gray500};
+      border-radius: 0 0 20px 0;
     }
   }
 `;

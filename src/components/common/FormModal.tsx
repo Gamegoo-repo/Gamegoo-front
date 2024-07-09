@@ -3,7 +3,7 @@ import Image from "next/image";
 import styled from "styled-components";
 import Button from "./Button";
 import { useDispatch } from "react-redux";
-import { setCloseEvaluationModal } from "@/redux/slices/confirmModalSlice";
+import { setCloseEvaluationModal } from "@/redux/slices/modalSlice";
 
 interface FormModalProps {
   type: "checkbox" | "text";

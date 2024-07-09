@@ -6,150 +6,151 @@ import { useEffect, useState } from 'react';
 import { setChatDateFormatter, setChatTimeFormatter } from '@/utils/custom';
 import ConfirmModal from '../common/ConfirmModal';
 import { useDispatch, useSelector } from 'react-redux';
-import { setOpenConfirmModal } from '@/redux/slices/confirmModalSlice';
+import { setOpenMannerStatusModal } from '@/redux/slices/modalSlice';
 import { RootState } from '@/redux/store';
 
 interface MessageInterface {
-    user: string;
-    msg: string;
-    msgId: number;
-    userId: number;
-    date: string;
+  user: string;
+  msg: string;
+  msgId: number;
+  userId: number;
+  date: string;
 }
 
 interface MessageContainerProps {
-    messageList: MessageInterface[];
+  messageList: MessageInterface[];
 }
 
 const MessageContainer = (props: MessageContainerProps) => {
-    const { messageList } = props;
+  const { messageList } = props;
 
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-    const isFeedbackModalOpen = useSelector((state: RootState) => state.confirmModal.isOpen);
+  const isFeedbackModalOpen = useSelector((state: RootState) => state.modal.isOpen);
 
-    const [isFeedbackDateVisible, setIsFeedbackDateVisible] = useState(false);
-    const [isFeedbackDate, setIsFeedbackDate] = useState("");
-    const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+  const [isFeedbackDateVisible, setIsFeedbackDateVisible] = useState(false);
+  const [isFeedbackDate, setIsFeedbackDate] = useState("");
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
-    const handleDisplayDate = (messages: MessageInterface[], index: number): boolean => {
-        if (index === 0) return true;
+  const handleDisplayDate = (messages: MessageInterface[], index: number): boolean => {
+    if (index === 0) return true;
 
-        const currentDate = dayjs(messages[index].date).format('YYYY-M-D');
-        const previousDate = dayjs(messages[index - 1].date).format('YYYY-M-D');
+    const currentDate = dayjs(messages[index].date).format('YYYY-M-D');
+    const previousDate = dayjs(messages[index - 1].date).format('YYYY-M-D');
 
-        return currentDate !== previousDate;
-    };
+    return currentDate !== previousDate;
+  };
 
-    const handleDisplayProfileImage = (messages: MessageInterface[], index: number): boolean => {
-        if (index === 0) return true;
+  const handleDisplayProfileImage = (messages: MessageInterface[], index: number): boolean => {
+    if (index === 0) return true;
 
-        return messages[index].userId !== messages[index - 1].userId;
-    };
+    return messages[index].userId !== messages[index - 1].userId;
+  };
 
-    const handleDisplayTime = (messages: MessageInterface[], index: number): boolean => {
-        if (index === messages.length - 1) return true;
+  const handleDisplayTime = (messages: MessageInterface[], index: number): boolean => {
+    if (index === messages.length - 1) return true;
 
-        const currentTime = dayjs(messages[index].date).format('A h:mm');
-        const nextTime = dayjs(messages[index + 1].date).format('A h:mm');
+    const currentTime = dayjs(messages[index].date).format('A h:mm');
+    const nextTime = dayjs(messages[index + 1].date).format('A h:mm');
 
-        const isSameTime = currentTime === nextTime;
-        const isSameSender = messages[index].userId === messages[index + 1].userId;
+    const isSameTime = currentTime === nextTime;
+    const isSameSender = messages[index].userId === messages[index + 1].userId;
 
-        /* 시간과 보낸 사람이 같으면 마지막 메시지에만 시간 표시 */
-        return !isSameTime || !isSameSender;
-    };
+    /* 시간과 보낸 사람이 같으면 마지막 메시지에만 시간 표시 */
+    return !isSameTime || !isSameSender;
+  };
 
-    /* 마지막 채팅을 보낸 날짜에서 1시간을 더했을 때, 마지막 보낸 채팅 날짜랑 피드백 날짜가 다를 때만 보여주기 */
-    useEffect(() => {
-        const lastMessage = messageList[messageList.length - 1];
-        const feedbackTimestamp = dayjs(lastMessage.date).add(1, 'hour');
-        const feedbackFullDate = dayjs(feedbackTimestamp).format('YYYY-MM-DDTHH:mm:ss');
+  /* 마지막 채팅을 보낸 날짜에서 1시간을 더했을 때, 마지막 보낸 채팅 날짜랑 피드백 날짜가 다를 때만 보여주기 */
+  useEffect(() => {
+    const lastMessage = messageList[messageList.length - 1];
+    const feedbackTimestamp = dayjs(lastMessage.date).add(1, 'hour');
+    const feedbackFullDate = dayjs(feedbackTimestamp).format('YYYY-MM-DDTHH:mm:ss');
 
-        const feedbackDate = dayjs(feedbackTimestamp).format('YYYY-M-D');
-        const lastMessageDate = dayjs(lastMessage.date).format('YYYY-M-D');
+    const feedbackDate = dayjs(feedbackTimestamp).format('YYYY-M-D');
+    const lastMessageDate = dayjs(lastMessage.date).format('YYYY-M-D');
 
-        setIsFeedbackDate(feedbackFullDate);
+    setIsFeedbackDate(feedbackFullDate);
 
-        if (feedbackDate !== lastMessageDate) {
-            setIsFeedbackDateVisible(true);
-        }
-    }, [])
+    if (feedbackDate !== lastMessageDate) {
+      setIsFeedbackDateVisible(true);
+    }
+  }, [])
 
-    return (
-        <>
-            {messageList.map((message, index) => {
-                const hasProfileImage = handleDisplayProfileImage(messageList, index);
-                const showTime = handleDisplayTime(messageList, index);
+  return (
+    <>
+      {messageList.map((message, index) => {
+        const hasProfileImage = handleDisplayProfileImage(messageList, index);
+        const showTime = handleDisplayTime(messageList, index);
 
-                return (
-                    <MsgContainer
-                        key={message.msgId}>
-                        {handleDisplayDate(messageList, index) && (
-                            <Timestamp>{setChatDateFormatter(message.date)}</Timestamp>
-                        )}
-                        {message.user === "you" ? (
-                            <YourMessageContainer>
-                                {handleDisplayProfileImage(messageList, index) && (
-                                    <Image
-                                        src="/assets/icons/gray_circle.svg"
-                                        width={47.43}
-                                        height={47.43}
-                                        alt="프로필 이미지" />
-                                )}
-                                <YourDiv $hasProfileImage={hasProfileImage}>
-                                    <YourMessage>{message.msg}</YourMessage>
-                                    {showTime ? <YourDate>{setChatTimeFormatter(message.date)}</YourDate> : null}
-                                </YourDiv>
-                            </YourMessageContainer>
-                        ) : (
-                            <MyMessageContainer>
-                                <MyDiv>
-                                    {showTime ? <MyDate>{setChatTimeFormatter(message.date)}</MyDate> : null}
-                                    <MyMessage>{message.msg}</MyMessage>
-                                </MyDiv>
-                            </MyMessageContainer>
-                        )
-                        }
-                    </MsgContainer>
-                )
-            })}
-
-            {isFeedbackDateVisible &&
-                <FeedbackDate className={isFeedbackDateVisible ? 'visibleDate' : 'invisibleDate'}>
-                    <Timestamp>{setChatDateFormatter(isFeedbackDate)}</Timestamp>
-                </FeedbackDate>
+        return (
+          <MsgContainer
+            key={message.msgId}>
+            {handleDisplayDate(messageList, index) && (
+              <Timestamp>{setChatDateFormatter(message.date)}</Timestamp>
+            )}
+            {message.user === "you" ? (
+              <YourMessageContainer>
+                {handleDisplayProfileImage(messageList, index) && (
+                  <Image
+                    src="/assets/icons/gray_circle.svg"
+                    width={47.43}
+                    height={47.43}
+                    alt="프로필 이미지" />
+                )}
+                <YourDiv $hasProfileImage={hasProfileImage}>
+                  <YourMessage>{message.msg}</YourMessage>
+                  {showTime ? <YourDate>{setChatTimeFormatter(message.date)}</YourDate> : null}
+                </YourDiv>
+              </YourMessageContainer>
+            ) : (
+              <MyMessageContainer>
+                <MyDiv>
+                  {showTime ? <MyDate>{setChatTimeFormatter(message.date)}</MyDate> : null}
+                  <MyMessage>{message.msg}</MyMessage>
+                </MyDiv>
+              </MyMessageContainer>
+            )
             }
-            <FeedbackDiv className={isFeedbackDateVisible ? 'visibleDate' : 'invisibleDate'}>
-                <FeedbackContainer>
-                    <Image
-                        src="/assets/icons/gray_circle.svg"
-                        width={47.43}
-                        height={47.43}
-                        alt="프로필 이미지" />
-                    <Feedback>
-                        <Text>매칭은 어떠셨나요?</Text>
-                        <Text>상대방의 매너를 평가해주세요!</Text>
-                        <SmileImage
-                            src="/assets/icons/clicked_smile.svg"
-                            width={22}
-                            height={22}
-                            alt="스마일 이모티콘" />
-                        <Button onClick={() => dispatch(setOpenConfirmModal())}>
-                            매너평가 하기
-                        </Button>
-                    </Feedback>
-                </FeedbackContainer>
-                <FeedbackTime>{setChatTimeFormatter(isFeedbackDate)}</FeedbackTime>
-            </FeedbackDiv>
-            {isFeedbackModalOpen &&
-                <ConfirmModal
-                    type="manner"
-                    width="315px"
-                    onClose={() => setIsFeedbackOpen(false)} />
-            }
-        </>
-    )
+          </MsgContainer>
+        )
+      })}
+
+      {isFeedbackDateVisible &&
+        <FeedbackDate className={isFeedbackDateVisible ? 'visibleDate' : 'invisibleDate'}>
+          <Timestamp>{setChatDateFormatter(isFeedbackDate)}</Timestamp>
+        </FeedbackDate>
+      }
+      <FeedbackDiv className={isFeedbackDateVisible ? 'visibleDate' : 'invisibleDate'}>
+        <FeedbackContainer>
+          <Image
+            src="/assets/icons/gray_circle.svg"
+            width={47.43}
+            height={47.43}
+            alt="프로필 이미지" />
+          <Feedback>
+            <Text>매칭은 어떠셨나요?</Text>
+            <Text>상대방의 매너를 평가해주세요!</Text>
+            <SmileImage
+              src="/assets/icons/clicked_smile.svg"
+              width={22}
+              height={22}
+              alt="스마일 이모티콘" />
+            <Button onClick={() => dispatch(setOpenMannerStatusModal())}>
+              매너평가 하기
+            </Button>
+          </Feedback>
+        </FeedbackContainer>
+        <FeedbackTime>{setChatTimeFormatter(isFeedbackDate)}</FeedbackTime>
+      </FeedbackDiv>
+      {isFeedbackModalOpen &&
+        <ConfirmModal
+          type="manner"
+          width="315px"
+          primaryButtonText="확인"
+          onPrimaryClick={() => setIsFeedbackOpen(false)} />
+      }
+    </>
+  )
 };
 
 export default MessageContainer;
@@ -178,7 +179,7 @@ const YourDiv = styled.div<{ $hasProfileImage: boolean }>`
   display: flex;
   align-items: end;
   margin-left: ${(props) =>
-        props.$hasProfileImage ? "11px" : "58.43px"};
+    props.$hasProfileImage ? "11px" : "58.43px"};
 `;
 
 const YourMessage = styled.div`

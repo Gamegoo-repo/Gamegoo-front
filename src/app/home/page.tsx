@@ -10,7 +10,7 @@ import styled from "styled-components";
 
 const HomePage = () => {
 
-    const isEvaluationModalOpen = useSelector((state: RootState) => state.confirmModal.evaluationModal);
+    const isEvaluationModalOpen = useSelector((state: RootState) => state.modal.evaluationModal);
 
     return (
         <Wrapper>

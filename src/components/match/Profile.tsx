@@ -171,11 +171,13 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                     type="yesOrNo"
                     width="540px"
                     borderRadius="20px"
-                    onCheck={() => {
+                    primaryButtonText="예"
+                    secondaryButtonText="아니요"
+                    onPrimaryClick={() => {
                       setIsBlockBoxOpen(false);
                       setIsBlockConfrimOpen(true);
                     }}
-                    onClose={() => {
+                    onSecondaryClick={() => {
                       setIsBlockBoxOpen(false);
                     }}
                   >
@@ -190,7 +192,8 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                     type="confirm"
                     width="540px"
                     borderRadius="20px"
-                    onClose={() => {
+                    primaryButtonText="확인"
+                    onPrimaryClick={() => {
                       setIsBlockConfrimOpen(false);
                     }}
                   >
