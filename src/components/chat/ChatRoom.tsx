@@ -43,7 +43,6 @@ const ChatRoom = (props: ChatRoomProps) => {
     const [message, setMessage] = useState("");
     const [messageList, setMessageList] = useState([]);
     const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
-    const [activeModal, setActiveModal] = useState("");
     const [reportDetail, setReportDetail] = useState<string>("");
 
     const isEvaluationModalOpen = useSelector((state: RootState) => state.modal.evaluationModal);
@@ -62,6 +61,7 @@ const ChatRoom = (props: ChatRoomProps) => {
         // socket.emit(“sendMessage”, message, (res) => {
         //     console.log(“res”, res);
         // })
+        setMessage("");
         console.log(message)
     };
 

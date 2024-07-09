@@ -11,6 +11,9 @@ import Table from "@/components/board/Table";
 import Pagination from "@/components/common/Pagination";
 import PositionFilter from "@/components/board/PositionFilter";
 import PostBoard from "@/components/createBoard/PostBoard";
+import ChatButton from "@/components/common/ChatButton";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 const DROP_DATA1 = [
   { id: 1, value: "솔로1" },
@@ -154,6 +157,9 @@ const BoardPage = () => {
   const [selectedDropOption1, setSelectedDropOption1] = useState("솔로 랭크");
   const [selectedDropOption2, setSelectedDropOption2] = useState("티어 선택");
 
+  const isEvaluationModalOpen = useSelector((state: RootState) => state.modal.evaluationModal);
+  const isMoreModalOpen = useSelector((state: RootState) => state.modal.moreModal);
+
   const dropdownRef1 = useRef<HTMLDivElement>(null);
   const dropdownRef2 = useRef<HTMLDivElement>(null);
 
@@ -232,7 +238,9 @@ const BoardPage = () => {
     <>
       {isWritingOpen && <PostBoard onClose={handleWritingClose} />}
       <Wrapper>
-        <BoardContent>
+        <BoardContent
+         $isEvaluationModalOpen={isEvaluationModalOpen}
+         $isMoreModalOpen={isMoreModalOpen}>
           <FirstRow>
             <Title>게시판</Title>
             <RefreshImage
@@ -307,6 +315,11 @@ const BoardPage = () => {
             pageButtonCount={pageButtonCount}
             onPageChange={handlePageChange}
           />
+          <Footer>
+            <ChatBoxContent>
+              <ChatButton count={3} />
+            </ChatBoxContent>
+          </Footer>
         </BoardContent>
       </Wrapper>
     </>
@@ -321,12 +334,22 @@ const Wrapper = styled.div`
   justify-content: center;
 `;
 
-const BoardContent = styled.header`
+const BoardContent = styled.header<{ $isEvaluationModalOpen: boolean, $isMoreModalOpen: string }>`
   max-width: 1440px;
   width: 100%;
-  padding: 0 80px 123px 80px;
+  padding: 0 80px;
   display: flex;
   flex-direction: column;
+  &:before {
+        content: '';
+        position: ${({ $isEvaluationModalOpen, $isMoreModalOpen }) => $isEvaluationModalOpen || $isMoreModalOpen !== "" ? 'fixed' : 'unset'};
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: ${({ $isEvaluationModalOpen, $isMoreModalOpen }) => $isEvaluationModalOpen || $isMoreModalOpen !== "" ? '#0000009C' : 'transparent'};
+        z-index: 100;
+    }
 `;
 
 const FirstRow = styled.div`
@@ -380,4 +403,13 @@ const SecondBlock = styled.div``;
 const Main = styled.main`
   width: 100%;
   margin-bottom: 64px;
+`;
+
+const Footer = styled.footer`
+  display: flex;
+  margin: 37px 0 78px;
+`;
+
+const ChatBoxContent = styled.div`
+  margin-left: auto;
 `;

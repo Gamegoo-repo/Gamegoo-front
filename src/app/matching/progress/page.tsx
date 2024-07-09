@@ -1,6 +1,5 @@
 "use client";
 
-import ChatButton from "@/components/common/ChatButton";
 import styled from "styled-components";
 import HeaderTitle from "@/components/common/HeaderTitle";
 import SquareProfile from "@/components/match/SquareProfile";
@@ -29,11 +28,6 @@ const Progress = () => {
             어떤 사람이 나올까요?
           </Waiting>
         </Main>
-        <Footer>
-          <ChatBoxContent>
-            <ChatButton count={3} />
-          </ChatBoxContent>
-        </Footer>
       </MatchContent>
     </Wrapper>
   );
@@ -92,14 +86,4 @@ const Waiting = styled.div`
   gap: 42px;
   color: ${theme.colors.gray600};
   ${(props) => props.theme.fonts.regular25};
-`;
-
-const Footer = styled.footer`
-  display: flex;
-  margin-bottom: 78px;
-`;
-
-const ChatBoxContent = styled.div`
-  margin-left: auto;
-  margin-bottom: 37px;
 `;

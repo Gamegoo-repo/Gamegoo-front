@@ -1,7 +1,5 @@
 "use client";
 
-import ChatButton from "@/components/common/ChatButton";
-import Image from "next/image";
 import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
 import Profile from "@/components/match/Profile";
@@ -60,11 +58,6 @@ const ProfilePage = () => {
             }}
           />
         </Main>
-        <Footer>
-          <ChatBoxContent>
-            <ChatButton count={3} />
-          </ChatBoxContent>
-        </Footer>
       </MatchContent>
     </Wrapper>
   );
@@ -90,38 +83,11 @@ const MatchContent = styled.div`
   padding: 0 80px;
 `;
 
-const Header = styled.header`
-  display: flex;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 32px;
-`;
-
-const StyledImage = styled(Image)`
-  margin-right: 35px;
-  cursor: pointer;
-`;
-
-const Title = styled.h1`
-  ${(props) => props.theme.fonts.bold32};
-  color: #393939;
-`;
-
 const Main = styled.main`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   width: 100%;
   gap: 14px;
-  margin-bottom: 37px;
-`;
-
-const Footer = styled.footer`
-  display: flex;
-  margin-bottom: 78px;
-`;
-
-const ChatBoxContent = styled.div`
-  margin-left: auto;
   margin-bottom: 37px;
 `;

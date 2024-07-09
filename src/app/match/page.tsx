@@ -83,10 +83,8 @@ const BoxWrapper = styled.div`
 
 const Footer = styled.footer`
   display: flex;
-  margin-bottom:78px;
 `
 
 const ChatBoxContent = styled.div`
   margin-left: auto;
-  margin-bottom: 37px;
 `

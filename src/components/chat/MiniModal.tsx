@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
-import { useState } from "react";
 
 interface MiniModalProps {
   onChangeModal: (type: string) => void;
@@ -12,7 +11,6 @@ const MiniModal = (props: MiniModalProps) => {
   const handleAddFriend = () => {
     console.log('친구 추가')
   };
-
 
   return (
     <Wrapper>
@@ -56,18 +54,4 @@ const Li = styled.li`
   &:last-child {
     border-bottom: none;
   }
-`;
-
-const CheckContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 20px;
-`;
-
-const Msg = styled.div`
-  text-align: center;
-  color: ${theme.colors.gray600};
-  ${(props) => props.theme.fonts.regular18};
-  margin: 28px 0;
 `;
