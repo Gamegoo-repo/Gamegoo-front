@@ -4,7 +4,7 @@ import { AppDispatch } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
 type ButtonText =
@@ -42,6 +42,16 @@ const ConfirmModal = (props: ConfirmModalProps) => {
   } = props;
 
   const dispatch: AppDispatch = useDispatch();
+
+  let buttonClassName = '';
+
+  if (type !== 'manner') {
+    if (primaryButtonText && secondaryButtonText) {
+      buttonClassName = 'leftButton';
+    } else if (primaryButtonText) {
+      buttonClassName = 'wholeButton';
+    }
+  }
 
   const [mannerStatusClicked, setMannerStatusClicked] = useState(false);
   const [badMannerStatusClicked, setBadMannerStatusClicked] = useState(false);
@@ -119,7 +129,7 @@ const ConfirmModal = (props: ConfirmModalProps) => {
           <ButtonWrapper>
             <Button
               onClick={type ? handleCheck : onPrimaryClick}
-              className={type ? undefined : "leftButton"}
+              className={buttonClassName}
               disabled={type === "manner" && !mannerStatusClicked && !badMannerStatusClicked}
               $type={type}>
               {primaryButtonText}
@@ -241,6 +251,16 @@ const Button = styled.button<{ $type: string | undefined }>`
       color: ${theme.colors.purple100};
       background: ${theme.colors.gray500};
       border-radius: 0 0 20px 0;
+    }
+  }
+
+  &.wholeButton {
+    &:hover,
+    &:active,
+    &:focus {
+      color: ${theme.colors.purple100};
+      background: ${theme.colors.gray500};
+      border-radius: 0 0 20px 20px;
     }
   }
 `;
