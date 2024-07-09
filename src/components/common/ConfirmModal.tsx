@@ -19,12 +19,10 @@ type ButtonText =
   | '글 보러하기';
 
 interface ConfirmModalProps {
-  type: "yesOrNo" | "confirm" | "manner";
+  type?: "manner";
   children?: string | React.ReactNode;
   width: string;
   borderRadius?: string;
-  onCheck?: () => void;
-  onClose?: () => void;
   primaryButtonText: ButtonText;
   secondaryButtonText?: ButtonText;
   onPrimaryClick: () => void;
@@ -37,8 +35,6 @@ const ConfirmModal = (props: ConfirmModalProps) => {
     children,
     width,
     borderRadius,
-    onCheck,
-    onClose,
     primaryButtonText,
     secondaryButtonText,
     onPrimaryClick,
@@ -64,7 +60,7 @@ const ConfirmModal = (props: ConfirmModalProps) => {
 
   const handleCheck = () => {
     dispatch(setOpenEvaluationModal());
-    dispatch(setCloseMannerStatusModal());
+    onPrimaryClick();
   };
 
   return (
@@ -79,11 +75,11 @@ const ConfirmModal = (props: ConfirmModalProps) => {
             <ImageTop>
               <CloseButton>
                 <Image
-                  onClick={() => dispatch(setCloseMannerStatusModal())}
+                  onClick={onPrimaryClick}
                   src="/assets/icons/close.svg"
                   width={10}
                   height={10}
-                  alt="close button"
+                  alt="닫기"
                 />
               </CloseButton>
               <ImageWrapper>
@@ -122,8 +118,8 @@ const ConfirmModal = (props: ConfirmModalProps) => {
         <Footer>
           <ButtonWrapper>
             <Button
-              onClick={onPrimaryClick || handleCheck}
-              className={type === "manner" ? undefined : "leftButton"}
+              onClick={type ? handleCheck : onPrimaryClick}
+              className={type ? undefined : "leftButton"}
               disabled={type === "manner" && !mannerStatusClicked && !badMannerStatusClicked}
               $type={type}>
               {primaryButtonText}
@@ -137,21 +133,6 @@ const ConfirmModal = (props: ConfirmModalProps) => {
               </Button>
             )}
           </ButtonWrapper>
-          {/* <Buttons>
-            <Button
-              onClick={handleCheck || onCheck || onClose}
-              className={type === "manner" ? undefined : "leftButton"}
-              disabled={type === "manner" && !mannerStatusClicked && !badMannerStatusClicked}
-              $type={type}
-            >
-              {buttonText[0]}
-              {type === "yesOrNo" ? `${noButtonText}` : "확인"}
-            </Button>
-            {type === "yesOrNo" && (
-              <Button onClick={onClose} className="rightButton" $type={type}>
-              </Button>
-            )}
-          </Buttons> */}
         </Footer>
       </Wrapper>
     </Overlay>
@@ -170,12 +151,11 @@ const Overlay = styled.div`
 `;
 
 const Wrapper = styled.div<{ $width: string; $borderRadius: string }>`
-  width: ${(props) => props.$width};
+  width: ${({ $width }) => $width};
   background: ${theme.colors.white};
-  border-radius: ${(props) => props.$borderRadius};
+  border-radius: ${({ $borderRadius }) => $borderRadius};
   box-shadow: 0 0 14.76px 0 rgba(0, 0, 0, 0.15);
 `;
-
 const Main = styled.main`
   padding: 0 4px;
 `;
@@ -232,12 +212,12 @@ const ButtonWrapper = styled.div`
   justify-content: center;
 `;
 
-const Button = styled.button<{ $type: string }>`
+const Button = styled.button<{ $type: string | undefined }>`
   text-align: center;
   ${({ $type }) =>
-    $type === "manner" ? `${theme.fonts.bold11}` : `${theme.fonts.semiBold18}`};
+    $type ? `${theme.fonts.bold11}` : `${theme.fonts.semiBold18}`};
   cursor: pointer;
-  color: ${({ $type }) => ($type === "img" ? `${theme.colors.gray600}` : `${theme.colors.gray700}`)};
+  color: ${({ $type }) => ($type ? `${theme.colors.gray600}` : `${theme.colors.gray700}`)};
   width: 100%;
   padding: 15px 0;
   &:disabled {

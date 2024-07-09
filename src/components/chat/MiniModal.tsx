@@ -3,31 +3,29 @@ import { theme } from "@/styles/theme";
 import { useState } from "react";
 
 interface MiniModalProps {
-    onClose: () => void;
-    onChangeModal:(type:string)=>void;
+  onChangeModal: (type: string) => void;
 }
 
 const MiniModal = (props: MiniModalProps) => {
-    const { onClose,onChangeModal } = props;
-    const [activeModal, setActiveModal] = useState("");
+  const { onChangeModal } = props;
 
-    const handleAddFriend = () => {
-        console.log('친구 추가')
-    };
+  const handleAddFriend = () => {
+    console.log('친구 추가')
+  };
 
 
-    return (
-        <Wrapper>
-            <Ul>
-                <Li onClick={() => onChangeModal("leave")}>채팅방 나가기</Li>
-                <Li onClick={handleAddFriend}>친구 추가</Li>
-                <Li onClick={() => onChangeModal("block")}>차단하기</Li>
-                <Li onClick={() => onChangeModal("report")}>신고하기</Li>
-                <Li onClick={() => onChangeModal("manner")}>매너 평가</Li>
-                <Li onClick={() => onChangeModal("badManner")}>비매너 평가</Li>
-            </Ul>
-        </Wrapper>
-    )
+  return (
+    <Wrapper>
+      <Ul>
+        <Li onClick={() => onChangeModal("leave")}>채팅방 나가기</Li>
+        <Li onClick={handleAddFriend}>친구 추가</Li>
+        <Li onClick={() => onChangeModal("block")}>차단하기</Li>
+        <Li onClick={() => onChangeModal("report")}>신고하기</Li>
+        <Li onClick={() => onChangeModal("manner")}>매너 평가</Li>
+        <Li onClick={() => onChangeModal("badManner")}>비매너 평가</Li>
+      </Ul>
+    </Wrapper>
+  )
 };
 
 export default MiniModal;
@@ -55,6 +53,9 @@ const Li = styled.li`
   ${(props) => props.theme.fonts.medium15};
   color: #555555;
   cursor: pointer;
+  &:last-child {
+    border-bottom: none;
+  }
 `;
 
 const CheckContent = styled.div`

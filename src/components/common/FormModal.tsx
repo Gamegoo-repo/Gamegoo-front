@@ -36,12 +36,6 @@ const FormModal = (props: FormModalProps) => {
     disabled,
   } = props;
 
-  const dispatch = useDispatch();
-
-  const handleFormClose = () => {
-    dispatch(setCloseEvaluationModal())
-  };
-
   return (
     <Overlay $position={position}>
       <Wrapper
@@ -55,7 +49,7 @@ const FormModal = (props: FormModalProps) => {
           {type === "checkbox" && <CheckboxTitle>{title}</CheckboxTitle>}
           <CloseButton>
             <CloseImage
-              onClick={handleFormClose}
+              onClick={onClose}
               src="/assets/icons/close.svg"
               width={closeButtonWidth}
               height={closeButtonHeight}
@@ -101,10 +95,10 @@ const Wrapper = styled.div<{
 }>`
   box-shadow: 0 0 21.3px 0 rgba(0, 0, 0, 0.15);
   background: ${theme.colors.white};
-  max-width: ${(props) => props.$width};
+  max-width: ${({ $width }) => $width};
   width: 100%;
-  max-height: ${(props) => props.$height};
-  border-radius: ${(props) => props.$borderRadius};
+  max-height: ${({ $height }) => $height};
+  border-radius: ${({ $borderRadius }) => $borderRadius};
   padding: ${({ $type }) =>
     $type === "checkbox" ? "26px 31px 22px" : "29px 37px 38px"};
 `;

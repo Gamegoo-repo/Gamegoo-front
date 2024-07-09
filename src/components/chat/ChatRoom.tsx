@@ -3,7 +3,7 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useState } from "react";
 import MessageContainer from "./MessageContainer";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import FormModal from "../common/FormModal";
 import Checkbox from "../common/Checkbox";
@@ -12,6 +12,7 @@ import MiniModal from "./MiniModal";
 import Input from "../common/Input";
 import { REPORT_REASON } from "@/data/report";
 import ConfirmModal from "../common/ConfirmModal";
+import { setCloseEvaluationModal, setCloseMoreModal, setOpenMoreModal } from "@/redux/slices/modalSlice";
 
 
 interface ChatRoomProps {
@@ -34,6 +35,8 @@ const MESSAGE_LIST = [
 const ChatRoom = (props: ChatRoomProps) => {
     const { id, onClose, onGoback } = props;
 
+    const dispatch = useDispatch();
+
     const [message, setMessage] = useState("");
     const [messageList, setMessageList] = useState([]);
     const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
@@ -43,6 +46,7 @@ const ChatRoom = (props: ChatRoomProps) => {
     const isEvaluationModalOpen = useSelector((state: RootState) => state.modal.evaluationModal);
     const isFeedbackModalOpen = useSelector((state: RootState) => state.modal.isOpen);
     const isMannerStatus = useSelector((state: RootState) => state.mannerStatus.mannerStatus);
+    const isMoreModalType = useSelector((state: RootState) => state.modal.moreModal);
 
     // useEffect(() => {
     //     socket.on(“message”, (message) => {
@@ -70,20 +74,27 @@ const ChatRoom = (props: ChatRoomProps) => {
     };
 
     const handleModalChange = (modalType: string) => {
-        setActiveModal(modalType);
+        dispatch(setOpenMoreModal(modalType));
         setIsMoreBoxOpen(false);
     };
 
     const handleModalClose = () => {
-        setActiveModal("");
+        dispatch(setCloseMoreModal());
     };
 
     const handleChatLeave = () => {
         console.log('채팅창 나가기')
+        handleModalClose();
+        onGoback();
     };
 
     const handleChatBlock = () => {
-        console.log('차단완료 모달보여주기')
+        handleModalClose();
+        dispatch(setOpenMoreModal('doneBlock'));
+    };
+
+    const handleFormModalClose = () => {
+        dispatch(setCloseEvaluationModal())
     };
 
     return (
@@ -94,7 +105,6 @@ const ChatRoom = (props: ChatRoomProps) => {
                     onClick={handleOutsideModalClick}>
                     {isMoreBoxOpen &&
                         <MiniModal
-                            onClose={() => setIsMoreBoxOpen(false)}
                             onChangeModal={handleModalChange} />}
                     <CloseButton>
                         <CloseImage
@@ -161,6 +171,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                     </ChatFooter>
                 </Wrapper>
             </Overlay>
+
             {isEvaluationModalOpen &&
                 <FormContainer>
                     <FormModal
@@ -172,6 +183,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                         closeButtonHeight={17}
                         borderRadius="10px"
                         buttonText="완료"
+                        onClose={handleFormModalClose}
                         disabled
                     >
                         <CheckContent>
@@ -197,9 +209,10 @@ const ChatRoom = (props: ChatRoomProps) => {
                     </FormModal>
                 </FormContainer>
             }
-            {activeModal === 'leave' &&
+            
+            {/* 채팅창 나가기 팝업 */}
+            {isMoreModalType === 'leave' &&
                 <ConfirmModal
-                    type="yesOrNo"
                     width="540px"
                     borderRadius="20px"
                     primaryButtonText="취소"
@@ -211,32 +224,48 @@ const ChatRoom = (props: ChatRoomProps) => {
                     <Msg>
                         {`친구 추가 하지 않은 상대방입니다\n채팅방을 나가시겠어요?`}
                     </Msg>
-                    {/* 친구일떄F */}
+
+                    {/* 친구일떄 */}
                     {/* <Msg>
                         {`채팅방을 나가시겠어요?`}
                     </Msg> */}
                 </ConfirmModal>}
-            {activeModal === 'block' &&
+
+            {/* 차단하기 팝업 */}
+            {isMoreModalType === 'block' &&
                 <ConfirmModal
-                    type="yesOrNo"
                     width="540px"
                     borderRadius="20px"
                     primaryButtonText="취소"
                     secondaryButtonText="차단"
                     onPrimaryClick={handleModalClose}
                     onSecondaryClick={handleChatBlock}
-                    onClose={() => setActiveModal("")}>
+                >
                     {/* 친구아닐떄 */}
                     <Msg>
-                        {`차단하면 상대가 보내는 메시지를 받을 수 없으며\n상대와 매칭이 이루어지지 않습니다.\n또한, 다시 차단 해제할 수 없습니다.\n차단하시겠습니까?`}
+                        {`차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다.\n\n또한, 다시 차단 해제할 수 없습니다.\n차단하시겠습니까?`}
                     </Msg>
-                    {/* 친구일떄F */}
+
+                    {/* 친구일떄 */}
                     {/* <Msg>
                      {`채팅방을 나가시겠어요?`}
                  </Msg> */}
                 </ConfirmModal>}
 
-            {activeModal === 'report' &&
+            {/* 차단 완료 팝업 */}
+            {isMoreModalType === 'doneBlock' && (
+                <ConfirmModal
+                    width="540px"
+                    borderRadius="20px"
+                    primaryButtonText="확인"
+                    onPrimaryClick={handleModalClose}
+                >
+                    <MsgConfirm>{`차단이 완료되었습니다.`}</MsgConfirm>
+                </ConfirmModal>
+            )}
+
+            {/* 신고하기 팝업 */}
+            {isMoreModalType === 'report' &&
                 <FormModal
                     type="checkbox"
                     title="유저 신고하기"
@@ -246,7 +275,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                     closeButtonHeight={17}
                     borderRadius="20px"
                     buttonText="신고하기"
-                    //    onClose={handleReport}
+                    onClose={handleModalClose}
                     disabled
                 >
                     <div>
@@ -277,7 +306,9 @@ const ChatRoom = (props: ChatRoomProps) => {
                         </ReportContent>
                     </div>
                 </FormModal>}
-            {activeModal === 'manner' &&
+
+            {/* 매너평가 팝업 */}
+            {isMoreModalType === 'manner' &&
                 <FormModal
                     type="checkbox"
                     title="매너 평가하기"
@@ -287,10 +318,11 @@ const ChatRoom = (props: ChatRoomProps) => {
                     closeButtonHeight={17}
                     borderRadius="10px"
                     buttonText="완료"
+                    onClose={handleModalClose}
                     disabled
                 >
                     <CheckContent>
-                        {activeModal === "manner" && MANNER_TYPES.map((data) => (
+                        {isMoreModalType === "manner" && MANNER_TYPES.map((data) => (
                             <Checkbox
                                 key={data.id}
                                 value={data.text}
@@ -300,7 +332,9 @@ const ChatRoom = (props: ChatRoomProps) => {
                         ))}
                     </CheckContent>
                 </FormModal>}
-            {activeModal === 'badManner' &&
+
+            {/* 비매너 평가 팝업 */}
+            {isMoreModalType === 'badManner' &&
                 <FormModal
                     type="checkbox"
                     title="비매너 평가하기"
@@ -310,10 +344,11 @@ const ChatRoom = (props: ChatRoomProps) => {
                     closeButtonHeight={17}
                     borderRadius="10px"
                     buttonText="완료"
+                    onClose={handleModalClose}
                     disabled
                 >
                     <CheckContent>
-                        {activeModal === "badManner" && BAD_MANNER_TYPES.map((data) => (
+                        {isMoreModalType === "badManner" && BAD_MANNER_TYPES.map((data) => (
                             <Checkbox
                                 key={data.id}
                                 value={data.text}
@@ -510,6 +545,13 @@ const ReportReasonContent = styled(ReportContent)`
 `;
 
 const Msg = styled.div`
+  text-align: center;
   color: ${theme.colors.gray600};
+  ${(props) => props.theme.fonts.regular18};
+  margin: 28px 0;
+`;
+
+const MsgConfirm = styled(Msg)`
   ${(props) => props.theme.fonts.regular25};
+  margin: 80px 0;
 `;

@@ -14,8 +14,8 @@ const HomePage = () => {
 
     return (
         <Wrapper>
-            <HomeContent 
-            $isEvaluationModalOpen={isEvaluationModalOpen}>
+            <HomeContent
+                $isEvaluationModalOpen={isEvaluationModalOpen}>
                 <Header>
                     <Image
                         src='/assets/icons/logo_m.svg'

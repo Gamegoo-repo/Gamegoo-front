@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { setChatDateFormatter, setChatTimeFormatter } from '@/utils/custom';
 import ConfirmModal from '../common/ConfirmModal';
 import { useDispatch, useSelector } from 'react-redux';
-import { setOpenMannerStatusModal } from '@/redux/slices/modalSlice';
+import { setCloseMannerStatusModal, setOpenMannerStatusModal } from '@/redux/slices/modalSlice';
 import { RootState } from '@/redux/store';
 
 interface MessageInterface {
@@ -30,8 +30,11 @@ const MessageContainer = (props: MessageContainerProps) => {
 
   const [isFeedbackDateVisible, setIsFeedbackDateVisible] = useState(false);
   const [isFeedbackDate, setIsFeedbackDate] = useState("");
-  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
+  const handleMannerTypeClose = ()=>{
+    dispatch(setCloseMannerStatusModal());
+  };
+  
   const handleDisplayDate = (messages: MessageInterface[], index: number): boolean => {
     if (index === 0) return true;
 
@@ -147,7 +150,7 @@ const MessageContainer = (props: MessageContainerProps) => {
           type="manner"
           width="315px"
           primaryButtonText="확인"
-          onPrimaryClick={() => setIsFeedbackOpen(false)} />
+          onPrimaryClick={handleMannerTypeClose} />
       }
     </>
   )

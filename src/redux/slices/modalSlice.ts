@@ -5,13 +5,15 @@ interface ModalState {
     mannerModal: boolean;
     badMannerModal: boolean;
     evaluationModal: boolean;
+    moreModal: string;
 }
 
 const initialState: ModalState = {
     isOpen: false,
     mannerModal: false,
     badMannerModal: false,
-    evaluationModal: false
+    evaluationModal: false,
+    moreModal: ""
 };
 
 const modalSlice = createSlice({
@@ -42,6 +44,12 @@ const modalSlice = createSlice({
         setCloseBadMannerModal: (state) => {
             state.badMannerModal = false;
         },
+        setOpenMoreModal: (state, action) => {
+            state.moreModal = action.payload;
+        },
+        setCloseMoreModal: (state) => {
+            state.moreModal = "";
+        }
     },
 });
 
@@ -53,7 +61,9 @@ export const {
     setOpenBadMannerModal,
     setCloseBadMannerModal,
     setOpenEvaluationModal,
-    setCloseEvaluationModal
+    setCloseEvaluationModal,
+    setOpenMoreModal,
+    setCloseMoreModal
 } = modalSlice.actions;
 
 export default modalSlice.reducer;
