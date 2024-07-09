@@ -2,16 +2,12 @@ import { createSlice } from '@reduxjs/toolkit';
 
 interface ModalState {
     isOpen: boolean;
-    mannerModal: boolean;
-    badMannerModal: boolean;
     evaluationModal: boolean;
     moreModal: string;
 }
 
 const initialState: ModalState = {
     isOpen: false,
-    mannerModal: false,
-    badMannerModal: false,
     evaluationModal: false,
     moreModal: ""
 };
@@ -20,29 +16,19 @@ const modalSlice = createSlice({
     name: 'modalSlice',
     initialState,
     reducers: {
+        /* 매너,비매너 선택 모달 */
         setOpenMannerStatusModal: (state) => {
             state.isOpen = true;
         },
         setCloseMannerStatusModal: (state) => {
             state.isOpen = false;
         },
+        /* 매너,비매너 평가하기 모달 */
         setOpenEvaluationModal: (state) => {
             state.evaluationModal = true;
         },
         setCloseEvaluationModal: (state) => {
             state.evaluationModal = false;
-        },
-        setOpenMannerModal: (state) => {
-            state.mannerModal = true;
-        },
-        setCloseMannerModal: (state) => {
-            state.mannerModal = false;
-        },
-        setOpenBadMannerModal: (state) => {
-            state.badMannerModal = true;
-        },
-        setCloseBadMannerModal: (state) => {
-            state.badMannerModal = false;
         },
         setOpenMoreModal: (state, action) => {
             state.moreModal = action.payload;
@@ -56,10 +42,6 @@ const modalSlice = createSlice({
 export const {
     setOpenMannerStatusModal,
     setCloseMannerStatusModal,
-    setOpenMannerModal,
-    setCloseMannerModal,
-    setOpenBadMannerModal,
-    setCloseBadMannerModal,
     setOpenEvaluationModal,
     setCloseEvaluationModal,
     setOpenMoreModal,
