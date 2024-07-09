@@ -13,6 +13,8 @@ import Input from "../common/Input";
 import { REPORT_REASON } from "@/data/report";
 import ConfirmModal from "../common/ConfirmModal";
 import { setCloseEvaluationModal, setCloseMoreModal, setOpenMoreModal } from "@/redux/slices/modalSlice";
+import { useRouter } from "next/navigation";
+
 
 
 interface ChatRoomProps {
@@ -36,6 +38,7 @@ const ChatRoom = (props: ChatRoomProps) => {
     const { id, onClose, onGoback } = props;
 
     const dispatch = useDispatch();
+    const router = useRouter();
 
     const [message, setMessage] = useState("");
     const [messageList, setMessageList] = useState([]);
@@ -123,6 +126,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                             alt="뒤로가기" />
                         <Middle>
                             <ProfileImage
+                                onClick={() => router.push("/user")}
                                 src="/assets/icons/gray_circle.svg"
                                 width={47.43}
                                 height={47.43}
@@ -209,7 +213,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                     </FormModal>
                 </FormContainer>
             }
-            
+
             {/* 채팅창 나가기 팝업 */}
             {isMoreModalType === 'leave' &&
                 <ConfirmModal

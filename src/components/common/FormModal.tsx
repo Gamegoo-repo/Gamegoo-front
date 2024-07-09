@@ -16,7 +16,7 @@ interface FormModalProps {
   borderRadius: string;
   children: string | React.ReactNode;
   buttonText: string;
-  onClose?: () => void;
+  onClose: () => void;
   disabled?: boolean;
 }
 
@@ -65,7 +65,7 @@ const FormModal = (props: FormModalProps) => {
         </Main>
         <Footer>
           <ButtonContent>
-            <Button onClick={onClose ? onClose : handleFormClose} buttonType="primary" text={buttonText} />
+            <Button onClick={onClose} buttonType="primary" text={buttonText} />
           </ButtonContent>
         </Footer>
       </Wrapper>
