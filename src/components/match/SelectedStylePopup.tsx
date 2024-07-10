@@ -8,16 +8,18 @@ type positionType = "top" | "left";
 interface SelectedStylePopupProps {
   onClose: () => void;
   selectedStyles: string[];
-  onSelectStyle: (style: string, event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+  onSelectStyle: (
+    style: string,
+    event: React.MouseEvent<HTMLElement, MouseEvent>
+  ) => void;
   position?: positionType;
 }
 const SelectedStylePopup: React.FC<SelectedStylePopupProps> = ({
   onClose,
   selectedStyles,
   onSelectStyle,
-  position = "top"
+  position = "top",
 }) => {
-
   return (
     <Container $position={position}>
       <Top>
@@ -63,8 +65,8 @@ const Container = styled.div<{ $position: positionType }>`
   backdrop-filter: blur(7.5px);
 
   position: absolute;
-  top: ${({ $position }) => ($position === "top" ? "0" : "60px")};
-  left: ${({ $position }) => ($position === "top" ? "52px" : "0")};
+  top: ${({ $position }) => ($position === "top" ? "65px" : "60px")};
+  left: ${({ $position }) => ($position === "top" ? "0px" : "0")};
   z-index: 100;
 `;
 
