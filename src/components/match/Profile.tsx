@@ -13,6 +13,7 @@ import Checkbox from "../common/Checkbox";
 import { REPORT_REASON } from "@/data/report";
 import Input from "../common/Input";
 import ConfirmModal from "../common/ConfirmModal";
+import PositionCategory from "../common/PositionCategory";
 
 type profileType = "fun" | "hard" | "other" | "me";
 
@@ -45,6 +46,13 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
   const [isProfileListOpen, setIsProfileListOpen] = useState(false);
   const [reportDetail, setReportDetail] = useState<string>("");
 
+  /* 포지션 */
+  const [positions, setPositions] = useState(POSITIONS);
+  const [isPositionOpen, setIsPositionOpen] = useState<boolean[]>([
+    false,
+    false,
+    false,
+  ]);
   /* 선택된 현재 프로필 이미지 */
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(
     parseInt(user.image.slice(-1))
@@ -81,6 +89,30 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
     // 차단하기 api
     setIsBlockBoxOpen(!isBlockBoxOpen);
     setIsMoreBoxOpen(false);
+  };
+
+  /* 포지션 선택창 관련 함수*/
+  // 포지션 선택창 열기 (포지션 클릭시 동작)
+  const handlePosition = (index: number) => {
+    setIsPositionOpen((prev) =>
+      prev.map((isOpen, i) => (i === index ? !isOpen : false))
+    );
+  };
+
+  // 포지션 선택창 닫기
+  const handlePositionClose = (index: number) => {
+    setIsPositionOpen((prev) =>
+      prev.map((isOpen, i) => (i === index ? false : isOpen))
+    );
+  };
+
+  // 포지션 선택해 변경하기
+  const handlePositionSelect = (index: number, newPosition: string) => {
+    setPositions((prev) =>
+      prev.map((pos, i) =>
+        i === index ? { ...pos, position: newPosition } : pos
+      )
+    );
   };
 
   return (
@@ -258,18 +290,30 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
             <UnderRow>
               <Position>
                 {(profileType === "other"
-                  ? POSITIONS.slice(0, 2)
-                  : POSITIONS
+                  ? positions.slice(0, 2)
+                  : positions
                 ).map((position, index) => (
-                  <Posi key={index} className={profileType}>
-                    {position.label}
-                    <Image
-                      src={`/assets/icons/position_${position.position}_purple.svg`}
-                      width={55}
-                      height={40}
-                      alt="포지션"
-                    />
-                  </Posi>
+                  <>
+                    <Posi key={index} className={profileType}>
+                      {position.label}
+                      <Image
+                        src={`/assets/icons/position_${position.position}_purple.svg`}
+                        width={55}
+                        height={40}
+                        alt="포지션"
+                        onClick={() => handlePosition(index)}
+                      />
+                      {isPositionOpen[index] && (
+                        <PositionCategory
+                          onClose={() => handlePositionClose(index)}
+                          onSelect={(newPosition: string) =>
+                            handlePositionSelect(index, newPosition)
+                          }
+                          boxName="position"
+                        />
+                      )}
+                    </Posi>
+                  </>
                 ))}
               </Position>
               {user.champions && <Champion size={14} list={user.champions} />}
@@ -512,11 +556,18 @@ const Posi = styled.div`
   gap: 10px;
   align-items: center;
   font-size: ${theme.fonts.regular14};
+  position: relative;
 
   &.other {
     font-size: ${theme.fonts.semiBold14};
   }
 `;
+
+// const StyledPositionCategory = styled(PositionCategory)`
+//   position: absolute;
+//   top: 200px;
+//   left: 0px;
+// `;
 
 const Mike = styled.div`
   display: flex;
