@@ -319,7 +319,7 @@ const Guide = () => {
       {openPosition && (
         <PositionCategory
           onClose={handlePositionClose}
-          onButtonClick={handlePosition}
+          onSelect={handlePosition}
           boxName="position"
         />
       )}
