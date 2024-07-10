@@ -39,7 +39,7 @@ const FormModal = (props: FormModalProps) => {
   const dispatch = useDispatch();
 
   const handleFormClose = () => {
-    dispatch(setCloseEvaluationModal())
+    dispatch(setCloseEvaluationModal());
   };
 
   return (
@@ -55,7 +55,7 @@ const FormModal = (props: FormModalProps) => {
           {type === "checkbox" && <CheckboxTitle>{title}</CheckboxTitle>}
           <CloseButton>
             <CloseImage
-              onClick={handleFormClose}
+              onClick={onClose}
               src="/assets/icons/close.svg"
               width={closeButtonWidth}
               height={closeButtonHeight}
@@ -71,7 +71,12 @@ const FormModal = (props: FormModalProps) => {
         </Main>
         <Footer>
           <ButtonContent>
-            <Button onClick={onClose ? onClose : handleFormClose} buttonType="primary" text={buttonText} />
+            <Button
+              onClick={onClose ? onClose : handleFormClose}
+              buttonType="primary"
+              text={buttonText}
+              disabled={disabled}
+            />
           </ButtonContent>
         </Footer>
       </Wrapper>
@@ -85,10 +90,12 @@ const Overlay = styled.div<{ $position: "manner" | undefined }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  position:  ${({ $position }) => ($position === "manner" ? "absolute" : "fixed")};
-  top:  ${({ $position }) => ($position === "manner" ? "50%" : "unset")};
-  left:  ${({ $position }) => ($position === "manner" ? "50%" : "unset")};
-  transform:  ${({ $position }) => ($position === "manner" ? "translate(-50%,-50%)" : "unset")};
+  position: ${({ $position }) =>
+    $position === "manner" ? "absolute" : "fixed"};
+  top: ${({ $position }) => ($position === "manner" ? "50%" : "unset")};
+  left: ${({ $position }) => ($position === "manner" ? "50%" : "unset")};
+  transform: ${({ $position }) =>
+    $position === "manner" ? "translate(-50%,-50%)" : "unset"};
   inset: 0;
   z-index: 100;
 `;
@@ -146,4 +153,3 @@ const Footer = styled.footer``;
 const ButtonContent = styled.p`
   text-align: center;
 `;
-

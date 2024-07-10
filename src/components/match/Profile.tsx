@@ -53,6 +53,7 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
     false,
     false,
   ]);
+
   /* 선택된 현재 프로필 이미지 */
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(
     parseInt(user.image.slice(-1))

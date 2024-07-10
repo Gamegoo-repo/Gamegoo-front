@@ -2,11 +2,12 @@
 
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
-import Input from "@/components/common/Input";
 import MyPageProfile from "@/components/mypage/profile/MyPageProfile";
+import PasswordModal from "@/components/mypage/profile/PasswordModal";
+import { useState } from "react";
 
 const userData = {
-  image: "/assets/images/profile.svg",
+  image: "profile6",
   account: "유니콘의 비밀",
   tag: "KR1",
   tier: "B3",
@@ -20,7 +21,13 @@ const userData = {
 };
 
 const updateDate = "24.05.08";
+const passwordLength = 10;
+
 const MyProfilePage = () => {
+  const circles = Array.from({ length: passwordLength });
+
+  const [isPasswordModify, setIsPasswordModify] = useState<boolean>(false);
+
   return (
     <Wrapper>
       <MyProfileContent>
@@ -34,20 +41,24 @@ const MyProfilePage = () => {
             <Small>{`마지막 업데이트 : ${updateDate}`}</Small>
           </Title>
           <PrivateContent>
-            <Input
-              label="이메일"
-              value="reen330@naver.com"
-              placeholder="이메일"
-              onChange={() => {}}
-            />
-            {/* 비밀번호 */}
-            <Input
-              label="비밀번호"
-              inputType="password"
-              value="비밀번호"
-              placeholder="비밀번호"
-              onChange={() => {}}
-            />
+            <Box>
+              <Label>이메일</Label>
+              <Email>reen330@naver.com</Email>
+            </Box>
+            <Box>
+              <Label>비밀번호</Label>
+              <Row>
+                <Password>
+                  {circles.map((_, index) => (
+                    <Circle key={index} />
+                  ))}
+                </Password>
+                <Modify onClick={() => setIsPasswordModify(true)}>수정</Modify>
+              </Row>
+            </Box>
+            {isPasswordModify && (
+              <PasswordModal onClose={() => setIsPasswordModify(false)} />
+            )}
           </PrivateContent>
         </Private>
         <P>회원탈퇴</P>
@@ -65,6 +76,7 @@ const Wrapper = styled.div`
 `;
 
 const MyProfileContent = styled.div`
+  width: 100%;
   max-width: 1440px;
   width: 100%;
   padding: 0 80px;
@@ -80,6 +92,7 @@ const Profile = styled.header`
 `;
 
 const Private = styled.header`
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: start;
@@ -103,7 +116,53 @@ const Small = styled.h1`
 `;
 
 const PrivateContent = styled(Private)`
+  width: 100%;
   gap: 31px;
+`;
+
+const Box = styled.div`
+  width: 100%;
+`;
+
+const Label = styled.button`
+  color: ${theme.colors.gray600};
+  ${(props) => props.theme.fonts.bold14};
+  margin-bottom: 13px;
+`;
+
+const Email = styled.div`
+  width: 100%;
+  height: 58px;
+  border-radius: 9px;
+  padding: 15px 20px;
+  border: 1px solid ${theme.colors.gray200};
+  color: ${theme.colors.gray800};
+  ${(props) => props.theme.fonts.regular18};
+`;
+const Row = styled.button`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const Password = styled.button`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+`;
+
+const Circle = styled.button`
+  width: 5px;
+  height: 5px;
+  border-radius: 10px;
+  background: ${theme.colors.gray700};
+`;
+
+const Modify = styled.button`
+  color: ${theme.colors.purple100};
+  ${(props) => props.theme.fonts.bold12};
 `;
 
 const P = styled.div`
