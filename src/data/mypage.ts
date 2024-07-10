@@ -22,7 +22,25 @@ export const EX_REQUEST_ALARM = [
     { content: '친구요청 내용9', time: '10시간', read:true},
 ];
 
-  
+export const EX_BLOCKED = [
+    { id: 1, name: '김철수'},
+    { id: 2, name: '김철수'},
+    { id: 3, name: '김철수'},
+    { id: 4, name: '유진주'},
+    { id: 5, name: '김철수'},
+    { id: 6, name: '김철수'},
+    { id: 7, name: '도희경'},
+    { id: 8, name: '김철수'},
+    { id: 9, name: '김철수'},
+    { id: 10, name: '장시은'},
+    { id: 11, name: '김철수'},
+    { id: 12, name: '김철수'},
+    { id: 13, name:  '김은진'},
+    { id: 14, name: '김철수'},
+    { id: 15, name: '김철수'},
+    { id: 16, name: '김철수'},
+];
+
 export const EX_POST = [
     {
         profileImg: "",

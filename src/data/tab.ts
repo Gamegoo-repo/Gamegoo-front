@@ -11,6 +11,7 @@ export const MYPAGE_TAB = [
     { id: 2, menu: '알림', url: "/mypage/alert" },
     { id: 3, menu: '내가 작성한 글', url: "/mypage/post" },
     { id: 4, menu: '내 평가', url: "/mypage/review" },
+    { id: 4, menu: '차단목록', url: "/mypage/blocked" },
     { id: 5, menu: '고객센터', url: "/mypage/service" },
     { id: 6, menu: '도움말', url: "/mypage/help" },
 ];
