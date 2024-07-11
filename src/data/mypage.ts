@@ -43,7 +43,7 @@ export const EX_BLOCKED = [
 
 export const EX_POST = [
     {
-        profileImg: "",
+        profileImg: "profile1",
         nickname: "유니콘의 비밀",
         tag: "KR1",
         tier: "UR",
@@ -51,7 +51,7 @@ export const EX_POST = [
         time: "24.05.06",
     },
     {
-        profileImg: "",
+        profileImg: "profile2",
         nickname: "유니콘의 비밀",
         tag: "KR1",
         tier: "B3",
@@ -59,7 +59,7 @@ export const EX_POST = [
         time: "24.05.06",
     },
     {
-        profileImg: "",
+        profileImg: "profile8",
         nickname: "유니콘의 비밀",
         tag: "KR1",
         tier: "B3",

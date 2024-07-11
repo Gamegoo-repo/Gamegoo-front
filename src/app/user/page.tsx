@@ -28,7 +28,7 @@ const data = {
 };
 
 const userData = {
-  image: "/assets/images/profile.svg",
+  image: "profile6",
   account: "유니콘의 비밀",
   tag: "KR1",
   tier: "B3",
@@ -47,7 +47,6 @@ const userData = {
 };
 
 const UserProfile = () => {
-  const router = useRouter();
   const params = useParams();
   const id = +params.id;
 
@@ -90,7 +89,7 @@ const UserProfile = () => {
                     })}
                   </ValueWrapper>
                   <TypeWrapper>
-                    {MANNER_TYPES.map((type,index) => {
+                    {MANNER_TYPES.map((type, index) => {
                       return (
                         <Type
                           key={type.id}

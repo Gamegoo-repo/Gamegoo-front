@@ -14,6 +14,7 @@ import { REPORT_REASON } from "@/data/report";
 import Input from "../common/Input";
 import ConfirmModal from "../common/ConfirmModal";
 import PositionCategory from "../common/PositionCategory";
+import MoreBox from "../common/MoreBox";
 
 type profileType = "fun" | "hard" | "other" | "me";
 
@@ -195,14 +196,18 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                 /> */}
                 </Admit>
                 {/* 더보기 버튼 */}
-                <Report onClick={handleMoreBoxOpen} />
-                {isMoreBoxOpen && (
-                  <ReportBox>
-                    <ReportText onClick={handleReport}>신고하기</ReportText>
-                    <Bar />
-                    <ReportText onClick={handleBlock}>차단하기</ReportText>
-                  </ReportBox>
-                )}
+                <MoreDiv>
+                  <Report onClick={handleMoreBoxOpen} />
+                  {isMoreBoxOpen && (
+                    <MoreBox
+                      text1="신고하기"
+                      text2="차단하기"
+                      handleFirst={handleReport}
+                      handleSecond={handleBlock}
+                      top="15px"
+                    />
+                  )}
+                </MoreDiv>
                 {/* 신고하기 팝업 */}
                 {isReportBoxOpen && (
                   <FormModal
@@ -484,36 +489,12 @@ const More = styled.div`
   align-items: center;
   gap: 32px;
   margin-bottom: 20px;
-  position: relative;
 `;
 
 const Admit = styled.div``;
 
-const ReportBox = styled.div`
-  width: 175px;
-  height: 84px;
-  position: absolute;
-  top: 60px;
-  left: 300px;
-  transform: translateY(-50%);
-  z-index: 100;
-  box-shadow: 0 0 21.3px 0 #00000026;
-  background: ${theme.colors.white};
-  border-radius: 10px;
-`;
-
-const ReportText = styled.p`
-  padding: 10px 20px;
-  ${(props) => props.theme.fonts.medium15};
-  color: #606060;
-  white-space: nowrap;
-  cursor: pointer;
-`;
-
-const Bar = styled.div`
-  width: 100%;
-  height: 1px;
-  background: ${theme.colors.gray400};
+const MoreDiv = styled.div`
+  position: relative;
 `;
 
 const ReportLabel = styled.p`
@@ -563,12 +544,6 @@ const Posi = styled.div`
     font-size: ${theme.fonts.semiBold14};
   }
 `;
-
-// const StyledPositionCategory = styled(PositionCategory)`
-//   position: absolute;
-//   top: 200px;
-//   left: 0px;
-// `;
 
 const Mike = styled.div`
   display: flex;
