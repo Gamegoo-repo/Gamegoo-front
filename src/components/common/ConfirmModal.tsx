@@ -7,7 +7,7 @@ import { AppDispatch } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
 interface ConfirmModalProps {
@@ -50,10 +50,10 @@ const ConfirmModal = (props: ConfirmModalProps) => {
     dispatch(setMannerStatus("badManner"));
   };
 
-  const handleCheck = () => {
-    dispatch(setOpenEvaluationModal());
-    dispatch(setCloseConfirmModal());
-  };
+  // const handleCheck = () => {
+  //   dispatch(setOpenEvaluationModal());
+  //   dispatch(setCloseConfirmModal());
+  // };
 
   return (
     <Overlay>
@@ -110,7 +110,7 @@ const ConfirmModal = (props: ConfirmModalProps) => {
         <Footer>
           <Buttons>
             <Button
-              onClick={handleCheck || onCheck || onClose}
+              onClick={onCheck || onClose}
               className={type === "manner" ? undefined : "noButton"}
               disabled={
                 type === "manner" &&

@@ -5,6 +5,7 @@ import { theme } from "@/styles/theme";
 import MyPageProfile from "@/components/mypage/profile/MyPageProfile";
 import PasswordModal from "@/components/mypage/profile/PasswordModal";
 import { useState } from "react";
+import ConfirmModal from "@/components/common/ConfirmModal";
 
 const userData = {
   image: "profile6",
@@ -27,6 +28,18 @@ const MyProfilePage = () => {
   const circles = Array.from({ length: passwordLength });
 
   const [isPasswordModify, setIsPasswordModify] = useState<boolean>(false);
+
+  /* 회원탈퇴 모달 */
+  const [isWithdrawalCaution, setIsWithdrawalCaution] =
+    useState<boolean>(false);
+  const [isWithdrawalComplete, setIsWithdrawalComplete] =
+    useState<boolean>(false);
+
+  const handleWithdrawal = () => {
+    // 회원탈퇴 API 연동
+    setIsWithdrawalCaution(false);
+    setIsWithdrawalComplete(true);
+  };
 
   return (
     <Wrapper>
@@ -61,7 +74,32 @@ const MyProfilePage = () => {
             )}
           </PrivateContent>
         </Private>
-        <P>회원탈퇴</P>
+        <P onClick={() => setIsWithdrawalCaution(true)}>회원탈퇴</P>
+        {/* 회원탈퇴 경고 */}
+        {isWithdrawalCaution && (
+          <ConfirmModal
+            type="yesOrNo"
+            width="540px"
+            onCheck={handleWithdrawal}
+            onClose={() => setIsWithdrawalCaution(false)}
+          >
+            회원 탈퇴를 하시겠습니까?
+            <br />
+            탈퇴한 아이디로는 다시 가입할 수 없으며,
+            <br />
+            아이디 및 데이터는 복구할 수 없습니다.
+          </ConfirmModal>
+        )}
+        {/* 회원탈퇴 완료 */}
+        {isWithdrawalComplete && (
+          <ConfirmModal
+            type="confirm"
+            width="540px"
+            onClose={() => setIsWithdrawalComplete(false)}
+          >
+            계속해서 매칭을 시도하겠습니까?
+          </ConfirmModal>
+        )}
       </MyProfileContent>
     </Wrapper>
   );
@@ -165,7 +203,7 @@ const Modify = styled.button`
   ${(props) => props.theme.fonts.bold12};
 `;
 
-const P = styled.div`
+const P = styled.button`
   ${(props) => props.theme.fonts.bold14};
   color: ${theme.colors.gray200};
   text-decoration-line: underline;
