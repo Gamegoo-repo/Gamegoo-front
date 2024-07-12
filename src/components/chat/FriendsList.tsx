@@ -15,19 +15,17 @@ interface FriendListInterface {
 
 interface FriendListProps {
     list: FriendListInterface[];
-    isFavorites: boolean;
-    setIsDeleteBox?: Dispatch<React.SetStateAction<boolean>>;
     onChatRoom: (id: number) => void;
 }
 
 const FriendsList = (props: FriendListProps) => {
-    const { list, isFavorites, setIsDeleteBox, onChatRoom } = props;
-    const [friends, setFriends] = useState(list);
+    const { list, onChatRoom } = props;
+    const [friends, setFriends] = useState<FriendListInterface[]>(list);
 
     const [contextMenu, setContextMenu] = useState<{ x: number, y: number, friendId: number | null }>({ x: 0, y: 0, friendId: null });
 
-    const favoriteFriends = list.filter(friend => friend.favorites === 1);
-    const nonFavoriteFriends = list.filter(friend => friend.favorites === 0);
+    const favoriteFriends = friends.filter(friend => friend.favorites === 1);
+    const nonFavoriteFriends = friends.filter(friend => friend.favorites === 0);
 
     const handleContextMenu = (event: React.MouseEvent, friendId: number) => {
         event.preventDefault();
@@ -52,14 +50,11 @@ const FriendsList = (props: FriendListProps) => {
         }
     };
 
-    const toggleFavorite = (id: number) => {
-        setFriends(prevFriends =>
-            prevFriends.map(friend =>
-                friend.id === id
-                    ? { ...friend, favorites: friend.favorites === 1 ? 0 : 1 }
-                    : friend
-            )
-        );
+    const handleFavoriteToggle = (e: React.MouseEvent, friendId: number) => {
+        e.stopPropagation();
+        setFriends(friends.map(friend =>
+            friend.id === friendId ? { ...friend, favorites: friend.favorites === 1 ? 0 : 1 } : friend
+        ));
     };
 
     console.log('X, Y', contextMenu.x, contextMenu.y)
@@ -71,14 +66,17 @@ const FriendsList = (props: FriendListProps) => {
     return (
         <>
             <List>
-                <FavoritesWrapper>
-                    <FavoritesTitle>
-                        즐겨찾기
-                    </FavoritesTitle>
+                <FavoritesWrapper $length={favoriteFriends.length}>
+                    {favoriteFriends?.length > 0 &&
+                        <FavoritesTitle>
+                            즐겨찾기
+                        </FavoritesTitle>
+                    }
                     {favoriteFriends.map(friend => (
                         <UserContent
                             onContextMenu={(event) => handleContextMenu(event, friend.id)}
-                            onClick={() => onChatRoom(friend.id)}
+                            onClick={() =>
+                                onChatRoom(friend.id)}
                             key={friend.id}>
                             {contextMenu.friendId === friend.id && (
                                 <ContextMenu
@@ -103,15 +101,13 @@ const FriendsList = (props: FriendListProps) => {
                                         alt="온라인" />
                                 }
                             </Left>
+                            {friend.favorites}
                             <Image
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    toggleFavorite(friend.id)
-                                }}
+                                onClick={(e) => handleFavoriteToggle(e, friend.id)}
                                 src={
                                     friend.favorites === 1
-                                        ? "assets/icons/favorites.svg"
-                                        : "assets/icons/nonFavorites.svg"
+                                        ? "/assets/icons/favorites.svg"
+                                        : "/assets/icons/nonFavorites.svg"
                                 }
                                 width={15}
                                 height={15}
@@ -120,7 +116,7 @@ const FriendsList = (props: FriendListProps) => {
                         </UserContent>
                     ))}
                 </FavoritesWrapper>
-                <FriendsWrapper>
+                <FriendsWrapper $length={favoriteFriends.length}>
                     <FriendsTitle>
                         친구 {friends.length}
                     </FriendsTitle>
@@ -153,14 +149,11 @@ const FriendsList = (props: FriendListProps) => {
                                 }
                             </Left>
                             <Image
-                                 onClick={(e) => {
-                                    e.stopPropagation();
-                                    toggleFavorite(friend.id)
-                                }}
+                                onClick={(e) => handleFavoriteToggle(e, friend.id)}
                                 src={
                                     friend.favorites === 1
-                                        ? "assets/icons/favorites.svg"
-                                        : "assets/icons/nonFavorites.svg"
+                                        ? "/assets/icons/favorites.svg"
+                                        : "/assets/icons/nonFavorites.svg"
                                 }
                                 width={15}
                                 height={15}
@@ -179,13 +172,13 @@ export default FriendsList;
 const List = styled.div`
 `;
 
-const FavoritesWrapper = styled.div`
-    padding: 0 0 11px 0;
+const FavoritesWrapper = styled.div<{ $length: number }>`
+    padding: ${({ $length }) => ($length > 0 ? '6px 0 11px 0' : 'none')};
 `;
 
-const FriendsWrapper = styled.div`
-    border-top: 1px solid ${theme.colors.gray400};
-    padding: 6px 0 11px 0;
+const FriendsWrapper = styled.div<{ $length: number }>`
+    border-top: ${({ $length }) => ($length > 0 ? `1px solid ${theme.colors.gray400}` : 'none')};
+    padding: 6px 0 11px;
 `;
 
 const FavoritesTitle = styled.p`
