@@ -3,7 +3,6 @@ import { theme } from "@/styles/theme";
 import Image from 'next/image';
 import { Dispatch, useEffect, useRef, useState } from 'react';
 import DeleteFriend from './DeleteFriend';
-import ContextMenu from './ContextMenu';
 
 interface FriendListInterface {
     id: number;
@@ -13,51 +12,52 @@ interface FriendListInterface {
     favorites: number;
 }
 
+
+
 interface FriendListProps {
     list: FriendListInterface[];
-    onChatRoom: (id: number) => void;
+    onChatRoom: ( id: number) => void;
 }
 
 const FriendsList = (props: FriendListProps) => {
     const { list, onChatRoom } = props;
     const [friends, setFriends] = useState<FriendListInterface[]>(list);
 
-    const [contextMenu, setContextMenu] = useState<{ x: number, y: number, friendId: number | null }>({ x: 0, y: 0, friendId: null });
+    const [deleteMenu, setDeleteMenu] = useState<{ x: number, y: number, friendId: number | null }>({ x: 0, y: 0, friendId: null });
 
     const favoriteFriends = friends.filter(friend => friend.favorites === 1);
     const nonFavoriteFriends = friends.filter(friend => friend.favorites === 0);
 
     const handleContextMenu = (event: React.MouseEvent, friendId: number) => {
         event.preventDefault();
+        event.stopPropagation();
         //  특정한 영역에서 클릭한 위치 찾기
         // friendsList위치에서부터 글릭한 곳
         // const top= friendRef.current.getBoundingClientRect().top;
         // const left= friendRef.current.getBoundingClientRect().left;
         // setContextMenu({ x: event.clientX, y: event.clientY, friendId });
-        const scrollX = window.scrollX || document.documentElement.scrollLeft;
-        const scrollY = window.scrollY || document.documentElement.scrollTop;
-        setContextMenu({ x: event.screenX, y: event.screenY, friendId });
+        setDeleteMenu({ x: event.screenX, y: event.screenY, friendId });
     };
 
-    const handleCloseContextMenu = () => {
-        setContextMenu({ x: 0, y: 0, friendId: null });
+    const handleCloseDeletetMenu = () => {
+        setDeleteMenu({ x: 0, y: 0, friendId: null });
     };
 
     const handleDeleteFriend = () => {
-        if (contextMenu.friendId !== null) {
-            setFriends(friends.filter(friend => friend.id !== contextMenu.friendId));
-            handleCloseContextMenu();
+        console.log('삭제하기')
+        if (deleteMenu.friendId !== null) {
+            handleCloseDeletetMenu();
         }
     };
 
-    const handleFavoriteToggle = (e: React.MouseEvent, friendId: number) => {
-        e.stopPropagation();
+    const handleFavoriteToggle = (event: React.MouseEvent, friendId: number) => {
+        event.stopPropagation();
         setFriends(friends.map(friend =>
             friend.id === friendId ? { ...friend, favorites: friend.favorites === 1 ? 0 : 1 } : friend
         ));
     };
 
-    console.log('X, Y', contextMenu.x, contextMenu.y)
+    console.log('X, Y', deleteMenu.x, deleteMenu.y)
 
     if (friends.length === 0) {
         return null;
@@ -74,15 +74,16 @@ const FriendsList = (props: FriendListProps) => {
                     }
                     {favoriteFriends.map(friend => (
                         <UserContent
-                            onContextMenu={(event) => handleContextMenu(event, friend.id)}
+                            onContextMenu={(e) => handleContextMenu(e, friend.id)}
                             onClick={() =>
                                 onChatRoom(friend.id)}
-                            key={friend.id}>
-                            {contextMenu.friendId === friend.id && (
-                                <ContextMenu
-                                    x={contextMenu.x}
-                                    y={contextMenu.y}
-                                    onClose={handleCloseContextMenu}
+                            key={friend.id}
+                            $disablePointerEvents={deleteMenu.friendId === friend.id}>
+                            {deleteMenu.friendId === friend.id && (
+                                <DeleteFriend
+                                    x={deleteMenu.x}
+                                    y={deleteMenu.y}
+                                    onClose={handleCloseDeletetMenu}
                                     onDelete={handleDeleteFriend}
                                 />
                             )}
@@ -101,7 +102,6 @@ const FriendsList = (props: FriendListProps) => {
                                         alt="온라인" />
                                 }
                             </Left>
-                            {friend.favorites}
                             <Image
                                 onClick={(e) => handleFavoriteToggle(e, friend.id)}
                                 src={
@@ -124,12 +124,14 @@ const FriendsList = (props: FriendListProps) => {
                         <UserContent
                             onContextMenu={(event) => handleContextMenu(event, friend.id)}
                             onClick={() => onChatRoom(friend.id)}
-                            key={friend.id}>
-                            {contextMenu.friendId === friend.id && (
-                                <ContextMenu
-                                    x={contextMenu.x}
-                                    y={contextMenu.y}
-                                    onClose={handleCloseContextMenu}
+                            key={friend.id}
+                            $disablePointerEvents={deleteMenu.friendId === friend.id}
+                            >
+                            {deleteMenu.friendId === friend.id && (
+                                <DeleteFriend
+                                    x={deleteMenu.x}
+                                    y={deleteMenu.y}
+                                    onClose={handleCloseDeletetMenu}
                                     onDelete={handleDeleteFriend}
                                 />
                             )}
@@ -193,13 +195,14 @@ const FriendsTitle = styled.p`
     padding: 0 16px 11px 18px;
 `;
 
-const UserContent = styled.div`
+const UserContent = styled.div<{ $disablePointerEvents: boolean }>`
     position: relative;
     display: flex;  
     align-items: center;
     justify-content: space-between;
     cursor: pointer;
     padding: 5px 18px 5px 16px;
+    ${({ $disablePointerEvents }) => $disablePointerEvents && 'pointer-events: none;'}
     &:hover {
         background: ${theme.colors.gray500}; 
     }

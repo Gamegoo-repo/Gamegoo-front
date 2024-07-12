@@ -6,7 +6,7 @@ import ChatList from "./ChatList";
 import { useState } from "react";
 import ChatRoom from "./ChatRoom";
 import { useDispatch, useSelector } from "react-redux";
-import { setCloseEvaluationModal, setCloseMoreModal, setOpenMoreModal } from "@/redux/slices/modalSlice";
+import { setCloseMoreModal, setOpenMoreModal } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
 import ConfirmModal from "../common/ConfirmModal";
 import FormModal from "../common/FormModal";
@@ -55,7 +55,7 @@ const ChatWindow = (props: ChatWindowProps) => {
 
     const isMoreModalType = useSelector((state: RootState) => state.modal.moreModal);
 
-    const handleGoToChatRoom = (id: number) => {
+    const handleGoToChatRoom = ( id: number) => {
         setChatId(id);
         setIsChatRoomVisible(true);
     };
@@ -132,7 +132,6 @@ const ChatWindow = (props: ChatWindowProps) => {
                                     <FriendsList
                                         onChatRoom={handleGoToChatRoom}
                                         list={FRIENDS}
-                                        isFavorites={true}
                                     />
                                 </div>
                             }

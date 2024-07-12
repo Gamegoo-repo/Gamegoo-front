@@ -35,13 +35,14 @@ const ChatList = (props: ChatListProps) => {
 
     return (
         <>
-            <List>
+            <List>e
                 {list.map(chat => {
                     return (
                         <UserContent
-                            onClick={() => onChatRoom(chat.id)}
+                            onClick={() =>
+                                onChatRoom(chat.id)}
                             key={chat.id}>
-                            {isMoreBoxOpen === chat.id && 
+                            {isMoreBoxOpen === chat.id &&
                                 <MiniModal
                                     type="chatList"
                                     onChangeModal={onModalChange} />}
