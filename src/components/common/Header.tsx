@@ -3,8 +3,9 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
+import AlertWindow from "../alert/AlertWindow";
 
 interface HeaderProps {
   selected: boolean;
@@ -13,7 +14,37 @@ interface HeaderProps {
 const Header = () => {
   const router = useRouter();
   const pathname = usePathname();
+  const [isAlertWindow, setIsAlertWindow] = useState<Boolean>(false);
   const [isMyPage, setIsMyPage] = useState<Boolean>(false);
+
+  const myPageRef = useRef<HTMLDivElement>(null);
+
+  /* 알림창 열고 닫는 함수 */
+  const handleAlertWindow = () => {
+    setIsAlertWindow(!isAlertWindow);
+  };
+
+  /* 외부 영역 클릭시 팝업 닫힘 */
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      myPageRef.current &&
+      !myPageRef.current.contains(event.target as Node)
+    ) {
+      setIsMyPage(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isMyPage) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+  }, [isMyPage]);
+
+  /* 페이지 이동 시 팝업창 닫음 */
+  useEffect(() => {
+    setIsAlertWindow(false);
+    setIsMyPage(false);
+  }, [pathname]);
 
   return (
     <Head>
@@ -28,14 +59,7 @@ const Header = () => {
             />
           </Link>
           <Menus>
-            <Menu
-              href="/match"
-              selected={
-                pathname === "/match" ||
-                pathname === "/match/type" ||
-                pathname === "/game-mode"
-              }
-            >
+            <Menu href="/match" selected={pathname.includes("/match")}>
               바로 매칭
             </Menu>
             <Bar />
@@ -50,7 +74,7 @@ const Header = () => {
             width={24}
             height={30}
             alt="noti"
-            onClick={() => router.push("/")}
+            onClick={handleAlertWindow}
           />
           <Profile>
             <Image
@@ -71,8 +95,9 @@ const Header = () => {
           </Profile>
         </Right>
       </HeaderBar>
+      {isAlertWindow && <AlertWindow onClose={() => setIsAlertWindow(false)} />}
       {isMyPage && (
-        <MyPageModal>
+        <MyPageModal ref={myPageRef}>
           <MyProfile>
             <Image
               src="/assets/images/profile.svg"
@@ -90,13 +115,16 @@ const Header = () => {
           </MyProfile>
           <TabMenu>
             {HEADER_MODAL_TAB.map((data, index) => (
-              <Line key={data.id} className={index === 2 ? "with-border" : ""}>
+              <Line
+                key={data.id}
+                className={index === 2 ? "with-border" : ""}
+                onClick={() => router.push(`${data.url}`)}
+              >
                 <Image
                   src={`/assets/icons/${data.icon}.svg`}
                   width={20}
                   height={20}
                   alt={`${data.icon}`}
-                  onClick={() => router.push(`${data.url}`)}
                 />
                 {data.menu}
               </Line>
@@ -174,7 +202,7 @@ const MyPageModal = styled.div`
   box-shadow: 2px 11px 44.1px 0px rgba(0, 0, 0, 0.15);
   position: absolute;
   top: 50px;
-  right: 10px;
+  right: 50px;
   z-index: 100;
 `;
 
@@ -211,6 +239,7 @@ const Line = styled.div`
   align-items: center;
   padding-left: 9px;
   gap: 18px;
+  cursor: pointer;
 
   &.with-border {
     border-bottom: 1px solid #d4d4d4;

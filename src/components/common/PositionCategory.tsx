@@ -10,36 +10,36 @@ import Supporter from "../../../public/assets/icons/position_supporter_unclicked
 interface PositionComponentProps {
   onClose: () => void;
   boxName: string;
-  onButtonClick: (boxName: string, buttonLabel: string) => void;
+  onSelect: (position: string) => void;
 }
 
 const PositionCategory = (props: PositionComponentProps) => {
-  const { onClose, boxName, onButtonClick } = props;
+  const { onClose, onSelect } = props;
 
   const handlePositionCategory = (positionName: string) => {
-    onButtonClick(boxName, positionName);
+    onSelect(positionName);
     onClose();
   };
 
   return (
-    <Wrapper className={boxName}>
+    <Wrapper>
       <Box>
-        <RandomButton onClick={() => handlePositionCategory('random')}>
+        <RandomButton onClick={() => handlePositionCategory("random")}>
           <Random />
         </RandomButton>
-        <TopButton onClick={() => handlePositionCategory('top')}>
+        <TopButton onClick={() => handlePositionCategory("top")}>
           <Top />
         </TopButton>
-        <JungleButton onClick={() => handlePositionCategory('jungle')}>
+        <JungleButton onClick={() => handlePositionCategory("jungle")}>
           <Jungle />
         </JungleButton>
-        <MidButton onClick={() => handlePositionCategory('mid')}>
+        <MidButton onClick={() => handlePositionCategory("mid")}>
           <Mid />
         </MidButton>
-        <BottomButton onClick={() => handlePositionCategory('bottom')}>
+        <BottomButton onClick={() => handlePositionCategory("bottom")}>
           <Bottom />
         </BottomButton>
-        <SupporterButton onClick={() => handlePositionCategory('supporter')}>
+        <SupporterButton onClick={() => handlePositionCategory("supporter")}>
           <Supporter />
         </SupporterButton>
       </Box>
@@ -50,7 +50,10 @@ const PositionCategory = (props: PositionComponentProps) => {
 export default PositionCategory;
 
 const Wrapper = styled.div`
+  width: 100%;
   position: absolute;
+  top: 100px;
+  left: calc(50% - 35px);
   z-index: 10;
   &.main {
     top: 47%;
@@ -70,11 +73,11 @@ const Box = styled.div`
   display: flex;
   align-items: center;
   column-gap: 50px;
-  width: 482px; 
+  width: 482px;
   padding: 18px 27px;
   background: ${theme.colors.black};
   border-radius: 16.3px;
-  &:after { 
+  &:after {
     border-top: 0 solid transparent;
     border-left: 9px solid transparent;
     border-right: 9px solid transparent;
@@ -82,13 +85,13 @@ const Box = styled.div`
     content: "";
     position: absolute;
     top: -13px;
-    left: 7%; 
+    left: 27px;
   }
 `;
 
 const RandomButton = styled.button`
   &:hover path {
-    stroke: #9F90F9;
+    stroke: ${theme.colors.purple200};
   }
   &:active,
   &:focus path {
@@ -98,7 +101,7 @@ const RandomButton = styled.button`
 
 const TopButton = styled.button`
   &:hover path:first-child {
-    fill: #9F90F9;
+    fill: ${theme.colors.purple200};
   }
   &:active,
   &:focus path:first-child {
@@ -108,7 +111,7 @@ const TopButton = styled.button`
 
 const JungleButton = styled.button`
   &:hover path {
-    fill: #9F90F9;
+    fill: ${theme.colors.purple200};
   }
   &:active,
   &:focus path {
@@ -118,7 +121,7 @@ const JungleButton = styled.button`
 
 const MidButton = styled.button`
   &:hover path:nth-child(2) {
-    fill: #9F90F9;
+    fill: ${theme.colors.purple200};
   }
   &:active,
   &:focus path:nth-child(2) {
@@ -128,7 +131,7 @@ const MidButton = styled.button`
 
 const BottomButton = styled.button`
   &:hover path:nth-child(2) {
-    fill: #9F90F9;
+    fill: ${theme.colors.purple200};
   }
   &:active,
   &:focus path:nth-child(2) {
@@ -138,11 +141,10 @@ const BottomButton = styled.button`
 
 const SupporterButton = styled.button`
   &:hover path {
-    fill: #9F90F9;
+    fill: ${theme.colors.purple200};
   }
   &:active,
   &:focus path {
     fill: ${theme.colors.purple100};
   }
 `;
-
