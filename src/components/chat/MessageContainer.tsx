@@ -31,10 +31,10 @@ const MessageContainer = (props: MessageContainerProps) => {
   const [isFeedbackDateVisible, setIsFeedbackDateVisible] = useState(false);
   const [isFeedbackDate, setIsFeedbackDate] = useState("");
 
-  const handleMannerTypeClose = ()=>{
+  const handleMannerTypeClose = () => {
     dispatch(setCloseMannerStatusModal());
   };
-  
+
   const handleDisplayDate = (messages: MessageInterface[], index: number): boolean => {
     if (index === 0) return true;
 

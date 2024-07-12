@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 import { theme } from "@/styles/theme";
 import Image from 'next/image';
-import MiniModal from './MiniModal';
 import { setChatRoomDateFormatter } from '@/utils/custom';
+import { Dispatch } from 'react';
+import MiniModal from './MiniModal';
 
 interface ChatListInterface {
     id: number;
@@ -15,10 +16,22 @@ interface ChatListInterface {
 interface ChatListProps {
     list: ChatListInterface[];
     onChatRoom: (id: number) => void;
+    setIsMoreBoxOpen: Dispatch<React.SetStateAction<number | null>>;
+    isMoreBoxOpen: number | null;
+    onModalChange: (modalType: string) => void;
 }
 
 const ChatList = (props: ChatListProps) => {
-    const { list, onChatRoom } = props;
+    const { list, onChatRoom, setIsMoreBoxOpen, isMoreBoxOpen, onModalChange } = props;
+
+    const handleMoreBoxOpen = (chatId: number) => {
+        console.log(isMoreBoxOpen === chatId)
+        if (isMoreBoxOpen === chatId) {
+            setIsMoreBoxOpen(null);
+        } else {
+            setIsMoreBoxOpen(chatId);
+        };
+    };
 
     return (
         <>
@@ -28,6 +41,10 @@ const ChatList = (props: ChatListProps) => {
                         <UserContent
                             onClick={() => onChatRoom(chat.id)}
                             key={chat.id}>
+                            {isMoreBoxOpen === chat.id && 
+                                <MiniModal
+                                    type="chatList"
+                                    onChangeModal={onModalChange} />}
                             <Left>
                                 <ProfileImage
                                     src={chat.image}
@@ -46,7 +63,11 @@ const ChatList = (props: ChatListProps) => {
                                 </Middle>
                             </Left>
                             <Right>
-                                <Image
+                                <MoreImage
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleMoreBoxOpen(chat.id);
+                                    }}
                                     src="/assets/icons/three_dots_button.svg"
                                     width={3}
                                     height={15}
@@ -56,6 +77,7 @@ const ChatList = (props: ChatListProps) => {
                     )
                 })}
             </List>
+
         </>
     )
 };
@@ -63,6 +85,8 @@ const ChatList = (props: ChatListProps) => {
 export default ChatList;
 
 const List = styled.div`
+  position: relative;
+
     &.border {
         border-bottom: 1px solid ${theme.colors.gray400};
     }
@@ -72,6 +96,7 @@ const List = styled.div`
 `;
 
 const UserContent = styled.div`
+  position: relative;
   display: flex;  
   justify-content: space-between;
   cursor: pointer;
@@ -131,3 +156,6 @@ const Date = styled.p`
 
 const Right = styled.div``;
 
+const MoreImage = styled(Image)`
+    cursor: pointer;
+`;

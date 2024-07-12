@@ -383,7 +383,7 @@ const FirstBlock = styled.div`
 `;
 
 const PositionBox = styled.div`
-  background: #f5f5f5;
+  background: ${theme.colors.gray500};
   border-radius: 10px;
 `;
 

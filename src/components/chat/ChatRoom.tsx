@@ -16,7 +16,6 @@ import { setCloseEvaluationModal, setCloseMoreModal, setOpenMoreModal } from "@/
 import { useRouter } from "next/navigation";
 
 
-
 interface ChatRoomProps {
     id: number;
     onClose: () => void;
@@ -65,7 +64,7 @@ const ChatRoom = (props: ChatRoomProps) => {
         console.log(message)
     };
 
-    const handleMoreOpen = () => {
+    const handleMoreBoxOpen = () => {
         setIsMoreBoxOpen(prevState => !prevState);
     };
 
@@ -141,8 +140,8 @@ const ChatRoom = (props: ChatRoomProps) => {
                                     alt="온라인" />
                             </Div>
                         </Middle>
-                        <DetailImage
-                            onClick={handleMoreOpen}
+                        <MoreImage
+                            onClick={handleMoreBoxOpen}
                             src="/assets/icons/three_dots_button.svg"
                             width={3}
                             height={15}
@@ -458,7 +457,7 @@ const ProfileImage = styled(Image)`
     cursor: pointer;
 `;
 
-const DetailImage = styled(Image)`
+const MoreImage = styled(Image)`
     cursor: pointer;
 `;
 

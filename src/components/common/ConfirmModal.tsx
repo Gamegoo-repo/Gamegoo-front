@@ -166,6 +166,7 @@ const Wrapper = styled.div<{ $width: string; $borderRadius: string }>`
   border-radius: ${({ $borderRadius }) => $borderRadius};
   box-shadow: 0 0 14.76px 0 rgba(0, 0, 0, 0.15);
 `;
+
 const Main = styled.main`
   padding: 0 4px;
 `;

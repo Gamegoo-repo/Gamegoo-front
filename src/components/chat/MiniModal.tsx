@@ -3,17 +3,18 @@ import { theme } from "@/styles/theme";
 
 interface MiniModalProps {
   onChangeModal: (type: string) => void;
+  type?: "chatList";
 }
 
 const MiniModal = (props: MiniModalProps) => {
-  const { onChangeModal } = props;
+  const { onChangeModal, type } = props;
 
   const handleAddFriend = () => {
     console.log('친구 추가')
   };
 
   return (
-    <Wrapper>
+    <Wrapper $type={type}>
       <Ul>
         <Li onClick={() => onChangeModal("leave")}>채팅방 나가기</Li>
         <Li onClick={handleAddFriend}>친구 추가</Li>
@@ -28,10 +29,12 @@ const MiniModal = (props: MiniModalProps) => {
 
 export default MiniModal;
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ $type?: string }>`
   position: absolute;
-  top: 35px;
-  right: 10%;
+  top: ${(props) =>
+    props.$type ? "14px" : "35px"};
+  right: ${(props) =>
+    props.$type ? "9%" : "10%"};
   background: ${theme.colors.white};
   box-shadow: 0 0 21.3px 0 #00000026;
   border-radius: 10px;

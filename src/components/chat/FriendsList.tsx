@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 import { theme } from "@/styles/theme";
 import Image from 'next/image';
-import { Dispatch, useState } from 'react';
+import { Dispatch, useEffect, useRef, useState } from 'react';
+import DeleteFriend from './DeleteFriend';
+import ContextMenu from './ContextMenu';
 
 interface FriendListInterface {
     id: number;
@@ -22,6 +24,32 @@ const FriendsList = (props: FriendListProps) => {
     const { list, isFavorites, setIsDeleteBox, onChatRoom } = props;
     const [friends, setFriends] = useState(list);
 
+    const friendRef = useRef();
+    const [contextMenu, setContextMenu] = useState<{ x: number, y: number, friendId: number | null }>({ x: 0, y: 0, friendId: null });
+
+    const handleContextMenu = (event: React.MouseEvent, friendId: number) => {
+        event.preventDefault();
+        //  특정한 영역에서 클릭한 위치 찾기
+        // friendsList위치에서부터 글릭한 곳
+        // const top= friendRef.current.getBoundingClientRect().top;
+        // const left= friendRef.current.getBoundingClientRect().left;
+        // setContextMenu({ x: event.clientX, y: event.clientY, friendId });
+        const scrollX = window.scrollX || document.documentElement.scrollLeft;
+        const scrollY = window.scrollY || document.documentElement.scrollTop;
+        setContextMenu({ x: event.clientX + scrollX, y: event.clientY + scrollY, friendId });
+    };
+
+    const handleCloseContextMenu = () => {
+        setContextMenu({ x: 0, y: 0, friendId: null });
+    };
+
+    const handleDeleteFriend = () => {
+        if (contextMenu.friendId !== null) {
+            setFriends(friends.filter(friend => friend.id !== contextMenu.friendId));
+            handleCloseContextMenu();
+        }
+    };
+
     const toggleFavorite = (id: number) => {
         setFriends(prevFriends =>
             prevFriends.map(friend =>
@@ -32,20 +60,32 @@ const FriendsList = (props: FriendListProps) => {
         );
     };
 
+    console.log('X, Y', contextMenu.x, contextMenu.y)
+
     if (friends.length === 0) {
         return null;
     }
 
     return (
         <>
-            <List className={isFavorites ? 'border' : 'none'}>
+            <List className={isFavorites ? 'border' : 'none'} >
                 <Title className={isFavorites ? 'none' : 'padding'}>
                     {isFavorites ? '즐겨찾기' : `친구 ${friends.length}`}
                 </Title>
                 {friends.map(friend => (
+
                     <UserContent
+                        onContextMenu={(event) => handleContextMenu(event, friend.id)}
                         onClick={() => onChatRoom(friend.id)}
                         key={friend.id}>
+                        {contextMenu.friendId === friend.id && (
+                            <ContextMenu
+                                x={contextMenu.x}
+                                y={contextMenu.y}
+                                onClose={handleCloseContextMenu}
+                                onDelete={handleDeleteFriend}
+                            />
+                        )}
                         <Left>
                             <Image
                                 src={friend.image}
@@ -73,7 +113,9 @@ const FriendsList = (props: FriendListProps) => {
                             alt="즐겨찾기 버튼"
                         />
                     </UserContent>
+
                 ))}
+
             </List>
         </>
     );
@@ -82,6 +124,8 @@ const FriendsList = (props: FriendListProps) => {
 export default FriendsList;
 
 const List = styled.div`
+position: relative;
+
     &.border {
         border-bottom: 1px solid ${theme.colors.gray400};
     }
@@ -102,6 +146,8 @@ const Title = styled.p`
 `;
 
 const UserContent = styled.div`
+/* position: relative; */
+
     display: flex;  
     align-items: center;
     justify-content: space-between;
@@ -133,3 +179,4 @@ const Online = styled(Image)`
     top: 19%;
     right: -4%;
 `;
+
