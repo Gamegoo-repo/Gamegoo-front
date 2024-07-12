@@ -50,16 +50,9 @@ const ChatWindow = (props: ChatWindowProps) => {
     const [activeTab, setActiveTab] = useState<string>('friends');
     const [isChatRoomVisible, setIsChatRoomVisible] = useState(false);
     const [isMoreBoxOpen, setIsMoreBoxOpen] = useState<number | null>(null);
-    const [isFriendDeleteBox, setIsFriendDeleteBox] = useState(false);
     const [chatId, setChatId] = useState<number | null>(null);
     const [reportDetail, setReportDetail] = useState<string>("");
 
-    const favoriteFriends = FRIENDS.filter(friend => friend.favorites === 1);
-    const nonFavoriteFriends = FRIENDS.filter(friend => friend.favorites === 0);
-
-    const isEvaluationModalOpen = useSelector((state: RootState) => state.modal.evaluationModal);
-    const isFeedbackModalOpen = useSelector((state: RootState) => state.modal.isOpen);
-    const isMannerStatus = useSelector((state: RootState) => state.mannerStatus.mannerStatus);
     const isMoreModalType = useSelector((state: RootState) => state.modal.moreModal);
 
     const handleGoToChatRoom = (id: number) => {
@@ -138,14 +131,9 @@ const ChatWindow = (props: ChatWindowProps) => {
                                 <div>
                                     <FriendsList
                                         onChatRoom={handleGoToChatRoom}
-                                        list={favoriteFriends}
+                                        list={FRIENDS}
                                         isFavorites={true}
                                     />
-                                    <FriendsList
-                                        onChatRoom={handleGoToChatRoom}
-                                        list={nonFavoriteFriends}
-                                        isFavorites={false}
-                                        setIsDeleteBox={setIsFriendDeleteBox} />
                                 </div>
                             }
                             {activeTab === 'chat' &&
@@ -160,6 +148,7 @@ const ChatWindow = (props: ChatWindowProps) => {
                     </ChatMain>
                 </Wrapper>
             </Overlay>
+
             {isChatRoomVisible && chatId !== null &&
                 <ChatRoom
                     onClose={onClose}
@@ -418,24 +407,23 @@ const SearchInput = styled.input`
 const ChatMain = styled.div`
     border-radius: 0 0 20px 20px;
     background:${theme.colors.white};
-
     &.friends{
         box-shadow: none;
         padding:11px 6px 0 0;
     }
     &.chat{
         box-shadow: inset 0 0px 4.7px 0 #00000026;
-        padding:0 6px 0 0;
     }
 `;
 
 const Content = styled.main`
     &.friends{
-        height: 507px; 
+        height: 508px; 
     }
     &.chat{
-        height: 577px; 
+        height: 590px; 
     }
+
     overflow-y: auto; 
     &::-webkit-scrollbar {
         width: 5px;

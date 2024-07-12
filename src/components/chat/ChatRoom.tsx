@@ -419,7 +419,7 @@ const ChatBorder = styled.div`
 const ChatMain = styled.main`
     border-top: 1px solid #C1B7FF;
     padding:10px 8px;
-    height: 476px;
+    height: 471px;
     overflow-y: auto;
     -ms-overflow-style: none;
     ::-webkit-scrollbar {

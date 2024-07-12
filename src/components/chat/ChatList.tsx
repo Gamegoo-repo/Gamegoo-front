@@ -85,14 +85,6 @@ const ChatList = (props: ChatListProps) => {
 export default ChatList;
 
 const List = styled.div`
-  position: relative;
-
-    &.border {
-        border-bottom: 1px solid ${theme.colors.gray400};
-    }
-    &.none{
-        border-bottom:none;
-    }
 `;
 
 const UserContent = styled.div`
@@ -101,10 +93,8 @@ const UserContent = styled.div`
   justify-content: space-between;
   cursor: pointer;
   padding:18px 19px 18px 0;
-  &:last-child {
-    padding: 5px 19px 11px 0;
-    }
   &:hover {
+    position: unset;
     background: ${theme.colors.gray500}; 
   }
 `;

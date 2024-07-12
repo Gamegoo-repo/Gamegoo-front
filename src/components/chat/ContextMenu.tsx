@@ -25,7 +25,7 @@ const ContextMenu = ({ x, y, onClose, onDelete }: ContextMenuProps) => {
     // }, [onClose]);
 
     return (
-        <MenuContainer ref={menuRef} style={{ top: `${y}px`, left: `${x}px` }} onMouseLeave={onClose}>
+        <MenuContainer $top={y} $left={x}>
             {/* <MenuItem onClick={onDelete}>삭제하기</MenuItem> */}
             <MenuItem>삭제하기</MenuItem>
         </MenuContainer>
@@ -34,9 +34,11 @@ const ContextMenu = ({ x, y, onClose, onDelete }: ContextMenuProps) => {
 
 export default ContextMenu;
 
-const MenuContainer = styled.div`
+const MenuContainer = styled.div<{ $top: number, $left: number }>`
     position: fixed;
     /* position:absolute; */
+    top: ${(props) => props.$top};
+    left: ${(props) => props.$left};
     z-index: 1000;
     background: ${theme.colors.white};
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
@@ -44,7 +46,6 @@ const MenuContainer = styled.div`
     overflow: hidden;
     white-space: nowrap;
     box-sizing: border-box;
-    /* transform: translate(-50%, -50%); */
 `;
 
 const MenuItem = styled.div`
