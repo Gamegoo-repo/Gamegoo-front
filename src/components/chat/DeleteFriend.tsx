@@ -47,7 +47,6 @@ const MenuContainer = styled.div<{ $top: number, $left: number }>`
     ${(props) => props.theme.fonts.medium15};
     border: 1px solid ${theme.colors.gray400};
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-    border-radius: 4px;
     border-radius: 10px;
     overflow: hidden;
     white-space: nowrap;
