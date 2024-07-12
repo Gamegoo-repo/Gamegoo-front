@@ -20,7 +20,7 @@ const GameStyle = (props: GameStyleProps) => {
 
   const [isMike, setIsMike] = useState(mic);
   const [styledPopup, setStyledPopup] = useState(false);
-  const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
+  const [selectedStyles, setSelectedStyles] = useState<string[]>(gameStyle);
 
   const handleMike = () => {
     setIsMike(!isMike);
@@ -51,7 +51,7 @@ const GameStyle = (props: GameStyleProps) => {
       <LeftLabel profileType={profileType}>
         게임 스타일
         <GameBox profileType={profileType}>
-          {gameStyle.map((data, index) => (
+          {selectedStyles.map((data, index) => (
             <Box
               key={index}
               text={data}
@@ -72,14 +72,14 @@ const GameStyle = (props: GameStyleProps) => {
                   alt="추가"
                 />
               </AddGameStyle>
-              {styledPopup && (
-                <SelectedStylePopup
-                  onClose={handleClosePopup}
-                  selectedStyles={selectedStyles}
-                  onSelectStyle={handleSelectStyle}
-                />
-              )}
             </Div>
+          )}
+          {styledPopup && (
+            <SelectedStylePopup
+              onClose={handleClosePopup}
+              selectedStyles={selectedStyles}
+              onSelectStyle={handleSelectStyle}
+            />
           )}
         </GameBox>
       </LeftLabel>
@@ -118,6 +118,7 @@ const GameBox = styled.div<{ profileType: profileType }>`
   display: row;
   display: flex;
   gap: 16px;
+  position: relative;
 
   ${({ profileType }) =>
     profileType === "mini" &&
@@ -129,7 +130,6 @@ const GameBox = styled.div<{ profileType: profileType }>`
 const Div = styled.div`
   width: 62px;
   border-radius: 25px;
-  position: relative;
 `;
 
 const AddGameStyle = styled.button<{ profileType: profileType }>`

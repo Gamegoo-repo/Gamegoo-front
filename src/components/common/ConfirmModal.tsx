@@ -1,10 +1,13 @@
-import { setOpenEvaluationModal, setCloseConfirmModal } from "@/redux/slices/confirmModalSlice";
+import {
+  setOpenEvaluationModal,
+  setCloseConfirmModal,
+} from "@/redux/slices/confirmModalSlice";
 import { setMannerStatus } from "@/redux/slices/mannerStatusSlice";
 import { AppDispatch } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
 interface ConfirmModalProps {
@@ -12,12 +15,23 @@ interface ConfirmModalProps {
   children?: string | React.ReactNode;
   width: string;
   borderRadius?: string;
+  yes?: string;
+  no?: string;
   onCheck?: () => void;
   onClose: () => void;
 }
 
 const ConfirmModal = (props: ConfirmModalProps) => {
-  const { type, children, width, borderRadius, onCheck, onClose } = props;
+  const {
+    type,
+    children,
+    width,
+    borderRadius = "20px",
+    yes = "예",
+    no = "아니요",
+    onCheck,
+    onClose,
+  } = props;
 
   const dispatch: AppDispatch = useDispatch();
 
@@ -36,10 +50,10 @@ const ConfirmModal = (props: ConfirmModalProps) => {
     dispatch(setMannerStatus("badManner"));
   };
 
-  const handleCheck = () => {
-    dispatch(setOpenEvaluationModal());
-    dispatch(setCloseConfirmModal());
-  };
+  // const handleCheck = () => {
+  //   dispatch(setOpenEvaluationModal());
+  //   dispatch(setCloseConfirmModal());
+  // };
 
   return (
     <Overlay>
@@ -96,16 +110,20 @@ const ConfirmModal = (props: ConfirmModalProps) => {
         <Footer>
           <Buttons>
             <Button
-              onClick={handleCheck || onCheck || onClose}
+              onClick={onCheck || onClose}
               className={type === "manner" ? undefined : "noButton"}
-              disabled={type === "manner" && !mannerStatusClicked && !badMannerStatusClicked}
+              disabled={
+                type === "manner" &&
+                !mannerStatusClicked &&
+                !badMannerStatusClicked
+              }
               $type={type}
             >
-              {type === "yesOrNo" ? "예" : "확인"}
+              {type === "yesOrNo" ? yes : "확인"}
             </Button>
             {type === "yesOrNo" && (
               <Button onClick={onClose} className="noButton" $type={type}>
-                아니요
+                {no}
               </Button>
             )}
           </Buttons>
@@ -131,6 +149,7 @@ const Wrapper = styled.div<{ $width: string; $borderRadius: string }>`
   background: ${theme.colors.white};
   border-radius: ${(props) => props.$borderRadius};
   box-shadow: 0 0 14.76px 0 rgba(0, 0, 0, 0.15);
+  overflow: hidden;
 `;
 
 const Main = styled.main`
@@ -148,6 +167,7 @@ const TextTop = styled.div`
   justify-content: center;
   text-align: center;
   border-bottom: 0.58px solid rgba(197, 197, 199, 1);
+  ${(props) => props.theme.fonts.regular25};
 `;
 
 const CloseButton = styled.p`
@@ -196,6 +216,7 @@ const Button = styled.button<{ $type: string }>`
   cursor: pointer;
   color: ${({ $type }) => ($type === "img" ? "#2D2D2D" : "#44515C")};
   width: 100%;
+  height: 79px;
   padding: 15px 0;
   &:disabled {
     color: ${theme.colors.gray300};

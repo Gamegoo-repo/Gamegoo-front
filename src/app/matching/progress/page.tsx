@@ -6,8 +6,15 @@ import HeaderTitle from "@/components/common/HeaderTitle";
 import SquareProfile from "@/components/match/SquareProfile";
 import Image from "next/image";
 import { theme } from "@/styles/theme";
+import { useState } from "react";
+import ConfirmModal from "@/components/common/ConfirmModal";
 
 const Progress = () => {
+  /* 모달창 */
+  const [isFirstRetry, setIsFirstRetry] = useState<boolean>(true);
+  const [isSecondYes, setIsSecondYes] = useState<boolean>(false);
+  const [isSecondNo, setIsSecondNo] = useState<boolean>(false);
+
   return (
     <Wrapper>
       <MatchContent>
@@ -34,6 +41,46 @@ const Progress = () => {
             <ChatButton count={3} />
           </ChatBoxContent>
         </Footer>
+        {/* 즐겜모드, 빡겜모드 매칭 실패 */}
+        {isFirstRetry && (
+          <ConfirmModal
+            type="yesOrNo"
+            width="540px"
+            onClose={() => setIsFirstRetry(false)}
+          >
+            계속해서 매칭을 시도하겠습니까?
+          </ConfirmModal>
+        )}
+        {/* 빡겜모드 2번째 매칭 실패 시, 같은 조건으로 글을 올린 사람이 있을 때 */}
+        {isSecondYes && (
+          <ConfirmModal
+            type="yesOrNo"
+            width="540px"
+            onCheck={() => setIsSecondYes(false)}
+            onClose={() => setIsSecondYes(false)}
+            yes="닫기"
+            no="글 보러가기"
+          >
+            조건에 맞는 사람이 없습니다.
+            <br />
+            같은 조건으로 글을 올린 사람이 있어요!
+          </ConfirmModal>
+        )}
+        {/* 빡겜모드 2번째 매칭 실패 시, 같은 조건으로 글을 쓴 사람이 없을 때 */}
+        {isSecondNo && (
+          <ConfirmModal
+            type="yesOrNo"
+            width="540px"
+            onCheck={() => setIsSecondNo(false)}
+            onClose={() => setIsSecondNo(false)}
+            yes="닫기"
+            no="글 작성하기"
+          >
+            조건에 맞는 사람이 없습니다.
+            <br />
+            게시판에 글을 작성할 수 있어요!
+          </ConfirmModal>
+        )}
       </MatchContent>
     </Wrapper>
   );

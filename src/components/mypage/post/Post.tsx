@@ -1,3 +1,5 @@
+import MoreBox from "@/components/common/MoreBox";
+import Report from "@/components/readBoard/Report";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -22,17 +24,35 @@ const Post: React.FC<PostProps> = ({
   text,
   time,
 }) => {
+  const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
+
+  const handleMoreBoxOpen = () => {
+    setIsMoreBoxOpen((prevState) => !prevState);
+  };
+
+  const handleModify = () => {
+    // 수정하기 api
+    setIsMoreBoxOpen(false);
+  };
+
+  const handleDelete = () => {
+    // 삭제하기 api
+    setIsMoreBoxOpen(false);
+  };
+
   return (
     <Container>
       {index}
       <Content>
         <Name>
-          <Image
-            src={`/assets/images/profile.svg`}
-            width={50}
-            height={50}
-            alt="profile"
-          />
+          <ProfileImage>
+            <PersonImage
+              src={`/assets/images/profile/${profileImg}.svg`}
+              width={40}
+              height={40}
+              alt="프로필"
+            />
+          </ProfileImage>
           <Div>
             {nickname}
             <Tag>#{tag}</Tag>
@@ -52,12 +72,17 @@ const Post: React.FC<PostProps> = ({
           {time} <Minute>20분 전</Minute>
         </Date>
       </Content>
-      <Image
-        src={`/assets/icons/three_dots_button.svg`}
-        width={3}
-        height={15}
-        alt="profile"
-      />
+      <More>
+        <Report onClick={handleMoreBoxOpen} />
+        {isMoreBoxOpen && (
+          <MoreBox
+            text1="수정"
+            text2="삭제"
+            handleFirst={handleModify}
+            handleSecond={handleDelete}
+          />
+        )}
+      </More>
     </Container>
   );
 };
@@ -90,6 +115,20 @@ const Name = styled.div`
   gap: 22px;
   ${(props) => props.theme.fonts.medium16};
   white-space: nowrap;
+`;
+
+const ProfileImage = styled.div`
+  width: 50px;
+  height: 50px;
+  border-radius: 93px;
+  background: ${theme.colors.purple300};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const PersonImage = styled(Image)`
+  filter: drop-shadow(-4px 10px 10px rgba(63, 53, 78, 0.582));
 `;
 
 const Div = styled.div`
@@ -126,4 +165,8 @@ const Date = styled.div`
 const Minute = styled.div`
   color: ${theme.colors.gray600};
   ${(props) => props.theme.fonts.semiBold14};
+`;
+
+const More = styled.div`
+  position: relative;
 `;

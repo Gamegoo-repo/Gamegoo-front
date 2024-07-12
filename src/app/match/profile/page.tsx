@@ -12,7 +12,7 @@ import { profileType } from "@/interface/profile";
 import { Suspense } from "react";
 
 const userData = {
-  image: "/assets/images/profile.svg",
+  image: "profile6",
   account: "유니콘의 비밀",
   tag: "KR1",
   tier: "B3",
