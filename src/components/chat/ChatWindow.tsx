@@ -42,8 +42,7 @@ const CHAT = [
     { id: 4, image: "/assets/icons/gray_circle.svg", userName: "김철수", msg: '마지막 메시지', date: "2024-05-19 11:27" },
 ];
 
-const ChatWindow = (props: ChatWindowProps) => {
-    const { onClose } = props;
+const ChatWindow = ({onClose}: ChatWindowProps) => {
 
     const dispatch = useDispatch();
 

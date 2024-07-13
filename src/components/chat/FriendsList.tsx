@@ -17,8 +17,8 @@ interface FriendListProps {
     onChatRoom: (id: number) => void;
 }
 
-const FriendsList = (props: FriendListProps) => {
-    const { list, onChatRoom } = props;
+const FriendsList = ({ list, onChatRoom }: FriendListProps) => {
+    
     const [friends, setFriends] = useState<FriendListInterface[]>(list);
 
     const [deleteMenu, setDeleteMenu] = useState<{ x: number, y: number, friendId: number | null }>({ x: 0, y: 0, friendId: null });
@@ -54,6 +54,7 @@ const FriendsList = (props: FriendListProps) => {
             friend.id === friendId ? { ...friend, favorites: friend.favorites === 1 ? 0 : 1 } : friend
         ));
     };
+
     if (friends.length === 0) {
         return null;
     }
@@ -122,7 +123,6 @@ const FriendsList = (props: FriendListProps) => {
                             onContextMenu={(event) => handleContextMenu(event, friend.id)}
                             onClick={() => onChatRoom(friend.id)}
                             key={friend.id}
-                            $disablePointerEvents={deleteMenu.friendId === friend.id}
                         >
                             {deleteMenu.friendId === friend.id && (
                                 <DeleteFriend
@@ -203,7 +203,6 @@ const UserContent = styled.div`
         background: ${theme.colors.gray500}; 
     }
 `;
-
 
 const Left = styled.div`
     position: relative;

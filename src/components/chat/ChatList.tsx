@@ -25,7 +25,6 @@ const ChatList = (props: ChatListProps) => {
     const { list, onChatRoom, setIsMoreBoxOpen, isMoreBoxOpen, onModalChange } = props;
 
     const handleMoreBoxOpen = (chatId: number) => {
-        console.log(isMoreBoxOpen === chatId)
         if (isMoreBoxOpen === chatId) {
             setIsMoreBoxOpen(null);
         } else {
@@ -35,7 +34,7 @@ const ChatList = (props: ChatListProps) => {
 
     return (
         <>
-            <List>e
+            <List>
                 {list.map(chat => {
                     return (
                         <UserContent
@@ -45,7 +44,8 @@ const ChatList = (props: ChatListProps) => {
                             {isMoreBoxOpen === chat.id &&
                                 <MiniModal
                                     type="chatList"
-                                    onChangeModal={onModalChange} />}
+                                    onChangeModal={onModalChange}
+                                    setIsMoreBoxOpen={setIsMoreBoxOpen} />}
                             <Left>
                                 <ProfileImage
                                     src={chat.image}

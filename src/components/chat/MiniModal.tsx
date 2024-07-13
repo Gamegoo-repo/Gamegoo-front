@@ -1,27 +1,48 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
+import { Dispatch } from "react";
 
 interface MiniModalProps {
   onChangeModal: (type: string) => void;
   type?: "chatList";
+  setIsMoreBoxOpen: Dispatch<React.SetStateAction<number | null>>;
 }
 
-const MiniModal = (props: MiniModalProps) => {
-  const { onChangeModal, type } = props;
+const MiniModal = ({
+  onChangeModal, type, setIsMoreBoxOpen
+}: MiniModalProps
+) => {
 
-  const handleAddFriend = () => {
+  const handleAddFriend = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsMoreBoxOpen(null);
     console.log('친구 추가')
   };
 
   return (
     <Wrapper $type={type}>
       <Ul>
-        <Li onClick={() => onChangeModal("leave")}>채팅방 나가기</Li>
-        <Li onClick={handleAddFriend}>친구 추가</Li>
-        <Li onClick={() => onChangeModal("block")}>차단하기</Li>
-        <Li onClick={() => onChangeModal("report")}>신고하기</Li>
-        <Li onClick={() => onChangeModal("manner")}>매너 평가</Li>
-        <Li onClick={() => onChangeModal("badManner")}>비매너 평가</Li>
+        <Li onClick={(e) => {
+          e.stopPropagation();
+          onChangeModal("leave");
+        }}>채팅방 나가기</Li>
+        <Li onClick={(e) =>
+          handleAddFriend(e)}>친구 추가</Li>
+        <Li onClick={(e) => {
+          e.stopPropagation(); onChangeModal("block")
+        }}>차단하기</Li>
+        <Li onClick={(e) => {
+          e.stopPropagation();
+          onChangeModal("report")
+        }}>신고하기</Li>
+        <Li onClick={(e) => {
+          e.stopPropagation();
+          onChangeModal("manner")
+        }}>매너 평가</Li>
+        <Li onClick={(e) => {
+          e.stopPropagation();
+          onChangeModal("badManner");
+        }}>비매너 평가</Li>
       </Ul>
     </Wrapper>
   )
@@ -32,7 +53,7 @@ export default MiniModal;
 const Wrapper = styled.div<{ $type?: string }>`
   position: absolute;
   top: ${(props) =>
-    props.$type ? "14px" : "35px"};
+    props.$type ? "none" : "35px"};
   right: ${(props) =>
     props.$type ? "9%" : "10%"};
   background: ${theme.colors.white};
