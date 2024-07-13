@@ -5,7 +5,7 @@ import { Dispatch } from "react";
 interface MiniModalProps {
   onChangeModal: (type: string) => void;
   type?: "chatList";
-  setIsMoreBoxOpen: Dispatch<React.SetStateAction<number | null>>;
+  setIsMoreBoxOpen?: Dispatch<React.SetStateAction<number | null>>;
 }
 
 const MiniModal = ({
@@ -15,7 +15,9 @@ const MiniModal = ({
 
   const handleAddFriend = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsMoreBoxOpen(null);
+    if (setIsMoreBoxOpen) {
+      setIsMoreBoxOpen(null);
+    }
     console.log('친구 추가')
   };
 
