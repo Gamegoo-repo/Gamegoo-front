@@ -36,9 +36,9 @@ const DeleteFriend = ({ x, y, onClose, onDelete }: ContextMenuProps) => {
 export default DeleteFriend;
 
 const MenuContainer = styled.div<{ $top: number, $left: number }>`
-    position: fixed;
-    top: ${(props) => props.$top};
-    left: ${(props) => props.$left};
+    position: absolute;
+    top: ${(props) => props.$top}px;
+    left: ${(props) => props.$left}px;
     z-index: 1000;
     max-width: 175px;
     width: 100%;

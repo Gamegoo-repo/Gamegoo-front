@@ -1,6 +1,5 @@
-import { setOpenEvaluationModal, setCloseMannerStatusModal } from "@/redux/slices/modalSlice";
+import { setOpenEvaluationModal } from "@/redux/slices/modalSlice";
 import { setMannerStatus } from "@/redux/slices/mannerStatusSlice";
-import { AppDispatch } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useState } from "react";
@@ -41,7 +40,7 @@ const ConfirmModal = (props: ConfirmModalProps) => {
     onSecondaryClick
   } = props;
 
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useDispatch();
 
   let buttonClassName = '';
 
@@ -130,7 +129,11 @@ const ConfirmModal = (props: ConfirmModalProps) => {
             <Button
               onClick={type ? handleCheck : onPrimaryClick}
               className={buttonClassName}
-              disabled={type === "manner" && !mannerStatusClicked && !badMannerStatusClicked}
+              disabled={
+                type === "manner" && 
+                !mannerStatusClicked && 
+                !badMannerStatusClicked
+              }
               $type={type}>
               {primaryButtonText}
             </Button>

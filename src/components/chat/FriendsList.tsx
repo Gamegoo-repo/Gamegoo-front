@@ -31,12 +31,13 @@ const FriendsList = (props: FriendListProps) => {
     const handleContextMenu = (event: React.MouseEvent, friendId: number) => {
         event.preventDefault();
         event.stopPropagation();
-        //  특정한 영역에서 클릭한 위치 찾기
-        // friendsList위치에서부터 글릭한 곳
-        // const top= friendRef.current.getBoundingClientRect().top;
-        // const left= friendRef.current.getBoundingClientRect().left;
-        // setContextMenu({ x: event.clientX, y: event.clientY, friendId });
-        setDeleteMenu({ x: event.screenX, y: event.screenY, friendId });
+        
+        /* FriendsList 컴포넌트 상대 좌표 */
+        const containerRect = event.currentTarget.getBoundingClientRect();
+        const x = event.clientX - containerRect.left;
+        const y = event.clientY - containerRect.top;
+    
+        setDeleteMenu({ x: x, y: y, friendId });
     };
 
     const handleCloseDeletetMenu = () => {
@@ -56,9 +57,6 @@ const FriendsList = (props: FriendListProps) => {
             friend.id === friendId ? { ...friend, favorites: friend.favorites === 1 ? 0 : 1 } : friend
         ));
     };
-
-    console.log('X, Y', deleteMenu.x, deleteMenu.y)
-
     if (friends.length === 0) {
         return null;
     }
