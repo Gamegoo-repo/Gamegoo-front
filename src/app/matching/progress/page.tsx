@@ -38,9 +38,11 @@ const Progress = () => {
         {/* 즐겜모드, 빡겜모드 매칭 실패 */}
         {isFirstRetry && (
           <ConfirmModal
-            type="yesOrNo"
             width="540px"
-            onClose={() => setIsFirstRetry(false)}
+            primaryButtonText="예"
+            secondaryButtonText="아니요"
+            onPrimaryClick={() => setIsFirstRetry(true)}
+            onSecondaryClick={() => setIsFirstRetry(false)}
           >
             계속해서 매칭을 시도하겠습니까?
           </ConfirmModal>
@@ -48,12 +50,11 @@ const Progress = () => {
         {/* 빡겜모드 2번째 매칭 실패 시, 같은 조건으로 글을 올린 사람이 있을 때 */}
         {isSecondYes && (
           <ConfirmModal
-            type="yesOrNo"
             width="540px"
-            onCheck={() => setIsSecondYes(false)}
-            onClose={() => setIsSecondYes(false)}
-            yes="닫기"
-            no="글 보러가기"
+            onPrimaryClick={() => setIsSecondYes(false)}
+            onSecondaryClick={() => setIsSecondYes(false)}
+            primaryButtonText="닫기"
+            secondaryButtonText="글 보러하기"
           >
             조건에 맞는 사람이 없습니다.
             <br />
@@ -63,12 +64,11 @@ const Progress = () => {
         {/* 빡겜모드 2번째 매칭 실패 시, 같은 조건으로 글을 쓴 사람이 없을 때 */}
         {isSecondNo && (
           <ConfirmModal
-            type="yesOrNo"
             width="540px"
-            onCheck={() => setIsSecondNo(false)}
-            onClose={() => setIsSecondNo(false)}
-            yes="닫기"
-            no="글 작성하기"
+            onPrimaryClick={() => setIsSecondNo(false)}
+            onSecondaryClick={() => setIsSecondNo(false)}
+            primaryButtonText="닫기"
+            secondaryButtonText="글 작성하기"
           >
             조건에 맞는 사람이 없습니다.
             <br />

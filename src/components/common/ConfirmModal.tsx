@@ -15,7 +15,7 @@ type ButtonText =
   | '아니요'
   | '닫기'
   | '글 작성하기'
-  | '글 보러하기';
+  | '글 보러하기'
 
 interface ConfirmModalProps {
   type?: "manner";
@@ -29,7 +29,7 @@ interface ConfirmModalProps {
   yes?: string;
   no?: string;
   onCheck?: () => void;
-  onClose: () => void;
+  onClose?: () => void;
 }
 
 const ConfirmModal = (props: ConfirmModalProps) => {
@@ -41,7 +41,7 @@ const ConfirmModal = (props: ConfirmModalProps) => {
     secondaryButtonText,
     onPrimaryClick,
     onSecondaryClick
-    borderRadius = "20px",
+    borderRadius,
     yes = "예",
     no = "아니요",
     onCheck,
@@ -84,7 +84,7 @@ const ConfirmModal = (props: ConfirmModalProps) => {
     <Overlay>
       <Wrapper
         $width={width}
-        $borderRadius={borderRadius || "11px"}
+        $type={type}
         onClick={(e) => e.stopPropagation()}
       >
         <Main>
@@ -134,13 +134,13 @@ const ConfirmModal = (props: ConfirmModalProps) => {
         </Main>
         <Footer>
           <ButtonWrapper>
-<!--             <Button
+            <Button
 
               onClick={type ? handleCheck : onPrimaryClick}
               className={buttonClassName}
               disabled={
-                type === "manner" && 
-                !mannerStatusClicked && 
+                type === "manner" &&
+                !mannerStatusClicked &&
                 !badMannerStatusClicked
               }
               $type={type}>
@@ -153,22 +153,22 @@ const ConfirmModal = (props: ConfirmModalProps) => {
                 $type={type}>
                 {secondaryButtonText}
 
-              onClick={onCheck || onClose}
-              className={type === "manner" ? undefined : "noButton"}
-              disabled={
-                type === "manner" &&
-                !mannerStatusClicked &&
-                !badMannerStatusClicked
-              }
-              $type={type}
+                onClick={onCheck || onClose}
+                className={type === "manner" ? undefined : "noButton"}
+                disabled={
+                  type === "manner" &&
+                  !mannerStatusClicked &&
+                  !badMannerStatusClicked
+                }
+                $type={type}
             >
-              {type === "yesOrNo" ? yes : "확인"}
-            </Button>
+                {type === "yesOrNo" ? yes : "확인"}
+              </Button>
             {type === "yesOrNo" && (
               <Button onClick={onClose} className="noButton" $type={type}>
                 {no}
 
-              </Button> -->
+              </Button> -- >
             )}
           </ButtonWrapper>
         </Footer>
@@ -188,10 +188,10 @@ const Overlay = styled.div`
   z-index: 100;
 `;
 
-const Wrapper = styled.div<{ $width: string; $borderRadius: string }>`
+const Wrapper = styled.div<{ $width: string; $type: string | undefined }>`
   width: ${({ $width }) => $width};
   background: ${theme.colors.white};
-  border-radius: ${({ $borderRadius }) => $borderRadius};
+  border-radius: ${({ $type }) => $type ? "10px" : "20px"};
   box-shadow: 0 0 14.76px 0 rgba(0, 0, 0, 0.15);
   overflow: hidden;
 `;
