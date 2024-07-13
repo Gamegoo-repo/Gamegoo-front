@@ -159,15 +159,15 @@ const Bubble = styled.div`
   left: 65%;
 
   &:before {
-    border-top: 0 solid transparent;
+    border-top: 3px solid transparent;
     border-left: 6px solid transparent;
     border-right: 6px solid transparent;
-    border-bottom: 12px solid ${theme.colors.purple200};
+    border-bottom: 9px solid #9F90F9;
     content: "";
     position: absolute;
-    bottom: -0.8px;
+    bottom: 0.2px;
     left: -5px;
-    transform: rotate(-10deg);
+    transform: rotate(-11deg);
     z-index: 0;
     border-radius: 0px 0px 0px 2px;
   }
@@ -175,8 +175,8 @@ const Bubble = styled.div`
   &:after {
     border-top: 0 solid transparent;
     border-left: 5.5px solid transparent;
-    border-right: 5.5px solid transparent;
-    border-bottom: 11px solid ${theme.colors.purple400};
+    border-right: 4.5px solid transparent;
+    border-bottom: 9px solid #E3DEFF;
     content: "";
     position: absolute;
     bottom: 1px;
