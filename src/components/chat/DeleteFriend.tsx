@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { theme } from "@/styles/theme";
-import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 
 interface ContextMenuProps {
     x: number;
@@ -25,11 +26,13 @@ const DeleteFriend = ({ x, y, onClose, onDelete }: ContextMenuProps) => {
         };
     }, [onClose]);
 
+    const modalRoot = document.getElementById('modal-root') as HTMLElement;
 
-    return (
+    return createPortal(
         <MenuContainer $top={y} $left={x} ref={menuRef}>
             <MenuItem onClick={(e) => { e.stopPropagation(); onDelete(); }}>삭제하기</MenuItem>
         </MenuContainer>
+        , modalRoot
     );
 };
 
@@ -56,5 +59,4 @@ const MenuContainer = styled.div<{ $top: number, $left: number }>`
 const MenuItem = styled.div`
     padding: 11px 20px;
     cursor: pointer;
-    pointer-events: auto;
 `;

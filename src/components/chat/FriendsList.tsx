@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { theme } from "@/styles/theme";
 import Image from 'next/image';
-import { Dispatch, useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import DeleteFriend from './DeleteFriend';
 
 interface FriendListInterface {
@@ -12,11 +12,9 @@ interface FriendListInterface {
     favorites: number;
 }
 
-
-
 interface FriendListProps {
     list: FriendListInterface[];
-    onChatRoom: ( id: number) => void;
+    onChatRoom: (id: number) => void;
 }
 
 const FriendsList = (props: FriendListProps) => {
@@ -31,12 +29,9 @@ const FriendsList = (props: FriendListProps) => {
     const handleContextMenu = (event: React.MouseEvent, friendId: number) => {
         event.preventDefault();
         event.stopPropagation();
-        
-        /* FriendsList 컴포넌트 상대 좌표 */
-        const containerRect = event.currentTarget.getBoundingClientRect();
-        const x = event.clientX - containerRect.left;
-        const y = event.clientY - containerRect.top;
-    
+
+        const x = event.pageX;
+        const y = event.pageY;
         setDeleteMenu({ x: x, y: y, friendId });
     };
 
@@ -45,8 +40,10 @@ const FriendsList = (props: FriendListProps) => {
     };
 
     const handleDeleteFriend = () => {
-        console.log('삭제하기')
-        if (deleteMenu.friendId !== null) {
+        const { friendId } = deleteMenu;
+        if (friendId) {
+            console.log(`${friendId}삭제`)
+            // setFriends(friends.filter((friend) => friend.id !== friendId));
             handleCloseDeletetMenu();
         }
     };
@@ -76,14 +73,16 @@ const FriendsList = (props: FriendListProps) => {
                             onClick={() =>
                                 onChatRoom(friend.id)}
                             key={friend.id}
-                            $disablePointerEvents={deleteMenu.friendId === friend.id}>
+                            >
                             {deleteMenu.friendId === friend.id && (
-                                <DeleteFriend
-                                    x={deleteMenu.x}
-                                    y={deleteMenu.y}
-                                    onClose={handleCloseDeletetMenu}
-                                    onDelete={handleDeleteFriend}
-                                />
+                                <>
+                                    <DeleteFriend
+                                        x={deleteMenu.x}
+                                        y={deleteMenu.y}
+                                        onClose={handleCloseDeletetMenu}
+                                        onDelete={handleDeleteFriend}
+                                    />
+                                </>
                             )}
                             <Left>
                                 <Image
@@ -124,7 +123,7 @@ const FriendsList = (props: FriendListProps) => {
                             onClick={() => onChatRoom(friend.id)}
                             key={friend.id}
                             $disablePointerEvents={deleteMenu.friendId === friend.id}
-                            >
+                        >
                             {deleteMenu.friendId === friend.id && (
                                 <DeleteFriend
                                     x={deleteMenu.x}
@@ -193,18 +192,18 @@ const FriendsTitle = styled.p`
     padding: 0 16px 11px 18px;
 `;
 
-const UserContent = styled.div<{ $disablePointerEvents: boolean }>`
+const UserContent = styled.div`
     position: relative;
     display: flex;  
     align-items: center;
     justify-content: space-between;
     cursor: pointer;
     padding: 5px 18px 5px 16px;
-    ${({ $disablePointerEvents }) => $disablePointerEvents && 'pointer-events: none;'}
     &:hover {
         background: ${theme.colors.gray500}; 
     }
 `;
+
 
 const Left = styled.div`
     position: relative;
