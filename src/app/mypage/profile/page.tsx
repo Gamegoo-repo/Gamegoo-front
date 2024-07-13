@@ -80,7 +80,7 @@ const MyProfilePage = () => {
           <ConfirmModal
             type="yesOrNo"
             width="540px"
-            onCheck={handleWithdrawal}
+            ={handleWithdrawal}
             onClose={() => setIsWithdrawalCaution(false)}
           >
             회원 탈퇴를 하시겠습니까?
