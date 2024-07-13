@@ -239,8 +239,8 @@ const BoardPage = () => {
       {isWritingOpen && <PostBoard onClose={handleWritingClose} />}
       <Wrapper>
         <BoardContent
-         $isEvaluationModalOpen={isEvaluationModalOpen}
-         $isMoreModalOpen={isMoreModalOpen}>
+          $isEvaluationModalOpen={isEvaluationModalOpen}
+          $isMoreModalOpen={isMoreModalOpen}>
           <FirstRow>
             <Title>게시판</Title>
             <RefreshImage
@@ -329,6 +329,7 @@ const BoardPage = () => {
 export default BoardPage;
 
 const Wrapper = styled.div`
+  position: relative;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -406,8 +407,10 @@ const Main = styled.main`
 `;
 
 const Footer = styled.footer`
+  position: fixed;
+  right: 80px;
+  bottom: 78px;
   display: flex;
-  margin: 37px 0 78px;
 `;
 
 const ChatBoxContent = styled.div`
