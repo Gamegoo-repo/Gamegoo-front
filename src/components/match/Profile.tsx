@@ -255,7 +255,6 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                 {isBlockBoxOpen && (
                   <ConfirmModal
                     width="540px"
-                    borderRadius="20px"
                     primaryButtonText="예"
                     secondaryButtonText="아니요"
                     onPrimaryClick={() => {
@@ -275,7 +274,6 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                 {isBlockConfirmOpen && (
                   <ConfirmModal
                     width="540px"
-                    borderRadius="20px"
                     primaryButtonText="확인"
                     onPrimaryClick={() => {
                       setIsBlockConfrimOpen(false);

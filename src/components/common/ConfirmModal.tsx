@@ -26,10 +26,6 @@ interface ConfirmModalProps {
   secondaryButtonText?: ButtonText;
   onPrimaryClick: () => void;
   onSecondaryClick?: () => void;
-  yes?: string;
-  no?: string;
-  onCheck?: () => void;
-  onClose?: () => void;
 }
 
 const ConfirmModal = (props: ConfirmModalProps) => {
@@ -37,15 +33,11 @@ const ConfirmModal = (props: ConfirmModalProps) => {
     type,
     children,
     width,
+    borderRadius,
     primaryButtonText,
     secondaryButtonText,
     onPrimaryClick,
     onSecondaryClick
-    borderRadius,
-    yes = "예",
-    no = "아니요",
-    onCheck,
-    onClose,
   } = props;
 
   const dispatch = useDispatch();
@@ -135,7 +127,6 @@ const ConfirmModal = (props: ConfirmModalProps) => {
         <Footer>
           <ButtonWrapper>
             <Button
-
               onClick={type ? handleCheck : onPrimaryClick}
               className={buttonClassName}
               disabled={
@@ -150,25 +141,14 @@ const ConfirmModal = (props: ConfirmModalProps) => {
               <Button
                 onClick={onSecondaryClick}
                 className="rightButton"
-                $type={type}>
-                {secondaryButtonText}
-
-                onClick={onCheck || onClose}
-                className={type === "manner" ? undefined : "noButton"}
+                $type={type}
                 disabled={
                   type === "manner" &&
                   !mannerStatusClicked &&
                   !badMannerStatusClicked
-                }
-                $type={type}
-            >
-                {type === "yesOrNo" ? yes : "확인"}
+                }>
+                {secondaryButtonText}
               </Button>
-            {type === "yesOrNo" && (
-              <Button onClick={onClose} className="noButton" $type={type}>
-                {no}
-
-              </Button> -- >
             )}
           </ButtonWrapper>
         </Footer>

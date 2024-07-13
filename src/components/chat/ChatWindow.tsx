@@ -158,7 +158,6 @@ const ChatWindow = ({onClose}: ChatWindowProps) => {
             {isMoreModalType === 'leave' &&
                 <ConfirmModal
                     width="540px"
-                    borderRadius="20px"
                     primaryButtonText="취소"
                     secondaryButtonText="나가기"
                     onPrimaryClick={handleModalClose}
@@ -179,7 +178,6 @@ const ChatWindow = ({onClose}: ChatWindowProps) => {
             {isMoreModalType === 'block' &&
                 <ConfirmModal
                     width="540px"
-                    borderRadius="20px"
                     primaryButtonText="취소"
                     secondaryButtonText="차단"
                     onPrimaryClick={handleModalClose}
@@ -200,7 +198,6 @@ const ChatWindow = ({onClose}: ChatWindowProps) => {
             {isMoreModalType === 'doneBlock' && (
                 <ConfirmModal
                     width="540px"
-                    borderRadius="20px"
                     primaryButtonText="확인"
                     onPrimaryClick={handleModalClose}
                 >
