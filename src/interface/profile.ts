@@ -17,5 +17,5 @@ export interface User {
 
 export interface Profile {
   user: User;
-  profileType: profileType;
+  profileType?: profileType;
 }

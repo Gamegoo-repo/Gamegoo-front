@@ -7,7 +7,7 @@ import { theme } from "@/styles/theme";
 import SelectedStylePopup from "./SelectedStylePopup";
 import { css } from "styled-components";
 
-type profileType = "me" | "other" | "none";
+type profileType = "me" | "other" | "none" | "mini";
 
 interface GameStyleProps {
   gameStyle: string[];
@@ -20,7 +20,7 @@ const GameStyle = (props: GameStyleProps) => {
 
   const [isMike, setIsMike] = useState(mic);
   const [styledPopup, setStyledPopup] = useState(false);
-  const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
+  const [selectedStyles, setSelectedStyles] = useState<string[]>(gameStyle);
 
   const handleMike = () => {
     setIsMike(!isMike);
@@ -50,28 +50,36 @@ const GameStyle = (props: GameStyleProps) => {
     <Style>
       <LeftLabel profileType={profileType}>
         게임 스타일
-        <GameBox>
-          {gameStyle.map((data, index) => (
-            <Box key={index} text={data} shape="round" />
+        <GameBox profileType={profileType}>
+          {selectedStyles.map((data, index) => (
+            <Box
+              key={index}
+              text={data}
+              shape="round"
+              profileType={profileType}
+            />
           ))}
           {profileType !== "other" && (
             <Div>
-              <AddGameStyle onClick={handleStylePopup}>
+              <AddGameStyle
+                profileType={profileType}
+                onClick={handleStylePopup}
+              >
                 <Image
                   src="/assets/icons/plus.svg"
-                  width={21}
-                  height={21}
+                  width={profileType === "mini" ? 11 : 21}
+                  height={profileType === "mini" ? 11 : 21}
                   alt="추가"
                 />
               </AddGameStyle>
-              {styledPopup && (
-                <SelectedStylePopup
-                  onClose={handleClosePopup}
-                  selectedStyles={selectedStyles}
-                  onSelectStyle={handleSelectStyle}
-                />
-              )}
             </Div>
+          )}
+          {styledPopup && (
+            <SelectedStylePopup
+              onClose={handleClosePopup}
+              selectedStyles={selectedStyles}
+              onSelectStyle={handleSelectStyle}
+            />
           )}
         </GameBox>
       </LeftLabel>
@@ -106,21 +114,25 @@ const LeftLabel = styled.div<{ profileType: profileType }>`
     `}
 `;
 
-const GameBox = styled.div`
+const GameBox = styled.div<{ profileType: profileType }>`
   display: row;
-  height: 50px;
   display: flex;
   gap: 16px;
+  position: relative;
+
+  ${({ profileType }) =>
+    profileType === "mini" &&
+    css`
+      gap: 6px;
+    `}
 `;
 
 const Div = styled.div`
   width: 62px;
-  height: 50px;
   border-radius: 25px;
-  position: relative;
 `;
 
-const AddGameStyle = styled.button`
+const AddGameStyle = styled.button<{ profileType: profileType }>`
   display: flex;
   width: 62px;
   height: 50px;
@@ -130,4 +142,13 @@ const AddGameStyle = styled.button`
   border-radius: 25px;
   background: ${theme.colors.purple300};
   outline: none;
+
+  ${({ profileType }) =>
+    profileType === "mini" &&
+    css`
+      width: 32px;
+      height: 25px;
+      padding: 5px 17px;
+      font-size: 12px;
+    `}
 `;

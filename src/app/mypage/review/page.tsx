@@ -1,12 +1,9 @@
 "use client";
 
 import styled from "styled-components";
-import { useParams, useRouter } from "next/navigation";
-import Profile from "@/components/match/Profile";
-import HeaderTitle from "@/components/common/HeaderTitle";
 import { theme } from "@/styles/theme";
-import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
 import MannerLevelBar from "@/components/common/MannerLevelBar";
+import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
 
 const data = {
   good_manner: {
@@ -27,54 +24,30 @@ const data = {
   },
 };
 
-const userData = {
-  image: "profile6",
-  account: "유니콘의 비밀",
-  tag: "KR1",
-  tier: "B3",
-  manner_level: 5,
-  mic: true,
-  champions: [
-    { id: 1, value: "/assets/icons/gray_circle.svg" },
-    { id: 2, value: "/assets/icons/gray_circle.svg" },
-    { id: 3, value: "/assets/icons/gray_circle.svg" },
-  ],
-  gameStyle: [
-    "이기기만 하면 뭔들",
-    "과도한 핑은 사절이에요",
-    "랭크 올리고 싶어요",
-  ],
-};
-
-const UserProfile = () => {
-  const params = useParams();
-  const id = +params.id;
-
+const MyReviewPage = () => {
   const mannerEvaluations = Object.entries(data.good_manner);
   const badMannerEvaluations = Object.entries(data.bad_manner);
 
   return (
     <Wrapper>
-      <MatchContent>
-        <HeaderTitle title="장시은 님의 프로필" size="regular" />
-        <Main>
-          <Profile profileType="other" user={userData} />
-          <Content>
-            <div>
-              <Title>장시은 님의 매너레벨</Title>
-              <Box>
-                <Text>
-                  매너 키워드는 하나 당 1점, 비매너 키워드는 -2점으로 계산해요.
-                  <br />
-                  최근 <Span>4</Span>명의 사용자가 장시은 님에게 긍정적 매너
-                  평가를 남겼어요.
-                </Text>
-                <MannerLevelBar recentLevel={4} percentage={15} />
-              </Box>
-            </div>
-            <div>
-              <Title>매너 키워드</Title>
-              <Box>
+      <MyReviewContent>
+        <Review>
+          <Title>내 평가</Title>
+          <Box>
+            <Top>
+              나의 매너 레벨
+              <Gray>
+                매너 키워드는 하나 당 1점, 비매너 키워드는 -2점으로 계산해요.
+              </Gray>
+            </Top>
+            <MannerLevelBar recentLevel={4} />
+          </Box>
+        </Review>
+        <Private>
+          <Row>
+            <MannerKey>
+              <Small>매너 키워드</Small>
+              <MannerBox>
                 <MannerList>
                   <ValueWrapper>
                     {mannerEvaluations.map(([key, value]) => {
@@ -92,7 +65,7 @@ const UserProfile = () => {
                     {MANNER_TYPES.map((type, index) => {
                       return (
                         <Type
-                          key={type.id}
+                          key={index}
                           className={
                             mannerEvaluations[index][1] > 0
                               ? "mannerEmph"
@@ -105,11 +78,11 @@ const UserProfile = () => {
                     })}
                   </TypeWrapper>
                 </MannerList>
-              </Box>
-            </div>
-            <div>
-              <Title>비매너 키워드</Title>
-              <Box>
+              </MannerBox>
+            </MannerKey>
+            <MannerKey>
+              <Small>매너 키워드</Small>
+              <MannerBox>
                 <MannerList>
                   <ValueWrapper>
                     {badMannerEvaluations.map(([key, value]) => {
@@ -127,7 +100,7 @@ const UserProfile = () => {
                     {BAD_MANNER_TYPES.map((type, index) => {
                       return (
                         <Type
-                          key={type.id}
+                          key={index}
                           className={
                             badMannerEvaluations[index][1] > 0
                               ? "badEmph"
@@ -140,16 +113,16 @@ const UserProfile = () => {
                     })}
                   </TypeWrapper>
                 </MannerList>
-              </Box>
-            </div>
-          </Content>
-        </Main>
-      </MatchContent>
+              </MannerBox>
+            </MannerKey>
+          </Row>
+        </Private>
+      </MyReviewContent>
     </Wrapper>
   );
 };
 
-export default UserProfile;
+export default MyReviewPage;
 
 const Wrapper = styled.div`
   width: 100%;
@@ -157,27 +130,47 @@ const Wrapper = styled.div`
   justify-content: center;
 `;
 
-const MatchContent = styled.div`
+const MyReviewContent = styled.div`
   max-width: 1440px;
   width: 100%;
   padding: 0 80px;
 `;
 
-const Main = styled.main`
+const Review = styled.header`
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: start;
   width: 100%;
-  gap: 14px;
-  margin-bottom: 37px;
+  margin-bottom: 32px;
 `;
 
-const Content = styled.div`
+const Private = styled.header`
+  display: flex;
+  flex-direction: column;
+  align-items: start;
   width: 100%;
-  display: grid;
-  grid-template-columns: 4fr 1fr 1fr;
-  gap: 15px;
-  margin-top: 37px;
+  margin-bottom: 32px;
+`;
+
+const Box = styled.div`
+  width: 100%;
+  height: 177px;
+  padding: 29px 36px;
+  border-radius: 20px;
+  background: ${theme.colors.gray500};
+`;
+
+const Top = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  color: ${theme.colors.gray600};
+  ${(props) => props.theme.fonts.medium16};
+`;
+
+const Gray = styled.div`
+  color: ${theme.colors.gray800};
+  ${(props) => props.theme.fonts.regular12};
 `;
 
 const Title = styled.h1`
@@ -187,38 +180,49 @@ const Title = styled.h1`
   color: ${theme.colors.gray700};
 `;
 
-const Box = styled.div`
+const Row = styled.div`
   width: 100%;
-  height: 269px;
+  display: flex;
+  justify-content: space-between;
+  gap: 9px;
+`;
+
+const MannerKey = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+`;
+
+const Small = styled.h1`
+  ${(props) => props.theme.fonts.bold11};
+  color: ${theme.colors.gray800};
+  margin-left: 11px;
+`;
+
+const MannerBox = styled.div`
+  width: 100%;
+  height: 313px;
   border-radius: 20px;
-  padding: 18px 32px;
-  background: ${theme.colors.gray500};
-`;
-
-const Text = styled.div`
-  ${(props) => props.theme.fonts.regular16};
-  color: ${theme.colors.gray700};
-  margin-top: 8px;
-  margin-bottom: 40px;
-`;
-
-const Span = styled.span`
-  ${(props) => props.theme.fonts.bold16};
-  color: ${theme.colors.purple100};
+  padding: 32px;
+  background: ${theme.colors.gray600};
+  box-shadow: 0px 4px 18.4px 0px rgba(0, 0, 0, 0.25);
 `;
 
 const MannerList = styled.div`
+  height: 100%;
   display: flex;
   align-items: center;
   white-space: nowrap;
 `;
 
 const ValueWrapper = styled.div`
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-right: 11px;
-  row-gap: 16px;
+  justify-content: space-between;
 `;
 
 const Value = styled.p`
@@ -238,12 +242,14 @@ const Value = styled.p`
 `;
 
 const TypeWrapper = styled.div`
+  height: 100%;
   display: flex;
   flex-direction: column;
-  row-gap: 16px;
+  justify-content: space-between;
 `;
 
 const Type = styled.p`
+  height: 100%;
   ${(props) => props.theme.fonts.medium16};
 
   &.default {

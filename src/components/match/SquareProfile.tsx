@@ -45,6 +45,7 @@ const SquareProfile: React.FC<SquareProfileProps> = ({ opponent = false }) => {
             <>
               <Level onClick={handleMannerLevel}>LV. 5</Level>
               {mannerPopup && <MannerLevelBox top="20px" right="-17%" />}
+              <Bubble>클릭해서 매너키워드 보기</Bubble>
             </>
           )}
         </ImageContainer>
@@ -142,12 +143,48 @@ const Level = styled.button`
   align-items: center;
 `;
 
-// const StyledMannerLevel = styled(MannerLevel)`
-//   position: absolute;
-//   bottom: 155x;
-//   left: 50%;
-//   transform: translateX(-50%);
-// `;
+const Bubble = styled.div`
+  width: 140px;
+  height: 31px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  border: 1px solid ${theme.colors.purple200};
+  background: ${theme.colors.purple400};
+  color: ${theme.colors.gray600};
+  ${(props) => props.theme.fonts.medium11};
+  position: absolute;
+  bottom: 140px;
+  left: 65%;
+
+  &:before {
+    border-top: 0 solid transparent;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 12px solid ${theme.colors.purple200};
+    content: "";
+    position: absolute;
+    bottom: -0.8px;
+    left: -5px;
+    transform: rotate(-10deg);
+    z-index: 0;
+    border-radius: 0px 0px 0px 2px;
+  }
+
+  &:after {
+    border-top: 0 solid transparent;
+    border-left: 5.5px solid transparent;
+    border-right: 5.5px solid transparent;
+    border-bottom: 11px solid ${theme.colors.purple400};
+    content: "";
+    position: absolute;
+    bottom: 1px;
+    left: -3px;
+    transform: rotate(-10deg);
+    z-index: 100;
+  }
+`;
 
 const Top = styled.div`
   display: flex;

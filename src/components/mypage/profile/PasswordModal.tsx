@@ -1,14 +1,16 @@
 import { theme } from "@/styles/theme";
 import styled from "styled-components";
-import FormModal from "../common/FormModal";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
-import Input from "../common/Input";
 import Image from "next/image";
+import Input from "@/components/common/Input";
+import FormModal from "@/components/common/FormModal";
 
-const PasswordModal = () => {
-  const router = useRouter();
-  const [isPopup, setIsPopup] = useState(false);
+interface PasswordModalProps {
+  onClose: () => void;
+}
+const PasswordModal = (props: PasswordModalProps) => {
+  const { onClose } = props;
+
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
@@ -26,6 +28,13 @@ const PasswordModal = () => {
     setHasSpecialChar(specialCharValid);
   };
 
+  /* 현재 비밀번호 일치 여부 추가 */
+  const validation =
+    isLengthValid &&
+    hasSpecialChar &&
+    newPassword.length > 0 &&
+    newPassword === rePassword;
+
   return (
     <FormModal
       type="text"
@@ -35,11 +44,8 @@ const PasswordModal = () => {
       closeButtonHeight={17}
       borderRadius="10px"
       buttonText="완료"
-      onClose={() => {
-        setIsPopup(false);
-        router.push("/");
-      }}
-      disabled
+      onClose={onClose}
+      disabled={!validation}
     >
       <Content>
         <Input
@@ -60,7 +66,9 @@ const PasswordModal = () => {
             validateNewPassword(value);
           }}
           placeholder="신규 비밀번호 입력"
-          isValid={isLengthValid && hasSpecialChar}
+          isValid={
+            newPassword === "" ? undefined : isLengthValid && hasSpecialChar
+          }
         />
         {newPassword && (
           <Valid>
@@ -110,7 +118,11 @@ const PasswordModal = () => {
             setRePassword(value);
           }}
           placeholder="신규 비밀번호 재입력"
-          isValid={newPassword.length > 0 && newPassword === rePassword}
+          isValid={
+            rePassword === ""
+              ? undefined
+              : newPassword.length > 0 && newPassword === rePassword
+          }
         />
       </Content>
     </FormModal>

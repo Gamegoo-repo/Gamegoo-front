@@ -26,6 +26,10 @@ interface ConfirmModalProps {
   secondaryButtonText?: ButtonText;
   onPrimaryClick: () => void;
   onSecondaryClick?: () => void;
+  yes?: string;
+  no?: string;
+  onCheck?: () => void;
+  onClose: () => void;
 }
 
 const ConfirmModal = (props: ConfirmModalProps) => {
@@ -33,11 +37,15 @@ const ConfirmModal = (props: ConfirmModalProps) => {
     type,
     children,
     width,
-    borderRadius,
     primaryButtonText,
     secondaryButtonText,
     onPrimaryClick,
     onSecondaryClick
+    borderRadius = "20px",
+    yes = "예",
+    no = "아니요",
+    onCheck,
+    onClose,
   } = props;
 
   const dispatch = useDispatch();
@@ -126,7 +134,8 @@ const ConfirmModal = (props: ConfirmModalProps) => {
         </Main>
         <Footer>
           <ButtonWrapper>
-            <Button
+<!--             <Button
+
               onClick={type ? handleCheck : onPrimaryClick}
               className={buttonClassName}
               disabled={
@@ -143,7 +152,23 @@ const ConfirmModal = (props: ConfirmModalProps) => {
                 className="rightButton"
                 $type={type}>
                 {secondaryButtonText}
-              </Button>
+
+              onClick={onCheck || onClose}
+              className={type === "manner" ? undefined : "noButton"}
+              disabled={
+                type === "manner" &&
+                !mannerStatusClicked &&
+                !badMannerStatusClicked
+              }
+              $type={type}
+            >
+              {type === "yesOrNo" ? yes : "확인"}
+            </Button>
+            {type === "yesOrNo" && (
+              <Button onClick={onClose} className="noButton" $type={type}>
+                {no}
+
+              </Button> -->
             )}
           </ButtonWrapper>
         </Footer>
@@ -168,6 +193,7 @@ const Wrapper = styled.div<{ $width: string; $borderRadius: string }>`
   background: ${theme.colors.white};
   border-radius: ${({ $borderRadius }) => $borderRadius};
   box-shadow: 0 0 14.76px 0 rgba(0, 0, 0, 0.15);
+  overflow: hidden;
 `;
 
 const Main = styled.main`
@@ -185,6 +211,7 @@ const TextTop = styled.div`
   justify-content: center;
   text-align: center;
   border-bottom: 0.58px solid rgba(197, 197, 199, 1);
+  ${(props) => props.theme.fonts.regular25};
 `;
 
 const CloseButton = styled.p`
@@ -233,6 +260,7 @@ const Button = styled.button<{ $type: string | undefined }>`
   cursor: pointer;
   color: ${({ $type }) => ($type ? `${theme.colors.gray600}` : `${theme.colors.gray700}`)};
   width: 100%;
+  height: 79px;
   padding: 15px 0;
   &:disabled {
     color: ${theme.colors.gray300};

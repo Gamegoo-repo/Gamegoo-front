@@ -17,6 +17,7 @@ const colors = {
     gray500: "#F7F7F9",
     gray600: "#2D2D2D",
     gray700: "#44515C",
+    gray800: "#606060",
 
     error100: "#FF5252",
     error200: "#FF7474",
@@ -69,6 +70,10 @@ const fonts = {
     bold14: FONT({
         weight: 700,
         size: 14,
+    }),
+    bold12: FONT({
+        weight: 700,
+        size: 12,
     }),
     bold11: FONT({
         weight: 700,
