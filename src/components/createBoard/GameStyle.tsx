@@ -3,7 +3,6 @@ import { theme } from "@/styles/theme";
 import SelectedStylePopup from "../match/SelectedStylePopup";
 import Image from "next/image";
 import { useState } from "react";
-import SelectedStyle from "./SelectedStyle";
 
 interface StylesProps {
     id: number;
@@ -63,7 +62,7 @@ const GameStyle = (props: GameStyleProps) => {
                         onClose={handleClosePopup}
                         selectedStyles={selectedStyles}
                         onSelectStyle={handleSelectStyle}
-                        position="top"
+                        position="board"
                     />
                 )}
             </Div>
@@ -105,4 +104,5 @@ const AddGameStyle = styled.p`
   margin-top: 15px;
   border-radius: 17px;
   background: ${theme.colors.purple300};
+  cursor: pointer;
 `;

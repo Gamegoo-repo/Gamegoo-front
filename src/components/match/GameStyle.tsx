@@ -79,6 +79,7 @@ const GameStyle = (props: GameStyleProps) => {
               onClose={handleClosePopup}
               selectedStyles={selectedStyles}
               onSelectStyle={handleSelectStyle}
+              fontSize={20}
             />
           )}
         </GameBox>

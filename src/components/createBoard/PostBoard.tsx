@@ -50,7 +50,6 @@ const PostBoard = (props: PostBoardProps) => {
 
     const [isOn, setisOn] = useState(false);
 
-
     const [textareaValue, setTextareaValue] = useState("");
 
     const handleDropValue = (value: string) => {
@@ -58,8 +57,7 @@ const PostBoard = (props: PostBoardProps) => {
         setSelectedDropOption(value);
         setIsDropdownOpen(false);
     };
-
-
+ 
     const handleDropdownClickOutside = (event: MouseEvent) => {
         if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
             setIsDropdownOpen(false);
