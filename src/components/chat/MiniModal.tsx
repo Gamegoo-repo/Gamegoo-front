@@ -14,37 +14,33 @@ const MiniModal = ({
 ) => {
 
   const handleAddFriend = (e: React.MouseEvent) => {
-    e.stopPropagation();
+    if (type) {
+      e.stopPropagation();
+    }
+
     if (setIsMoreBoxOpen) {
       setIsMoreBoxOpen(null);
     }
     console.log('친구 추가')
   };
 
+  const handleChangeModal = (e: React.MouseEvent, type: string) => {
+    if (type) {
+      e.stopPropagation();
+    }
+
+    onChangeModal(type);
+  };
+
   return (
     <Wrapper $type={type}>
       <Ul>
-        <Li onClick={(e) => {
-          e.stopPropagation();
-          onChangeModal("leave");
-        }}>채팅방 나가기</Li>
-        <Li onClick={(e) =>
-          handleAddFriend(e)}>친구 추가</Li>
-        <Li onClick={(e) => {
-          e.stopPropagation(); onChangeModal("block")
-        }}>차단하기</Li>
-        <Li onClick={(e) => {
-          e.stopPropagation();
-          onChangeModal("report")
-        }}>신고하기</Li>
-        <Li onClick={(e) => {
-          e.stopPropagation();
-          onChangeModal("manner")
-        }}>매너 평가</Li>
-        <Li onClick={(e) => {
-          e.stopPropagation();
-          onChangeModal("badManner");
-        }}>비매너 평가</Li>
+        <Li onClick={(e) => handleChangeModal(e, "leave")}>채팅방 나가기</Li>
+        <Li onClick={(e) => handleAddFriend(e)}>친구 추가</Li>
+        <Li onClick={(e) => handleChangeModal(e, "block")}>차단하기</Li>
+        <Li onClick={(e) => handleChangeModal(e, "report")}>신고하기</Li>
+        <Li onClick={(e) => handleChangeModal(e, "manner")}>매너 평가</Li>
+        <Li onClick={(e) => handleChangeModal(e, "badManner")}>비매너 평가</Li>
       </Ul>
     </Wrapper>
   )

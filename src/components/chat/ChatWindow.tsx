@@ -42,7 +42,7 @@ const CHAT = [
     { id: 4, image: "/assets/icons/gray_circle.svg", userName: "김철수", msg: '마지막 메시지', date: "2024-05-19 11:27" },
 ];
 
-const ChatWindow = ({onClose}: ChatWindowProps) => {
+const ChatWindow = ({ onClose }: ChatWindowProps) => {
 
     const dispatch = useDispatch();
 
@@ -54,7 +54,7 @@ const ChatWindow = ({onClose}: ChatWindowProps) => {
 
     const isMoreModalType = useSelector((state: RootState) => state.modal.moreModal);
 
-    const handleGoToChatRoom = ( id: number) => {
+    const handleGoToChatRoom = (id: number) => {
         setChatId(id);
         setIsChatRoomVisible(true);
     };
@@ -75,9 +75,11 @@ const ChatWindow = ({onClose}: ChatWindowProps) => {
     const handleChatLeave = () => {
         console.log('채팅창 나가기')
         handleModalClose();
+        handleBackToChatWindow();
     };
 
     const handleChatBlock = () => {
+        handleBackToChatWindow();
         handleModalClose();
         dispatch(setOpenMoreModal('doneBlock'));
     };
@@ -217,7 +219,6 @@ const ChatWindow = ({onClose}: ChatWindowProps) => {
                     borderRadius="20px"
                     buttonText="신고하기"
                     onClose={handleModalClose}
-                    disabled
                 >
                     <div>
                         <ReportLabel>신고 사유</ReportLabel>
@@ -260,7 +261,6 @@ const ChatWindow = ({onClose}: ChatWindowProps) => {
                     borderRadius="10px"
                     buttonText="완료"
                     onClose={handleModalClose}
-                    disabled
                 >
                     <CheckContent>
                         {isMoreModalType === "manner" && MANNER_TYPES.map((data) => (
@@ -286,7 +286,6 @@ const ChatWindow = ({onClose}: ChatWindowProps) => {
                     borderRadius="10px"
                     buttonText="완료"
                     onClose={handleModalClose}
-                    disabled
                 >
                     <CheckContent>
                         {isMoreModalType === "badManner" && BAD_MANNER_TYPES.map((data) => (

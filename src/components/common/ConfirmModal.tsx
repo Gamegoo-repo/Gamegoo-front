@@ -240,7 +240,7 @@ const Button = styled.button<{ $type: string | undefined }>`
   cursor: pointer;
   color: ${({ $type }) => ($type ? `${theme.colors.gray600}` : `${theme.colors.gray700}`)};
   width: 100%;
-  height: 79px;
+  height: ${({ $type }) => $type ? "none" : "79px"};
   padding: 15px 0;
   &:disabled {
     color: ${theme.colors.gray300};

@@ -187,7 +187,6 @@ const ChatRoom = (props: ChatRoomProps) => {
                         borderRadius="10px"
                         buttonText="완료"
                         onClose={handleFormModalClose}
-                        disabled
                     >
                         <CheckContent>
                             {isMannerStatus === "manner" && MANNER_TYPES.map((data) => (
@@ -276,7 +275,6 @@ const ChatRoom = (props: ChatRoomProps) => {
                     borderRadius="20px"
                     buttonText="신고하기"
                     onClose={handleModalClose}
-                    disabled
                 >
                     <div>
                         <ReportLabel>신고 사유</ReportLabel>

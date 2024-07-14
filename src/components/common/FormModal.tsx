@@ -2,8 +2,7 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 import styled from "styled-components";
 import Button from "./Button";
-import { useDispatch } from "react-redux";
-import { setCloseEvaluationModal } from "@/redux/slices/modalSlice";
+import { Dispatch, useState } from "react";
 
 interface FormModalProps {
   type: "checkbox" | "text";
@@ -66,7 +65,7 @@ const FormModal = (props: FormModalProps) => {
         <Footer>
           <ButtonContent>
             <Button
-              onClick={onClose ? onClose : handleFormClose}
+              onClick={onClose}
               buttonType="primary"
               text={buttonText}
               disabled={disabled}
