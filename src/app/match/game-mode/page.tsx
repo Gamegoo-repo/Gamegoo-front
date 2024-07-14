@@ -1,6 +1,5 @@
 "use client";
 
-import ChatButton from "@/components/common/ChatButton";
 import GraphicBox from "@/components/match/GraphicBox";
 import Image from "next/image";
 import styled from "styled-components";
@@ -48,11 +47,6 @@ const GameModePage = () => {
             );
           })}
         </Main>
-        <Footer>
-          <ChatBoxContent>
-            <ChatButton count={3} />
-          </ChatBoxContent>
-        </Footer>
       </MatchContent>
     </Wrapper>
   );
@@ -105,14 +99,4 @@ const Main = styled.main`
 
 const BoxWrapper = styled.div`
   display: contents;
-`;
-
-const Footer = styled.footer`
-  display: flex;
-  margin-bottom: 78px;
-`;
-
-const ChatBoxContent = styled.div`
-  margin-left: auto;
-  margin-bottom: 37px;
 `;

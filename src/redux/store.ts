@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import exampleSlice from "./slices/exampleSlice";
-import confirmModalReducer from "./slices/confirmModalSlice";
+import modalReducer from "./slices/modalSlice";
 import mannerStatusReducer from "./slices/mannerStatusSlice";
 
 
@@ -8,7 +8,7 @@ export const store = () => {
   return configureStore({
     reducer: {
       example: exampleSlice,
-      confirmModal: confirmModalReducer,
+      modal: modalReducer,
       mannerStatus: mannerStatusReducer,
     },
   })

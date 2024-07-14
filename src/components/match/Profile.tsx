@@ -254,14 +254,14 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                 {/* 차단하기 팝업 */}
                 {isBlockBoxOpen && (
                   <ConfirmModal
-                    type="yesOrNo"
                     width="540px"
-                    borderRadius="20px"
-                    onCheck={() => {
+                    primaryButtonText="예"
+                    secondaryButtonText="아니요"
+                    onPrimaryClick={() => {
                       setIsBlockBoxOpen(false);
                       setIsBlockConfrimOpen(true);
                     }}
-                    onClose={() => {
+                    onSecondaryClick={() => {
                       setIsBlockBoxOpen(false);
                     }}
                   >
@@ -273,10 +273,9 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                 {/* 차단하기 확인 팝업 */}
                 {isBlockConfirmOpen && (
                   <ConfirmModal
-                    type="confirm"
                     width="540px"
-                    borderRadius="20px"
-                    onClose={() => {
+                    primaryButtonText="확인"
+                    onPrimaryClick={() => {
                       setIsBlockConfrimOpen(false);
                     }}
                   >

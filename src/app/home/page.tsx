@@ -10,12 +10,14 @@ import styled from "styled-components";
 
 const HomePage = () => {
 
-    const isEvaluationModalOpen = useSelector((state: RootState) => state.confirmModal.evaluationModal);
+    const isEvaluationModalOpen = useSelector((state: RootState) => state.modal.evaluationModal);
+    const isMoreModalOpen = useSelector((state: RootState) => state.modal.moreModal);
 
     return (
         <Wrapper>
-            <HomeContent 
-            $isEvaluationModalOpen={isEvaluationModalOpen}>
+            <HomeContent
+                $isEvaluationModalOpen={isEvaluationModalOpen}
+                $isMoreModalOpen={isMoreModalOpen}>
                 <Header>
                     <Image
                         src='/assets/icons/logo_m.svg'
@@ -59,18 +61,18 @@ const Wrapper = styled.div`
     justify-content: center;
 `;
 
-const HomeContent = styled.div<{ $isEvaluationModalOpen: boolean }>`
+const HomeContent = styled.div<{ $isEvaluationModalOpen: boolean, $isMoreModalOpen: string }>`
     max-width: 1440px;
     width: 100%;
     padding: 0 80px;
     &:before {
         content: '';
-        position: ${({ $isEvaluationModalOpen }) => $isEvaluationModalOpen ? 'fixed' : 'unset'};
+        position: ${({ $isEvaluationModalOpen, $isMoreModalOpen }) => $isEvaluationModalOpen || $isMoreModalOpen !== "" ? 'fixed' : 'unset'};
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background: ${({ $isEvaluationModalOpen }) => $isEvaluationModalOpen ? '#0000009C' : 'transparent'};
+        background: ${({ $isEvaluationModalOpen, $isMoreModalOpen }) => $isEvaluationModalOpen || $isMoreModalOpen !== "" ? '#0000009C' : 'transparent'};
         z-index: 100;
     }
 `;

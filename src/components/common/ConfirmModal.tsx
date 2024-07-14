@@ -1,24 +1,31 @@
-import {
-  setOpenEvaluationModal,
-  setCloseConfirmModal,
-} from "@/redux/slices/confirmModalSlice";
+import { setOpenEvaluationModal } from "@/redux/slices/modalSlice";
 import { setMannerStatus } from "@/redux/slices/mannerStatusSlice";
-import { AppDispatch } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
+type ButtonText =
+  | '취소'
+  | '나가기'
+  | '차단'
+  | '확인'
+  | '예'
+  | '아니요'
+  | '닫기'
+  | '글 작성하기'
+  | '글 보러하기'
+
 interface ConfirmModalProps {
-  type: "yesOrNo" | "confirm" | "manner";
+  type?: "manner";
   children?: string | React.ReactNode;
   width: string;
   borderRadius?: string;
-  yes?: string;
-  no?: string;
-  onCheck?: () => void;
-  onClose: () => void;
+  primaryButtonText: ButtonText;
+  secondaryButtonText?: ButtonText;
+  onPrimaryClick: () => void;
+  onSecondaryClick?: () => void;
 }
 
 const ConfirmModal = (props: ConfirmModalProps) => {
@@ -26,14 +33,24 @@ const ConfirmModal = (props: ConfirmModalProps) => {
     type,
     children,
     width,
-    borderRadius = "20px",
-    yes = "예",
-    no = "아니요",
-    onCheck,
-    onClose,
+    borderRadius,
+    primaryButtonText,
+    secondaryButtonText,
+    onPrimaryClick,
+    onSecondaryClick
   } = props;
 
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useDispatch();
+
+  let buttonClassName = '';
+
+  if (type !== 'manner') {
+    if (primaryButtonText && secondaryButtonText) {
+      buttonClassName = 'leftButton';
+    } else if (primaryButtonText) {
+      buttonClassName = 'wholeButton';
+    }
+  }
 
   const [mannerStatusClicked, setMannerStatusClicked] = useState(false);
   const [badMannerStatusClicked, setBadMannerStatusClicked] = useState(false);
@@ -50,16 +67,16 @@ const ConfirmModal = (props: ConfirmModalProps) => {
     dispatch(setMannerStatus("badManner"));
   };
 
-  // const handleCheck = () => {
-  //   dispatch(setOpenEvaluationModal());
-  //   dispatch(setCloseConfirmModal());
-  // };
+  const handleCheck = () => {
+    dispatch(setOpenEvaluationModal());
+    onPrimaryClick();
+  };
 
   return (
     <Overlay>
       <Wrapper
         $width={width}
-        $borderRadius={borderRadius || "11px"}
+        $type={type}
         onClick={(e) => e.stopPropagation()}
       >
         <Main>
@@ -67,11 +84,11 @@ const ConfirmModal = (props: ConfirmModalProps) => {
             <ImageTop>
               <CloseButton>
                 <Image
-                  onClick={() => dispatch(setCloseConfirmModal())}
+                  onClick={onPrimaryClick}
                   src="/assets/icons/close.svg"
                   width={10}
                   height={10}
-                  alt="close button"
+                  alt="닫기"
                 />
               </CloseButton>
               <ImageWrapper>
@@ -108,25 +125,32 @@ const ConfirmModal = (props: ConfirmModalProps) => {
           )}
         </Main>
         <Footer>
-          <Buttons>
+          <ButtonWrapper>
             <Button
-              onClick={onCheck || onClose}
-              className={type === "manner" ? undefined : "noButton"}
+              onClick={type ? handleCheck : onPrimaryClick}
+              className={buttonClassName}
               disabled={
                 type === "manner" &&
                 !mannerStatusClicked &&
                 !badMannerStatusClicked
               }
-              $type={type}
-            >
-              {type === "yesOrNo" ? yes : "확인"}
+              $type={type}>
+              {primaryButtonText}
             </Button>
-            {type === "yesOrNo" && (
-              <Button onClick={onClose} className="noButton" $type={type}>
-                {no}
+            {secondaryButtonText && onSecondaryClick && (
+              <Button
+                onClick={onSecondaryClick}
+                className="rightButton"
+                $type={type}
+                disabled={
+                  type === "manner" &&
+                  !mannerStatusClicked &&
+                  !badMannerStatusClicked
+                }>
+                {secondaryButtonText}
               </Button>
             )}
-          </Buttons>
+          </ButtonWrapper>
         </Footer>
       </Wrapper>
     </Overlay>
@@ -144,10 +168,10 @@ const Overlay = styled.div`
   z-index: 100;
 `;
 
-const Wrapper = styled.div<{ $width: string; $borderRadius: string }>`
-  width: ${(props) => props.$width};
+const Wrapper = styled.div<{ $width: string; $type: string | undefined }>`
+  width: ${({ $width }) => $width};
   background: ${theme.colors.white};
-  border-radius: ${(props) => props.$borderRadius};
+  border-radius: ${({ $type }) => $type ? "10px" : "20px"};
   box-shadow: 0 0 14.76px 0 rgba(0, 0, 0, 0.15);
   overflow: hidden;
 `;
@@ -203,32 +227,52 @@ const MannerText = styled.p`
 
 const Footer = styled.footer``;
 
-const Buttons = styled.div`
+const ButtonWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
 `;
 
-const Button = styled.button<{ $type: string }>`
+const Button = styled.button<{ $type: string | undefined }>`
   text-align: center;
   ${({ $type }) =>
-    $type === "manner" ? `${theme.fonts.bold11}` : `${theme.fonts.semiBold18}`};
+    $type ? `${theme.fonts.bold11}` : `${theme.fonts.semiBold18}`};
   cursor: pointer;
-  color: ${({ $type }) => ($type === "img" ? "#2D2D2D" : "#44515C")};
+  color: ${({ $type }) => ($type ? `${theme.colors.gray600}` : `${theme.colors.gray700}`)};
   width: 100%;
-  height: 79px;
+  height: ${({ $type }) => $type ? "none" : "79px"};
   padding: 15px 0;
   &:disabled {
     color: ${theme.colors.gray300};
   }
 
-  &.noButton {
-    border-radius: 0 0 11px 0;
+  &.leftButton {
     &:hover,
     &:active,
     &:focus {
       color: ${theme.colors.purple100};
       background: ${theme.colors.gray500};
+      border-radius: 0 0 0 20px;
+    }
+  }
+
+  &.rightButton {
+    &:hover,
+    &:active,
+    &:focus {
+      color: ${theme.colors.purple100};
+      background: ${theme.colors.gray500};
+      border-radius: 0 0 20px 0;
+    }
+  }
+
+  &.wholeButton {
+    &:hover,
+    &:active,
+    &:focus {
+      color: ${theme.colors.purple100};
+      background: ${theme.colors.gray500};
+      border-radius: 0 0 20px 20px;
     }
   }
 `;

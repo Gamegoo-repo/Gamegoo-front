@@ -1,6 +1,5 @@
 "use client";
 
-import ChatButton from "@/components/common/ChatButton";
 import styled from "styled-components";
 import HeaderTitle from "@/components/common/HeaderTitle";
 import SquareProfile from "@/components/match/SquareProfile";
@@ -26,11 +25,6 @@ const Progress = () => {
             <Text>10초 뒤 자동으로 대화방이 생성됩니다.</Text>
           </Oppnent>
         </Main>
-        <Footer>
-          <ChatBoxContent>
-            <ChatButton count={3} />
-          </ChatBoxContent>
-        </Footer>
       </MatchContent>
     </Wrapper>
   );
@@ -69,13 +63,4 @@ const Oppnent = styled.div`
 const Text = styled.div`
   color: ${theme.colors.purple100};
   ${(props) => props.theme.fonts.regular18};
-`;
-const Footer = styled.footer`
-  display: flex;
-  margin-bottom: 78px;
-`;
-
-const ChatBoxContent = styled.div`
-  margin-left: auto;
-  margin-bottom: 37px;
 `;

@@ -66,6 +66,6 @@ export function setChatRoomDateFormatter(date:string){
     } else if (diffHours < 36) {
         return '어제';
     } else {
-        return dayjs(date).format('YYYY-MM-DD');
+        return dayjs(date).format('YYYY.MM.DD');
     }
 };

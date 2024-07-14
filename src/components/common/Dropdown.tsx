@@ -77,7 +77,7 @@ const DropdownHeader = styled.div<{ $type: string, $width: string, $padding: str
     color:${theme.colors.black};
     border-radius: 10px;
     padding:${({ $padding }) => $padding};
-    background: ${({ $type }) => $type === 'type1' ? '#F5F5F5' : `${theme.colors.white}`};
+    background: ${({ $type }) => $type === 'type1' ? `${theme.colors.gray500}` : `${theme.colors.white}`};
     border:${({ $type }) =>
         $type === 'type2'
             ? `1px solid ${theme.colors.gray300}`

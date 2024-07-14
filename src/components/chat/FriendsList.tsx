@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import { theme } from "@/styles/theme";
 import Image from 'next/image';
-import { Dispatch, useState } from 'react';
+import { useState } from 'react';
+import DeleteFriend from './DeleteFriend';
 
 interface FriendListInterface {
     id: number;
@@ -13,23 +14,45 @@ interface FriendListInterface {
 
 interface FriendListProps {
     list: FriendListInterface[];
-    isFavorites: boolean;
-    setIsDeleteBox?: Dispatch<React.SetStateAction<boolean>>;
     onChatRoom: (id: number) => void;
 }
 
-const FriendsList = (props: FriendListProps) => {
-    const { list, isFavorites, setIsDeleteBox, onChatRoom } = props;
-    const [friends, setFriends] = useState(list);
+const FriendsList = ({ list, onChatRoom }: FriendListProps) => {
+    
+    const [friends, setFriends] = useState<FriendListInterface[]>(list);
 
-    const toggleFavorite = (id: number) => {
-        setFriends(prevFriends =>
-            prevFriends.map(friend =>
-                friend.id === id
-                    ? { ...friend, favorites: friend.favorites === 1 ? 0 : 1 }
-                    : friend
-            )
-        );
+    const [deleteMenu, setDeleteMenu] = useState<{ x: number, y: number, friendId: number | null }>({ x: 0, y: 0, friendId: null });
+
+    const favoriteFriends = friends.filter(friend => friend.favorites === 1);
+    const nonFavoriteFriends = friends.filter(friend => friend.favorites === 0);
+
+    const handleContextMenu = (event: React.MouseEvent, friendId: number) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const x = event.pageX;
+        const y = event.pageY;
+        setDeleteMenu({ x: x, y: y, friendId });
+    };
+
+    const handleCloseDeletetMenu = () => {
+        setDeleteMenu({ x: 0, y: 0, friendId: null });
+    };
+
+    const handleDeleteFriend = () => {
+        const { friendId } = deleteMenu;
+        if (friendId) {
+            console.log(`${friendId}삭제`)
+            // setFriends(friends.filter((friend) => friend.id !== friendId));
+            handleCloseDeletetMenu();
+        }
+    };
+
+    const handleFavoriteToggle = (event: React.MouseEvent, friendId: number) => {
+        event.stopPropagation();
+        setFriends(friends.map(friend =>
+            friend.id === friendId ? { ...friend, favorites: friend.favorites === 1 ? 0 : 1 } : friend
+        ));
     };
 
     if (friends.length === 0) {
@@ -38,42 +61,106 @@ const FriendsList = (props: FriendListProps) => {
 
     return (
         <>
-            <List className={isFavorites ? 'border' : 'none'}>
-                <Title className={isFavorites ? 'none' : 'padding'}>
-                    {isFavorites ? '즐겨찾기' : `친구 ${friends.length}`}
-                </Title>
-                {friends.map(friend => (
-                    <UserContent
-                        onClick={() => onChatRoom(friend.id)}
-                        key={friend.id}>
-                        <Left>
+            <List>
+                <FavoritesWrapper $length={favoriteFriends.length}>
+                    {favoriteFriends?.length > 0 &&
+                        <FavoritesTitle>
+                            즐겨찾기
+                        </FavoritesTitle>
+                    }
+                    {favoriteFriends.map(friend => (
+                        <UserContent
+                            onContextMenu={(e) => handleContextMenu(e, friend.id)}
+                            onClick={() =>
+                                onChatRoom(friend.id)}
+                            key={friend.id}
+                            >
+                            {deleteMenu.friendId === friend.id && (
+                                <>
+                                    <DeleteFriend
+                                        x={deleteMenu.x}
+                                        y={deleteMenu.y}
+                                        onClose={handleCloseDeletetMenu}
+                                        onDelete={handleDeleteFriend}
+                                    />
+                                </>
+                            )}
+                            <Left>
+                                <Image
+                                    src={friend.image}
+                                    width={40.79}
+                                    height={40.79}
+                                    alt="사용자 프로필" />
+                                <UserName>{friend.userName}</UserName>
+                                {friend.online === "on" &&
+                                    <Online
+                                        src="/assets/icons/online.svg"
+                                        width={5}
+                                        height={5}
+                                        alt="온라인" />
+                                }
+                            </Left>
                             <Image
-                                src={friend.image}
-                                width={40.79}
-                                height={40.79}
-                                alt="사용자 프로필" />
-                            <UserName>{friend.userName}</UserName>
-                            {friend.online === "on" &&
-                                <Online
-                                    src="/assets/icons/online.svg"
-                                    width={5}
-                                    height={5}
-                                    alt="온라인" />
-                            }
-                        </Left>
-                        <Image
-                            onClick={() => toggleFavorite(friend.id)}
-                            src={
-                                friend.favorites === 1
-                                    ? "assets/icons/favorites.svg"
-                                    : "assets/icons/nonFavorites.svg"
-                            }
-                            width={15}
-                            height={15}
-                            alt="즐겨찾기 버튼"
-                        />
-                    </UserContent>
-                ))}
+                                onClick={(e) => handleFavoriteToggle(e, friend.id)}
+                                src={
+                                    friend.favorites === 1
+                                        ? "/assets/icons/favorites.svg"
+                                        : "/assets/icons/nonFavorites.svg"
+                                }
+                                width={15}
+                                height={15}
+                                alt="즐겨찾기 버튼"
+                            />
+                        </UserContent>
+                    ))}
+                </FavoritesWrapper>
+                <FriendsWrapper $length={favoriteFriends.length}>
+                    <FriendsTitle>
+                        친구 {friends.length}
+                    </FriendsTitle>
+                    {nonFavoriteFriends.map(friend => (
+                        <UserContent
+                            onContextMenu={(event) => handleContextMenu(event, friend.id)}
+                            onClick={() => onChatRoom(friend.id)}
+                            key={friend.id}
+                        >
+                            {deleteMenu.friendId === friend.id && (
+                                <DeleteFriend
+                                    x={deleteMenu.x}
+                                    y={deleteMenu.y}
+                                    onClose={handleCloseDeletetMenu}
+                                    onDelete={handleDeleteFriend}
+                                />
+                            )}
+                            <Left>
+                                <Image
+                                    src={friend.image}
+                                    width={40.79}
+                                    height={40.79}
+                                    alt="사용자 프로필" />
+                                <UserName>{friend.userName}</UserName>
+                                {friend.online === "on" &&
+                                    <Online
+                                        src="/assets/icons/online.svg"
+                                        width={5}
+                                        height={5}
+                                        alt="온라인" />
+                                }
+                            </Left>
+                            <Image
+                                onClick={(e) => handleFavoriteToggle(e, friend.id)}
+                                src={
+                                    friend.favorites === 1
+                                        ? "/assets/icons/favorites.svg"
+                                        : "/assets/icons/nonFavorites.svg"
+                                }
+                                width={15}
+                                height={15}
+                                alt="즐겨찾기 버튼"
+                            />
+                        </UserContent>
+                    ))}
+                </FriendsWrapper>
             </List>
         </>
     );
@@ -82,34 +169,36 @@ const FriendsList = (props: FriendListProps) => {
 export default FriendsList;
 
 const List = styled.div`
-    &.border {
-        border-bottom: 1px solid ${theme.colors.gray400};
-    }
-    &.none {
-        border-bottom: none;
-    }
 `;
 
-const Title = styled.p`
+const FavoritesWrapper = styled.div<{ $length: number }>`
+    padding: ${({ $length }) => ($length > 0 ? '6px 0 11px 0' : 'none')};
+`;
+
+const FriendsWrapper = styled.div<{ $length: number }>`
+    border-top: ${({ $length }) => ($length > 0 ? `1px solid ${theme.colors.gray400}` : 'none')};
+    padding: 6px 0 11px;
+`;
+
+const FavoritesTitle = styled.p`
     ${(props) => props.theme.fonts.medium11};
     color: ${theme.colors.gray200}; 
-    &.padding{
-        padding: 11px 16px 11px 18px;
-    }
-    &.none {
-        padding: 0 16px 11px 18px;
-    }
+    padding: 0 16px 11px 18px;
+`;
+
+const FriendsTitle = styled.p`
+    ${(props) => props.theme.fonts.medium11};
+    color: ${theme.colors.gray200}; 
+    padding: 0 16px 11px 18px;
 `;
 
 const UserContent = styled.div`
+    position: relative;
     display: flex;  
     align-items: center;
     justify-content: space-between;
     cursor: pointer;
-    padding: 5px 16px 5px 0;
-    &:last-child {
-        padding: 5px 16px 11px 0;
-    }
+    padding: 5px 18px 5px 16px;
     &:hover {
         background: ${theme.colors.gray500}; 
     }
@@ -120,7 +209,6 @@ const Left = styled.div`
     display: flex;
     align-items: center;
     gap: 16px;
-    padding-left: 18px;
 `;
 
 const UserName = styled.p`
@@ -133,3 +221,4 @@ const Online = styled(Image)`
     top: 19%;
     right: -4%;
 `;
+

@@ -3,11 +3,18 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useState } from "react";
 import MessageContainer from "./MessageContainer";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import FormModal from "../common/FormModal";
 import Checkbox from "../common/Checkbox";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
+import MiniModal from "./MiniModal";
+import Input from "../common/Input";
+import { REPORT_REASON } from "@/data/report";
+import ConfirmModal from "../common/ConfirmModal";
+import { setCloseEvaluationModal, setCloseMoreModal, setOpenMoreModal } from "@/redux/slices/modalSlice";
+import { useRouter } from "next/navigation";
+
 
 interface ChatRoomProps {
     id: number;
@@ -29,12 +36,18 @@ const MESSAGE_LIST = [
 const ChatRoom = (props: ChatRoomProps) => {
     const { id, onClose, onGoback } = props;
 
+    const dispatch = useDispatch();
+    const router = useRouter();
+
     const [message, setMessage] = useState("");
     const [messageList, setMessageList] = useState([]);
+    const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
+    const [reportDetail, setReportDetail] = useState<string>("");
 
-    const isEvaluationModalOpen = useSelector((state: RootState) => state.confirmModal.evaluationModal);
-    const isFeedbackModalOpen = useSelector((state: RootState) => state.confirmModal.isOpen);
+    const isEvaluationModalOpen = useSelector((state: RootState) => state.modal.evaluationModal);
+    const isFeedbackModalOpen = useSelector((state: RootState) => state.modal.isOpen);
     const isMannerStatus = useSelector((state: RootState) => state.mannerStatus.mannerStatus);
+    const isMoreModalType = useSelector((state: RootState) => state.modal.moreModal);
 
     // useEffect(() => {
     //     socket.on(“message”, (message) => {
@@ -47,14 +60,54 @@ const ChatRoom = (props: ChatRoomProps) => {
         // socket.emit(“sendMessage”, message, (res) => {
         //     console.log(“res”, res);
         // })
+        setMessage("");
         console.log(message)
+    };
+
+    const handleMoreBoxOpen = () => {
+        setIsMoreBoxOpen(prevState => !prevState);
+    };
+
+    const handleOutsideModalClick = (event: React.MouseEvent<HTMLDivElement>) => {
+        event.stopPropagation();
+        if (isMoreBoxOpen) {
+            setIsMoreBoxOpen(false);
+        }
+    };
+
+    const handleModalChange = (modalType: string) => {
+        dispatch(setOpenMoreModal(modalType));
+        setIsMoreBoxOpen(false);
+    };
+
+    const handleModalClose = () => {
+        dispatch(setCloseMoreModal());
+    };
+
+    const handleChatLeave = () => {
+        console.log('채팅창 나가기')
+        handleModalClose();
+        onGoback();
+    };
+
+    const handleChatBlock = () => {
+        handleModalClose();
+        dispatch(setOpenMoreModal('doneBlock'));
+    };
+
+    const handleFormModalClose = () => {
+        dispatch(setCloseEvaluationModal())
     };
 
     return (
         <>
             <Overlay>
                 <Wrapper
-                    $isFeedbackModalOpen={isFeedbackModalOpen}>
+                    $isFeedbackModalOpen={isFeedbackModalOpen}
+                    onClick={handleOutsideModalClick}>
+                    {isMoreBoxOpen &&
+                        <MiniModal
+                            onChangeModal={handleModalChange} />}
                     <CloseButton>
                         <CloseImage
                             onClick={onClose}
@@ -72,6 +125,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                             alt="뒤로가기" />
                         <Middle>
                             <ProfileImage
+                                onClick={() => router.push("/user")}
                                 src="/assets/icons/gray_circle.svg"
                                 width={47.43}
                                 height={47.43}
@@ -86,7 +140,8 @@ const ChatRoom = (props: ChatRoomProps) => {
                                     alt="온라인" />
                             </Div>
                         </Middle>
-                        <DetailImage
+                        <MoreImage
+                            onClick={handleMoreBoxOpen}
                             src="/assets/icons/three_dots_button.svg"
                             width={3}
                             height={15}
@@ -118,8 +173,8 @@ const ChatRoom = (props: ChatRoomProps) => {
                         </TextareaContainer>
                     </ChatFooter>
                 </Wrapper>
-
             </Overlay>
+
             {isEvaluationModalOpen &&
                 <FormContainer>
                     <FormModal
@@ -131,7 +186,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                         closeButtonHeight={17}
                         borderRadius="10px"
                         buttonText="완료"
-                        disabled
+                        onClose={handleFormModalClose}
                     >
                         <CheckContent>
                             {isMannerStatus === "manner" && MANNER_TYPES.map((data) => (
@@ -155,8 +210,152 @@ const ChatRoom = (props: ChatRoomProps) => {
                         </CheckContent>
                     </FormModal>
                 </FormContainer>
-
             }
+
+            {/* 채팅창 나가기 팝업 */}
+            {isMoreModalType === 'leave' &&
+                <ConfirmModal
+                    width="540px"
+                    primaryButtonText="취소"
+                    secondaryButtonText="나가기"
+                    onPrimaryClick={handleModalClose}
+                    onSecondaryClick={handleChatLeave}
+                >
+                    {/* 친구아닐떄 */}
+                    <Msg>
+                        {`친구 추가 하지 않은 상대방입니다\n채팅방을 나가시겠어요?`}
+                    </Msg>
+
+                    {/* 친구일떄 */}
+                    {/* <Msg>
+                        {`채팅방을 나가시겠어요?`}
+                    </Msg> */}
+                </ConfirmModal>}
+
+            {/* 차단하기 팝업 */}
+            {isMoreModalType === 'block' &&
+                <ConfirmModal
+                    width="540px"
+                    primaryButtonText="취소"
+                    secondaryButtonText="차단"
+                    onPrimaryClick={handleModalClose}
+                    onSecondaryClick={handleChatBlock}
+                >
+                    {/* 친구아닐떄 */}
+                    <Msg>
+                        {`차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다.\n\n또한, 다시 차단 해제할 수 없습니다.\n차단하시겠습니까?`}
+                    </Msg>
+
+                    {/* 친구일떄 */}
+                    {/* <Msg>
+                     {`채팅방을 나가시겠어요?`}
+                 </Msg> */}
+                </ConfirmModal>}
+
+            {/* 차단 완료 팝업 */}
+            {isMoreModalType === 'doneBlock' && (
+                <ConfirmModal
+                    width="540px"
+                    primaryButtonText="확인"
+                    onPrimaryClick={handleModalClose}
+                >
+                    <MsgConfirm>{`차단이 완료되었습니다.`}</MsgConfirm>
+                </ConfirmModal>
+            )}
+
+            {/* 신고하기 팝업 */}
+            {isMoreModalType === 'report' &&
+                <FormModal
+                    type="checkbox"
+                    title="유저 신고하기"
+                    width="494px"
+                    height="721px"
+                    closeButtonWidth={17}
+                    closeButtonHeight={17}
+                    borderRadius="20px"
+                    buttonText="신고하기"
+                    onClose={handleModalClose}
+                >
+                    <div>
+                        <ReportLabel>신고 사유</ReportLabel>
+                        <ReportReasonContent>
+                            {REPORT_REASON.map((data) => (
+                                <Checkbox
+                                    key={data.id}
+                                    value={data.text}
+                                    label={data.text}
+                                    fontSize="regular18"
+                                />
+                            ))}
+                        </ReportReasonContent>
+                        <ReportLabel>상세 내용</ReportLabel>
+                        <ReportContent>
+                            <Input
+                                inputType="textarea"
+                                value={reportDetail}
+                                onChange={(value) => {
+                                    setReportDetail(value);
+                                }}
+                                placeholder="내용을 입력하세요. (선택)"
+                                borderRadius="8px"
+                                fontSize="regular18"
+                                height="134px"
+                            />
+                        </ReportContent>
+                    </div>
+                </FormModal>}
+
+            {/* 매너평가 팝업 */}
+            {isMoreModalType === 'manner' &&
+                <FormModal
+                    type="checkbox"
+                    title="매너 평가하기"
+                    width="418px"
+                    height="434px"
+                    closeButtonWidth={17}
+                    closeButtonHeight={17}
+                    borderRadius="10px"
+                    buttonText="완료"
+                    onClose={handleModalClose}
+                    disabled
+                >
+                    <CheckContent>
+                        {isMoreModalType === "manner" && MANNER_TYPES.map((data) => (
+                            <Checkbox
+                                key={data.id}
+                                value={data.text}
+                                label={data.text}
+                                fontSize="semiBold16"
+                            />
+                        ))}
+                    </CheckContent>
+                </FormModal>}
+
+            {/* 비매너 평가 팝업 */}
+            {isMoreModalType === 'badManner' &&
+                <FormModal
+                    type="checkbox"
+                    title="비매너 평가하기"
+                    width="418px"
+                    height="434px"
+                    closeButtonWidth={17}
+                    closeButtonHeight={17}
+                    borderRadius="10px"
+                    buttonText="완료"
+                    onClose={handleModalClose}
+                    disabled
+                >
+                    <CheckContent>
+                        {isMoreModalType === "badManner" && BAD_MANNER_TYPES.map((data) => (
+                            <Checkbox
+                                key={data.id}
+                                value={data.text}
+                                label={data.text}
+                                fontSize="semiBold16"
+                            />
+                        ))}
+                    </CheckContent>
+                </FormModal>}
         </>
     )
 };
@@ -172,6 +371,7 @@ const Overlay = styled.div`
 `;
 
 const Wrapper = styled.div<{ $isFeedbackModalOpen: boolean }>`
+    position: relative;
     background: ${theme.colors.purple400};
     border-radius: 20px;
     display: flex;
@@ -214,7 +414,7 @@ const ChatBorder = styled.div`
 const ChatMain = styled.main`
     border-top: 1px solid #C1B7FF;
     padding:10px 8px;
-    height: 476px;
+    height: 471px;
     overflow-y: auto;
     -ms-overflow-style: none;
     ::-webkit-scrollbar {
@@ -252,7 +452,7 @@ const ProfileImage = styled(Image)`
     cursor: pointer;
 `;
 
-const DetailImage = styled(Image)`
+const MoreImage = styled(Image)`
     cursor: pointer;
 `;
 
@@ -323,4 +523,33 @@ const CheckContent = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
+`;
+
+const ReportLabel = styled.p`
+  color: ${theme.colors.gray600};
+  ${(props) => props.theme.fonts.semiBold18};
+  margin-bottom: 12px;
+`;
+
+const ReportContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+`;
+
+const ReportReasonContent = styled(ReportContent)`
+  margin-bottom: 38px;
+`;
+
+const Msg = styled.div`
+  text-align: center;
+  color: ${theme.colors.gray600};
+  ${(props) => props.theme.fonts.regular18};
+  margin: 28px 0;
+`;
+
+const MsgConfirm = styled(Msg)`
+  ${(props) => props.theme.fonts.regular25};
+  margin: 80px 0;
 `;

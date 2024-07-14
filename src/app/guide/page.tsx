@@ -239,7 +239,8 @@ const Guide = () => {
         <ConfirmModal
           type="manner"
           width="315px"
-          onClose={handleConfirmModalClose}
+          primaryButtonText="확인"
+          onPrimaryClick={handleConfirmModalClose}
         />
       )}
       <p>Image Modal</p>

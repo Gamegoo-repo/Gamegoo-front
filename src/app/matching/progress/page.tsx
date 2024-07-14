@@ -1,6 +1,5 @@
 "use client";
 
-import ChatButton from "@/components/common/ChatButton";
 import styled from "styled-components";
 import HeaderTitle from "@/components/common/HeaderTitle";
 import SquareProfile from "@/components/match/SquareProfile";
@@ -36,17 +35,14 @@ const Progress = () => {
             어떤 사람이 나올까요?
           </Waiting>
         </Main>
-        <Footer>
-          <ChatBoxContent>
-            <ChatButton count={3} />
-          </ChatBoxContent>
-        </Footer>
         {/* 즐겜모드, 빡겜모드 매칭 실패 */}
         {isFirstRetry && (
           <ConfirmModal
-            type="yesOrNo"
             width="540px"
-            onClose={() => setIsFirstRetry(false)}
+            primaryButtonText="예"
+            secondaryButtonText="아니요"
+            onPrimaryClick={() => setIsFirstRetry(true)}
+            onSecondaryClick={() => setIsFirstRetry(false)}
           >
             계속해서 매칭을 시도하겠습니까?
           </ConfirmModal>
@@ -54,12 +50,11 @@ const Progress = () => {
         {/* 빡겜모드 2번째 매칭 실패 시, 같은 조건으로 글을 올린 사람이 있을 때 */}
         {isSecondYes && (
           <ConfirmModal
-            type="yesOrNo"
             width="540px"
-            onCheck={() => setIsSecondYes(false)}
-            onClose={() => setIsSecondYes(false)}
-            yes="닫기"
-            no="글 보러가기"
+            onPrimaryClick={() => setIsSecondYes(false)}
+            onSecondaryClick={() => setIsSecondYes(false)}
+            primaryButtonText="닫기"
+            secondaryButtonText="글 보러하기"
           >
             조건에 맞는 사람이 없습니다.
             <br />
@@ -69,12 +64,11 @@ const Progress = () => {
         {/* 빡겜모드 2번째 매칭 실패 시, 같은 조건으로 글을 쓴 사람이 없을 때 */}
         {isSecondNo && (
           <ConfirmModal
-            type="yesOrNo"
             width="540px"
-            onCheck={() => setIsSecondNo(false)}
-            onClose={() => setIsSecondNo(false)}
-            yes="닫기"
-            no="글 작성하기"
+            onPrimaryClick={() => setIsSecondNo(false)}
+            onSecondaryClick={() => setIsSecondNo(false)}
+            primaryButtonText="닫기"
+            secondaryButtonText="글 작성하기"
           >
             조건에 맞는 사람이 없습니다.
             <br />
@@ -139,14 +133,4 @@ const Waiting = styled.div`
   gap: 42px;
   color: ${theme.colors.gray600};
   ${(props) => props.theme.fonts.regular25};
-`;
-
-const Footer = styled.footer`
-  display: flex;
-  margin-bottom: 78px;
-`;
-
-const ChatBoxContent = styled.div`
-  margin-left: auto;
-  margin-bottom: 37px;
 `;

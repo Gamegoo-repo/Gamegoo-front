@@ -78,10 +78,11 @@ const MyProfilePage = () => {
         {/* 회원탈퇴 경고 */}
         {isWithdrawalCaution && (
           <ConfirmModal
-            type="yesOrNo"
             width="540px"
-            onCheck={handleWithdrawal}
-            onClose={() => setIsWithdrawalCaution(false)}
+            primaryButtonText="예"
+            secondaryButtonText="아니요"
+            onPrimaryClick={handleWithdrawal}
+            onSecondaryClick={() => setIsWithdrawalCaution(false)}
           >
             회원 탈퇴를 하시겠습니까?
             <br />
@@ -93,9 +94,9 @@ const MyProfilePage = () => {
         {/* 회원탈퇴 완료 */}
         {isWithdrawalComplete && (
           <ConfirmModal
-            type="confirm"
             width="540px"
-            onClose={() => setIsWithdrawalComplete(false)}
+            primaryButtonText="확인"
+            onPrimaryClick={() => setIsWithdrawalComplete(false)}
           >
             계속해서 매칭을 시도하겠습니까?
           </ConfirmModal>

@@ -23,7 +23,8 @@ const PositionFilter = (props: SvgProps) => {
                 <Random />
             </RandomButton>
             <TopButton
-                onClick={() => onPositionFilter(1)}>
+                onClick={() => onPositionFilter(1)}
+                $isSelected={isPosition === 1}>
                 <Top />
             </TopButton>
             <JungleButton
@@ -93,24 +94,30 @@ const RandomButton = styled.button<{ $isPosition: number }>`
     }
 `;
 
-const TopButton = styled.button`
+const TopButton = styled.button<{ $isSelected: boolean }>`
     max-width: 48px;
     height: 56px;
     padding:0 15px;
     border-right: 1px solid ${theme.colors.gray400};
 
-    &:hover {
+    background: ${({ $isSelected }) =>
+        $isSelected ? `${theme.colors.purple100}` : "unset"};
+
+    /* &:hover {
         background: ${theme.colors.gray300};
-    }
+    } */
 
     &:active,
     &:focus path:first-child {
-        fill: ${theme.colors.white};
+        fill: ${theme.colors.white}
+
     }
 
     &:active,
     &:focus {
         background: ${theme.colors.purple100};
+        background: ${({ $isSelected }) =>
+        $isSelected ? `${theme.colors.purple100}` : "unset"};
     }
 `;
 
