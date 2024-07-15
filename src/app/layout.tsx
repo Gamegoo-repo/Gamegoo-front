@@ -21,7 +21,7 @@ export default function RootLayout({
   }
 
   const pathname = usePathname();
-  const isHeader = !pathname.includes("/" || "/join");
+  const isHeader = !(pathname === "/" || pathname.includes("/join"));
 
   return (
     <html>
