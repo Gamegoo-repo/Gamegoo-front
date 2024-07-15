@@ -13,16 +13,7 @@ import styled from "styled-components";
 const Login = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
-  const [emailDisable, setEmailDisable] = useState(false);
   const [password, setPassword] = useState("");
-
-  /* 이메일 존재 여부 검사 */
-  // API 연동
-
-  /* 이메일 수정하기 */
-  const handleModify = () => {
-    setEmailDisable(false);
-  };
 
   /* 로그인 */
   const handleLogin = () => {
@@ -42,17 +33,15 @@ const Login = () => {
         <P>GAMGOO에 오신 것을 환영합니다.</P>
         <Content>
           <Div>
-            <Input
-              inputType="input"
-              value={email}
-              onChange={(value) => {
-                setEmail(value);
-              }}
-              placeholder="이메일 주소"
-              disabled={emailDisable}
-            />
-            {email && <Modify onClick={handleModify}>수정</Modify>}
-            {email && (
+            <InputList>
+              <Input
+                inputType="input"
+                value={email}
+                onChange={(value) => {
+                  setEmail(value);
+                }}
+                placeholder="이메일 주소"
+              />
               <Input
                 inputType="password"
                 value={password}
@@ -61,7 +50,7 @@ const Login = () => {
                 }}
                 placeholder="비밀번호"
               />
-            )}
+            </InputList>
             <Button
               buttonType="primary"
               text="이메일로 시작하기"
@@ -112,6 +101,7 @@ export default Login;
 
 const Container = styled.div`
   width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
 `;
@@ -123,6 +113,8 @@ const Box = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  margin-bottom: 140px;
 `;
 
 const Title = styled.div`
@@ -131,16 +123,16 @@ const Title = styled.div`
   ${(props) => props.theme.fonts.regular35};
 `;
 
-const P = styled.div`
-  display: flex;
-  color: #737373;
-  ${(props) => props.theme.fonts.regular14};
-  gap: 10px;
-`;
-
 const Content = styled.div`
   width: 100%;
   margin-top: 49px;
+`;
+
+const P = styled.div`
+  display: flex;
+  color: ${theme.colors.gray200};
+  ${(props) => props.theme.fonts.regular14};
+  gap: 10px;
 `;
 
 const Div = styled.div`
@@ -151,15 +143,8 @@ const Div = styled.div`
   position: relative;
 `;
 
-const Modify = styled.div`
-  position: absolute;
-  top: 30px;
-  right: 20px;
-  transform: translate(0, -50%);
-  color: ${theme.colors.purple100};
-  font-size: ${theme.fonts.semiBold14};
-  z-index: 100;
-  cursor: pointer;
+const InputList = styled(Div)`
+  gap: 8px;
 `;
 
 const Check = styled.div`
@@ -171,8 +156,9 @@ const Check = styled.div`
 const Bar = styled.div`
   width: 1px;
   height: 20px;
-  background: #c5c5c7;
+  background: ${theme.colors.gray300};
 `;
+
 const Line = styled.div`
   width: 100%;
   height: 1px;
@@ -188,7 +174,6 @@ const SocialIcons = styled.div`
 `;
 
 const Join = styled(Link)`
-  color: #bcbcbc;
+  color: ${theme.colors.gray300};
   font-weight: 500;
-  text-decoration-line: underline;
 `;
