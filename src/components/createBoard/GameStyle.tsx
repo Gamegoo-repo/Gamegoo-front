@@ -4,20 +4,15 @@ import SelectedStylePopup from "../match/SelectedStylePopup";
 import Image from "next/image";
 import { useState } from "react";
 
-interface StylesProps {
-    id: number;
-    text: string;
-}
-
 interface GameStyleProps {
-    styles: StylesProps[]
+    gameStyles: string[];
 }
 
 const GameStyle = (props: GameStyleProps) => {
-    const { styles } = props;
+    const { gameStyles } = props;
 
     const [styledPopup, setStyledPopup] = useState(false);
-    const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
+    const [selectedStyles, setSelectedStyles] = useState<string[]>(gameStyles);
 
     const handleStylePopup = () => {
         setStyledPopup(prevState => !prevState);
@@ -42,9 +37,9 @@ const GameStyle = (props: GameStyleProps) => {
     return (
         <>
             <StylesWrapper>
-                {styles.map((data) => (
-                    <Content key={data.id}>
-                        {data.text}
+                {selectedStyles.map((data, index) => (
+                    <Content key={index}>
+                        {data}
                     </Content>
                 ))}
             </StylesWrapper>
@@ -75,7 +70,7 @@ export default GameStyle;
 const StylesWrapper = styled.div`
     display: grid;
     grid-gap: 11px;
-    grid-template-columns: repeat(auto-fit, minmax(100px, auto));
+    grid-template-columns: repeat(3, minmax(100px, auto));
 `;
 
 const Content = styled.p`

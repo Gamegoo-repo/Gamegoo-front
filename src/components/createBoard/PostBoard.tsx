@@ -11,7 +11,6 @@ import User from "../crBoard/User";
 import Toggle from "../common/Toggle";
 import PositionBox, { PositionState } from "../crBoard/PositionBox";
 import GameStyle from "./GameStyle";
-import { EX_GAME_STYLE } from "@/data/profile";
 
 interface PostBoardProps {
     onClose: () => void;
@@ -23,13 +22,18 @@ const DROP_DATA = [
     { id: 3, value: '솔로3' },
 ];
 
-const userData = {
+const USERDATA = {
     image: "/assets/icons/profile_img.svg",
     account: "유니콘의 비밀",
     tag: "KR1",
     tier: "B3",
     manner_level: 5,
     mic: 0,
+    gameStyle: [
+        "이기기만 하면 뭔들",
+        "과도한 핑은 사절이에요",
+        "랭크 올리고 싶어요",
+      ],
 };
 
 const PostBoard = (props: PostBoardProps) => {
@@ -145,9 +149,9 @@ const PostBoard = (props: PostBoardProps) => {
                     <UpdateProfileImage
                         onFileSelect={handleFileSelect} />
                     <User
-                        account={userData.account}
-                        tag={userData.tag}
-                        tier={userData.tier}
+                        account={USERDATA.account}
+                        tag={USERDATA.tag}
+                        tier={USERDATA.tier}
                     />
                 </UserSection>
                 <QueueNMicSection>
@@ -182,7 +186,7 @@ const PostBoard = (props: PostBoardProps) => {
                 </PositionSection>
                 <StyleSection>
                     <Title className="gameStyleTitle">게임 스타일</Title>
-                    <GameStyle styles={EX_GAME_STYLE} />
+                    <GameStyle gameStyles={USERDATA.gameStyle} />
                 </StyleSection>
                 <MemoSection>
                     <Title className="memoTitle">메모</Title>
