@@ -12,8 +12,6 @@ import Pagination from "@/components/common/Pagination";
 import PositionFilter from "@/components/board/PositionFilter";
 import PostBoard from "@/components/createBoard/PostBoard";
 import ChatButton from "@/components/common/ChatButton";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
 
 const DROP_DATA1 = [
   { id: 1, value: "솔로1" },
@@ -157,9 +155,6 @@ const BoardPage = () => {
   const [selectedDropOption1, setSelectedDropOption1] = useState("솔로 랭크");
   const [selectedDropOption2, setSelectedDropOption2] = useState("티어 선택");
 
-  const isEvaluationModalOpen = useSelector((state: RootState) => state.modal.evaluationModal);
-  const isMoreModalOpen = useSelector((state: RootState) => state.modal.moreModal);
-
   const dropdownRef1 = useRef<HTMLDivElement>(null);
   const dropdownRef2 = useRef<HTMLDivElement>(null);
 
@@ -237,10 +232,9 @@ const BoardPage = () => {
   return (
     <>
       {isWritingOpen && <PostBoard onClose={handleWritingClose} />}
-      <Wrapper>
+      <Wrapper $isWritingOpen={isWritingOpen}>
         <BoardContent
-          $isEvaluationModalOpen={isEvaluationModalOpen}
-          $isMoreModalOpen={isMoreModalOpen}>
+          $isWritingOpen={isWritingOpen}>
           <FirstRow>
             <Title>게시판</Title>
             <RefreshImage
@@ -328,29 +322,31 @@ const BoardPage = () => {
 
 export default BoardPage;
 
-const Wrapper = styled.div`
-  position: relative;
+const Wrapper = styled.div<{ $isWritingOpen: boolean }>`
   width: 100%;
   display: flex;
   justify-content: center;
+  z-index: ${({ $isWritingOpen }) => ($isWritingOpen ? 2 : 1)};
 `;
 
-const BoardContent = styled.header<{ $isEvaluationModalOpen: boolean, $isMoreModalOpen: string }>`
+const BoardContent = styled.header<{ $isWritingOpen: boolean }>`
   max-width: 1440px;
   width: 100%;
   padding: 0 80px;
   display: flex;
   flex-direction: column;
-  &:before {
-        content: '';
-        position: ${({ $isEvaluationModalOpen, $isMoreModalOpen }) => $isEvaluationModalOpen || $isMoreModalOpen !== "" ? 'fixed' : 'unset'};
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: ${({ $isEvaluationModalOpen, $isMoreModalOpen }) => $isEvaluationModalOpen || $isMoreModalOpen !== "" ? '#0000009C' : 'transparent'};
-        z-index: 100;
-    }
+  position: relative; 
+
+&:before {
+  content: '';
+  position: ${({ $isWritingOpen }) => ($isWritingOpen ? 'fixed' : 'unset')};
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: ${({ $isWritingOpen }) => ($isWritingOpen ? '#0000009E' : 'transparent')};
+  z-index: 1; 
+}
 `;
 
 const FirstRow = styled.div`

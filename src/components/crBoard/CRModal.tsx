@@ -7,7 +7,6 @@ interface BoardModalProps {
     type: 'posting' | 'reading';
     onClose: () => void;
     children: string | React.ReactNode;
-    disabled?: boolean
 }
 
 const CRModal = (props: BoardModalProps) => {
@@ -15,7 +14,6 @@ const CRModal = (props: BoardModalProps) => {
         type,
         children,
         onClose,
-        disabled
     } = props;
 
     const modalRoot = document.getElementById('modal-root') as HTMLElement;
@@ -52,7 +50,7 @@ const Overlay = styled.div`
     top:50%;
     left:50%;
     transform: translate(-50%, -50%);
-    z-index: 1;
+    z-index: 100;
 `;
 
 const Wrapper = styled.div`
