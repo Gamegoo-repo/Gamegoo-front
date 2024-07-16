@@ -160,6 +160,8 @@ const BoardPage = () => {
   const dropdownRef1 = useRef<HTMLDivElement>(null);
   const dropdownRef2 = useRef<HTMLDivElement>(null);
 
+  const isEvaluationModalOpen = useSelector((state: RootState) => state.modal.evaluationModal);
+  const isMoreModalOpen = useSelector((state: RootState) => state.modal.moreModal);
   const isReadingModal = useSelector((state: RootState) => state.modal.readingModal);
 
   const handleFirstDropValue = (value: string) => {
@@ -241,7 +243,9 @@ const BoardPage = () => {
         $isReadingModal={isReadingModal}>
         <BoardContent
           $isWritingOpen={isWritingOpen}
-          $isReadingModal={isReadingModal}>
+          $isReadingModal={isReadingModal}
+          $isEvaluationModalOpen={isEvaluationModalOpen}
+          $isMoreModalOpen={isMoreModalOpen}>
           <FirstRow>
             <Title>게시판</Title>
             <RefreshImage
@@ -330,28 +334,36 @@ const BoardPage = () => {
 export default BoardPage;
 
 const Wrapper = styled.div<{ $isWritingOpen: boolean, $isReadingModal: boolean }>`
+  /* position: relative; */
   width: 100%;
   display: flex;
   justify-content: center;
-  z-index: ${({ $isWritingOpen, $isReadingModal }) => ($isWritingOpen || $isReadingModal ? 2 : 1)};
+  /* z-index: ${({ $isWritingOpen, $isReadingModal }) => ($isWritingOpen || $isReadingModal ? 2 : 1)}; */
 `;
 
-const BoardContent = styled.header<{ $isWritingOpen: boolean, $isReadingModal: boolean }>`
+const BoardContent = styled.header<{
+  $isWritingOpen: boolean,
+  $isReadingModal: boolean,
+  $isEvaluationModalOpen: boolean,
+  $isMoreModalOpen: string
+}>`
   max-width: 1440px;
   width: 100%;
   padding: 0 80px;
   display: flex;
   flex-direction: column;
-  position: relative; 
+  /* position: relative;  */
 
 &:before {
   content: '';
-  position: ${({ $isWritingOpen, $isReadingModal }) => ($isWritingOpen || $isReadingModal ? 'fixed' : 'unset')};
+  position: ${({ $isWritingOpen, $isReadingModal, $isEvaluationModalOpen, $isMoreModalOpen }) =>
+    ($isWritingOpen || $isReadingModal || $isEvaluationModalOpen || $isMoreModalOpen !== "" ? 'fixed' : 'unset')};
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: ${({ $isWritingOpen, $isReadingModal }) => ($isWritingOpen || $isReadingModal ? '#0000009E' : 'transparent')};
+  background: ${({ $isWritingOpen, $isReadingModal, $isEvaluationModalOpen, $isMoreModalOpen }) =>
+    ($isWritingOpen || $isReadingModal || $isEvaluationModalOpen || $isMoreModalOpen !== "" ? '#0000009E' : 'transparent')};
   z-index: 1; 
 }
 `;

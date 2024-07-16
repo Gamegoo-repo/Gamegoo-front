@@ -10,6 +10,7 @@ import User from "../crBoard/User";
 import Toggle from "../common/Toggle";
 import PositionBox, { PositionState } from "../crBoard/PositionBox";
 import GameStyle from "./GameStyle";
+import ConfirmModal from "../common/ConfirmModal";
 
 interface PostBoardProps {
     onClose: () => void;
@@ -50,6 +51,7 @@ const PostBoard = (props: PostBoardProps) => {
 
     const [isOn, setisOn] = useState(false);
     const [textareaValue, setTextareaValue] = useState("");
+    const [isCompletedPost, setIsCompletedPost] = useState(false);
 
     /* 선택된 현재 프로필 이미지 */
     const [selectedImageIndex, setSelectedImageIndex] = useState<number>(
@@ -114,8 +116,7 @@ const PostBoard = (props: PostBoardProps) => {
         // } catch (error) {
         //     console.error('Error:', error);
         // }
-
-        onClose();
+        setIsCompletedPost(true);
     };
 
 
@@ -124,6 +125,15 @@ const PostBoard = (props: PostBoardProps) => {
             type='posting'
             onClose={onClose}
         >
+            {isCompletedPost &&
+                <ConfirmModal
+                    width="540px"
+                    primaryButtonText="확인"
+                    onPrimaryClick={onClose}
+                >
+                    글 작성이 완료되었습니다.
+                </ConfirmModal>
+            }
             <Form onSubmit={handlePost}>
                 <UserSection>
                     <UpdateProfileImage

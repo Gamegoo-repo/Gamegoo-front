@@ -21,7 +21,6 @@ interface ConfirmModalProps {
   type?: "manner";
   children?: string | React.ReactNode;
   width: string;
-  borderRadius?: string;
   primaryButtonText: ButtonText;
   secondaryButtonText?: ButtonText;
   onPrimaryClick: () => void;
@@ -33,7 +32,6 @@ const ConfirmModal = (props: ConfirmModalProps) => {
     type,
     children,
     width,
-    borderRadius,
     primaryButtonText,
     secondaryButtonText,
     onPrimaryClick,

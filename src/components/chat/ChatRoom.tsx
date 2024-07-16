@@ -257,7 +257,6 @@ const ChatRoom = (props: ChatRoomProps) => {
             {isMoreModalType === 'doneBlock' && (
                 <ConfirmModal
                     width="540px"
-                    borderRadius="20px"
                     primaryButtonText="확인"
                     onPrimaryClick={handleModalClose}
                 >
