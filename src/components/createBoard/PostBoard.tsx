@@ -4,7 +4,6 @@ import Input from "../common/Input";
 import { useEffect, useRef, useState } from "react";
 import Button from "../common/Button";
 import axios from "axios";
-import dayjs from "dayjs";
 import CRModal from "../crBoard/CRModal";
 import UpdateProfileImage from "./UpdateProfileImage";
 import User from "../crBoard/User";
@@ -23,7 +22,7 @@ const DROP_DATA = [
 ];
 
 const USERDATA = {
-    image: "/assets/icons/profile_img.svg",
+    image: "profile6",
     account: "유니콘의 비밀",
     tag: "KR1",
     tier: "B3",
@@ -33,19 +32,16 @@ const USERDATA = {
         "이기기만 하면 뭔들",
         "과도한 핑은 사절이에요",
         "랭크 올리고 싶어요",
-      ],
+    ],
 };
 
 const PostBoard = (props: PostBoardProps) => {
     const { onClose } = props;
 
-    const [imageUploadResult, setImageUploadResult] = useState<any>(null);
-    const [profileImg, setProfileImg] = useState<File | null>(null);
-
+    const [isProfileListOpen, setIsProfileListOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [selectedDropOption, setSelectedDropOption] = useState('솔로 랭크');
     const dropdownRef = useRef<HTMLDivElement>(null);
-
     const [positionValue, setPositionValue] = useState<PositionState>({
         main: '',
         sub: '',
@@ -53,15 +49,28 @@ const PostBoard = (props: PostBoardProps) => {
     });
 
     const [isOn, setisOn] = useState(false);
-
     const [textareaValue, setTextareaValue] = useState("");
+
+    /* 선택된 현재 프로필 이미지 */
+    const [selectedImageIndex, setSelectedImageIndex] = useState<number>(
+        parseInt(USERDATA.image.slice(-1))
+    );
+
+    /* 프로필 이미지 리스트 중 클릭시*/
+    const handleImageClick = (index: number) => {
+        setSelectedImageIndex(index + 1);
+
+        setTimeout(() => {
+            setIsProfileListOpen(false);
+        }, 300); // 300ms 후에 창이 닫히도록 설정
+    };
 
     const handleDropValue = (value: string) => {
         console.log(value)
         setSelectedDropOption(value);
         setIsDropdownOpen(false);
     };
- 
+
     const handleDropdownClickOutside = (event: MouseEvent) => {
         if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
             setIsDropdownOpen(false);
@@ -75,36 +84,6 @@ const PostBoard = (props: PostBoardProps) => {
         };
     }, []);
 
-    const handleFileSelect = (file: File) => {
-        setProfileImg(file);
-    };
-
-    // TODO: api 연결
-    // const handleProfileUpload = async () => {
-    //     if (!profileImg) return;
-
-    //     const formData = new FormData();
-
-    //     const config = {
-    //         header: { "content-type": "multipart/form-data" },
-    //     };
-
-    //     formData.append('file', profileImg);
-
-    //     try {
-    //         const response = await axios.post(
-    //             '/api/',
-    //             formData,
-    //             config
-    //         );
-    //         console.log('Success:', response.data);
-    //         setImageUploadResult(response.data);
-    //     } catch (error) {
-    //         console.error('Error:', error);
-    //     }
-    // };
-
-
     const handlePositionChange = (newPositionValue: PositionState) => {
         setPositionValue(newPositionValue);
     };
@@ -115,20 +94,20 @@ const PostBoard = (props: PostBoardProps) => {
 
     const handlePost = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const formData = new FormData();
-        const updatedDate = dayjs().format();
-        formData.append('updateTime', updatedDate);
-        if (profileImg) {
-            formData.append('profileImg', profileImg);
-        }
-        formData.append('queueType', selectedDropOption);
-        formData.append('position', JSON.stringify(positionValue));
-        formData.append('memo', textareaValue);
+        // const formData = {
+        //     image: `profile${selectedImageIndex}`,
+        //     user: USERDATA.account,
+        //     mic: isOn,
+        //     queue: selectedDropOption,
+        //     position: positionValue,
+        //     gameStyle: USERDATA.gameStyle,
+        //     memo: textareaValue,
+        // };
 
         // try {
-        //     const response = await axios.post('/api/', formData, {
+        //     const response = await axios.post('http://localhost:3000/', formData, {
         //         headers: {
-        //             'Content-Type': 'multipart/form-data',
+        //             'Content-Type': 'application/json',
         //         },
         //     });
         //     console.log('Success:', response.data);
@@ -139,15 +118,19 @@ const PostBoard = (props: PostBoardProps) => {
         onClose();
     };
 
+
     return (
         <CRModal
             type='posting'
             onClose={onClose}
-            >
+        >
             <Form onSubmit={handlePost}>
                 <UserSection>
                     <UpdateProfileImage
-                        onFileSelect={handleFileSelect} />
+                        selectedImageIndex={selectedImageIndex}
+                        setIsProfileListOpen={setIsProfileListOpen}
+                        isProfileListOpen={isProfileListOpen}
+                        onImageClick={handleImageClick} />
                     <User
                         account={USERDATA.account}
                         tag={USERDATA.tag}
@@ -180,8 +163,8 @@ const PostBoard = (props: PostBoardProps) => {
                 <PositionSection>
                     <Title className="positionTitle">포지션</Title>
                     <PositionBox
-                    status="posting"
-                    onPositionChange={handlePositionChange} 
+                        status="posting"
+                        onPositionChange={handlePositionChange}
                     />
                 </PositionSection>
                 <StyleSection>
