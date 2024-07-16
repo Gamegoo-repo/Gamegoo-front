@@ -4,12 +4,14 @@ interface ModalState {
     isOpen: boolean;
     evaluationModal: boolean;
     moreModal: string;
+    readingModal: boolean;
 }
 
 const initialState: ModalState = {
     isOpen: false,
     evaluationModal: false,
-    moreModal: ""
+    moreModal: "",
+    readingModal: false,
 };
 
 const modalSlice = createSlice({
@@ -35,7 +37,14 @@ const modalSlice = createSlice({
         },
         setCloseMoreModal: (state) => {
             state.moreModal = "";
-        }
+        },
+        /* 게시판 읽기 모달 */
+        setOpenReadingModal: (state) => {
+            state.readingModal = true;
+        },
+        setCloseReadingModal: (state) => {
+            state.readingModal = false;
+        },
     },
 });
 
@@ -45,7 +54,9 @@ export const {
     setOpenEvaluationModal,
     setCloseEvaluationModal,
     setOpenMoreModal,
-    setCloseMoreModal
+    setCloseMoreModal,
+    setOpenReadingModal,
+    setCloseReadingModal
 } = modalSlice.actions;
 
 export default modalSlice.reducer;

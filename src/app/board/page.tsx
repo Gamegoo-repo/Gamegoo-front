@@ -12,6 +12,8 @@ import Pagination from "@/components/common/Pagination";
 import PositionFilter from "@/components/board/PositionFilter";
 import PostBoard from "@/components/createBoard/PostBoard";
 import ChatButton from "@/components/common/ChatButton";
+import { RootState } from "@/redux/store";
+import { useSelector } from "react-redux";
 
 const DROP_DATA1 = [
   { id: 1, value: "솔로1" },
@@ -158,6 +160,8 @@ const BoardPage = () => {
   const dropdownRef1 = useRef<HTMLDivElement>(null);
   const dropdownRef2 = useRef<HTMLDivElement>(null);
 
+  const isReadingModal = useSelector((state: RootState) => state.modal.readingModal);
+
   const handleFirstDropValue = (value: string) => {
     console.log(value);
     setSelectedDropOption1(value);
@@ -232,9 +236,12 @@ const BoardPage = () => {
   return (
     <>
       {isWritingOpen && <PostBoard onClose={handleWritingClose} />}
-      <Wrapper $isWritingOpen={isWritingOpen}>
+      <Wrapper
+        $isWritingOpen={isWritingOpen}
+        $isReadingModal={isReadingModal}>
         <BoardContent
-          $isWritingOpen={isWritingOpen}>
+          $isWritingOpen={isWritingOpen}
+          $isReadingModal={isReadingModal}>
           <FirstRow>
             <Title>게시판</Title>
             <RefreshImage
@@ -322,14 +329,14 @@ const BoardPage = () => {
 
 export default BoardPage;
 
-const Wrapper = styled.div<{ $isWritingOpen: boolean }>`
+const Wrapper = styled.div<{ $isWritingOpen: boolean, $isReadingModal: boolean }>`
   width: 100%;
   display: flex;
   justify-content: center;
-  z-index: ${({ $isWritingOpen }) => ($isWritingOpen ? 2 : 1)};
+  z-index: ${({ $isWritingOpen, $isReadingModal }) => ($isWritingOpen || $isReadingModal ? 2 : 1)};
 `;
 
-const BoardContent = styled.header<{ $isWritingOpen: boolean }>`
+const BoardContent = styled.header<{ $isWritingOpen: boolean, $isReadingModal: boolean }>`
   max-width: 1440px;
   width: 100%;
   padding: 0 80px;
@@ -339,12 +346,12 @@ const BoardContent = styled.header<{ $isWritingOpen: boolean }>`
 
 &:before {
   content: '';
-  position: ${({ $isWritingOpen }) => ($isWritingOpen ? 'fixed' : 'unset')};
+  position: ${({ $isWritingOpen, $isReadingModal }) => ($isWritingOpen || $isReadingModal ? 'fixed' : 'unset')};
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: ${({ $isWritingOpen }) => ($isWritingOpen ? '#0000009E' : 'transparent')};
+  background: ${({ $isWritingOpen, $isReadingModal }) => ($isWritingOpen || $isReadingModal ? '#0000009E' : 'transparent')};
   z-index: 1; 
 }
 `;
