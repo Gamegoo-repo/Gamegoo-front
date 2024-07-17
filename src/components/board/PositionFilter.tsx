@@ -19,32 +19,32 @@ const PositionFilter = (props: SvgProps) => {
         <Wrapper>
             <RandomButton
                 onClick={() => onPositionFilter(0)}
-                className={isPosition === 0 ? 'clicked' : 'unClicked'}>
+                className={isPosition === 0 ? 'clicked' : ''}>
                 <Random />
             </RandomButton>
             <TopButton
                 onClick={() => onPositionFilter(1)}
-                className={isPosition === 1 ? 'clicked' : 'unClicked'} >
+                className={isPosition === 1 ? 'clicked' : ''} >
                 <Top />
             </TopButton>
             <JungleButton
                 onClick={() => onPositionFilter(2)}
-                className={isPosition === 2 ? 'clicked' : 'unClicked'}>
+                className={isPosition === 2 ? 'clicked' : ''}>
                 <Jungle />
             </JungleButton>
             <MidButton
                 onClick={() => onPositionFilter(3)}
-                className={isPosition === 3 ? 'clicked' : 'unClicked'}>
+                className={isPosition === 3 ? 'clicked' : ''}>
                 <Mid />
             </MidButton>
             <BottomButton
                 onClick={() => onPositionFilter(4)}
-                className={isPosition === 4 ? 'clicked' : 'unClicked'}>
+                className={isPosition === 4 ? 'clicked' : ''}>
                 <Bottom />
             </BottomButton>
             <SupporterButton
                 onClick={() => onPositionFilter(5)}
-                className={isPosition === 5 ? 'clicked' : 'unClicked'}>
+                className={isPosition === 5 ? 'clicked' : ''}>
                 <Supporter />
             </SupporterButton>
         </Wrapper>

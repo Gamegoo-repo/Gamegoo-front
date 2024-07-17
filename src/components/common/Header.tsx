@@ -63,7 +63,7 @@ const Header = () => {
               바로 매칭
             </Menu>
             <Bar />
-            <Menu href="board" selected={pathname === "/board"}>
+            <Menu href="/board" selected={pathname === "/board"}>
               매칭 게시판
             </Menu>
           </Menus>
