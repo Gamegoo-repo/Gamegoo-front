@@ -161,7 +161,7 @@ const BoardPage = () => {
   const dropdownRef2 = useRef<HTMLDivElement>(null);
 
   const isEvaluationModalOpen = useSelector((state: RootState) => state.modal.evaluationModal);
-  const isMoreModalOpen = useSelector((state: RootState) => state.modal.moreModal);
+  const isModalType = useSelector((state: RootState) => state.modal.modalType);
   const isReadingModal = useSelector((state: RootState) => state.modal.readingModal);
 
   const handleFirstDropValue = (value: string) => {
@@ -234,7 +234,7 @@ const BoardPage = () => {
   //     document.body.style.overflow = "unset";
   //   };
   // }, [isWritingOpen]);
-console.log(isMoreModalOpen)
+  console.log(isModalType)
   return (
     <>
       {isWritingOpen && <PostBoard onClose={handleWritingClose} />}
@@ -243,7 +243,7 @@ console.log(isMoreModalOpen)
           $isWritingOpen={isWritingOpen}
           $isReadingModal={isReadingModal}
           $isEvaluationModalOpen={isEvaluationModalOpen}
-          $isMoreModalOpen={isMoreModalOpen}>
+          $isModalType={isModalType}>
           <FirstRow>
             <Title>게시판</Title>
             <RefreshImage
@@ -341,7 +341,7 @@ const BoardContent = styled.div<{
   $isWritingOpen: boolean,
   $isReadingModal: boolean,
   $isEvaluationModalOpen: boolean,
-  $isMoreModalOpen: string
+  $isModalType: string
 }>`
   max-width: 1440px;
   width: 100%;
@@ -349,14 +349,14 @@ const BoardContent = styled.div<{
 
 &:before {
   content: '';
-  position: ${({ $isWritingOpen, $isReadingModal, $isEvaluationModalOpen, $isMoreModalOpen }) =>
-    ($isWritingOpen || $isReadingModal || $isEvaluationModalOpen || $isMoreModalOpen !== "" ? 'fixed' : 'unset')};
+  position: ${({ $isWritingOpen, $isReadingModal, $isEvaluationModalOpen, $isModalType }) =>
+    ($isWritingOpen || $isReadingModal || $isEvaluationModalOpen || $isModalType !== "" ? 'fixed' : 'unset')};
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: ${({ $isWritingOpen, $isReadingModal, $isEvaluationModalOpen, $isMoreModalOpen }) =>
-    ($isWritingOpen || $isReadingModal || $isEvaluationModalOpen || $isMoreModalOpen !== "" ? '#0000009E' : 'transparent')};
+  background: ${({ $isWritingOpen, $isReadingModal, $isEvaluationModalOpen, $isModalType }) =>
+    ($isWritingOpen || $isReadingModal || $isEvaluationModalOpen || $isModalType !== "" ? '#0000009E' : 'transparent')};
   z-index: 1; 
 }
 `;

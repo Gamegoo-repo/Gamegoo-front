@@ -3,14 +3,14 @@ import { createSlice } from '@reduxjs/toolkit';
 interface ModalState {
     isOpen: boolean;
     evaluationModal: boolean;
-    moreModal: string;
+    modalType: string;
     readingModal: boolean;
 }
 
 const initialState: ModalState = {
     isOpen: false,
     evaluationModal: false,
-    moreModal: "",
+    modalType: "",
     readingModal: false,
 };
 
@@ -32,11 +32,11 @@ const modalSlice = createSlice({
         setCloseEvaluationModal: (state) => {
             state.evaluationModal = false;
         },
-        setOpenMoreModal: (state, action) => {
-            state.moreModal = action.payload;
+        setOpenModal: (state, action) => {
+            state.modalType = action.payload;
         },
-        setCloseMoreModal: (state) => {
-            state.moreModal = "";
+        setCloseModal: (state) => {
+            state.modalType = "";
         },
         /* 게시판 읽기 모달 */
         setOpenReadingModal: (state) => {
@@ -53,8 +53,8 @@ export const {
     setCloseMannerStatusModal,
     setOpenEvaluationModal,
     setCloseEvaluationModal,
-    setOpenMoreModal,
-    setCloseMoreModal,
+    setOpenModal,
+    setCloseModal,
     setOpenReadingModal,
     setCloseReadingModal
 } = modalSlice.actions;

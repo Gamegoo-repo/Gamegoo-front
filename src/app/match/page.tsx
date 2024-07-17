@@ -10,13 +10,13 @@ import { RootState } from "@/redux/store";
 const MatchTypePage = () => {
 
   const isEvaluationModalOpen = useSelector((state: RootState) => state.modal.evaluationModal);
-  const isMoreModalOpen = useSelector((state: RootState) => state.modal.moreModal);
+  const isModalType = useSelector((state: RootState) => state.modal.modalType);
 
   return (
     <Wrapper>
       <MatchContent
         $isEvaluationModalOpen={isEvaluationModalOpen}
-        $isMoreModalOpen={isMoreModalOpen}>
+        $isModalType={isModalType}>
         <Header>
           <Title>바로 매칭하기</Title>
         </Header>
@@ -57,18 +57,18 @@ const Wrapper = styled.div`
   justify-content: center;
 `
 
-const MatchContent = styled.div<{ $isEvaluationModalOpen: boolean, $isMoreModalOpen: string }>`
+const MatchContent = styled.div<{ $isEvaluationModalOpen: boolean, $isModalType: string }>`
   max-width: 1440px;
   width: 100%;;
   padding: 0 80px;
   &:before {
         content: '';
-        position: ${({ $isEvaluationModalOpen, $isMoreModalOpen }) => $isEvaluationModalOpen || $isMoreModalOpen !== "" ? 'fixed' : 'unset'};
+        position: ${({ $isEvaluationModalOpen, $isModalType }) => $isEvaluationModalOpen || $isModalType !== "" ? 'fixed' : 'unset'};
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background: ${({ $isEvaluationModalOpen, $isMoreModalOpen }) => $isEvaluationModalOpen || $isMoreModalOpen !== "" ? '#0000009C' : 'transparent'};
+        background: ${({ $isEvaluationModalOpen, $isModalType }) => $isEvaluationModalOpen || $isModalType !== "" ? '#0000009C' : 'transparent'};
         z-index: 100;
     }
 `

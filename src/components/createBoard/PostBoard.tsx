@@ -11,6 +11,9 @@ import Toggle from "../common/Toggle";
 import PositionBox, { PositionState } from "../crBoard/PositionBox";
 import GameStyle from "./GameStyle";
 import ConfirmModal from "../common/ConfirmModal";
+import { useDispatch, useSelector } from "react-redux";
+import { setOpenModal } from "@/redux/slices/modalSlice";
+import { RootState } from "@/redux/store";
 
 interface PostBoardProps {
     onClose: () => void;
@@ -39,6 +42,8 @@ const USERDATA = {
 const PostBoard = (props: PostBoardProps) => {
     const { onClose } = props;
 
+    const dispatch = useDispatch();
+
     const [isProfileListOpen, setIsProfileListOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [selectedDropOption, setSelectedDropOption] = useState('솔로 랭크');
@@ -51,7 +56,8 @@ const PostBoard = (props: PostBoardProps) => {
 
     const [isOn, setisOn] = useState(false);
     const [textareaValue, setTextareaValue] = useState("");
-    const [isCompletedPost, setIsCompletedPost] = useState(false);
+
+    const isCompletedModal = useSelector((state: RootState) => state.modal.modalType);
 
     /* 선택된 현재 프로필 이미지 */
     const [selectedImageIndex, setSelectedImageIndex] = useState<number>(
@@ -116,7 +122,12 @@ const PostBoard = (props: PostBoardProps) => {
         // } catch (error) {
         //     console.error('Error:', error);
         // }
-        setIsCompletedPost(true);
+        dispatch(setOpenModal('completedPost'));
+    };
+
+    const handleModalClose = () => {
+        onClose();
+        dispatch(setOpenModal(""));
     };
 
 
@@ -125,11 +136,11 @@ const PostBoard = (props: PostBoardProps) => {
             type='posting'
             onClose={onClose}
         >
-            {isCompletedPost &&
+            {isCompletedModal &&
                 <ConfirmModal
                     width="540px"
                     primaryButtonText="확인"
-                    onPrimaryClick={onClose}
+                    onPrimaryClick={handleModalClose}
                 >
                     글 작성이 완료되었습니다.
                 </ConfirmModal>

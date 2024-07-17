@@ -12,7 +12,7 @@ import MiniModal from "./MiniModal";
 import Input from "../common/Input";
 import { REPORT_REASON } from "@/data/report";
 import ConfirmModal from "../common/ConfirmModal";
-import { setCloseEvaluationModal, setCloseMoreModal, setOpenMoreModal } from "@/redux/slices/modalSlice";
+import { setCloseEvaluationModal, setCloseModal, setOpenModal } from "@/redux/slices/modalSlice";
 import { useRouter } from "next/navigation";
 
 
@@ -47,7 +47,7 @@ const ChatRoom = (props: ChatRoomProps) => {
     const isEvaluationModalOpen = useSelector((state: RootState) => state.modal.evaluationModal);
     const isFeedbackModalOpen = useSelector((state: RootState) => state.modal.isOpen);
     const isMannerStatus = useSelector((state: RootState) => state.mannerStatus.mannerStatus);
-    const isMoreModalType = useSelector((state: RootState) => state.modal.moreModal);
+    const isModalType = useSelector((state: RootState) => state.modal.modalType);
 
     // useEffect(() => {
     //     socket.on(“message”, (message) => {
@@ -76,12 +76,12 @@ const ChatRoom = (props: ChatRoomProps) => {
     };
 
     const handleModalChange = (modalType: string) => {
-        dispatch(setOpenMoreModal(modalType));
+        dispatch(setOpenModal(modalType));
         setIsMoreBoxOpen(false);
     };
 
     const handleModalClose = () => {
-        dispatch(setCloseMoreModal());
+        dispatch(setCloseModal());
     };
 
     const handleChatLeave = () => {
@@ -92,7 +92,7 @@ const ChatRoom = (props: ChatRoomProps) => {
 
     const handleChatBlock = () => {
         handleModalClose();
-        dispatch(setOpenMoreModal('doneBlock'));
+        dispatch(setOpenModal('doneBlock'));
     };
 
     const handleFormModalClose = () => {
@@ -214,7 +214,7 @@ const ChatRoom = (props: ChatRoomProps) => {
             }
 
             {/* 채팅창 나가기 팝업 */}
-            {isMoreModalType === 'leave' &&
+            {isModalType === 'leave' &&
                 <ConfirmModal
                     width="540px"
                     primaryButtonText="취소"
@@ -234,7 +234,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                 </ConfirmModal>}
 
             {/* 차단하기 팝업 */}
-            {isMoreModalType === 'block' &&
+            {isModalType === 'block' &&
                 <ConfirmModal
                     width="540px"
                     primaryButtonText="취소"
@@ -254,7 +254,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                 </ConfirmModal>}
 
             {/* 차단 완료 팝업 */}
-            {isMoreModalType === 'doneBlock' && (
+            {isModalType === 'doneBlock' && (
                 <ConfirmModal
                     width="540px"
                     primaryButtonText="확인"
@@ -265,7 +265,7 @@ const ChatRoom = (props: ChatRoomProps) => {
             )}
 
             {/* 신고하기 팝업 */}
-            {isMoreModalType === 'report' &&
+            {isModalType === 'report' &&
                 <FormModal
                     type="checkbox"
                     title="유저 신고하기"
@@ -308,7 +308,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                 </FormModal>}
 
             {/* 매너평가 팝업 */}
-            {isMoreModalType === 'manner' &&
+            {isModalType === 'manner' &&
                 <FormModal
                     type="checkbox"
                     title="매너 평가하기"
@@ -322,7 +322,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                     disabled
                 >
                     <CheckContent>
-                        {isMoreModalType === "manner" && MANNER_TYPES.map((data) => (
+                        {isModalType === "manner" && MANNER_TYPES.map((data) => (
                             <Checkbox
                                 key={data.id}
                                 value={data.text}
@@ -334,7 +334,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                 </FormModal>}
 
             {/* 비매너 평가 팝업 */}
-            {isMoreModalType === 'badManner' &&
+            {isModalType === 'badManner' &&
                 <FormModal
                     type="checkbox"
                     title="비매너 평가하기"
@@ -348,7 +348,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                     disabled
                 >
                     <CheckContent>
-                        {isMoreModalType === "badManner" && BAD_MANNER_TYPES.map((data) => (
+                        {isModalType === "badManner" && BAD_MANNER_TYPES.map((data) => (
                             <Checkbox
                                 key={data.id}
                                 value={data.text}

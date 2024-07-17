@@ -6,7 +6,7 @@ import ChatList from "./ChatList";
 import { useState } from "react";
 import ChatRoom from "./ChatRoom";
 import { useDispatch, useSelector } from "react-redux";
-import { setCloseMoreModal, setOpenMoreModal } from "@/redux/slices/modalSlice";
+import { setCloseModal, setOpenModal } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
 import ConfirmModal from "../common/ConfirmModal";
 import FormModal from "../common/FormModal";
@@ -52,7 +52,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
     const [chatId, setChatId] = useState<number | null>(null);
     const [reportDetail, setReportDetail] = useState<string>("");
 
-    const isMoreModalType = useSelector((state: RootState) => state.modal.moreModal);
+    const isModalType = useSelector((state: RootState) => state.modal.modalType);
 
     const handleGoToChatRoom = (id: number) => {
         setChatId(id);
@@ -64,12 +64,12 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
     };
 
     const handleModalChange = (modalType: string) => {
-        dispatch(setOpenMoreModal(modalType));
+        dispatch(setOpenModal(modalType));
         setIsMoreBoxOpen(null);
     };
 
     const handleModalClose = () => {
-        dispatch(setCloseMoreModal());
+        dispatch(setCloseModal());
     };
 
     const handleChatLeave = () => {
@@ -81,7 +81,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
     const handleChatBlock = () => {
         handleBackToChatWindow();
         handleModalClose();
-        dispatch(setOpenMoreModal('doneBlock'));
+        dispatch(setOpenModal('doneBlock'));
     };
 
     const handleOutsideModalClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -157,7 +157,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
             }
 
             {/* 채팅창 나가기 팝업 */}
-            {isMoreModalType === 'leave' &&
+            {isModalType === 'leave' &&
                 <ConfirmModal
                     width="540px"
                     primaryButtonText="취소"
@@ -177,7 +177,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                 </ConfirmModal>}
 
             {/* 차단하기 팝업 */}
-            {isMoreModalType === 'block' &&
+            {isModalType === 'block' &&
                 <ConfirmModal
                     width="540px"
                     primaryButtonText="취소"
@@ -197,7 +197,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                 </ConfirmModal>}
 
             {/* 차단 완료 팝업 */}
-            {isMoreModalType === 'doneBlock' && (
+            {isModalType === 'doneBlock' && (
                 <ConfirmModal
                     width="540px"
                     primaryButtonText="확인"
@@ -208,7 +208,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
             )}
 
             {/* 신고하기 팝업 */}
-            {isMoreModalType === 'report' &&
+            {isModalType === 'report' &&
                 <FormModal
                     type="checkbox"
                     title="유저 신고하기"
@@ -250,7 +250,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                 </FormModal>}
 
             {/* 매너평가 팝업 */}
-            {isMoreModalType === 'manner' &&
+            {isModalType === 'manner' &&
                 <FormModal
                     type="checkbox"
                     title="매너 평가하기"
@@ -263,7 +263,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                     onClose={handleModalClose}
                 >
                     <CheckContent>
-                        {isMoreModalType === "manner" && MANNER_TYPES.map((data) => (
+                        {isModalType === "manner" && MANNER_TYPES.map((data) => (
                             <Checkbox
                                 key={data.id}
                                 value={data.text}
@@ -275,7 +275,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                 </FormModal>}
 
             {/* 비매너 평가 팝업 */}
-            {isMoreModalType === 'badManner' &&
+            {isModalType === 'badManner' &&
                 <FormModal
                     type="checkbox"
                     title="비매너 평가하기"
@@ -288,7 +288,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                     onClose={handleModalClose}
                 >
                     <CheckContent>
-                        {isMoreModalType === "badManner" && BAD_MANNER_TYPES.map((data) => (
+                        {isModalType === "badManner" && BAD_MANNER_TYPES.map((data) => (
                             <Checkbox
                                 key={data.id}
                                 value={data.text}
