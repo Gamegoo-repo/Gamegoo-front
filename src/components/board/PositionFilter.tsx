@@ -19,28 +19,32 @@ const PositionFilter = (props: SvgProps) => {
         <Wrapper>
             <RandomButton
                 onClick={() => onPositionFilter(0)}
-                $isPosition={isPosition}>
+                className={isPosition === 0 ? 'clicked' : 'unClicked'}>
                 <Random />
             </RandomButton>
             <TopButton
                 onClick={() => onPositionFilter(1)}
-                $isSelected={isPosition === 1}>
+                className={isPosition === 1 ? 'clicked' : 'unClicked'} >
                 <Top />
             </TopButton>
             <JungleButton
-                onClick={() => onPositionFilter(2)}>
+                onClick={() => onPositionFilter(2)}
+                className={isPosition === 2 ? 'clicked' : 'unClicked'}>
                 <Jungle />
             </JungleButton>
             <MidButton
-                onClick={() => onPositionFilter(3)}>
+                onClick={() => onPositionFilter(3)}
+                className={isPosition === 3 ? 'clicked' : 'unClicked'}>
                 <Mid />
             </MidButton>
             <BottomButton
-                onClick={() => onPositionFilter(4)}>
+                onClick={() => onPositionFilter(4)}
+                className={isPosition === 4 ? 'clicked' : 'unClicked'}>
                 <Bottom />
             </BottomButton>
             <SupporterButton
-                onClick={() => onPositionFilter(5)}>
+                onClick={() => onPositionFilter(5)}
+                className={isPosition === 5 ? 'clicked' : 'unClicked'}>
                 <Supporter />
             </SupporterButton>
         </Wrapper>
@@ -56,68 +60,42 @@ const Wrapper = styled.div`
     width: 100%;
 `;
 
-const RandomButton = styled.button<{ $isPosition: number }>`
+const RandomButton = styled.button`
     max-width: 48px;
     height: 56px;
     padding:0 15px;
     border-right: 1px solid ${theme.colors.gray400};
     border-radius: 10px 0 0 10px;
-    
-    stroke: ${({ $isPosition }) =>
-        $isPosition === 0
-            ? `${theme.colors.white}`
-            : 'unset'
-    };
-
-    background: ${({ $isPosition }) =>
-        $isPosition === 0
-            ? `${theme.colors.purple100}`
-            : 'unset'
-    };
 
     &:hover {
-        ${({ $isPosition }) =>
-        $isPosition === 0
-            ? `unset`
-            : `background: ${theme.colors.gray300}`
-    };
+        background: ${theme.colors.gray300};
     }
 
-    &:active,
-    &:focus path {
-        stroke: ${theme.colors.white};
-    }
-
-    &:active,
-    &:focus {
+    &.clicked {
         background: ${theme.colors.purple100};
+
+        path {
+        stroke: ${theme.colors.white}
+        }
     }
 `;
 
-const TopButton = styled.button<{ $isSelected: boolean }>`
+const TopButton = styled.button`
     max-width: 48px;
     height: 56px;
     padding:0 15px;
     border-right: 1px solid ${theme.colors.gray400};
 
-    background: ${({ $isSelected }) =>
-        $isSelected ? `${theme.colors.purple100}` : "unset"};
-
-    /* &:hover {
+    &:hover {
         background: ${theme.colors.gray300};
-    } */
-
-    &:active,
-    &:focus path:first-child {
-        fill: ${theme.colors.white}
-
     }
 
-    &:active,
-    &:focus {
+    &.clicked {
         background: ${theme.colors.purple100};
-        background: ${({ $isSelected }) =>
-        $isSelected ? `${theme.colors.purple100}` : "unset"};
+
+        path:first-child {
+        fill: ${theme.colors.white}
+        }
     }
 `;
 
@@ -131,14 +109,12 @@ const JungleButton = styled.button`
         background: ${theme.colors.gray300};
     }
 
-    &:active,
-    &:focus path {
-        fill: ${theme.colors.white};
-    }
-
-    &:active,
-    &:focus {
+    &.clicked {
         background: ${theme.colors.purple100};
+
+        path {
+        fill: ${theme.colors.white};
+        }
     }
 `;
 
@@ -152,14 +128,12 @@ const MidButton = styled.button`
         background: ${theme.colors.gray300};
     }
 
-    &:active,
-    &:focus path:nth-child(2) {
-        fill: ${theme.colors.white};
-    }
-
-    &:active,
-    &:focus {
+    &.clicked {
         background: ${theme.colors.purple100};
+
+        path:nth-child(2) {
+        fill: ${theme.colors.white};
+     }
     }
 `;
 
@@ -173,14 +147,12 @@ const BottomButton = styled.button`
         background: ${theme.colors.gray300};
     }
 
-    &:active,
-    &:focus path:nth-child(2) {
-        fill: ${theme.colors.white};
-    }
-
-    &:active,
-    &:focus {
+    &.clicked {
         background: ${theme.colors.purple100};
+
+        path:nth-child(2) {
+        fill: ${theme.colors.white};
+     }
     }
 `;
 
@@ -194,14 +166,12 @@ const SupporterButton = styled.button`
         background: ${theme.colors.gray300};
     }
 
-    &:active,
-    &:focus path {
-        fill: ${theme.colors.white};
-    }
-
-    &:active,
-    &:focus {
+    &.clicked {
         background: ${theme.colors.purple100};
+
+        path {
+        fill: ${theme.colors.white};
+     }
     }
 `;
 

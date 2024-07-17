@@ -223,24 +223,22 @@ const BoardPage = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (isWritingOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
+  // useEffect(() => {
+  //   if (isWritingOpen) {
+  //     document.body.style.overflow = "hidden";
+  //   } else {
+  //     document.body.style.overflow = "unset";
+  //   }
 
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, [isWritingOpen]);
-
+  //   return () => {
+  //     document.body.style.overflow = "unset";
+  //   };
+  // }, [isWritingOpen]);
+console.log(isMoreModalOpen)
   return (
     <>
       {isWritingOpen && <PostBoard onClose={handleWritingClose} />}
-      <Wrapper
-        $isWritingOpen={isWritingOpen}
-        $isReadingModal={isReadingModal}>
+      <Wrapper>
         <BoardContent
           $isWritingOpen={isWritingOpen}
           $isReadingModal={isReadingModal}
@@ -252,7 +250,7 @@ const BoardPage = () => {
               src="/assets/icons/refresh.svg"
               width={30}
               height={27}
-              alt="refresh button"
+              alt="새로고침"
             />
           </FirstRow>
           <SecondRow>
@@ -297,7 +295,7 @@ const BoardPage = () => {
                   }
                   width={21}
                   height={26}
-                  alt="mic button"
+                  alt="마이크 버튼"
                 />
               </MicButton>
             </FirstBlock>
@@ -333,15 +331,13 @@ const BoardPage = () => {
 
 export default BoardPage;
 
-const Wrapper = styled.div<{ $isWritingOpen: boolean, $isReadingModal: boolean }>`
-  /* position: relative; */
+const Wrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  /* z-index: ${({ $isWritingOpen, $isReadingModal }) => ($isWritingOpen || $isReadingModal ? 2 : 1)}; */
 `;
 
-const BoardContent = styled.header<{
+const BoardContent = styled.div<{
   $isWritingOpen: boolean,
   $isReadingModal: boolean,
   $isEvaluationModalOpen: boolean,
@@ -350,9 +346,6 @@ const BoardContent = styled.header<{
   max-width: 1440px;
   width: 100%;
   padding: 0 80px;
-  display: flex;
-  flex-direction: column;
-  /* position: relative;  */
 
 &:before {
   content: '';
