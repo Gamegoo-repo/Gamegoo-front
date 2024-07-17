@@ -63,12 +63,12 @@ const ChatList = (props: ChatListProps) => {
                                     </Row>
                                 </Middle>
                             </Left>
-                            <Right>
+                            <Right
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleMoreBoxOpen(chat.id);
+                                }}>
                                 <MoreImage
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleMoreBoxOpen(chat.id);
-                                    }}
                                     src="/assets/icons/three_dots_button.svg"
                                     width={3}
                                     height={15}
@@ -93,7 +93,7 @@ const UserContent = styled.div`
   display: flex;  
   justify-content: space-between;
   cursor: pointer;
-  padding:18px 19px 18px 0;
+  padding:18px 12px 18px 0;
   &:hover {
     position: unset;
     background: ${theme.colors.gray500}; 
@@ -111,7 +111,7 @@ const ProfileImage = styled(Image)`
 `;
 
 const Middle = styled.div`
-    min-width: 304px;
+    min-width: 300px;
 `;
 
 const UserName = styled.p`
@@ -122,7 +122,6 @@ const UserName = styled.p`
 const Unread = styled.p`
     ${(props) => props.theme.fonts.medium11};
     color:${theme.colors.white};  
-    margin-right: 12px;
     padding:0 5px;
     border-radius: 38px;
     background:${theme.colors.purple100};
@@ -145,7 +144,9 @@ const Date = styled.p`
     margin-right: 12px;
 `;
 
-const Right = styled.div``;
+const Right = styled.div`
+    padding: 0 7px 0 12px;;
+`;
 
 const MoreImage = styled(Image)`
     cursor: pointer;
