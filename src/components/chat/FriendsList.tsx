@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { theme } from "@/styles/theme";
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DeleteFriend from './DeleteFriend';
 
 interface FriendListInterface {
@@ -18,7 +18,7 @@ interface FriendListProps {
 }
 
 const FriendsList = ({ list, onChatRoom }: FriendListProps) => {
-    
+
     const [friends, setFriends] = useState<FriendListInterface[]>(list);
 
     const [deleteMenu, setDeleteMenu] = useState<{ x: number, y: number, friendId: number | null }>({ x: 0, y: 0, friendId: null });
@@ -55,6 +55,15 @@ const FriendsList = ({ list, onChatRoom }: FriendListProps) => {
         ));
     };
 
+    /* 브라우저 너비 변경 시 삭제하기 버튼 닫기 */
+    useEffect(() => {
+        window.addEventListener('resize', handleCloseDeletetMenu);
+
+        return () => {
+            window.removeEventListener('resize', handleCloseDeletetMenu);
+        };
+    }, []);
+
     if (friends.length === 0) {
         return null;
     }
@@ -74,7 +83,7 @@ const FriendsList = ({ list, onChatRoom }: FriendListProps) => {
                             onClick={() =>
                                 onChatRoom(friend.id)}
                             key={friend.id}
-                            >
+                        >
                             {deleteMenu.friendId === friend.id && (
                                 <>
                                     <DeleteFriend
