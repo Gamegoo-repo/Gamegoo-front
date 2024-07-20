@@ -5,6 +5,7 @@ interface ModalState {
     evaluationModal: boolean;
     modalType: string;
     readingModal: boolean;
+    postingModal: boolean;
 }
 
 const initialState: ModalState = {
@@ -12,6 +13,7 @@ const initialState: ModalState = {
     evaluationModal: false,
     modalType: "",
     readingModal: false,
+    postingModal: false
 };
 
 const modalSlice = createSlice({
@@ -45,6 +47,14 @@ const modalSlice = createSlice({
         setCloseReadingModal: (state) => {
             state.readingModal = false;
         },
+        /* 게시판 쓰기 모달 */
+        setOpenPostingModal: (state) => {
+            state.postingModal = true;
+        },
+        setClosePostingModal: (state) => {
+            state.postingModal = false;
+        },
+
     },
 });
 
@@ -56,7 +66,9 @@ export const {
     setOpenModal,
     setCloseModal,
     setOpenReadingModal,
-    setCloseReadingModal
+    setCloseReadingModal,
+    setOpenPostingModal,
+    setClosePostingModal
 } = modalSlice.actions;
 
 export default modalSlice.reducer;

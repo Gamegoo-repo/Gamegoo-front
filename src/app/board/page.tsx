@@ -13,7 +13,8 @@ import PositionFilter from "@/components/board/PositionFilter";
 import PostBoard from "@/components/createBoard/PostBoard";
 import ChatButton from "@/components/common/ChatButton";
 import { RootState } from "@/redux/store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setClosePostingModal, setOpenPostingModal } from "@/redux/slices/modalSlice";
 
 const DROP_DATA1 = [
   { id: 1, value: "솔로1" },
@@ -150,7 +151,6 @@ const BoardPage = () => {
 
   const [isPosition, setIsPosition] = useState(0);
   const [micOn, setMicOn] = useState(true);
-  const [isWritingOpen, setIsWritingOpen] = useState(false);
 
   const [isDropdownOpen1, setIsDropdownOpen1] = useState(false);
   const [isDropdownOpen2, setIsDropdownOpen2] = useState(false);
@@ -160,9 +160,12 @@ const BoardPage = () => {
   const dropdownRef1 = useRef<HTMLDivElement>(null);
   const dropdownRef2 = useRef<HTMLDivElement>(null);
 
+  const dispatch = useDispatch();
+
   const isEvaluationModalOpen = useSelector((state: RootState) => state.modal.evaluationModal);
   const isModalType = useSelector((state: RootState) => state.modal.modalType);
   const isReadingModal = useSelector((state: RootState) => state.modal.readingModal);
+  const isPostingModal = useSelector((state: RootState) => state.modal.postingModal);
 
   const handleFirstDropValue = (value: string) => {
     console.log(value);
@@ -189,11 +192,12 @@ const BoardPage = () => {
   };
 
   const handleWritingOpen = () => {
-    setIsWritingOpen(true);
+    dispatch(setOpenPostingModal());
   };
 
   const handleWritingClose = () => {
-    setIsWritingOpen(false);
+    dispatch(setClosePostingModal());
+    dispatchEvent
   };
 
   const handleDropdownClickOutside1 = (event: MouseEvent) => {
@@ -223,25 +227,14 @@ const BoardPage = () => {
     };
   }, []);
 
-  // useEffect(() => {
-  //   if (isWritingOpen) {
-  //     document.body.style.overflow = "hidden";
-  //   } else {
-  //     document.body.style.overflow = "unset";
-  //   }
-
-  //   return () => {
-  //     document.body.style.overflow = "unset";
-  //   };
-  // }, [isWritingOpen]);
-  console.log(isModalType)
   return (
     <>
-      {isWritingOpen && <PostBoard onClose={handleWritingClose} />}
+      {isPostingModal && <PostBoard onClose={handleWritingClose} />}
       <Wrapper>
         <BoardContent
-          $isWritingOpen={isWritingOpen}
+          $isWritingOpen={isPostingModal}
           $isReadingModal={isReadingModal}
+          $isPostingModal={isPostingModal}
           $isEvaluationModalOpen={isEvaluationModalOpen}
           $isModalType={isModalType}>
           <FirstRow>
@@ -318,7 +311,7 @@ const BoardPage = () => {
             pageButtonCount={pageButtonCount}
             onPageChange={handlePageChange}
           />
-          <Footer>
+          <Footer className={isModalType === "" && !isEvaluationModalOpen ? "float" : "no_float"}>
             <ChatBoxContent>
               <ChatButton count={3} />
             </ChatBoxContent>
@@ -340,6 +333,7 @@ const Wrapper = styled.div`
 const BoardContent = styled.div<{
   $isWritingOpen: boolean,
   $isReadingModal: boolean,
+  $isPostingModal: boolean,
   $isEvaluationModalOpen: boolean,
   $isModalType: string
 }>`
@@ -357,7 +351,8 @@ const BoardContent = styled.div<{
   height: 100%;
   background: ${({ $isWritingOpen, $isReadingModal, $isEvaluationModalOpen, $isModalType }) =>
     ($isWritingOpen || $isReadingModal || $isEvaluationModalOpen || $isModalType !== "" ? '#0000009E' : 'transparent')};
-  z-index: 1; 
+  z-index: ${({ $isReadingModal, $isPostingModal }) =>
+    ($isReadingModal || $isPostingModal ? 1 : 100)};
 }
 `;
 
@@ -415,7 +410,13 @@ const Main = styled.main`
 `;
 
 const Footer = styled.footer`
-  position: fixed;
+  &.float{
+    position: fixed;
+  }
+
+  &.no_float{
+    position: none;
+  }
   right: 80px;
   bottom: 78px;
   display: flex;

@@ -23,7 +23,6 @@ const CRModal = (props: BoardModalProps) => {
 
     const modalRoot = document.getElementById('modal-root') as HTMLElement;
 
-    console.log(isModalType)
     return createPortal(
         <Overlay className={isModalType === "completedPost" ? "bg" : ""}>
             <Wrapper className={isModalType === "completedPost" ? "bg" : ""}>
@@ -79,8 +78,8 @@ const Wrapper = styled.div`
             height: 100%;
             background: #0000009E;
             z-index: 1; 
-    }
-}
+         }
+    }   
 `;
 
 const Header = styled.header<{ $type: string }>` 

@@ -101,10 +101,12 @@ const ChatRoom = (props: ChatRoomProps) => {
 
     return (
         <>
-            <Overlay>
+            <Overlay
+                className={isModalType !== "" ? "bg" : ""}>
                 <Wrapper
                     $isFeedbackModalOpen={isFeedbackModalOpen}
-                    onClick={handleOutsideModalClick}>
+                    onClick={handleOutsideModalClick}
+                    className={isModalType !== "" ? "bg" : ""}>
                     {isMoreBoxOpen &&
                         <MiniModal
                             onChangeModal={handleModalChange} />}
@@ -381,7 +383,7 @@ const Wrapper = styled.div<{ $isFeedbackModalOpen: boolean }>`
     width: 418px;
     &:before {
         content: '';
-        position: ${({ $isFeedbackModalOpen, }) => $isFeedbackModalOpen ? 'fixed' : 'unset'};
+        position: ${({ $isFeedbackModalOpen }) => $isFeedbackModalOpen ? 'fixed' : 'unset'};
         top: 0;
         left: 0;
         width: 100%;

@@ -2,7 +2,6 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 import styled from "styled-components";
 import Button from "./Button";
-import { Dispatch, useState } from "react";
 
 interface FormModalProps {
   type: "checkbox" | "text";
