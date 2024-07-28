@@ -56,15 +56,14 @@ const ChatBoxContent = styled.div`
 `;
 
 const MsgButton = styled.div`
-  position: relative;
   width: 89px;
   height: 89px;
   border-radius: 50%;
   background: ${theme.colors.purple100};
   cursor: pointer;
-  position: sticky;
-  bottom: 30px;
-  right: 30px;
+  position: fixed;
+  bottom: 34px;
+  right: 134px;
   margin-left: auto;
   img {
     position: absolute;
