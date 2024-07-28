@@ -6,7 +6,7 @@ import { theme } from "@/styles/theme";
 import Header from "@/components/common/Header";
 import StyledComponentsRegistry from "@/libs/registry";
 import { Provider } from "react-redux";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { AppStore, store } from "@/redux/store";
 import { usePathname } from "next/navigation";
 

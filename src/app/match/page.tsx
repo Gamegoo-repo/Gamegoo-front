@@ -6,6 +6,7 @@ import GraphicBox from "@/components/match/GraphicBox";
 import { MATCH_TYPE_PAGE_DATA } from "@/data/match";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import HeaderTitle from "@/components/common/HeaderTitle";
 
 const MatchTypePage = () => {
   const isEvaluationModalOpen = useSelector(
@@ -21,9 +22,7 @@ const MatchTypePage = () => {
         $isEvaluationModalOpen={isEvaluationModalOpen}
         $isMoreModalOpen={isMoreModalOpen}
       >
-        <Header>
-          <Title>바로 매칭하기</Title>
-        </Header>
+        <HeaderTitle title="바로 매칭하기" />
         <Main>
           {MATCH_TYPE_PAGE_DATA.map((box) => {
             return (
@@ -79,19 +78,6 @@ const MatchContent = styled.div<{
   }
 `;
 
-const Header = styled.header`
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  width: 100%;
-  margin-bottom: 32px;
-`;
-
-const Title = styled.h1`
-  ${(props) => props.theme.fonts.bold32};
-  color: #393939;
-`;
-
 const Main = styled.main`
   display: flex;
   align-items: center;
@@ -102,12 +88,4 @@ const Main = styled.main`
 
 const BoxWrapper = styled.div`
   display: contents;
-`;
-
-const Footer = styled.footer`
-  display: flex;
-`;
-
-const ChatBoxContent = styled.div`
-  margin-left: auto;
 `;
