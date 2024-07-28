@@ -2,7 +2,6 @@
 
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import styled from "styled-components";
@@ -12,7 +11,7 @@ const Summoner = () => {
   const [name, setName] = useState("");
   const [tag, setTag] = useState("");
 
-  const handleSendSummoner = () => {
+  const handleSendSummoner = async () => {
     router.push("/");
   };
 

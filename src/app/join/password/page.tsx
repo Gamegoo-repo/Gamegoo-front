@@ -2,9 +2,11 @@
 
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
+import { updatePassword } from "@/redux/slices/signInSlice";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
 interface StyledValid {
@@ -13,6 +15,7 @@ interface StyledValid {
 }
 const Password = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [password, setPassword] = useState("");
   const [repassword, setRepassword] = useState("");
   const [passwordValid, setPasswordValid] = useState<boolean | undefined>(
@@ -41,6 +44,7 @@ const Password = () => {
   };
 
   const handleSendPassword = () => {
+    dispatch(updatePassword(password));
     router.push("/join/summoner");
   };
 

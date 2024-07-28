@@ -1,31 +1,62 @@
 "use client";
 
+import { sendAuth, sendEmail } from "@/api/join";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
+import { emailRegEx } from "@/constants/regEx";
+import {
+  updateAuthStatus,
+  updateEmail,
+  updateEmailAuth,
+} from "@/redux/slices/signInSlice";
+import { theme } from "@/styles/theme";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
 const Email = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
-  const [authCode, setAuthCode] = useState("");
+  const [authCode, setAuthCode] = useState<string>("");
   const [emailValid, setEmailValid] = useState<boolean | undefined>(undefined);
+  const [authCodeValid, setAuthCodeValid] = useState<boolean | undefined>(
+    undefined
+  );
   const [isSend, setIsSend] = useState(false);
-
-  const emailRegEx =
-    /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
 
   const validateEmail = (email: string) => {
     setEmailValid(emailRegEx.test(email));
   };
 
-  const handleSendEmail = () => {
-    setIsSend(true);
+  const handleSendEmail = async () => {
+    try {
+      const response = await sendEmail({ email });
+      console.log("인증코드 전송 성공:", response);
+      setIsSend(true);
+    } catch (error) {
+      console.error("인증코드 전송 실패:", error);
+      setEmailValid(false);
+    }
   };
 
-  const handleSendCode = () => {
-    router.push("/join/password");
+  const handleSendCode = async () => {
+    try {
+      const response = await sendAuth({ email, code: authCode });
+      console.log("인증코드 확인 성공:", response);
+
+      // Redux 상태 업데이트
+      dispatch(updateEmail(email));
+      dispatch(updateEmailAuth(authCode));
+      dispatch(updateAuthStatus(true));
+
+      setAuthCodeValid(true);
+      router.push("/join/password");
+    } catch (error) {
+      setAuthCodeValid(false);
+      console.error("인증코드 확인 실패:", error);
+    }
   };
 
   return (
@@ -50,6 +81,7 @@ const Email = () => {
             setAuthCode(value);
           }}
           placeholder="인증 코드 입력"
+          isValid={authCodeValid}
         />
       )}
       {isSend ? (
@@ -76,6 +108,6 @@ const Div = styled.div`
 `;
 
 const Label = styled.div`
-  color: #44515c;
+  color: ${theme.colors.gray700};
   ${(props) => props.theme.fonts.regular25};
 `;
