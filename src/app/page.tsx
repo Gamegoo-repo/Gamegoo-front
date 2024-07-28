@@ -1,8 +1,10 @@
 "use client";
 
+import { postLogin } from "@/api/login";
 import Button from "@/components/common/Button";
 import Checkbox from "@/components/common/Checkbox";
 import Input from "@/components/common/Input";
+import { emailRegEx } from "@/constants/regEx";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,9 +17,33 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [emailValid, setEmailValid] = useState<boolean | undefined>(undefined);
+  const [passwordValid, setPasswordValid] = useState<boolean | undefined>(
+    undefined
+  );
+
+  const validateEmail = (email: string) => {
+    setEmailValid(emailRegEx.test(email));
+  };
+
   /* 로그인 */
-  const handleLogin = () => {
-    router.push("/home");
+  const handleLogin = async () => {
+    try {
+      const response = await postLogin({ email, password });
+      router.push("/home");
+      console.log("로그인 성공:", response);
+    } catch (error) {
+      console.error("로그인 실패:", error);
+
+      if (error instanceof Error) {
+        if ((error as any).code === "MEMBER400") {
+          setPasswordValid(false);
+        } else {
+          setEmailValid(false);
+          setPasswordValid(false);
+        }
+      }
+    }
   };
 
   return (
@@ -39,8 +65,10 @@ const Login = () => {
                 value={email}
                 onChange={(value) => {
                   setEmail(value);
+                  validateEmail(value);
                 }}
                 placeholder="이메일 주소"
+                isValid={emailValid}
               />
               <Input
                 inputType="password"
@@ -49,13 +77,14 @@ const Login = () => {
                   setPassword(value);
                 }}
                 placeholder="비밀번호"
+                isValid={passwordValid}
               />
             </InputList>
             <Button
               buttonType="primary"
               text="이메일로 시작하기"
               onClick={handleLogin}
-              disabled={!email}
+              disabled={!email || !password || !emailValid}
             />
           </Div>
           <Check>
