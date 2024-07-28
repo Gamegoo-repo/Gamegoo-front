@@ -157,8 +157,12 @@ const BoardPage = () => {
   const [selectedDropOption1, setSelectedDropOption1] = useState("솔로 랭크");
   const [selectedDropOption2, setSelectedDropOption2] = useState("티어 선택");
 
-  const isEvaluationModalOpen = useSelector((state: RootState) => state.modal.evaluationModal);
-  const isMoreModalOpen = useSelector((state: RootState) => state.modal.moreModal);
+  const isEvaluationModalOpen = useSelector(
+    (state: RootState) => state.modal.evaluationModal
+  );
+  const isMoreModalOpen = useSelector(
+    (state: RootState) => state.modal.moreModal
+  );
 
   const dropdownRef1 = useRef<HTMLDivElement>(null);
   const dropdownRef2 = useRef<HTMLDivElement>(null);
@@ -240,7 +244,8 @@ const BoardPage = () => {
       <Wrapper>
         <BoardContent
           $isEvaluationModalOpen={isEvaluationModalOpen}
-          $isMoreModalOpen={isMoreModalOpen}>
+          $isMoreModalOpen={isMoreModalOpen}
+        >
           <FirstRow>
             <Title>게시판</Title>
             <RefreshImage
@@ -315,11 +320,7 @@ const BoardPage = () => {
             pageButtonCount={pageButtonCount}
             onPageChange={handlePageChange}
           />
-          <Footer>
-            <ChatBoxContent>
-              <ChatButton count={3} />
-            </ChatBoxContent>
-          </Footer>
+          <ChatButton count={3} />
         </BoardContent>
       </Wrapper>
     </>
@@ -335,22 +336,29 @@ const Wrapper = styled.div`
   justify-content: center;
 `;
 
-const BoardContent = styled.header<{ $isEvaluationModalOpen: boolean, $isMoreModalOpen: string }>`
+const BoardContent = styled.header<{
+  $isEvaluationModalOpen: boolean;
+  $isMoreModalOpen: string;
+}>`
   max-width: 1440px;
   width: 100%;
   padding: 0 80px;
   display: flex;
   flex-direction: column;
   &:before {
-        content: '';
-        position: ${({ $isEvaluationModalOpen, $isMoreModalOpen }) => $isEvaluationModalOpen || $isMoreModalOpen !== "" ? 'fixed' : 'unset'};
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: ${({ $isEvaluationModalOpen, $isMoreModalOpen }) => $isEvaluationModalOpen || $isMoreModalOpen !== "" ? '#0000009C' : 'transparent'};
-        z-index: 100;
-    }
+    content: "";
+    position: ${({ $isEvaluationModalOpen, $isMoreModalOpen }) =>
+      $isEvaluationModalOpen || $isMoreModalOpen !== "" ? "fixed" : "unset"};
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: ${({ $isEvaluationModalOpen, $isMoreModalOpen }) =>
+      $isEvaluationModalOpen || $isMoreModalOpen !== ""
+        ? "#0000009C"
+        : "transparent"};
+    z-index: 100;
+  }
 `;
 
 const FirstRow = styled.div`
