@@ -85,11 +85,13 @@ const HomeContent = styled.div<{
 `;
 
 const Header = styled.header`
+  height: 150px;
   display: flex;
   flex-direction: column;
   align-items: start;
   margin-bottom: 52px;
 `;
+
 const SubTitle = styled.div`
   ${(props) => props.theme.fonts.regular25};
   color: #44515c;
@@ -99,5 +101,4 @@ const Main = styled.main`
   display: flex;
   align-items: center;
   gap: 55px;
-  margin-bottom: 37px;
 `;

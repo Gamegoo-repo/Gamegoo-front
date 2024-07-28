@@ -91,6 +91,7 @@ const Overlay = styled.div<{ $position: "manner" | undefined }>`
     $position === "manner" ? "translate(-50%,-50%)" : "unset"};
   inset: 0;
   z-index: 100;
+  overflow: hidden;
 `;
 
 const Wrapper = styled.div<{
