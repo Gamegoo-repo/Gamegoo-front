@@ -9,10 +9,11 @@ import {
   updateEmail,
   updateEmailAuth,
 } from "@/redux/slices/signInSlice";
+import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 const Email = () => {
@@ -26,25 +27,44 @@ const Email = () => {
   );
   const [isSend, setIsSend] = useState(false);
 
+  const emailRedux = useSelector((state: RootState) => state.signIn.email);
+  const authCodeRedux = useSelector(
+    (state: RootState) => state.signIn.emailAuth
+  );
+  const authStatusRedux = useSelector(
+    (state: RootState) => state.signIn.authStatus
+  );
+
+  /* redux 업데이트 */
+  useEffect(() => {
+    setEmail(emailRedux);
+    setAuthCode(authCodeRedux);
+    setAuthCodeValid(authStatusRedux);
+  }, [emailRedux, authCodeRedux, authStatusRedux]);
+
   const validateEmail = (email: string) => {
     setEmailValid(emailRegEx.test(email));
+    if (emailRegEx.test(email)) {
+      dispatch(updateEmail(email));
+    }
   };
 
   const handleSendEmail = async () => {
     try {
-      const response = await sendEmail({ email });
-      console.log("인증코드 전송 성공:", response);
+      await sendEmail({ email });
+      setAuthCode("");
+      setAuthCodeValid(false);
+      dispatch(updateEmailAuth(""));
+      dispatch(updateAuthStatus(false));
       setIsSend(true);
     } catch (error) {
-      console.error("인증코드 전송 실패:", error);
       setEmailValid(false);
     }
   };
 
   const handleSendCode = async () => {
     try {
-      const response = await sendAuth({ email, code: authCode });
-      console.log("인증코드 확인 성공:", response);
+      await sendAuth({ email, code: authCode });
 
       // Redux 상태 업데이트
       dispatch(updateEmail(email));
@@ -55,7 +75,6 @@ const Email = () => {
       router.push("/join/password");
     } catch (error) {
       setAuthCodeValid(false);
-      console.error("인증코드 확인 실패:", error);
     }
   };
 
@@ -67,11 +86,12 @@ const Email = () => {
         value={email}
         onChange={(value) => {
           setEmail(value);
+          setIsSend(false);
           validateEmail(value);
         }}
         placeholder="이메일 주소"
         isValid={emailValid}
-        disabled={isSend}
+        // disabled={isSend}
       />
       {isSend && (
         <Input
@@ -79,19 +99,28 @@ const Email = () => {
           value={authCode}
           onChange={(value) => {
             setAuthCode(value);
+            if (value.length === 5) {
+              setAuthCodeValid(true);
+            } else {
+              setAuthCodeValid(false);
+            }
           }}
           placeholder="인증 코드 입력"
           isValid={authCodeValid}
         />
       )}
       {isSend ? (
-        <Button buttonType="primary" text="확인" onClick={handleSendCode} />
+        <Button
+          buttonType="primary"
+          text="인증 완료"
+          onClick={handleSendCode}
+        />
       ) : (
         <Button
           buttonType="primary"
           text="인증코드 전송"
           onClick={handleSendEmail}
-          disabled={!emailValid}
+          disabled={!authCodeRedux || !emailValid}
         />
       )}
     </Div>
