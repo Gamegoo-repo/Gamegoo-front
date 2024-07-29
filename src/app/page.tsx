@@ -6,6 +6,7 @@ import Checkbox from "@/components/common/Checkbox";
 import Input from "@/components/common/Input";
 import { emailRegEx } from "@/constants/regEx";
 import { theme } from "@/styles/theme";
+import { AxiosError } from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -18,30 +19,47 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const [emailValid, setEmailValid] = useState<boolean | undefined>(undefined);
-  const [passwordValid, setPasswordValid] = useState<boolean | undefined>(
-    undefined
-  );
+  const [passwordValid, setPasswordValid] = useState<boolean | undefined>(true);
+  const [autoLogin, setAutoLogin] = useState(false);
 
   const validateEmail = (email: string) => {
     setEmailValid(emailRegEx.test(email));
+  };
+
+  const validatePassword = (password: string) => {
+    setPasswordValid(true);
   };
 
   /* 로그인 */
   const handleLogin = async () => {
     try {
       const response = await postLogin({ email, password });
-      router.push("/home");
-      console.log("로그인 성공:", response);
-    } catch (error) {
-      console.error("로그인 실패:", error);
+      const accessToken = response.result.accessToken;
+      const refreshToken = response.result.refreshToken;
 
-      if (error instanceof Error) {
-        if ((error as any).code === "MEMBER400") {
+      /* 자동 로그인 체크 여부에 따라 토큰 저장 위치 결정 */
+      if (autoLogin) {
+        localStorage.setItem("accessToken", accessToken);
+      } else {
+        sessionStorage.setItem("accessToken", accessToken);
+      }
+
+      router.push("/home");
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const status = error.response?.status;
+        if (status === 401) {
+          // 401 Unauthorized 처리
           setPasswordValid(false);
         } else {
+          // 기타 에러 처리
           setEmailValid(false);
           setPasswordValid(false);
         }
+      } else {
+        // 예상치 못한 에러 처리
+        setEmailValid(false);
+        setPasswordValid(false);
       }
     }
   };
@@ -75,6 +93,7 @@ const Login = () => {
                 value={password}
                 onChange={(value) => {
                   setPassword(value);
+                  validatePassword(value);
                 }}
                 placeholder="비밀번호"
                 isValid={passwordValid}
@@ -84,12 +103,16 @@ const Login = () => {
               buttonType="primary"
               text="이메일로 시작하기"
               onClick={handleLogin}
-              disabled={!email || !password || !emailValid}
+              disabled={!email || !password || !emailValid || !passwordValid}
             />
           </Div>
           <Check>
             <P>
-              <Checkbox value="autoLogin"></Checkbox>
+              <Checkbox
+                value="autoLogin"
+                isChecked={autoLogin}
+                onChange={(isChecked) => setAutoLogin(isChecked)}
+              ></Checkbox>
               자동 로그인
               <Bar />
               <Link href="/password/find">비밀번호 찾기</Link>
