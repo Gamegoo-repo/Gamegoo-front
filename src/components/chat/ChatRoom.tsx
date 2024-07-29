@@ -1,19 +1,20 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import MessageContainer from "./MessageContainer";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import FormModal from "../common/FormModal";
 import Checkbox from "../common/Checkbox";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
-import MiniModal from "./MiniModal";
 import Input from "../common/Input";
 import { REPORT_REASON } from "@/data/report";
 import ConfirmModal from "../common/ConfirmModal";
 import { setCloseEvaluationModal, setCloseModal, setOpenModal } from "@/redux/slices/modalSlice";
 import { useRouter } from "next/navigation";
+import { MoreBoxMenuItems } from "@/interface/moreBox";
+import MoreBox from "../common/MoreBox";
 
 
 interface ChatRoomProps {
@@ -42,7 +43,9 @@ const ChatRoom = (props: ChatRoomProps) => {
     const [message, setMessage] = useState("");
     const [messageList, setMessageList] = useState([]);
     const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
-    const [reportDetail, setReportDetail] = useState<string>("");
+    const [reportDetail, setReportDetail] = useState("");
+    const [isChecked, setIsChecked] = useState(false);
+    const [inputText, setInputText] = useState('');
 
     const isEvaluationModalOpen = useSelector((state: RootState) => state.modal.evaluationModal);
     const isFeedbackModalOpen = useSelector((state: RootState) => state.modal.isOpen);
@@ -84,6 +87,17 @@ const ChatRoom = (props: ChatRoomProps) => {
         dispatch(setCloseModal());
     };
 
+    // const handleChatLeave = () => {
+    //     console.log('채팅창 나가기')
+    //     handleModalClose();
+    //     onGoback();
+    // };
+
+    // const handleChatBlock = () => {
+    //     handleModalClose();
+    //     dispatch(setOpenModal('doneBlock'));
+    // };
+
     const handleChatLeave = () => {
         console.log('채팅창 나가기')
         handleModalClose();
@@ -93,11 +107,35 @@ const ChatRoom = (props: ChatRoomProps) => {
     const handleChatBlock = () => {
         handleModalClose();
         dispatch(setOpenModal('doneBlock'));
+        // onGoback();
+
     };
 
     const handleFormModalClose = () => {
         dispatch(setCloseEvaluationModal())
     };
+
+    const handleFriendAdd = () => {
+        setIsMoreBoxOpen(false);
+        console.log('친구 추가')
+    };
+
+    const handleChangeModal = (e: React.MouseEvent, type: string) => {
+        e.stopPropagation();
+        handleModalChange(type);
+    };
+
+    const menuItems: MoreBoxMenuItems[] = [
+        { text: '채팅방 나가기', onClick: (e) => handleChangeModal(e, 'leave') },
+        { text: '친구 추가', onClick: handleFriendAdd },
+        { text: '차단하기', onClick: (e) => handleChangeModal(e, 'block') },
+        { text: '신고하기', onClick: (e) => handleChangeModal(e, 'report') },
+        { text: '매너 평가', onClick: (e) => handleChangeModal(e, 'manner') },
+        { text: '비매너 평가', onClick: (e) => handleChangeModal(e, 'badManner') },
+    ];
+
+
+    const [checkedItems, setCheckedItems] = useState<string[]>([]);
 
     return (
         <>
@@ -108,8 +146,12 @@ const ChatRoom = (props: ChatRoomProps) => {
                     onClick={handleOutsideModalClick}
                     className={isModalType !== "" ? "bg" : ""}>
                     {isMoreBoxOpen &&
-                        <MiniModal
-                            onChangeModal={handleModalChange} />}
+                        <MoreBox
+                            items={menuItems}
+                            top={35}
+                            left={200}
+                        />
+                    }
                     <CloseButton>
                         <CloseImage
                             onClick={onClose}
@@ -142,7 +184,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                                     alt="온라인" />
                             </Div>
                         </Middle>
-                        <MoreImage
+                        <ThreeDotsImage
                             onClick={handleMoreBoxOpen}
                             src="/assets/icons/three_dots_button.svg"
                             width={3}
@@ -178,41 +220,41 @@ const ChatRoom = (props: ChatRoomProps) => {
             </Overlay>
 
             {isEvaluationModalOpen &&
-                <FormContainer>
-                    <FormModal
-                        type="checkbox"
-                        title={isMannerStatus === "manner" ? "매너 평가하기" : "비매너 평가하기"}
-                        width="418px"
-                        height="434px"
-                        closeButtonWidth={17}
-                        closeButtonHeight={17}
-                        borderRadius="10px"
-                        buttonText="완료"
-                        onClose={handleFormModalClose}
-                        disabled
-                    >
-                        <CheckContent>
-                            {isMannerStatus === "manner" && MANNER_TYPES.map((data) => (
-                                <Checkbox
-                                    key={data.id}
-                                    value={data.text}
-                                    label={data.text}
-                                    fontSize="semiBold16"
-                                />
-                            ))}
-                        </CheckContent>
-                        <CheckContent>
-                            {isMannerStatus === "badManner" && BAD_MANNER_TYPES.map((data) => (
-                                <Checkbox
-                                    key={data.id}
-                                    value={data.text}
-                                    label={data.text}
-                                    fontSize="semiBold16"
-                                />
-                            ))}
-                        </CheckContent>
-                    </FormModal>
-                </FormContainer>
+                // <FormContainer>
+                <FormModal
+                    type="checkbox"
+                    title={isMannerStatus === "manner" ? "매너 평가하기" : "비매너 평가하기"}
+                    width="418px"
+                    height="434px"
+                    closeButtonWidth={17}
+                    closeButtonHeight={17}
+                    borderRadius="10px"
+                    buttonText="완료"
+                    onClose={handleFormModalClose}
+                    disabled
+                >
+                    <CheckContent>
+                        {isMannerStatus === "manner" && MANNER_TYPES.map((data) => (
+                            <Checkbox
+                                key={data.id}
+                                value={data.text}
+                                label={data.text}
+                                fontSize="semiBold16"
+                            />
+                        ))}
+                    </CheckContent>
+                    <CheckContent>
+                        {isMannerStatus === "badManner" && BAD_MANNER_TYPES.map((data) => (
+                            <Checkbox
+                                key={data.id}
+                                value={data.text}
+                                label={data.text}
+                                fontSize="semiBold16"
+                            />
+                        ))}
+                    </CheckContent>
+                </FormModal>
+                // </FormContainer>
             }
 
             {/* 채팅창 나가기 팝업 */}
@@ -246,7 +288,9 @@ const ChatRoom = (props: ChatRoomProps) => {
                 >
                     {/* 친구아닐떄 */}
                     <Msg>
-                        {`차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다.\n\n또한, 다시 차단 해제할 수 없습니다.\n차단하시겠습니까?`}
+                        {`차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다. 차단하시겠습니까?`}
+                        <br />
+                        <p className="grayMsg">차단 해제는 마이페이지에서 가능합니다.</p>
                     </Msg>
 
                     {/* 친구일떄 */}
@@ -278,7 +322,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                     borderRadius="20px"
                     buttonText="신고하기"
                     onClose={handleModalClose}
-                    disabled
+                    disabled={checkedItems.length === 0}
                 >
                     <div>
                         <ReportLabel>신고 사유</ReportLabel>
@@ -288,8 +332,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                                     key={data.id}
                                     value={data.text}
                                     label={data.text}
-                                    fontSize="regular18"
-                                />
+                                    fontSize="regular18" />
                             ))}
                         </ReportReasonContent>
                         <ReportLabel>상세 내용</ReportLabel>
@@ -456,7 +499,7 @@ const ProfileImage = styled(Image)`
     cursor: pointer;
 `;
 
-const MoreImage = styled(Image)`
+const ThreeDotsImage = styled(Image)`
     cursor: pointer;
 `;
 
@@ -519,7 +562,7 @@ const SubmitButton = styled.button`
 `;
 
 const FormContainer = styled.div`
-  position:relative;
+  /* position:relative; */
 `;
 
 const CheckContent = styled.div`
@@ -551,6 +594,11 @@ const Msg = styled.div`
   color: ${theme.colors.gray600};
   ${(props) => props.theme.fonts.regular18};
   margin: 28px 0;
+
+  &.grayMsg {
+    color: ${theme.colors.gray200};
+  ${(props) => props.theme.fonts.regular14};
+  }
 `;
 
 const MsgConfirm = styled(Msg)`

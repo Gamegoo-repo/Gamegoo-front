@@ -1,16 +1,16 @@
 import styled from "styled-components";
 import Image from "next/image";
 
-interface ReportProps {
+interface MoreBoxButtonProps {
   onClick: (e: React.MouseEvent) => void;
 }
 
-const Report = (props: ReportProps) => {
+const MoreBoxButton = (props: MoreBoxButtonProps) => {
   const { onClick } = props;
 
   return (
     <Wrapper>
-      <ReportImage
+      <ThreeDotsImage
         onClick={onClick}
         src="/assets/icons/three_dots_button.svg"
         width={3}
@@ -21,12 +21,12 @@ const Report = (props: ReportProps) => {
   );
 };
 
-export default Report;
+export default MoreBoxButton;
 
 const Wrapper = styled.div`
   margin-left: 26px;
 `;
 
-const ReportImage = styled(Image)`
+const ThreeDotsImage = styled(Image)`
   cursor: pointer;
 `;

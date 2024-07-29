@@ -7,7 +7,7 @@ import { POSITIONS } from "@/data/profile";
 import Champion from "../readBoard/Champion";
 import Toggle from "../common/Toggle";
 import Button from "../common/Button";
-import Report from "../readBoard/Report";
+import Report from "../readBoard/MoreBoxButton";
 import FormModal from "../common/FormModal";
 import Checkbox from "../common/Checkbox";
 import { REPORT_REASON } from "@/data/report";
@@ -15,6 +15,7 @@ import Input from "../common/Input";
 import ConfirmModal from "../common/ConfirmModal";
 import PositionCategory from "../common/PositionCategory";
 import MoreBox from "../common/MoreBox";
+import { MoreBoxMenuItems } from "@/interface/moreBox";
 
 type profileType = "fun" | "hard" | "other" | "me";
 
@@ -117,6 +118,12 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
     );
   };
 
+  // 더보기 버튼 메뉴
+  const MoreBoxMenuItems: MoreBoxMenuItems[] = [
+    { text: '신고하기', onClick: handleReport },
+    { text: '차단하기', onClick: handleBlock },
+  ];
+
   return (
     <Container className={profileType}>
       <Row>
@@ -200,12 +207,9 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                   <Report onClick={handleMoreBoxOpen} />
                   {isMoreBoxOpen && (
                     <MoreBox
-                      text1="신고하기"
-                      text2="차단하기"
-                      handleFirst={handleReport}
-                      handleSecond={handleBlock}
-                      top="15px"
-                    />
+                      items={MoreBoxMenuItems} 
+                      top={15}
+                      left={45}/>
                   )}
                 </MoreDiv>
                 {/* 신고하기 팝업 */}
@@ -427,7 +431,7 @@ const ProfileList = styled.div`
   grid-template-rows: repeat(2, 1fr);
 `;
 
-const ProfileListImage = styled(Image)<{ isSelected: boolean }>`
+const ProfileListImage = styled(Image) <{ isSelected: boolean }>`
   cursor: pointer;
   transition: opacity 0.3s ease-in-out;
 

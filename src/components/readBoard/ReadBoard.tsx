@@ -8,13 +8,16 @@ import ProfileImage from "./ProfileImage";
 import User from "../crBoard/User";
 import MannerLevel from "../common/MannerLevel";
 import Mic from "./Mic";
-import Report from "./Report";
+import MoreBoxButton from "./MoreBoxButton";
 import Champion from "./Champion";
 import QueueType from "./QueueType";
 import WinningRate from "./WinningRate";
 import MannerLevelBox from "../common/MannerLevelBox";
 import GameStyle from "./GameStyle";
 import { EX_GAME_STYLE } from "@/data/profile";
+import { MoreBoxMenuItems } from "@/interface/moreBox";
+import MoreBox from "../common/MoreBox";
+import Image from "next/image";
 
 interface ReadBoardProps {
   onClose: () => void;
@@ -55,7 +58,7 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   const [textareaValue, setTextareaValue] = useState("");
 
-  const [isReportBoxOpen, setIsReportBoxOpen] = useState(false);
+  const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
   const [isMannerBalloonVisible, setIsMannerBalloonVisible] = useState(true);
   const [isMannerLevelBoxOpen, setIsMannerLevelBoxOpen] = useState(false);
 
@@ -67,20 +70,39 @@ const ReadBoard = (props: ReadBoardProps) => {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleReportBoxOpen = () => {
-    setIsReportBoxOpen((prevState) => !prevState);
+  const handleMoreBoxToggle = () => {
+    setIsMoreBoxOpen((prevState) => !prevState);
+  };
+
+  const handleMoreBoxClose = () => {
+    setIsMoreBoxOpen(false);
   };
 
   const handleReport = () => {
-    // 신고하기 api
-    setIsReportBoxOpen(false);
+    console.log('신고하기');
+    handleMoreBoxClose();
+  };
+
+  const handleBlock = () => {
+    console.log('차단하기')
+    handleMoreBoxClose();
+  };
+
+  const handleAddFriend = () => {
+    console.log('친구추가')
+    handleMoreBoxClose();
   };
 
   const handleMannerLevelBoxOpen = () => {
     setIsMannerLevelBoxOpen((prevState) => !prevState);
   };
 
-
+  // 더보기 버튼 메뉴
+  const MoreBoxMenuItems: MoreBoxMenuItems[] = [
+    { text: '친구 추가', onClick: handleAddFriend },
+    { text: '차단하기', onClick: handleBlock },
+    { text: '신고하기', onClick: handleReport },
+  ];
 
   // const [user, setUser] = useState<userInfo>()
 
@@ -97,10 +119,11 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   return (
     <CRModal type="reading" onClose={onClose}>
-      {isReportBoxOpen && (
-        <ReportBox>
-          <ReportText onClick={handleReport}>신고하기</ReportText>
-        </ReportBox>
+      {isMoreBoxOpen && (
+        <MoreBox 
+        items={MoreBoxMenuItems}
+        top={67}
+        left={552} />
       )}
       {isMannerLevelBoxOpen && <MannerLevelBox top="14%" right="-28%" />}
       <UpdatedDate>게시일 : 24.05.06. 12:45</UpdatedDate>
@@ -123,8 +146,7 @@ const ReadBoard = (props: ReadBoardProps) => {
         <UserRight>
           <Mic
             status={userData.mic} />
-          <Report
-            onClick={handleReportBoxOpen} />
+          <MoreBoxButton onClick={handleMoreBoxToggle} />
         </UserRight>
       </UserSection>
       <ChampionNQueueSection>
@@ -241,19 +263,23 @@ const ButtonContent = styled.p<{ $gameType: string }>`
     text-align: center;
 `;
 
-const ReportBox = styled.div`
-    position: absolute;
-    top: 8.5%;
-    right: -31%;
-    z-index: 100;
-    box-shadow: 0 0 21.3px 0 #00000026;
-    background: ${theme.colors.white}; 
-    padding:10px 103px 10px 20px;
-    border-radius: 10px;
-`;
-
-const ReportText = styled.p`
-    ${(props) => props.theme.fonts.medium15};
-    color: #606060;
+const MoreBoxImage = styled(Image)`
     cursor: pointer;
 `;
+
+// const ReportBox = styled.div`
+//     position: absolute;
+//     top: 8.5%;
+//     right: -31%;
+//     z-index: 100;
+//     box-shadow: 0 0 21.3px 0 #00000026;
+//     background: ${theme.colors.white}; 
+//     padding:10px 103px 10px 20px;
+//     border-radius: 10px;
+// `;
+
+// const ReportText = styled.p`
+//     ${(props) => props.theme.fonts.medium15};
+//     color: #606060;
+//     cursor: pointer;
+// `;

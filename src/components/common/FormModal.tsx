@@ -82,6 +82,9 @@ const Overlay = styled.div<{ $position: "manner" | undefined }>`
   display: flex;
   justify-content: center;
   align-items: center;
+  position: fixed;
+  /* background: #0000009C;
+  border-radius: 20px; */
   position: ${({ $position }) =>
     $position === "manner" ? "absolute" : "fixed"};
   top: ${({ $position }) => ($position === "manner" ? "50%" : "unset")};
@@ -92,7 +95,7 @@ const Overlay = styled.div<{ $position: "manner" | undefined }>`
   z-index: 100;
 `;
 
-const Wrapper = styled.div<{
+const Wrapper = styled.form<{
   $type: string;
   $width: string;
   $height: string;

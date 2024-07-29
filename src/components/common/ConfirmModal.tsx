@@ -162,6 +162,8 @@ const Overlay = styled.div`
   justify-content: center;
   align-items: center;
   position: fixed;
+  /* background: #0000009C;
+  border-radius: 20px; */
   inset: 0;
   z-index: 100;
 `;
