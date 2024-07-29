@@ -1,21 +1,25 @@
 import { theme } from "@/styles/theme";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 interface CheckboxProps {
   value: string;
   label?: string;
+  isChecked?: boolean;
   onChange?: (isChecked: boolean) => void;
   fontSize?: string;
 }
 const Checkbox = (props: CheckboxProps) => {
-  const { value, label, onChange, fontSize } = props;
-  const [isChecked, setIsChecked] = useState<boolean>(false);
+  const { value, label, isChecked = false, onChange, fontSize } = props;
+  const [checked, setChecked] = useState<boolean>(isChecked);
+
+  useEffect(() => {
+    setChecked(isChecked);
+  }, [isChecked]);
 
   const handleChange = () => {
-    const newValue = !isChecked;
-    setIsChecked(newValue);
-    console.log(value, ": ", newValue);
+    const newValue = !checked;
+    setChecked(newValue);
     if (onChange) {
       onChange(newValue);
     }
@@ -26,7 +30,7 @@ const Checkbox = (props: CheckboxProps) => {
       <Check
         value={value}
         type="checkbox"
-        checked={isChecked}
+        checked={checked}
         onChange={handleChange}
       />
       {label}

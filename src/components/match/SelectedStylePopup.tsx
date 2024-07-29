@@ -52,7 +52,7 @@ export default SelectedStylePopup;
 const Container = styled.div<{ $position: positionType }>`
   width: 796px;
   height: 310px;
-  padding: 20px 30px;
+  padding: 28px;
   display: flex;
   flex-direction: column;
   align-items: center;
