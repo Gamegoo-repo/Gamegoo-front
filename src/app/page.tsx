@@ -19,7 +19,9 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const [emailValid, setEmailValid] = useState<boolean | undefined>(undefined);
-  const [passwordValid, setPasswordValid] = useState<boolean | undefined>(true);
+  const [passwordValid, setPasswordValid] = useState<boolean | undefined>(
+    undefined
+  );
   const [autoLogin, setAutoLogin] = useState(false);
 
   const validateEmail = (email: string) => {
@@ -27,7 +29,11 @@ const Login = () => {
   };
 
   const validatePassword = (password: string) => {
-    setPasswordValid(true);
+    if (password.length === 0) {
+      setPasswordValid(undefined);
+    } else {
+      setPasswordValid(true);
+    }
   };
 
   /* 로그인 */
