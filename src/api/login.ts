@@ -1,4 +1,5 @@
-import Axios from ".";
+import axios from "axios";
+import { BASE_URL } from ".";
 
 interface loginProps {
     email: string;
@@ -10,8 +11,15 @@ export const postLogin = async ({
     password,
   }: loginProps) => {
     try {
-      const response = await Axios.post('/api/member/login', {
-        email, password
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('password', password);
+
+      const response = await axios.post('/v1/member/login', formData, {
+        baseURL: BASE_URL,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
       console.log('로그인 성공:', response.data);
       return response.data;
