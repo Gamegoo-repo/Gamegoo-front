@@ -1,4 +1,4 @@
-import axios, { InternalAxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosInstance } from "axios";
 
 export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 export const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL;
@@ -12,10 +12,19 @@ const getToken = () => {
 };
 
 /* Axios 인스턴스 생성 */
-const Axios = axios.create({
+const Axios: AxiosInstance = axios.create({
   baseURL: BASE_URL,
   headers: {
     'Content-Type': 'application/json;charset=UTF-8',
+  },
+});
+
+/* AuthAxios 인스턴스 생성 */
+export const AuthAxios: AxiosInstance = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    'Content-Type': 'application/json;charset=UTF-8',
+    Authorization: `Bearer ${getToken()}`,
   },
 });
 
