@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import MessageContainer from "./MessageContainer";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -15,6 +15,7 @@ import { setCloseEvaluationModal, setCloseModal, setOpenModal } from "@/redux/sl
 import { useRouter } from "next/navigation";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import MoreBox from "../common/MoreBox";
+import Button from "../common/Button";
 
 
 interface ChatRoomProps {
@@ -44,8 +45,7 @@ const ChatRoom = (props: ChatRoomProps) => {
     const [messageList, setMessageList] = useState([]);
     const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
     const [reportDetail, setReportDetail] = useState("");
-    const [isChecked, setIsChecked] = useState(false);
-    const [inputText, setInputText] = useState('');
+    const [checkedItems, setCheckedItems] = useState<string[]>([]);
 
     const isEvaluationModalOpen = useSelector((state: RootState) => state.modal.evaluationModal);
     const isFeedbackModalOpen = useSelector((state: RootState) => state.modal.isOpen);
@@ -84,19 +84,9 @@ const ChatRoom = (props: ChatRoomProps) => {
     };
 
     const handleModalClose = () => {
+        setCheckedItems([]);
         dispatch(setCloseModal());
     };
-
-    // const handleChatLeave = () => {
-    //     console.log('채팅창 나가기')
-    //     handleModalClose();
-    //     onGoback();
-    // };
-
-    // const handleChatBlock = () => {
-    //     handleModalClose();
-    //     dispatch(setOpenModal('doneBlock'));
-    // };
 
     const handleChatLeave = () => {
         console.log('채팅창 나가기')
@@ -107,12 +97,11 @@ const ChatRoom = (props: ChatRoomProps) => {
     const handleChatBlock = () => {
         handleModalClose();
         dispatch(setOpenModal('doneBlock'));
-        // onGoback();
-
     };
 
     const handleFormModalClose = () => {
-        dispatch(setCloseEvaluationModal())
+        setCheckedItems([]);
+        dispatch(setCloseEvaluationModal());
     };
 
     const handleFriendAdd = () => {
@@ -134,8 +123,13 @@ const ChatRoom = (props: ChatRoomProps) => {
         { text: '비매너 평가', onClick: (e) => handleChangeModal(e, 'badManner') },
     ];
 
+    const handleCheckboxChange = (reason: string) => {
+        setCheckedItems((prev) =>
+            prev.includes(reason) ? prev.filter((r) => r !== reason) : [...prev, reason]
+        );
+    };
 
-    const [checkedItems, setCheckedItems] = useState<string[]>([]);
+    console.log(reportDetail)
 
     return (
         <>
@@ -220,16 +214,13 @@ const ChatRoom = (props: ChatRoomProps) => {
             </Overlay>
 
             {isEvaluationModalOpen &&
-                // <FormContainer>
                 <FormModal
                     type="checkbox"
                     title={isMannerStatus === "manner" ? "매너 평가하기" : "비매너 평가하기"}
                     width="418px"
-                    height="434px"
                     closeButtonWidth={17}
                     closeButtonHeight={17}
                     borderRadius="10px"
-                    buttonText="완료"
                     onClose={handleFormModalClose}
                     disabled
                 >
@@ -240,6 +231,8 @@ const ChatRoom = (props: ChatRoomProps) => {
                                 value={data.text}
                                 label={data.text}
                                 fontSize="semiBold16"
+                                checked={checkedItems.includes(data.text)}
+                                onChange={handleCheckboxChange}
                             />
                         ))}
                     </CheckContent>
@@ -250,11 +243,20 @@ const ChatRoom = (props: ChatRoomProps) => {
                                 value={data.text}
                                 label={data.text}
                                 fontSize="semiBold16"
+                                checked={checkedItems.includes(data.text)}
+                                onChange={handleCheckboxChange}
                             />
                         ))}
                     </CheckContent>
+                    <ModalSubmitBtn>
+                        <Button
+                            onClick={handleFormModalClose}
+                            buttonType="primary"
+                            text="완료"
+                            disabled={checkedItems.length === 0}
+                        />
+                    </ModalSubmitBtn>
                 </FormModal>
-                // </FormContainer>
             }
 
             {/* 채팅창 나가기 팝업 */}
@@ -320,9 +322,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                     closeButtonWidth={17}
                     closeButtonHeight={17}
                     borderRadius="20px"
-                    buttonText="신고하기"
                     onClose={handleModalClose}
-                    disabled={checkedItems.length === 0}
                 >
                     <div>
                         <ReportLabel>신고 사유</ReportLabel>
@@ -332,7 +332,10 @@ const ChatRoom = (props: ChatRoomProps) => {
                                     key={data.id}
                                     value={data.text}
                                     label={data.text}
-                                    fontSize="regular18" />
+                                    fontSize="regular18"
+                                    checked={checkedItems.includes(data.text)}
+                                    onChange={handleCheckboxChange}
+                                />
                             ))}
                         </ReportReasonContent>
                         <ReportLabel>상세 내용</ReportLabel>
@@ -349,6 +352,14 @@ const ChatRoom = (props: ChatRoomProps) => {
                                 height="134px"
                             />
                         </ReportContent>
+                        <ModalSubmitBtn>
+                            <Button
+                                onClick={handleModalClose}
+                                buttonType="primary"
+                                text="신고하기"
+                                disabled={checkedItems.length === 0}
+                            />
+                        </ModalSubmitBtn>
                     </div>
                 </FormModal>}
 
@@ -358,13 +369,10 @@ const ChatRoom = (props: ChatRoomProps) => {
                     type="checkbox"
                     title="매너 평가하기"
                     width="418px"
-                    height="434px"
                     closeButtonWidth={17}
                     closeButtonHeight={17}
                     borderRadius="10px"
-                    buttonText="완료"
                     onClose={handleModalClose}
-                    disabled
                 >
                     <CheckContent>
                         {isModalType === "manner" && MANNER_TYPES.map((data) => (
@@ -373,9 +381,19 @@ const ChatRoom = (props: ChatRoomProps) => {
                                 value={data.text}
                                 label={data.text}
                                 fontSize="semiBold16"
+                                checked={checkedItems.includes(data.text)}
+                                onChange={handleCheckboxChange}
                             />
                         ))}
                     </CheckContent>
+                    <ModalSubmitBtn>
+                        <Button
+                            onClick={handleModalClose}
+                            buttonType="primary"
+                            text="완료"
+                            disabled={checkedItems.length === 0}
+                        />
+                    </ModalSubmitBtn>
                 </FormModal>}
 
             {/* 비매너 평가 팝업 */}
@@ -384,13 +402,10 @@ const ChatRoom = (props: ChatRoomProps) => {
                     type="checkbox"
                     title="비매너 평가하기"
                     width="418px"
-                    height="434px"
                     closeButtonWidth={17}
                     closeButtonHeight={17}
                     borderRadius="10px"
-                    buttonText="완료"
                     onClose={handleModalClose}
-                    disabled
                 >
                     <CheckContent>
                         {isModalType === "badManner" && BAD_MANNER_TYPES.map((data) => (
@@ -399,9 +414,19 @@ const ChatRoom = (props: ChatRoomProps) => {
                                 value={data.text}
                                 label={data.text}
                                 fontSize="semiBold16"
+                                checked={checkedItems.includes(data.text)}
+                                onChange={handleCheckboxChange}
                             />
                         ))}
                     </CheckContent>
+                    <ModalSubmitBtn>
+                        <Button
+                            onClick={handleModalClose}
+                            buttonType="primary"
+                            text="완료"
+                            disabled={checkedItems.length === 0}
+                        />
+                    </ModalSubmitBtn>
                 </FormModal>}
         </>
     )
@@ -561,15 +586,15 @@ const SubmitButton = styled.button`
   padding: 12px 20px;
 `;
 
-const FormContainer = styled.div`
-  /* position:relative; */
-`;
-
 const CheckContent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
+`;
+
+const ModalSubmitBtn = styled.div`
+  margin-top:52px;
 `;
 
 const ReportLabel = styled.p`

@@ -14,6 +14,7 @@ import Checkbox from "../common/Checkbox";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
 import { REPORT_REASON } from "@/data/report";
 import Input from "../common/Input";
+import Button from "../common/Button";
 
 interface ChatWindowProps {
     onClose: () => void;
@@ -50,6 +51,8 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
     const [isChatRoomVisible, setIsChatRoomVisible] = useState(false);
     const [isMoreBoxOpen, setIsMoreBoxOpen] = useState<number | null>(null);
     const [chatId, setChatId] = useState<number | null>(null);
+    const [checkedItems, setCheckedItems] = useState<string[]>([]);
+    const [inputText, setInputText] = useState("");
     const [reportDetail, setReportDetail] = useState<string>("");
 
     const isModalType = useSelector((state: RootState) => state.modal.modalType);
@@ -69,6 +72,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
     };
 
     const handleModalClose = () => {
+        setCheckedItems([]);
         dispatch(setCloseModal());
     };
 
@@ -84,11 +88,17 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
         dispatch(setOpenModal('doneBlock'));
     };
 
-    const handleOutsideModalClick = (event: React.MouseEvent<HTMLDivElement>) => {
-        event.stopPropagation();
+    const handleOutsideModalClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        e.stopPropagation();
         if (isMoreBoxOpen) {
             setIsMoreBoxOpen(null);
         }
+    };
+
+    const handleCheckboxChange = (reason: string) => {
+        setCheckedItems((prev) =>
+            prev.includes(reason) ? prev.filter((r) => r !== reason) : [...prev, reason]
+        );
     };
 
     return (
@@ -217,7 +227,6 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                     closeButtonWidth={17}
                     closeButtonHeight={17}
                     borderRadius="20px"
-                    buttonText="신고하기"
                     onClose={handleModalClose}
                 >
                     <div>
@@ -229,6 +238,8 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                                     value={data.text}
                                     label={data.text}
                                     fontSize="regular18"
+                                    checked={checkedItems.includes(data.text)}
+                                    onChange={handleCheckboxChange}
                                 />
                             ))}
                         </ReportReasonContent>
@@ -246,6 +257,14 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                                 height="134px"
                             />
                         </ReportContent>
+                        <ReportButton>
+                            <Button
+                                onClick={handleModalClose}
+                                buttonType="primary"
+                                text="신고하기"
+                                disabled={checkedItems.length === 0}
+                            />
+                        </ReportButton>
                     </div>
                 </FormModal>}
 
@@ -255,11 +274,9 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                     type="checkbox"
                     title="매너 평가하기"
                     width="418px"
-                    height="434px"
                     closeButtonWidth={17}
                     closeButtonHeight={17}
                     borderRadius="10px"
-                    buttonText="완료"
                     onClose={handleModalClose}
                 >
                     <CheckContent>
@@ -269,9 +286,19 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                                 value={data.text}
                                 label={data.text}
                                 fontSize="semiBold16"
+                                checked={checkedItems.includes(data.text)}
+                                onChange={handleCheckboxChange}
                             />
                         ))}
                     </CheckContent>
+                    <ModalSubmitBtn>
+                        <Button
+                            onClick={handleModalClose}
+                            buttonType="primary"
+                            text="완료"
+                            disabled={checkedItems.length === 0}
+                        />
+                    </ModalSubmitBtn>
                 </FormModal>}
 
             {/* 비매너 평가 팝업 */}
@@ -280,11 +307,9 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                     type="checkbox"
                     title="비매너 평가하기"
                     width="418px"
-                    height="434px"
                     closeButtonWidth={17}
                     closeButtonHeight={17}
                     borderRadius="10px"
-                    buttonText="완료"
                     onClose={handleModalClose}
                 >
                     <CheckContent>
@@ -294,9 +319,19 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                                 value={data.text}
                                 label={data.text}
                                 fontSize="semiBold16"
+                                checked={checkedItems.includes(data.text)}
+                                onChange={handleCheckboxChange}
                             />
                         ))}
                     </CheckContent>
+                    <ModalSubmitBtn>
+                        <Button
+                            onClick={handleModalClose}
+                            buttonType="primary"
+                            text="완료"
+                            disabled={checkedItems.length === 0}
+                        />
+                    </ModalSubmitBtn>
                 </FormModal>}
         </>
     )
@@ -439,6 +474,10 @@ const CheckContent = styled.div`
   gap: 20px;
 `;
 
+const ModalSubmitBtn = styled.div`
+  margin-top:52px;
+`;
+
 const ReportLabel = styled.p`
   color: ${theme.colors.gray600};
   ${(props) => props.theme.fonts.semiBold18};
@@ -454,6 +493,10 @@ const ReportContent = styled.div`
 
 const ReportReasonContent = styled(ReportContent)`
   margin-bottom: 38px;
+`;
+
+const ReportButton = styled.div`
+    margin-top:21px;
 `;
 
 const Text = styled.div`

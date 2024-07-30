@@ -13,7 +13,6 @@ interface FormModalProps {
   closeButtonHeight: number;
   borderRadius: string;
   children: string | React.ReactNode;
-  buttonText: string;
   onClose: () => void;
   disabled?: boolean;
 }
@@ -24,14 +23,12 @@ const FormModal = (props: FormModalProps) => {
     position,
     title,
     width,
-    height = "auto",
+    height,
     closeButtonWidth,
     closeButtonHeight,
     borderRadius,
     children,
-    buttonText,
     onClose,
-    disabled,
   } = props;
 
   return (
@@ -61,16 +58,6 @@ const FormModal = (props: FormModalProps) => {
           </TitleContent>
           <MainContent $type={type}>{children}</MainContent>
         </Main>
-        <Footer>
-          <ButtonContent>
-            <Button
-              onClick={onClose}
-              buttonType="primary"
-              text={buttonText}
-              disabled={disabled}
-            />
-          </ButtonContent>
-        </Footer>
       </Wrapper>
     </Overlay>
   );
@@ -98,7 +85,7 @@ const Overlay = styled.div<{ $position: "manner" | undefined }>`
 const Wrapper = styled.form<{
   $type: string;
   $width: string;
-  $height: string;
+  $height: string | undefined;
   $borderRadius: string;
 }>`
   box-shadow: 0 0 21.3px 0 rgba(0, 0, 0, 0.15);
@@ -106,6 +93,7 @@ const Wrapper = styled.form<{
   max-width: ${({ $width }) => $width};
   width: 100%;
   max-height: ${({ $height }) => $height};
+  height: ${({ $height }) => $height ? "100%" : "auto"};
   border-radius: ${({ $borderRadius }) => $borderRadius};
   padding: ${({ $type }) =>
     $type === "checkbox" ? "26px 31px 22px" : "29px 37px 38px"};
@@ -136,15 +124,10 @@ const Main = styled.main``;
 const TitleContent = styled.div``;
 
 const MainContent = styled.div<{ $type: string }>`
-  margin: ${({ $type }) => ($type === "checkbox" ? "20px 0 32px" : "32px 0")};
+  margin: ${({ $type }) => ($type === "checkbox" ? "20px 0 0" : "32px 0")};
 `;
 const TextTitle = styled.p`
   ${(props) => props.theme.fonts.regular25};
   color: #44515c;
-  text-align: center;
-`;
-const Footer = styled.footer``;
-
-const ButtonContent = styled.p`
   text-align: center;
 `;

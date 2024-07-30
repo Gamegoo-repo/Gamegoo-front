@@ -5,30 +5,31 @@ import styled from "styled-components";
 interface CheckboxProps {
   value: string;
   label?: string;
-  onChange?: (isChecked: boolean) => void;
+  onChange: (isChecked: string) => void;
   fontSize?: string;
+  checked: boolean;
 }
 
 const Checkbox = (props: CheckboxProps) => {
-  const { value, label, onChange, fontSize } = props;
+  const { value, label, onChange, fontSize,checked } = props;
   const [isChecked, setIsChecked] = useState<boolean>(false);
 
-  const handleChange = () => {
-    const newValue = !isChecked;
-    setIsChecked(newValue);
-    console.log(value, ": ", newValue);
-    if (onChange) {
-      onChange(newValue);
-    }
-  };
+  // const handleChange = () => {
+  //   const newValue = !isChecked;
+  //   setIsChecked(newValue);
+  //   console.log(value, ": ", newValue);
+  //   if (onChange) {
+  //     onChange(newValue);
+  //   }
+  // };
 
   return (
     <StyledCheckbox fontSize={fontSize || "semiBold16"}>
       <Check
         value={value}
         type="checkbox"
-        checked={isChecked}
-        onChange={handleChange}
+        checked={checked}
+        onChange={()=>onChange(value)}
       />
       {label}
     </StyledCheckbox>
