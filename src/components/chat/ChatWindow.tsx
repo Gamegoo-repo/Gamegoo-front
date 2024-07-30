@@ -52,7 +52,6 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
     const [isMoreBoxOpen, setIsMoreBoxOpen] = useState<number | null>(null);
     const [chatId, setChatId] = useState<number | null>(null);
     const [checkedItems, setCheckedItems] = useState<string[]>([]);
-    const [inputText, setInputText] = useState("");
     const [reportDetail, setReportDetail] = useState<string>("");
 
     const isModalType = useSelector((state: RootState) => state.modal.modalType);
@@ -73,6 +72,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
 
     const handleModalClose = () => {
         setCheckedItems([]);
+        setReportDetail("");
         dispatch(setCloseModal());
     };
 

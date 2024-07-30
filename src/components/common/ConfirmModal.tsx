@@ -71,7 +71,7 @@ const ConfirmModal = (props: ConfirmModalProps) => {
   };
 
   return (
-    <Overlay>
+    <Overlay $type={type}>
       <Wrapper
         $width={width}
         $type={type}
@@ -157,13 +157,13 @@ const ConfirmModal = (props: ConfirmModalProps) => {
 
 export default ConfirmModal;
 
-const Overlay = styled.div`
+const Overlay = styled.div<{ $type: string | undefined }>`
   display: flex;
   justify-content: center;
   align-items: center;
   position: fixed;
-  /* background: #0000009C;
-  border-radius: 20px; */
+  background:#0000009C;
+  border-radius: ${({ $type }) => $type ? "20px" : "unset"};
   inset: 0;
   z-index: 100;
 `;

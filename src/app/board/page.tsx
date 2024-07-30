@@ -161,10 +161,7 @@ const BoardPage = () => {
   const dropdownRef2 = useRef<HTMLDivElement>(null);
 
   const dispatch = useDispatch();
-
-  const isEvaluationModalOpen = useSelector((state: RootState) => state.modal.evaluationModal);
-  const isModalType = useSelector((state: RootState) => state.modal.modalType);
-  const isReadingModal = useSelector((state: RootState) => state.modal.readingModal);
+  
   const isPostingModal = useSelector((state: RootState) => state.modal.postingModal);
 
   const handleFirstDropValue = (value: string) => {
@@ -231,12 +228,7 @@ const BoardPage = () => {
     <>
       {isPostingModal && <PostBoard onClose={handleWritingClose} />}
       <Wrapper>
-        <BoardContent
-          $isWritingOpen={isPostingModal}
-          $isReadingModal={isReadingModal}
-          $isPostingModal={isPostingModal}
-          $isEvaluationModalOpen={isEvaluationModalOpen}
-          $isModalType={isModalType}>
+        <BoardContent>
           <FirstRow>
             <Title>게시판</Title>
             <RefreshImage
@@ -311,7 +303,7 @@ const BoardPage = () => {
             pageButtonCount={pageButtonCount}
             onPageChange={handlePageChange}
           />
-          <Footer className={isModalType === "" && !isEvaluationModalOpen ? "float" : "no_float"}>
+          <Footer>
             <ChatBoxContent>
               <ChatButton count={3} />
             </ChatBoxContent>
@@ -330,30 +322,10 @@ const Wrapper = styled.div`
   justify-content: center;
 `;
 
-const BoardContent = styled.div<{
-  $isWritingOpen: boolean,
-  $isReadingModal: boolean,
-  $isPostingModal: boolean,
-  $isEvaluationModalOpen: boolean,
-  $isModalType: string
-}>`
+const BoardContent = styled.div`
   max-width: 1440px;
   width: 100%;
   padding: 0 80px;
-
-&:before {
-  content: '';
-  position: ${({ $isWritingOpen, $isReadingModal, $isEvaluationModalOpen, $isModalType }) =>
-    ($isWritingOpen || $isReadingModal || $isEvaluationModalOpen || $isModalType !== "" ? 'fixed' : 'unset')};
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: ${({ $isWritingOpen, $isReadingModal, $isEvaluationModalOpen, $isModalType }) =>
-    ($isWritingOpen || $isReadingModal || $isEvaluationModalOpen || $isModalType !== "" ? '#0000009E' : 'transparent')};
-  z-index: ${({ $isReadingModal, $isPostingModal }) =>
-    ($isReadingModal || $isPostingModal ? 1 : 100)};
-}
 `;
 
 const FirstRow = styled.div`
@@ -410,13 +382,6 @@ const Main = styled.main`
 `;
 
 const Footer = styled.footer`
-  &.float{
-    position: fixed;
-  }
-
-  &.no_float{
-    position: none;
-  }
   right: 80px;
   bottom: 78px;
   display: flex;

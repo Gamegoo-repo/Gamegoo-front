@@ -3,21 +3,14 @@
 import ChatButton from "@/components/common/ChatButton";
 import GraphicBox from "@/components/match/GraphicBox";
 import { MATCH_PAGE_DATA } from "@/data/match";
-import { RootState } from "@/redux/store";
 import Image from "next/image";
-import { useSelector } from "react-redux";
 import styled from "styled-components";
 
 const HomePage = () => {
 
-    const isEvaluationModalOpen = useSelector((state: RootState) => state.modal.evaluationModal);
-    const isModalType = useSelector((state: RootState) => state.modal.modalType);
-   
     return (
         <Wrapper>
-            <HomeContent
-                $isEvaluationModalOpen={isEvaluationModalOpen}
-                $isModalType={isModalType}>
+            <HomeContent>
                 <Header>
                     <Image
                         src='/assets/icons/logo_m.svg'
@@ -61,20 +54,10 @@ const Wrapper = styled.div`
     justify-content: center;
 `;
 
-const HomeContent = styled.div<{ $isEvaluationModalOpen: boolean, $isModalType: string }>`
+const HomeContent = styled.div`
     max-width: 1440px;
     width: 100%;
     padding: 0 80px;
-    &:before {
-        content: '';
-        position: ${({ $isEvaluationModalOpen, $isModalType }) => $isEvaluationModalOpen || $isModalType !== "" ? 'fixed' : 'unset'};
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: ${({ $isEvaluationModalOpen, $isModalType }) => $isEvaluationModalOpen || $isModalType !== "" ? '#0000009C' : 'transparent'};
-        z-index: 100;
-    }
 `;
 
 const Header = styled.header`

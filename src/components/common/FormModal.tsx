@@ -70,8 +70,7 @@ const Overlay = styled.div<{ $position: "manner" | undefined }>`
   justify-content: center;
   align-items: center;
   position: fixed;
-  /* background: #0000009C;
-  border-radius: 20px; */
+  background: #0000009C;
   position: ${({ $position }) =>
     $position === "manner" ? "absolute" : "fixed"};
   top: ${({ $position }) => ($position === "manner" ? "50%" : "unset")};

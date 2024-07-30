@@ -5,8 +5,6 @@ import { setChatRoomDateFormatter } from '@/utils/custom';
 import { Dispatch } from 'react';
 import MoreBox from '../common/MoreBox';
 import { MoreBoxMenuItems } from '@/interface/moreBox';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
 
 interface ChatListInterface {
     id: number;
@@ -26,8 +24,6 @@ interface ChatListProps {
 
 const ChatList = (props: ChatListProps) => {
     const { list, onChatRoom, setIsMoreBoxOpen, isMoreBoxOpen, onModalChange } = props;
-
-    const isModalType = useSelector((state: RootState) => state.modal.modalType);
 
     const handleMoreBoxOpen = (chatId: number, e: React.MouseEvent) => {
         e.stopPropagation();
@@ -125,11 +121,6 @@ const UserContent = styled.div`
   justify-content: space-between;
   cursor: pointer;
   padding:18px 12px 18px 0;
-  /* &:first-child {
-    &:hover{
-    position: unset;
-    }
-  } */
   &:hover {
     background: ${theme.colors.gray500}; 
   }
