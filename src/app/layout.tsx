@@ -1,4 +1,5 @@
 "use client";
+import StyledJsxRegistry from "./registry";
 
 import GlobalStyles from "@/styles/GlobalStyles";
 import { ThemeProvider } from "styled-components";
@@ -6,9 +7,8 @@ import { theme } from "@/styles/theme";
 import Header from "@/components/common/Header";
 import StyledComponentsRegistry from "@/libs/registry";
 import { Provider } from "react-redux";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { AppStore, store } from "@/redux/store";
-import { usePathname } from "next/navigation";
 
 export default function RootLayout({
   children,
@@ -17,12 +17,9 @@ export default function RootLayout({
 }>) {
   const storeRef = useRef<AppStore>();
   if (!storeRef.current) {
+    // Create the store instance the first time this renders
     storeRef.current = store();
   }
-
-  const pathname = usePathname();
-  const isHeader = !(pathname === "/" || pathname.includes("/join"));
-
   return (
     <html>
       <head>
@@ -34,7 +31,7 @@ export default function RootLayout({
           <GlobalStyles />
           <ThemeProvider theme={theme}>
             <Provider store={storeRef.current}>
-              {isHeader && <Header />}
+              <Header />
               {children}
             </Provider>
           </ThemeProvider>

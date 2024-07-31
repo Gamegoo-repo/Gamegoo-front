@@ -4,12 +4,10 @@ import styled from "styled-components";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import { useEffect, useRef, useState } from "react";
-import Checkbox from "@/components/common/Checkbox";
 import RadioCard from "@/components/common/RadioCard";
 import Dropdown from "@/components/common/Dropdown";
 import ChatButton from "@/components/common/ChatButton";
 import ConfirmModal from "@/components/common/ConfirmModal";
-import FormModal from "@/components/common/FormModal";
 import PositionCategory from "@/components/common/PositionCategory";
 import Toggle from "@/components/common/Toggle";
 import CompleteProfile from "@/components/match/CompleteProfile";
@@ -168,9 +166,6 @@ const Guide = () => {
         }}
         placeholder="placeholder"
       />
-      <H2>Checkbox</H2>
-      <Checkbox value="checkbox1" label="checkbox" />
-      <Checkbox value="checkbox2" label="checkbox" />
       <H2>RadioCard</H2>
       <RadioCard
         id="option1"
@@ -266,49 +261,6 @@ const Guide = () => {
       >
         텍스트 모달 열기 버튼
       </button>
-
-      {/* {openFormModal &&
-        <FormModal
-          type='text'
-          title='비밀번호 재설정하기'
-          width='492px'
-          height="616px"
-          closeButtonWidth={15}
-          closeButtonHeight={15}
-          borderRadius='20px'
-          buttonText="비밀번호 재설정"
-          onClose={handleFormModalClose}>
-          <Input
-            inputType="password"
-            value={passwordValue}
-            label="label"
-            onChange={(value) => {
-              setPasswordValue(value);
-            }}
-            placeholder="placeholder"
-          />
-        </FormModal>
-      }
-      <p>Text Modal</p> */}
-
-      {/* 같은 변수 사용으로 주석처리 해놨습니다.*/}
-      {openFormModal && (
-        <FormModal
-          type="checkbox"
-          title="매너 평가하기"
-          width="418px"
-          height="434px"
-          closeButtonWidth={17}
-          closeButtonHeight={17}
-          borderRadius="10px"
-          buttonText="완료"
-          onClose={handleFormModalClose}
-          disabled
-        >
-          <Checkbox value="checkbox1" label="checkbox" />
-        </FormModal>
-      )}
-      <p>Checkbox Modal</p>
 
       <H2>Position</H2>
       <button

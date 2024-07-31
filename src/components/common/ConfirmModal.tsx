@@ -7,15 +7,15 @@ import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
 type ButtonText =
-  | "취소"
-  | "나가기"
-  | "차단"
-  | "확인"
-  | "예"
-  | "아니요"
-  | "닫기"
-  | "글 작성하기"
-  | "글 보러하기";
+  | '취소'
+  | '나가기'
+  | '차단'
+  | '확인'
+  | '예'
+  | '아니요'
+  | '닫기'
+  | '글 작성하기'
+  | '글 보러하기'
 
 interface ConfirmModalProps {
   type?: "manner";
@@ -35,18 +35,18 @@ const ConfirmModal = (props: ConfirmModalProps) => {
     primaryButtonText,
     secondaryButtonText,
     onPrimaryClick,
-    onSecondaryClick,
+    onSecondaryClick
   } = props;
 
   const dispatch = useDispatch();
 
-  let buttonClassName = "";
+  let buttonClassName = '';
 
-  if (type !== "manner") {
+  if (type !== 'manner') {
     if (primaryButtonText && secondaryButtonText) {
-      buttonClassName = "leftButton";
+      buttonClassName = 'leftButton';
     } else if (primaryButtonText) {
-      buttonClassName = "wholeButton";
+      buttonClassName = 'wholeButton';
     }
   }
 
@@ -132,8 +132,7 @@ const ConfirmModal = (props: ConfirmModalProps) => {
                 !mannerStatusClicked &&
                 !badMannerStatusClicked
               }
-              $type={type}
-            >
+              $type={type}>
               {primaryButtonText}
             </Button>
             {secondaryButtonText && onSecondaryClick && (
@@ -145,8 +144,7 @@ const ConfirmModal = (props: ConfirmModalProps) => {
                   type === "manner" &&
                   !mannerStatusClicked &&
                   !badMannerStatusClicked
-                }
-              >
+                }>
                 {secondaryButtonText}
               </Button>
             )}
@@ -168,13 +166,12 @@ const Overlay = styled.div<{ $type: string | undefined }>`
   border-radius: ${({ $type }) => $type ? "20px" : "unset"};
   inset: 0;
   z-index: 100;
-  background: rgba(0, 0, 0, 0.64);
 `;
 
 const Wrapper = styled.div<{ $width: string; $type: string | undefined }>`
   width: ${({ $width }) => $width};
   background: ${theme.colors.white};
-  border-radius: ${({ $type }) => ($type ? "10px" : "20px")};
+  border-radius: ${({ $type }) => $type ? "10px" : "20px"};
   box-shadow: 0 0 14.76px 0 rgba(0, 0, 0, 0.15);
   overflow: hidden;
 `;
@@ -241,10 +238,9 @@ const Button = styled.button<{ $type: string | undefined }>`
   ${({ $type }) =>
     $type ? `${theme.fonts.bold11}` : `${theme.fonts.semiBold18}`};
   cursor: pointer;
-  color: ${({ $type }) =>
-    $type ? `${theme.colors.gray600}` : `${theme.colors.gray700}`};
+  color: ${({ $type }) => ($type ? `${theme.colors.gray600}` : `${theme.colors.gray700}`)};
   width: 100%;
-  height: ${({ $type }) => ($type ? "none" : "79px")};
+  height: ${({ $type }) => $type ? "none" : "79px"};
   padding: 15px 0;
   &:disabled {
     color: ${theme.colors.gray300};

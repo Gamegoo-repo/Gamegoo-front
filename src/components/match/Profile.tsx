@@ -351,6 +351,7 @@ export default Profile;
 
 const Container = styled.div`
   width: 100%;
+  min-width: 1000px;
   box-sizing: border-box;
   border-radius: 30px;
   padding: 23px 44px 44px 44px;
