@@ -2,6 +2,7 @@ import { createGlobalStyle } from "styled-components";
 
 const GlobalStyles = createGlobalStyle`    
 * {
+  /* width: 100%; */
   box-sizing: border-box;
   padding: 0;
   margin: 0;
@@ -9,6 +10,7 @@ const GlobalStyles = createGlobalStyle`
 
 html,
 body {
+  width: 100%;
   font-family: "Pretendard";
   white-space: pre-line;
   padding-top: 70px;

@@ -99,6 +99,7 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  white-space: nowrap;
 `;
 
 const Time = styled.div`

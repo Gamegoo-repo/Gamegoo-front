@@ -1,5 +1,5 @@
 import { theme } from "@/styles/theme";
-import { ChangeEvent, Dispatch, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 interface CheckboxProps {
@@ -8,7 +8,7 @@ interface CheckboxProps {
   isChecked?: boolean;
   onChange?: (isChecked: boolean) => void;
   isArraychecked?: boolean;
-  onArrayChange?: (isChecked: string) => void;
+  onArrayChange?: (checked: string) => void;
   fontSize?: string;
 }
 
@@ -21,12 +21,10 @@ const Checkbox = (props: CheckboxProps) => {
   }, [isChecked]);
 
   const handleChange = () => {
+    const newValue = !checked;
+    setChecked(newValue);
     if (onChange) {
-      const newValue = !checked;
-      setChecked(newValue);
-      if (onChange) {
-        onChange(newValue);
-      }
+      onChange(newValue);
     }
     if (onArrayChange) {
       onArrayChange(value);

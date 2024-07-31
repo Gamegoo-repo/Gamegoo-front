@@ -303,11 +303,7 @@ const BoardPage = () => {
             pageButtonCount={pageButtonCount}
             onPageChange={handlePageChange}
           />
-          <Footer>
-            <ChatBoxContent>
-              <ChatButton count={3} />
-            </ChatBoxContent>
-          </Footer>
+          <ChatButton count={3} />
         </BoardContent>
       </Wrapper>
     </>
