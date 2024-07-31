@@ -496,7 +496,7 @@ const ReportReasonContent = styled(ReportContent)`
 `;
 
 const ReportButton = styled.div`
-    margin-top:21px;
+  margin-top:21px;
 `;
 
 const Text = styled.div`

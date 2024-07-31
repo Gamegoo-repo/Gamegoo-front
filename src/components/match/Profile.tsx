@@ -47,6 +47,7 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
   const [isBlockConfirmOpen, setIsBlockConfrimOpen] = useState(false);
   const [isProfileListOpen, setIsProfileListOpen] = useState(false);
   const [reportDetail, setReportDetail] = useState<string>("");
+  const [checkedItems, setCheckedItems] = useState<string[]>([]);
 
   /* 포지션 */
   const [positions, setPositions] = useState(POSITIONS);
@@ -123,6 +124,13 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
     { text: '신고하기', onClick: handleReport },
     { text: '차단하기', onClick: handleBlock },
   ];
+
+  // 신고하기 체크
+  const handleCheckboxChange = (checked: string) => {
+    setCheckedItems((prev) =>
+      prev.includes(checked) ? prev.filter((r) => r !== checked) : [...prev, checked]
+    );
+  };
 
   return (
     <Container className={profileType}>
@@ -207,9 +215,9 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                   <Report onClick={handleMoreBoxOpen} />
                   {isMoreBoxOpen && (
                     <MoreBox
-                      items={MoreBoxMenuItems} 
+                      items={MoreBoxMenuItems}
                       top={15}
-                      left={45}/>
+                      left={45} />
                   )}
                 </MoreDiv>
                 {/* 신고하기 팝업 */}
@@ -222,9 +230,7 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                     closeButtonWidth={17}
                     closeButtonHeight={17}
                     borderRadius="20px"
-                    buttonText="신고하기"
                     onClose={handleReport}
-                    disabled
                   >
                     <div>
                       <ReportLabel>신고 사유</ReportLabel>
@@ -235,6 +241,8 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                             value={data.text}
                             label={data.text}
                             fontSize="regular18"
+                            isArraychecked={checkedItems.includes(data.text)}
+                            onArrayChange={handleCheckboxChange}
                           />
                         ))}
                       </ReportReasonContent>
@@ -252,6 +260,14 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                           height="134px"
                         />
                       </ReportContent>
+                      <ReportButton>
+                        <Button
+                          onClick={handleReport}
+                          buttonType="primary"
+                          text="신고하기"
+                          disabled={checkedItems.length === 0}
+                        />
+                      </ReportButton>
                     </div>
                   </FormModal>
                 )}
@@ -515,6 +531,10 @@ const ReportContent = styled.div`
 
 const ReportReasonContent = styled(ReportContent)`
   margin-bottom: 38px;
+`;
+
+const ReportButton = styled.div`
+  margin-top:21px;
 `;
 
 const Msg = styled.div`
