@@ -1,35 +1,45 @@
 import { theme } from "@/styles/theme";
-import { ChangeEvent, Dispatch, useState } from "react";
+import { ChangeEvent, Dispatch, useEffect, useState } from "react";
 import styled from "styled-components";
 
 interface CheckboxProps {
   value: string;
   label?: string;
-  onChange: (isChecked: string) => void;
+  isChecked?: boolean;
+  onChange?: (isChecked: boolean) => void;
+  isArraychecked?: boolean;
+  onArrayChange?: (isChecked: string) => void;
   fontSize?: string;
-  checked: boolean;
 }
 
 const Checkbox = (props: CheckboxProps) => {
-  const { value, label, onChange, fontSize,checked } = props;
-  const [isChecked, setIsChecked] = useState<boolean>(false);
+  const { value, label, isChecked = false, onChange, isArraychecked, onArrayChange, fontSize } = props;
+  const [checked, setChecked] = useState<boolean>(isChecked);
 
-  // const handleChange = () => {
-  //   const newValue = !isChecked;
-  //   setIsChecked(newValue);
-  //   console.log(value, ": ", newValue);
-  //   if (onChange) {
-  //     onChange(newValue);
-  //   }
-  // };
+  useEffect(() => {
+    setChecked(isChecked);
+  }, [isChecked]);
+
+  const handleChange = () => {
+    if (onChange) {
+      const newValue = !checked;
+      setChecked(newValue);
+      if (onChange) {
+        onChange(newValue);
+      }
+    }
+    if (onArrayChange) {
+      onArrayChange(value);
+    }
+  };
 
   return (
     <StyledCheckbox fontSize={fontSize || "semiBold16"}>
       <Check
         value={value}
         type="checkbox"
-        checked={checked}
-        onChange={()=>onChange(value)}
+        checked={isChecked ? checked : isArraychecked}
+        onChange={handleChange}
       />
       {label}
     </StyledCheckbox>

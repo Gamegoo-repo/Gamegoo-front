@@ -101,9 +101,9 @@ const ChatRoom = (props: ChatRoomProps) => {
         { text: '비매너 평가', onClick: (e) => handleChangeModal(e, 'badManner') },
     ];
 
-    const handleCheckboxChange = (reason: string) => {
+    const handleCheckboxChange = (checked: string) => {
         setCheckedItems((prev) =>
-            prev.includes(reason) ? prev.filter((r) => r !== reason) : [...prev, reason]
+            prev.includes(checked) ? prev.filter((r) => r !== checked) : [...prev, checked]
         );
     };
 
@@ -203,8 +203,8 @@ const ChatRoom = (props: ChatRoomProps) => {
                                 value={data.text}
                                 label={data.text}
                                 fontSize="semiBold16"
-                                checked={checkedItems.includes(data.text)}
-                                onChange={handleCheckboxChange}
+                                isArraychecked={checkedItems.includes(data.text)}
+                                onArrayChange={handleCheckboxChange}
                             />
                         ))}
                     </CheckContent>
@@ -237,8 +237,8 @@ const ChatRoom = (props: ChatRoomProps) => {
                                 value={data.text}
                                 label={data.text}
                                 fontSize="semiBold16"
-                                checked={checkedItems.includes(data.text)}
-                                onChange={handleCheckboxChange}
+                                isArraychecked={checkedItems.includes(data.text)}
+                                onArrayChange={handleCheckboxChange}
                             />
                         ))}
                     </CheckContent>
