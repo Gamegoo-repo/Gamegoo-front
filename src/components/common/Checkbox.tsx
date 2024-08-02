@@ -2,15 +2,20 @@ import { theme } from "@/styles/theme";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
+type IsCheckedType = boolean | string;
+
 interface CheckboxProps {
   value: string;
   label?: string;
   isChecked?: boolean;
   onChange?: (isChecked: boolean) => void;
+  isArraychecked?: boolean;
+  onArrayChange?: (checked: string) => void;
   fontSize?: string;
 }
+
 const Checkbox = (props: CheckboxProps) => {
-  const { value, label, isChecked = false, onChange, fontSize } = props;
+  const { value, label, isChecked = false, onChange, isArraychecked, onArrayChange, fontSize } = props;
   const [checked, setChecked] = useState<boolean>(isChecked);
 
   useEffect(() => {
@@ -23,6 +28,9 @@ const Checkbox = (props: CheckboxProps) => {
     if (onChange) {
       onChange(newValue);
     }
+    if (onArrayChange) {
+      onArrayChange(value);
+    }
   };
 
   return (
@@ -30,7 +38,7 @@ const Checkbox = (props: CheckboxProps) => {
       <Check
         value={value}
         type="checkbox"
-        checked={checked}
+        checked={isChecked ? checked : isArraychecked}
         onChange={handleChange}
       />
       {label}

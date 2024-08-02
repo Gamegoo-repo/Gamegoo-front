@@ -1,5 +1,6 @@
 import MoreBox from "@/components/common/MoreBox";
-import Report from "@/components/readBoard/Report";
+import Report from "@/components/readBoard/MoreBoxButton";
+import { MoreBoxMenuItems } from "@/interface/moreBox";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -40,6 +41,12 @@ const Post: React.FC<PostProps> = ({
     setIsMoreBoxOpen(false);
   };
 
+   // 더보기 버튼 메뉴
+   const MoreBoxMenuItems: MoreBoxMenuItems[] = [
+    { text: '수정', onClick: handleModify },
+    { text: '삭제', onClick: handleDelete },
+  ];
+
   return (
     <Container>
       {index}
@@ -76,10 +83,9 @@ const Post: React.FC<PostProps> = ({
         <Report onClick={handleMoreBoxOpen} />
         {isMoreBoxOpen && (
           <MoreBox
-            text1="수정"
-            text2="삭제"
-            handleFirst={handleModify}
-            handleSecond={handleDelete}
+          items={MoreBoxMenuItems}
+          top={-10}
+          left={45}
           />
         )}
       </More>

@@ -12,8 +12,9 @@ import Pagination from "@/components/common/Pagination";
 import PositionFilter from "@/components/board/PositionFilter";
 import PostBoard from "@/components/createBoard/PostBoard";
 import ChatButton from "@/components/common/ChatButton";
-import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { setClosePostingModal, setOpenPostingModal } from "@/redux/slices/modalSlice";
 
 const DROP_DATA1 = [
   { id: 1, value: "솔로1" },
@@ -150,22 +151,18 @@ const BoardPage = () => {
 
   const [isPosition, setIsPosition] = useState(0);
   const [micOn, setMicOn] = useState(true);
-  const [isWritingOpen, setIsWritingOpen] = useState(false);
 
   const [isDropdownOpen1, setIsDropdownOpen1] = useState(false);
   const [isDropdownOpen2, setIsDropdownOpen2] = useState(false);
   const [selectedDropOption1, setSelectedDropOption1] = useState("솔로 랭크");
   const [selectedDropOption2, setSelectedDropOption2] = useState("티어 선택");
 
-  const isEvaluationModalOpen = useSelector(
-    (state: RootState) => state.modal.evaluationModal
-  );
-  const isMoreModalOpen = useSelector(
-    (state: RootState) => state.modal.moreModal
-  );
-
   const dropdownRef1 = useRef<HTMLDivElement>(null);
   const dropdownRef2 = useRef<HTMLDivElement>(null);
+
+  const dispatch = useDispatch();
+  
+  const isPostingModal = useSelector((state: RootState) => state.modal.postingModal);
 
   const handleFirstDropValue = (value: string) => {
     console.log(value);
@@ -192,11 +189,12 @@ const BoardPage = () => {
   };
 
   const handleWritingOpen = () => {
-    setIsWritingOpen(true);
+    dispatch(setOpenPostingModal());
   };
 
   const handleWritingClose = () => {
-    setIsWritingOpen(false);
+    dispatch(setClosePostingModal());
+    dispatchEvent
   };
 
   const handleDropdownClickOutside1 = (event: MouseEvent) => {
@@ -226,33 +224,18 @@ const BoardPage = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (isWritingOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, [isWritingOpen]);
-
   return (
     <>
-      {isWritingOpen && <PostBoard onClose={handleWritingClose} />}
+      {isPostingModal && <PostBoard onClose={handleWritingClose} />}
       <Wrapper>
-        <BoardContent
-          $isEvaluationModalOpen={isEvaluationModalOpen}
-          $isMoreModalOpen={isMoreModalOpen}
-        >
+        <BoardContent>
           <FirstRow>
             <Title>게시판</Title>
             <RefreshImage
               src="/assets/icons/refresh.svg"
               width={30}
               height={27}
-              alt="refresh button"
+              alt="새로고침"
             />
           </FirstRow>
           <SecondRow>
@@ -297,7 +280,7 @@ const BoardPage = () => {
                   }
                   width={21}
                   height={26}
-                  alt="mic button"
+                  alt="마이크 버튼"
                 />
               </MicButton>
             </FirstBlock>
@@ -320,7 +303,11 @@ const BoardPage = () => {
             pageButtonCount={pageButtonCount}
             onPageChange={handlePageChange}
           />
-          <ChatButton count={3} />
+          <Footer>
+            <ChatBoxContent>
+              <ChatButton count={3} />
+            </ChatBoxContent>
+          </Footer>
         </BoardContent>
       </Wrapper>
     </>
@@ -330,35 +317,15 @@ const BoardPage = () => {
 export default BoardPage;
 
 const Wrapper = styled.div`
-  position: relative;
   width: 100%;
   display: flex;
   justify-content: center;
 `;
 
-const BoardContent = styled.header<{
-  $isEvaluationModalOpen: boolean;
-  $isMoreModalOpen: string;
-}>`
+const BoardContent = styled.div`
   max-width: 1440px;
   width: 100%;
   padding: 0 80px;
-  display: flex;
-  flex-direction: column;
-  &:before {
-    content: "";
-    position: ${({ $isEvaluationModalOpen, $isMoreModalOpen }) =>
-      $isEvaluationModalOpen || $isMoreModalOpen !== "" ? "fixed" : "unset"};
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: ${({ $isEvaluationModalOpen, $isMoreModalOpen }) =>
-      $isEvaluationModalOpen || $isMoreModalOpen !== ""
-        ? "#0000009C"
-        : "transparent"};
-    z-index: 100;
-  }
 `;
 
 const FirstRow = styled.div`
@@ -415,7 +382,6 @@ const Main = styled.main`
 `;
 
 const Footer = styled.footer`
-  position: fixed;
   right: 80px;
   bottom: 78px;
   display: flex;

@@ -1,12 +1,9 @@
 "use client";
 
-import { postLogin } from "@/api/login";
 import Button from "@/components/common/Button";
 import Checkbox from "@/components/common/Checkbox";
 import Input from "@/components/common/Input";
-import { emailRegEx } from "@/constants/regEx";
 import { theme } from "@/styles/theme";
-import { AxiosError } from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -16,58 +13,20 @@ import styled from "styled-components";
 const Login = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
+  const [emailDisable, setEmailDisable] = useState(false);
   const [password, setPassword] = useState("");
 
-  const [emailValid, setEmailValid] = useState<boolean | undefined>(undefined);
-  const [passwordValid, setPasswordValid] = useState<boolean | undefined>(
-    undefined
-  );
-  const [autoLogin, setAutoLogin] = useState(false);
+  /* 이메일 존재 여부 검사 */
+  // API 연동
 
-  const validateEmail = (email: string) => {
-    setEmailValid(emailRegEx.test(email));
-  };
-
-  const validatePassword = (password: string) => {
-    if (password.length === 0) {
-      setPasswordValid(undefined);
-    } else {
-      setPasswordValid(true);
-    }
+  /* 이메일 수정하기 */
+  const handleModify = () => {
+    setEmailDisable(false);
   };
 
   /* 로그인 */
-  const handleLogin = async () => {
-    try {
-      const response = await postLogin({ email, password });
-      const accessToken = response.result.accessToken;
-      const refreshToken = response.result.refreshToken;
-
-      /* 자동 로그인 체크 여부에 따라 토큰 저장 위치 결정 */
-      if (autoLogin) {
-        localStorage.setItem("accessToken", accessToken);
-      } else {
-        sessionStorage.setItem("accessToken", accessToken);
-      }
-
-      router.push("/home");
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        const status = error.response?.status;
-        if (status === 401) {
-          // 401 Unauthorized 처리
-          setPasswordValid(false);
-        } else {
-          // 기타 에러 처리
-          setEmailValid(false);
-          setPasswordValid(false);
-        }
-      } else {
-        // 예상치 못한 에러 처리
-        setEmailValid(false);
-        setPasswordValid(false);
-      }
-    }
+  const handleLogin = () => {
+    router.push("/home");
   };
 
   return (
@@ -83,42 +42,36 @@ const Login = () => {
         <P>GAMGOO에 오신 것을 환영합니다.</P>
         <Content>
           <Div>
-            <InputList>
-              <Input
-                inputType="input"
-                value={email}
-                onChange={(value) => {
-                  setEmail(value);
-                  validateEmail(value);
-                }}
-                placeholder="이메일 주소"
-                isValid={emailValid}
-              />
+            <Input
+              inputType="input"
+              value={email}
+              onChange={(value) => {
+                setEmail(value);
+              }}
+              placeholder="이메일 주소"
+              disabled={emailDisable}
+            />
+            {email && <Modify onClick={handleModify}>수정</Modify>}
+            {email && (
               <Input
                 inputType="password"
                 value={password}
                 onChange={(value) => {
                   setPassword(value);
-                  validatePassword(value);
                 }}
                 placeholder="비밀번호"
-                isValid={passwordValid}
               />
-            </InputList>
+            )}
             <Button
               buttonType="primary"
               text="이메일로 시작하기"
               onClick={handleLogin}
-              disabled={!email || !password || !emailValid || !passwordValid}
+              disabled={!email}
             />
           </Div>
           <Check>
             <P>
-              <Checkbox
-                value="autoLogin"
-                isChecked={autoLogin}
-                onChange={(isChecked) => setAutoLogin(isChecked)}
-              ></Checkbox>
+              <Checkbox value="autoLogin"></Checkbox>
               자동 로그인
               <Bar />
               <Link href="/password/find">비밀번호 찾기</Link>
@@ -159,7 +112,6 @@ export default Login;
 
 const Container = styled.div`
   width: 100%;
-  height: 100%;
   display: flex;
   justify-content: center;
 `;
@@ -171,8 +123,6 @@ const Box = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  margin-bottom: 140px;
 `;
 
 const Title = styled.div`
@@ -181,16 +131,16 @@ const Title = styled.div`
   ${(props) => props.theme.fonts.regular35};
 `;
 
+const P = styled.div`
+  display: flex;
+  color: #737373;
+  ${(props) => props.theme.fonts.regular14};
+  gap: 10px;
+`;
+
 const Content = styled.div`
   width: 100%;
   margin-top: 49px;
-`;
-
-const P = styled.div`
-  display: flex;
-  color: ${theme.colors.gray200};
-  ${(props) => props.theme.fonts.regular14};
-  gap: 10px;
 `;
 
 const Div = styled.div`
@@ -201,8 +151,15 @@ const Div = styled.div`
   position: relative;
 `;
 
-const InputList = styled(Div)`
-  gap: 8px;
+const Modify = styled.div`
+  position: absolute;
+  top: 30px;
+  right: 20px;
+  transform: translate(0, -50%);
+  color: ${theme.colors.purple100};
+  font-size: ${theme.fonts.semiBold14};
+  z-index: 100;
+  cursor: pointer;
 `;
 
 const Check = styled.div`
@@ -214,9 +171,8 @@ const Check = styled.div`
 const Bar = styled.div`
   width: 1px;
   height: 20px;
-  background: ${theme.colors.gray300};
+  background: #c5c5c7;
 `;
-
 const Line = styled.div`
   width: 100%;
   height: 1px;
@@ -232,6 +188,7 @@ const SocialIcons = styled.div`
 `;
 
 const Join = styled(Link)`
-  color: ${theme.colors.gray300};
+  color: #bcbcbc;
   font-weight: 500;
+  text-decoration-line: underline;
 `;

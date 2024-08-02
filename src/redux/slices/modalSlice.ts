@@ -3,13 +3,17 @@ import { createSlice } from '@reduxjs/toolkit';
 interface ModalState {
     isOpen: boolean;
     evaluationModal: boolean;
-    moreModal: string;
+    modalType: string;
+    readingModal: boolean;
+    postingModal: boolean;
 }
 
 const initialState: ModalState = {
     isOpen: false,
     evaluationModal: false,
-    moreModal: ""
+    modalType: "",
+    readingModal: false,
+    postingModal: false
 };
 
 const modalSlice = createSlice({
@@ -30,12 +34,27 @@ const modalSlice = createSlice({
         setCloseEvaluationModal: (state) => {
             state.evaluationModal = false;
         },
-        setOpenMoreModal: (state, action) => {
-            state.moreModal = action.payload;
+        setOpenModal: (state, action) => {
+            state.modalType = action.payload;
         },
-        setCloseMoreModal: (state) => {
-            state.moreModal = "";
-        }
+        setCloseModal: (state) => {
+            state.modalType = "";
+        },
+        /* 게시판 읽기 모달 */
+        setOpenReadingModal: (state) => {
+            state.readingModal = true;
+        },
+        setCloseReadingModal: (state) => {
+            state.readingModal = false;
+        },
+        /* 게시판 쓰기 모달 */
+        setOpenPostingModal: (state) => {
+            state.postingModal = true;
+        },
+        setClosePostingModal: (state) => {
+            state.postingModal = false;
+        },
+
     },
 });
 
@@ -44,8 +63,12 @@ export const {
     setCloseMannerStatusModal,
     setOpenEvaluationModal,
     setCloseEvaluationModal,
-    setOpenMoreModal,
-    setCloseMoreModal
+    setOpenModal,
+    setCloseModal,
+    setOpenReadingModal,
+    setCloseReadingModal,
+    setOpenPostingModal,
+    setClosePostingModal
 } = modalSlice.actions;
 
 export default modalSlice.reducer;

@@ -7,7 +7,7 @@ import { POSITIONS } from "@/data/profile";
 import Champion from "../readBoard/Champion";
 import Toggle from "../common/Toggle";
 import Button from "../common/Button";
-import Report from "../readBoard/Report";
+import Report from "../readBoard/MoreBoxButton";
 import FormModal from "../common/FormModal";
 import Checkbox from "../common/Checkbox";
 import { REPORT_REASON } from "@/data/report";
@@ -15,6 +15,7 @@ import Input from "../common/Input";
 import ConfirmModal from "../common/ConfirmModal";
 import PositionCategory from "../common/PositionCategory";
 import MoreBox from "../common/MoreBox";
+import { MoreBoxMenuItems } from "@/interface/moreBox";
 
 type profileType = "fun" | "hard" | "other" | "me";
 
@@ -46,6 +47,7 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
   const [isBlockConfirmOpen, setIsBlockConfrimOpen] = useState(false);
   const [isProfileListOpen, setIsProfileListOpen] = useState(false);
   const [reportDetail, setReportDetail] = useState<string>("");
+  const [checkedItems, setCheckedItems] = useState<string[]>([]);
 
   /* 포지션 */
   const [positions, setPositions] = useState(POSITIONS);
@@ -114,6 +116,19 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
       prev.map((pos, i) =>
         i === index ? { ...pos, position: newPosition } : pos
       )
+    );
+  };
+
+  // 더보기 버튼 메뉴
+  const MoreBoxMenuItems: MoreBoxMenuItems[] = [
+    { text: '신고하기', onClick: handleReport },
+    { text: '차단하기', onClick: handleBlock },
+  ];
+
+  // 신고하기 체크
+  const handleCheckboxChange = (checked: string) => {
+    setCheckedItems((prev) =>
+      prev.includes(checked) ? prev.filter((r) => r !== checked) : [...prev, checked]
     );
   };
 
@@ -200,12 +215,9 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                   <Report onClick={handleMoreBoxOpen} />
                   {isMoreBoxOpen && (
                     <MoreBox
-                      text1="신고하기"
-                      text2="차단하기"
-                      handleFirst={handleReport}
-                      handleSecond={handleBlock}
-                      top="15px"
-                    />
+                      items={MoreBoxMenuItems}
+                      top={15}
+                      left={45} />
                   )}
                 </MoreDiv>
                 {/* 신고하기 팝업 */}
@@ -218,9 +230,7 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                     closeButtonWidth={17}
                     closeButtonHeight={17}
                     borderRadius="20px"
-                    buttonText="신고하기"
                     onClose={handleReport}
-                    disabled
                   >
                     <div>
                       <ReportLabel>신고 사유</ReportLabel>
@@ -231,6 +241,8 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                             value={data.text}
                             label={data.text}
                             fontSize="regular18"
+                            isArraychecked={checkedItems.includes(data.text)}
+                            onArrayChange={handleCheckboxChange}
                           />
                         ))}
                       </ReportReasonContent>
@@ -248,6 +260,14 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                           height="134px"
                         />
                       </ReportContent>
+                      <ReportButton>
+                        <Button
+                          onClick={handleReport}
+                          buttonType="primary"
+                          text="신고하기"
+                          disabled={checkedItems.length === 0}
+                        />
+                      </ReportButton>
                     </div>
                   </FormModal>
                 )}
@@ -347,6 +367,7 @@ export default Profile;
 
 const Container = styled.div`
   width: 100%;
+  min-width: 1000px;
   box-sizing: border-box;
   border-radius: 30px;
   padding: 23px 44px 44px 44px;
@@ -426,7 +447,7 @@ const ProfileList = styled.div`
   grid-template-rows: repeat(2, 1fr);
 `;
 
-const ProfileListImage = styled(Image)<{ isSelected: boolean }>`
+const ProfileListImage = styled(Image) <{ isSelected: boolean }>`
   cursor: pointer;
   transition: opacity 0.3s ease-in-out;
 
@@ -510,6 +531,10 @@ const ReportContent = styled.div`
 
 const ReportReasonContent = styled(ReportContent)`
   margin-bottom: 38px;
+`;
+
+const ReportButton = styled.div`
+  margin-top:21px;
 `;
 
 const Msg = styled.div`

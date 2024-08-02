@@ -1,10 +1,11 @@
 import { GAME_STYLE } from "@/data/profile";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 
-type positionType = "top" | "left";
+type positionType = "board";
+
 interface SelectedStylePopupProps {
   onClose: () => void;
   selectedStyles: string[];
@@ -18,23 +19,26 @@ const SelectedStylePopup: React.FC<SelectedStylePopupProps> = ({
   onClose,
   selectedStyles,
   onSelectStyle,
-  position = "top",
+  position,
 }) => {
+
+
   return (
     <Container $position={position}>
-      <Top>
+      <Top $position={position}>
         3개까지 선택가능
-        <Image
+        <CloseImage
           src="/assets/icons/close_white.svg"
-          width={14}
-          height={14}
+          width={position ? 9 : 14}
+          height={position ? 9 : 14}
           alt="close"
           onClick={onClose}
         />
       </Top>
-      <Boxs>
+      <Boxs $position={position}>
         {GAME_STYLE.map((data) => (
           <Box
+            $position={position}
             key={data.id}
             onClick={(e) => onSelectStyle(data.text, e)}
             selected={selectedStyles.includes(data.text)}
@@ -49,10 +53,10 @@ const SelectedStylePopup: React.FC<SelectedStylePopupProps> = ({
 
 export default SelectedStylePopup;
 
-const Container = styled.div<{ $position: positionType }>`
-  width: 796px;
-  height: 310px;
-  padding: 28px;
+const Container = styled.div<{ $position: positionType | undefined }>`
+  width: ${({ $position }) => ($position ? "554px" : "796px")};
+  height: ${({ $position }) => ($position ? "214px" : "310px")};
+  padding: ${({ $position }) => ($position ? "13px 22px" : "20px 30px")};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -65,39 +69,43 @@ const Container = styled.div<{ $position: positionType }>`
   backdrop-filter: blur(7.5px);
 
   position: absolute;
-  top: ${({ $position }) => ($position === "top" ? "65px" : "60px")};
-  left: ${({ $position }) => ($position === "top" ? "0px" : "0")};
+  top: ${({ $position }) => ($position ? "-3px" : "60px")};
+  left: ${({ $position }) => ($position ? "-2px" : "0")};
   z-index: 100;
 `;
 
-const Top = styled.div`
+const Top = styled.div<{ $position: positionType | undefined }>`
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   color: ${theme.colors.white};
-  ${(props) => props.theme.fonts.regular20};
+  font-size: ${({ $position }) => ($position ? theme.fonts.regular14 : theme.fonts.regular20)};
 `;
 
-const Boxs = styled.div`
+const CloseImage = styled(Image)`
+  cursor: pointer;
+`
+
+const Boxs = styled.div<{ $position: positionType | undefined }>`
   width: 100%;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: center;
-  gap: 14px;
+  gap: ${({ $position }) => ($position ? "9px" : "14px")};
   outline: none;
 `;
 
-const Box = styled.button<{ selected: boolean }>`
+const Box = styled.button<{ selected: boolean, $position: positionType | undefined }>`
   display: flex;
-  height: 40px;
-  padding: 10px 25px;
+  height: ${({ $position }) => ($position ? "29px" : "40px")};
+  padding: ${({ $position }) => ($position ? "6px 20px" : "10px 25px")};
   justify-content: center;
   align-items: center;
   border-radius: 59.263px;
   background: ${({ selected }) =>
     selected ? theme.colors.purple100 : theme.colors.gray200};
   color: ${theme.colors.white};
-  ${(props) => props.theme.fonts.regular20};
+  font-size: ${({ $position }) => ($position ? theme.fonts.medium14 : theme.fonts.regular20)};
 `;

@@ -44,7 +44,6 @@ const Title = styled.p<{ size: number }>`
       `semiBold${props.size}` as keyof typeof props.theme.fonts
     ]};
   color: #222222;
-  margin-bottom: ${(props) => (props.size === 14 ? "7px" : "4px")};
 `;
 
 const Images = styled.div`

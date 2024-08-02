@@ -4,6 +4,9 @@ import Image from "next/image";
 import { setDateFormatter, setPositionImg, setTierImg } from "@/utils/custom";
 import ReadBoard from "../readBoard/ReadBoard";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { setCloseReadingModal, setOpenReadingModal } from "@/redux/slices/modalSlice";
 
 interface TableTitleProps {
     id: number;
@@ -33,20 +36,23 @@ interface TableProps {
 const Table = (props: TableProps) => {
     const { title, content } = props;
 
-    const [isOpenReadBoard, setIsOpenReadBoard] = useState(false);
     const [isReadBoardId, setIsReadBoardId] = useState<number | null>(null);
 
+    const isReadingModal = useSelector((state: RootState) => state.modal.readingModal);
+
+    const dispatch = useDispatch();
+
     const handlePostOpen = (id: number) => {
-        setIsOpenReadBoard(true);
+        dispatch(setOpenReadingModal());
         setIsReadBoardId(id);
     };
 
     const handlePostClose = () => {
-        setIsOpenReadBoard(false);
+        dispatch(setCloseReadingModal());
     };
 
     useEffect(() => {
-        if (isOpenReadBoard) {
+        if (isReadingModal) {
             document.body.style.overflow = 'hidden';
         } else {
             document.body.style.overflow = 'unset';
@@ -55,11 +61,11 @@ const Table = (props: TableProps) => {
         return () => {
             document.body.style.overflow = 'unset';
         };
-    }, [isOpenReadBoard]);
+    }, [isReadingModal]);
 
     return (
         <>
-            {isOpenReadBoard &&
+            {isReadingModal &&
                 <ReadBoard onClose={handlePostClose} postId={isReadBoardId} gameType="canyon"/>
             }
             <TableWrapper>

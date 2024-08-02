@@ -3,7 +3,8 @@ import { theme } from "@/styles/theme";
 import Image from 'next/image';
 import { setChatRoomDateFormatter } from '@/utils/custom';
 import { Dispatch } from 'react';
-import MiniModal from './MiniModal';
+import MoreBox from '../common/MoreBox';
+import { MoreBoxMenuItems } from '@/interface/moreBox';
 
 interface ChatListInterface {
     id: number;
@@ -24,13 +25,40 @@ interface ChatListProps {
 const ChatList = (props: ChatListProps) => {
     const { list, onChatRoom, setIsMoreBoxOpen, isMoreBoxOpen, onModalChange } = props;
 
-    const handleMoreBoxOpen = (chatId: number) => {
+    const handleMoreBoxOpen = (chatId: number, e: React.MouseEvent) => {
+        e.stopPropagation();
         if (isMoreBoxOpen === chatId) {
             setIsMoreBoxOpen(null);
         } else {
             setIsMoreBoxOpen(chatId);
         };
     };
+
+    const handleFriendAdd = (e: React.MouseEvent) => {
+        e.stopPropagation();
+
+        if (setIsMoreBoxOpen) {
+            setIsMoreBoxOpen(null);
+        }
+        console.log('친구 추가')
+    };
+
+    const handleChangeModal = (e: React.MouseEvent, type: string) => {
+        if (type) {
+            e.stopPropagation();
+        }
+
+        onModalChange(type);
+    };
+
+    const menuItems: MoreBoxMenuItems[] = [
+        { text: '채팅방 나가기', onClick: (e) => handleChangeModal(e, 'leave') },
+        { text: '친구 추가', onClick: (e) => handleFriendAdd(e) },
+        { text: '차단하기', onClick: (e) => handleChangeModal(e, 'block') },
+        { text: '신고하기', onClick: (e) => handleChangeModal(e, 'report') },
+        { text: '매너 평가', onClick: (e) => handleChangeModal(e, 'manner') },
+        { text: '비매너 평가', onClick: (e) => handleChangeModal(e, 'badManner') },
+    ];
 
     return (
         <>
@@ -42,10 +70,12 @@ const ChatList = (props: ChatListProps) => {
                                 onChatRoom(chat.id)}
                             key={chat.id}>
                             {isMoreBoxOpen === chat.id &&
-                                <MiniModal
-                                    type="chatList"
-                                    onChangeModal={onModalChange}
-                                    setIsMoreBoxOpen={setIsMoreBoxOpen} />}
+                                <MoreBox
+                                    items={menuItems}
+                                    top={10}
+                                    left={208}
+                                />
+                            }
                             <Left>
                                 <ProfileImage
                                     src={chat.image}
@@ -63,12 +93,9 @@ const ChatList = (props: ChatListProps) => {
                                     </Row>
                                 </Middle>
                             </Left>
-                            <Right>
+                            <Right
+                                onClick={(e) => handleMoreBoxOpen(chat.id, e)}>
                                 <MoreImage
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleMoreBoxOpen(chat.id);
-                                    }}
                                     src="/assets/icons/three_dots_button.svg"
                                     width={3}
                                     height={15}
@@ -93,9 +120,8 @@ const UserContent = styled.div`
   display: flex;  
   justify-content: space-between;
   cursor: pointer;
-  padding:18px 19px 18px 0;
+  padding:18px 12px 18px 0;
   &:hover {
-    position: unset;
     background: ${theme.colors.gray500}; 
   }
 `;
@@ -111,7 +137,7 @@ const ProfileImage = styled(Image)`
 `;
 
 const Middle = styled.div`
-    min-width: 304px;
+    min-width: 300px;
 `;
 
 const UserName = styled.p`
@@ -122,7 +148,6 @@ const UserName = styled.p`
 const Unread = styled.p`
     ${(props) => props.theme.fonts.medium11};
     color:${theme.colors.white};  
-    margin-right: 12px;
     padding:0 5px;
     border-radius: 38px;
     background:${theme.colors.purple100};
@@ -145,7 +170,9 @@ const Date = styled.p`
     margin-right: 12px;
 `;
 
-const Right = styled.div``;
+const Right = styled.div`
+    padding: 0 7px 0 12px;;
+`;
 
 const MoreImage = styled(Image)`
     cursor: pointer;

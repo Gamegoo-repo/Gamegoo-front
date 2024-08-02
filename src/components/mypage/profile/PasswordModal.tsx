@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Input from "@/components/common/Input";
 import FormModal from "@/components/common/FormModal";
+import Button from "@/components/common/Button";
 
 interface PasswordModalProps {
   onClose: () => void;
@@ -43,7 +44,6 @@ const PasswordModal = (props: PasswordModalProps) => {
       closeButtonWidth={17}
       closeButtonHeight={17}
       borderRadius="10px"
-      buttonText="완료"
       onClose={onClose}
       disabled={!validation}
     >
@@ -124,6 +124,14 @@ const PasswordModal = (props: PasswordModalProps) => {
               : newPassword.length > 0 && newPassword === rePassword
           }
         />
+        <ButtonContent>
+        <Button
+          onClick={onClose}
+          buttonType="primary"
+          text="완료"
+          disabled={!validation}
+        />
+        </ButtonContent>
       </Content>
     </FormModal>
   );
@@ -151,3 +159,7 @@ const Span = styled.div<{ $selected: boolean }>`
     $selected ? theme.colors.purple100 : "#737373"};
   font-weight: 400;
 `;
+
+const ButtonContent = styled.div`
+  margin-top: 34px;
+`

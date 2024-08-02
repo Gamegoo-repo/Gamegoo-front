@@ -1,50 +1,46 @@
-import { theme } from "@/styles/theme";
-import React from "react";
 import styled from "styled-components";
+import { theme } from "@/styles/theme";
+import { MoreBoxMenuItems } from "@/interface/moreBox";
 
 interface MoreBoxProps {
-  text1: string;
-  text2: string;
-  handleFirst: () => void;
-  handleSecond: () => void;
-  top?: string;
+    items: MoreBoxMenuItems[];
+    top: number;
+    left: number;
 }
-const MoreBox = (props: MoreBoxProps) => {
-  const { text1, text2, top, handleFirst, handleSecond } = props;
 
-  return (
-    <ReportBox top={top}>
-      <ReportText onClick={handleFirst}>{text1}</ReportText>
-      <Bar />
-      <ReportText onClick={handleSecond}>{text2}</ReportText>
-    </ReportBox>
-  );
+const MoreBox = ({ items, top, left }: MoreBoxProps) => {
+    return (
+        <MenuWrapper $top={top} $left={left}>
+            {items.map((item, index) => (
+                <MenuItem key={index} onClick={item.onClick}>
+                    {item.text}
+                </MenuItem>
+            ))}
+        </MenuWrapper>
+    )
 };
 
 export default MoreBox;
 
-const ReportBox = styled.div<{ top?: string }>`
-  width: 175px;
-  height: 84px;
-  position: absolute;
-  top: ${(props) => (props.top ? props.top : "-10px")};
-  left: 45px;
-  z-index: 100;
-  box-shadow: 0 0 21.3px 0 #00000026;
-  background: ${theme.colors.white};
-  border-radius: 10px;
+const MenuWrapper = styled.div<{ $top: number; $left: number }>`
+    width: 175px;
+    position: absolute;
+    top: ${props => props.$top}px;
+    left: ${props => props.$left}px;
+    z-index: 100;
+    box-shadow: 0 0 21.3px 0 #00000026;
+    background: ${theme.colors.white}; 
+    border-radius: 10px;
 `;
 
-const ReportText = styled.p`
-  padding: 10px 20px;
-  ${(props) => props.theme.fonts.medium15};
-  color: #606060;
-  white-space: nowrap;
-  cursor: pointer;
-`;
-
-const Bar = styled.div`
-  width: 100%;
-  height: 1px;
-  background: ${theme.colors.gray400};
+const MenuItem = styled.div`
+    ${(props) => props.theme.fonts.medium15};
+    color: #555555;
+    white-space: nowrap;
+    cursor: pointer;
+    padding:9px 0 9px 20px;
+    border-bottom: 1px solid ${theme.colors.gray400};
+    &:last-child {
+        border-bottom: none;
+    }
 `;
