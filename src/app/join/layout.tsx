@@ -1,9 +1,12 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
 const Layout = (props: any) => {
+  const router = useRouter();
+
   return (
     <Container>
       <Box>
@@ -12,6 +15,9 @@ const Layout = (props: any) => {
           width={277}
           height={88}
           alt="logo"
+          onClick={() => {
+            router.push("/");
+          }}
         />
         <Title>회원가입</Title>
         <Content>{props.children}</Content>

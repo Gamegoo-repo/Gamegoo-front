@@ -54,9 +54,9 @@ const SelectedStylePopup: React.FC<SelectedStylePopupProps> = ({
 export default SelectedStylePopup;
 
 const Container = styled.div<{ $position: positionType | undefined }>`
-  width: ${({ $position }) => ($position ? "554px" : "796px")};
+  width: ${({ $position }) => ($position ? "574px" : "796px")};
   height: ${({ $position }) => ($position ? "214px" : "310px")};
-  padding: ${({ $position }) => ($position ? "13px 22px" : "20px 30px")};
+  padding: ${({ $position }) => ($position ? "13px 22px" : "28px")};
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -47,7 +47,8 @@ const StyledButton = styled.button<{ width?: string }>`
   border-radius: 15px;
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.bold14};
-
+  white-space: nowrap;
+  
   /*buttonType*/
   &.primary {
     background: ${theme.colors.purple100};

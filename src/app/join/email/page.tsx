@@ -1,31 +1,81 @@
 "use client";
 
+import { sendAuth, sendEmail } from "@/api/join";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
+import { emailRegEx } from "@/constants/regEx";
+import {
+  updateAuthStatus,
+  updateEmail,
+  updateEmailAuth,
+} from "@/redux/slices/signInSlice";
+import { RootState } from "@/redux/store";
+import { theme } from "@/styles/theme";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 const Email = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
-  const [authCode, setAuthCode] = useState("");
+  const [authCode, setAuthCode] = useState<string>("");
   const [emailValid, setEmailValid] = useState<boolean | undefined>(undefined);
+  const [authCodeValid, setAuthCodeValid] = useState<boolean | undefined>(
+    undefined
+  );
   const [isSend, setIsSend] = useState(false);
 
-  const emailRegEx =
-    /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
+  const emailRedux = useSelector((state: RootState) => state.signIn.email);
+  const authCodeRedux = useSelector(
+    (state: RootState) => state.signIn.emailAuth
+  );
+  const authStatusRedux = useSelector(
+    (state: RootState) => state.signIn.authStatus
+  );
+
+  /* redux 업데이트 */
+  useEffect(() => {
+    setEmail(emailRedux);
+    setAuthCode(authCodeRedux);
+    setAuthCodeValid(authStatusRedux);
+  }, [emailRedux, authCodeRedux, authStatusRedux]);
 
   const validateEmail = (email: string) => {
     setEmailValid(emailRegEx.test(email));
+    if (emailRegEx.test(email)) {
+      dispatch(updateEmail(email));
+    }
   };
 
-  const handleSendEmail = () => {
-    setIsSend(true);
+  const handleSendEmail = async () => {
+    try {
+      await sendEmail({ email });
+      setAuthCode("");
+      setAuthCodeValid(false);
+      dispatch(updateEmailAuth(""));
+      dispatch(updateAuthStatus(false));
+      setIsSend(true);
+    } catch (error) {
+      setEmailValid(false);
+    }
   };
 
-  const handleSendCode = () => {
-    router.push("/join/password");
+  const handleSendCode = async () => {
+    try {
+      await sendAuth({ email, code: authCode });
+
+      // Redux 상태 업데이트
+      dispatch(updateEmail(email));
+      dispatch(updateEmailAuth(authCode));
+      dispatch(updateAuthStatus(true));
+
+      setAuthCodeValid(true);
+      router.push("/join/password");
+    } catch (error) {
+      setAuthCodeValid(false);
+    }
   };
 
   return (
@@ -36,11 +86,12 @@ const Email = () => {
         value={email}
         onChange={(value) => {
           setEmail(value);
+          setIsSend(false);
           validateEmail(value);
         }}
         placeholder="이메일 주소"
         isValid={emailValid}
-        disabled={isSend}
+        // disabled={isSend}
       />
       {isSend && (
         <Input
@@ -48,18 +99,28 @@ const Email = () => {
           value={authCode}
           onChange={(value) => {
             setAuthCode(value);
+            if (value.length === 5) {
+              setAuthCodeValid(true);
+            } else {
+              setAuthCodeValid(false);
+            }
           }}
           placeholder="인증 코드 입력"
+          isValid={authCodeValid}
         />
       )}
       {isSend ? (
-        <Button buttonType="primary" text="확인" onClick={handleSendCode} />
+        <Button
+          buttonType="primary"
+          text="인증 완료"
+          onClick={handleSendCode}
+        />
       ) : (
         <Button
           buttonType="primary"
           text="인증코드 전송"
           onClick={handleSendEmail}
-          disabled={!emailValid}
+          disabled={!authCodeRedux || !emailValid}
         />
       )}
     </Div>
@@ -76,6 +137,6 @@ const Div = styled.div`
 `;
 
 const Label = styled.div`
-  color: #44515c;
+  color: ${theme.colors.gray700};
   ${(props) => props.theme.fonts.regular25};
 `;

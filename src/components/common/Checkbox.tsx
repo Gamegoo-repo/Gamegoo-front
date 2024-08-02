@@ -2,8 +2,6 @@ import { theme } from "@/styles/theme";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
-type IsCheckedType = boolean | string;
-
 interface CheckboxProps {
   value: string;
   label?: string;

@@ -9,6 +9,7 @@ const GlobalStyles = createGlobalStyle`
 
 html,
 body {
+  width: 100%;
   font-family: "Pretendard";
   white-space: pre-line;
   padding-top: 70px;

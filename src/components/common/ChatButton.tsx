@@ -12,7 +12,7 @@ const ChatButton = (props: msgCountProps) => {
   const [isChatOpen, setIsChatOpen] = useState(false);
 
   const toggleChat = () => {
-    setIsChatOpen(prevState => !prevState);
+    setIsChatOpen((prevState) => !prevState);
   };
 
   const handleChatWindowClose = () => {
@@ -32,40 +32,46 @@ const ChatButton = (props: msgCountProps) => {
   }, [isChatOpen]);
 
   return (
-    <>
-      {isChatOpen &&
-        <ChatWindow
-          onClose={handleChatWindowClose} />}
+    <ChatBoxContent>
+      {isChatOpen && <ChatWindow onClose={handleChatWindowClose} />}
       <MsgButton onClick={toggleChat}>
         <Image
-          src='/assets/icons/chat_box.svg'
+          src="/assets/icons/chat_box.svg"
           width={36}
           height={34}
-          alt='chat box'
+          alt="채팅"
         />
         <MsgCount>
           <Count>{props.count}</Count>
         </MsgCount>
       </MsgButton>
-    </>
-  )
+    </ChatBoxContent>
+  );
 };
 
 export default ChatButton;
+
+const ChatBoxContent = styled.div`
+  display: flex;
+`;
 
 const MsgButton = styled.div`
   position: relative;
   width: 89px;
   height: 89px;
   border-radius: 50%;
-  background: #7967EB;
+  background: ${theme.colors.purple100};
   cursor: pointer;
-     img{
-       position: absolute;
-       top:50%;
-       left:50%;
-       transform: translate(-50%, -50%);
-       }
+  position: fixed;
+  bottom: 34px;
+  right: 134px;
+  margin-left: auto;
+  img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, calc(-50% + 2px));
+  }
 `;
 
 const MsgCount = styled.div`
@@ -73,17 +79,16 @@ const MsgCount = styled.div`
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  border:1px solid ${theme.colors.purple200};
+  border: 1px solid ${theme.colors.purple200};
   background: ${theme.colors.white};
-  left:72%;          
+  left: 72%;       
 `;
 
 const Count = styled.p`
-    ${(props) => props.theme.fonts.semiBold14};
-    color:${theme.colors.purple100};
-    position: absolute;
-    top:50%;
-    left:50%;
-    transform: translate(-50%, -50%);
-  `;
-
+ ${(props) => props.theme.fonts.semiBold14};
+  color: ${theme.colors.purple100};
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
