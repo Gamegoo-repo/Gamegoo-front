@@ -3,7 +3,7 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import AlertWindow from "../alert/AlertWindow";
 
@@ -158,6 +158,7 @@ const HeaderBar = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  white-space: nowrap;
 `;
 
 const Menus = styled.div`
@@ -165,7 +166,7 @@ const Menus = styled.div`
   gap: 25px;
 `;
 
-const Menu = styled(Link)<HeaderProps>`
+const Menu = styled(Link) <HeaderProps>`
   font-weight: ${({ selected }) => (selected ? "700" : "400")};
 `;
 

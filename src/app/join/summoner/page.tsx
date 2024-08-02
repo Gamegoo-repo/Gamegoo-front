@@ -1,10 +1,12 @@
 "use client";
 
+import { joinMember } from "@/api/join";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
-import Image from "next/image";
+import { RootState } from "@/redux/store";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 
 const Summoner = () => {
@@ -12,8 +14,19 @@ const Summoner = () => {
   const [name, setName] = useState("");
   const [tag, setTag] = useState("");
 
-  const handleSendSummoner = () => {
-    router.push("/");
+  const email = useSelector((state: RootState) => state.signIn.email);
+  const password = useSelector((state: RootState) => state.signIn.password);
+
+  const handleSendJoin = async () => {
+    if (!email || !password) {
+      console.log("이메일과 비밀번호를 입력해주세요.");
+      return;
+    }
+
+    try {
+      await joinMember({ email, password });
+      router.push("/");
+    } catch (error) {}
   };
 
   return (
@@ -40,7 +53,7 @@ const Summoner = () => {
       <Button
         buttonType="primary"
         text="회원가입 완료"
-        onClick={handleSendSummoner}
+        onClick={handleSendJoin}
       />
     </Div>
   );

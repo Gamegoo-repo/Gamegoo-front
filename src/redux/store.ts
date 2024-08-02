@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import exampleSlice from "./slices/exampleSlice";
+import signInReducer from "./slices/signInSlice";
 import modalReducer from "./slices/modalSlice";
 import mannerStatusReducer from "./slices/mannerStatusSlice";
 
@@ -7,7 +7,7 @@ import mannerStatusReducer from "./slices/mannerStatusSlice";
 export const store = () => {
   return configureStore({
     reducer: {
-      example: exampleSlice,
+      signIn: signInReducer,
       modal: modalReducer,
       mannerStatus: mannerStatusReducer,
     },

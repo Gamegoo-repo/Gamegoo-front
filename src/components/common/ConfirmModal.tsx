@@ -144,7 +144,8 @@ const ConfirmModal = (props: ConfirmModalProps) => {
                   type === "manner" &&
                   !mannerStatusClicked &&
                   !badMannerStatusClicked
-                }>
+                }
+              >
                 {secondaryButtonText}
               </Button>
             )}
