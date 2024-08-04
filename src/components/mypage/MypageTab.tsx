@@ -31,6 +31,7 @@ const TabContainer = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 26px;
+  padding-top: 140px;
 `;
 
 const Tab = styled.div<{ selected: boolean }>`
