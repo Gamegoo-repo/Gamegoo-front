@@ -9,18 +9,25 @@ import { css } from "styled-components";
 
 type profileType = "me" | "other" | "none" | "mini";
 
+interface GameStyle {
+  gameStyleId: number;
+  gameStyleName: string;
+}
+
 interface GameStyleProps {
-  gameStyle: string[];
+  gameStyleResponseDTOList: GameStyle[];
   profileType: profileType;
   mic: boolean;
 }
 
 const GameStyle = (props: GameStyleProps) => {
-  const { gameStyle, profileType = "none", mic } = props;
+  const { gameStyleResponseDTOList, profileType = "none", mic } = props;
 
   const [isMike, setIsMike] = useState(mic);
   const [styledPopup, setStyledPopup] = useState(false);
-  const [selectedStyles, setSelectedStyles] = useState<string[]>(gameStyle);
+  const [selectedStyles, setSelectedStyles] = useState<GameStyle[]>(
+    gameStyleResponseDTOList
+  );
 
   const handleMike = () => {
     setIsMike(!isMike);
@@ -34,10 +41,10 @@ const GameStyle = (props: GameStyleProps) => {
     setStyledPopup(false);
   };
 
-  const handleSelectStyle = (style: string) => {
+  const handleSelectStyle = (style: GameStyle) => {
     setSelectedStyles((prevStyles) => {
-      if (prevStyles.includes(style)) {
-        return prevStyles.filter((s) => s! == style);
+      if (prevStyles.find((s) => s.gameStyleId === style.gameStyleId)) {
+        return prevStyles.filter((s) => s.gameStyleId !== style.gameStyleId);
       } else if (prevStyles.length < 3) {
         return [...prevStyles, style];
       } else {
@@ -54,7 +61,7 @@ const GameStyle = (props: GameStyleProps) => {
           {selectedStyles.map((data, index) => (
             <Box
               key={index}
-              text={data}
+              text={data.gameStyleName}
               shape="round"
               profileType={profileType}
             />

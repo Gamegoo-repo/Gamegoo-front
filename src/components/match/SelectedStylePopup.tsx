@@ -1,28 +1,32 @@
 import { GAME_STYLE } from "@/data/profile";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 
 type positionType = "board";
 
+interface GameStyle {
+  gameStyleId: number;
+  gameStyleName: string;
+}
+
 interface SelectedStylePopupProps {
   onClose: () => void;
-  selectedStyles: string[];
+  selectedStyles: GameStyle[];
   onSelectStyle: (
-    style: string,
+    style: GameStyle,
     event: React.MouseEvent<HTMLElement, MouseEvent>
   ) => void;
   position?: positionType;
 }
+
 const SelectedStylePopup: React.FC<SelectedStylePopupProps> = ({
   onClose,
   selectedStyles,
   onSelectStyle,
   position,
 }) => {
-
-
   return (
     <Container $position={position}>
       <Top $position={position}>
@@ -39,11 +43,13 @@ const SelectedStylePopup: React.FC<SelectedStylePopupProps> = ({
         {GAME_STYLE.map((data) => (
           <Box
             $position={position}
-            key={data.id}
-            onClick={(e) => onSelectStyle(data.text, e)}
-            selected={selectedStyles.includes(data.text)}
+            key={data.gameStyleId}
+            onClick={(e) => onSelectStyle(data, e)}
+            selected={selectedStyles.some(
+              (s) => s.gameStyleId === data.gameStyleId
+            )}
           >
-            {data.text}
+            {data.gameStyleName}
           </Box>
         ))}
       </Boxs>
@@ -80,12 +86,13 @@ const Top = styled.div<{ $position: positionType | undefined }>`
   justify-content: space-between;
   align-items: center;
   color: ${theme.colors.white};
-  font-size: ${({ $position }) => ($position ? theme.fonts.regular14 : theme.fonts.regular20)};
+  font-size: ${({ $position }) =>
+    $position ? theme.fonts.regular14 : theme.fonts.regular20};
 `;
 
 const CloseImage = styled(Image)`
   cursor: pointer;
-`
+`;
 
 const Boxs = styled.div<{ $position: positionType | undefined }>`
   width: 100%;
@@ -97,7 +104,10 @@ const Boxs = styled.div<{ $position: positionType | undefined }>`
   outline: none;
 `;
 
-const Box = styled.button<{ selected: boolean, $position: positionType | undefined }>`
+const Box = styled.button<{
+  selected: boolean;
+  $position: positionType | undefined;
+}>`
   display: flex;
   height: ${({ $position }) => ($position ? "29px" : "40px")};
   padding: ${({ $position }) => ($position ? "6px 20px" : "10px 25px")};
@@ -107,5 +117,6 @@ const Box = styled.button<{ selected: boolean, $position: positionType | undefin
   background: ${({ selected }) =>
     selected ? theme.colors.purple100 : theme.colors.gray200};
   color: ${theme.colors.white};
-  font-size: ${({ $position }) => ($position ? theme.fonts.medium14 : theme.fonts.regular20)};
+  font-size: ${({ $position }) =>
+    $position ? theme.fonts.medium14 : theme.fonts.regular20};
 `;

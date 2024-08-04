@@ -1,18 +1,25 @@
 export type profileType = "fun" | "hard" | "other" | "me";
 
 export interface Champion {
-  id: number;
-  value: string;
+  championId: number;
+  championName: string;
+}
+
+export interface GameStyle {
+  gameStyleId: number;
+  gameStyleName: string;
 }
 
 export interface User {
-  image: string;
-  account: string;
+  gameName: string;
+  profileImg: string;
+  email: string;
   tag: string;
   tier: string;
-  mic: boolean;
-  champions?: Champion[];
-  gameStyle: string[];
+  rank: string;
+  updatedAt: string;
+  gameStyleResponseDTOList: GameStyle[];
+  championResponseDTOList: Champion[];
 }
 
 export interface Profile {
