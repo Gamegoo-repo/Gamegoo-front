@@ -30,8 +30,10 @@ export default Layout;
 
 const Container = styled.div`
   width: 100%;
+  height: 100vh;
   display: flex;
   justify-content: center;
+  align-items: center;
 `;
 
 const Box = styled.div`
@@ -50,8 +52,8 @@ const Title = styled.div`
 
 const Content = styled.div`
   width: 100%;
+  margin-top: 100px;
   height: 500px;
   display: flex;
   justify-content: flex-start;
-  align-items: center;
 `;
