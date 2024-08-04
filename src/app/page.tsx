@@ -163,7 +163,6 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 140px;
 `;
 
 const Box = styled.div`
