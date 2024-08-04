@@ -53,7 +53,7 @@ const Email = () => {
     try {
       await sendEmail({ email });
       setAuthCode("");
-      setAuthCodeValid(false);
+      setAuthCodeValid(undefined);
       dispatch(updateEmailAuth(""));
       dispatch(updateAuthStatus(false));
       setIsSend(true);
@@ -100,6 +100,8 @@ const Email = () => {
             setAuthCode(value);
             if (value.length === 5) {
               setAuthCodeValid(true);
+            } else if (value.length === 0) {
+              setAuthCodeValid(undefined);
             } else {
               setAuthCodeValid(false);
             }
