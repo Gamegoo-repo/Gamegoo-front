@@ -6,6 +6,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import AlertWindow from "../alert/AlertWindow";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 interface HeaderProps {
   selected: boolean;
@@ -18,6 +20,8 @@ const Header = () => {
   const [isMyPage, setIsMyPage] = useState<Boolean>(false);
 
   const myPageRef = useRef<HTMLDivElement>(null);
+
+  const name = useSelector((state: RootState) => state.user.name);
 
   /* 알림창 열고 닫는 함수 */
   const handleAlertWindow = () => {
@@ -83,7 +87,7 @@ const Header = () => {
               height={29}
               alt="profile"
             />
-            장시은
+            {name}
             <button onClick={() => setIsMyPage(!isMyPage)}>
               <Image
                 src="/assets/icons/chevron_down.svg"
@@ -105,7 +109,7 @@ const Header = () => {
               height={75}
               alt="profile"
             />
-            <MyName>장시은</MyName>
+            <MyName>{name}</MyName>
             <Image
               src="/assets/icons/noti_on.svg"
               width={24}

@@ -5,6 +5,7 @@ import Button from "@/components/common/Button";
 import Checkbox from "@/components/common/Checkbox";
 import Input from "@/components/common/Input";
 import { emailRegEx } from "@/constants/regEx";
+import { setUserEmail, setUserName } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
 import { setToken } from "@/utils/storage";
 import { AxiosError } from "axios";
@@ -12,10 +13,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
 const Login = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -45,13 +48,10 @@ const Login = () => {
       const refreshToken = response.result.refreshToken;
 
       /* 자동 로그인 체크 여부에 따라 토큰 저장 위치 결정 */
-      if (autoLogin) {
-        localStorage.setItem("accessToken", accessToken);
-      } else {
-        sessionStorage.setItem("accessToken", accessToken);
-      }
       setToken(accessToken, refreshToken, autoLogin);
 
+      dispatch(setUserName(response.result.name));
+      dispatch(setUserEmail(email));
       router.push("/home");
     } catch (error) {
       if (error instanceof AxiosError) {
