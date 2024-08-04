@@ -1,22 +1,32 @@
+import { putProfileImg } from "@/api/mypage";
 import GameStyle from "@/components/match/GameStyle";
 import { Profile } from "@/interface/profile";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { css } from "styled-components";
 
 const MyPageProfile: React.FC<Profile> = ({ user }) => {
   const [isProfileListOpen, setIsProfileListOpen] = useState(false);
 
+  // 프로필 이미지 값이 "default"인 경우 1로 기본 설정, 그렇지 않으면 문자열에서 마지막 숫자 추출
+  const getProfileIndex = () => {
+    if (user.profileImg === "default") return 1;
+    const match = user.profileImg.match(/\d+$/);
+    return match ? parseInt(match[0], 10) : 1;
+  };
+
   /* 선택된 현재 프로필 이미지 */
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(
-    parseInt(user.image.slice(-1))
+    getProfileIndex()
   );
 
   /* 프로필 이미지 리스트 중 클릭시*/
-  const handleImageClick = (index: number) => {
-    setSelectedImageIndex(index + 1);
+  const handleImageClick = async (index: number) => {
+    setSelectedImageIndex(index);
+
+    await putProfileImg(`profile${index}`);
 
     setTimeout(() => {
       setIsProfileListOpen(false);
@@ -29,8 +39,8 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
         <ProfileImage>
           <PersonImage
             src={`/assets/images/profile/profile${selectedImageIndex}.svg`}
-            width={106}
-            height={106}
+            width={126}
+            height={126}
             alt="프로필"
           />
         </ProfileImage>
@@ -52,14 +62,14 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
               onClick={() => setIsProfileListOpen(false)}
             />
             <ProfileList>
-              {[1, 2, 3, 4, 5, 6, 7, 8].map((item, index) => (
+              {[0, 1, 2, 3, 4, 5, 6, 7].map((item, index) => (
                 <ProfileListImage
                   key={index}
                   src={`/assets/images/profile/profile${item}.svg`}
-                  width={104}
-                  height={104}
+                  width={106.52}
+                  height={119.65}
                   alt="프로필 이미지"
-                  isSelected={index + 1 === selectedImageIndex}
+                  isSelected={index === selectedImageIndex}
                   onClick={() => handleImageClick(index)}
                 />
               ))}
@@ -70,15 +80,19 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
       <Div>
         <Top>
           <Image
-            src={`/assets/images/rank_${user.tier}.svg`}
+            src={`/assets/images/rank_${user.tier || "b3"}.svg`}
             width={43}
             height={43}
             alt="profile"
           />
-          {user.account}
+          {user.gameName}
           <Tag>#{user.tag}</Tag>
         </Top>
-        <GameStyle gameStyle={user.gameStyle} profileType="mini" mic={false} />
+        <GameStyle
+          gameStyleResponseDTOList={user.gameStyleResponseDTOList}
+          profileType="mini"
+          mic={false}
+        />
       </Div>
     </Container>
   );
@@ -96,6 +110,7 @@ const Container = styled.div`
   justify-content: flex-start;
   align-items: center;
   gap: 26px;
+  white-space: nowrap;
 `;
 
 const ImageContainer = styled.div`
@@ -144,7 +159,7 @@ const ProfileList = styled.div`
   width: 100%;
   height: 100%;
   padding: 0 14px 29px 14px;
-  row-gap: 45px;
+  row-gap: 25px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(2, 1fr);

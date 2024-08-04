@@ -4,27 +4,19 @@ import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import MyPageProfile from "@/components/mypage/profile/MyPageProfile";
 import PasswordModal from "@/components/mypage/profile/PasswordModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ConfirmModal from "@/components/common/ConfirmModal";
+import { getProfile } from "@/api/mypage";
+import { setUserProfile } from "@/redux/slices/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
-const userData = {
-  image: "profile6",
-  account: "유니콘의 비밀",
-  tag: "KR1",
-  tier: "B3",
-  manner_level: 5,
-  mic: true,
-  gameStyle: [
-    "이기기만 하면 뭔들",
-    "과도한 핑은 사절이에요",
-    "랭크 올리고 싶어요",
-  ],
-};
-
-const updateDate = "24.05.08";
 const passwordLength = 10;
 
 const MyProfilePage = () => {
+  const dispatch = useDispatch();
+  const user = useSelector((state: RootState) => state.user);
+
   const circles = Array.from({ length: passwordLength });
 
   const [isPasswordModify, setIsPasswordModify] = useState<boolean>(false);
@@ -41,22 +33,35 @@ const MyProfilePage = () => {
     setIsWithdrawalComplete(true);
   };
 
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await getProfile();
+        dispatch(setUserProfile(response.result));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
   return (
     <Wrapper>
       <MyProfileContent>
         <Profile>
           <Title>내 프로필</Title>
-          <MyPageProfile user={userData} />
+          <MyPageProfile user={user} />
         </Profile>
         <Private>
           <Title>
             개인정보
-            <Small>{`마지막 업데이트 : ${updateDate}`}</Small>
+            <Small>{`마지막 업데이트 : ${user.updatedAt}`}</Small>
           </Title>
           <PrivateContent>
             <Box>
               <Label>이메일</Label>
-              <Email>reen330@naver.com</Email>
+              <Email>{user.email}</Email>
             </Box>
             <Box>
               <Label>비밀번호</Label>
