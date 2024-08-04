@@ -166,7 +166,7 @@ const Menus = styled.div`
   gap: 25px;
 `;
 
-const Menu = styled(Link) <HeaderProps>`
+const Menu = styled(Link)<HeaderProps>`
   font-weight: ${({ selected }) => (selected ? "700" : "400")};
 `;
 

@@ -21,6 +21,7 @@ const Wrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
+  padding-top: 140px;
 `;
 
 const MyHelpContent = styled.div`

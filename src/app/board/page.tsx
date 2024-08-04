@@ -14,7 +14,10 @@ import PostBoard from "@/components/createBoard/PostBoard";
 import ChatButton from "@/components/common/ChatButton";
 import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { setClosePostingModal, setOpenPostingModal } from "@/redux/slices/modalSlice";
+import {
+  setClosePostingModal,
+  setOpenPostingModal,
+} from "@/redux/slices/modalSlice";
 
 const DROP_DATA1 = [
   { id: 1, value: "솔로1" },
@@ -161,8 +164,10 @@ const BoardPage = () => {
   const dropdownRef2 = useRef<HTMLDivElement>(null);
 
   const dispatch = useDispatch();
-  
-  const isPostingModal = useSelector((state: RootState) => state.modal.postingModal);
+
+  const isPostingModal = useSelector(
+    (state: RootState) => state.modal.postingModal
+  );
 
   const handleFirstDropValue = (value: string) => {
     console.log(value);
@@ -194,7 +199,7 @@ const BoardPage = () => {
 
   const handleWritingClose = () => {
     dispatch(setClosePostingModal());
-    dispatchEvent
+    dispatchEvent;
   };
 
   const handleDropdownClickOutside1 = (event: MouseEvent) => {
@@ -320,6 +325,7 @@ const Wrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
+  padding-top: 140px;
 `;
 
 const BoardContent = styled.div`
