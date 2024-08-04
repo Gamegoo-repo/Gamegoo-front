@@ -21,7 +21,7 @@ const Header = () => {
 
   const myPageRef = useRef<HTMLDivElement>(null);
 
-  const name = useSelector((state: RootState) => state.user.name);
+  const name = useSelector((state: RootState) => state.user.gameName);
 
   /* 알림창 열고 닫는 함수 */
   const handleAlertWindow = () => {
