@@ -11,7 +11,7 @@ export function setPositionImg(position: number) {
         case 2:
             return '/assets/icons/position_mid_purple.svg';
         case 3:
-            return '/assets/icons/position_bottom_purple.svg';
+            return '/assets/icons/position_one_deal_purple.svg';
         case 4:
             return '/assets/icons/position_supporter_purple.svg';
         default:

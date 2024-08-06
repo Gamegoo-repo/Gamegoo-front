@@ -132,7 +132,7 @@ const PostBoard = (props: PostBoardProps) => {
 
     const handleModalClose = () => {
         onClose();
-        // dispatch(setOpenModal(""));
+        dispatch(setOpenModal(""));
     };
 
     return (

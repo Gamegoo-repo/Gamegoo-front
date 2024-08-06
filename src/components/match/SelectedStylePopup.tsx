@@ -1,16 +1,16 @@
 import { GAME_STYLE } from "@/data/profile";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 
 type positionType = "board";
 
 interface SelectedStylePopupProps {
   onClose: () => void;
-  selectedStyles: string[];
+  selectedStyles: number[];
   onSelectStyle: (
-    style: string,
+    style: number,
     event: React.MouseEvent<HTMLElement, MouseEvent>
   ) => void;
   position?: positionType;
@@ -36,14 +36,14 @@ const SelectedStylePopup: React.FC<SelectedStylePopupProps> = ({
         />
       </Top>
       <Boxs $position={position}>
-        {GAME_STYLE.map((data) => (
+        {GAME_STYLE.map((style) => (
           <Box
             $position={position}
-            key={data.id}
-            onClick={(e) => onSelectStyle(data.text, e)}
-            selected={selectedStyles.includes(data.text)}
+            key={style.id}
+            selected={selectedStyles.includes(style.id)}
+            onClick={(e) => onSelectStyle(style.id, e)}
           >
-            {data.text}
+            {style.text}
           </Box>
         ))}
       </Boxs>
@@ -56,7 +56,7 @@ export default SelectedStylePopup;
 const Container = styled.div<{ $position: positionType | undefined }>`
   width: ${({ $position }) => ($position ? "574px" : "796px")};
   height: ${({ $position }) => ($position ? "214px" : "310px")};
-  padding: ${({ $position }) => ($position ? "13px 22px" : "28px")};
+  padding: ${({ $position }) => ($position ? "13px 22px" : "20px 30px")};
   display: flex;
   flex-direction: column;
   align-items: center;
