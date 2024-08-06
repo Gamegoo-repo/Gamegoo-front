@@ -114,8 +114,8 @@ const ProfileListBox = styled.div`
     border-radius: 13px;
     background: rgba(0, 0, 0, 0.64);
     position: fixed;
-    top: 136px;
-    left: 34px;
+    top: 146px;
+    left: 291px;
     z-index: 100;
 `;
 

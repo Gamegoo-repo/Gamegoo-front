@@ -2,17 +2,18 @@ import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import SelectedStylePopup from "../match/SelectedStylePopup";
 import Image from "next/image";
-import { useState } from "react";
+import { Dispatch, useState } from "react";
+import { GAME_STYLE } from "@/data/profile";
 
 interface GameStyleProps {
-    gameStyles: string[];
+    setSelectedIds: Dispatch<React.SetStateAction<number[]>>;
+    selectedIds: number[]
 }
 
 const GameStyle = (props: GameStyleProps) => {
-    const { gameStyles } = props;
+    const { setSelectedIds, selectedIds } = props;
 
     const [styledPopup, setStyledPopup] = useState(false);
-    const [selectedStyles, setSelectedStyles] = useState<string[]>(gameStyles);
 
     const handleStylePopup = () => {
         setStyledPopup(prevState => !prevState);
@@ -22,24 +23,28 @@ const GameStyle = (props: GameStyleProps) => {
         setStyledPopup(false);
     };
 
-    const handleSelectStyle = (style: string, e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    const handleSelectStyle = (id: number, e: React.MouseEvent<HTMLElement, MouseEvent>) => {
         e.preventDefault();
-        setSelectedStyles((prevStyles) => {
-            if (prevStyles.includes(style)) {
-                return prevStyles.filter((s) => s! == style);
-            } else if (prevStyles.length < 3) {
-                return [...prevStyles, style];
+        setSelectedIds(prev => {
+            if (prev.includes(id)) {
+                return prev.filter(selectedId => selectedId !== id);
             } else {
-                return prevStyles;
+                if (prev.length === 3) {
+                    return [...prev.slice(1), id];
+                }
+                return [...prev, id];
             }
         });
     };
+
+    const selectedStyles = selectedIds.map(id => GAME_STYLE.find(style => style.id === id)?.text);
+
     return (
         <>
             <StylesWrapper>
-                {selectedStyles.map((data, index) => (
-                    <Content key={index}>
-                        {data}
+                {selectedStyles?.map((style) => (
+                    <Content key={style}>
+                        {style}
                     </Content>
                 ))}
             </StylesWrapper>
@@ -55,7 +60,7 @@ const GameStyle = (props: GameStyleProps) => {
                 {styledPopup && (
                     <SelectedStylePopup
                         onClose={handleClosePopup}
-                        selectedStyles={selectedStyles}
+                        selectedStyles={selectedIds}
                         onSelectStyle={handleSelectStyle}
                         position="board"
                     />
