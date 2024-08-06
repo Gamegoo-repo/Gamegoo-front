@@ -5,6 +5,8 @@ interface SignInState {
     emailAuth: string;
     password: string;
     authStatus: boolean;
+    summonerName: string;
+    summonerTag: string;
 };
 
 const initialState: SignInState = {
@@ -12,6 +14,8 @@ const initialState: SignInState = {
     emailAuth: '',
     password: '',
     authStatus: false,
+    summonerName: '',
+    summonerTag: '',
 };
 
 export const signInSlice = createSlice({
@@ -29,6 +33,10 @@ export const signInSlice = createSlice({
     },
     updateAuthStatus: (state, action: PayloadAction<boolean>) => {
       state.authStatus = action.payload;
+    },
+    updateSummoner: (state, action: PayloadAction<string>) => {
+      state.summonerName = action.payload;
+      state.summonerTag = action.payload;
     },
   },
 });

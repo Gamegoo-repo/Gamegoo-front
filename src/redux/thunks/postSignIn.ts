@@ -7,6 +7,8 @@ import { AxiosError } from 'axios';
 interface SignInData {
   email: string;
   password: string;
+  gameName: string;
+  tag: string;
 }
 
 export const postSignIn = createAsyncThunk(
@@ -20,6 +22,8 @@ export const postSignIn = createAsyncThunk(
       const joinData = {
         email: signInState.email,
         password: signInState.password,
+        gameName: signInState.summonerName,
+        tag: signInState.summonerTag,
       };
       
       if (signInState.authStatus === true) {

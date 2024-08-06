@@ -3,10 +3,11 @@
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import { updatePassword } from "@/redux/slices/signInSlice";
+import { RootState } from "@/redux/store";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 interface StyledValid {
@@ -24,6 +25,15 @@ const Password = () => {
   const [repasswordValid, setRepasswordValid] = useState<boolean | undefined>(
     undefined
   );
+
+  const passwordRedux = useSelector(
+    (state: RootState) => state.signIn.password
+  );
+
+  /* redux 업데이트 */
+  useEffect(() => {
+    setPassword(passwordRedux);
+  }, [passwordRedux]);
 
   const passwordRegEx =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;

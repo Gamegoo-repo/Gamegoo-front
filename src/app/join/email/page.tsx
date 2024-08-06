@@ -53,7 +53,7 @@ const Email = () => {
     try {
       await sendEmail({ email });
       setAuthCode("");
-      setAuthCodeValid(false);
+      setAuthCodeValid(undefined);
       dispatch(updateEmailAuth(""));
       dispatch(updateAuthStatus(false));
       setIsSend(true);
@@ -91,9 +91,8 @@ const Email = () => {
         }}
         placeholder="이메일 주소"
         isValid={emailValid}
-        // disabled={isSend}
       />
-      {isSend && (
+      {(isSend || authCodeRedux) && (
         <Input
           inputType="input"
           value={authCode}
@@ -101,6 +100,8 @@ const Email = () => {
             setAuthCode(value);
             if (value.length === 5) {
               setAuthCodeValid(true);
+            } else if (value.length === 0) {
+              setAuthCodeValid(undefined);
             } else {
               setAuthCodeValid(false);
             }
@@ -109,7 +110,7 @@ const Email = () => {
           isValid={authCodeValid}
         />
       )}
-      {isSend ? (
+      {isSend || authCodeRedux ? (
         <Button
           buttonType="primary"
           text="인증 완료"
@@ -120,8 +121,11 @@ const Email = () => {
           buttonType="primary"
           text="인증코드 전송"
           onClick={handleSendEmail}
-          disabled={!authCodeRedux || !emailValid}
+          disabled={!emailValid}
         />
+      )}
+      {isSend && (
+        <ReButton onClick={handleSendEmail}>인증 코드 재전송</ReButton>
       )}
     </Div>
   );
@@ -139,4 +143,12 @@ const Div = styled.div`
 const Label = styled.div`
   color: ${theme.colors.gray700};
   ${(props) => props.theme.fonts.regular25};
+`;
+
+const ReButton = styled.button`
+  color: ${theme.colors.purple100};
+  ${(props) => props.theme.fonts.medium16};
+  text-decoration-line: underline;
+  text-align: left;
+  margin-top: 10px;
 `;

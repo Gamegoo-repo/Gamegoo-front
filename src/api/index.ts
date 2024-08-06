@@ -1,15 +1,8 @@
+import { getAccessToken } from "@/utils/storage";
 import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosInstance } from "axios";
 
 export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 export const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL;
-
-/* 토큰을 가져오는 함수 */
-export const getToken = () => {
-  if (typeof window !== 'undefined') {
-    return localStorage.getItem('access_token');
-  }
-  return null;
-};
 
 /* Axios 인스턴스 생성 */
 const Axios: AxiosInstance = axios.create({
@@ -24,14 +17,14 @@ export const AuthAxios: AxiosInstance = axios.create({
   baseURL: BASE_URL,
   headers: {
     'Content-Type': 'application/json;charset=UTF-8',
-    Authorization: `Bearer ${getToken()}`,
+    Authorization: `Bearer ${getAccessToken()}`,
   },
 });
 
 /* 요청 인터셉터 */
 Axios.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = getToken();
+    const token = getAccessToken();
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }

@@ -6,6 +6,7 @@ import Checkbox from "@/components/common/Checkbox";
 import Input from "@/components/common/Input";
 import { emailRegEx } from "@/constants/regEx";
 import { theme } from "@/styles/theme";
+import { setToken } from "@/utils/storage";
 import { AxiosError } from "axios";
 import Image from "next/image";
 import Link from "next/link";
@@ -49,6 +50,7 @@ const Login = () => {
       } else {
         sessionStorage.setItem("accessToken", accessToken);
       }
+      setToken(accessToken, refreshToken, autoLogin);
 
       router.push("/home");
     } catch (error) {
@@ -159,9 +161,10 @@ export default Login;
 
 const Container = styled.div`
   width: 100%;
-  height: 100%;
+  height: 100vh;
   display: flex;
   justify-content: center;
+  align-items: center;
 `;
 
 const Box = styled.div`
@@ -170,9 +173,8 @@ const Box = styled.div`
   padding: 35px;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
-
-  margin-bottom: 140px;
 `;
 
 const Title = styled.div`
