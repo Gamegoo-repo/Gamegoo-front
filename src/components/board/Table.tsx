@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import { setDateFormatter, setPositionImg, setTierImg } from "@/utils/custom";
+import { setDateFormatter, setPositionImg, setProfileImg, setTierImg } from "@/utils/custom";
 import ReadBoard from "../readBoard/ReadBoard";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,19 +14,21 @@ interface TableTitleProps {
 };
 
 interface TableContentProps {
-    id: number;
-    image: string;
-    account: string;
-    manner_lev: number;
-    tierImg: number;
-    tier: string;
-    main_position: number;
-    sub_position: number;
-    hope_position: number;
-    champion: string[];
-    odds: number;
-    date: string;
+    boardId: number,
+    memberId: number,
+    profileImage: string,
+    gameName: string,
+    mannerLevel: number,
+    tier: string,
+    gameMode: number,
+    mainPosition: number,
+    subPosition: number,
+    wantPosition: number,
+    championList: number[],
+    winRate: number,
+    createdAt: string
 };
+// createdAt: "2024-08-04T15:57:55.929Z"
 
 interface TableProps {
     title: TableTitleProps[];
@@ -66,51 +68,53 @@ const Table = (props: TableProps) => {
     return (
         <>
             {isReadingModal &&
-                <ReadBoard onClose={handlePostClose} postId={isReadBoardId} gameType="canyon"/>
+                <ReadBoard onClose={handlePostClose} postId={isReadBoardId} gameType="canyon" />
             }
             <TableWrapper>
                 <TableHead>
-                    {title.map(value => {
+                    {title.map(data => {
                         return (
-                            <Title key={value.id} className="table_width">{value.name}</Title>
+                            <Title key={data.id} className="table_width">{data.name}</Title>
                         )
                     })}
                 </TableHead>
                 <TableContent>
-                    {content.map(value => {
+                    {content?.map(data => {
                         return (
-                            <Row key={value.id}
-                                onClick={() => handlePostOpen(value.id)}>
+                            <Row key={data.boardId}
+                                onClick={() => handlePostOpen(data.boardId)}>
                                 <First className="table_width">
                                     <Image
-                                        src={value.image}
+                                        src={setProfileImg(data.profileImage)}
                                         width={50}
                                         height={50}
                                         alt="profile image"
                                     />
-                                    <P>{value.account}</P>
+                                    <P>{data.gameName}</P>
                                 </First>
                                 <Second className="table_width">
-                                    <P>LV.{value.manner_lev}</P>
+                                    {data.mannerLevel &&
+                                        <P>LV.{data.mannerLevel}</P>
+                                    }
                                 </Second>
                                 <Third className="table_width">
-                                    <Image
-                                        src={setTierImg(value.tierImg)}
+                                    {/* <Image
+                                        src={setTierImg(data.tier)}
                                         width={26}
                                         height={13}
                                         alt="profile image"
-                                    />
-                                    <P>{value.tier}</P>
+                                    /> */}
+                                    <P>{data.tier}</P>
                                 </Third>
                                 <Fourth className="table_width">
                                     <Image
-                                        src={setPositionImg(value.main_position)}
+                                        src={setPositionImg(data.mainPosition)}
                                         width={35}
                                         height={28}
                                         alt="main position image"
                                     />
                                     <Image
-                                        src={setPositionImg(value.sub_position)}
+                                        src={setPositionImg(data.subPosition)}
                                         width={26}
                                         height={25}
                                         alt="main position image"
@@ -118,14 +122,14 @@ const Table = (props: TableProps) => {
                                 </Fourth>
                                 <Fifth className="table_width">
                                     <Image
-                                        src={setPositionImg(value.hope_position)}
+                                        src={setPositionImg(data.wantPosition)}
                                         width={26}
                                         height={25}
                                         alt="sub position image"
                                     />
                                 </Fifth>
                                 <Sixth className="table_width">
-                                    {value.champion.map((data, index) => (
+                                    {/* {data.championList.map((data, index) => (
                                         <Image
                                             key={index}
                                             src={data}
@@ -133,13 +137,25 @@ const Table = (props: TableProps) => {
                                             height={50}
                                             alt="champion image"
                                         />
+                                    ))} */}
+                                    {data.championList.map((data, index) => (
+                                        // <Image
+                                        //     key={index}
+                                        //     src={data}
+                                        //     width={50}
+                                        //     height={50}
+                                        //     alt="champion image"
+                                        // />
+                                        data
                                     ))}
                                 </Sixth>
                                 <Seventh className="table_width">
-                                    <P className={value.odds >= 50 ? 'emph' : 'basic'}>{value.odds}%</P>
+                                    {data.winRate &&
+                                        <P className={data.winRate >= 50 ? 'emph' : 'basic'}>{data.winRate}%</P>
+                                    }
                                 </Seventh>
                                 <Eighth className="table_width">
-                                    <P>{setDateFormatter(value.date)}</P>
+                                    <P>{setDateFormatter(data.createdAt)}</P>
                                 </Eighth>
                             </Row>
                         )

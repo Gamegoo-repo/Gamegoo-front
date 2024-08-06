@@ -14,15 +14,14 @@ import PostBoard from "@/components/createBoard/PostBoard";
 import ChatButton from "@/components/common/ChatButton";
 import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setClosePostingModal,
-  setOpenPostingModal,
-} from "@/redux/slices/modalSlice";
+import { setClosePostingModal, setOpenPostingModal } from "@/redux/slices/modalSlice";
+import { getBoardList } from "@/api/board";
 
 const DROP_DATA1 = [
-  { id: 1, value: "솔로1" },
-  { id: 2, value: "솔로2" },
-  { id: 3, value: "솔로3" },
+  { id: 1, value: '빠른대전' },
+  { id: 2, value: '솔로랭크' },
+  { id: 3, value: '자유랭크' },
+  { id: 4, value: '칼바람 나락' },
 ];
 
 const DROP_DATA2 = [
@@ -142,66 +141,41 @@ const BOARD_CONTENT = [
   },
 ];
 
+const ITEMS_PER_PAGE = 20;
+
 const BoardPage = () => {
+  const [listData, getListData] = useState();
   const [currentPage, setCurrentPage] = useState(1);
-  //TODO: itemsPerPage 추후 20개로 수정
-  const itemsPerPage = 5;
-  const pageButtonCount = 5;
+  const [hasMoreItems, setHasMoreItems] = useState(true);
 
-  const indexOfLastPost = currentPage * itemsPerPage;
-  const indexOfFirstPost = indexOfLastPost - itemsPerPage;
-  const currentPosts = BOARD_CONTENT.slice(indexOfFirstPost, indexOfLastPost);
-
-  const [isPosition, setIsPosition] = useState(0);
+  const [isPosition, setIsPosition] = useState(1);
   const [micOn, setMicOn] = useState(true);
 
   const [isDropdownOpen1, setIsDropdownOpen1] = useState(false);
   const [isDropdownOpen2, setIsDropdownOpen2] = useState(false);
-  const [selectedDropOption1, setSelectedDropOption1] = useState("솔로 랭크");
-  const [selectedDropOption2, setSelectedDropOption2] = useState("티어 선택");
+  const [selectedFirstDropOption, setSelectedDropOption1] = useState(1);
+  const [selectedSecondDropOption, setSelectedDropOption2] = useState(2);
 
   const dropdownRef1 = useRef<HTMLDivElement>(null);
   const dropdownRef2 = useRef<HTMLDivElement>(null);
 
   const dispatch = useDispatch();
 
-  const isPostingModal = useSelector(
-    (state: RootState) => state.modal.postingModal
-  );
+  const isPostingModal = useSelector((state: RootState) => state.modal.postingModal);
 
-  const handleFirstDropValue = (value: string) => {
-    console.log(value);
-    setSelectedDropOption1(value);
+  // 첫번째 드롭
+  const handleFirstDropValue = (id: number) => {
+    setSelectedDropOption1(id);
     setIsDropdownOpen1(false);
   };
 
-  const handleSecondDropValue = (value: string) => {
-    console.log(value);
-    setSelectedDropOption2(value);
+  // 두번째 드롭
+  const handleSecondDropValue = (id: number) => {
+    setSelectedDropOption2(id);
     setIsDropdownOpen2(false);
   };
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
-  const handlePositionFilter = (id: number) => {
-    setIsPosition(id);
-  };
-
-  const handleMic = () => {
-    setMicOn((prevStatus) => !prevStatus);
-  };
-
-  const handleWritingOpen = () => {
-    dispatch(setOpenPostingModal());
-  };
-
-  const handleWritingClose = () => {
-    dispatch(setClosePostingModal());
-    dispatchEvent;
-  };
-
+  // 첫번째 드롭 외부 클릭
   const handleDropdownClickOutside1 = (event: MouseEvent) => {
     if (
       dropdownRef1.current &&
@@ -211,6 +185,7 @@ const BoardPage = () => {
     }
   };
 
+  // 두번째 드롭 외부 클릭
   const handleDropdownClickOutside2 = (event: MouseEvent) => {
     if (
       dropdownRef2.current &&
@@ -228,6 +203,64 @@ const BoardPage = () => {
       document.removeEventListener("mousedown", handleDropdownClickOutside2);
     };
   }, []);
+
+  // 포지션 필터
+  const handlePositionFilter = (id: number) => {
+    setIsPosition(id);
+  };
+
+  // 마이크 여부
+  const handleMic = () => {
+    setMicOn((prevStatus) => !prevStatus);
+  };
+
+  // 글쓰기 모달 오픈
+  const handleWritingOpen = () => {
+    dispatch(setOpenPostingModal());
+  };
+
+  // 글쓰기 모달 닫기
+  const handleWritingClose = () => {
+    dispatch(setClosePostingModal());
+  };
+
+  // 게시글 목록
+  useEffect(() => {
+    const getList = async () => {
+
+      const params = {
+        pageIdx: currentPage
+      };
+
+      const data = await getBoardList(params);
+      getListData(data.result);
+      setHasMoreItems(data.result.length === ITEMS_PER_PAGE);
+    };
+
+    getList();
+  }, [
+    currentPage,
+    selectedFirstDropOption,
+    selectedSecondDropOption,
+    isPosition,
+    micOn,]);
+
+  // 페이지네이션 이전 클릭
+  const handlePrevPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  // 페이지네이션 다음 클릭
+  const handleNextPage = () => {
+    if (hasMoreItems) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  // 페이지네이션 페이지 클릭F
+  const handlePageClick = (page: number) => {
+    setCurrentPage(page);
+  };
 
   return (
     <>
@@ -254,7 +287,7 @@ const BoardPage = () => {
                 open={isDropdownOpen1}
                 setOpen={setIsDropdownOpen1}
                 onDropValue={handleFirstDropValue}
-                defaultValue={selectedDropOption1}
+                defaultValue={selectedFirstDropOption}
               />
               <Dropdown
                 type="type1"
@@ -265,7 +298,7 @@ const BoardPage = () => {
                 open={isDropdownOpen2}
                 setOpen={setIsDropdownOpen2}
                 onDropValue={handleSecondDropValue}
-                defaultValue={selectedDropOption2}
+                defaultValue={selectedSecondDropOption}
               />
               <PositionBox>
                 <PositionFilter
@@ -299,14 +332,14 @@ const BoardPage = () => {
             </SecondBlock>
           </SecondRow>
           <Main>
-            <Table title={BOARD_TITLE} content={currentPosts} />
+            <Table title={BOARD_TITLE} content={listData} />
           </Main>
           <Pagination
             currentPage={currentPage}
-            totalItems={BOARD_CONTENT.length}
-            itemsPerPage={itemsPerPage}
-            pageButtonCount={pageButtonCount}
-            onPageChange={handlePageChange}
+            hasMoreItems={hasMoreItems}
+            onPrevPage={handlePrevPage}
+            onNextPage={handleNextPage}
+            onPageClick={handlePageClick}
           />
           <Footer>
             <ChatBoxContent>
@@ -325,7 +358,6 @@ const Wrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  padding-top: 140px;
 `;
 
 const BoardContent = styled.div`
