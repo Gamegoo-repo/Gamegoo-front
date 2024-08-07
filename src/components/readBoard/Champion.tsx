@@ -2,8 +2,8 @@ import styled from "styled-components";
 import Image from "next/image";
 
 interface ChampioinListInterface {
-  id: number;
-  value: string;
+  championId: number;
+  championName: string;
 }
 
 interface ChampionProps {
@@ -19,8 +19,8 @@ const Champion = (props: ChampionProps) => {
       <Images>
         {list.map((champion) => (
           <Image
-            key={champion.id}
-            src={champion.value}
+            key={champion.championId}
+            src={champion.championName}
             width={50}
             height={50}
             alt="champion image"
