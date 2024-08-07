@@ -174,7 +174,7 @@ const Gray = styled.div`
   ${(props) => props.theme.fonts.regular12};
 `;
 
-const Title = styled.h1`
+const Title = styled.div`
   padding-left: 6px;
   margin-bottom: 13px;
   ${(props) => props.theme.fonts.regular25};
@@ -195,7 +195,7 @@ const MannerKey = styled.div`
   gap: 14px;
 `;
 
-const Small = styled.h1`
+const Small = styled.div`
   ${(props) => props.theme.fonts.bold11};
   color: ${theme.colors.gray800};
   margin-left: 11px;

@@ -63,7 +63,7 @@ const Header = styled.header`
   margin-bottom: 32px;
 `;
 
-const Title = styled.h1`
+const Title = styled.div`
   ${(props) => props.theme.fonts.bold32};
   color: #393939;
 `;

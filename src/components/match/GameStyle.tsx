@@ -55,9 +55,9 @@ const GameStyle = (props: GameStyleProps) => {
 
   return (
     <Style>
-      <LeftLabel profileType={profileType}>
+      <LeftLabel $profileType={profileType}>
         게임 스타일
-        <GameBox profileType={profileType}>
+        <GameBox $profileType={profileType}>
           {selectedStyles.map((data, index) => (
             <Box
               key={index}
@@ -69,7 +69,7 @@ const GameStyle = (props: GameStyleProps) => {
           {profileType !== "other" && (
             <Div>
               <AddGameStyle
-                profileType={profileType}
+                $profileType={profileType}
                 onClick={handleStylePopup}
               >
                 <Image
@@ -91,7 +91,7 @@ const GameStyle = (props: GameStyleProps) => {
         </GameBox>
       </LeftLabel>
       {profileType === "none" && (
-        <LeftLabel profileType={profileType}>
+        <LeftLabel $profileType={profileType}>
           마이크
           <Toggle isOn={isMike} onToggle={handleMike} />
         </LeftLabel>
@@ -109,26 +109,26 @@ const Style = styled.div`
   align-items: flex-start;
 `;
 
-const LeftLabel = styled.div<{ profileType: profileType }>`
+const LeftLabel = styled.div<{ $profileType: profileType }>`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 12px;
-  ${({ profileType }) =>
-    profileType !== "none" &&
+  ${({ $profileType }) =>
+    $profileType !== "none" &&
     css`
       font: ${theme.fonts.semiBold14};
     `}
 `;
 
-const GameBox = styled.div<{ profileType: profileType }>`
+const GameBox = styled.div<{ $profileType: profileType }>`
   display: row;
   display: flex;
   gap: 16px;
   position: relative;
 
-  ${({ profileType }) =>
-    profileType === "mini" &&
+  ${({ $profileType }) =>
+    $profileType === "mini" &&
     css`
       gap: 6px;
     `}
@@ -139,7 +139,7 @@ const Div = styled.div`
   border-radius: 25px;
 `;
 
-const AddGameStyle = styled.button<{ profileType: profileType }>`
+const AddGameStyle = styled.button<{ $profileType: profileType }>`
   display: flex;
   width: 62px;
   height: 50px;
@@ -150,8 +150,8 @@ const AddGameStyle = styled.button<{ profileType: profileType }>`
   background: ${theme.colors.purple300};
   outline: none;
 
-  ${({ profileType }) =>
-    profileType === "mini" &&
+  ${({ $profileType }) =>
+    $profileType === "mini" &&
     css`
       width: 32px;
       height: 25px;

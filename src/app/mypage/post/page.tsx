@@ -58,7 +58,7 @@ const PostPage = styled.header`
   margin-bottom: 32px;
 `;
 
-const Title = styled.h1`
+const Title = styled.div`
   ${(props) => props.theme.fonts.bold25};
   color: ${theme.colors.gray700};
   margin-bottom: 39px;

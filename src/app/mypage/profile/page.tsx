@@ -10,6 +10,7 @@ import { getProfile } from "@/api/mypage";
 import { setUserProfile } from "@/redux/slices/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { setChatRoomDateFormatter } from "@/utils/custom";
 
 const passwordLength = 10;
 
@@ -46,6 +47,12 @@ const MyProfilePage = () => {
     fetchProfile();
   }, []);
 
+  /* user 업데이트 값 가져오기 */
+  useEffect(() => {
+    // 필요한 로직을 여기에 추가
+    console.log("user 업데이트:", user);
+  }, [user]);
+
   return (
     <Wrapper>
       <MyProfileContent>
@@ -56,7 +63,9 @@ const MyProfilePage = () => {
         <Private>
           <Title>
             개인정보
-            <Small>{`마지막 업데이트 : ${user.updatedAt}`}</Small>
+            <Small>{`마지막 업데이트 : ${setChatRoomDateFormatter(
+              user.updatedAt
+            )}`}</Small>
           </Title>
           <PrivateContent>
             <Box>
@@ -146,7 +155,7 @@ const Private = styled.header`
   margin-bottom: 80px;
 `;
 
-const Title = styled.h1`
+const Title = styled.div`
   display: flex;
   align-items: flex-end;
   gap: 22px;
@@ -154,7 +163,7 @@ const Title = styled.h1`
   color: ${theme.colors.gray700};
 `;
 
-const Small = styled.h1`
+const Small = styled.div`
   ${(props) => props.theme.fonts.bold11};
   color: ${theme.colors.gray800};
   margin-bottom: 5px;
@@ -184,7 +193,7 @@ const Email = styled.div`
   color: ${theme.colors.gray800};
   ${(props) => props.theme.fonts.regular18};
 `;
-const Row = styled.button`
+const Row = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -198,7 +207,7 @@ const Password = styled.button`
   gap: 8px;
 `;
 
-const Circle = styled.button`
+const Circle = styled.div`
   width: 5px;
   height: 5px;
   border-radius: 10px;
