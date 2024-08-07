@@ -22,7 +22,7 @@ const AlertBox: React.FC<AlertBoxProps> = ({
   };
 
   return (
-    <Container read={read} onClick={handleChangeRead} size={size}>
+    <Container $read={read} onClick={handleChangeRead} size={size}>
       <AlertImage>
         <Round size={size}></Round>
         <Read size={size}></Read>
@@ -37,7 +37,7 @@ const AlertBox: React.FC<AlertBoxProps> = ({
 
 export default AlertBox;
 
-const Container = styled.div<{ read: boolean; size: string }>`
+const Container = styled.div<{ $read: boolean; size: string }>`
   width: 100%;
   height: 110px;
   border-radius: 10px;
@@ -46,7 +46,7 @@ const Container = styled.div<{ read: boolean; size: string }>`
   box-shadow: 0px 0px 16.8px 0px rgba(0, 0, 0, 0.15);
   display: flex;
   gap: 26px;
-  opacity: ${(props) => (props.read ? 0.5 : 1)};
+  opacity: ${(props) => (props.$read ? 0.5 : 1)};
 
   ${(props) =>
     props.size === "small" &&

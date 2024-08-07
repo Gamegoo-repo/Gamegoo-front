@@ -62,15 +62,15 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
               onClick={() => setIsProfileListOpen(false)}
             />
             <ProfileList>
-              {[0, 1, 2, 3, 4, 5, 6, 7].map((item, index) => (
+              {[0, 1, 2, 3, 4, 5, 6, 7].map((item) => (
                 <ProfileListImage
-                  key={index}
+                  key={item}
                   src={`/assets/images/profile/profile${item}.svg`}
                   width={106.52}
                   height={119.65}
                   alt="프로필 이미지"
-                  isSelected={index === selectedImageIndex}
-                  onClick={() => handleImageClick(index)}
+                  isSelected={item === selectedImageIndex}
+                  onClick={() => handleImageClick(item)}
                 />
               ))}
             </ProfileList>
