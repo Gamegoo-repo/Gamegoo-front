@@ -1,4 +1,4 @@
-import { AuthAxios } from ".";
+import { AuthAxios } from "./auth";
 
 export const getProfile= async () => {
   const endpoint = '/v1/member/profile';
@@ -15,7 +15,7 @@ export const getProfile= async () => {
 export const putProfileImg= async (profileImage: string) => {
   const endpoint = '/v1/member/profile_image';
   try {
-    console.log("이거바", profileImage);
+    console.log("선택한 프로필 이미지", profileImage);
     const response = await AuthAxios.put(endpoint, { profileImage });
     console.log("프로필 이미지 수정 성공:", response.data);
     return response.data;
