@@ -25,3 +25,13 @@ export const blockMember = async (memberId: number) => {
         console.error("차단 실패:", error)
     }
 };
+
+export const unblockMember = async (memberId: number) => {
+    try {
+        const response = await Axios.delete(`/v1/member/block/${memberId}`);
+        console.log("차단 해제 성공:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("차단 해제 실패:", error)
+    }
+};

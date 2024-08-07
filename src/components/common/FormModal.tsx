@@ -31,10 +31,14 @@ const FormModal = (props: FormModalProps) => {
     onClose,
   } = props;
 
+  const handleForm = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
   return (
     <Overlay $position={position}>
       <Wrapper
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) => handleForm(e)}
         $type={type}
         $width={width}
         $height={height}

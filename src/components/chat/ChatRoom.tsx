@@ -41,7 +41,7 @@ const ChatRoom = (props: ChatRoomProps) => {
     const [message, setMessage] = useState("");
     const [messageList, setMessageList] = useState([]);
     const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
-    const [checkedItems, setCheckedItems] = useState<string[]>([]);
+    const [checkedItems, setCheckedItems] = useState<number[]>([]);
 
     const isEvaluationModalOpen = useSelector((state: RootState) => state.modal.evaluationModal);
     const isMannerStatus = useSelector((state: RootState) => state.mannerStatus.mannerStatus);
@@ -101,9 +101,9 @@ const ChatRoom = (props: ChatRoomProps) => {
         { text: '비매너 평가', onClick: (e) => handleChangeModal(e, 'badManner') },
     ];
 
-    const handleCheckboxChange = (checked: string) => {
+    const handleCheckboxChange = (checked: number) => {
         setCheckedItems((prev) =>
-            prev.includes(checked) ? prev.filter((r) => r !== checked) : [...prev, checked]
+            prev.includes(checked) ? prev.filter((c) => c !== checked) : [...prev, checked]
         );
     };
 
@@ -200,7 +200,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                         {isMannerStatus === "manner" && MANNER_TYPES.map((data) => (
                             <Checkbox
                                 key={data.id}
-                                value={data.text}
+                                value={data.id}
                                 label={data.text}
                                 fontSize="semiBold16"
                                 isArraychecked={checkedItems.includes(data.text)}

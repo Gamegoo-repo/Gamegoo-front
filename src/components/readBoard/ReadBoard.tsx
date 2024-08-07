@@ -21,7 +21,14 @@ import { Post } from "@/interface/board";
 import { getPost } from "@/api/board";
 import LoadingSpinner from "../common/LoadingSpinner";
 import { setPostingDateFormatter } from "@/utils/custom";
-import { blockMember } from "@/api/member";
+import { blockMember, unblockMember } from "@/api/member";
+import FormModal from "../common/FormModal";
+import Input from "../common/Input";
+import Checkbox from "../common/Checkbox";
+import { REPORT_REASON } from "@/data/report";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { setCloseModal, setOpenModal } from "@/redux/slices/modalSlice";
 
 interface ReadBoardProps {
   onClose: () => void;
@@ -60,13 +67,22 @@ const userData = {
 const ReadBoard = (props: ReadBoardProps) => {
   const { onClose, postId, gameType } = props;
 
+  const dispatch = useDispatch();
+
   const [post, setPost] = useState<Post>();
   const [textareaValue, setTextareaValue] = useState("");
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
   const [isMannerBalloonVisible, setIsMannerBalloonVisible] = useState(true);
   const [isMannerLevelBoxOpen, setIsMannerLevelBoxOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isBlocked, setIsBlocked] = useState(false);
+  const [checkedItems, setCheckedItems] = useState<number[]>([]);
+  const [reportDetail, setReportDetail] = useState<string>("");
 
+  const isModalType = useSelector((state: RootState) => state.modal.modalType);
+
+
+  console.log(checkedItems)
   /* 클릭해서 매너지워드 보기 박스 닫히 */
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -86,17 +102,48 @@ const ReadBoard = (props: ReadBoardProps) => {
     setIsMoreBoxOpen(false);
   };
 
-  /* 신고하기 */
-  const handleReport = () => {
-    console.log('신고하기');
+  /* 신고하기 모달 오픈 */
+  const handleReportModal = () => {
+    dispatch(setOpenModal('report'));
     handleMoreBoxClose();
   };
 
-  /* 차단하기 */
-  const handleBlock = () => {
-    if(!post) return;
+  /* 신고하기 */
+  const handleReport = ()=>{
+    // const params = {
+    //   targetMemberId: post.memberId,
+    //   reportTypeIdList": [
+    //     0
+    //   ],
+    //   contents: reportDetail
+    // }; 
 
-    blockMember(post.memberId);
+    // const data = reportMember(params);
+  };
+
+  /* 차단하기 */
+  const handleBlock = async () => {
+    if (!post) return;
+
+    const data = await blockMember(post.memberId);
+
+    if (data.isSuccess) {
+      setIsBlocked(true);
+    }
+
+    handleMoreBoxClose();
+  };
+
+  /* 차단 해제 */
+  const handleUnblock = async () => {
+    if (!post) return;
+
+    const data = await unblockMember(post.memberId);
+
+    if (data.isSuccess) {
+      setIsBlocked(false);
+    }
+
     handleMoreBoxClose();
   };
 
@@ -114,9 +161,16 @@ const ReadBoard = (props: ReadBoardProps) => {
   /* 더보기 버튼 메뉴 */
   const MoreBoxMenuItems: MoreBoxMenuItems[] = [
     { text: '친구 추가', onClick: handleAddFriend },
-    { text: '차단하기', onClick: handleBlock },
-    { text: '신고하기', onClick: handleReport },
+    { text: isBlocked ? '차단 해제' : '차단하기', onClick: isBlocked ? handleUnblock : handleBlock },
+    { text: '신고하기', onClick: handleReportModal },
   ];
+
+  /* 신고하기 사유 */
+  const handleCheckboxChange = (checked: number) => {
+    setCheckedItems((prev) =>
+      prev.includes(checked) ? prev.filter((c) => c !== checked) : [...prev, checked]
+    );
+  };
 
   /* 게시글 api */
   useEffect(() => {
@@ -130,6 +184,13 @@ const ReadBoard = (props: ReadBoardProps) => {
     getPostData();
   }, [])
 
+  /* 신고하기 모달 닫히 */
+  const handleModalClose = () => {
+    setCheckedItems([]);
+    setReportDetail("");
+    dispatch(setCloseModal());
+  };
+
   // 스피너 진주님과 합치기
   if (loading) {
     return (
@@ -142,86 +203,137 @@ const ReadBoard = (props: ReadBoardProps) => {
   // if(post?.memberId===)
 
   return (
-    <CRModal type="reading" onClose={onClose}>
-      {post && (
-        <>
-          {isMoreBoxOpen && (
-            <MoreBox
-              items={MoreBoxMenuItems}
-              top={67}
-              left={776} />
-          )}
-          {isMannerLevelBoxOpen && <MannerLevelBox top="14%" right="22%" />}
-          <UpdatedDate>게시일 : {setPostingDateFormatter(post.createdAt)}</UpdatedDate>
-          <UserSection>
-            <UserLeft>
-              <ProfileImage
-                image={post.profileImage} />
-              <UserNManner>
-                <User
-                  account={post.gameName}
-                  tag={post.tag}
-                  tier={post.tier} />
-                <MannerLevel
-                  level={post.mannerLevel}
-                  onClick={handleMannerLevelBoxOpen}
-                  position="top"
-                  isBalloon={isMannerBalloonVisible} />
-              </UserNManner>
-            </UserLeft>
-            <UserRight>
-              <Mic
-                status={post.voice} />
-              <MoreBoxButton onClick={handleMoreBoxToggle} />
-            </UserRight>
-          </UserSection>
-          <ChampionNQueueSection>
-            <Champion
-              list={post.championList}
-              size={14} />
-            <QueueType
-              value={post.gameMode} />
-          </ChampionNQueueSection>
-          {post.mainPosition &&
-            post.subPosition &&
-            post.wantPosition &&
-            <PositionSection>
-              <Title>포지션</Title>
-              <PositionBox
-                status="reading"
-                main={post.mainPosition}
-                sub={post.subPosition}
-                want={post.wantPosition} />
-            </PositionSection>
-          }
-          <WinningRateSection $gameType={gameType}>
-            <WinningRate
-              completed={userData.winning_rate.completed}
-              history={userData.winning_rate.history} />
-          </WinningRateSection>
-          <StyleSection $gameType={gameType}>
-            <Title>게임 스타일</Title>
-            <GameStyle styles={post.gameStyles} />
-          </StyleSection>
-          <MemoSection $gameType={gameType}>
-            <Title>메모</Title>
-            <Memo>
-              <MemoData>
-                {post.contents}
-              </MemoData>
-            </Memo>
-          </MemoSection>
-          <ButtonContent $gameType={gameType}>
-            <Button
-              type="submit"
-              buttonType="primary"
-              text="말 걸어보기"
-              onClick={onClose} />
-          </ButtonContent>
-        </>
-      )}
-    </CRModal>
-
+    <>
+      <CRModal type="reading" onClose={onClose}>
+        {post && (
+          <>
+            {isMoreBoxOpen && (
+              <MoreBox
+                items={MoreBoxMenuItems}
+                top={67}
+                left={776} />
+            )}
+            {isMannerLevelBoxOpen && <MannerLevelBox top="14%" right="22%" />}
+            <UpdatedDate>게시일 : {setPostingDateFormatter(post.createdAt)}</UpdatedDate>
+            <UserSection>
+              <UserLeft>
+                <ProfileImage
+                  image={post.profileImage} />
+                <UserNManner>
+                  <User
+                    account={post.gameName}
+                    tag={post.tag}
+                    tier={post.tier} />
+                  <MannerLevel
+                    level={post.mannerLevel}
+                    onClick={handleMannerLevelBoxOpen}
+                    position="top"
+                    isBalloon={isMannerBalloonVisible} />
+                </UserNManner>
+              </UserLeft>
+              <UserRight>
+                <Mic
+                  status={post.voice} />
+                <MoreBoxButton onClick={handleMoreBoxToggle} />
+              </UserRight>
+            </UserSection>
+            <ChampionNQueueSection>
+              <Champion
+                list={post.championList}
+                size={14} />
+              <QueueType
+                value={post.gameMode} />
+            </ChampionNQueueSection>
+            {post.mainPosition &&
+              post.subPosition &&
+              post.wantPosition &&
+              <PositionSection>
+                <Title>포지션</Title>
+                <PositionBox
+                  status="reading"
+                  main={post.mainPosition}
+                  sub={post.subPosition}
+                  want={post.wantPosition} />
+              </PositionSection>
+            }
+            <WinningRateSection $gameType={gameType}>
+              <WinningRate
+                completed={userData.winning_rate.completed}
+                history={userData.winning_rate.history} />
+            </WinningRateSection>
+            <StyleSection $gameType={gameType}>
+              <Title>게임 스타일</Title>
+              <GameStyle styles={post.gameStyles} />
+            </StyleSection>
+            <MemoSection $gameType={gameType}>
+              <Title>메모</Title>
+              <Memo>
+                <MemoData>
+                  {post.contents}
+                </MemoData>
+              </Memo>
+            </MemoSection>
+            <ButtonContent $gameType={gameType}>
+              <Button
+                type="submit"
+                buttonType="primary"
+                text="말 걸어보기"
+                onClick={onClose} />
+            </ButtonContent>
+          </>
+        )}
+      </CRModal>
+      {isModalType === 'report' &&
+        <FormModal
+          type="checkbox"
+          title="유저 신고하기"
+          width="494px"
+          height="721px"
+          closeButtonWidth={17}
+          closeButtonHeight={17}
+          borderRadius="20px"
+          onClose={handleModalClose}
+        >
+          <div>
+            <ReportLabel>신고 사유</ReportLabel>
+            <ReportReasonContent>
+              {REPORT_REASON.map((data) => (
+                <Checkbox
+                  key={data.id}
+                  value={data.id}
+                  label={data.text}
+                  fontSize="regular18"
+                  isArraychecked={checkedItems.includes(data.id)}
+                  onArrayChange={handleCheckboxChange}
+                />
+              ))}
+            </ReportReasonContent>
+            <ReportLabel>상세 내용</ReportLabel>
+            <ReportContent>
+              <Input
+                inputType="textarea"
+                value={reportDetail}
+                onChange={(value) => {
+                  setReportDetail(value);
+                }}
+                placeholder="내용을 입력하세요. (선택)"
+                borderRadius="8px"
+                fontSize="regular18"
+                height="134px"
+              />
+            </ReportContent>
+            <ReportButton>
+              <Button
+                onClick={handleModalClose}
+                buttonType="primary"
+                text="신고하기"
+                disabled={checkedItems.length === 0}
+              />
+            </ReportButton>
+          </div>
+        </FormModal>
+      }
+    </>
   );
 };
 
@@ -303,5 +415,26 @@ const LoadingContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; // 페이지 전체 높이
+  height: 100vh;
+`;
+
+const ReportLabel = styled.p`
+  color: ${theme.colors.gray600};
+  ${(props) => props.theme.fonts.semiBold18};
+  margin-bottom: 12px;
+`;
+
+const ReportContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+`;
+
+const ReportReasonContent = styled(ReportContent)`
+  margin-bottom: 38px;
+`;
+
+const ReportButton = styled.div`
+  margin-top:21px;
 `;

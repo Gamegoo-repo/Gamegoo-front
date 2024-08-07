@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 interface CheckboxProps {
-  value: string;
+  value: number;
   label?: string;
   isChecked?: boolean;
   onChange?: (isChecked: boolean) => void;
   isArraychecked?: boolean;
-  onArrayChange?: (checked: string) => void;
+  onArrayChange?: (checked: number) => void;
   fontSize?: string;
 }
 

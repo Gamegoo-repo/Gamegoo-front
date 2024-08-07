@@ -1,6 +1,6 @@
 import Axios from ".";
 
-interface PostProps {
+interface PostInterface {
     gameMode: number;
     mainPosition: number;
     subPosition: number;
@@ -10,7 +10,7 @@ interface PostProps {
     contents: string;
 }
 
-interface ListProps {
+interface ListInterface {
     pageIdx: number;
 }
 
@@ -20,7 +20,7 @@ const headers = {
     Authorization: `Bearer ${token}`
 };
 
-export const postBoard = async (params: PostProps) => {
+export const postBoard = async (params: PostInterface) => {
     try {
         const response = await Axios.post("/v1/posts", params, { headers });
         console.log("글쓰기 완료:", response.data);
@@ -31,7 +31,7 @@ export const postBoard = async (params: PostProps) => {
     }
 };
 
-export const getBoardList = async (params: ListProps) => {
+export const getBoardList = async (params: ListInterface) => {
     try {
         const response = await Axios.get("/v1/posts/list", { params });
         console.log("게시판 목록:", response.data);

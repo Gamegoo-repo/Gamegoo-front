@@ -51,7 +51,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
     const [isChatRoomVisible, setIsChatRoomVisible] = useState(false);
     const [isMoreBoxOpen, setIsMoreBoxOpen] = useState<number | null>(null);
     const [chatId, setChatId] = useState<number | null>(null);
-    const [checkedItems, setCheckedItems] = useState<string[]>([]);
+    const [checkedItems, setCheckedItems] = useState<number[]>([]);
     const [reportDetail, setReportDetail] = useState<string>("");
 
     const isModalType = useSelector((state: RootState) => state.modal.modalType);
@@ -95,9 +95,9 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
         }
     };
 
-    const handleCheckboxChange = (checked: string) => {
+    const handleCheckboxChange = (checked: number) => {
         setCheckedItems((prev) =>
-            prev.includes(checked) ? prev.filter((r) => r !== checked) : [...prev, checked]
+            prev.includes(checked) ? prev.filter((c) => c !== checked) : [...prev, checked]
         );
     };
 
@@ -235,7 +235,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                             {REPORT_REASON.map((data) => (
                                 <Checkbox
                                     key={data.id}
-                                    value={data.text}
+                                    value={data.id}
                                     label={data.text}
                                     fontSize="regular18"
                                     isArraychecked={checkedItems.includes(data.text)}
