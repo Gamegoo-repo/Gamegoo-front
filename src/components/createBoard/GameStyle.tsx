@@ -2,18 +2,26 @@ import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import SelectedStylePopup from "../match/SelectedStylePopup";
 import Image from "next/image";
-import { Dispatch, useState } from "react";
+import { Dispatch, useEffect, useState } from "react";
 import { GAME_STYLE } from "@/data/profile";
+import { GameStyleList } from "@/interface/profile";
 
 interface GameStyleProps {
     setSelectedIds: Dispatch<React.SetStateAction<number[]>>;
-    selectedIds: number[]
+    selectedIds: number[];
+    gameStyles: GameStyleList[];
 }
 
 const GameStyle = (props: GameStyleProps) => {
-    const { setSelectedIds, selectedIds } = props;
+    const { setSelectedIds, selectedIds, gameStyles = [] } = props;
 
     const [styledPopup, setStyledPopup] = useState(false);
+    const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
+
+    useEffect(() => {
+        setSelectedIds(gameStyles.map(style => style.gameStyleId));
+        setSelectedStyles(gameStyles.map(style => style.gameStyleName));
+    }, [gameStyles]);
 
     const handleStylePopup = () => {
         setStyledPopup(prevState => !prevState);
@@ -37,7 +45,15 @@ const GameStyle = (props: GameStyleProps) => {
         });
     };
 
-    const selectedStyles = selectedIds.map(id => GAME_STYLE.find(style => style.id === id)?.text);
+    // const selectedStyles = selectedIds.map(id => GAME_STYLE.find(style => style.id === id)?.text);
+
+    useEffect(() => {
+        const updatedStyles = selectedIds.map(id => {
+            const style = GAME_STYLE.find(style => style.id === id);
+            return style ? style.text : '';
+        }).filter(Boolean);
+        setSelectedStyles(updatedStyles);
+    }, [selectedIds]);
 
     return (
         <>

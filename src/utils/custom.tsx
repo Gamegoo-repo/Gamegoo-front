@@ -17,21 +17,21 @@ export function setQueueType(gameMode: number) {
 
 export function setProfileImg(profile: string) {
     switch (profile) {
-        case "default":
-            return '/assets/images/profile/profile1.svg';
         case "profile1":
-            return '/assets/images/profile/profile2.svg';
+            return '/assets/images/profile/profile1.svg';
         case "profile2":
-            return '/assets/images/profile/profile3.svg';
+            return '/assets/images/profile/profile2.svg';
         case "profile3":
-            return '/assets/images/profile/profile4.svg';
+            return '/assets/images/profile/profile3.svg';
         case "profile4":
-            return '/assets/images/profile/profile5.svg';
+            return '/assets/images/profile/profile4.svg';
         case "profile5":
-            return '/assets/images/profile/profile6.svg';
+            return '/assets/images/profile/profile5.svg';
         case "profile6":
-            return '/assets/images/profile/profile7.svg';
+            return '/assets/images/profile/profile6.svg';
         case "profile7":
+            return '/assets/images/profile/profile7.svg';
+        case "profile8":
             return '/assets/images/profile/profile8.svg';
         default:
             return '/assets/images/profile/profile1.svg';
@@ -56,23 +56,31 @@ export function setPositionImg(position: number) {
     };
 };
 
-export function setTierImg(tier: number) {
+export function setTierImg(tier: string) {
     //TODO: api 작업 시 수정
     switch (tier) {
-        case 0:
-            return '/assets/icons/tier_bronze.svg';
-        case 1:
-            return '/assets/icons/tier_diamond.svg';
-        case 2:
-            return '/assets/icons/tier_gold.svg';
-        case 3:
-            return '/assets/icons/tier_bronze.svg';
-        case 4:
-            return '/assets/icons/tier_gold.svg';
-        case 4:
-            return '/assets/icons/tier_bronze.svg';
+        case "IRON":
+            return '/assets/images/tier/iron.svg';
+        case "BRONZE":
+            return '/assets/images/tier/bronze.svg';
+        case "SILVER":
+            return '/assets/images/tier/silver.svg';
+        case "GOLD":
+            return '/assets/images/tier/gold.svg';
+        case "PLATINUM":
+            return '/assets/images/tier/platinum.svg';
+        case "EMERALD":
+            return '/assets/images/tier/emerald.svg';
+        case "DIAMOND":
+            return '/assets/images/tier/diamond.svg';
+        case "MASTER":
+            return '/assets/images/tier/master.svg';
+        case "GRANDMASTER":
+            return '/assets/images/tier/grandmaster.svg';
+        case "CHALLENGER":
+            return '/assets/images/tier/challenger.svg';
         default:
-            return '/assets/icons/tier_diamond.svg';
+            return '/assets/images/tier/unrank.svg';
     };
 };
 
@@ -107,6 +115,6 @@ export function setChatRoomDateFormatter(date: string) {
     }
 };
 
-export function setPostingDateFormatter(date:string) {
+export function setPostingDateFormatter(date: string) {
     return dayjs(date).format('YYYY.MM.DD hh:mm');
 };

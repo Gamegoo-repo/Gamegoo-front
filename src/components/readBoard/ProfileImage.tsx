@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import Image from "next/image";
+import { setProfileImg } from "@/utils/custom";
 
 interface ProfileImageProps {
     image: string;
@@ -11,10 +12,10 @@ const ProfileImage = (props: ProfileImageProps) => {
     return (
         <Wrapper>
             <StyledImage
-                src={image}
+                src={setProfileImg(image)}
                 width={51}
                 height={48}
-                alt='profile image' />
+                alt='프로필 이미지' />
         </Wrapper>
     )
 };

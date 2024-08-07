@@ -14,21 +14,20 @@ interface TableTitleProps {
 };
 
 interface TableContentProps {
-    boardId: number,
-    memberId: number,
-    profileImage: string,
-    gameName: string,
-    mannerLevel: number,
-    tier: string,
-    gameMode: number,
-    mainPosition: number,
-    subPosition: number,
-    wantPosition: number,
-    championList: number[],
-    winRate: number,
-    createdAt: string
+    boardId: number;
+    memberId: number;
+    profileImage: string;
+    gameName: string;
+    mannerLevel: number;
+    tier: string;
+    gameMode: number;
+    mainPosition: number;
+    subPosition: number;
+    wantPosition: number;
+    championList: number[];
+    winRate: number;
+    createdAt: string;
 };
-// createdAt: "2024-08-04T15:57:55.929Z"
 
 interface TableProps {
     title: TableTitleProps[];
@@ -44,11 +43,13 @@ const Table = (props: TableProps) => {
 
     const dispatch = useDispatch();
 
+    /* 게시글 열기 */
     const handlePostOpen = (id: number) => {
         dispatch(setOpenReadingModal());
         setIsBoardId(id);
     };
 
+    /* 게시글 닫기 */
     const handlePostClose = () => {
         dispatch(setCloseReadingModal());
     };
@@ -88,7 +89,7 @@ const Table = (props: TableProps) => {
                                         src={setProfileImg(data.profileImage)}
                                         width={50}
                                         height={50}
-                                        alt="profile image"
+                                        alt="프로필 이미지"
                                     />
                                     <P>{data.gameName}</P>
                                 </First>
@@ -98,12 +99,12 @@ const Table = (props: TableProps) => {
                                     }
                                 </Second>
                                 <Third className="table_width">
-                                    {/* <Image
+                                    <Image
                                         src={setTierImg(data.tier)}
                                         width={26}
                                         height={13}
                                         alt="profile image"
-                                    /> */}
+                                    />
                                     <P>{data.tier}</P>
                                 </Third>
                                 <Fourth className="table_width">

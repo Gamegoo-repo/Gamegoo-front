@@ -59,13 +59,14 @@ const userData = {
 const ReadBoard = (props: ReadBoardProps) => {
   const { onClose, postId, gameType } = props;
 
-  const [post, setPost] = useState<Post>({});
+  const [post, setPost] = useState<Post>();
   const [textareaValue, setTextareaValue] = useState("");
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
   const [isMannerBalloonVisible, setIsMannerBalloonVisible] = useState(true);
   const [isMannerLevelBoxOpen, setIsMannerLevelBoxOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  /* 클릭해서 매너지워드 보기 박스 닫히 */
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsMannerBalloonVisible(false);
@@ -74,40 +75,47 @@ const ReadBoard = (props: ReadBoardProps) => {
     return () => clearTimeout(timer);
   }, []);
 
+  /* 더보기 버튼 토글 */
   const handleMoreBoxToggle = () => {
     setIsMoreBoxOpen((prevState) => !prevState);
   };
 
+  /* 더보기 버튼 닫기 */
   const handleMoreBoxClose = () => {
     setIsMoreBoxOpen(false);
   };
 
+  /* 신고하기 */
   const handleReport = () => {
     console.log('신고하기');
     handleMoreBoxClose();
   };
 
+  /* 차단하기 */
   const handleBlock = () => {
     console.log('차단하기')
     handleMoreBoxClose();
   };
 
+  /* 친구 추가 */
   const handleAddFriend = () => {
     console.log('친구추가')
     handleMoreBoxClose();
   };
 
+  /* 매너레벨 박스 열기 */
   const handleMannerLevelBoxOpen = () => {
     setIsMannerLevelBoxOpen((prevState) => !prevState);
   };
 
-  // 더보기 버튼 메뉴
+  /* 더보기 버튼 메뉴 */
   const MoreBoxMenuItems: MoreBoxMenuItems[] = [
     { text: '친구 추가', onClick: handleAddFriend },
     { text: '차단하기', onClick: handleBlock },
     { text: '신고하기', onClick: handleReport },
   ];
 
+  /* 게시글 api */
   useEffect(() => {
     const getPostData = async () => {
       setLoading(true);
@@ -129,80 +137,85 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   return (
     <CRModal type="reading" onClose={onClose}>
-      {isMoreBoxOpen && (
-        <MoreBox
-          items={MoreBoxMenuItems}
-          top={67}
-          left={828} />
+      {post && (
+        <>
+          {isMoreBoxOpen && (
+            <MoreBox
+              items={MoreBoxMenuItems}
+              top={67}
+              left={828} />
+          )}
+          {isMannerLevelBoxOpen && <MannerLevelBox top="14%" right="22%" />}
+          <UpdatedDate>게시일 : {setPostingDateFormatter(post.createdAt)}</UpdatedDate>
+          <UserSection>
+            <UserLeft>
+              <ProfileImage
+                image={post.profileImage} />
+              <UserNManner>
+                <User
+                  account={post.gameName}
+                  tag={post.tag}
+                  tier={post.tier} />
+                <MannerLevel
+                  level={post.mannerLevel}
+                  onClick={handleMannerLevelBoxOpen}
+                  position="top"
+                  isBalloon={isMannerBalloonVisible} />
+              </UserNManner>
+            </UserLeft>
+            <UserRight>
+              <Mic
+                status={post.voice} />
+              <MoreBoxButton onClick={handleMoreBoxToggle} />
+            </UserRight>
+          </UserSection>
+          <ChampionNQueueSection>
+            <Champion
+              list={post.championList}
+              size={14} />
+            <QueueType
+              value={post.gameMode} />
+          </ChampionNQueueSection>
+          {post.mainPosition &&
+            post.subPosition &&
+            post.wantPosition &&
+            <PositionSection>
+              <Title>포지션</Title>
+              <PositionBox
+                status="reading"
+                main={post.mainPosition}
+                sub={post.subPosition}
+                want={post.wantPosition} />
+            </PositionSection>
+          }
+          <WinningRateSection $gameType={gameType}>
+            <WinningRate
+              completed={userData.winning_rate.completed}
+              history={userData.winning_rate.history} />
+          </WinningRateSection>
+          <StyleSection $gameType={gameType}>
+            <Title>게임 스타일</Title>
+            <GameStyle styles={post.gameStyles} />
+          </StyleSection>
+          <MemoSection $gameType={gameType}>
+            <Title>메모</Title>
+            <Memo>
+              <MemoData>
+                {post.contents}
+              </MemoData>
+            </Memo>
+          </MemoSection>
+          <ButtonContent $gameType={gameType}>
+            <Button
+              type="submit"
+              buttonType="primary"
+              text="말 걸어보기"
+              onClick={onClose} />
+          </ButtonContent>
+        </>
       )}
-      {isMannerLevelBoxOpen && <MannerLevelBox top="14%" right="22%" />}
-      <UpdatedDate>게시일 : {setPostingDateFormatter(post.createdAt)}</UpdatedDate>
-      <UserSection>
-        <UserLeft>
-          <ProfileImage
-            image={userData.image} />
-          <UserNManner>
-            <User
-              account={post.gameName}
-              tag={post.tag}
-              tier={post.tier} />
-            <MannerLevel
-              level={post.mannerLevel}
-              onClick={handleMannerLevelBoxOpen}
-              position="top"
-              isBalloon={isMannerBalloonVisible} />
-          </UserNManner>
-        </UserLeft>
-        <UserRight>
-          <Mic
-            status={post.voice} />
-          <MoreBoxButton onClick={handleMoreBoxToggle} />
-        </UserRight>
-      </UserSection>
-      <ChampionNQueueSection>
-        <Champion
-          list={post.championList}
-          size={14} />
-        <QueueType
-          value={post.gameMode} />
-      </ChampionNQueueSection>
-      {post.mainPosition &&
-        post.subPosition &&
-        post.wantPosition &&
-        <PositionSection>
-          <Title>포지션</Title>
-          <PositionBox
-            status="reading"
-            main={post.mainPosition}
-            sub={post.subPosition}
-            want={post.wantPosition} />
-        </PositionSection>
-      }
-      <WinningRateSection $gameType={gameType}>
-        <WinningRate
-          completed={userData.winning_rate.completed}
-          history={userData.winning_rate.history} />
-      </WinningRateSection>
-      <StyleSection $gameType={gameType}>
-        <Title>게임 스타일</Title>
-        <GameStyle styles={post.gameStyles} />
-      </StyleSection>
-      <MemoSection $gameType={gameType}>
-        <Title>메모</Title>
-        <Memo>
-          <MemoData>
-            {post.contents}
-          </MemoData>
-        </Memo>
-      </MemoSection>
-      <ButtonContent $gameType={gameType}>
-        <Button
-          type="submit"
-          buttonType="primary"
-          text="말 걸어보기"
-          onClick={onClose} />
-      </ButtonContent>
     </CRModal>
+
   );
 };
 

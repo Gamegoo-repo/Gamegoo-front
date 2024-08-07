@@ -14,6 +14,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setOpenModal } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
 import { postBoard } from "@/api/board";
+import { getUserInfo } from "@/api/user";
+import { UserInfo } from "@/interface/profile";
 
 interface PostBoardProps {
     onClose: () => void;
@@ -42,7 +44,7 @@ const USERDATA = {
 };
 
 const PostBoard = (props: PostBoardProps) => {
-    const { onClose,onCompletedPosting } = props;
+    const { onClose, onCompletedPosting } = props;
 
     const dispatch = useDispatch();
 
@@ -58,6 +60,7 @@ const PostBoard = (props: PostBoardProps) => {
     const [isMicOn, setIsMicOn] = useState(false);
     const [selectedStyleIds, setSelectedStyleIds] = useState<number[]>([]);
     const [textareaValue, setTextareaValue] = useState("");
+    const [userInfo, setUserInfo] = useState<UserInfo>();
 
     const isCompletedModal = useSelector((state: RootState) => state.modal.modalType);
 
@@ -110,6 +113,7 @@ const PostBoard = (props: PostBoardProps) => {
         event.preventDefault();
 
         const params = {
+            boardProfileImage: `profile${selectedImageIndex}`,
             gameMode: selectedDropOption,
             mainPosition: positionValue.main,
             subPosition: positionValue.sub,
@@ -130,6 +134,17 @@ const PostBoard = (props: PostBoardProps) => {
         }
     };
 
+    /* 유저 정보 api */
+    useEffect(() => {
+        const getUserData = async () => {
+            const data = await getUserInfo();
+            setUserInfo(data.result);
+        };
+
+        getUserData();
+    }, [])
+
+    console.log(userInfo)
     return (
         <CRModal
             type='posting'
@@ -151,11 +166,13 @@ const PostBoard = (props: PostBoardProps) => {
                         setIsProfileListOpen={setIsProfileListOpen}
                         isProfileListOpen={isProfileListOpen}
                         onImageClick={handleImageClick} />
-                    <User
-                        account={USERDATA.account}
-                        tag={USERDATA.tag}
-                        tier={USERDATA.tier}
-                    />
+                    {userInfo && (
+                        <User
+                            account={userInfo.gameName}
+                            tag={userInfo.tag}
+                            tier={userInfo.tier}
+                        />
+                    )}
                 </UserSection>
                 <QueueNMicSection>
                     <Div>
@@ -189,10 +206,13 @@ const PostBoard = (props: PostBoardProps) => {
                 </PositionSection>
                 <StyleSection>
                     <Title className="gameStyleTitle">게임 스타일</Title>
-                    <GameStyle
-                        setSelectedIds={setSelectedStyleIds}
-                        selectedIds={selectedStyleIds}
-                    />
+                    {userInfo && (
+                        <GameStyle
+                            setSelectedIds={setSelectedStyleIds}
+                            selectedIds={selectedStyleIds}
+                            gameStyles={userInfo.gameStyleResponseDTOList}
+                        />
+                    )}
                 </StyleSection>
                 <MemoSection>
                     <Title className="memoTitle">메모</Title>

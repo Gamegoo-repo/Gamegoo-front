@@ -26,7 +26,7 @@ const User = (props: UserProps) => {
                             src="/assets/icons/tier_bronze.svg"
                             width={32}
                             height={20}
-                            alt="tier image"
+                            alt="티어"
                         />
                         <Tier>{tier}</Tier>
                     </>

@@ -148,7 +148,6 @@ const BoardPage = () => {
   const [boardList, setBoardList] = useState<BoardList[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMoreItems, setHasMoreItems] = useState(true);
-  const [totalPages, setTotalPages] = useState(1);
 
   const [isPosition, setIsPosition] = useState(1);
   const [micOn, setMicOn] = useState(true);
@@ -238,7 +237,6 @@ const BoardPage = () => {
       const data = await getBoardList(params);
       setBoardList(data.result);
       setHasMoreItems(data.result.length === ITEMS_PER_PAGE);
-      setTotalPages(Math.ceil(boardList.length / ITEMS_PER_PAGE));
     };
 
     getList();

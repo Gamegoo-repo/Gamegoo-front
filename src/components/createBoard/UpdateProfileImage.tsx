@@ -23,7 +23,7 @@ const UpdateProfileImage = (props: FileInputProps) => {
                 src={`/assets/images/profile/profile${selectedImageIndex}.svg`}
                 width={51}
                 height={48}
-                alt='profile image' />
+                alt='프로필 이미지' />
             <Label htmlFor="profileImg">
                 <CameraImgBg
                     onClick={() => setIsProfileListOpen(!isProfileListOpen)}
