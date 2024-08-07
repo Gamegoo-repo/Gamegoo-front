@@ -66,6 +66,17 @@ const Table = (props: TableProps) => {
         };
     }, [isReadingModal]);
 
+    /* 소환사명 복사 */
+    const handleTextClick = async (gameName: string, e: React.MouseEvent) => {
+        e.stopPropagation();
+        const copied = `#${gameName.replace(/\s+/g, '')}`;
+        try {
+            await navigator.clipboard.writeText(copied);
+        } catch (error) {
+            console.error('복사 실패', error);
+        }
+    };
+
     return (
         <>
             {isReadingModal &&
@@ -91,7 +102,7 @@ const Table = (props: TableProps) => {
                                         height={50}
                                         alt="프로필 이미지"
                                     />
-                                    <P>{data.gameName}</P>
+                                    <P onClick={(e) => handleTextClick(data.gameName, e)}>{data.gameName}</P>
                                 </First>
                                 <Second className="table_width">
                                     {data.mannerLevel &&

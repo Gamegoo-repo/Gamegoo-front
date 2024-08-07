@@ -127,6 +127,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     getPostData();
   }, [])
 
+  // 스피너 진주님과 합치기
   if (loading) {
     return (
       <LoadingContainer>
