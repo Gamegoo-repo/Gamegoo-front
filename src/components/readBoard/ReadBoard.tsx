@@ -14,14 +14,17 @@ import QueueType from "./QueueType";
 import WinningRate from "./WinningRate";
 import MannerLevelBox from "../common/MannerLevelBox";
 import GameStyle from "./GameStyle";
-import { EX_GAME_STYLE } from "@/data/profile";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import MoreBox from "../common/MoreBox";
 import Image from "next/image";
+import { Post } from "@/interface/board";
+import { getPost } from "@/api/board";
+import LoadingSpinner from "../common/LoadingSpinner";
+import { setPostingDateFormatter } from "@/utils/custom";
 
 interface ReadBoardProps {
   onClose: () => void;
-  postId: number | null;
+  postId: number;
   gameType: 'canyon' | 'wind';
 }
 
@@ -56,11 +59,12 @@ const userData = {
 const ReadBoard = (props: ReadBoardProps) => {
   const { onClose, postId, gameType } = props;
 
+  const [post, setPost] = useState<Post>({});
   const [textareaValue, setTextareaValue] = useState("");
-
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
   const [isMannerBalloonVisible, setIsMannerBalloonVisible] = useState(true);
   const [isMannerLevelBoxOpen, setIsMannerLevelBoxOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -104,40 +108,46 @@ const ReadBoard = (props: ReadBoardProps) => {
     { text: '신고하기', onClick: handleReport },
   ];
 
-  // const [user, setUser] = useState<userInfo>()
+  useEffect(() => {
+    const getPostData = async () => {
+      setLoading(true);
+      const data = await getPost(postId);
+      setPost(data.result);
+      setLoading(false);
+    };
 
-  // TODO: api 연결
-  // useEffect(() => {
-  //     axios.get('http://localhost:3001/user')
-  //         .then(response => {
-  //             setUser(response.data)
-  //         })
-  //         .catch(error => {
-  //             console.error('Error fetching data:', error);
-  //         });
-  // }, [])
+    getPostData();
+  }, [])
+
+  if (loading) {
+    return (
+      <LoadingContainer>
+        <LoadingSpinner />
+      </LoadingContainer>
+    );
+  }
 
   return (
     <CRModal type="reading" onClose={onClose}>
       {isMoreBoxOpen && (
-        <MoreBox 
-        items={MoreBoxMenuItems}
-        top={67}
-        left={552} />
+        <MoreBox
+          items={MoreBoxMenuItems}
+          top={67}
+          left={828} />
       )}
-      {isMannerLevelBoxOpen && <MannerLevelBox top="14%" right="-28%" />}
-      <UpdatedDate>게시일 : 24.05.06. 12:45</UpdatedDate>
+      {isMannerLevelBoxOpen && <MannerLevelBox top="14%" right="22%" />}
+      <UpdatedDate>게시일 : {setPostingDateFormatter(post.createdAt)}</UpdatedDate>
       <UserSection>
         <UserLeft>
           <ProfileImage
             image={userData.image} />
           <UserNManner>
             <User
-              account={userData.account}
-              tag={userData.tag}
-              tier={userData.tier} />
+              account={post.gameName}
+              tag={post.tag}
+              tier={post.tier} />
             <MannerLevel
-              level={userData.manner_level}
+              level={post.mannerLevel}
               onClick={handleMannerLevelBoxOpen}
               position="top"
               isBalloon={isMannerBalloonVisible} />
@@ -145,20 +155,27 @@ const ReadBoard = (props: ReadBoardProps) => {
         </UserLeft>
         <UserRight>
           <Mic
-            status={userData.mic} />
+            status={post.voice} />
           <MoreBoxButton onClick={handleMoreBoxToggle} />
         </UserRight>
       </UserSection>
       <ChampionNQueueSection>
         <Champion
-          list={userData.champions} />
+          list={post.championList}
+          size={14} />
         <QueueType
-          value={userData.queue} />
+          value={post.gameMode} />
       </ChampionNQueueSection>
-      {gameType === "canyon" &&
+      {post.mainPosition &&
+        post.subPosition &&
+        post.wantPosition &&
         <PositionSection>
           <Title>포지션</Title>
-          <PositionBox status="reading" />
+          <PositionBox
+            status="reading"
+            main={post.mainPosition}
+            sub={post.subPosition}
+            want={post.wantPosition} />
         </PositionSection>
       }
       <WinningRateSection $gameType={gameType}>
@@ -168,13 +185,13 @@ const ReadBoard = (props: ReadBoardProps) => {
       </WinningRateSection>
       <StyleSection $gameType={gameType}>
         <Title>게임 스타일</Title>
-        <GameStyle styles={EX_GAME_STYLE} />
+        <GameStyle styles={post.gameStyles} />
       </StyleSection>
       <MemoSection $gameType={gameType}>
         <Title>메모</Title>
         <Memo>
           <MemoData>
-            가볍게 같이 즐기실 분 구해요 !
+            {post.contents}
           </MemoData>
         </Memo>
       </MemoSection>
@@ -263,23 +280,9 @@ const ButtonContent = styled.p<{ $gameType: string }>`
     text-align: center;
 `;
 
-const MoreBoxImage = styled(Image)`
-    cursor: pointer;
+const LoadingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; // 페이지 전체 높이
 `;
-
-// const ReportBox = styled.div`
-//     position: absolute;
-//     top: 8.5%;
-//     right: -31%;
-//     z-index: 100;
-//     box-shadow: 0 0 21.3px 0 #00000026;
-//     background: ${theme.colors.white}; 
-//     padding:10px 103px 10px 20px;
-//     border-radius: 10px;
-// `;
-
-// const ReportText = styled.p`
-//     ${(props) => props.theme.fonts.medium15};
-//     color: #606060;
-//     cursor: pointer;
-// `;

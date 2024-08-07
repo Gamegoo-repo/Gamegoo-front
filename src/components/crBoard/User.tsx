@@ -15,17 +15,24 @@ const User = (props: UserProps) => {
         <Wrapper>
             <UserAccount>
                 <Account>{account}</Account>
-                <Tag>#{tag}</Tag>
+                {tag &&
+                    <Tag>#{tag}</Tag>
+                }
             </UserAccount>
             <UserTier>
-                {/* TODO:api 연결 후 수정 필 */}
-                <Image
-                    src="/assets/icons/tier_bronze.svg"
-                    width={32}
-                    height={20}
-                    alt="tier image"
-                />
-                <Tier>{tier}</Tier>
+                {tier ?
+                    <>
+                        <Image
+                            src="/assets/icons/tier_bronze.svg"
+                            width={32}
+                            height={20}
+                            alt="tier image"
+                        />
+                        <Tier>{tier}</Tier>
+                    </>
+                    :
+                    <NoData />
+                }
             </UserTier>
         </Wrapper>
     )
@@ -61,4 +68,8 @@ const UserTier = styled.div`
 const Tier = styled.p`
     ${(props) => props.theme.fonts.regular18};
     color:#44515C;
+`;
+
+const NoData = styled.div`
+    height: 27px;
 `;

@@ -38,7 +38,7 @@ interface TableProps {
 const Table = (props: TableProps) => {
     const { title, content } = props;
 
-    const [isReadBoardId, setIsReadBoardId] = useState<number | null>(null);
+    const [isBoardId, setIsBoardId] = useState<number>(0);
 
     const isReadingModal = useSelector((state: RootState) => state.modal.readingModal);
 
@@ -46,7 +46,7 @@ const Table = (props: TableProps) => {
 
     const handlePostOpen = (id: number) => {
         dispatch(setOpenReadingModal());
-        setIsReadBoardId(id);
+        setIsBoardId(id);
     };
 
     const handlePostClose = () => {
@@ -68,7 +68,7 @@ const Table = (props: TableProps) => {
     return (
         <>
             {isReadingModal &&
-                <ReadBoard onClose={handlePostClose} postId={isReadBoardId} gameType="canyon" />
+                <ReadBoard onClose={handlePostClose} postId={isBoardId} gameType="canyon" />
             }
             <TableWrapper>
                 <TableHead>

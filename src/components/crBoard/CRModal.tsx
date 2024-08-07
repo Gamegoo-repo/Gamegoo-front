@@ -58,6 +58,8 @@ const Wrapper = styled.div`
     background: ${theme.colors.white};
     border-radius: 20px;
     box-shadow: 0 4px 96.4px 0 #00000040;
+    max-width:555px;
+    width: 100%;
 `;
 
 const Header = styled.header<{ $type: string }>` 

@@ -14,8 +14,9 @@ import PostBoard from "@/components/createBoard/PostBoard";
 import ChatButton from "@/components/common/ChatButton";
 import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { setClosePostingModal, setOpenPostingModal } from "@/redux/slices/modalSlice";
+import { setClosePostingModal, setOpenModal, setOpenPostingModal } from "@/redux/slices/modalSlice";
 import { getBoardList } from "@/api/board";
+import { BoardList } from "@/interface/board";
 
 const DROP_DATA1 = [
   { id: 1, value: '빠른대전' },
@@ -144,9 +145,10 @@ const BOARD_CONTENT = [
 const ITEMS_PER_PAGE = 20;
 
 const BoardPage = () => {
-  const [listData, getListData] = useState();
+  const [boardList, setBoardList] = useState<BoardList[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMoreItems, setHasMoreItems] = useState(true);
+  const [totalPages, setTotalPages] = useState(1);
 
   const [isPosition, setIsPosition] = useState(1);
   const [micOn, setMicOn] = useState(true);
@@ -162,7 +164,8 @@ const BoardPage = () => {
   const dispatch = useDispatch();
 
   const isPostingModal = useSelector((state: RootState) => state.modal.postingModal);
-
+  const isCompletedPosting = useSelector((state: RootState) => state.modal.modalType);
+  
   // 첫번째 드롭
   const handleFirstDropValue = (id: number) => {
     setSelectedDropOption1(id);
@@ -215,12 +218,12 @@ const BoardPage = () => {
   };
 
   // 글쓰기 모달 오픈
-  const handleWritingOpen = () => {
+  const handlePostingOpen = () => {
     dispatch(setOpenPostingModal());
   };
 
   // 글쓰기 모달 닫기
-  const handleWritingClose = () => {
+  const handlePostingClose = () => {
     dispatch(setClosePostingModal());
   };
 
@@ -233,8 +236,9 @@ const BoardPage = () => {
       };
 
       const data = await getBoardList(params);
-      getListData(data.result);
+      setBoardList(data.result);
       setHasMoreItems(data.result.length === ITEMS_PER_PAGE);
+      setTotalPages(Math.ceil(boardList.length / ITEMS_PER_PAGE));
     };
 
     getList();
@@ -243,7 +247,9 @@ const BoardPage = () => {
     selectedFirstDropOption,
     selectedSecondDropOption,
     isPosition,
-    micOn,]);
+    micOn,
+    isCompletedPosting
+  ]);
 
   // 페이지네이션 이전 클릭
   const handlePrevPage = () => {
@@ -252,19 +258,30 @@ const BoardPage = () => {
 
   // 페이지네이션 다음 클릭
   const handleNextPage = () => {
-    if (hasMoreItems) {
+    if (boardList.length === ITEMS_PER_PAGE) {
       setCurrentPage((prev) => prev + 1);
     }
   };
 
-  // 페이지네이션 페이지 클릭F
+  // 페이지네이션 페이지 클릭
   const handlePageClick = (page: number) => {
     setCurrentPage(page);
   };
 
+  const handleModalClose = () => {
+    // 글쓰기 모달 닫기
+    handlePostingClose();
+    // 글쓰기 완료 모달 닫기
+    dispatch(setOpenModal(""));
+  };
+
   return (
     <>
-      {isPostingModal && <PostBoard onClose={handleWritingClose} />}
+      {isPostingModal &&
+        <PostBoard
+          onClose={handlePostingClose}
+          onCompletedPosting={handleModalClose}
+        />}
       <Wrapper>
         <BoardContent>
           <FirstRow>
@@ -324,7 +341,7 @@ const BoardPage = () => {
             </FirstBlock>
             <SecondBlock>
               <Button
-                onClick={handleWritingOpen}
+                onClick={handlePostingOpen}
                 buttonType="primary"
                 size="large"
                 text="글 작성하기"
@@ -332,7 +349,7 @@ const BoardPage = () => {
             </SecondBlock>
           </SecondRow>
           <Main>
-            <Table title={BOARD_TITLE} content={listData} />
+            <Table title={BOARD_TITLE} content={boardList} />
           </Main>
           <Pagination
             currentPage={currentPage}

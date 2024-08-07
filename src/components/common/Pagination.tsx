@@ -30,10 +30,13 @@ const Pagination = (props: PaginationProps) => {
                     disabled={currentPage === 1}
                     $isDisabled={currentPage === 1}>
                     <Image
-                        src="/assets/icons/paging_left_arrow.svg"
+                        src={
+                            currentPage === 1 ?
+                                "/assets/icons/paging_disabled_left_arrow.svg"
+                                : "/assets/icons/paging_left_arrow.svg"}
                         width={14}
                         height={26}
-                        alt="previous page" />
+                        alt="이전 페이지" />
                 </Button>
                 <PageList>
                     {pages.map((page) => (
@@ -51,10 +54,13 @@ const Pagination = (props: PaginationProps) => {
                     disabled={!hasMoreItems}
                     $isDisabled={!hasMoreItems}>
                     <Image
-                        src="/assets/icons/paging_right_arrow.svg"
+                        src={
+                            !hasMoreItems ?
+                                "/assets/icons/paging_disabled_right_arrow.svg"
+                                : "/assets/icons/paging_right_arrow.svg"}
                         width={14}
                         height={26}
-                        alt="next page" />
+                        alt="다음 페이지" />
                 </Button>
             </Wrapper>
         </>
@@ -68,32 +74,26 @@ const Wrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-`
+`;
 const Button = styled.button < { $isDisabled: boolean }> `
-    &:disabled{
-        cursor: unset;
-    }
-`
+    color: ${({ $isDisabled }) => ($isDisabled ? `${theme.colors.gray300}` : '#2D2D2D')};
+    cursor: ${({ $isDisabled }) => ($isDisabled ? `unset` : 'pointer')};
+`;
 const PageList = styled.div`
     display: flex;
     align-items: center;
     gap:30px;
     margin:0 36px;
-`
+`;
 const PageButton = styled.span<{ $isActive: boolean }>`
     padding:8px 11px;
     border-radius: 9px;
-    ${(props) => props.theme.fonts.regular14};
     &:hover{
         background: #F9F8FF;
     }
-    &.active {
-        color:${theme.colors.purple100};
-        ${(props) => props.theme.fonts.bold14};
-    }
-  color: ${({ $isActive }) => ($isActive ? `${theme.colors.purple100}` : '#A1A1A8')};
-  ${(props) =>
+    color: ${({ $isActive }) => ($isActive ? `${theme.colors.purple100}` : '#A1A1A8')};
+    ${(props) =>
         props.$isActive
             ? props.theme.fonts.bold14
             : props.theme.fonts.regular14};
-`
+`;

@@ -6,6 +6,9 @@ import PositionCategory from "../common/PositionCategory";
 interface PositionBoxProps {
   status: "posting" | "reading";
   onPositionChange?: (newPositionValue: PositionState) => void;
+  main?: number;
+  sub?: number;
+  want?: number;
 }
 
 type Position = "main" | "sub" | "want";
@@ -17,7 +20,7 @@ export interface PositionState {
 }
 
 const PositionBox = (props: PositionBoxProps) => {
-  const { status, onPositionChange } = props;
+  const { status, onPositionChange, main, sub, want } = props;
   const [selectedBox, setSelectedBox] = useState("");
   const [openPosition, setOpenPosition] = useState<Position | null>(null);
   const [positionValue, setPositionValue] = useState<PositionState>({
@@ -78,7 +81,10 @@ const PositionBox = (props: PositionBoxProps) => {
           <StyledImage
             $status={status}
             onClick={() => handleBoxClick("main")}
-            src={handlePositionImgSet(positionValue.main)}
+            src={
+              handlePositionImgSet(
+                status === "posting" ? positionValue.main : main
+              )}
             width={35}
             height={34}
             alt="메인 포지션"
@@ -96,7 +102,10 @@ const PositionBox = (props: PositionBoxProps) => {
           <StyledImage
             $status={status}
             onClick={() => handleBoxClick("sub")}
-            src={handlePositionImgSet(positionValue.sub)}
+            src={
+              handlePositionImgSet(
+                status === "posting" ? positionValue.sub : sub
+              )}
             width={35}
             height={34}
             alt="서브 포지션"
@@ -115,7 +124,10 @@ const PositionBox = (props: PositionBoxProps) => {
         <StyledImage
           $status={status}
           onClick={() => handleBoxClick("want")}
-          src={handlePositionImgSet(positionValue.want)}
+          src={
+            handlePositionImgSet(
+              status === "posting"  ? positionValue.want : want
+            )}
           width={35}
           height={34}
           alt="찾는 포지션"
@@ -144,12 +156,12 @@ const PositionWrapper = styled.div`
 const FirstBox = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
   width: 100%;
   white-space: nowrap;
   background: #f6f6f6;
   border-radius: 10px;
   padding: 24px 54px 24px 47px;
+  gap: 59px;
 `;
 
 const Section = styled.div`

@@ -17,6 +17,7 @@ import { postBoard } from "@/api/board";
 
 interface PostBoardProps {
     onClose: () => void;
+    onCompletedPosting: () => void;
 }
 
 const DROP_DATA = [
@@ -41,7 +42,7 @@ const USERDATA = {
 };
 
 const PostBoard = (props: PostBoardProps) => {
-    const { onClose } = props;
+    const { onClose,onCompletedPosting } = props;
 
     const dispatch = useDispatch();
 
@@ -129,12 +130,6 @@ const PostBoard = (props: PostBoardProps) => {
         }
     };
 
-
-    const handleModalClose = () => {
-        onClose();
-        dispatch(setOpenModal(""));
-    };
-
     return (
         <CRModal
             type='posting'
@@ -144,7 +139,7 @@ const PostBoard = (props: PostBoardProps) => {
                 <ConfirmModal
                     width="540px"
                     primaryButtonText="확인"
-                    onPrimaryClick={handleModalClose}
+                    onPrimaryClick={onCompletedPosting}
                 >
                     글 작성이 완료되었습니다.
                 </ConfirmModal>

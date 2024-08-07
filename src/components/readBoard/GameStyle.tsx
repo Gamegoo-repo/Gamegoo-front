@@ -1,24 +1,27 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
-
-interface StylesProps {
-    id: number;
-    text: string;
-}
+import { GAME_STYLE } from "@/data/profile";
 
 interface GameStyleProps {
-    styles: StylesProps[]
+    styles: number[];
 }
 
 const GameStyle = (props: GameStyleProps) => {
     const { styles } = props;
+
+    const getTextById = (styleId: number) => {
+        const gameStyle = GAME_STYLE.find(style => style.id === styleId);
+        return gameStyle ? gameStyle.text : '';
+    };
+
     return (
         <Div>
-            {styles.map((data) => (
-                <Content key={data.id}>
-                    {data.text}
-                </Content>
-            ))}
+            {styles && styles.length > 0 &&
+                styles.map((data, index) => (
+                    <Content key={index}>
+                        {getTextById(data)}
+                    </Content>
+                ))}
         </Div>
     )
 };
@@ -28,7 +31,7 @@ export default GameStyle;
 const Div = styled.div`
     display: grid;
     grid-gap: 11px;
-    grid-template-columns: repeat(auto-fit, minmax(100px, auto));
+    grid-template-columns: repeat(3, minmax(100px, auto));
 `;
 
 const Content = styled.p`
