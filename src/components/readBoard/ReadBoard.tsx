@@ -21,6 +21,7 @@ import { Post } from "@/interface/board";
 import { getPost } from "@/api/board";
 import LoadingSpinner from "../common/LoadingSpinner";
 import { setPostingDateFormatter } from "@/utils/custom";
+import { blockMember } from "@/api/member";
 
 interface ReadBoardProps {
   onClose: () => void;
@@ -93,7 +94,9 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 차단하기 */
   const handleBlock = () => {
-    console.log('차단하기')
+    if(!post) return;
+
+    blockMember(post.memberId);
     handleMoreBoxClose();
   };
 
@@ -136,6 +139,8 @@ const ReadBoard = (props: ReadBoardProps) => {
     );
   }
 
+  // if(post?.memberId===)
+
   return (
     <CRModal type="reading" onClose={onClose}>
       {post && (
@@ -144,7 +149,7 @@ const ReadBoard = (props: ReadBoardProps) => {
             <MoreBox
               items={MoreBoxMenuItems}
               top={67}
-              left={828} />
+              left={776} />
           )}
           {isMannerLevelBoxOpen && <MannerLevelBox top="14%" right="22%" />}
           <UpdatedDate>게시일 : {setPostingDateFormatter(post.createdAt)}</UpdatedDate>

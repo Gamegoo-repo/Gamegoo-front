@@ -24,22 +24,22 @@ const PositionCategory = (props: PositionComponentProps) => {
   return (
     <Wrapper>
       <Box>
-        {/* <RandomButton onClick={() => handlePositionCategory(1)}>
+        <RandomButton onClick={() => handlePositionCategory(1)}>
           <Random />
-        </RandomButton> */}
-        <TopButton onClick={() => handlePositionCategory(1)}>
+        </RandomButton>
+        <TopButton onClick={() => handlePositionCategory(2)}>
           <Top />
         </TopButton>
-        <JungleButton onClick={() => handlePositionCategory(2)}>
+        <JungleButton onClick={() => handlePositionCategory(3)}>
           <Jungle />
         </JungleButton>
-        <MidButton onClick={() => handlePositionCategory(3)}>
+        <MidButton onClick={() => handlePositionCategory(4)}>
           <Mid />
         </MidButton>
-        <OneDealButton onClick={() => handlePositionCategory(4)}>
+        <OneDealButton onClick={() => handlePositionCategory(5)}>
           <OndDeal />
         </OneDealButton>
-        <SupporterButton onClick={() => handlePositionCategory(5)}>
+        <SupporterButton onClick={() => handlePositionCategory(6)}>
           <Supporter />
         </SupporterButton>
       </Box>

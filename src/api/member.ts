@@ -15,3 +15,13 @@ export const getUserInfo = async () => {
         console.error("유저 데이터 불러오기 실패:", error)
     }
 };
+
+export const blockMember = async (memberId: number) => {
+    try {
+        const response = await Axios.post(`/v1/member/block/${memberId}`);
+        console.log("차단 성공:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("차단 실패:", error)
+    }
+};

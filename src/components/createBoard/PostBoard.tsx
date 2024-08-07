@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setOpenModal } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
 import { postBoard } from "@/api/board";
-import { getUserInfo } from "@/api/user";
+import { getUserInfo } from "@/api/member";
 import { UserInfo } from "@/interface/profile";
 
 interface PostBoardProps {

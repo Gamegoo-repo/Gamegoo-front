@@ -155,7 +155,7 @@ const BoardPage = () => {
   const [isDropdownOpen1, setIsDropdownOpen1] = useState(false);
   const [isDropdownOpen2, setIsDropdownOpen2] = useState(false);
   const [selectedFirstDropOption, setSelectedDropOption1] = useState(1);
-  const [selectedSecondDropOption, setSelectedDropOption2] = useState(2);
+  const [selectedSecondDropOption, setSelectedDropOption2] = useState(1);
 
   const dropdownRef1 = useRef<HTMLDivElement>(null);
   const dropdownRef2 = useRef<HTMLDivElement>(null);
