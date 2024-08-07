@@ -21,7 +21,7 @@ import { Post } from "@/interface/board";
 import { getPost } from "@/api/board";
 import LoadingSpinner from "../common/LoadingSpinner";
 import { setPostingDateFormatter } from "@/utils/custom";
-import { blockMember, unblockMember } from "@/api/member";
+import { blockMember, reportMember, unblockMember } from "@/api/member";
 import FormModal from "../common/FormModal";
 import Input from "../common/Input";
 import Checkbox from "../common/Checkbox";
@@ -109,16 +109,20 @@ const ReadBoard = (props: ReadBoardProps) => {
   };
 
   /* 신고하기 */
-  const handleReport = ()=>{
-    // const params = {
-    //   targetMemberId: post.memberId,
-    //   reportTypeIdList": [
-    //     0
-    //   ],
-    //   contents: reportDetail
-    // }; 
+  const handleReport = async () => {
+    if (!post) return;
 
-    // const data = reportMember(params);
+    const params = {
+      targetMemberId: post.memberId,
+      reportTypeIdList: checkedItems,
+      contents: reportDetail
+    };
+
+    try {
+      await reportMember(params);
+      await handleModalClose();
+    } catch (error) {
+    }
   };
 
   /* 차단하기 */
@@ -184,7 +188,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     getPostData();
   }, [])
 
-  /* 신고하기 모달 닫히 */
+  /* 신고하기 모달 닫기 */
   const handleModalClose = () => {
     setCheckedItems([]);
     setReportDetail("");
@@ -305,6 +309,7 @@ const ReadBoard = (props: ReadBoardProps) => {
                   fontSize="regular18"
                   isArraychecked={checkedItems.includes(data.id)}
                   onArrayChange={handleCheckboxChange}
+                  id={`report${data.id}`}
                 />
               ))}
             </ReportReasonContent>
@@ -320,11 +325,13 @@ const ReadBoard = (props: ReadBoardProps) => {
                 borderRadius="8px"
                 fontSize="regular18"
                 height="134px"
+                id="report"
               />
             </ReportContent>
             <ReportButton>
               <Button
-                onClick={handleModalClose}
+                type="submit"
+                onClick={handleReport}
                 buttonType="primary"
                 text="신고하기"
                 disabled={checkedItems.length === 0}

@@ -1,7 +1,7 @@
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import styled from "styled-components";
-import Button from "./Button";
+import { FormEvent } from "react";
 
 interface FormModalProps {
   type: "checkbox" | "text";
@@ -31,14 +31,9 @@ const FormModal = (props: FormModalProps) => {
     onClose,
   } = props;
 
-  const handleForm = (e: React.MouseEvent) => {
-    e.stopPropagation();
-  };
-
   return (
     <Overlay $position={position}>
       <Wrapper
-        onClick={(e) => handleForm(e)}
         $type={type}
         $width={width}
         $height={height}
@@ -86,7 +81,7 @@ const Overlay = styled.div<{ $position: "manner" | undefined }>`
   overflow: hidden;
 `;
 
-const Wrapper = styled.form<{
+const Wrapper = styled.div<{
   $type: string;
   $width: string;
   $height: string | undefined;

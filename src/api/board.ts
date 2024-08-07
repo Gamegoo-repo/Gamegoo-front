@@ -37,7 +37,8 @@ export const getBoardList = async (params: ListInterface) => {
         console.log("게시판 목록:", response.data);
         return response.data;
     } catch (error) {
-        console.error("게시판 목록 불러오기 실패:", error)
+        console.error("게시판 목록 불러오기 실패:", error);
+        throw error;
     }
 };
 
@@ -48,7 +49,8 @@ export const getPost = async (postId: number) => {
         return response.data;
 
     } catch (error) {
-        console.error("게시글 조회 실패:", error)
+        console.error("게시글 조회 실패:", error);
+        throw error;
     }
 };
 

@@ -10,10 +10,20 @@ interface CheckboxProps {
   isArraychecked?: boolean;
   onArrayChange?: (checked: number) => void;
   fontSize?: string;
+  id?: string;
 }
 
 const Checkbox = (props: CheckboxProps) => {
-  const { value, label, isChecked = false, onChange, isArraychecked, onArrayChange, fontSize } = props;
+  const {
+    value,
+    label,
+    isChecked = false,
+    onChange,
+    isArraychecked,
+    onArrayChange,
+    fontSize,
+    id
+  } = props;
   const [checked, setChecked] = useState<boolean>(isChecked);
 
   useEffect(() => {
@@ -34,6 +44,7 @@ const Checkbox = (props: CheckboxProps) => {
   return (
     <StyledCheckbox fontSize={fontSize || "semiBold16"}>
       <Check
+        id={id}
         value={value}
         type="checkbox"
         checked={isChecked ? checked : isArraychecked}

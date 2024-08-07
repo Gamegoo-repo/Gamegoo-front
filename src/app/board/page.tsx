@@ -164,7 +164,7 @@ const BoardPage = () => {
 
   const isPostingModal = useSelector((state: RootState) => state.modal.postingModal);
   const isCompletedPosting = useSelector((state: RootState) => state.modal.modalType);
-  
+
   // 첫번째 드롭
   const handleFirstDropValue = (id: number) => {
     setSelectedDropOption1(id);
@@ -206,27 +206,27 @@ const BoardPage = () => {
     };
   }, []);
 
-  // 포지션 필터
+  /* 포지션 필터 */
   const handlePositionFilter = (id: number) => {
     setIsPosition(id);
   };
 
-  // 마이크 여부
+  /* 마이크 여부 */
   const handleMic = () => {
     setMicOn((prevStatus) => !prevStatus);
   };
 
-  // 글쓰기 모달 오픈
+  /* 글쓰기 모달 오픈 */
   const handlePostingOpen = () => {
     dispatch(setOpenPostingModal());
   };
 
-  // 글쓰기 모달 닫기
+  /* 글쓰기 모달 닫기 */
   const handlePostingClose = () => {
     dispatch(setClosePostingModal());
   };
 
-  // 게시글 목록
+  /* 게시글 목록 */
   useEffect(() => {
     const getList = async () => {
 
@@ -249,27 +249,27 @@ const BoardPage = () => {
     isCompletedPosting
   ]);
 
-  // 페이지네이션 이전 클릭
+  /* 페이지네이션 이전 클릭 */
   const handlePrevPage = () => {
     setCurrentPage((prev) => Math.max(prev - 1, 1));
   };
 
-  // 페이지네이션 다음 클릭
+  /* 페이지네이션 다음 클릭 */
   const handleNextPage = () => {
     if (boardList.length === ITEMS_PER_PAGE) {
       setCurrentPage((prev) => prev + 1);
     }
   };
 
-  // 페이지네이션 페이지 클릭
+  /* 페이지네이션 페이지 클릭 */
   const handlePageClick = (page: number) => {
     setCurrentPage(page);
   };
 
   const handleModalClose = () => {
-    // 글쓰기 모달 닫기
+    /* 글쓰기 모달 닫기 */
     handlePostingClose();
-    // 글쓰기 완료 모달 닫기
+    /* 글쓰기 완료 모달 닫기 */
     dispatch(setOpenModal(""));
   };
 
