@@ -5,6 +5,7 @@ import Image from "next/image";
 import Input from "@/components/common/Input";
 import FormModal from "@/components/common/FormModal";
 import Button from "@/components/common/Button";
+import { checkPassword, resetPassword } from "@/api/password";
 
 interface PasswordModalProps {
   onClose: () => void;
@@ -17,6 +18,8 @@ const PasswordModal = (props: PasswordModalProps) => {
   const [rePassword, setRePassword] = useState("");
   const [isLengthValid, setIsLengthValid] = useState(false);
   const [hasSpecialChar, setHasSpecialChar] = useState(false);
+  /* 현재 비밀번호 일치 여부 */
+  const [isPasswordValid, setIsPasswordValid] = useState<boolean | undefined>();
 
   const validateNewPassword = (password: string) => {
     const lengthValid = password.length >= 8;
@@ -27,6 +30,26 @@ const PasswordModal = (props: PasswordModalProps) => {
       /[!@#$%^&*]/.test(password);
     setIsLengthValid(lengthValid);
     setHasSpecialChar(specialCharValid);
+  };
+
+  /* 비밀번호 재설정 함수 */
+  const handleChangePassword = async () => {
+    try {
+      await checkPassword(password);
+      console.log("체크");
+      setIsPasswordValid(true);
+
+      if (validation) {
+        await resetPassword(newPassword);
+        console.log("비밀번호 재설정 완료");
+        // onClose();
+      } else {
+        console.log("신규 비밀번호 확인 실패");
+      }
+    } catch (error) {
+      setIsPasswordValid(false);
+      console.log("현재 비밀번호가 일치하지 않습니다.");
+    }
   };
 
   /* 현재 비밀번호 일치 여부 추가 */
@@ -54,8 +77,10 @@ const PasswordModal = (props: PasswordModalProps) => {
           label="현재 비밀번호"
           onChange={(value) => {
             setPassword(value);
+            setIsPasswordValid(undefined);
           }}
           placeholder="현재 비밀번호 입력"
+          isValid={isPasswordValid}
         />
         <Input
           inputType="password"
@@ -125,12 +150,12 @@ const PasswordModal = (props: PasswordModalProps) => {
           }
         />
         <ButtonContent>
-        <Button
-          onClick={onClose}
-          buttonType="primary"
-          text="완료"
-          disabled={!validation}
-        />
+          <Button
+            // onClick={handleChangePassword}
+            buttonType="primary"
+            text="완료"
+            // disabled={!validation}
+          />
         </ButtonContent>
       </Content>
     </FormModal>
@@ -162,4 +187,4 @@ const Span = styled.div<{ $selected: boolean }>`
 
 const ButtonContent = styled.div`
   margin-top: 34px;
-`
+`;
