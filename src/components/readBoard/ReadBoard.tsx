@@ -21,7 +21,7 @@ import { Post } from "@/interface/board";
 import { getPost } from "@/api/board";
 import LoadingSpinner from "../common/LoadingSpinner";
 import { setPostingDateFormatter } from "@/utils/custom";
-import { blockMember, reportMember, unblockMember } from "@/api/member";
+import { blockMember, getBlockedMemberList, reportMember, unblockMember } from "@/api/member";
 import FormModal from "../common/FormModal";
 import Input from "../common/Input";
 import Checkbox from "../common/Checkbox";
@@ -204,6 +204,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     );
   }
 
+
   // if(post?.memberId===)
 
   return (
@@ -262,7 +263,7 @@ const ReadBoard = (props: ReadBoardProps) => {
             }
             <WinningRateSection $gameType={gameType}>
               <WinningRate
-                completed={userData.winning_rate.completed}
+                completed={post.winRate}
                 history={userData.winning_rate.history} />
             </WinningRateSection>
             <StyleSection $gameType={gameType}>

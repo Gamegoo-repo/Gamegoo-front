@@ -55,7 +55,7 @@ const SecondRow = styled.div<{ $completed: number }>`
 }
     .barCompleted {
    background: linear-gradient(90deg, #342688 0, #5A42EE 100%);
-   border-radius: 11px 0 0 11px;
+   border-radius: ${({ $completed }) => $completed === null ? "11px" : "11px 0 0 11px"};
    width: ${({ $completed }) => $completed}%;
 } 
     .label{

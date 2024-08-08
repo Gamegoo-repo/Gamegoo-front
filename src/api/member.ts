@@ -55,3 +55,14 @@ export const reportMember = async (params: ReportInterface) => {
         throw error;
     }
 };
+
+// export const getBlockedMemberList = async (page: number) => {
+//     try {
+//         const response = await Axios.get("/v1/member/block", { page });
+//         console.log("차단 리스트 가져오기 성공:", response.data);
+//         return response.data;
+//     } catch (error) {
+//         console.error("차단 리스트 가져오기 실패:", error);
+//         throw error;
+//     }
+// };
