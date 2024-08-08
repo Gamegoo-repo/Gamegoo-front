@@ -34,7 +34,7 @@ const HomePage = () => {
                   src={content.image}
                   width={0}
                   height={0}
-                  style={{ width: '93%', height: 'auto' }}
+                  style={{ width: '100%', height: 'auto' }}
                   alt={content.title}
                   priority
                 />
@@ -79,6 +79,8 @@ const SubTitle = styled.div`
 
 const Main = styled.main`
   display: flex;
+  align-items: center;
+  gap:59px;
 `;
 
 const ContentWrapper = styled.div`
@@ -96,6 +98,7 @@ const ContentTitle = styled.p`
   transform: translate(-50%, -50%);
   ${(props) => props.theme.fonts.bold32};
   color: ${theme.colors.white};
+  white-space: nowrap;
 `;
 
 const Footer = styled.footer`
