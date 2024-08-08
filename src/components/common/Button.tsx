@@ -7,7 +7,7 @@ interface ButtonProps {
   size?: "small" | "medium" | "large";
   width?: string;
   text: string;
-  onClick?: (e: React.MouseEvent) => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   disabled?: boolean;
 }
 
@@ -48,7 +48,7 @@ const StyledButton = styled.button<{ width?: string }>`
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.bold14};
   white-space: nowrap;
-  
+
   /*buttonType*/
   &.primary {
     background: ${theme.colors.purple100};

@@ -33,16 +33,17 @@ const PasswordModal = (props: PasswordModalProps) => {
   };
 
   /* 비밀번호 재설정 함수 */
-  const handleChangePassword = async () => {
+  const handleChangePassword = async (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
     try {
       await checkPassword(password);
-      console.log("체크");
       setIsPasswordValid(true);
 
       if (validation) {
         await resetPassword(newPassword);
-        console.log("비밀번호 재설정 완료");
-        // onClose();
+        onClose();
       } else {
         console.log("신규 비밀번호 확인 실패");
       }
@@ -151,10 +152,10 @@ const PasswordModal = (props: PasswordModalProps) => {
         />
         <ButtonContent>
           <Button
-            // onClick={handleChangePassword}
+            onClick={handleChangePassword}
             buttonType="primary"
             text="완료"
-            // disabled={!validation}
+            disabled={!validation}
           />
         </ButtonContent>
       </Content>
