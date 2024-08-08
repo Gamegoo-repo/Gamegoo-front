@@ -13,9 +13,10 @@ import ConfirmModal from "../common/ConfirmModal";
 import { useDispatch, useSelector } from "react-redux";
 import { setOpenModal } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
-import { postBoard } from "@/api/board";
+import { editPost, postBoard } from "@/api/board";
 import { getUserInfo } from "@/api/member";
 import { UserInfo } from "@/interface/profile";
+import { clearCurrentPost } from "@/redux/slices/postSlice";
 
 interface PostBoardProps {
     onClose: () => void;
@@ -29,42 +30,70 @@ const DROP_DATA = [
     { id: 4, value: '칼바람 나락' },
 ];
 
-const USERDATA = {
-    image: "profile6",
-    account: "유니콘의 비밀",
-    tag: "KR1",
-    tier: "B3",
-    manner_level: 5,
-    mic: 0,
-    gameStyle: [
-        "이기기만 하면 뭔들",
-        "과도한 핑은 사절이에요",
-        "랭크 올리고 싶어요",
-    ],
-};
-
 const PostBoard = (props: PostBoardProps) => {
     const { onClose, onCompletedPosting } = props;
 
     const dispatch = useDispatch();
 
+    const isCompletedModal = useSelector((state: RootState) => state.modal.modalType);
+    const currentPost = useSelector((state: RootState) => state.post.currentPost);
+    const currentPostId = useSelector((state: RootState) => state.post.currentPostId);
+
     const [isProfileListOpen, setIsProfileListOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [selectedDropOption, setSelectedDropOption] = useState(1);
+    // const [selectedDropOption, setSelectedDropOption] = useState(1);
     const dropdownRef = useRef<HTMLDivElement>(null);
-    const [positionValue, setPositionValue] = useState<PositionState>({
-        main: 1,
-        sub: 1,
-        want: 1
-    });
-    const [isMicOn, setIsMicOn] = useState(false);
-    const [selectedStyleIds, setSelectedStyleIds] = useState<number[]>([]);
-    const [textareaValue, setTextareaValue] = useState("");
+    // const [positionValue, setPositionValue] = useState<PositionState>({
+    //     main: 1,
+    //     sub: 1,
+    //     want: 1
+    // });
+    // const [isMicOn, setIsMicOn] = useState(false);
+    // const [selectedStyleIds, setSelectedStyleIds] = useState<number[]>([]);
+    // const [textareaValue, setTextareaValue] = useState("");
     const [userInfo, setUserInfo] = useState<UserInfo>();
-    const [selectedImageIndex, setSelectedImageIndex] = useState<number>();
+    const [originProfileImg, setOriginProfileImg] = useState<number>();
+    const [selectedImageIndex, setSelectedImageIndex] = useState<number | undefined>(
+        !!currentPost ?
+            parseInt(currentPost.profileImage)
+            : originProfileImg
+    );
 
-    const isCompletedModal = useSelector((state: RootState) => state.modal.modalType);
-    
+    // 수정하기 버튼 클릭하고 , currentPost 초기화시키기. 그럼 currentPost.profileImage === 'string' 이부분 지워도돼.
+
+    const [selectedDropOption, setSelectedDropOption] = useState<number>(
+        currentPost?.gameMode || 1
+    );
+    const [positionValue, setPositionValue] = useState<PositionState>({
+        main: currentPost?.mainPosition || 1,
+        sub: currentPost?.subPosition || 1,
+        want: currentPost?.wantPosition || 1,
+    });
+    const [isMicOn, setIsMicOn] = useState<boolean>(currentPost?.voice || false);
+    const [selectedStyleIds, setSelectedStyleIds] = useState<number[]>(currentPost?.gameStyles || []);
+    const [textareaValue, setTextareaValue] = useState<string>(currentPost?.contents || '');
+
+    useEffect(() => {
+        if (currentPost) {
+            setSelectedDropOption(currentPost.gameMode);
+
+            setPositionValue({
+                main: currentPost.mainPosition ? currentPost.mainPosition : 1,
+                sub: currentPost.subPosition ? currentPost.subPosition : 1,
+                want: currentPost.wantPosition ? currentPost.wantPosition : 1,
+            });
+
+            setIsMicOn(!!currentPost.voice);
+            setSelectedStyleIds(currentPost.gameStyles || []);
+            setTextareaValue(currentPost.contents || '');
+            setSelectedImageIndex(
+                !!currentPost ? parseInt(currentPost.profileImage) : originProfileImg
+            );
+        }
+    }, [currentPost]);
+
+    console.log(currentPost)
+
     /* 프로필 이미지 리스트 중 클릭시 */
     const handleImageClick = (index: number) => {
         setSelectedImageIndex(index + 1);
@@ -103,6 +132,28 @@ const PostBoard = (props: PostBoardProps) => {
         setIsMicOn(!isMicOn);
     };
 
+    interface PostInterface {
+        boardProfileImage: string;
+        gameMode: number;
+        mainPosition: number;
+        subPosition: number;
+        wantPosition: number;
+        voice: boolean;
+        gameStyles: number[];
+        contents: string;
+    }
+
+    /* 글 수정 */
+    const handleEdit = async (params: PostInterface) => {
+        if (!currentPostId) return;
+
+        try {
+            await editPost(currentPostId, params);
+            // await onClose();
+        } catch (error) {
+        }
+    };
+
     /* 글쓰기 */
     const handlePost = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -118,33 +169,46 @@ const PostBoard = (props: PostBoardProps) => {
             contents: textareaValue
         };
 
-        if (selectedStyleIds.length === 0 || textareaValue.trim() == "") {
-            return;
+        if (!!currentPost) {
+            handleEdit(params);
+            handleModalClose();
         }
 
-        try {
-            await postBoard(params);
-            await dispatch(setOpenModal('completedPost'));
-        } catch (error) {
+        if (!currentPost) {
+
+            // if (selectedStyleIds.length === 0 || textareaValue.trim() == "") {
+            //     return;
+            // }
+
+            try {
+                await postBoard(params);
+                await dispatch(setOpenModal('completedPost'));
+            } catch (error) {
+            }
         }
     };
+
+    /* 모달 닫기 */
+    const handleModalClose = () => {
+        onClose();
+        dispatch(clearCurrentPost());
+    }
 
     /* 유저 정보 api */
     useEffect(() => {
         const getUserData = async () => {
             const data = await getUserInfo();
-            setUserInfo(data.result);
-            setSelectedImageIndex(parseInt(data.result.profileImg));
+            await setUserInfo(data.result);
+            await setOriginProfileImg(parseInt(data.result.profileImg));
         };
 
         getUserData();
     }, [])
 
-    console.log(userInfo)
     return (
         <CRModal
             type='posting'
-            onClose={onClose}
+            onClose={handleModalClose}
         >
             {isCompletedModal &&
                 <ConfirmModal
@@ -156,20 +220,20 @@ const PostBoard = (props: PostBoardProps) => {
                 </ConfirmModal>
             }
             <Form onSubmit={handlePost}>
-            {userInfo && (
-                <UserSection>
-                    <UpdateProfileImage
-                        selectedImageIndex={selectedImageIndex}
-                        setIsProfileListOpen={setIsProfileListOpen}
-                        isProfileListOpen={isProfileListOpen}
-                        onImageClick={handleImageClick} />
+                {userInfo && (
+                    <UserSection>
+                        <UpdateProfileImage
+                            selectedImageIndex={selectedImageIndex}
+                            setIsProfileListOpen={setIsProfileListOpen}
+                            isProfileListOpen={isProfileListOpen}
+                            onImageClick={handleImageClick} />
                         <User
                             account={userInfo.gameName}
                             tag={userInfo.tag}
                             tier={userInfo.tier}
                         />
-                </UserSection>
-                    )}
+                    </UserSection>
+                )}
 
                 <QueueNMicSection>
                     <Div>
@@ -197,17 +261,26 @@ const PostBoard = (props: PostBoardProps) => {
                 <PositionSection>
                     <Title className="positionTitle">포지션</Title>
                     <PositionBox
-                        status="posting"
+                        status={!!currentPost ? "editing" : "posting"}
                         onPositionChange={handlePositionChange}
+                        main={positionValue.main}
+                        sub={positionValue.sub}
+                        want={positionValue.want}
                     />
                 </PositionSection>
                 <StyleSection>
                     <Title className="gameStyleTitle">게임 스타일</Title>
                     {userInfo && (
                         <GameStyle
+                            type={!!currentPost ? "editing" : "posting"}
                             setSelectedIds={setSelectedStyleIds}
                             selectedIds={selectedStyleIds}
-                            gameStyles={userInfo.gameStyleResponseDTOList}
+                            gameStyles={
+                                currentPost ?
+                                    currentPost.gameStyles
+                                    :
+                                    userInfo.gameStyleResponseDTOList
+                            }
                         />
                     )}
                 </StyleSection>

@@ -4,11 +4,11 @@ import { useState } from "react";
 import PositionCategory from "../common/PositionCategory";
 
 interface PositionBoxProps {
-  status: "posting" | "reading";
+  status: "posting" | "reading" | "editing";
   onPositionChange?: (newPositionValue: PositionState) => void;
-  main?: number;
-  sub?: number;
-  want?: number;
+  main: number;
+  sub: number;
+  want: number;
 }
 
 type Position = "main" | "sub" | "want";
@@ -44,17 +44,17 @@ const PositionBox = (props: PositionBoxProps) => {
 
   const handlePositionImgSet = (positionId: number) => {
     switch (positionId) {
-      // case 1:
-      //   return "/assets/icons/position_random_purple.svg";
       case 1:
-        return "/assets/icons/position_top_purple.svg";
+        return "/assets/icons/position_random_purple.svg";
       case 2:
-        return "/assets/icons/position_jungle_purple.svg";
+        return "/assets/icons/position_top_purple.svg";
       case 3:
-        return "/assets/icons/position_mid_purple.svg";
+        return "/assets/icons/position_jungle_purple.svg";
       case 4:
-        return "/assets/icons/position_one_deal_purple.svg";
+        return "/assets/icons/position_mid_purple.svg";
       case 5:
+        return "/assets/icons/position_one_deal_purple.svg";
+      case 6:
         return "/assets/icons/position_supporter_purple.svg";
       default:
         return "/assets/icons/position_random_purple.svg";
@@ -68,6 +68,7 @@ const PositionBox = (props: PositionBoxProps) => {
     );
     setSelectedBox(position);
   };
+
 
   const closePosition = () => {
     setOpenPosition(null);

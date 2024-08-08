@@ -7,20 +7,30 @@ import { GAME_STYLE } from "@/data/profile";
 import { GameStyleList } from "@/interface/profile";
 
 interface GameStyleProps {
+    type: "editing" | "posting";
     setSelectedIds: Dispatch<React.SetStateAction<number[]>>;
     selectedIds: number[];
-    gameStyles: GameStyleList[];
+    gameStyles: number[] | GameStyleList[];
 }
 
 const GameStyle = (props: GameStyleProps) => {
-    const { setSelectedIds, selectedIds, gameStyles = [] } = props;
+    const { type, setSelectedIds, selectedIds, gameStyles = [] } = props;
 
     const [styledPopup, setStyledPopup] = useState(false);
     const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
 
     useEffect(() => {
-        setSelectedIds(gameStyles.map(style => style.gameStyleId));
-        setSelectedStyles(gameStyles.map(style => style.gameStyleName));
+        if (type === "posting" && Array.isArray(gameStyles) && gameStyles.length > 0 && 'gameStyleId' in gameStyles[0]) {
+            const gameStyleList = gameStyles as GameStyleList[];
+            setSelectedIds(gameStyleList.map(style => style.gameStyleId));
+            setSelectedStyles(gameStyleList.map(style => style.gameStyleName));
+        }
+
+        if (type === "editing" && Array.isArray(gameStyles) && typeof gameStyles[0] === 'number') {
+            const gameStyleIds = gameStyles as number[];
+            setSelectedIds(gameStyleIds);
+            setSelectedStyles(mapIdsToText(gameStyleIds));
+        }
     }, [gameStyles]);
 
     const handleStylePopup = () => {
@@ -48,12 +58,16 @@ const GameStyle = (props: GameStyleProps) => {
     // const selectedStyles = selectedIds.map(id => GAME_STYLE.find(style => style.id === id)?.text);
 
     useEffect(() => {
-        const updatedStyles = selectedIds.map(id => {
+        const updatedStyles = mapIdsToText(selectedIds);
+        setSelectedStyles(updatedStyles);
+    }, [selectedIds]);
+
+    const mapIdsToText = (ids: number[]): string[] => {
+        return ids.map(id => {
             const style = GAME_STYLE.find(style => style.id === id);
             return style ? style.text : '';
         }).filter(Boolean);
-        setSelectedStyles(updatedStyles);
-    }, [selectedIds]);
+    };
 
     return (
         <>

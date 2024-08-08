@@ -16,33 +16,24 @@ import MannerLevelBox from "../common/MannerLevelBox";
 import GameStyle from "./GameStyle";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import MoreBox from "../common/MoreBox";
-import Image from "next/image";
 import { Post } from "@/interface/board";
-import { getPost } from "@/api/board";
+import { deletePost, editPost, getPost } from "@/api/board";
 import LoadingSpinner from "../common/LoadingSpinner";
 import { setPostingDateFormatter } from "@/utils/custom";
-import { blockMember, getBlockedMemberList, reportMember, unblockMember } from "@/api/member";
+import { blockMember, reportMember, unblockMember } from "@/api/member";
 import FormModal from "../common/FormModal";
 import Input from "../common/Input";
 import Checkbox from "../common/Checkbox";
 import { REPORT_REASON } from "@/data/report";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { setCloseModal, setOpenModal } from "@/redux/slices/modalSlice";
+import { setCloseModal, setCloseReadingModal, setOpenModal, setOpenPostingModal } from "@/redux/slices/modalSlice";
+import { setCurrentPost } from "@/redux/slices/postSlice";
 
 interface ReadBoardProps {
   onClose: () => void;
   postId: number;
   gameType: 'canyon' | 'wind';
-}
-
-interface userInfo {
-  image: string;
-  account: string;
-  tag: string;
-  tier: string;
-  manner_level: number;
-  mic: number;
 }
 
 const userData = {
@@ -91,16 +82,6 @@ const ReadBoard = (props: ReadBoardProps) => {
 
     return () => clearTimeout(timer);
   }, []);
-
-  /* 더보기 버튼 토글 */
-  const handleMoreBoxToggle = () => {
-    setIsMoreBoxOpen((prevState) => !prevState);
-  };
-
-  /* 더보기 버튼 닫기 */
-  const handleMoreBoxClose = () => {
-    setIsMoreBoxOpen(false);
-  };
 
   /* 신고하기 모달 오픈 */
   const handleReportModal = () => {
@@ -162,19 +143,50 @@ const ReadBoard = (props: ReadBoardProps) => {
     setIsMannerLevelBoxOpen((prevState) => !prevState);
   };
 
-  /* 더보기 버튼 메뉴 */
-  const MoreBoxMenuItems: MoreBoxMenuItems[] = [
-    { text: '친구 추가', onClick: handleAddFriend },
-    { text: isBlocked ? '차단 해제' : '차단하기', onClick: isBlocked ? handleUnblock : handleBlock },
-    { text: '신고하기', onClick: handleReportModal },
-  ];
-
   /* 신고하기 사유 */
   const handleCheckboxChange = (checked: number) => {
     setCheckedItems((prev) =>
       prev.includes(checked) ? prev.filter((c) => c !== checked) : [...prev, checked]
     );
   };
+
+  /* 게시글 수정 */
+  const handlePostEdit = async () => {
+    if (post) {
+      dispatch(setCurrentPost({ currentPost: post, currentPostId: postId }));
+      dispatch(setOpenPostingModal());
+      dispatch(setCloseReadingModal());
+    }
+  };
+
+  /* 게시글 삭제 */
+  const handlePostDelete = async () => {
+    try {
+      await deletePost(postId);
+      await onClose();
+      // 게시글 업로드 해야하나?
+    } catch (error) {
+    }
+  };
+
+  /* 더보기 버튼 토글 */
+  const handleMoreBoxToggle = () => {
+    setIsMoreBoxOpen((prevState) => !prevState);
+  };
+
+  /* 더보기 버튼 닫기 */
+  const handleMoreBoxClose = () => {
+    setIsMoreBoxOpen(false);
+  };
+
+  /* 더보기 버튼 메뉴 */
+  const MoreBoxMenuItems: MoreBoxMenuItems[] = [
+    // { text: '친구 추가', onClick: handleAddFriend },
+    // { text: isBlocked ? '차단 해제' : '차단하기', onClick: isBlocked ? handleUnblock : handleBlock },
+    // { text: '신고하기', onClick: handleReportModal },
+    { text: '수정', onClick: handlePostEdit },
+    { text: '삭제', onClick: handlePostDelete },
+  ];
 
   /* 게시글 api */
   useEffect(() => {
