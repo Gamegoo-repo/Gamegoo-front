@@ -2,8 +2,9 @@ import { GAME_STYLE } from "@/data/profile";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
+type profileType = "me" | "other" | "none" | "mini";
 type positionType = "board";
 
 interface GameStyle {
@@ -12,6 +13,7 @@ interface GameStyle {
 }
 
 interface SelectedStylePopupProps {
+  profileType: profileType;
   onClose: () => void;
   selectedStyles: GameStyle[];
   onSelectStyle: (
@@ -22,13 +24,14 @@ interface SelectedStylePopupProps {
 }
 
 const SelectedStylePopup: React.FC<SelectedStylePopupProps> = ({
+  profileType = "none",
   onClose,
   selectedStyles,
   onSelectStyle,
   position,
 }) => {
   return (
-    <Container $position={position}>
+    <Container $position={position} $profileType={profileType}>
       <Top $position={position}>
         3개까지 선택가능
         <CloseImage
@@ -43,6 +46,7 @@ const SelectedStylePopup: React.FC<SelectedStylePopupProps> = ({
         {GAME_STYLE.map((data) => (
           <Box
             $position={position}
+            $profileType={profileType}
             key={data.gameStyleId}
             onClick={(e) => onSelectStyle(data, e)}
             selected={selectedStyles.some(
@@ -59,7 +63,10 @@ const SelectedStylePopup: React.FC<SelectedStylePopupProps> = ({
 
 export default SelectedStylePopup;
 
-const Container = styled.div<{ $position: positionType | undefined }>`
+const Container = styled.div<{
+  $position: positionType | undefined;
+  $profileType: profileType;
+}>`
   width: ${({ $position }) => ($position ? "574px" : "796px")};
   height: ${({ $position }) => ($position ? "214px" : "310px")};
   padding: ${({ $position }) => ($position ? "13px 22px" : "28px")};
@@ -78,6 +85,13 @@ const Container = styled.div<{ $position: positionType | undefined }>`
   top: ${({ $position }) => ($position ? "-3px" : "60px")};
   left: ${({ $position }) => ($position ? "-2px" : "0")};
   z-index: 100;
+
+  /* 프로필 미니 */
+  ${({ $profileType }) =>
+    $profileType === "mini" &&
+    css`
+      width: 720px;
+    `}
 `;
 
 const Top = styled.div<{ $position: positionType | undefined }>`
@@ -107,6 +121,7 @@ const Boxs = styled.div<{ $position: positionType | undefined }>`
 const Box = styled.button<{
   selected: boolean;
   $position: positionType | undefined;
+  $profileType: profileType;
 }>`
   display: flex;
   height: ${({ $position }) => ($position ? "29px" : "40px")};
@@ -119,4 +134,11 @@ const Box = styled.button<{
   color: ${theme.colors.white};
   font-size: ${({ $position }) =>
     $position ? theme.fonts.medium14 : theme.fonts.regular20};
+
+  /* 프로필 미니 */
+  ${({ $profileType }) =>
+    $profileType === "mini" &&
+    css`
+      ${(props) => props.theme.fonts.regular12}
+    `}
 `;

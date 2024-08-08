@@ -83,6 +83,7 @@ const GameStyle = (props: GameStyleProps) => {
           )}
           {styledPopup && (
             <SelectedStylePopup
+              profileType={profileType}
               onClose={handleClosePopup}
               selectedStyles={selectedStyles}
               onSelectStyle={handleSelectStyle}
