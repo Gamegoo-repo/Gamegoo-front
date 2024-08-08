@@ -327,6 +327,7 @@ const ReadBoard = (props: ReadBoardProps) => {
                 fontSize="regular18"
                 height="134px"
                 id="report"
+                maxLeng={500}
               />
             </ReportContent>
             <ReportButton>

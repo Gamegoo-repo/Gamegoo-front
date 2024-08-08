@@ -25,7 +25,7 @@ export default ProfileImage;
 const Wrapper = styled.div`
     position: relative;
     width: 75px;
-    height: 75px;
+    height: 76px;
     background: #C3B9FF;
     border-radius: 50%;
     margin-right: 17px;
