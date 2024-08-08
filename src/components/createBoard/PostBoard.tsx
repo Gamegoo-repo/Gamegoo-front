@@ -61,18 +61,13 @@ const PostBoard = (props: PostBoardProps) => {
     const [selectedStyleIds, setSelectedStyleIds] = useState<number[]>([]);
     const [textareaValue, setTextareaValue] = useState("");
     const [userInfo, setUserInfo] = useState<UserInfo>();
+    const [selectedImageIndex, setSelectedImageIndex] = useState<number>();
 
     const isCompletedModal = useSelector((state: RootState) => state.modal.modalType);
-
-    /* 선택된 현재 프로필 이미지 */
-    const [selectedImageIndex, setSelectedImageIndex] = useState<number>(
-        parseInt(USERDATA.image.slice(-1))
-    );
-
+    
     /* 프로필 이미지 리스트 중 클릭시 */
     const handleImageClick = (index: number) => {
         setSelectedImageIndex(index + 1);
-
         setTimeout(() => {
             setIsProfileListOpen(false);
         }, 300); // 300ms 후에 창이 닫히도록 설정
@@ -139,6 +134,7 @@ const PostBoard = (props: PostBoardProps) => {
         const getUserData = async () => {
             const data = await getUserInfo();
             setUserInfo(data.result);
+            setSelectedImageIndex(parseInt(data.result.profileImg));
         };
 
         getUserData();
@@ -160,20 +156,21 @@ const PostBoard = (props: PostBoardProps) => {
                 </ConfirmModal>
             }
             <Form onSubmit={handlePost}>
+            {userInfo && (
                 <UserSection>
                     <UpdateProfileImage
                         selectedImageIndex={selectedImageIndex}
                         setIsProfileListOpen={setIsProfileListOpen}
                         isProfileListOpen={isProfileListOpen}
                         onImageClick={handleImageClick} />
-                    {userInfo && (
                         <User
                             account={userInfo.gameName}
                             tag={userInfo.tag}
                             tier={userInfo.tier}
                         />
-                    )}
                 </UserSection>
+                    )}
+
                 <QueueNMicSection>
                     <Div>
                         <Title className="micTitle">마이크</Title>

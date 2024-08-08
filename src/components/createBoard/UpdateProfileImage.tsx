@@ -6,7 +6,7 @@ interface FileInputProps {
     setIsProfileListOpen: Dispatch<React.SetStateAction<boolean>>;
     isProfileListOpen: boolean;
     onImageClick: (index: number) => void;
-    selectedImageIndex: number;
+    selectedImageIndex: number | undefined;
 }
 
 const UpdateProfileImage = (props: FileInputProps) => {
