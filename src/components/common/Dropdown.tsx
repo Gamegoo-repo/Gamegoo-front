@@ -15,8 +15,8 @@ interface DropdownProps {
     width: string;
     open: boolean;
     setOpen: Dispatch<React.SetStateAction<boolean>>;
-    onDropValue: (id: number) => void;
-    defaultValue: number | string;
+    onDropValue: (id: number | null) => void;
+    defaultValue: number | string | null;
 };
 
 const Dropdown = forwardRef(function Dropdown(props: DropdownProps, ref: React.ForwardedRef<HTMLDivElement>) {
@@ -27,7 +27,7 @@ const Dropdown = forwardRef(function Dropdown(props: DropdownProps, ref: React.F
 
     const toggling = () => setOpen((prevState) => !prevState);
 
-    const handleItemClick = (id: number) => {
+    const handleItemClick = (id: number | null) => {
         const selectedItem = list.find(item => item.id === id);
         if (selectedItem) {
             setSelectedValue(selectedItem.value);

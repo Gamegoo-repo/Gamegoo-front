@@ -45,13 +45,11 @@ const PostBoard = (props: PostBoardProps) => {
     const dropdownRef = useRef<HTMLDivElement>(null);
     const [userInfo, setUserInfo] = useState<UserInfo>();
     const [originProfileImg, setOriginProfileImg] = useState<number>();
-    const [selectedImageIndex, setSelectedImageIndex] = useState<number | undefined>(
+    const [selectedImageIndex, setSelectedImageIndex] = useState<number>(
         !!currentPost ?
-            parseInt(currentPost.profileImage)
-            : originProfileImg
+            currentPost.profileImage
+            : userInfo?.profileImg
     );
-
-    // 수정하기 버튼 클릭하고 , currentPost 초기화시키기. 그럼 currentPost.profileImage === 'string' 이부분 지워도돼.
 
     const [selectedDropOption, setSelectedDropOption] = useState<number>(
         currentPost?.gameMode || 1
@@ -79,12 +77,13 @@ const PostBoard = (props: PostBoardProps) => {
             setSelectedStyleIds(currentPost.gameStyles || []);
             setTextareaValue(currentPost.contents || '');
             setSelectedImageIndex(
-                !!currentPost ? parseInt(currentPost.profileImage) : originProfileImg
+                !!currentPost ? currentPost.profileImage : userInfo?.profileImg
             );
         }
     }, [currentPost]);
 
-    console.log(currentPost)
+    console.log('수정 전 데이터',currentPost);
+    console.log('유저', userInfo)
 
     /* 프로필 이미지 리스트 중 클릭시 */
     const handleImageClick = (index: number) => {
@@ -140,12 +139,12 @@ const PostBoard = (props: PostBoardProps) => {
         event.preventDefault();
 
         const params = {
-            boardProfileImage: `profile${selectedImageIndex}`,
+            boardProfileImage: selectedImageIndex,
             gameMode: selectedDropOption,
             mainPosition: positionValue.main,
             subPosition: positionValue.sub,
             wantPosition: positionValue.want,
-            voice: isMicOn,
+            mike: isMicOn,
             gameStyles: selectedStyleIds,
             contents: textareaValue
         };
@@ -180,7 +179,7 @@ const PostBoard = (props: PostBoardProps) => {
         const getUserData = async () => {
             const data = await getUserInfo();
             await setUserInfo(data.result);
-            await setOriginProfileImg(parseInt(data.result.profileImg));
+            await setOriginProfileImg(data.result.profileImg);
         };
 
         getUserData();

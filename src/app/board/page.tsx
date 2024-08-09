@@ -17,6 +17,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setClosePostingModal, setOpenModal, setOpenPostingModal } from "@/redux/slices/modalSlice";
 import { getBoardList } from "@/api/board";
 import { BoardList } from "@/interface/board";
+import { getUserInfo } from "@/api/member";
+import { UserInfo } from "@/interface/profile";
 
 const ITEMS_PER_PAGE = 20;
 
@@ -24,14 +26,13 @@ const BoardPage = () => {
   const [boardList, setBoardList] = useState<BoardList[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMoreItems, setHasMoreItems] = useState(true);
-
   const [isPosition, setIsPosition] = useState(0);
   const [micStatus, setMicStatus] = useState(true);
-
   const [isGameModeDropdownOpen, setIsGameModeDropdownOpen] = useState(false);
   const [isTierDropdownOpen, setIsTierDropdownOpen] = useState(false);
   const [selectedGameMode, setSelectedGameMode] = useState<string | number | null>("솔로 랭크");
   const [selectedTier, setSelectedTier] = useState<string | null>("티어 선택");
+  const [userInfo, setUserInfo] = useState<UserInfo>();
 
   const gameModeRef = useRef<HTMLDivElement>(null);
   const tierRef = useRef<HTMLDivElement>(null);
@@ -42,13 +43,13 @@ const BoardPage = () => {
   const isCompletedPosting = useSelector((state: RootState) => state.modal.modalType);
 
   // 게임모드 드롭
-  const handleGameModeDropValue = (id: number) => {
+  const handleGameModeDropValue = (id: number | null) => {
     setSelectedGameMode(id);
     setIsGameModeDropdownOpen(false);
   };
 
   // 티어 드롭
-  const handleTierDropValue = (id: number) => {
+  const handleTierDropValue = (id: number | null) => {
     switch (id) {
       case 1:
         setSelectedTier("IRON");
@@ -129,6 +130,7 @@ const BoardPage = () => {
 
   /* 글쓰기 모달 오픈 */
   const handlePostingOpen = () => {
+    if (!userInfo) return;
     dispatch(setOpenPostingModal());
   };
 
@@ -187,6 +189,16 @@ const BoardPage = () => {
     /* 글쓰기 완료 모달 닫기 */
     dispatch(setOpenModal(""));
   };
+
+  /* 유저 정보 api */
+  useEffect(() => {
+    const getUserData = async () => {
+      const data = await getUserInfo();
+      await setUserInfo(data);
+    };
+
+    getUserData();
+  }, [])
 
   return (
     <>

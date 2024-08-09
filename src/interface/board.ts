@@ -35,12 +35,12 @@ export interface Post {
 }
 
 export interface PostReq {
-    boardProfileImage: string;
+    boardProfileImage: number;
     gameMode: number;
     mainPosition: number;
     subPosition: number;
     wantPosition: number;
-    voice: boolean;
+    mike: boolean;
     gameStyles: number[];
     contents: string;
 }
