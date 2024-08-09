@@ -1,15 +1,5 @@
+import { PostReq } from "@/interface/board";
 import Axios from ".";
-
-interface PostInterface {
-    boardProfileImage:string;
-    gameMode: number;
-    mainPosition: number;
-    subPosition: number;
-    wantPosition: number;
-    voice: boolean;
-    gameStyles: number[];
-    contents: string;
-}
 
 interface ListInterface {
     pageIdx: number;
@@ -22,7 +12,7 @@ const headers = {
 };
 
 /* 글쓰기 */
-export const postBoard = async (params: PostInterface) => {
+export const postBoard = async (params: PostReq) => {
     try {
         const response = await Axios.post("/v1/posts", params, { headers });
         console.log("글쓰기 완료:", response.data);

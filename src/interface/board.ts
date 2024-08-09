@@ -33,3 +33,14 @@ export interface Post {
     gameStyles: number[];
     contents: string;
 }
+
+export interface PostReq {
+    boardProfileImage: string;
+    gameMode: number;
+    mainPosition: number;
+    subPosition: number;
+    wantPosition: number;
+    voice: boolean;
+    gameStyles: number[];
+    contents: string;
+}

@@ -17,6 +17,7 @@ import { editPost, postBoard } from "@/api/board";
 import { getUserInfo } from "@/api/member";
 import { UserInfo } from "@/interface/profile";
 import { clearCurrentPost } from "@/redux/slices/postSlice";
+import { PostReq } from "@/interface/board";
 
 interface PostBoardProps {
     onClose: () => void;
@@ -41,16 +42,7 @@ const PostBoard = (props: PostBoardProps) => {
 
     const [isProfileListOpen, setIsProfileListOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    // const [selectedDropOption, setSelectedDropOption] = useState(1);
     const dropdownRef = useRef<HTMLDivElement>(null);
-    // const [positionValue, setPositionValue] = useState<PositionState>({
-    //     main: 1,
-    //     sub: 1,
-    //     want: 1
-    // });
-    // const [isMicOn, setIsMicOn] = useState(false);
-    // const [selectedStyleIds, setSelectedStyleIds] = useState<number[]>([]);
-    // const [textareaValue, setTextareaValue] = useState("");
     const [userInfo, setUserInfo] = useState<UserInfo>();
     const [originProfileImg, setOriginProfileImg] = useState<number>();
     const [selectedImageIndex, setSelectedImageIndex] = useState<number | undefined>(
@@ -132,19 +124,8 @@ const PostBoard = (props: PostBoardProps) => {
         setIsMicOn(!isMicOn);
     };
 
-    interface PostInterface {
-        boardProfileImage: string;
-        gameMode: number;
-        mainPosition: number;
-        subPosition: number;
-        wantPosition: number;
-        voice: boolean;
-        gameStyles: number[];
-        contents: string;
-    }
-
     /* 글 수정 */
-    const handleEdit = async (params: PostInterface) => {
+    const handleEdit = async (params: PostReq) => {
         if (!currentPostId) return;
 
         try {

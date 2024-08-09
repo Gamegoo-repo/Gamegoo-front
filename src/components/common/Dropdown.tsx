@@ -4,7 +4,7 @@ import { theme } from "@/styles/theme";
 import styled from "styled-components";
 
 interface ListProps {
-    id: number;
+    id: number | null;
     value: string;
 };
 
@@ -16,7 +16,7 @@ interface DropdownProps {
     open: boolean;
     setOpen: Dispatch<React.SetStateAction<boolean>>;
     onDropValue: (id: number) => void;
-    defaultValue: number;
+    defaultValue: number | string;
 };
 
 const Dropdown = forwardRef(function Dropdown(props: DropdownProps, ref: React.ForwardedRef<HTMLDivElement>) {
@@ -33,7 +33,7 @@ const Dropdown = forwardRef(function Dropdown(props: DropdownProps, ref: React.F
             setSelectedValue(selectedItem.value);
             onDropValue(id);
         }
-    };
+    }
 
     return (
         <Wrapper
@@ -51,7 +51,7 @@ const Dropdown = forwardRef(function Dropdown(props: DropdownProps, ref: React.F
                     src='/assets/icons/down_arrow.svg'
                     width={16}
                     height={9}
-                    alt='down-arrow' />
+                    alt='화살표' />
             </DropdownHeader>
             {open && (
                 <DropBox>
