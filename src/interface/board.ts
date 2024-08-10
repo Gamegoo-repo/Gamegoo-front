@@ -1,7 +1,7 @@
 export interface BoardList {
     boardId: number;
     memberId: number;
-    profileImage: string;
+    profileImage: number;
     gameName: string;
     mannerLevel: number;
     tier: string;
@@ -14,7 +14,29 @@ export interface BoardList {
     createdAt: string;
 }
 
-export interface Post {
+export interface MemberPost {
+    boardId: number;
+    memberId: number;
+    isBlocked:boolean;
+    createdAt: string;
+    profileImage: number;
+    gameName: string;
+    tag: string;
+    mannerLevel: number;
+    tier: string;
+    mike: boolean;
+    championList: number[];
+    gameMode: number;
+    mainPosition?: number;
+    subPosition?: number;
+    wantPosition?: number;
+    winRate: number;
+    gameStyles: number[];
+    contents: string;
+    recentGameCount:number;
+}
+
+export interface NonMemberPost {
     boardId: number;
     memberId: number;
     createdAt: string;

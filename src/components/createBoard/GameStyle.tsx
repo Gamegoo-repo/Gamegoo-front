@@ -2,14 +2,14 @@ import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import SelectedStylePopup from "../match/SelectedStylePopup";
 import Image from "next/image";
-import { Dispatch, useEffect, useState } from "react";
+import { Dispatch, useState } from "react";
 import { GAME_STYLE } from "@/data/profile";
 import { GameStyleList } from "@/interface/profile";
 
 interface GameStyleProps {
     type: "editing" | "posting";
-    setSelectedIds: Dispatch<React.SetStateAction<number[]>>;
-    selectedIds: number[];
+    selectedIds: number[] | GameStyleList[] | undefined;
+    setSelectedIds: Dispatch<React.SetStateAction<number[] | GameStyleList[] | undefined>>;
     gameStyles: number[] | GameStyleList[];
 }
 
@@ -17,21 +17,33 @@ const GameStyle = (props: GameStyleProps) => {
     const { type, setSelectedIds, selectedIds, gameStyles = [] } = props;
 
     const [styledPopup, setStyledPopup] = useState(false);
-    const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
 
-    useEffect(() => {
-        if (type === "posting" && Array.isArray(gameStyles) && gameStyles.length > 0 && 'gameStyleId' in gameStyles[0]) {
-            const gameStyleList = gameStyles as GameStyleList[];
-            setSelectedIds(gameStyleList.map(style => style.gameStyleId));
-            setSelectedStyles(gameStyleList.map(style => style.gameStyleName));
+    const selectedStyles: number[] = Array.isArray(selectedIds)
+        ? selectedIds.map(id => (typeof id === 'number' ? id : id.gameStyleId))
+        : [];
+
+    const handleSelectStyle = (id: number) => {
+        let updatedSelectedStyles = [...selectedStyles];
+
+        if (updatedSelectedStyles.includes(id)) {
+            updatedSelectedStyles = updatedSelectedStyles.filter(styleId => styleId !== id);
+        } else {
+            if (updatedSelectedStyles.length >= 3) {
+                updatedSelectedStyles.shift();
+            }
+            updatedSelectedStyles.push(id);
         }
 
-        if (type === "editing" && Array.isArray(gameStyles) && typeof gameStyles[0] === 'number') {
-            const gameStyleIds = gameStyles as number[];
-            setSelectedIds(gameStyleIds);
-            setSelectedStyles(mapIdsToText(gameStyleIds));
+        if (type === "editing") {
+            const updatedList = updatedSelectedStyles.map(styleId => {
+                const foundStyle = (selectedIds as GameStyleList[]).find(style => style.gameStyleId === styleId);
+                return foundStyle ? foundStyle : { gameStyleId: styleId, gameStyleName: '' };
+            });
+            setSelectedIds(updatedList);
+        } else {
+            setSelectedIds(updatedSelectedStyles);
         }
-    }, [gameStyles]);
+    };
 
     const handleStylePopup = () => {
         setStyledPopup(prevState => !prevState);
@@ -41,42 +53,17 @@ const GameStyle = (props: GameStyleProps) => {
         setStyledPopup(false);
     };
 
-    const handleSelectStyle = (id: number, e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-        e.preventDefault();
-        setSelectedIds(prev => {
-            if (prev.includes(id)) {
-                return prev.filter(selectedId => selectedId !== id);
-            } else {
-                if (prev.length === 3) {
-                    return [...prev.slice(1), id];
-                }
-                return [...prev, id];
-            }
-        });
-    };
-
-    // const selectedStyles = selectedIds.map(id => GAME_STYLE.find(style => style.id === id)?.text);
-
-    useEffect(() => {
-        const updatedStyles = mapIdsToText(selectedIds);
-        setSelectedStyles(updatedStyles);
-    }, [selectedIds]);
-
-    const mapIdsToText = (ids: number[]): string[] => {
-        return ids.map(id => {
-            const style = GAME_STYLE.find(style => style.id === id);
-            return style ? style.text : '';
-        }).filter(Boolean);
-    };
-
     return (
         <>
             <StylesWrapper>
-                {selectedStyles?.map((style) => (
-                    <Content key={style}>
-                        {style}
-                    </Content>
-                ))}
+                {selectedStyles.map((styleId) => {
+                    const style = GAME_STYLE.find(s => s.id === styleId);
+                    return (
+                        <Content key={styleId} onClick={() => handleSelectStyle(styleId)}>
+                            {style?.text}
+                        </Content>
+                    );
+                })}
             </StylesWrapper>
             <Div>
                 <AddGameStyle onClick={handleStylePopup}>
@@ -90,14 +77,14 @@ const GameStyle = (props: GameStyleProps) => {
                 {styledPopup && (
                     <SelectedStylePopup
                         onClose={handleClosePopup}
-                        selectedStyles={selectedIds}
+                        selectedStyles={selectedStyles} 
                         onSelectStyle={handleSelectStyle}
                         position="board"
                     />
                 )}
             </Div>
         </>
-    )
+    );
 };
 
 export default GameStyle;
@@ -126,7 +113,7 @@ const Div = styled.div`
 
 const AddGameStyle = styled.p`
   display: flex;
-  width: 39Px;
+  width: 39px;
   height: 30px;
   padding: 8px 12px;
   justify-content: center;

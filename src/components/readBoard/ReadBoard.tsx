@@ -16,8 +16,8 @@ import MannerLevelBox from "../common/MannerLevelBox";
 import GameStyle from "./GameStyle";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import MoreBox from "../common/MoreBox";
-import { Post } from "@/interface/board";
-import { deletePost, editPost, getPost } from "@/api/board";
+import { MemberPost, NonMemberPost } from "@/interface/board";
+import { deletePost, editPost, getMemberPost } from "@/api/board";
 import LoadingSpinner from "../common/LoadingSpinner";
 import { setPostingDateFormatter } from "@/utils/custom";
 import { blockMember, reportMember, unblockMember } from "@/api/member";
@@ -60,7 +60,8 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   const dispatch = useDispatch();
 
-  const [post, setPost] = useState<Post>();
+  const [memberPost, setMemberPost] = useState<MemberPost>();
+  const [nonMemberPost, setNonMemberPost] = useState<NonMemberPost>();
   const [textareaValue, setTextareaValue] = useState("");
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
   const [isMannerBalloonVisible, setIsMannerBalloonVisible] = useState(true);
@@ -91,10 +92,10 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 신고하기 */
   const handleReport = async () => {
-    if (!post) return;
+    if (!memberPost) return;
 
     const params = {
-      targetMemberId: post.memberId,
+      targetMemberId: memberPost.memberId,
       reportTypeIdList: checkedItems,
       contents: reportDetail
     };
@@ -108,9 +109,9 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 차단하기 */
   const handleBlock = async () => {
-    if (!post) return;
+    if (!memberPost) return;
 
-    const data = await blockMember(post.memberId);
+    const data = await blockMember(memberPost.memberId);
 
     if (data.isSuccess) {
       setIsBlocked(true);
@@ -121,9 +122,9 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 차단 해제 */
   const handleUnblock = async () => {
-    if (!post) return;
+    if (!memberPost) return;
 
-    const data = await unblockMember(post.memberId);
+    const data = await unblockMember(memberPost.memberId);
 
     if (data.isSuccess) {
       setIsBlocked(false);
@@ -151,16 +152,16 @@ const ReadBoard = (props: ReadBoardProps) => {
   };
 
   /* 게시글 수정 */
-  const handlePostEdit = async () => {
-    if (post) {
-      dispatch(setCurrentPost({ currentPost: post, currentPostId: postId }));
+  const Edit = async () => {
+    if (memberPost) {
+      dispatch(setCurrentPost({ currentPost: memberPost, currentPostId: postId }));
       dispatch(setOpenPostingModal());
       dispatch(setCloseReadingModal());
     }
   };
 
   /* 게시글 삭제 */
-  const handlePostDelete = async () => {
+  const Delete = async () => {
     try {
       await deletePost(postId);
       await onClose();
@@ -184,16 +185,16 @@ const ReadBoard = (props: ReadBoardProps) => {
     // { text: '친구 추가', onClick: handleAddFriend },
     // { text: isBlocked ? '차단 해제' : '차단하기', onClick: isBlocked ? handleUnblock : handleBlock },
     // { text: '신고하기', onClick: handleReportModal },
-    { text: '수정', onClick: handlePostEdit },
-    { text: '삭제', onClick: handlePostDelete },
+    { text: '수정', onClick: Edit },
+    { text: '삭제', onClick: Delete },
   ];
 
   /* 게시글 api */
   useEffect(() => {
     const getPostData = async () => {
       setLoading(true);
-      const data = await getPost(postId);
-      setPost(data.result);
+      const data = await getMemberPost(postId);
+      setMemberPost(data.result);
       setLoading(false);
     };
 
@@ -222,7 +223,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   return (
     <>
       <CRModal type="reading" onClose={onClose}>
-        {post && (
+        {memberPost && (
           <>
             {isMoreBoxOpen && (
               <MoreBox
@@ -231,18 +232,18 @@ const ReadBoard = (props: ReadBoardProps) => {
                 left={776} />
             )}
             {isMannerLevelBoxOpen && <MannerLevelBox top="14%" right="22%" />}
-            <UpdatedDate>게시일 : {setPostingDateFormatter(post.createdAt)}</UpdatedDate>
+            <UpdatedDate>게시일 : {setPostingDateFormatter(memberPost.createdAt)}</UpdatedDate>
             <UserSection>
               <UserLeft>
                 <ProfileImage
-                  image={post.profileImage} />
+                  image={memberPost.profileImage} />
                 <UserNManner>
                   <User
-                    account={post.gameName}
-                    tag={post.tag}
-                    tier={post.tier} />
+                    account={memberPost.gameName}
+                    tag={memberPost.tag}
+                    tier={memberPost.tier} />
                   <MannerLevel
-                    level={post.mannerLevel}
+                    level={memberPost.mannerLevel}
                     onClick={handleMannerLevelBoxOpen}
                     position="top"
                     isBalloon={isMannerBalloonVisible} />
@@ -250,43 +251,43 @@ const ReadBoard = (props: ReadBoardProps) => {
               </UserLeft>
               <UserRight>
                 <Mic
-                  status={post.voice} />
+                  status={memberPost.mike} />
                 <MoreBoxButton onClick={handleMoreBoxToggle} />
               </UserRight>
             </UserSection>
             <ChampionNQueueSection>
               <Champion
-                list={post.championList}
+                list={memberPost.championList}
                 size={14} />
               <QueueType
-                value={post.gameMode} />
+                value={memberPost.gameMode} />
             </ChampionNQueueSection>
-            {post.mainPosition &&
-              post.subPosition &&
-              post.wantPosition &&
+            {memberPost.mainPosition &&
+              memberPost.subPosition &&
+              memberPost.wantPosition &&
               <PositionSection>
                 <Title>포지션</Title>
                 <PositionBox
                   status="reading"
-                  main={post.mainPosition}
-                  sub={post.subPosition}
-                  want={post.wantPosition} />
+                  main={memberPost.mainPosition}
+                  sub={memberPost.subPosition}
+                  want={memberPost.wantPosition} />
               </PositionSection>
             }
             <WinningRateSection $gameType={gameType}>
               <WinningRate
-                completed={post.winRate}
-                history={userData.winning_rate.history} />
+                completed={memberPost.winRate}
+                history={memberPost.recentGameCount} />
             </WinningRateSection>
             <StyleSection $gameType={gameType}>
               <Title>게임 스타일</Title>
-              <GameStyle styles={post.gameStyles} />
+              <GameStyle styles={memberPost.gameStyles} />
             </StyleSection>
             <MemoSection $gameType={gameType}>
               <Title>메모</Title>
               <Memo>
                 <MemoData>
-                  {post.contents}
+                  {memberPost.contents}
                 </MemoData>
               </Memo>
             </MemoSection>

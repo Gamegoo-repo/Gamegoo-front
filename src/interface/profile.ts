@@ -31,7 +31,7 @@ export interface ChampionList {
 }
 
 export interface UserInfo {
-  profileImg: string;
+  profileImg: number;
   email: string;
   gameName: string;
   tag: string;

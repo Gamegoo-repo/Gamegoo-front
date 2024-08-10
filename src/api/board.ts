@@ -35,8 +35,21 @@ export const getBoardList = async (params: ListInterface) => {
     }
 };
 
-/* 게시글 조회 */
-export const getPost = async (postId: number) => {
+/* 회원 게시글 조회 */
+export const getMemberPost = async (postId: number) => {
+    try {
+        const response = await Axios.get(`/v1/posts/member/list/${postId}`);
+        console.log("게시글 조회 성공:", response.data);
+        return response.data;
+
+    } catch (error) {
+        console.error("게시글 조회 실패:", error);
+        throw error;
+    }
+};
+
+/* 비회원 게시글 조회 */
+export const getNonMemberPost = async (postId: number) => {
     try {
         const response = await Axios.get(`/v1/posts/list/${postId}`);
         console.log("게시글 조회 성공:", response.data);
@@ -49,7 +62,7 @@ export const getPost = async (postId: number) => {
 };
 
 /* 게시글 수정 */
-export const editPost = async (postId: number, params:PostInterface) => {
+export const editPost = async (postId: number, params:PostReq) => {
     try {
         const response = await Axios.put(`/v1/posts/${postId}`, params);
         console.log("게시글 수정 성공:", response.data);

@@ -6,16 +6,16 @@ import PositionCategory from "../common/PositionCategory";
 interface PositionBoxProps {
   status: "posting" | "reading" | "editing";
   onPositionChange?: (newPositionValue: PositionState) => void;
-  main: number;
-  sub: number;
+  main: number | undefined;
+  sub: number | undefined;
   want: number;
 }
 
 type Position = "main" | "sub" | "want";
 
 export interface PositionState {
-  main: number;
-  sub: number;
+  main: number | undefined;
+  sub: number | undefined;
   want: number;
 }
 
@@ -24,8 +24,8 @@ const PositionBox = (props: PositionBoxProps) => {
   const [selectedBox, setSelectedBox] = useState("");
   const [openPosition, setOpenPosition] = useState<Position | null>(null);
   const [positionValue, setPositionValue] = useState<PositionState>({
-    main: 1,
-    sub: 1,
+    main: main,
+    sub: sub,
     want: 1,
   });
 
@@ -127,7 +127,7 @@ const PositionBox = (props: PositionBoxProps) => {
           onClick={() => handleBoxClick("want")}
           src={
             handlePositionImgSet(
-              status === "posting"  ? positionValue.want : want
+              status === "posting" ? positionValue.want : want
             )}
           width={35}
           height={34}

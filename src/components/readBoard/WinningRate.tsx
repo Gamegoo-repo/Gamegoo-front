@@ -17,9 +17,11 @@ const WinningRate = (props: WinningRateProps) => {
                     <Percent>{completed === null ? 0 : completed}%</Percent>
                 </Left>
                 <Right>
-                    <History>
-                        글 작성 시점 최근 {history}게임
-                    </History>
+                    {!!history &&
+                        <History>
+                            글 작성 시점 최근 {history}게임
+                        </History>
+                    }
                 </Right>
             </FirstRow>
             <SecondRow $completed={completed}>

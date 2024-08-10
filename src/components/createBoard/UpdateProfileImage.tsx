@@ -16,14 +16,15 @@ const UpdateProfileImage = (props: FileInputProps) => {
         onImageClick,
         selectedImageIndex
     } = props;
-
     return (
         <Wrapper>
-            <ProfileImage
-                src={`/assets/images/profile/profile${selectedImageIndex}.svg`}
-                width={51}
-                height={48}
-                alt='프로필 이미지' />
+            {selectedImageIndex &&
+                <ProfileImage
+                    src={`/assets/images/profile/profile${selectedImageIndex}.svg`}
+                    width={51}
+                    height={48}
+                    alt='프로필 이미지' />
+            }
             <Label htmlFor="profileImg">
                 <CameraImgBg
                     onClick={() => setIsProfileListOpen(!isProfileListOpen)}

@@ -15,7 +15,7 @@ import { setOpenModal } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
 import { editPost, postBoard } from "@/api/board";
 import { getUserInfo } from "@/api/member";
-import { UserInfo } from "@/interface/profile";
+import { GameStyleList, UserInfo } from "@/interface/profile";
 import { clearCurrentPost } from "@/redux/slices/postSlice";
 import { PostReq } from "@/interface/board";
 
@@ -44,46 +44,39 @@ const PostBoard = (props: PostBoardProps) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const [userInfo, setUserInfo] = useState<UserInfo>();
-    const [originProfileImg, setOriginProfileImg] = useState<number>();
-    const [selectedImageIndex, setSelectedImageIndex] = useState<number>(
-        !!currentPost ?
-            currentPost.profileImage
-            : userInfo?.profileImg
+    const [selectedImageIndex, setSelectedImageIndex] = useState<number | undefined>(
+        currentPost?.profileImage || userInfo?.profileImg
     );
-
     const [selectedDropOption, setSelectedDropOption] = useState<number>(
         currentPost?.gameMode || 1
     );
-    const [positionValue, setPositionValue] = useState<PositionState>({
-        main: currentPost?.mainPosition || 1,
-        sub: currentPost?.subPosition || 1,
+    const [positionValue, setPositionValue] = useState<PositionState | undefined>({
+        main: currentPost?.mainPosition || userInfo?.mainP,
+        sub: currentPost?.subPosition || userInfo?.subP,
         want: currentPost?.wantPosition || 1,
     });
-    const [isMicOn, setIsMicOn] = useState<boolean>(currentPost?.voice || false);
-    const [selectedStyleIds, setSelectedStyleIds] = useState<number[]>(currentPost?.gameStyles || []);
+    const [isMicOn, setIsMicOn] = useState<boolean>(currentPost?.mike || false);
+    const [selectedStyleIds, setSelectedStyleIds] = useState<number[] | GameStyleList[] | undefined>(
+        currentPost?.gameStyles || userInfo?.gameStyleResponseDTOList
+    );
     const [textareaValue, setTextareaValue] = useState<string>(currentPost?.contents || '');
 
     useEffect(() => {
-        if (currentPost) {
+        if (!!currentPost) {
             setSelectedDropOption(currentPost.gameMode);
 
             setPositionValue({
-                main: currentPost.mainPosition ? currentPost.mainPosition : 1,
-                sub: currentPost.subPosition ? currentPost.subPosition : 1,
-                want: currentPost.wantPosition ? currentPost.wantPosition : 1,
+                main: currentPost.mainPosition,
+                sub: currentPost.subPosition,
+                want: currentPost.wantPosition,
             });
 
-            setIsMicOn(!!currentPost.voice);
-            setSelectedStyleIds(currentPost.gameStyles || []);
+            setIsMicOn(currentPost.mike);
+            setSelectedStyleIds(currentPost.gameStyles);
             setTextareaValue(currentPost.contents || '');
-            setSelectedImageIndex(
-                !!currentPost ? currentPost.profileImage : userInfo?.profileImg
-            );
+            setSelectedImageIndex(currentPost.profileImage);
         }
     }, [currentPost]);
-
-    console.log('수정 전 데이터',currentPost);
-    console.log('유저', userInfo)
 
     /* 프로필 이미지 리스트 중 클릭시 */
     const handleImageClick = (index: number) => {
@@ -138,6 +131,11 @@ const PostBoard = (props: PostBoardProps) => {
     const handlePost = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
+        if (!selectedImageIndex
+            || !selectedStyleIds
+            || !positionValue
+        ) return;
+
         const params = {
             boardProfileImage: selectedImageIndex,
             gameMode: selectedDropOption,
@@ -178,12 +176,20 @@ const PostBoard = (props: PostBoardProps) => {
     useEffect(() => {
         const getUserData = async () => {
             const data = await getUserInfo();
-            await setUserInfo(data.result);
-            await setOriginProfileImg(data.result.profileImg);
+            setUserInfo(data.result);
         };
 
         getUserData();
     }, [])
+
+    /* userInfo가 업데이트된 후 selectedImageIndex 상태 업데이트 */
+    useEffect(() => {
+        if (userInfo) {
+            setSelectedImageIndex(currentPost?.profileImage || userInfo.profileImg);
+            setSelectedStyleIds(currentPost?.gameStyles || userInfo.gameStyleResponseDTOList);
+        }
+    }, [userInfo, currentPost]);
+
 
     return (
         <CRModal

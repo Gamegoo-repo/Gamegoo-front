@@ -3,7 +3,7 @@ import Image from "next/image";
 import { setProfileImg } from "@/utils/custom";
 
 interface ProfileImageProps {
-    image: string;
+    image: number;
 }
 
 const ProfileImage = (props: ProfileImageProps) => {
