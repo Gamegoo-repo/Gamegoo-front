@@ -30,6 +30,7 @@ import { RootState } from "@/redux/store";
 import { setCloseModal, setCloseReadingModal, setOpenModal, setOpenPostingModal } from "@/redux/slices/modalSlice";
 import { setCurrentPost } from "@/redux/slices/postSlice";
 import { UserInfo } from "@/interface/profile";
+import { deleteFriend, reqFriend } from "@/api/friends";
 
 interface ReadBoardProps {
   onClose: () => void;
@@ -133,11 +134,29 @@ const ReadBoard = (props: ReadBoardProps) => {
   };
 
   /* 친구 추가 */
-  const handleAddFriend = () => {
-    if (userInfo?.id === memberPost?.memberId) return;
-    console.log('친구추가')
+  const handleFriendAdd = async () => {
+    if (userInfo?.id === memberPost?.memberId || !memberPost) return;
+
+    try {
+      await reqFriend(memberPost.memberId);
+      await handleMoreBoxClose();
+    } catch (error) {
+    }
+
     handleMoreBoxClose();
   };
+
+  const handleFriendDelete = async () => {
+    if (userInfo?.id === memberPost?.memberId || !memberPost) return;
+
+    try {
+      await deleteFriend(memberPost.memberId);
+      await handleMoreBoxClose();
+    } catch (error) {
+    }
+
+    handleMoreBoxClose();
+  }
 
   /* 매너레벨 박스 열기 */
   const handleMannerLevelBoxOpen = () => {
@@ -196,7 +215,7 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   if (userInfo?.id !== memberPost?.memberId) {
     MoreBoxMenuItems.push(
-      { text: '친구 추가', onClick: handleAddFriend },
+      { text: '친구 추가', onClick: handleFriendAdd },
       { text: memberPost?.isBlocked ? '차단 해제' : '차단하기', onClick: memberPost?.isBlocked ? handleUnblock : handleBlock },
       { text: '신고하기', onClick: handleReportModal }
     );
