@@ -39,7 +39,6 @@ export function setProfileImg(profile: string) {
 };
 
 export function setPositionImg(position: number) {
-    //TODO: api 작업 시 수정
     switch (position) {
         case 1:
             return '/assets/icons/position_random_purple.svg';
@@ -59,7 +58,6 @@ export function setPositionImg(position: number) {
 };
 
 export function setTierImg(tier: string) {
-    //TODO: api 작업 시 수정
     switch (tier) {
         case "IRON":
             return '/assets/images/tier/iron.svg';

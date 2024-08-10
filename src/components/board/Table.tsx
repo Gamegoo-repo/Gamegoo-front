@@ -45,7 +45,6 @@ const Table = (props: TableProps) => {
     const dispatch = useDispatch();
     const router = useRouter();
 
-
     /* 게시글 열기 */
     const handlePostOpen = (id: number) => {
         dispatch(setOpenReadingModal());

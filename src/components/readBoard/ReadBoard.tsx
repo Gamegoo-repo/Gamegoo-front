@@ -17,7 +17,7 @@ import GameStyle from "./GameStyle";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import MoreBox from "../common/MoreBox";
 import { MemberPost, NonMemberPost } from "@/interface/board";
-import { deletePost, editPost, getMemberPost } from "@/api/board";
+import { deletePost, editPost, getMemberPost, getNonMemberPost } from "@/api/board";
 import LoadingSpinner from "../common/LoadingSpinner";
 import { setPostingDateFormatter } from "@/utils/custom";
 import { blockMember, getUserInfo, reportMember, unblockMember } from "@/api/member";
@@ -76,8 +76,7 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   const isModalType = useSelector((state: RootState) => state.modal.modalType);
 
-  console.log(checkedItems)
-  /* 클릭해서 매너지워드 보기 박스 닫히 */
+  /* 클릭해서 매너키워드 보기 박스 닫기 */
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsMannerBalloonVisible(false);
@@ -146,6 +145,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     handleMoreBoxClose();
   };
 
+  /* 친구 삭제 */
   const handleFriendDelete = async () => {
     if (userInfo?.id === memberPost?.memberId || !memberPost) return;
 
@@ -160,6 +160,9 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 매너레벨 박스 열기 */
   const handleMannerLevelBoxOpen = () => {
+    // if(!userInfo) {
+
+    // }
     setIsMannerLevelBoxOpen((prevState) => !prevState);
   };
 
@@ -195,6 +198,9 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 더보기 버튼 토글 */
   const handleMoreBoxToggle = () => {
+    // if(!userInfo) {
+
+    // }
     setIsMoreBoxOpen((prevState) => !prevState);
   };
 
@@ -225,9 +231,18 @@ const ReadBoard = (props: ReadBoardProps) => {
   useEffect(() => {
     const getPostData = async () => {
       setLoading(true);
-      const memberData = await getMemberPost(postId);
-      setMemberPost(memberData.result);
-      setLoading(false);
+      if (!!userInfo) {
+        const memberData = await getMemberPost(postId);
+        setMemberPost(memberData.result);
+        setLoading(false);
+      }
+
+      if (!userInfo) {
+        const nonMember = await getNonMemberPost(postId);
+        setNonMemberPost(nonMember.result);
+        setLoading(false);
+      }
+
     };
 
     getPostData();
@@ -260,6 +275,14 @@ const ReadBoard = (props: ReadBoardProps) => {
       </LoadingContainer>
     );
   }
+
+  /* 채팅방 연결 */
+  const handleChatStart = () => {
+    // if(!userInfo) {
+
+    // }
+    onClose();
+  };
 
 
   // if(post?.memberId===)
@@ -340,7 +363,7 @@ const ReadBoard = (props: ReadBoardProps) => {
                 type="submit"
                 buttonType="primary"
                 text="말 걸어보기"
-                onClick={onClose} />
+                onClick={handleChatStart} />
             </ButtonContent>
           </>
         )}
