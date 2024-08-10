@@ -17,7 +17,8 @@ export interface BoardList {
 export interface MemberPost {
     boardId: number;
     memberId: number;
-    isBlocked:boolean;
+    isBlocked: boolean;
+    isFriend: boolean;
     createdAt: string;
     profileImage: number;
     gameName: string;
@@ -33,7 +34,7 @@ export interface MemberPost {
     winRate: number;
     gameStyles: number[];
     contents: string;
-    recentGameCount:number;
+    recentGameCount: number;
 }
 
 export interface NonMemberPost {

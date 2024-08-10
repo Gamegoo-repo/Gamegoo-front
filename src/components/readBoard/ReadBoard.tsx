@@ -31,31 +31,13 @@ import { setCloseModal, setCloseReadingModal, setOpenModal, setOpenPostingModal 
 import { setCurrentPost } from "@/redux/slices/postSlice";
 import { UserInfo } from "@/interface/profile";
 import { deleteFriend, reqFriend } from "@/api/friends";
+import Alert from "../common/Alert";
 
 interface ReadBoardProps {
   onClose: () => void;
   postId: number;
   gameType: 'canyon' | 'wind';
 }
-
-const userData = {
-  image: "/assets/icons/profile_img.svg",
-  account: "유니콘의 비밀",
-  tag: "KR1",
-  tier: "B3",
-  manner_level: 5,
-  mic: 1,
-  champions: [
-    { id: 1, value: "/assets/icons/gray_circle.svg" },
-    { id: 2, value: "/assets/icons/gray_circle.svg" },
-    { id: 3, value: "/assets/icons/gray_circle.svg" },
-  ],
-  queue: "솔로1",
-  winning_rate: {
-    completed: 76,
-    history: 20,
-  },
-};
 
 const ReadBoard = (props: ReadBoardProps) => {
   const { onClose, postId, gameType } = props;
@@ -70,9 +52,11 @@ const ReadBoard = (props: ReadBoardProps) => {
   const [isMannerLevelBoxOpen, setIsMannerLevelBoxOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isBlockedStatus, setIsBlockedStatus] = useState(false);
+  const [isFriendStatus, setIsFriendStatus] = useState(false);
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
   const [reportDetail, setReportDetail] = useState<string>("");
   const [userInfo, setUserInfo] = useState<UserInfo>();
+  const [showAlert, setShowAlert] = useState(false);
 
   const isModalType = useSelector((state: RootState) => state.modal.modalType);
 
@@ -134,11 +118,14 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 친구 추가 */
   const handleFriendAdd = async () => {
-    if (userInfo?.id === memberPost?.memberId || !memberPost) return;
+    if (userInfo?.id === memberPost?.memberId ||
+      !memberPost ||
+      memberPost?.isBlocked) return;
 
     try {
       await reqFriend(memberPost.memberId);
       await handleMoreBoxClose();
+      setIsFriendStatus(true);
     } catch (error) {
     }
 
@@ -152,6 +139,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     try {
       await deleteFriend(memberPost.memberId);
       await handleMoreBoxClose();
+      setIsFriendStatus(false);
     } catch (error) {
     }
 
@@ -198,9 +186,9 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 더보기 버튼 토글 */
   const handleMoreBoxToggle = () => {
-    // if(!userInfo) {
-
-    // }
+    if (userInfo) {
+      return setShowAlert(true);
+    }
     setIsMoreBoxOpen((prevState) => !prevState);
   };
 
@@ -219,9 +207,12 @@ const ReadBoard = (props: ReadBoardProps) => {
     );
   }
 
+  // 친구 차단 후 친구 추가 못함
+  // 친구 차단 후 친구 삭제 가능
+  // 친구 추가 요청 후 차단 가능
   if (userInfo?.id !== memberPost?.memberId) {
     MoreBoxMenuItems.push(
-      { text: '친구 추가', onClick: handleFriendAdd },
+      { text: memberPost?.isFriend || memberPost?.isBlocked ? '친구 삭제' : '친구 추가', onClick: memberPost?.isFriend || memberPost?.isBlocked ? handleFriendDelete : handleFriendAdd },
       { text: memberPost?.isBlocked ? '차단 해제' : '차단하기', onClick: memberPost?.isBlocked ? handleUnblock : handleBlock },
       { text: '신고하기', onClick: handleReportModal }
     );
@@ -231,22 +222,22 @@ const ReadBoard = (props: ReadBoardProps) => {
   useEffect(() => {
     const getPostData = async () => {
       setLoading(true);
-      if (!!userInfo) {
-        const memberData = await getMemberPost(postId);
-        setMemberPost(memberData.result);
-        setLoading(false);
-      }
+      // if (!!userInfo) {
+      const memberData = await getMemberPost(postId);
+      setMemberPost(memberData.result);
+      setLoading(false);
+      // }
 
-      if (!userInfo) {
-        const nonMember = await getNonMemberPost(postId);
-        setNonMemberPost(nonMember.result);
-        setLoading(false);
-      }
+      // if (!userInfo) {
+      // const nonMember = await getNonMemberPost(postId);
+      // setNonMemberPost(nonMember.result);
+      // setLoading(false);
+      // }
 
     };
 
     getPostData();
-  }, [isBlockedStatus])
+  }, [isBlockedStatus, isFriendStatus])
 
 
   /* 유저 정보 api */
@@ -284,12 +275,25 @@ const ReadBoard = (props: ReadBoardProps) => {
     onClose();
   };
 
+  const handleAlertClose = () => {
+    setShowAlert(false);
+  };
 
   // if(post?.memberId===)
 
   return (
     <>
       <CRModal type="reading" onClose={onClose}>
+        {showAlert && (
+          <Alert
+            icon="exclamation"
+            width={68}
+            height={58}
+            content="로그인이 필요한 서비스입니다."
+            alt="로그인 필요"
+            onClose={handleAlertClose}
+          />
+        )}
         {memberPost && (
           <>
             {isMoreBoxOpen && (
