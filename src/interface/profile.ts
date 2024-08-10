@@ -31,6 +31,12 @@ export interface ChampionList {
 }
 
 export interface UserInfo {
+  id: number;
+  isAgree: number;
+  isBlind: boolean;
+  mainP: number;
+  subP: number;
+  winRate: number;
   profileImg: number;
   email: string;
   gameName: string;

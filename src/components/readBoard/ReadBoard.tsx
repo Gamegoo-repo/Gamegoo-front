@@ -20,7 +20,7 @@ import { MemberPost, NonMemberPost } from "@/interface/board";
 import { deletePost, editPost, getMemberPost } from "@/api/board";
 import LoadingSpinner from "../common/LoadingSpinner";
 import { setPostingDateFormatter } from "@/utils/custom";
-import { blockMember, reportMember, unblockMember } from "@/api/member";
+import { blockMember, getUserInfo, reportMember, unblockMember } from "@/api/member";
 import FormModal from "../common/FormModal";
 import Input from "../common/Input";
 import Checkbox from "../common/Checkbox";
@@ -29,6 +29,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { setCloseModal, setCloseReadingModal, setOpenModal, setOpenPostingModal } from "@/redux/slices/modalSlice";
 import { setCurrentPost } from "@/redux/slices/postSlice";
+import { UserInfo } from "@/interface/profile";
 
 interface ReadBoardProps {
   onClose: () => void;
@@ -67,12 +68,12 @@ const ReadBoard = (props: ReadBoardProps) => {
   const [isMannerBalloonVisible, setIsMannerBalloonVisible] = useState(true);
   const [isMannerLevelBoxOpen, setIsMannerLevelBoxOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [isBlocked, setIsBlocked] = useState(false);
+  const [isBlockedStatus, setIsBlockedStatus] = useState(false);
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
   const [reportDetail, setReportDetail] = useState<string>("");
+  const [userInfo, setUserInfo] = useState<UserInfo>();
 
   const isModalType = useSelector((state: RootState) => state.modal.modalType);
-
 
   console.log(checkedItems)
   /* 클릭해서 매너지워드 보기 박스 닫히 */
@@ -92,7 +93,7 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 신고하기 */
   const handleReport = async () => {
-    if (!memberPost) return;
+    if (userInfo?.id === memberPost?.memberId || !memberPost) return;
 
     const params = {
       targetMemberId: memberPost.memberId,
@@ -109,32 +110,31 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 차단하기 */
   const handleBlock = async () => {
-    if (!memberPost) return;
+    if (userInfo?.id === memberPost?.memberId || !memberPost) return;
 
-    const data = await blockMember(memberPost.memberId);
-
-    if (data.isSuccess) {
-      setIsBlocked(true);
+    try {
+      await blockMember(memberPost.memberId);
+      await handleMoreBoxClose();
+      setIsBlockedStatus(true);
+    } catch (error) {
     }
-
-    handleMoreBoxClose();
   };
 
   /* 차단 해제 */
   const handleUnblock = async () => {
-    if (!memberPost) return;
+    if (userInfo?.id === memberPost?.memberId || !memberPost) return;
 
-    const data = await unblockMember(memberPost.memberId);
-
-    if (data.isSuccess) {
-      setIsBlocked(false);
+    try {
+      const data = await unblockMember(memberPost.memberId);
+      await handleMoreBoxClose();
+      setIsBlockedStatus(false);
+    } catch (error) {
     }
-
-    handleMoreBoxClose();
   };
 
   /* 친구 추가 */
   const handleAddFriend = () => {
+    if (userInfo?.id === memberPost?.memberId) return;
     console.log('친구추가')
     handleMoreBoxClose();
   };
@@ -152,7 +152,9 @@ const ReadBoard = (props: ReadBoardProps) => {
   };
 
   /* 게시글 수정 */
-  const Edit = async () => {
+  const handleEdit = async () => {
+    if (userInfo?.id !== memberPost?.memberId) return;
+
     if (memberPost) {
       dispatch(setCurrentPost({ currentPost: memberPost, currentPostId: postId }));
       dispatch(setOpenPostingModal());
@@ -161,7 +163,9 @@ const ReadBoard = (props: ReadBoardProps) => {
   };
 
   /* 게시글 삭제 */
-  const Delete = async () => {
+  const handleDelete = async () => {
+    if (userInfo?.id !== memberPost?.memberId) return;
+
     try {
       await deletePost(postId);
       await onClose();
@@ -181,24 +185,45 @@ const ReadBoard = (props: ReadBoardProps) => {
   };
 
   /* 더보기 버튼 메뉴 */
-  const MoreBoxMenuItems: MoreBoxMenuItems[] = [
-    // { text: '친구 추가', onClick: handleAddFriend },
-    // { text: isBlocked ? '차단 해제' : '차단하기', onClick: isBlocked ? handleUnblock : handleBlock },
-    // { text: '신고하기', onClick: handleReportModal },
-    { text: '수정', onClick: Edit },
-    { text: '삭제', onClick: Delete },
-  ];
+  const MoreBoxMenuItems: MoreBoxMenuItems[] = [];
+
+  if (userInfo?.id === memberPost?.memberId) {
+    MoreBoxMenuItems.push(
+      { text: '수정', onClick: handleEdit },
+      { text: '삭제', onClick: handleDelete }
+    );
+  }
+
+  if (userInfo?.id !== memberPost?.memberId) {
+    MoreBoxMenuItems.push(
+      { text: '친구 추가', onClick: handleAddFriend },
+      { text: memberPost?.isBlocked ? '차단 해제' : '차단하기', onClick: memberPost?.isBlocked ? handleUnblock : handleBlock },
+      { text: '신고하기', onClick: handleReportModal }
+    );
+  }
 
   /* 게시글 api */
   useEffect(() => {
     const getPostData = async () => {
       setLoading(true);
-      const data = await getMemberPost(postId);
-      setMemberPost(data.result);
+      const memberData = await getMemberPost(postId);
+      setMemberPost(memberData.result);
       setLoading(false);
     };
 
     getPostData();
+  }, [isBlockedStatus])
+
+
+  /* 유저 정보 api */
+  useEffect(() => {
+    const getUserData = async () => {
+      const data = await getUserInfo();
+      setUserInfo(data.result);
+      console.log('유저,', data.result)
+    };
+
+    getUserData();
   }, [])
 
   /* 신고하기 모달 닫기 */
