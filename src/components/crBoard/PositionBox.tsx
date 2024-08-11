@@ -26,7 +26,7 @@ const PositionBox = (props: PositionBoxProps) => {
   const [positionValue, setPositionValue] = useState<PositionState>({
     main: main,
     sub: sub,
-    want: 1,
+    want: 0,
   });
 
   const handleCategoryButtonClick = (positionId: number) => {
@@ -44,17 +44,17 @@ const PositionBox = (props: PositionBoxProps) => {
 
   const handlePositionImgSet = (positionId: number) => {
     switch (positionId) {
-      case 1:
+      case 0:
         return "/assets/icons/position_random_purple.svg";
-      case 2:
+      case 1:
         return "/assets/icons/position_top_purple.svg";
-      case 3:
+      case 2:
         return "/assets/icons/position_jungle_purple.svg";
-      case 4:
+      case 3:
         return "/assets/icons/position_mid_purple.svg";
-      case 5:
+      case 4:
         return "/assets/icons/position_one_deal_purple.svg";
-      case 6:
+      case 5:
         return "/assets/icons/position_supporter_purple.svg";
       default:
         return "/assets/icons/position_random_purple.svg";

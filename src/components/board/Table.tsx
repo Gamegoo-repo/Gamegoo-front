@@ -17,7 +17,7 @@ interface TableTitleProps {
 interface TableContentProps {
     boardId: number;
     memberId: number;
-    profileImage: string;
+    profileImage: number;
     gameName: string;
     mannerLevel: number;
     tier: string;
