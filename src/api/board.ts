@@ -39,11 +39,11 @@ export const getBoardList = async (params: ListInterface) => {
 export const getMemberPost = async (postId: number) => {
     try {
         const response = await Axios.get(`/v1/posts/member/list/${postId}`);
-        console.log("게시글 조회 성공:", response.data);
+        console.log("로그인 상태 게시글 조회 성공:", response.data);
         return response.data;
 
     } catch (error) {
-        console.error("게시글 조회 실패:", error);
+        console.error("로그인 상태 게시글 조회 실패:", error);
         throw error;
     }
 };
@@ -52,11 +52,11 @@ export const getMemberPost = async (postId: number) => {
 export const getNonMemberPost = async (postId: number) => {
     try {
         const response = await Axios.get(`/v1/posts/list/${postId}`);
-        console.log("게시글 조회 성공:", response.data);
+        console.log("로그아웃 상태 게시글 조회 성공:", response.data);
         return response.data;
 
     } catch (error) {
-        console.error("게시글 조회 실패:", error);
+        console.error("로그아웃 상태 게시글 조회 실패:", error);
         throw error;
     }
 };

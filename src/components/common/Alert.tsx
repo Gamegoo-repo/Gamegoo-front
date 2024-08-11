@@ -1,15 +1,7 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-
-interface AlertProps {
-    icon: string;
-    width: number;
-    height: number;
-    content: string;
-    alt: string;
-    onClose: () => void;
-}
+import { AlertProps } from "@/interface/modal";
 
 const Alert = (props: AlertProps) => {
     const { icon, width, height, content, alt, onClose } = props;

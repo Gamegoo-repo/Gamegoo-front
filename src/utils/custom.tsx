@@ -15,23 +15,23 @@ export function setQueueType(gameMode: number) {
     }
 };
 
-export function setProfileImg(profile: string) {
+export function setProfileImg(profile: number) {
     switch (profile) {
-        case "profile1":
+        case 1:
             return '/assets/images/profile/profile1.svg';
-        case "profile2":
+        case 2:
             return '/assets/images/profile/profile2.svg';
-        case "profile3":
+        case 3:
             return '/assets/images/profile/profile3.svg';
-        case "profile4":
+        case 4:
             return '/assets/images/profile/profile4.svg';
-        case "profile5":
+        case 5:
             return '/assets/images/profile/profile5.svg';
-        case "profile6":
+        case 6:
             return '/assets/images/profile/profile6.svg';
-        case "profile7":
+        case 7:
             return '/assets/images/profile/profile7.svg';
-        case "profile8":
+        case 8:
             return '/assets/images/profile/profile8.svg';
         default:
             return '/assets/images/profile/profile1.svg';

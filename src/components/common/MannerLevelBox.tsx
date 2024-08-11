@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
+import { useEffect, useState } from "react";
+import { getBadMannerValues, getMannerValues } from "@/api/manner";
 
 const data = {
   good_manner: {
@@ -22,15 +24,37 @@ const data = {
 };
 
 interface MannerLevelBoxProps {
+  memberId: number;
   top: string;
   right: string;
 }
 
 const MannerLevelBox = (props: MannerLevelBoxProps) => {
-  const { top, right } = props;
+  const { memberId, top, right } = props;
 
   const mannerEvaluations = Object.entries(data.good_manner);
   const badMannerEvaluations = Object.entries(data.bad_manner);
+
+  const [mannerData, setMannerData] = useState();
+  const [badMannerData, setBadMannerData] = useState();
+
+  // useEffect(() => {
+  //   const getManner = async () => {
+  //     const good = await getMannerValues(memmberId);
+  //     setMannerData(good.result);
+  //     console.log('good:', good.result)
+  //   };
+
+  //   const getBadManner = async () => {
+  //     const bad = await getBadMannerValues(memmberId);
+  //     setBadMannerData(bad.result);
+  //     console.log('bad:', bad.result)
+
+  //   };
+
+  //   getManner();
+  //   getBadManner();
+  // }, [])
 
   return (
     <Wrapper $top={top} $right={right}>

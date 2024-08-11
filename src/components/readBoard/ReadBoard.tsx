@@ -32,6 +32,7 @@ import { setCurrentPost } from "@/redux/slices/postSlice";
 import { UserInfo } from "@/interface/profile";
 import { deleteFriend, reqFriend } from "@/api/friends";
 import Alert from "../common/Alert";
+import { AlertProps } from "@/interface/modal";
 
 interface ReadBoardProps {
   onClose: () => void;
@@ -44,9 +45,7 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   const dispatch = useDispatch();
 
-  const [memberPost, setMemberPost] = useState<MemberPost>();
-  const [nonMemberPost, setNonMemberPost] = useState<NonMemberPost>();
-  const [textareaValue, setTextareaValue] = useState("");
+  const [isPost, setIsPost] = useState<MemberPost | NonMemberPost>();
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
   const [isMannerBalloonVisible, setIsMannerBalloonVisible] = useState(true);
   const [isMannerLevelBoxOpen, setIsMannerLevelBoxOpen] = useState(false);
@@ -57,6 +56,14 @@ const ReadBoard = (props: ReadBoardProps) => {
   const [reportDetail, setReportDetail] = useState<string>("");
   const [userInfo, setUserInfo] = useState<UserInfo>();
   const [showAlert, setShowAlert] = useState(false);
+  const [alertProps, setAlertProps] = useState<AlertProps>({
+    icon: "",
+    width: 0,
+    height: 0,
+    content: "",
+    alt: "",
+    onClose: () => { },
+  });
 
   const isModalType = useSelector((state: RootState) => state.modal.modalType);
 
@@ -69,18 +76,43 @@ const ReadBoard = (props: ReadBoardProps) => {
     return () => clearTimeout(timer);
   }, []);
 
+  /* 로그아웃 시, 비회원 접근 시 알럿 props 설정 함수 */
+  const logoutMessage = "로그아웃 되었습니다.";
+  const loginRequiredMessage = "로그인이 필요한 서비스입니다.";
+
+  const showAlertWithContent = (content: string) => {
+    setAlertProps({
+      icon: "exclamation",
+      width: 68,
+      height: 58,
+      content: content,
+      alt: "경고",
+      onClose: handleAlertClose,
+    });
+    setShowAlert(true);
+  };
+
   /* 신고하기 모달 오픈 */
   const handleReportModal = () => {
+    // 신고하기 버튼 클릭 시점 토큰 만료
+    if (!userInfo) {
+      return showAlertWithContent(logoutMessage);
+    }
+
     dispatch(setOpenModal('report'));
     handleMoreBoxClose();
   };
 
   /* 신고하기 */
   const handleReport = async () => {
-    if (userInfo?.id === memberPost?.memberId || !memberPost) return;
+    if (!userInfo) {
+      return showAlertWithContent(logoutMessage);
+    }
+
+    if (!isPost || userInfo?.id === isPost?.memberId) return;
 
     const params = {
-      targetMemberId: memberPost.memberId,
+      targetMemberId: isPost.memberId,
       reportTypeIdList: checkedItems,
       contents: reportDetail
     };
@@ -94,36 +126,55 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 차단하기 */
   const handleBlock = async () => {
-    if (userInfo?.id === memberPost?.memberId || !memberPost) return;
+    if (!userInfo) {
+      return showAlertWithContent(logoutMessage);
+    }
+
+    if (!isPost || userInfo?.id === isPost?.memberId) return;
+
+    if ('isBlocked' in isPost && isPost.isBlocked) return;
 
     try {
-      await blockMember(memberPost.memberId);
+      await blockMember(isPost.memberId);
       await handleMoreBoxClose();
-      setIsBlockedStatus(true);
+      await setIsBlockedStatus(true);
     } catch (error) {
     }
   };
 
   /* 차단 해제 */
   const handleUnblock = async () => {
-    if (userInfo?.id === memberPost?.memberId || !memberPost) return;
+    if (!userInfo) {
+      return showAlertWithContent(logoutMessage);
+    }
+
+    if (!isPost || userInfo?.id === isPost?.memberId) return;
+
+    if ('isBlocked' in isPost && !isPost.isBlocked) return;
 
     try {
-      const data = await unblockMember(memberPost.memberId);
+      await unblockMember(isPost.memberId);
       await handleMoreBoxClose();
-      setIsBlockedStatus(false);
+      await setIsBlockedStatus(false);
     } catch (error) {
     }
   };
 
   /* 친구 추가 */
   const handleFriendAdd = async () => {
-    if (userInfo?.id === memberPost?.memberId ||
-      !memberPost ||
-      memberPost?.isBlocked) return;
+    if (!userInfo) {
+      return showAlertWithContent(logoutMessage);
+    }
+
+    if (!isPost || userInfo?.id === isPost?.memberId) return;
+
+    if ('isBlocked' in isPost && isPost?.isBlocked ||
+      'isFriend' in isPost && isPost?.isFriend ||
+      'friendRequestMemberId' in isPost && isPost?.friendRequestMemberId
+    ) return;
 
     try {
-      await reqFriend(memberPost.memberId);
+      await reqFriend(isPost.memberId);
       await handleMoreBoxClose();
       setIsFriendStatus(true);
     } catch (error) {
@@ -134,10 +185,16 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 친구 삭제 */
   const handleFriendDelete = async () => {
-    if (userInfo?.id === memberPost?.memberId || !memberPost) return;
+    if (!userInfo) {
+      return showAlertWithContent(logoutMessage);
+    }
+
+    if (!isPost || userInfo?.id === isPost?.memberId) return;
+
+    if ('isFriend' in isPost && !isPost?.isFriend) return;
 
     try {
-      await deleteFriend(memberPost.memberId);
+      await deleteFriend(isPost.memberId);
       await handleMoreBoxClose();
       setIsFriendStatus(false);
     } catch (error) {
@@ -148,9 +205,10 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 매너레벨 박스 열기 */
   const handleMannerLevelBoxOpen = () => {
-    // if(!userInfo) {
+    if (!userInfo) {
+      return showAlertWithContent(loginRequiredMessage);
+    }
 
-    // }
     setIsMannerLevelBoxOpen((prevState) => !prevState);
   };
 
@@ -163,10 +221,14 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 게시글 수정 */
   const handleEdit = async () => {
-    if (userInfo?.id !== memberPost?.memberId) return;
+    if (!userInfo) {
+      return showAlertWithContent(logoutMessage);
+    }
 
-    if (memberPost) {
-      dispatch(setCurrentPost({ currentPost: memberPost, currentPostId: postId }));
+    if (userInfo?.id !== isPost?.memberId) return;
+
+    if (isPost) {
+      dispatch(setCurrentPost({ currentPost: isPost, currentPostId: postId }));
       dispatch(setOpenPostingModal());
       dispatch(setCloseReadingModal());
     }
@@ -174,7 +236,11 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 게시글 삭제 */
   const handleDelete = async () => {
-    if (userInfo?.id !== memberPost?.memberId) return;
+    if (!userInfo) {
+      return showAlertWithContent(logoutMessage);
+    }
+
+    if (userInfo?.id !== isPost?.memberId) return;
 
     try {
       await deletePost(postId);
@@ -186,9 +252,10 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 더보기 버튼 토글 */
   const handleMoreBoxToggle = () => {
-    if (userInfo) {
-      return setShowAlert(true);
+    if (!userInfo) {
+      return showAlertWithContent(loginRequiredMessage);
     }
+
     setIsMoreBoxOpen((prevState) => !prevState);
   };
 
@@ -200,44 +267,78 @@ const ReadBoard = (props: ReadBoardProps) => {
   /* 더보기 버튼 메뉴 */
   const MoreBoxMenuItems: MoreBoxMenuItems[] = [];
 
-  if (userInfo?.id === memberPost?.memberId) {
+  if (!userInfo || userInfo?.id === isPost?.memberId) {
     MoreBoxMenuItems.push(
       { text: '수정', onClick: handleEdit },
       { text: '삭제', onClick: handleDelete }
     );
   }
 
-  // 친구 차단 후 친구 추가 못함
-  // 친구 차단 후 친구 삭제 가능
-  // 친구 추가 요청 후 차단 가능
-  if (userInfo?.id !== memberPost?.memberId) {
+  //친구 삭제 - 차단되어있을 때, 친구일 때, 친구 추가 요청 중일 때
+  //친구 추가 - 친구가 아닐 때, 차단되어있지 않을 때, 친구 추가 요청 중이 아닐 때
+  //차단하기 - 친구 추가 요청 중일 때, 친구 삭제된 상태일 때, 차단되어있지 않을 때
+  //차단해제 - 차단되어 있을 때, 
+
+  if (!userInfo || userInfo?.id !== isPost?.memberId) {
+    let friendText = '친구 추가';
+    let friendFunc = handleFriendAdd;
+    let blockText = '차단하기';
+    let blockFunc = handleBlock;
+
+    if (!!isPost && 'isBlocked' in isPost && 'isFriend' in isPost && 'friendRequestMemberId' in isPost) {
+      if (isPost?.isBlocked || isPost?.isFriend) {
+        friendText = '친구 삭제';
+        friendFunc = handleFriendDelete;
+      }
+      if (!isPost?.isBlocked || !isPost?.isFriend || !isPost?.friendRequestMemberId) {
+        friendText = '친구 추가';
+        friendFunc = handleFriendAdd;
+      }
+      if (isPost?.friendRequestMemberId) {
+        friendText = '친구 요청 중';
+      }
+
+      if (isPost?.friendRequestMemberId || !isPost?.isFriend, !isPost?.isBlocked) {
+        blockText = '차단하기';
+        blockFunc = handleBlock;
+      }
+
+      if (isPost?.isBlocked) {
+        blockText = '차단 해제';
+        friendText = '';
+        blockFunc = handleUnblock;
+      }
+    }
+
+    if (friendText) {
+      MoreBoxMenuItems.push({ text: friendText, onClick: friendFunc });
+    }
     MoreBoxMenuItems.push(
-      { text: memberPost?.isFriend || memberPost?.isBlocked ? '친구 삭제' : '친구 추가', onClick: memberPost?.isFriend || memberPost?.isBlocked ? handleFriendDelete : handleFriendAdd },
-      { text: memberPost?.isBlocked ? '차단 해제' : '차단하기', onClick: memberPost?.isBlocked ? handleUnblock : handleBlock },
+      { text: blockText, onClick: blockFunc },
       { text: '신고하기', onClick: handleReportModal }
     );
+
   }
 
   /* 게시글 api */
   useEffect(() => {
     const getPostData = async () => {
       setLoading(true);
-      // if (!!userInfo) {
-      const memberData = await getMemberPost(postId);
-      setMemberPost(memberData.result);
-      setLoading(false);
-      // }
+      if (!!userInfo) {
+        const memberData = await getMemberPost(postId);
+        setIsPost(memberData.result);
+        setLoading(false);
+      }
 
-      // if (!userInfo) {
-      // const nonMember = await getNonMemberPost(postId);
-      // setNonMemberPost(nonMember.result);
-      // setLoading(false);
-      // }
-
+      if (!userInfo) {
+        const nonMember = await getNonMemberPost(postId);
+        setIsPost(nonMember.result);
+        setLoading(false);
+      }
     };
 
     getPostData();
-  }, [isBlockedStatus, isFriendStatus])
+  }, [isBlockedStatus, isFriendStatus, userInfo])
 
 
   /* 유저 정보 api */
@@ -269,9 +370,10 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 채팅방 연결 */
   const handleChatStart = () => {
-    // if(!userInfo) {
+    if (!userInfo) {
+      return showAlertWithContent(loginRequiredMessage);
+    }
 
-    // }
     onClose();
   };
 
@@ -279,22 +381,11 @@ const ReadBoard = (props: ReadBoardProps) => {
     setShowAlert(false);
   };
 
-  // if(post?.memberId===)
-
   return (
     <>
       <CRModal type="reading" onClose={onClose}>
-        {showAlert && (
-          <Alert
-            icon="exclamation"
-            width={68}
-            height={58}
-            content="로그인이 필요한 서비스입니다."
-            alt="로그인 필요"
-            onClose={handleAlertClose}
-          />
-        )}
-        {memberPost && (
+        {showAlert && <Alert {...alertProps} />}
+        {isPost && (
           <>
             {isMoreBoxOpen && (
               <MoreBox
@@ -302,19 +393,20 @@ const ReadBoard = (props: ReadBoardProps) => {
                 top={67}
                 left={776} />
             )}
-            {isMannerLevelBoxOpen && <MannerLevelBox top="14%" right="22%" />}
-            <UpdatedDate>게시일 : {setPostingDateFormatter(memberPost.createdAt)}</UpdatedDate>
+            {isMannerLevelBoxOpen &&
+              <MannerLevelBox memberId={isPost.memberId} top="14%" right="22%" />}
+            <UpdatedDate>게시일 : {setPostingDateFormatter(isPost.createdAt)}</UpdatedDate>
             <UserSection>
               <UserLeft>
                 <ProfileImage
-                  image={memberPost.profileImage} />
+                  image={isPost.profileImage} />
                 <UserNManner>
                   <User
-                    account={memberPost.gameName}
-                    tag={memberPost.tag}
-                    tier={memberPost.tier} />
+                    account={isPost.gameName}
+                    tag={isPost.tag}
+                    tier={isPost.tier} />
                   <MannerLevel
-                    level={memberPost.mannerLevel}
+                    level={isPost.mannerLevel}
                     onClick={handleMannerLevelBoxOpen}
                     position="top"
                     isBalloon={isMannerBalloonVisible} />
@@ -322,43 +414,43 @@ const ReadBoard = (props: ReadBoardProps) => {
               </UserLeft>
               <UserRight>
                 <Mic
-                  status={memberPost.mike} />
+                  status={isPost.mike} />
                 <MoreBoxButton onClick={handleMoreBoxToggle} />
               </UserRight>
             </UserSection>
             <ChampionNQueueSection>
               <Champion
-                list={memberPost.championList}
+                list={isPost.championList}
                 size={14} />
               <QueueType
-                value={memberPost.gameMode} />
+                value={isPost.gameMode} />
             </ChampionNQueueSection>
-            {memberPost.mainPosition &&
-              memberPost.subPosition &&
-              memberPost.wantPosition &&
+            {isPost.mainPosition &&
+              isPost.subPosition &&
+              isPost.wantPosition &&
               <PositionSection>
                 <Title>포지션</Title>
                 <PositionBox
                   status="reading"
-                  main={memberPost.mainPosition}
-                  sub={memberPost.subPosition}
-                  want={memberPost.wantPosition} />
+                  main={isPost.mainPosition}
+                  sub={isPost.subPosition}
+                  want={isPost.wantPosition} />
               </PositionSection>
             }
             <WinningRateSection $gameType={gameType}>
               <WinningRate
-                completed={memberPost.winRate}
-                history={memberPost.recentGameCount} />
+                completed={isPost.winRate}
+                history={isPost.recentGameCount} />
             </WinningRateSection>
             <StyleSection $gameType={gameType}>
               <Title>게임 스타일</Title>
-              <GameStyle styles={memberPost.gameStyles} />
+              <GameStyle styles={isPost.gameStyles} />
             </StyleSection>
             <MemoSection $gameType={gameType}>
               <Title>메모</Title>
               <Memo>
                 <MemoData>
-                  {memberPost.contents}
+                  {isPost.contents}
                 </MemoData>
               </Memo>
             </MemoSection>

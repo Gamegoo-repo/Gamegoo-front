@@ -19,6 +19,7 @@ import { getBoardList } from "@/api/board";
 import { BoardList } from "@/interface/board";
 import { getUserInfo } from "@/api/member";
 import { UserInfo } from "@/interface/profile";
+import Alert from "@/components/common/Alert";
 
 const ITEMS_PER_PAGE = 20;
 
@@ -33,6 +34,7 @@ const BoardPage = () => {
   const [selectedGameMode, setSelectedGameMode] = useState<string | number | null>("솔로 랭크");
   const [selectedTier, setSelectedTier] = useState<string | null>("티어 선택");
   const [userInfo, setUserInfo] = useState<UserInfo>();
+  const [showAlert, setShowAlert] = useState(false);
 
   const gameModeRef = useRef<HTMLDivElement>(null);
   const tierRef = useRef<HTMLDivElement>(null);
@@ -130,7 +132,9 @@ const BoardPage = () => {
 
   /* 글쓰기 모달 오픈 */
   const handlePostingOpen = () => {
-    if (!userInfo) return;
+    if (!userInfo) {
+      return setShowAlert(true);
+    }
     dispatch(setOpenPostingModal());
   };
 
@@ -202,6 +206,16 @@ const BoardPage = () => {
 
   return (
     <>
+      {showAlert && (
+        <Alert
+          icon="exclamation"
+          width={68}
+          height={58}
+          content="로그아웃되었습니다."
+          alt="로그인 필요"
+          onClose={() => setShowAlert(false)}
+        />
+      )}
       {isPostingModal &&
         <PostBoard
           onClose={handlePostingClose}

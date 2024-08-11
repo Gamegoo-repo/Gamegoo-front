@@ -19,6 +19,7 @@ export interface MemberPost {
     memberId: number;
     isBlocked: boolean;
     isFriend: boolean;
+    friendRequestMemberId:number;
     createdAt: string;
     profileImage: number;
     gameName: string;
@@ -41,12 +42,12 @@ export interface NonMemberPost {
     boardId: number;
     memberId: number;
     createdAt: string;
-    profileImage: string;
+    profileImage: number;
     gameName: string;
     tag: string;
     mannerLevel: number;
     tier: string;
-    voice: boolean;
+    mike: boolean;
     championList: number[];
     gameMode: number;
     mainPosition?: number;
@@ -55,6 +56,7 @@ export interface NonMemberPost {
     winRate: number;
     gameStyles: number[];
     contents: string;
+    recentGameCount:number;
 }
 
 export interface PostReq {

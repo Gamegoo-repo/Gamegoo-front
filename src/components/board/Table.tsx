@@ -116,7 +116,7 @@ const Table = (props: TableProps) => {
                                         src={setTierImg(data.tier)}
                                         width={26}
                                         height={13}
-                                        alt="profile image"
+                                        alt="티어 이미지"
                                     />
                                     <P>{data.tier}</P>
                                 </Third>
@@ -125,40 +125,31 @@ const Table = (props: TableProps) => {
                                         src={setPositionImg(data.mainPosition)}
                                         width={35}
                                         height={28}
-                                        alt="main position image"
+                                        alt="메인 포지션"
                                     />
                                     <Image
                                         src={setPositionImg(data.subPosition)}
-                                        width={26}
-                                        height={25}
-                                        alt="main position image"
+                                        width={35}
+                                        height={28}
+                                        alt="서브 포지션"
                                     />
                                 </Fourth>
                                 <Fifth className="table_width">
                                     <Image
                                         src={setPositionImg(data.wantPosition)}
-                                        width={26}
-                                        height={25}
-                                        alt="sub position image"
+                                        width={35}
+                                        height={28}
+                                        alt="찾는 포지션"
                                     />
                                 </Fifth>
                                 <Sixth className="table_width">
-                                    {/* {data.championList.map((data, index) => (
-                                        <Image
-                                            key={index}
-                                            src={data}
-                                            width={50}
-                                            height={50}
-                                            alt="champion image"
-                                        />
-                                    ))} */}
                                     {data.championList.map((data, index) => (
                                         // <Image
                                         //     key={index}
                                         //     src={data}
                                         //     width={50}
                                         //     height={50}
-                                        //     alt="champion image"
+                                        //     alt="챔피언 이미지"
                                         // />
                                         data
                                     ))}
