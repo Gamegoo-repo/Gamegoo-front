@@ -291,13 +291,15 @@ const BoardPage = () => {
             <Main>
               <Table title={BOARD_TITLE} content={boardList} />
             </Main>
-            <Pagination
-              currentPage={currentPage}
-              hasMoreItems={hasMoreItems}
-              onPrevPage={handlePrevPage}
-              onNextPage={handleNextPage}
-              onPageClick={handlePageClick}
-            />
+            {boardList.length > 0 &&
+              <Pagination
+                currentPage={currentPage}
+                hasMoreItems={hasMoreItems}
+                onPrevPage={handlePrevPage}
+                onNextPage={handleNextPage}
+                onPageClick={handlePageClick}
+              />
+            }
             <Footer>
               <ChatBoxContent>
                 <ChatButton count={3} />
