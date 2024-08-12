@@ -4,32 +4,37 @@ import { useState } from "react";
 import PositionCategory from "../common/PositionCategory";
 
 interface PositionBoxProps {
-  status: "posting" | "reading";
   onPositionChange?: (newPositionValue: PositionState) => void;
+  main: number | undefined;
+  sub: number | undefined;
+  want: number | undefined;
 }
 
 type Position = "main" | "sub" | "want";
 
 export interface PositionState {
-  main: string;
-  sub: string;
-  want: string;
+  main: number | undefined;
+  sub: number | undefined;
+  want: number | undefined;
 }
 
 const PositionBox = (props: PositionBoxProps) => {
-  const { status, onPositionChange } = props;
+  const { onPositionChange, main, sub, want } = props;
   const [selectedBox, setSelectedBox] = useState("");
+  const [openPosition, setOpenPosition] = useState<Position | null>(null);
   const [positionValue, setPositionValue] = useState<PositionState>({
-    main: "",
-    sub: "",
-    want: "",
+    main: main,
+    sub: sub,
+    want: want,
   });
 
-  const handleCategoryButtonClick = (positionName: string) => {
+  const handleCategoryButtonClick = (positionId: number) => {
+    console.log(positionId)
+
     if (selectedBox) {
       const newPositionValue = {
         ...positionValue,
-        [selectedBox]: positionName,
+        [selectedBox]: positionId,
       };
       setPositionValue(newPositionValue);
       if (onPositionChange) {
@@ -38,26 +43,24 @@ const PositionBox = (props: PositionBoxProps) => {
     }
   };
 
-  const handlePositionImgSet = (buttonLabel: string) => {
-    switch (buttonLabel) {
-      case "random":
-        return "/assets/icons/position_random_purple.svg";
-      case "top":
+  const handlePositionImgSet = (positionId: number | undefined) => {
+    switch (positionId) {
+      case 0:
+        return "/assets/icons/position_all_purple.svg";
+      case 1:
         return "/assets/icons/position_top_purple.svg";
-      case "jungle":
+      case 2:
         return "/assets/icons/position_jungle_purple.svg";
-      case "mid":
+      case 3:
         return "/assets/icons/position_mid_purple.svg";
-      case "bottom":
-        return "/assets/icons/position_bottom_purple.svg";
-      case "supporter":
+      case 4:
+        return "/assets/icons/position_one_deal_purple.svg";
+      case 5:
         return "/assets/icons/position_supporter_purple.svg";
       default:
-        return "/assets/icons/position_random_purple.svg";
+        return "/assets/icons/position_all_purple.svg";
     }
   };
-
-  const [openPosition, setOpenPosition] = useState<Position | null>(null);
 
   const handleBoxClick = (position: Position) => {
     if (status === "reading") return;
@@ -66,6 +69,7 @@ const PositionBox = (props: PositionBoxProps) => {
     );
     setSelectedBox(position);
   };
+
 
   const closePosition = () => {
     setOpenPosition(null);
@@ -82,7 +86,7 @@ const PositionBox = (props: PositionBoxProps) => {
             src={handlePositionImgSet(positionValue.main)}
             width={35}
             height={34}
-            alt="main position image"
+            alt="메인 포지션"
           />
           {openPosition === "main" && (
             <PositionCategory
@@ -100,7 +104,7 @@ const PositionBox = (props: PositionBoxProps) => {
             src={handlePositionImgSet(positionValue.sub)}
             width={35}
             height={34}
-            alt="sub position image"
+            alt="부 포지션"
           />
           {openPosition === "sub" && (
             <PositionCategory
@@ -119,7 +123,7 @@ const PositionBox = (props: PositionBoxProps) => {
           src={handlePositionImgSet(positionValue.want)}
           width={35}
           height={34}
-          alt="want position image"
+          alt="찾는 포지션"
         />
         {openPosition === "want" && (
           <PositionCategory
@@ -145,12 +149,12 @@ const PositionWrapper = styled.div`
 const FirstBox = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
   width: 100%;
   white-space: nowrap;
   background: #f6f6f6;
   border-radius: 10px;
   padding: 24px 54px 24px 47px;
+  gap: 59px;
 `;
 
 const Section = styled.div`
@@ -171,6 +175,6 @@ const Title = styled.p`
   margin-bottom: 6px;
 `;
 
-const StyledImage = styled(Image)<{ $status: string }>`
+const StyledImage = styled(Image) <{ $status: string }>`
   cursor: ${({ $status }) => ($status === "posting" ? "pointer" : "unset")};
 `;

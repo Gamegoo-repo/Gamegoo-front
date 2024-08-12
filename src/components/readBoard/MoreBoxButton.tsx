@@ -15,7 +15,7 @@ const MoreBoxButton = (props: MoreBoxButtonProps) => {
         src="/assets/icons/three_dots_button.svg"
         width={3}
         height={15}
-        alt="신고하기 버튼"
+        alt="더보기 버튼"
       />
     </Wrapper>
   );

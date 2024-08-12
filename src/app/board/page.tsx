@@ -4,7 +4,7 @@ import styled from "styled-components";
 import Image from "next/image";
 import { theme } from "@/styles/theme";
 import { useEffect, useRef, useState } from "react";
-import { BOARD_TITLE } from "@/data/board";
+import { BOARD_TITLE, GAME_MODE, TIER } from "@/data/board";
 import Button from "@/components/common/Button";
 import Dropdown from "@/components/common/Dropdown";
 import Table from "@/components/board/Table";
@@ -14,307 +14,315 @@ import PostBoard from "@/components/createBoard/PostBoard";
 import ChatButton from "@/components/common/ChatButton";
 import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setClosePostingModal,
-  setOpenPostingModal,
-} from "@/redux/slices/modalSlice";
+import { setClosePostingModal, setOpenModal, setOpenPostingModal } from "@/redux/slices/modalSlice";
+import { getBoardList } from "@/api/board";
+import { BoardList } from "@/interface/board";
+import { getUserInfo } from "@/api/member";
+import { UserInfo } from "@/interface/profile";
+import Alert from "@/components/common/Alert";
+import { useRouter } from "next/navigation";
 
-const DROP_DATA1 = [
-  { id: 1, value: "솔로1" },
-  { id: 2, value: "솔로2" },
-  { id: 3, value: "솔로3" },
-];
-
-const DROP_DATA2 = [
-  { id: 1, value: "티어1" },
-  { id: 2, value: "티어2" },
-  { id: 3, value: "티어3" },
-];
-
-const BOARD_CONTENT = [
-  {
-    id: 1,
-    image: "/assets/icons/gray_circle.svg",
-    account: "소환사명1",
-    manner_lev: 5,
-    tierImg: 0,
-    tier: "UR",
-    main_position: 0,
-    sub_position: 1,
-    hope_position: 1,
-    champion: [
-      "/assets/icons/gray_circle.svg",
-      "/assets/icons/gray_circle.svg",
-      "/assets/icons/gray_circle.svg",
-    ],
-    odds: 32,
-    date: "2024-07-06 16:59",
-  },
-  {
-    id: 2,
-    image: "/assets/icons/gray_circle.svg",
-    account: "소환사명1",
-    manner_lev: 5,
-    tierImg: 1,
-    tier: "UR",
-    main_position: 0,
-    sub_position: 1,
-    hope_position: 1,
-    champion: [
-      "/assets/icons/gray_circle.svg",
-      "/assets/icons/gray_circle.svg",
-      "/assets/icons/gray_circle.svg",
-    ],
-    odds: 97,
-    date: "2024-07-06 01:39",
-  },
-  {
-    id: 3,
-    image: "/assets/icons/gray_circle.svg",
-    account: "소환사명1",
-    manner_lev: 5,
-    tierImg: 2,
-    tier: "UR",
-    main_position: 0,
-    sub_position: 1,
-    hope_position: 1,
-    champion: [
-      "/assets/icons/gray_circle.svg",
-      "/assets/icons/gray_circle.svg",
-      "/assets/icons/gray_circle.svg",
-    ],
-    odds: 50,
-    date: "2024-07-04 23:27",
-  },
-  {
-    id: 4,
-    image: "/assets/icons/gray_circle.svg",
-    account: "소환사명1",
-    manner_lev: 5,
-    tierImg: 3,
-    tier: "UR",
-    main_position: 0,
-    sub_position: 1,
-    hope_position: 1,
-    champion: [
-      "/assets/icons/gray_circle.svg",
-      "/assets/icons/gray_circle.svg",
-      "/assets/icons/gray_circle.svg",
-    ],
-    odds: 32,
-    date: "2024-05-19 03:27",
-  },
-  {
-    id: 5,
-    image: "/assets/icons/gray_circle.svg",
-    account: "소환사명1",
-    manner_lev: 5,
-    tierImg: 4,
-    tier: "UR",
-    main_position: 0,
-    sub_position: 1,
-    hope_position: 1,
-    champion: [
-      "/assets/icons/gray_circle.svg",
-      "/assets/icons/gray_circle.svg",
-      "/assets/icons/gray_circle.svg",
-    ],
-    odds: 60,
-    date: "2024-05-18 12:27",
-  },
-  {
-    id: 6,
-    image: "/assets/icons/gray_circle.svg",
-    account: "소환사명1",
-    manner_lev: 5,
-    tierImg: 5,
-    tier: "UR",
-    main_position: 0,
-    sub_position: 1,
-    hope_position: 1,
-    champion: [
-      "/assets/icons/gray_circle.svg",
-      "/assets/icons/gray_circle.svg",
-      "/assets/icons/gray_circle.svg",
-    ],
-    odds: 32,
-    date: "2024-04-04 23:27",
-  },
-];
+const ITEMS_PER_PAGE = 20;
 
 const BoardPage = () => {
+  const [boardList, setBoardList] = useState<BoardList[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  //TODO: itemsPerPage 추후 20개로 수정
-  const itemsPerPage = 5;
-  const pageButtonCount = 5;
-
-  const indexOfLastPost = currentPage * itemsPerPage;
-  const indexOfFirstPost = indexOfLastPost - itemsPerPage;
-  const currentPosts = BOARD_CONTENT.slice(indexOfFirstPost, indexOfLastPost);
-
+  const [hasMoreItems, setHasMoreItems] = useState(true);
   const [isPosition, setIsPosition] = useState(0);
-  const [micOn, setMicOn] = useState(true);
+  const [micStatus, setMicStatus] = useState(true);
+  const [isGameModeDropdownOpen, setIsGameModeDropdownOpen] = useState(false);
+  const [isTierDropdownOpen, setIsTierDropdownOpen] = useState(false);
+  const [selectedGameMode, setSelectedGameMode] = useState<string | number | null>("솔로 랭크");
+  const [selectedTier, setSelectedTier] = useState<string | null>("티어 선택");
+  const [userInfo, setUserInfo] = useState<UserInfo>();
+  const [showAlert, setShowAlert] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
-  const [isDropdownOpen1, setIsDropdownOpen1] = useState(false);
-  const [isDropdownOpen2, setIsDropdownOpen2] = useState(false);
-  const [selectedDropOption1, setSelectedDropOption1] = useState("솔로 랭크");
-  const [selectedDropOption2, setSelectedDropOption2] = useState("티어 선택");
-
-  const dropdownRef1 = useRef<HTMLDivElement>(null);
-  const dropdownRef2 = useRef<HTMLDivElement>(null);
+  const gameModeRef = useRef<HTMLDivElement>(null);
+  const tierRef = useRef<HTMLDivElement>(null);
 
   const dispatch = useDispatch();
+  const router = useRouter();
 
-  const isPostingModal = useSelector(
-    (state: RootState) => state.modal.postingModal
-  );
+  const isPostingModal = useSelector((state: RootState) => state.modal.postingModal);
+  const isCompletedPosting = useSelector((state: RootState) => state.modal.modalType);
 
-  const handleFirstDropValue = (value: string) => {
-    console.log(value);
-    setSelectedDropOption1(value);
-    setIsDropdownOpen1(false);
+  // 게임모드 드롭
+  const handleGameModeDropValue = (id: number | null) => {
+    setSelectedGameMode(id);
+    setIsGameModeDropdownOpen(false);
   };
 
-  const handleSecondDropValue = (value: string) => {
-    console.log(value);
-    setSelectedDropOption2(value);
-    setIsDropdownOpen2(false);
+  // 티어 드롭
+  const handleTierDropValue = (id: number | null) => {
+    switch (id) {
+      case 1:
+        setSelectedTier("IRON");
+        break;
+      case 2:
+        setSelectedTier("BRONZE");
+        break;
+      case 3:
+        setSelectedTier("SILVER");
+        break;
+      case 4:
+        setSelectedTier("GOLD");
+        break;
+      case 5:
+        setSelectedTier("PLATINUM");
+        break;
+      case 6:
+        setSelectedTier("EMERALD");
+        break;
+      case 7:
+        setSelectedTier("DIAMOND");
+        break;
+      case 8:
+        setSelectedTier("MASTER");
+        break;
+      case 9:
+        setSelectedTier("GRANDMASTER");
+        break;
+      case 10:
+        setSelectedTier("CHALLENGER");
+        break;
+      default:
+        setSelectedTier(null);
+        break;
+    }
+
+    setIsTierDropdownOpen(false);
   };
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
-  const handlePositionFilter = (id: number) => {
-    setIsPosition(id);
-  };
-
-  const handleMic = () => {
-    setMicOn((prevStatus) => !prevStatus);
-  };
-
-  const handleWritingOpen = () => {
-    dispatch(setOpenPostingModal());
-  };
-
-  const handleWritingClose = () => {
-    dispatch(setClosePostingModal());
-    dispatchEvent;
-  };
-
-  const handleDropdownClickOutside1 = (event: MouseEvent) => {
+  // 첫번째 드롭 외부 클릭
+  const handleGameModeDropdownClickOutside = (event: MouseEvent) => {
     if (
-      dropdownRef1.current &&
-      !dropdownRef1.current.contains(event.target as Node)
+      gameModeRef.current &&
+      !gameModeRef.current.contains(event.target as Node)
     ) {
-      setIsDropdownOpen1(false);
+      setIsGameModeDropdownOpen(false);
     }
   };
 
-  const handleDropdownClickOutside2 = (event: MouseEvent) => {
+  // 두번째 드롭 외부 클릭
+  const handleTierDropdownClickOutside = (event: MouseEvent) => {
     if (
-      dropdownRef2.current &&
-      !dropdownRef2.current.contains(event.target as Node)
+      tierRef.current &&
+      !tierRef.current.contains(event.target as Node)
     ) {
-      setIsDropdownOpen2(false);
+      setIsTierDropdownOpen(false);
     }
   };
 
   useEffect(() => {
-    document.addEventListener("mousedown", handleDropdownClickOutside1);
-    document.addEventListener("mousedown", handleDropdownClickOutside2);
+    document.addEventListener("mousedown", handleGameModeDropdownClickOutside);
+    document.addEventListener("mousedown", handleTierDropdownClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleDropdownClickOutside1);
-      document.removeEventListener("mousedown", handleDropdownClickOutside2);
+      document.removeEventListener("mousedown", handleGameModeDropdownClickOutside);
+      document.removeEventListener("mousedown", handleTierDropdownClickOutside);
     };
   }, []);
 
+  /* 포지션 필터 */
+  const handlePositionFilter = (id: number) => {
+    setIsPosition(id);
+  };
+
+  /* 마이크 여부 */
+  const handleMic = () => {
+    setMicStatus((prevStatus) => !prevStatus);
+  };
+
+  /* 글쓰기 모달 오픈 */
+  const handlePostingOpen = () => {
+    if (!userInfo) {
+      return setShowAlert(true);
+    }
+    dispatch(setOpenPostingModal());
+  };
+
+  /* 글쓰기 모달 닫기 */
+  const handlePostingClose = () => {
+    dispatch(setClosePostingModal());
+  };
+
+  /* 게시글 목록 */
+  useEffect(() => {
+    const getList = async () => {
+
+      const params = {
+        pageIdx: currentPage,
+        mode: selectedGameMode === '솔로 랭크' ? setSelectedGameMode(null) : selectedGameMode,
+        tier: selectedTier === '티어 선택' ? setSelectedTier(null) : selectedTier,
+        mainPosition: isPosition,
+        mike: micStatus
+      };
+
+      const data = await getBoardList(params);
+      setBoardList(data.result);
+      setHasMoreItems(data.result.length === ITEMS_PER_PAGE);
+    };
+
+    getList();
+  }, [
+    currentPage,
+    selectedGameMode,
+    selectedTier,
+    isPosition,
+    micStatus,
+    isCompletedPosting,
+    refresh
+  ]);
+
+  /* 페이지네이션 이전 클릭 */
+  const handlePrevPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  /* 페이지네이션 다음 클릭 */
+  const handleNextPage = () => {
+    if (boardList.length === ITEMS_PER_PAGE) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  /* 페이지네이션 페이지 클릭 */
+  const handlePageClick = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleModalClose = () => {
+    /* 글쓰기 모달 닫기 */
+    handlePostingClose();
+    /* 글쓰기 완료 모달 닫기 */
+    dispatch(setOpenModal(""));
+  };
+
+  /* 유저 정보 api */
+  useEffect(() => {
+    const getUserData = async () => {
+      const data = await getUserInfo();
+      await setUserInfo(data);
+    };
+
+    getUserData();
+  }, [])
+
+  const handleRefresh = () => {
+    setRefresh((prevStatus) => !prevStatus);
+  }
+
   return (
     <>
-      {isPostingModal && <PostBoard onClose={handleWritingClose} />}
-      <Wrapper>
-        <BoardContent>
-          <FirstRow>
-            <Title>게시판</Title>
-            <RefreshImage
-              src="/assets/icons/refresh.svg"
-              width={30}
-              height={27}
-              alt="새로고침"
-            />
-          </FirstRow>
-          <SecondRow>
-            <FirstBlock>
-              <Dropdown
-                type="type1"
-                width="138px"
-                padding="18px 21px"
-                list={DROP_DATA1}
-                ref={dropdownRef1}
-                open={isDropdownOpen1}
-                setOpen={setIsDropdownOpen1}
-                onDropValue={handleFirstDropValue}
-                defaultValue={selectedDropOption1}
+      {showAlert && (
+        <Alert
+          icon="exclamation"
+          width={68}
+          height={58}
+          content="로그아웃 되었습니다. 다시 로그인 해주세요."
+          alt="로그인 필요"
+          onClose={() => router.push("/")}
+        />
+      )}
+      {isPostingModal &&
+        <PostBoard
+          onClose={handlePostingClose}
+          onCompletedPosting={handleModalClose}
+        />}
+      {boardList &&
+        <Wrapper>
+          <BoardContent>
+            <FirstRow>
+              <Title>게시판</Title>
+              <RefreshImage
+                onClick={handleRefresh}
+                src="/assets/icons/refresh.svg"
+                width={30}
+                height={27}
+                alt="새로고침"
               />
-              <Dropdown
-                type="type1"
-                width="138px"
-                padding="18px 21px"
-                list={DROP_DATA2}
-                ref={dropdownRef2}
-                open={isDropdownOpen2}
-                setOpen={setIsDropdownOpen2}
-                onDropValue={handleSecondDropValue}
-                defaultValue={selectedDropOption2}
-              />
-              <PositionBox>
-                <PositionFilter
-                  onPositionFilter={handlePositionFilter}
-                  isPosition={isPosition}
+            </FirstRow>
+            <SecondRow>
+              <FirstBlock>
+                <Dropdown
+                  type="type1"
+                  width="138px"
+                  padding="18px 21px"
+                  list={GAME_MODE}
+                  ref={gameModeRef}
+                  open={isGameModeDropdownOpen}
+                  setOpen={setIsGameModeDropdownOpen}
+                  onDropValue={handleGameModeDropValue}
+                  defaultValue={selectedGameMode}
                 />
-              </PositionBox>
-              <MicButton
-                onClick={handleMic}
-                className={micOn ? "clicked" : "unClicked"}
-              >
-                <Image
-                  src={
-                    micOn
-                      ? "/assets/icons/availabled_mic.svg"
-                      : "/assets/icons/unavailabled_mic.svg"
-                  }
-                  width={21}
-                  height={26}
-                  alt="마이크 버튼"
+                <Dropdown
+                  type="type1"
+                  width="138px"
+                  padding="18px 21px"
+                  list={TIER}
+                  ref={tierRef}
+                  open={isTierDropdownOpen}
+                  setOpen={setIsTierDropdownOpen}
+                  onDropValue={handleTierDropValue}
+                  defaultValue={selectedTier}
                 />
-              </MicButton>
-            </FirstBlock>
-            <SecondBlock>
-              <Button
-                onClick={handleWritingOpen}
-                buttonType="primary"
-                size="large"
-                text="글 작성하기"
+                <PositionBox>
+                  <PositionFilter
+                    onPositionFilter={handlePositionFilter}
+                    isPosition={isPosition}
+                  />
+                </PositionBox>
+                <MicButton
+                  onClick={handleMic}
+                  className={micStatus ? "clicked" : "unClicked"}
+                >
+                  <Image
+                    src={
+                      micStatus
+                        ? "/assets/icons/availabled_mic.svg"
+                        : "/assets/icons/unavailabled_mic.svg"
+                    }
+                    width={21}
+                    height={26}
+                    alt="마이크 버튼"
+                  />
+                </MicButton>
+              </FirstBlock>
+              <SecondBlock>
+                <Button
+                  onClick={handlePostingOpen}
+                  buttonType="primary"
+                  size="large"
+                  text="글 작성하기"
+                />
+              </SecondBlock>
+            </SecondRow>
+            <Main>
+              {boardList?.length > 0 ? (
+                <Table title={BOARD_TITLE} content={boardList} />
+              ) : (
+                <p>데이터가 없습니다.</p>
+              )}
+            </Main>
+            {boardList?.length > 0 &&
+              <Pagination
+                currentPage={currentPage}
+                hasMoreItems={hasMoreItems}
+                onPrevPage={handlePrevPage}
+                onNextPage={handleNextPage}
+                onPageClick={handlePageClick}
               />
-            </SecondBlock>
-          </SecondRow>
-          <Main>
-            <Table title={BOARD_TITLE} content={currentPosts} />
-          </Main>
-          <Pagination
-            currentPage={currentPage}
-            totalItems={BOARD_CONTENT.length}
-            itemsPerPage={itemsPerPage}
-            pageButtonCount={pageButtonCount}
-            onPageChange={handlePageChange}
-          />
-          <Footer>
-            <ChatBoxContent>
-              <ChatButton count={3} />
-            </ChatBoxContent>
-          </Footer>
-        </BoardContent>
-      </Wrapper>
+            }
+            <Footer>
+              <ChatBoxContent>
+                <ChatButton
+                  user={userInfo}
+                  count={3} />
+              </ChatBoxContent>
+            </Footer>
+          </BoardContent>
+        </Wrapper>
+      }
     </>
   );
 };

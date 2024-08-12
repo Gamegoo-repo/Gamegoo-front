@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import AlertBox from "../mypage/alert/AlertBox";
 import { EX_ALARM, EX_REQUEST_ALARM } from "@/data/mypage";
 import { useRouter } from "next/navigation";
@@ -20,21 +20,21 @@ const AlertWindow = (
 
   const alertWindowRef = useRef<HTMLDivElement>(null);
 
-  const handleClickOutside = (event: MouseEvent) => {
+  const handleClickOutside = useCallback((event: MouseEvent) => {
     if (
       alertWindowRef.current &&
       !alertWindowRef.current.contains(event.target as Node)
     ) {
       onClose();
     }
-  };
+  }, [onClose]);
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [handleClickOutside]);
 
   return (
     <>

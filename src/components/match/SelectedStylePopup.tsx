@@ -1,4 +1,5 @@
 import { GAME_STYLE } from "@/data/profile";
+import { GameStyleList } from "@/interface/profile";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import React from "react";
@@ -18,6 +19,9 @@ interface SelectedStylePopupProps {
   selectedStyles: GameStyle[];
   onSelectStyle: (
     style: GameStyle,
+    // selectedStyles: number[];
+    // onSelectStyle: (
+    //   style: number,
     event: React.MouseEvent<HTMLElement, MouseEvent>
   ) => void;
   position?: positionType;
@@ -54,6 +58,15 @@ const SelectedStylePopup: React.FC<SelectedStylePopupProps> = ({
             )}
           >
             {data.gameStyleName}
+            {/* <Boxs $position={position}>
+        {GAME_STYLE.map((style) => (
+          <Box
+            $position={position}
+            key={style.id}
+            selected={selectedStyles.includes(style.id)}
+            onClick={(e) => onSelectStyle(style.id, e)}
+          >
+            {style.text} */}
           </Box>
         ))}
       </Boxs>

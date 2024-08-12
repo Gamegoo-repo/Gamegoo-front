@@ -14,12 +14,14 @@ const WinningRate = (props: WinningRateProps) => {
             <FirstRow>
                 <Left>
                     <WinningTitle>승률</WinningTitle>
-                    <Percent>{completed}%</Percent>
+                    <Percent>{completed === null ? 0 : completed}%</Percent>
                 </Left>
                 <Right>
-                    <History>
-                        글 작성 시점 최근 {history}게임
-                    </History>
+                    {!!history &&
+                        <History>
+                            글 작성 시점 최근 {history}게임
+                        </History>
+                    }
                 </Right>
             </FirstRow>
             <SecondRow $completed={completed}>
@@ -55,7 +57,7 @@ const SecondRow = styled.div<{ $completed: number }>`
 }
     .barCompleted {
    background: linear-gradient(90deg, #342688 0, #5A42EE 100%);
-   border-radius: 11px 0 0 11px;
+   border-radius: ${({ $completed }) => $completed === null ? "11px" : "11px 0 0 11px"};
    width: ${({ $completed }) => $completed}%;
 } 
     .label{

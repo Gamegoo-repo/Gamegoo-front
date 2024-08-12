@@ -3,7 +3,7 @@ import signInReducer from "./slices/signInSlice";
 import userReducer from "./slices/userSlice";
 import modalReducer from "./slices/modalSlice";
 import mannerStatusReducer from "./slices/mannerStatusSlice";
-
+import postReducer from "./slices/postSlice";
 
 export const store = () => {
   return configureStore({
@@ -12,6 +12,7 @@ export const store = () => {
       user: userReducer,
       modal: modalReducer,
       mannerStatus: mannerStatusReducer,
+      post: postReducer
     },
   })
 }

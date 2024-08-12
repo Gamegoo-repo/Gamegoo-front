@@ -1,8 +1,9 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
+import { setQueueType } from "@/utils/custom";
 
 interface QueueTypeProps {
-    value: string;
+    value: number;
 }
 
 const QueueType = (props: QueueTypeProps) => {
@@ -12,7 +13,7 @@ const QueueType = (props: QueueTypeProps) => {
         <Queue>
             <Title>큐타입</Title>
             <Type>
-                <P>{value}</P>
+                <P>{setQueueType(value)}</P>
             </Type>
         </Queue>
     )

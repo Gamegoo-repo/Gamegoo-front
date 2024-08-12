@@ -40,13 +40,13 @@ const MyBlockedPage = () => {
               <BlockedBox key={data.id} name={data.name} />
             ))}
           </BlockedList>
-          <Pagination
+          {/* <Pagination
             currentPage={currentPage}
             totalItems={EX_BLOCKED.length}
             itemsPerPage={itemsPerPage}
             pageButtonCount={pageButtonCount}
             onPageChange={handlePageChange}
-          />
+          /> */}
         </Blocked>
       </MyBlockedContent>
     </Wrapper>
