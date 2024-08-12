@@ -6,7 +6,6 @@ import styled from "styled-components";
 import Mic from "../readBoard/Mic";
 import Box from "../common/Box";
 import MannerLevelBox from "../common/MannerLevelBox";
-import MannerLevel from "../common/MannerLevel";
 
 interface SquareProfileProps {
   opponent?: boolean;
@@ -44,12 +43,19 @@ const SquareProfile: React.FC<SquareProfileProps> = ({ opponent = false }) => {
           {opponent && (
             <>
               <Level onClick={handleMannerLevel}>LV. 5</Level>
-              {mannerPopup && <MannerLevelBox top="20px" right="-17%" />}
+              {mannerPopup && (
+                <MannerLevelBox
+                  memberId={0}
+                  level={5}
+                  top="20px"
+                  right="-17%"
+                />
+              )}
               <Bubble>클릭해서 매너키워드 보기</Bubble>
             </>
           )}
         </ImageContainer>
-        <Mic status={0} />
+        <Mic status={false} />
         <RowBox>
           <Box shape="round" text="원챔러" />
           <Box shape="round" text="승급 뿌셔" />
@@ -162,7 +168,7 @@ const Bubble = styled.div`
     border-top: 3px solid transparent;
     border-left: 6px solid transparent;
     border-right: 6px solid transparent;
-    border-bottom: 9px solid #9F90F9;
+    border-bottom: 9px solid #9f90f9;
     content: "";
     position: absolute;
     bottom: 0.2px;
@@ -176,7 +182,7 @@ const Bubble = styled.div`
     border-top: 0 solid transparent;
     border-left: 5.5px solid transparent;
     border-right: 4.5px solid transparent;
-    border-bottom: 9px solid #E3DEFF;
+    border-bottom: 9px solid #e3deff;
     content: "";
     position: absolute;
     bottom: 1px;

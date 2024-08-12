@@ -48,7 +48,7 @@ const StyledImage = styled(Image)`
   cursor: pointer;
 `;
 
-const Title = styled.h1`
+const Title = styled.div`
   color: ${theme.colors.gray100};
   margin-right: 40px;
 
@@ -61,7 +61,7 @@ const Title = styled.h1`
   }
 `;
 
-const Sub = styled.h1`
+const Sub = styled.div`
   ${(props) => props.theme.fonts.regular28};
   color: ${theme.colors.gray600};
 `;

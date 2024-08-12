@@ -4,30 +4,32 @@ import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import MyPageProfile from "@/components/mypage/profile/MyPageProfile";
 import PasswordModal from "@/components/mypage/profile/PasswordModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ConfirmModal from "@/components/common/ConfirmModal";
+import { deleteMember, getProfile } from "@/api/mypage";
+import { setUserProfile } from "@/redux/slices/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { setChatRoomDateFormatter } from "@/utils/custom";
+import Input from "@/components/common/Input";
+import { checkPassword } from "@/api/password";
+import { clearTokens } from "@/utils/storage";
+import { useRouter } from "next/navigation";
 
-const userData = {
-  image: "profile6",
-  account: "유니콘의 비밀",
-  tag: "KR1",
-  tier: "B3",
-  manner_level: 5,
-  mic: true,
-  gameStyle: [
-    "이기기만 하면 뭔들",
-    "과도한 핑은 사절이에요",
-    "랭크 올리고 싶어요",
-  ],
-};
-
-const updateDate = "24.05.08";
 const passwordLength = 10;
 
 const MyProfilePage = () => {
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const user = useSelector((state: RootState) => state.user);
+
   const circles = Array.from({ length: passwordLength });
 
   const [isPasswordModify, setIsPasswordModify] = useState<boolean>(false);
+
+  const [password, setPassword] = useState("");
+  /* 현재 비밀번호 일치 여부 */
+  const [isPasswordValid, setIsPasswordValid] = useState<boolean | undefined>();
 
   /* 회원탈퇴 모달 */
   const [isWithdrawalCaution, setIsWithdrawalCaution] =
@@ -35,28 +37,60 @@ const MyProfilePage = () => {
   const [isWithdrawalComplete, setIsWithdrawalComplete] =
     useState<boolean>(false);
 
-  const handleWithdrawal = () => {
+  const handleWithdrawal = async () => {
     // 회원탈퇴 API 연동
-    setIsWithdrawalCaution(false);
-    setIsWithdrawalComplete(true);
+    try {
+      await checkPassword(password);
+      setIsPasswordValid(true);
+
+      await deleteMember();
+      setIsWithdrawalCaution(false);
+      setIsWithdrawalComplete(true);
+      clearTokens();
+      router.push("/login");
+    } catch (error) {
+      setIsPasswordValid(false);
+      console.log("현재 비밀번호가 일치하지 않습니다.");
+    }
   };
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await getProfile();
+        dispatch(setUserProfile(response.result));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  /* user 업데이트 값 가져오기 */
+  useEffect(() => {
+    // 필요한 로직을 여기에 추가
+    console.log("user 업데이트:", user);
+  }, [user]);
 
   return (
     <Wrapper>
       <MyProfileContent>
         <Profile>
           <Title>내 프로필</Title>
-          <MyPageProfile user={userData} />
+          <MyPageProfile user={user} />
         </Profile>
         <Private>
           <Title>
             개인정보
-            <Small>{`마지막 업데이트 : ${updateDate}`}</Small>
+            <Small>{`마지막 업데이트 : ${setChatRoomDateFormatter(
+              user.updatedAt
+            )}`}</Small>
           </Title>
           <PrivateContent>
             <Box>
               <Label>이메일</Label>
-              <Email>reen330@naver.com</Email>
+              <Email>{user.email}</Email>
             </Box>
             <Box>
               <Label>비밀번호</Label>
@@ -84,11 +118,26 @@ const MyProfilePage = () => {
             onPrimaryClick={handleWithdrawal}
             onSecondaryClick={() => setIsWithdrawalCaution(false)}
           >
-            회원 탈퇴를 하시겠습니까?
-            <br />
-            탈퇴한 아이디로는 다시 가입할 수 없으며,
-            <br />
-            아이디 및 데이터는 복구할 수 없습니다.
+            <ModalContent>
+              <div>
+                회원 탈퇴를 하시겠습니까?
+                <br />
+                탈퇴한 아이디로는 다시 가입할 수 없으며,
+                <br />
+                아이디 및 데이터는 복구할 수 없습니다.
+              </div>
+              <Input
+                inputType="password"
+                value={password}
+                label="현재 비밀번호"
+                onChange={(value) => {
+                  setPassword(value);
+                  setIsPasswordValid(undefined);
+                }}
+                placeholder="현재 비밀번호 입력"
+                isValid={isPasswordValid}
+              />
+            </ModalContent>
           </ConfirmModal>
         )}
         {/* 회원탈퇴 완료 */}
@@ -98,7 +147,7 @@ const MyProfilePage = () => {
             primaryButtonText="확인"
             onPrimaryClick={() => setIsWithdrawalComplete(false)}
           >
-            계속해서 매칭을 시도하겠습니까?
+            회원탈퇴가 완료되었습니다.
           </ConfirmModal>
         )}
       </MyProfileContent>
@@ -141,7 +190,7 @@ const Private = styled.header`
   margin-bottom: 80px;
 `;
 
-const Title = styled.h1`
+const Title = styled.div`
   display: flex;
   align-items: flex-end;
   gap: 22px;
@@ -149,7 +198,7 @@ const Title = styled.h1`
   color: ${theme.colors.gray700};
 `;
 
-const Small = styled.h1`
+const Small = styled.div`
   ${(props) => props.theme.fonts.bold11};
   color: ${theme.colors.gray800};
   margin-bottom: 5px;
@@ -179,7 +228,7 @@ const Email = styled.div`
   color: ${theme.colors.gray800};
   ${(props) => props.theme.fonts.regular18};
 `;
-const Row = styled.button`
+const Row = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -193,7 +242,7 @@ const Password = styled.button`
   gap: 8px;
 `;
 
-const Circle = styled.button`
+const Circle = styled.div`
   width: 5px;
   height: 5px;
   border-radius: 10px;
@@ -209,4 +258,11 @@ const P = styled.button`
   ${(props) => props.theme.fonts.bold14};
   color: ${theme.colors.gray200};
   text-decoration-line: underline;
+`;
+
+const ModalContent = styled.div`
+  padding: 30px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 `;

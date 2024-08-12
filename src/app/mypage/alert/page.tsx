@@ -116,7 +116,7 @@ const Top = styled.div`
   border-bottom: 1px solid ${theme.colors.gray400};
 `;
 
-const Small = styled.h1`
+const Small = styled.div`
   width: 100%;
   ${(props) => props.theme.fonts.medium16};
   color: ${theme.colors.gray700};

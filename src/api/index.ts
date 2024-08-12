@@ -12,15 +12,6 @@ const Axios: AxiosInstance = axios.create({
   },
 });
 
-/* AuthAxios 인스턴스 생성 */
-export const AuthAxios: AxiosInstance = axios.create({
-  baseURL: BASE_URL,
-  headers: {
-    'Content-Type': 'application/json;charset=UTF-8',
-    Authorization: `Bearer ${getAccessToken()}`,
-  },
-});
-
 /* 요청 인터셉터 */
 Axios.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {

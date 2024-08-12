@@ -1,13 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Post } from '@/interface/board';
+import { MemberPost, NonMemberPost } from '@/interface/board';
 
 interface SetCurrentPostPayload {
-    currentPost: Post;
+    currentPost: MemberPost | NonMemberPost;
     currentPostId: number;
 }
 
 interface PostState {
-    currentPost: Post | null;
+    currentPost: MemberPost | NonMemberPost | null;
     currentPostId: number | null;
 }
 

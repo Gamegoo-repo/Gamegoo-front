@@ -4,29 +4,31 @@ import styled from "styled-components";
 import ChatButton from "@/components/common/ChatButton";
 import GraphicBox from "@/components/match/GraphicBox";
 import { MATCH_TYPE_PAGE_DATA } from "@/data/match";
+import HeaderTitle from "@/components/common/HeaderTitle";
 
 const MatchTypePage = () => {
   return (
     <Wrapper>
       <MatchContent>
-        <Header>
-          <Title>바로 매칭하기</Title>
-        </Header>
+        <HeaderTitle title="바로 매칭하기" />
         <Main>
           {MATCH_TYPE_PAGE_DATA.map((box) => {
             return (
-              <BoxWrapper key={box.id}>
-                <GraphicBox
-                  type={box.type}
-                  pathname={box.pathname}
-                  width={box.width}
-                  height={box.height}
-                  top={box.top}
-                  left={box.left}
-                >
+              <GraphicBox
+                key={box.id}
+                type={box.type}
+                pathname={box.pathname}
+                width={box.width}
+                height={box.height}
+                top={box.top}
+                left={box.left}
+                background={box.background}
+              >
+                <div>
                   {box.title}
-                </GraphicBox>
-              </BoxWrapper>
+                  <Sub>{box.sub}</Sub>
+                </div>
+              </GraphicBox>
             );
           })}
         </Main>
@@ -52,32 +54,21 @@ const Wrapper = styled.div`
 const MatchContent = styled.div`
   max-width: 1440px;
   width: 100%;
-  padding: 0 80px;
-`;
-
-const Header = styled.header`
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  width: 100%;
-  margin-bottom: 32px;
-`;
-
-const Title = styled.h1`
-  ${(props) => props.theme.fonts.bold32};
-  color: #393939;
+  padding: 60px 80px 0px 80px;
 `;
 
 const Main = styled.main`
   display: flex;
+  justify-content: center;
   align-items: center;
   width: 100%;
-  gap: 27px;
+  gap: 59px;
   margin-bottom: 37px;
 `;
 
-const BoxWrapper = styled.div`
-  display: contents;
+const Sub = styled.div`
+  ${(props) => props.theme.fonts.regular18};
+  white-space: pre-wrap;
 `;
 
 const Footer = styled.footer`

@@ -1,14 +1,8 @@
-import Axios from ".";
-
-let token = JSON.stringify(localStorage.getItem('refreshToken'));
-
-const headers = {
-    Authorization: `Bearer ${token}`
-};
+import { AuthAxios } from "./auth";
 
 export const reqFriend = async (memberId: number) => {
     try {
-        const response = await Axios.post(`/v1/friends/request/${memberId}`, { headers });
+        const response = await AuthAxios.post(`/v1/friends/request/${memberId}`);
         console.log("친구 요청 완료:", response.data);
         return response.data;
     } catch (error) {
@@ -20,7 +14,7 @@ export const reqFriend = async (memberId: number) => {
 
 export const deleteFriend = async (memberId: number) => {
     try {
-        const response = await Axios.delete(`/v1/friends/${memberId}`);
+        const response = await AuthAxios.delete(`/v1/friends/${memberId}`);
         console.log("친구 삭제 완료:", response.data);
         return response.data;
     } catch (error) {

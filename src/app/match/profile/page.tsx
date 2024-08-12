@@ -8,26 +8,32 @@ import HeaderTitle from "@/components/common/HeaderTitle";
 import { useEffect, useState } from "react";
 import { profileType } from "@/interface/profile";
 import { Suspense } from "react";
-
-const userData = {
-  image: "profile6",
-  account: "유니콘의 비밀",
-  tag: "KR1",
-  tier: "B3",
-  manner_level: 5,
-  mic: true,
-  gameStyle: [
-    "이기기만 하면 뭔들",
-    "과도한 핑은 사절이에요",
-    "랭크 올리고 싶어요",
-  ],
-};
+import { useDispatch, useSelector } from "react-redux";
+import { getProfile } from "@/api/mypage";
+import { setUserProfile } from "@/redux/slices/userSlice";
+import { RootState } from "@/redux/store";
 
 const ProfilePage = () => {
   const router = useRouter();
   const [profileType, setProfileType] = useState<profileType | undefined>();
   const searchParams = useSearchParams();
   const params = searchParams.get("type");
+
+  const dispatch = useDispatch();
+  const user = useSelector((state: RootState) => state.user);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await getProfile();
+        dispatch(setUserProfile(response.result));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchProfile();
+  }, [dispatch]);
 
   useEffect(() => {
     if (
@@ -48,7 +54,7 @@ const ProfilePage = () => {
       <MatchContent>
         <HeaderTitle title="프로필 설정" />
         <Main>
-          <Profile profileType={profileType ?? "fun"} user={userData} />
+          <Profile profileType={profileType ?? "fun"} user={user} />
           <Button
             buttonType="primary"
             width="380px"
@@ -81,7 +87,7 @@ const Wrapper = styled.div`
 const MatchContent = styled.div`
   max-width: 1440px;
   width: 100%;
-  padding: 0 80px;
+  padding: 60px 80px 0px 80px;
 `;
 
 const Main = styled.main`

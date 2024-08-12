@@ -1,27 +1,56 @@
+import { getProfile, putProfileImg } from "@/api/mypage";
 import GameStyle from "@/components/match/GameStyle";
 import { Profile } from "@/interface/profile";
+import { setUserProfile, setUserProfileImg } from "@/redux/slices/userSlice";
+import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
+import { toLowerCaseString } from "@/utils/string";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { css } from "styled-components";
 
 const MyPageProfile: React.FC<Profile> = ({ user }) => {
+  const dispatch = useDispatch();
   const [isProfileListOpen, setIsProfileListOpen] = useState(false);
+  const userRedux = useSelector((state: RootState) => state.user);
 
   /* 선택된 현재 프로필 이미지 */
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(
-    parseInt(user.image.slice(-1))
+    userRedux.profileImg
   );
 
   /* 프로필 이미지 리스트 중 클릭시*/
-  const handleImageClick = (index: number) => {
-    setSelectedImageIndex(index + 1);
+  const handleImageClick = async (index: number) => {
+    setSelectedImageIndex(index);
+
+    await putProfileImg(index);
+    const newUserData = await getProfile();
+    dispatch(setUserProfileImg(index));
+    dispatch(setUserProfile(newUserData));
 
     setTimeout(() => {
       setIsProfileListOpen(false);
     }, 300); // 300ms 후에 창이 닫히도록 설정
   };
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const userData = await getProfile();
+        dispatch(setUserProfile(userData));
+      } catch (error) {
+        console.error("프로필 정보 불러오기 실패:", error);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  useEffect(() => {
+    console.log("selectedImageIndex", selectedImageIndex);
+  }, [selectedImageIndex]);
 
   return (
     <Container>
@@ -29,8 +58,8 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
         <ProfileImage>
           <PersonImage
             src={`/assets/images/profile/profile${selectedImageIndex}.svg`}
-            width={106}
-            height={106}
+            width={126}
+            height={126}
             alt="프로필"
           />
         </ProfileImage>
@@ -52,15 +81,15 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
               onClick={() => setIsProfileListOpen(false)}
             />
             <ProfileList>
-              {[1, 2, 3, 4, 5, 6, 7, 8].map((item, index) => (
+              {[0, 1, 2, 3, 4, 5, 6, 7].map((item) => (
                 <ProfileListImage
-                  key={index}
+                  key={item}
                   src={`/assets/images/profile/profile${item}.svg`}
-                  width={104}
-                  height={104}
+                  width={106.52}
+                  height={119.65}
                   alt="프로필 이미지"
-                  isSelected={index + 1 === selectedImageIndex}
-                  onClick={() => handleImageClick(index)}
+                  isSelected={item === selectedImageIndex}
+                  onClick={() => handleImageClick(item)}
                 />
               ))}
             </ProfileList>
@@ -70,15 +99,21 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
       <Div>
         <Top>
           <Image
-            src={`/assets/images/rank_${user.tier}.svg`}
+            src={`/assets/images/tier/${
+              toLowerCaseString(user.tier) || "ur"
+            }.svg`}
             width={43}
             height={43}
-            alt="profile"
+            alt="tier"
           />
-          {user.account}
+          {user.gameName}
           <Tag>#{user.tag}</Tag>
         </Top>
-        <GameStyle gameStyle={user.gameStyle} profileType="mini" mic={false} />
+        <GameStyle
+          gameStyleResponseDTOList={user.gameStyleResponseDTOList}
+          profileType="mini"
+          mic={false}
+        />
       </Div>
     </Container>
   );
@@ -96,6 +131,7 @@ const Container = styled.div`
   justify-content: flex-start;
   align-items: center;
   gap: 26px;
+  white-space: nowrap;
 `;
 
 const ImageContainer = styled.div`
@@ -144,7 +180,7 @@ const ProfileList = styled.div`
   width: 100%;
   height: 100%;
   padding: 0 14px 29px 14px;
-  row-gap: 45px;
+  row-gap: 25px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(2, 1fr);

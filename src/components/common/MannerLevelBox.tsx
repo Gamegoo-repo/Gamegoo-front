@@ -26,7 +26,7 @@ const data = {
 
 interface MannerLevelBoxProps {
   memberId: number;
-  level:number;
+  level: number;
   top: string;
   right: string;
 }
@@ -44,19 +44,18 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
     const getManner = async () => {
       const good = await getMannerValues(memberId);
       setMannerData(good.result);
-      console.log('good:', good.result)
+      console.log("good:", good.result);
     };
 
     const getBadManner = async () => {
       const bad = await getBadMannerValues(memberId);
       setBadMannerData(bad.result);
-      console.log('bad:', bad.result)
-
+      console.log("bad:", bad.result);
     };
 
     getManner();
     getBadManner();
-  }, [memberId])
+  }, [memberId]);
 
   return (
     <Wrapper $top={top} $right={right}>
@@ -64,7 +63,7 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
       <MannerEvaluations>
         <Div>
           <SubTitle>받은 매너평가</SubTitle>
-          <MannerList>
+          <MannerListBox>
             <ValueWrapper>
               {mannerEvaluations.map(([key, value]) => {
                 return (
@@ -91,11 +90,11 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
                 );
               })}
             </TypeWrapper>
-          </MannerList>
+          </MannerListBox>
         </Div>
         <Div>
           <SubTitle>받은 비매너평가</SubTitle>
-          <MannerList>
+          <MannerListBox>
             <ValueWrapper>
               {badMannerEvaluations.map(([key, value]) => {
                 return (
@@ -122,7 +121,7 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
                 );
               })}
             </TypeWrapper>
-          </MannerList>
+          </MannerListBox>
         </Div>
       </MannerEvaluations>
     </Wrapper>
@@ -166,7 +165,7 @@ const SubTitle = styled.p`
   margin-bottom: 23px;
 `;
 
-const MannerList = styled.div`
+const MannerListBox = styled.div`
   display: flex;
   align-items: center;
 `;

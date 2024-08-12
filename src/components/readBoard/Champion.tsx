@@ -11,7 +11,7 @@ const Champion = (props: ChampionProps) => {
   return (
     <Wrapper>
       <Title $size={size}>최근 선호 챔피언</Title>
-      {list.length!==0 ?
+      {list.length !== 0 ? (
         <Images>
           {/* {list?.map((champion,key) => (
           <Image
@@ -23,9 +23,9 @@ const Champion = (props: ChampionProps) => {
           />
         ))} */}
         </Images>
-        :
+      ) : (
         <NoData />
-      }
+      )}
     </Wrapper>
   );
 };
@@ -40,7 +40,7 @@ const Wrapper = styled.div`
 const Title = styled.p<{ $size: number }>`
   ${(props) =>
     props.theme.fonts[
-    `semiBold${props.$size}` as keyof typeof props.theme.fonts
+      `semiBold${props.$size}` as keyof typeof props.theme.fonts
     ]};
   color: #222222;
 `;
@@ -52,5 +52,5 @@ const Images = styled.div`
 `;
 
 const NoData = styled.div`
-    height: 50px;
+  height: 50px;
 `;

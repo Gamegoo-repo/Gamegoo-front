@@ -5,5 +5,5 @@ export interface AlertProps {
   content: string;
   alt: string;
   onClose: () => void;
-  buttonText: string;
+  buttonText?: string;
 }

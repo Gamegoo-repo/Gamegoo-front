@@ -16,23 +16,11 @@ import ConfirmModal from "../common/ConfirmModal";
 import PositionCategory from "../common/PositionCategory";
 import MoreBox from "../common/MoreBox";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
+import { User } from "@/interface/profile";
+import { toLowerCaseString } from "@/utils/string";
+import { PositionState } from "../crBoard/PositionBox";
 
 type profileType = "fun" | "hard" | "other" | "me";
-
-interface Champion {
-  id: number;
-  value: string;
-}
-
-interface User {
-  image: string;
-  account: string;
-  tag: string;
-  tier: string;
-  mic: boolean;
-  champions?: Champion[];
-  gameStyle: string[];
-}
 
 interface Profile {
   user: User;
@@ -40,7 +28,7 @@ interface Profile {
 }
 
 const Profile: React.FC<Profile> = ({ profileType, user }) => {
-  const [isMike, setIsMike] = useState(user.mic);
+  const [isMike, setIsMike] = useState(user.mike);
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
   const [isReportBoxOpen, setIsReportBoxOpen] = useState(false);
   const [isBlockBoxOpen, setIsBlockBoxOpen] = useState(false);
@@ -57,9 +45,16 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
     false,
   ]);
 
+  const [selectedBox, setSelectedBox] = useState("");
+  const [positionValue, setPositionValue] = useState<PositionState>({
+    main: user.mainP,
+    sub: user.subP,
+    want: user.subP,
+  });
+
   /* 선택된 현재 프로필 이미지 */
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(
-    parseInt(user.image.slice(-1))
+    user.profileImg
   );
 
   /* 프로필 이미지 리스트 중 클릭시*/
@@ -71,9 +66,9 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
     }, 300); // 300ms 후에 창이 닫히도록 설정
   };
 
-  useEffect(() => {
-    setIsMike(user.mic);
-  }, [user.mic]);
+  // useEffect(() => {
+  //   setIsMike(user.mic);
+  // }, [user.mic]);
 
   const handleMike = () => {
     setIsMike(!isMike);
@@ -111,24 +106,35 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
   };
 
   // 포지션 선택해 변경하기
-  const handlePositionSelect = (index: number, newPosition: string) => {
-    setPositions((prev) =>
-      prev.map((pos, i) =>
-        i === index ? { ...pos, position: newPosition } : pos
-      )
-    );
+  const handlePositionChange = (newPositionValue: PositionState) => {
+    setPositionValue(newPositionValue);
+  };
+
+  const handleCategoryButtonClick = (positionId: number) => {
+    console.log(positionId);
+
+    if (selectedBox) {
+      const newPositionValue = {
+        ...positionValue,
+        [selectedBox]: positionId,
+      };
+      setPositionValue(newPositionValue);
+      handlePositionChange(newPositionValue);
+    }
   };
 
   // 더보기 버튼 메뉴
   const MoreBoxMenuItems: MoreBoxMenuItems[] = [
-    { text: '신고하기', onClick: handleReport },
-    { text: '차단하기', onClick: handleBlock },
+    { text: "신고하기", onClick: handleReport },
+    { text: "차단하기", onClick: handleBlock },
   ];
 
   // 신고하기 체크
   const handleCheckboxChange = (checked: number) => {
     setCheckedItems((prev) =>
-      prev.includes(checked) ? prev.filter((c) => c !== checked) : [...prev, checked]
+      prev.includes(checked)
+        ? prev.filter((c) => c !== checked)
+        : [...prev, checked]
     );
   };
 
@@ -171,7 +177,7 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                     width={104}
                     height={104}
                     alt="프로필 이미지"
-                    isSelected={index + 1 === selectedImageIndex}
+                    $isSelected={index + 1 === selectedImageIndex}
                     onClick={() => handleImageClick(index)}
                   />
                 ))}
@@ -182,14 +188,16 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
         <StyledBox>
           <TopContainer>
             <Top>
-              {user.account}
+              {user.gameName}
               <Span>{`#${user.tag}`}</Span>
               <Rank>
                 <Image
-                  src={`/assets/images/rank_${user.tier}.svg`}
+                  src={`/assets/images/tier/${
+                    toLowerCaseString(user.tier) || "ur"
+                  }.svg`}
                   width={52}
                   height={52}
-                  alt="B3"
+                  alt="tier"
                 />
                 {user.tier}
               </Rank>
@@ -214,10 +222,7 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                 <MoreDiv>
                   <Report onClick={handleMoreBoxOpen} />
                   {isMoreBoxOpen && (
-                    <MoreBox
-                      items={MoreBoxMenuItems}
-                      top={15}
-                      left={45} />
+                    <MoreBox items={MoreBoxMenuItems} top={15} left={45} />
                   )}
                 </MoreDiv>
                 {/* 신고하기 팝업 */}
@@ -308,8 +313,9 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
           {profileType === "fun" ? (
             <GameStyle
               profileType="none"
-              gameStyle={user.gameStyle}
-              mic={user.mic}
+              gameStyleResponseDTOList={user.gameStyleResponseDTOList}
+              // mic={user.mic}
+              mic={false}
             />
           ) : (
             <UnderRow>
@@ -328,20 +334,29 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                         alt="포지션"
                         onClick={() => handlePosition(index)}
                       />
+                      {/* 오류 발생 부분 */}
                       {isPositionOpen[index] && (
                         <PositionCategory
                           onClose={() => handlePositionClose(index)}
-                          onSelect={(newPosition: string) =>
-                            handlePositionSelect(index, newPosition)
-                          }
-                          boxName="position"
+                          // onSelect={(newPosition: string) =>
+                          //   handlePositionSelect(index, newPosition)
+                          // }
+                          onSelect={handleCategoryButtonClick}
+                          boxName={selectedBox}
                         />
                       )}
                     </Posi>
                   </>
                 ))}
               </Position>
-              {user.champions && <Champion size={14} list={user.champions} />}
+              {user.championResponseDTOList && (
+                <Champion
+                  size={14}
+                  list={user.championResponseDTOList.map(
+                    (champion) => champion.championId
+                  )}
+                />
+              )}
               {profileType === "other" && (
                 <Mike>
                   마이크
@@ -355,8 +370,9 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
       {(profileType === "hard" || profileType === "other") && (
         <GameStyle
           profileType={profileType === "hard" ? "none" : profileType}
-          gameStyle={user.gameStyle}
-          mic={user.mic}
+          gameStyleResponseDTOList={user.gameStyleResponseDTOList}
+          // mic={user.mic}
+          mic={false}
         />
       )}
     </Container>
@@ -446,12 +462,12 @@ const ProfileList = styled.div`
   grid-template-rows: repeat(2, 1fr);
 `;
 
-const ProfileListImage = styled(Image) <{ isSelected: boolean }>`
+const ProfileListImage = styled(Image)<{ $isSelected: boolean }>`
   cursor: pointer;
   transition: opacity 0.3s ease-in-out;
 
-  ${({ isSelected }) =>
-    isSelected &&
+  ${({ $isSelected }) =>
+    $isSelected &&
     css`
       opacity: 0.5;
     `}
@@ -533,7 +549,7 @@ const ReportReasonContent = styled(ReportContent)`
 `;
 
 const ReportButton = styled.div`
-  margin-top:21px;
+  margin-top: 21px;
 `;
 
 const Msg = styled.div`

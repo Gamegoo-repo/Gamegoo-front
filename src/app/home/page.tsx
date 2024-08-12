@@ -34,7 +34,7 @@ const HomePage = () => {
                   src={content.image}
                   width={0}
                   height={0}
-                  style={{ width: '100%', height: 'auto' }}
+                  style={{ width: "100%", height: "auto" }}
                   alt={content.title}
                   priority
                 />
@@ -57,17 +57,19 @@ export default HomePage;
 
 const Wrapper = styled.div`
   width: 100%;
+  display: flex;
+  justify-content: center;
   padding-top: 140px;
 `;
 
 const HomeContent = styled.div`
   max-width: 1440px;
   width: 100%;
-  padding: 0 80px;
+  padding: 0px 80px;
 `;
 
 const Header = styled.header`
-  margin-bottom: 52px;
+  margin-bottom: 35px;
 `;
 
 const SubTitle = styled.div`
@@ -76,19 +78,28 @@ const SubTitle = styled.div`
 `;
 
 const Main = styled.main`
+  width: 100%;
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap:59px;
+  gap: 59px;
+  margin-bottom: 37px;
+
+  @media (max-width: 1200px) {
+    flex-direction: column;
+    justify-content: center;
+  }
 `;
 
 const ContentWrapper = styled.div`
+  max-width: 600px;
   position: relative;
   cursor: pointer;
 `;
 
 const ContentTitle = styled.p`
   position: absolute;
-  top:50%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   ${(props) => props.theme.fonts.bold32};

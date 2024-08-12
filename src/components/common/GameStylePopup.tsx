@@ -23,7 +23,7 @@ const GameStylePopup: React.FC<GameStylePopupProps> = ({ onClose }) => {
       </Top>
       <StyledBox>
         {GAME_STYLE.map((data) => (
-          <Box key={data.id} text={data.text} shape="round" />
+          <Box key={data.gameStyleId} text={data.gameStyleName} shape="round" />
         ))}
       </StyledBox>
     </Container>

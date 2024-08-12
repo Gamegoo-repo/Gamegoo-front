@@ -1,4 +1,4 @@
-import Axios from ".";
+import { AuthAxios } from "./auth";
 
 interface ReportInterface {
     targetMemberId: number;
@@ -6,15 +6,9 @@ interface ReportInterface {
     contents: string;
 }
 
-let token = JSON.stringify(localStorage.getItem('refreshToken'));
-
-const headers = {
-    Authorization: `Bearer ${token}`
-};
-
 export const getUserInfo = async () => {
     try {
-        const response = await Axios.get("/v1/member/profile", { headers });
+        const response = await AuthAxios.get("/v1/member/profile");
         console.log("유저 데이터 성공:", response.data);
         return response.data;
     } catch (error) {
@@ -25,7 +19,7 @@ export const getUserInfo = async () => {
 
 export const blockMember = async (memberId: number) => {
     try {
-        const response = await Axios.post(`/v1/member/block/${memberId}`);
+        const response = await AuthAxios.post(`/v1/member/block/${memberId}`);
         console.log("차단 성공:", response.data);
         return response.data;
     } catch (error) {
@@ -36,7 +30,7 @@ export const blockMember = async (memberId: number) => {
 
 export const unblockMember = async (memberId: number) => {
     try {
-        const response = await Axios.delete(`/v1/member/block/${memberId}`);
+        const response = await AuthAxios.delete(`/v1/member/block/${memberId}`);
         console.log("차단 해제 성공:", response.data);
         return response.data;
     } catch (error) {
@@ -47,7 +41,7 @@ export const unblockMember = async (memberId: number) => {
 
 export const reportMember = async (params: ReportInterface) => {
     try {
-        const response = await Axios.post("/v1/reports", params);
+        const response = await AuthAxios.post("/v1/reports", params);
         console.log("신고 성공:", response.data);
         return response.data;
     } catch (error) {

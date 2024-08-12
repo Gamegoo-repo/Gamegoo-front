@@ -27,22 +27,44 @@ const data = {
   },
 };
 
+export interface Champion {
+  championId: number;
+  championName: string;
+}
+
+export interface GameStyle {
+  gameStyleId: number;
+  gameStyleName: string;
+}
+
+export interface User {
+  gameName: string;
+  profileImg: string;
+  email: string;
+  tag: string;
+  tier: string;
+  rank: string;
+  updatedAt: string;
+  gameStyleResponseDTOList: GameStyle[];
+  championResponseDTOList: Champion[];
+}
+
 const userData = {
-  image: "profile6",
-  account: "유니콘의 비밀",
+  profileImg: "profile6",
+  gameName: "유니콘의 비밀",
+  email: "이메일 어쩌구 예시",
   tag: "KR1",
   tier: "B3",
   manner_level: 5,
   mic: true,
-  champions: [
-    { id: 1, value: "/assets/icons/gray_circle.svg" },
-    { id: 2, value: "/assets/icons/gray_circle.svg" },
-    { id: 3, value: "/assets/icons/gray_circle.svg" },
+  championResponseDTOList: [
+    { championId: 1, championName: "/assets/icons/gray_circle.svg" },
+    { championId: 2, championName: "/assets/icons/gray_circle.svg" },
+    { championId: 3, championName: "/assets/icons/gray_circle.svg" },
   ],
-  gameStyle: [
-    "이기기만 하면 뭔들",
-    "과도한 핑은 사절이에요",
-    "랭크 올리고 싶어요",
+  gameStyleResponseDTOList: [
+    { gameStyleId: 2, gameStyleName: "과도한 핑은 사절이에요" },
+    { gameStyleId: 3, gameStyleName: "랭크 올리고 싶어요" },
   ],
 };
 
@@ -58,7 +80,7 @@ const UserProfile = () => {
       <MatchContent>
         <HeaderTitle title="장시은 님의 프로필" size="regular" />
         <Main>
-          <Profile profileType="other" user={userData} />
+          {/* <Profile profileType="other" user={userData} /> */}
           <Content>
             <div>
               <Title>장시은 님의 매너레벨</Title>
@@ -181,7 +203,7 @@ const Content = styled.div`
   margin-top: 37px;
 `;
 
-const Title = styled.h1`
+const Title = styled.div`
   padding-left: 6px;
   margin-bottom: 13px;
   ${(props) => props.theme.fonts.regular25};
