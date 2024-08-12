@@ -22,7 +22,9 @@ const Header = () => {
   const myPageRef = useRef<HTMLDivElement>(null);
 
   const name = useSelector((state: RootState) => state.user.gameName);
+  const profileImg = useSelector((state: RootState) => state.user.profileImg);
 
+  console.log(profileImg);
   /* 알림창 열고 닫는 함수 */
   const handleAlertWindow = () => {
     setIsAlertWindow(!isAlertWindow);
@@ -82,10 +84,11 @@ const Header = () => {
           />
           <Profile>
             <Image
-              src="/assets/images/profile.svg"
+              src={`/assets/images/profile/profile${profileImg}.svg`}
               width={29}
               height={29}
               alt="profile"
+              style={{ background: "#C1B7FF", borderRadius: "50%" }}
             />
             {name}
             <button onClick={() => setIsMyPage(!isMyPage)}>
@@ -104,10 +107,11 @@ const Header = () => {
         <MyPageModal ref={myPageRef}>
           <MyProfile>
             <Image
-              src="/assets/images/profile.svg"
+              src={`/assets/images/profile/profile${profileImg}.svg`}
               width={75}
               height={75}
               alt="profile"
+              style={{ background: "#C1B7FF", borderRadius: "50%" }}
             />
             <MyName>{name}</MyName>
             <Image

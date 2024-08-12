@@ -12,7 +12,7 @@ interface Champion {
 
 interface UserState {
   gameName: string;
-  profileImg: string;
+  profileImg: number;
   email: string;
   tag: string;
   tier: string;
@@ -23,7 +23,7 @@ interface UserState {
 };
 
 const initialState: UserState = {
-  profileImg: '',
+  profileImg: 0,
   email: '',
   gameName: '',
   tag: '',
@@ -41,12 +41,15 @@ export const userSlice = createSlice({
     setUserName: (state, action: PayloadAction<string>) => {
       state.gameName = action.payload;
     },
+    setUserProfileImg: (state, action: PayloadAction<number>) => {
+      state.profileImg = action.payload;
+    },
     setUserProfile: (state:any, action: PayloadAction<UserState>) => {
       return { ...state, ...action.payload };
     },
   },
 });
 
-export const {setUserName, setUserProfile} = userSlice.actions;
+export const {setUserName, setUserProfileImg, setUserProfile} = userSlice.actions;
 
 export default userSlice.reducer;

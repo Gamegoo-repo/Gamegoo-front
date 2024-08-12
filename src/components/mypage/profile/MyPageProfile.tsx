@@ -1,37 +1,55 @@
-import { putProfileImg } from "@/api/mypage";
+import { getProfile, putProfileImg } from "@/api/mypage";
 import GameStyle from "@/components/match/GameStyle";
 import { Profile } from "@/interface/profile";
+import { setUserProfile, setUserProfileImg } from "@/redux/slices/userSlice";
+import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { css } from "styled-components";
 
 const MyPageProfile: React.FC<Profile> = ({ user }) => {
+  const dispatch = useDispatch();
   const [isProfileListOpen, setIsProfileListOpen] = useState(false);
-
-  // 프로필 이미지 값이 "default"인 경우 1로 기본 설정, 그렇지 않으면 문자열에서 마지막 숫자 추출
-  const getProfileIndex = () => {
-    if (user.profileImg === "default") return 1;
-    const match = user.profileImg.match(/\d+$/);
-    return match ? parseInt(match[0], 10) : 1;
-  };
+  const userRedux = useSelector((state: RootState) => state.user);
 
   /* 선택된 현재 프로필 이미지 */
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(
-    getProfileIndex()
+    userRedux.profileImg
   );
 
   /* 프로필 이미지 리스트 중 클릭시*/
   const handleImageClick = async (index: number) => {
     setSelectedImageIndex(index);
 
-    await putProfileImg(`profile${index}`);
+    await putProfileImg(index);
+    const newUserData = await getProfile();
+    dispatch(setUserProfileImg(index));
+    dispatch(setUserProfile(newUserData));
 
     setTimeout(() => {
       setIsProfileListOpen(false);
     }, 300); // 300ms 후에 창이 닫히도록 설정
   };
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const userData = await getProfile();
+        dispatch(setUserProfile(userData));
+      } catch (error) {
+        console.error("프로필 정보 불러오기 실패:", error);
+      }
+    };
+
+    fetchProfile();
+  }, [dispatch]);
+
+  useEffect(() => {
+    console.log("selectedImageIndex", selectedImageIndex);
+  }, [selectedImageIndex]);
 
   return (
     <Container>

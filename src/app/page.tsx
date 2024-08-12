@@ -5,7 +5,7 @@ import Button from "@/components/common/Button";
 import Checkbox from "@/components/common/Checkbox";
 import Input from "@/components/common/Input";
 import { emailRegEx } from "@/constants/regEx";
-import { setUserName } from "@/redux/slices/userSlice";
+import { setUserName, setUserProfileImg } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
 import { setToken } from "@/utils/storage";
 import { AxiosError } from "axios";
@@ -51,6 +51,7 @@ const Login = () => {
       setToken(accessToken, refreshToken, autoLogin);
 
       dispatch(setUserName(response.result.name));
+      dispatch(setUserProfileImg(response.result.profileImage));
       router.push("/home");
     } catch (error) {
       if (error instanceof AxiosError) {

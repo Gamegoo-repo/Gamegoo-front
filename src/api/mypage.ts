@@ -12,7 +12,7 @@ export const getProfile= async () => {
   }
 };
 
-export const putProfileImg= async (profileImage: string) => {
+export const putProfileImg= async (profileImage: number) => {
   const endpoint = '/v1/member/profile_image';
   try {
     console.log("선택한 프로필 이미지", profileImage);

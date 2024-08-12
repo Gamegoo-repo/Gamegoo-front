@@ -12,7 +12,7 @@ export interface GameStyle {
 
 export interface User {
   gameName: string;
-  profileImg: string;
+  profileImg: number;
   email: string;
   tag: string;
   tier: string;
