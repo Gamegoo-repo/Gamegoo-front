@@ -8,6 +8,7 @@ import styled from "styled-components";
 import AlertWindow from "../alert/AlertWindow";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { clearTokens } from "@/utils/storage";
 
 interface HeaderProps {
   selected: boolean;
@@ -123,19 +124,28 @@ const Header = () => {
           </MyProfile>
           <TabMenu>
             {HEADER_MODAL_TAB.map((data, index) => (
-              <Line
-                key={data.id}
-                className={index === 2 ? "with-border" : ""}
-                onClick={() => router.push(`${data.url}`)}
-              >
-                <Image
-                  src={`/assets/icons/${data.icon}.svg`}
-                  width={20}
-                  height={20}
-                  alt={`${data.icon}`}
-                />
-                {data.menu}
-              </Line>
+              <>
+                <Line
+                  key={data.id}
+                  onClick={() => {
+                    if (data.url) {
+                      router.push(`${data.url}`);
+                    } else {
+                      clearTokens();
+                      router.push("/login");
+                    }
+                  }}
+                >
+                  <Image
+                    src={`/assets/icons/${data.icon}.svg`}
+                    width={20}
+                    height={20}
+                    alt={`${data.icon}`}
+                  />
+                  {data.menu}
+                </Line>
+                {index === 2 && <Divider />}
+              </>
             ))}
           </TabMenu>
         </MyPageModal>
@@ -204,7 +214,6 @@ const Profile = styled.div`
 
 const MyPageModal = styled.div`
   width: 408px;
-  height: 507px;
   border-radius: 10px;
   padding: 25px 27px;
   background: ${theme.colors.white};
@@ -225,9 +234,10 @@ const MyProfile = styled.div`
 
 const MyName = styled.div`
   margin-left: 15px;
-  margin-right: 170px;
+  margin-right: auto;
   color: ${theme.colors.black};
   ${(props) => props.theme.fonts.bold20};
+  white-space: nowrap;
 `;
 
 const TabMenu = styled.div`
@@ -235,23 +245,28 @@ const TabMenu = styled.div`
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  padding: 34px 0px;
-  gap: 34px;
+  padding-top: 18px;
+  gap: 4px;
   color: ${theme.colors.black};
   ${(props) => props.theme.fonts.semiBold18};
 `;
 
 const Line = styled.div`
   width: 100%;
+  height: 52px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   padding-left: 9px;
   gap: 18px;
   cursor: pointer;
+  border-radius: 10px;
+  background: ${theme.colors.gray500};
+`;
 
-  &.with-border {
-    border-bottom: 1px solid #d4d4d4;
-    padding-bottom: 34px;
-  }
+const Divider = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: #d4d4d4;
+  margin: 18px 0;
 `;
