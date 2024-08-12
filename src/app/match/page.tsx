@@ -14,22 +14,21 @@ const MatchTypePage = () => {
         <Main>
           {MATCH_TYPE_PAGE_DATA.map((box) => {
             return (
-              <BoxWrapper key={box.id}>
-                <GraphicBox
-                  type={box.type}
-                  pathname={box.pathname}
-                  width={box.width}
-                  height={box.height}
-                  top={box.top}
-                  left={box.left}
-                  background={box.background}
-                >
-                  <div>
-                    {box.title}
-                    <Sub>{box.sub}</Sub>
-                  </div>
-                </GraphicBox>
-              </BoxWrapper>
+              <GraphicBox
+                key={box.id}
+                type={box.type}
+                pathname={box.pathname}
+                width={box.width}
+                height={box.height}
+                top={box.top}
+                left={box.left}
+                background={box.background}
+              >
+                <div>
+                  {box.title}
+                  <Sub>{box.sub}</Sub>
+                </div>
+              </GraphicBox>
             );
           })}
         </Main>
@@ -58,26 +57,18 @@ const MatchContent = styled.div`
   padding: 60px 80px 0px 80px;
 `;
 
-const Title = styled.div`
-  ${(props) => props.theme.fonts.bold32};
-  color: #393939;
-`;
-
 const Main = styled.main`
   display: flex;
+  justify-content: center;
   align-items: center;
   width: 100%;
-  gap: 27px;
+  gap: 59px;
   margin-bottom: 37px;
 `;
 
 const Sub = styled.div`
   ${(props) => props.theme.fonts.regular18};
   white-space: pre-wrap;
-`;
-
-const BoxWrapper = styled.div`
-  display: contents;
 `;
 
 const Footer = styled.footer`

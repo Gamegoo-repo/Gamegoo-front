@@ -26,13 +26,6 @@ const HomePage = () => {
         <Main>
           {MATCH_PAGE_DATA.map((content) => {
             return (
-              // <GraphicBox
-              //   key={box.id}
-              //   pathname={box.pathname}
-              //   height={box.height}
-              //   top={box.top}
-              //   left={box.left}
-              //   background={box.background}
               <ContentWrapper
                 key={content.id}
                 onClick={() => router.push(content.pathname)}
@@ -64,17 +57,19 @@ export default HomePage;
 
 const Wrapper = styled.div`
   width: 100%;
+  display: flex;
+  justify-content: center;
   padding-top: 140px;
 `;
 
 const HomeContent = styled.div`
   max-width: 1440px;
   width: 100%;
-  padding: 0 80px;
+  padding: 0px 80px;
 `;
 
 const Header = styled.header`
-  margin-bottom: 52px;
+  margin-bottom: 35px;
 `;
 
 const SubTitle = styled.div`
@@ -83,7 +78,9 @@ const SubTitle = styled.div`
 `;
 
 const Main = styled.main`
+  width: 100%;
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: 59px;
   margin-bottom: 37px;
@@ -95,6 +92,7 @@ const Main = styled.main`
 `;
 
 const ContentWrapper = styled.div`
+  max-width: 600px;
   position: relative;
   cursor: pointer;
 `;
