@@ -8,6 +8,11 @@ interface PaginationProps {
     onPrevPage: () => void;
     onNextPage: () => void;
     onPageClick: (page: number) => void;
+    totalItems?: number;
+    itemsPerPage?: number;
+    pageButtonCount?: number;
+    onPageChange?: (page: number) => void;
+
 }
 
 const Pagination = (props: PaginationProps) => {
