@@ -8,7 +8,7 @@ interface CheckboxProps {
   isChecked?: boolean;
   onChange?: (isChecked: boolean) => void;
   isArraychecked?: boolean;
-  onArrayChange?: (checked: number | string) => void;
+  onArrayChange?: (checked: number) => void;
   fontSize?: string;
   id?: string;
 }

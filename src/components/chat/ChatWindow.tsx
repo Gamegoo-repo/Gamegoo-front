@@ -238,7 +238,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                                     value={data.id}
                                     label={data.text}
                                     fontSize="regular18"
-                                    isArraychecked={checkedItems.includes(data.text)}
+                                    isArraychecked={checkedItems.includes(data.id)}
                                     onArrayChange={handleCheckboxChange}
                                 />
                             ))}
@@ -286,7 +286,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                                 value={data.text}
                                 label={data.text}
                                 fontSize="semiBold16"
-                                isArraychecked={checkedItems.includes(data.text)}
+                                isArraychecked={checkedItems.includes(data.id)}
                                 onArrayChange={handleCheckboxChange}
                             />
                         ))}
@@ -319,7 +319,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                                 value={data.text}
                                 label={data.text}
                                 fontSize="semiBold16"
-                                isArraychecked={checkedItems.includes(data.text)}
+                                isArraychecked={checkedItems.includes(data.id)}
                                 onArrayChange={handleCheckboxChange}
                             />
                         ))}

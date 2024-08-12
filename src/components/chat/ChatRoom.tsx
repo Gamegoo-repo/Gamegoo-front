@@ -200,10 +200,10 @@ const ChatRoom = (props: ChatRoomProps) => {
                         {isMannerStatus === "manner" && MANNER_TYPES.map((data) => (
                             <Checkbox
                                 key={data.id}
-                                numValue={data.id}
+                                value={data.id}
                                 label={data.text}
                                 fontSize="semiBold16"
-                                isArraychecked={checkedItems.includes(data.text)}
+                                isArraychecked={checkedItems.includes(data.id)}
                                 onArrayChange={handleCheckboxChange}
                             />
                         ))}
@@ -234,10 +234,10 @@ const ChatRoom = (props: ChatRoomProps) => {
                         {isMannerStatus === "badManner" && BAD_MANNER_TYPES.map((data) => (
                             <Checkbox
                                 key={data.id}
-                                numValue={data.text}
+                                value={data.text}
                                 label={data.text}
                                 fontSize="semiBold16"
-                                isArraychecked={checkedItems.includes(data.text)}
+                                isArraychecked={checkedItems.includes(data.id)}
                                 onArrayChange={handleCheckboxChange}
                             />
                         ))}

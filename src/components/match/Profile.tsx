@@ -241,7 +241,7 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                             value={data.id}
                             label={data.text}
                             fontSize="regular18"
-                            isArraychecked={checkedItems.includes(data.text)}
+                            isArraychecked={checkedItems.includes(data.id)}
                             onArrayChange={handleCheckboxChange}
                           />
                         ))}

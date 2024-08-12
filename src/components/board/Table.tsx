@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import { setDateFormatter, setPositionImg, setProfileImg, setTierImg } from "@/utils/custom";
+import { setDateFormatter, setPositionImg, setProfileImg} from "@/utils/custom";
 import ReadBoard from "../readBoard/ReadBoard";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -135,7 +135,7 @@ const Table = (props: TableProps) => {
                                 </Second>
                                 <Third className="table_width">
                                     <Image
-                                        src={setTierImg(data.tier)}
+                                        src={`/assets/images/tier/${data.tier}.svg`}
                                         width={26}
                                         height={13}
                                         alt="티어 이미지"

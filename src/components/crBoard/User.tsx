@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import { setTierImg } from "@/utils/custom";
 
 interface UserProps {
     account: string;
@@ -24,7 +23,7 @@ const User = (props: UserProps) => {
                 {tier ?
                     <>
                         <Image
-                            src={setTierImg(tier)}
+                            src={`/assets/images/tier/${tier}.svg`}
                             width={32}
                             height={20}
                             alt="티어 이미지"
