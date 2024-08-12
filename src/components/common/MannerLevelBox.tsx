@@ -56,7 +56,7 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
 
     getManner();
     getBadManner();
-  }, [])
+  }, [memberId])
 
   return (
     <Wrapper $top={top} $right={right}>

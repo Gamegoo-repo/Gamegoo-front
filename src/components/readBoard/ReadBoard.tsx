@@ -337,7 +337,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     };
 
     getPostData();
-  }, [isBlockedStatus, isFriendStatus, userInfo])
+  }, [isBlockedStatus, isFriendStatus, userInfo, postId])
 
   let gameType = '';
   if (isPost?.mainPosition ||

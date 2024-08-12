@@ -8,7 +8,7 @@ import Alert from "./Alert";
 
 interface msgCountProps {
   count: number;
-  user: UserInfo | undefined;
+  user?: UserInfo | undefined;
 }
 
 const ChatButton = (props: msgCountProps) => {
