@@ -23,7 +23,7 @@ const User = (props: UserProps) => {
                 {tier ?
                     <>
                         <Image
-                            src={`/assets/images/tier/${tier}.svg`}
+                            src={!tier ? "/assets/images/tier/UNRANK.svg" : `/assets/images/tier/${tier}.svg`}
                             width={32}
                             height={20}
                             alt="티어 이미지"
