@@ -261,7 +261,10 @@ const Line = styled.div`
   gap: 18px;
   cursor: pointer;
   border-radius: 10px;
-  background: ${theme.colors.gray500};
+
+  &:hover {
+    background: ${theme.colors.gray500};
+  }
 `;
 
 const Divider = styled.div`
