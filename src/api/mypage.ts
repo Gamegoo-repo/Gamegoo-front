@@ -25,7 +25,7 @@ export const putProfileImg= async (profileImage: number) => {
   }
 };
 
-export const putGameStyle = async (gameStyleIdList: string[]) => {
+export const putGameStyle = async (gameStyleIdList: number[]) => {
   const endpoint = '/v1/member/gamestyle';
   try {
     const response = await AuthAxios.put(endpoint, { gameStyleIdList });

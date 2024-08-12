@@ -6,6 +6,7 @@ import Toggle from "../common/Toggle";
 import { theme } from "@/styles/theme";
 import SelectedStylePopup from "./SelectedStylePopup";
 import { css } from "styled-components";
+import { putGameStyle } from "@/api/mypage";
 
 type profileType = "me" | "other" | "none" | "mini";
 
@@ -41,16 +42,19 @@ const GameStyle = (props: GameStyleProps) => {
     setStyledPopup(false);
   };
 
-  const handleSelectStyle = (style: GameStyle) => {
-    setSelectedStyles((prevStyles) => {
-      if (prevStyles.find((s) => s.gameStyleId === style.gameStyleId)) {
-        return prevStyles.filter((s) => s.gameStyleId !== style.gameStyleId);
-      } else if (prevStyles.length < 3) {
-        return [...prevStyles, style];
-      } else {
-        return prevStyles;
-      }
-    });
+  const handleSelectStyle = async (style: GameStyle) => {
+    const updatedStyles = selectedStyles.find(
+      (s) => s.gameStyleId === style.gameStyleId
+    )
+      ? selectedStyles.filter((s) => s.gameStyleId !== style.gameStyleId)
+      : selectedStyles.length < 3
+      ? [...selectedStyles, style]
+      : selectedStyles;
+
+    setSelectedStyles(updatedStyles);
+
+    const gameStyleIdList = updatedStyles.map((s) => s.gameStyleId);
+    await putGameStyle(gameStyleIdList);
   };
 
   return (

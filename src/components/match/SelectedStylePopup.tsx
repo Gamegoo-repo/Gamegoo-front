@@ -42,7 +42,7 @@ const SelectedStylePopup: React.FC<SelectedStylePopupProps> = ({
           onClick={onClose}
         />
       </Top>
-      <Boxs $position={position}>
+      <Boxs $position={position} $profileType={profileType}>
         {GAME_STYLE.map((data) => (
           <Box
             $position={position}
@@ -90,7 +90,8 @@ const Container = styled.div<{
   ${({ $profileType }) =>
     $profileType === "mini" &&
     css`
-      width: 720px;
+      width: 570px;
+      height: auto;
     `}
 `;
 
@@ -108,7 +109,10 @@ const CloseImage = styled(Image)`
   cursor: pointer;
 `;
 
-const Boxs = styled.div<{ $position: positionType | undefined }>`
+const Boxs = styled.div<{
+  $position: positionType | undefined;
+  $profileType: profileType;
+}>`
   width: 100%;
   display: flex;
   flex-wrap: wrap;
@@ -116,6 +120,13 @@ const Boxs = styled.div<{ $position: positionType | undefined }>`
   align-items: center;
   gap: ${({ $position }) => ($position ? "9px" : "14px")};
   outline: none;
+
+  /* 프로필 미니 */
+  ${({ $profileType }) =>
+    $profileType === "mini" &&
+    css`
+      gap: 9px;
+    `}
 `;
 
 const Box = styled.button<{
@@ -139,6 +150,8 @@ const Box = styled.button<{
   ${({ $profileType }) =>
     $profileType === "mini" &&
     css`
-      ${(props) => props.theme.fonts.regular12}
+      height: 30px;
+      padding: 8px 18px;
+      ${(props) => props.theme.fonts.regular14}
     `}
 `;
