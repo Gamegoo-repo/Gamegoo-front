@@ -1,5 +1,4 @@
 import { GAME_STYLE } from "@/data/profile";
-import { GameStyleList } from "@/interface/profile";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import React from "react";

@@ -18,8 +18,8 @@ export interface User {
   tier: string;
   rank: string;
   mike: boolean;
-  mainP: string;
-  subP: string;
+  mainP: number;
+  subP: number;
   updatedAt: string;
   gameStyleResponseDTOList: GameStyle[];
   championResponseDTOList: Champion[];

@@ -18,6 +18,7 @@ import MoreBox from "../common/MoreBox";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import { User } from "@/interface/profile";
 import { toLowerCaseString } from "@/utils/string";
+import { PositionState } from "../crBoard/PositionBox";
 
 type profileType = "fun" | "hard" | "other" | "me";
 
@@ -43,6 +44,13 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
     false,
     false,
   ]);
+
+  const [selectedBox, setSelectedBox] = useState("");
+  const [positionValue, setPositionValue] = useState<PositionState>({
+    main: user.mainP,
+    sub: user.subP,
+    want: user.subP,
+  });
 
   /* 선택된 현재 프로필 이미지 */
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(
@@ -98,12 +106,21 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
   };
 
   // 포지션 선택해 변경하기
-  const handlePositionSelect = (index: number, newPosition: string) => {
-    setPositions((prev) =>
-      prev.map((pos, i) =>
-        i === index ? { ...pos, position: newPosition } : pos
-      )
-    );
+  const handlePositionChange = (newPositionValue: PositionState) => {
+    setPositionValue(newPositionValue);
+  };
+
+  const handleCategoryButtonClick = (positionId: number) => {
+    console.log(positionId);
+
+    if (selectedBox) {
+      const newPositionValue = {
+        ...positionValue,
+        [selectedBox]: positionId,
+      };
+      setPositionValue(newPositionValue);
+      handlePositionChange(newPositionValue);
+    }
   };
 
   // 더보기 버튼 메뉴
@@ -321,10 +338,11 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                       {isPositionOpen[index] && (
                         <PositionCategory
                           onClose={() => handlePositionClose(index)}
-                          onSelect={(newPosition: string) =>
-                            handlePositionSelect(index, newPosition)
-                          }
-                          boxName="position"
+                          // onSelect={(newPosition: string) =>
+                          //   handlePositionSelect(index, newPosition)
+                          // }
+                          onSelect={handleCategoryButtonClick}
+                          boxName={selectedBox}
                         />
                       )}
                     </Posi>

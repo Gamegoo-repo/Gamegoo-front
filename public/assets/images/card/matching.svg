@@ -1,23 +1,11 @@
-<svg width="580" height="312" viewBox="0 0 580 312" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<rect y="27" width="580" height="285" rx="30" fill="#2D2D2D"/>
-<rect x="47" y="199" width="189" height="113" fill="url(#pattern0_3221_150)"/>
-<g filter="url(#filter0_d_3221_150)">
-<rect x="374" y="27" width="142" height="92" fill="url(#pattern1_3221_150)" shape-rendering="crispEdges"/>
-</g>
+<svg width="580" height="285" viewBox="0 0 580 285" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="580" height="285" rx="30" fill="#2D2D2D"/>
+<rect x="47" y="172" width="189" height="113" fill="url(#pattern0_3221_150)"/>
+<rect x="374" width="142" height="92" fill="url(#pattern1_3221_150)"/>
 <defs>
 <pattern id="pattern0_3221_150" patternContentUnits="objectBoundingBox" width="1" height="1">
 <use xlink:href="#image0_3221_150" transform="matrix(0.00140252 0 0 0.00234376 0 -0.00631909)"/>
 </pattern>
-<filter id="filter0_d_3221_150" x="343" y="0" width="204" height="154" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-<feFlood flood-opacity="0" result="BackgroundImageFix"/>
-<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-<feOffset dy="4"/>
-<feGaussianBlur stdDeviation="15.5"/>
-<feComposite in2="hardAlpha" operator="out"/>
-<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
-<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_3221_150"/>
-<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_3221_150" result="shape"/>
-</filter>
 <pattern id="pattern1_3221_150" patternContentUnits="objectBoundingBox" width="1" height="1">
 <use xlink:href="#image1_3221_150" transform="matrix(0.0017452 0 0 0.00271179 0 -0.561601)"/>
 </pattern>

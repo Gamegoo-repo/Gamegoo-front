@@ -46,7 +46,7 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
     };
 
     fetchProfile();
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     console.log("selectedImageIndex", selectedImageIndex);
