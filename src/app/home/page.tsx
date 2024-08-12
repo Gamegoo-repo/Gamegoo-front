@@ -1,12 +1,15 @@
 "use client";
 
 import ChatButton from "@/components/common/ChatButton";
-import GraphicBox from "@/components/match/GraphicBox";
+import { useRouter } from "next/navigation";
 import { MATCH_PAGE_DATA } from "@/data/match";
 import Image from "next/image";
 import styled from "styled-components";
+import { theme } from "@/styles/theme";
 
 const HomePage = () => {
+  const router = useRouter();
+
   return (
     <Wrapper>
       <HomeContent>
@@ -21,17 +24,22 @@ const HomePage = () => {
           <SubTitle>겜구 커뮤니티에 오신 것을 환영합니다.</SubTitle>
         </Header>
         <Main>
-          {MATCH_PAGE_DATA.map((box) => {
+          {MATCH_PAGE_DATA.map((content) => {
             return (
-              <GraphicBox
-                key={box.id}
-                pathname={box.pathname}
-                height={box.height}
-                top={box.top}
-                left={box.left}
+              <ContentWrapper
+                key={content.id}
+                onClick={() => router.push(content.pathname)}
               >
-                {box.title}
-              </GraphicBox>
+                <Image
+                  src={content.image}
+                  width={0}
+                  height={0}
+                  style={{ width: '100%', height: 'auto' }}
+                  alt={content.title}
+                  priority
+                />
+                <ContentTitle>{content.title}</ContentTitle>
+              </ContentWrapper>
             );
           })}
         </Main>
@@ -49,8 +57,6 @@ export default HomePage;
 
 const Wrapper = styled.div`
   width: 100%;
-  display: flex;
-  justify-content: center;
   padding-top: 140px;
 `;
 
@@ -61,11 +67,9 @@ const HomeContent = styled.div`
 `;
 
 const Header = styled.header`
-  display: flex;
-  flex-direction: column;
-  align-items: start;
   margin-bottom: 52px;
 `;
+
 const SubTitle = styled.div`
   ${(props) => props.theme.fonts.regular25};
   color: #44515c;
@@ -73,11 +77,25 @@ const SubTitle = styled.div`
 
 const Main = styled.main`
   display: flex;
-  flex-direction: column;
   align-items: center;
-  row-gap: 30px;
-  margin-bottom: 37px;
+  gap:59px;
 `;
+
+const ContentWrapper = styled.div`
+  position: relative;
+  cursor: pointer;
+`;
+
+const ContentTitle = styled.p`
+  position: absolute;
+  top:50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  ${(props) => props.theme.fonts.bold32};
+  color: ${theme.colors.white};
+  white-space: nowrap;
+`;
+
 const Footer = styled.footer`
   display: flex;
   margin-bottom: 78px;

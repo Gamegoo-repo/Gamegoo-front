@@ -1,45 +1,45 @@
 import { theme } from "@/styles/theme";
 import styled from "styled-components";
-import Random from "../../../public/assets/icons/position_random_unclicked.svg";
+import All from "../../../public/assets/icons/position_all_unclicked.svg";
 import Top from "../../../public/assets/icons/position_top_unclicked.svg";
 import Jungle from "../../../public/assets/icons/position_jungle_unclicked.svg";
 import Mid from "../../../public/assets/icons/position_mid_unclicked.svg";
-import Bottom from "../../../public/assets/icons/position_bottom_unclicked.svg";
+import OndDeal from "../../../public/assets/icons/position_one_deal_unclicked.svg";
 import Supporter from "../../../public/assets/icons/position_supporter_unclicked.svg";
 
 interface PositionComponentProps {
   onClose: () => void;
   boxName: string;
-  onSelect: (position: string) => void;
+  onSelect: (positionId: number) => void;
 }
 
 const PositionCategory = (props: PositionComponentProps) => {
   const { onClose, onSelect } = props;
 
-  const handlePositionCategory = (positionName: string) => {
-    onSelect(positionName);
+  const handlePositionCategory = (positionId: number) => {
+    onSelect(positionId);
     onClose();
   };
 
   return (
     <Wrapper>
       <Box>
-        <RandomButton onClick={() => handlePositionCategory("random")}>
-          <Random />
-        </RandomButton>
-        <TopButton onClick={() => handlePositionCategory("top")}>
+        <AllButton onClick={() => handlePositionCategory(0)}>
+          <All />
+        </AllButton>
+        <TopButton onClick={() => handlePositionCategory(1)}>
           <Top />
         </TopButton>
-        <JungleButton onClick={() => handlePositionCategory("jungle")}>
+        <JungleButton onClick={() => handlePositionCategory(2)}>
           <Jungle />
         </JungleButton>
-        <MidButton onClick={() => handlePositionCategory("mid")}>
+        <MidButton onClick={() => handlePositionCategory(3)}>
           <Mid />
         </MidButton>
-        <BottomButton onClick={() => handlePositionCategory("bottom")}>
-          <Bottom />
-        </BottomButton>
-        <SupporterButton onClick={() => handlePositionCategory("supporter")}>
+        <OneDealButton onClick={() => handlePositionCategory(4)}>
+          <OndDeal />
+        </OneDealButton>
+        <SupporterButton onClick={() => handlePositionCategory(5)}>
           <Supporter />
         </SupporterButton>
       </Box>
@@ -89,7 +89,7 @@ const Box = styled.div`
   }
 `;
 
-const RandomButton = styled.button`
+const AllButton = styled.button`
   &:hover path {
     stroke: ${theme.colors.purple200};
   }
@@ -129,7 +129,7 @@ const MidButton = styled.button`
   }
 `;
 
-const BottomButton = styled.button`
+const OneDealButton = styled.button`
   &:hover path:nth-child(2) {
     fill: ${theme.colors.purple200};
   }

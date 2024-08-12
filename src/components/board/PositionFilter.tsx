@@ -1,10 +1,10 @@
 import { theme } from "@/styles/theme";
 import styled from "styled-components";
-import Random from "../../../public/assets/icons/default_random.svg";
+import All from "../../../public/assets/icons/default_all.svg";
 import Top from "../../../public/assets/icons/default_top.svg";
 import Jungle from "../../../public/assets/icons/default_jungle.svg";
 import Mid from "../../../public/assets/icons/default_mid.svg";
-import Bottom from "../../../public/assets/icons/default_bottom.svg";
+import OneDeal from "../../../public/assets/icons/default_one_deal.svg";
 import Supporter from "../../../public/assets/icons/default_supporter.svg";
 
 interface SvgProps {
@@ -17,11 +17,11 @@ const PositionFilter = (props: SvgProps) => {
 
     return (
         <Wrapper>
-            <RandomButton
+            <AllButton
                 onClick={() => onPositionFilter(0)}
                 className={isPosition === 0 ? 'clicked' : ''}>
-                <Random />
-            </RandomButton>
+                <All />
+            </AllButton>
             <TopButton
                 onClick={() => onPositionFilter(1)}
                 className={isPosition === 1 ? 'clicked' : ''} >
@@ -37,11 +37,11 @@ const PositionFilter = (props: SvgProps) => {
                 className={isPosition === 3 ? 'clicked' : ''}>
                 <Mid />
             </MidButton>
-            <BottomButton
+            <OneDealButton
                 onClick={() => onPositionFilter(4)}
                 className={isPosition === 4 ? 'clicked' : ''}>
-                <Bottom />
-            </BottomButton>
+                <OneDeal />
+            </OneDealButton>
             <SupporterButton
                 onClick={() => onPositionFilter(5)}
                 className={isPosition === 5 ? 'clicked' : ''}>
@@ -60,7 +60,7 @@ const Wrapper = styled.div`
     width: 100%;
 `;
 
-const RandomButton = styled.button`
+const AllButton = styled.button`
     max-width: 48px;
     height: 56px;
     padding:0 15px;
@@ -137,7 +137,7 @@ const MidButton = styled.button`
     }
 `;
 
-const BottomButton = styled.button`
+const OneDealButton = styled.button`
     max-width: 48px;
     height: 56px;
     padding:0 15px;

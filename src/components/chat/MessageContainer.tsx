@@ -77,7 +77,7 @@ const MessageContainer = (props: MessageContainerProps) => {
     if (feedbackDate !== lastMessageDate) {
       setIsFeedbackDateVisible(true);
     }
-  }, [])
+  }, [messageList])
 
   return (
     <>

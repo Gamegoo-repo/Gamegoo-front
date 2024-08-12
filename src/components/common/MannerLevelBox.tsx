@@ -1,6 +1,9 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
+import { useEffect, useState } from "react";
+import { getBadMannerValues, getMannerValues } from "@/api/manner";
+import { MannerList } from "@/interface/manner";
 
 const data = {
   good_manner: {
@@ -22,19 +25,42 @@ const data = {
 };
 
 interface MannerLevelBoxProps {
+  memberId: number;
+  level:number;
   top: string;
   right: string;
 }
 
 const MannerLevelBox = (props: MannerLevelBoxProps) => {
-  const { top, right } = props;
+  const { memberId, level, top, right } = props;
 
   const mannerEvaluations = Object.entries(data.good_manner);
   const badMannerEvaluations = Object.entries(data.bad_manner);
 
+  const [mannerData, setMannerData] = useState<MannerList>();
+  const [badMannerData, setBadMannerData] = useState<MannerList>();
+
+  useEffect(() => {
+    const getManner = async () => {
+      const good = await getMannerValues(memberId);
+      setMannerData(good.result);
+      console.log('good:', good.result)
+    };
+
+    const getBadManner = async () => {
+      const bad = await getBadMannerValues(memberId);
+      setBadMannerData(bad.result);
+      console.log('bad:', bad.result)
+
+    };
+
+    getManner();
+    getBadManner();
+  }, [memberId])
+
   return (
     <Wrapper $top={top} $right={right}>
-      <Title>매너 레벨 5</Title>
+      <Title>매너 레벨 {level}</Title>
       <MannerEvaluations>
         <Div>
           <SubTitle>받은 매너평가</SubTitle>

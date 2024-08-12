@@ -3,7 +3,7 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 
 interface MicProps {
-    status: number;
+    status: boolean;
 }
 
 const Mic = (props: MicProps) => {
@@ -12,14 +12,14 @@ const Mic = (props: MicProps) => {
     return (
         <Wrapper>
             <Image
-                src={status === 0 ?
+                src={!!status ?
                     "/assets/icons/mic_on_no_bg.svg"
                     :
                     "/assets/icons/mic_off_no_bg.svg"}
                 width={27}
                 height={33}
-                alt={`mic ${status === 0 ? "on" : "off"}`} />
-            <MicText className={status === 0 ? 'on' : 'off'}>마이크 {status === 0 ? "ON" : "OFF"}</MicText>
+                alt={`mic ${!!status ? "on" : "off"}`} />
+            <MicText className={!!status ? 'on' : 'off'}>마이크 {!!status ? "ON" : "OFF"}</MicText>
         </Wrapper>
     )
 };

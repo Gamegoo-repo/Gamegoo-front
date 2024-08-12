@@ -3,20 +3,31 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 interface CheckboxProps {
-  value: string;
+  value: number | string;
   label?: string;
   isChecked?: boolean;
   onChange?: (isChecked: boolean) => void;
   isArraychecked?: boolean;
-  onArrayChange?: (checked: string) => void;
+  onArrayChange?: (checked: number) => void;
   fontSize?: string;
+  id?: string;
 }
 
 const Checkbox = (props: CheckboxProps) => {
-  const { value, label, isChecked = false, onChange, isArraychecked, onArrayChange, fontSize } = props;
+  const {
+    value,
+    label,
+    isChecked = false,
+    onChange,
+    isArraychecked,
+    onArrayChange,
+    fontSize,
+    id
+  } = props;
   const [checked, setChecked] = useState<boolean>(isChecked);
 
   useEffect(() => {
+    if (typeof value === "number") return;
     setChecked(isChecked);
   }, [isChecked]);
 
@@ -26,6 +37,7 @@ const Checkbox = (props: CheckboxProps) => {
     if (onChange) {
       onChange(newValue);
     }
+    if (typeof value === "string") return;
     if (onArrayChange) {
       onArrayChange(value);
     }
@@ -34,6 +46,7 @@ const Checkbox = (props: CheckboxProps) => {
   return (
     <StyledCheckbox fontSize={fontSize || "semiBold16"}>
       <Check
+        id={id}
         value={value}
         type="checkbox"
         checked={isChecked ? checked : isArraychecked}

@@ -4,69 +4,68 @@ import styled from "styled-components";
 
 interface PaginationProps {
     currentPage: number;
-    totalItems: number;
-    itemsPerPage: number;
-    pageButtonCount: number;
-    onPageChange: (page: number) => void;
+    hasMoreItems: boolean;
+    onPrevPage: () => void;
+    onNextPage: () => void;
+    onPageClick: (page: number) => void;
+    totalItems?: number;
+    itemsPerPage?: number;
+    pageButtonCount?: number;
+    onPageChange?: (page: number) => void;
+
 }
 
 const Pagination = (props: PaginationProps) => {
     const {
         currentPage,
-        totalItems,
-        itemsPerPage,
-        pageButtonCount,
-        onPageChange } = props;
+        hasMoreItems,
+        onPrevPage,
+        onNextPage,
+        onPageClick
+    } = props;
 
-    const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-    const getPageNumbers = () => {
-        const pages = [];
-        const halfPageButtonCount = Math.floor(pageButtonCount / 2);
-        let startPage = Math.max(1, currentPage - halfPageButtonCount);
-        let endPage = Math.min(totalPages, currentPage + halfPageButtonCount);
-
-        if (endPage - startPage + 1 < pageButtonCount) {
-            startPage = Math.max(1, endPage - pageButtonCount + 1);
-        }
-
-        for (let i = startPage; i <= endPage; i++) {
-            pages.push(i);
-        }
-
-        return pages;
-    };
+    const totalPages = hasMoreItems ? currentPage + 1 : currentPage;
+    const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
     return (
         <>
             <Wrapper>
                 <Button
+                    onClick={onPrevPage}
                     disabled={currentPage === 1}
-                    onClick={() => onPageChange(1)}
-                >
+                    $isDisabled={currentPage === 1}>
                     <Image
-                        src="/assets/icons/paging_left_arrow.svg"
+                        src={
+                            currentPage === 1 ?
+                                "/assets/icons/paging_disabled_left_arrow.svg"
+                                : "/assets/icons/paging_left_arrow.svg"}
                         width={14}
                         height={26}
-                        alt="previous page" />
+                        alt="이전 페이지" />
                 </Button>
                 <PageList>
-                    {getPageNumbers().map(page => (
+                    {pages.map((page) => (
                         <PageButton
                             key={page}
-                            className={page === currentPage ? 'active' : ''}
-                            onClick={() => onPageChange(page)}
+                            $isActive={page === currentPage}
+                            onClick={() => onPageClick(page)}
                         >
                             {page}
                         </PageButton>
                     ))}
                 </PageList>
-                <Button disabled={currentPage === totalPages} onClick={() => onPageChange(totalPages)}>
+                <Button
+                    onClick={onNextPage}
+                    disabled={!hasMoreItems}
+                    $isDisabled={!hasMoreItems}>
                     <Image
-                        src="/assets/icons/paging_right_arrow.svg"
+                        src={
+                            !hasMoreItems ?
+                                "/assets/icons/paging_disabled_right_arrow.svg"
+                                : "/assets/icons/paging_right_arrow.svg"}
                         width={14}
                         height={26}
-                        alt="next page" />
+                        alt="다음 페이지" />
                 </Button>
             </Wrapper>
         </>
@@ -80,28 +79,26 @@ const Wrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-`
-const Button = styled.button`
-    &:disabled{
-        cursor: unset;
-    }
-`
+`;
+const Button = styled.button < { $isDisabled: boolean }> `
+    color: ${({ $isDisabled }) => ($isDisabled ? `${theme.colors.gray300}` : '#2D2D2D')};
+    cursor: ${({ $isDisabled }) => ($isDisabled ? `unset` : 'pointer')};
+`;
 const PageList = styled.div`
     display: flex;
     align-items: center;
     gap:30px;
     margin:0 36px;
-`
-const PageButton = styled.button`
-    color:#A1A1A8;
+`;
+const PageButton = styled.span<{ $isActive: boolean }>`
     padding:8px 11px;
     border-radius: 9px;
-    ${(props) => props.theme.fonts.regular14};
     &:hover{
         background: #F9F8FF;
     }
-    &.active {
-        color:${theme.colors.purple100};
-        ${(props) => props.theme.fonts.bold14};
-    }
-`
+    color: ${({ $isActive }) => ($isActive ? `${theme.colors.purple100}` : '#A1A1A8')};
+    ${(props) =>
+        props.$isActive
+            ? props.theme.fonts.bold14
+            : props.theme.fonts.regular14};
+`;

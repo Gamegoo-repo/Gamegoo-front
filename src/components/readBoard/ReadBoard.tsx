@@ -14,54 +14,62 @@ import QueueType from "./QueueType";
 import WinningRate from "./WinningRate";
 import MannerLevelBox from "../common/MannerLevelBox";
 import GameStyle from "./GameStyle";
-import { EX_GAME_STYLE } from "@/data/profile";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import MoreBox from "../common/MoreBox";
-import Image from "next/image";
+import { MemberPost, NonMemberPost } from "@/interface/board";
+import { deletePost, getMemberPost, getNonMemberPost } from "@/api/board";
+import LoadingSpinner from "../common/LoadingSpinner";
+import { setPostingDateFormatter } from "@/utils/custom";
+import { blockMember, getUserInfo, reportMember, unblockMember } from "@/api/member";
+import FormModal from "../common/FormModal";
+import Input from "../common/Input";
+import Checkbox from "../common/Checkbox";
+import { REPORT_REASON } from "@/data/report";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { setCloseModal, setCloseReadingModal, setOpenModal, setOpenPostingModal } from "@/redux/slices/modalSlice";
+import { setCurrentPost } from "@/redux/slices/postSlice";
+import { UserInfo } from "@/interface/profile";
+import { deleteFriend, reqFriend } from "@/api/friends";
+import Alert from "../common/Alert";
+import { AlertProps } from "@/interface/modal";
+import { useRouter } from "next/navigation";
 
 interface ReadBoardProps {
   onClose: () => void;
-  postId: number | null;
-  gameType: 'canyon' | 'wind';
+  postId: number;
 }
-
-interface userInfo {
-  image: string;
-  account: string;
-  tag: string;
-  tier: string;
-  manner_level: number;
-  mic: number;
-}
-
-const userData = {
-  image: "/assets/icons/profile_img.svg",
-  account: "유니콘의 비밀",
-  tag: "KR1",
-  tier: "B3",
-  manner_level: 5,
-  mic: 1,
-  champions: [
-    { id: 1, value: "/assets/icons/gray_circle.svg" },
-    { id: 2, value: "/assets/icons/gray_circle.svg" },
-    { id: 3, value: "/assets/icons/gray_circle.svg" },
-  ],
-  queue: "솔로1",
-  winning_rate: {
-    completed: 76,
-    history: 20,
-  },
-};
 
 const ReadBoard = (props: ReadBoardProps) => {
-  const { onClose, postId, gameType } = props;
+  const { onClose, postId } = props;
 
-  const [textareaValue, setTextareaValue] = useState("");
+  const dispatch = useDispatch();
+  const router = useRouter();
 
+  const [isPost, setIsPost] = useState<MemberPost | NonMemberPost>();
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
   const [isMannerBalloonVisible, setIsMannerBalloonVisible] = useState(true);
   const [isMannerLevelBoxOpen, setIsMannerLevelBoxOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [isBlockedStatus, setIsBlockedStatus] = useState(false);
+  const [isFriendStatus, setIsFriendStatus] = useState(false);
+  const [checkedItems, setCheckedItems] = useState<number[]>([]);
+  const [reportDetail, setReportDetail] = useState<string>("");
+  const [userInfo, setUserInfo] = useState<UserInfo>();
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertProps, setAlertProps] = useState<AlertProps>({
+    icon: "",
+    width: 0,
+    height: 0,
+    content: "",
+    alt: "",
+    onClose: () => { },
+    buttonText: "",
+  });
 
+  const isModalType = useSelector((state: RootState) => state.modal.modalType);
+
+  /* 클릭해서 매너키워드 보기 박스 닫기 */
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsMannerBalloonVisible(false);
@@ -70,122 +78,461 @@ const ReadBoard = (props: ReadBoardProps) => {
     return () => clearTimeout(timer);
   }, []);
 
+  /* 로그아웃 시, 비회원 접근 시 알럿 props 설정 함수 */
+  const logoutMessage = "로그아웃 되었습니다. 다시 로그인 해주세요.";
+  const loginRequiredMessage = "로그인이 필요한 서비스입니다.";
+
+  const showAlertWithContent = (content: string, handleAlertClose: () => void, btnText: string) => {
+    setAlertProps({
+      icon: "exclamation",
+      width: 68,
+      height: 58,
+      content: content,
+      alt: "경고",
+      onClose: handleAlertClose,
+      buttonText: btnText
+    });
+    setShowAlert(true);
+  };
+
+  /* 신고하기 모달 오픈 */
+  const handleReportModal = () => {
+    // 신고하기 버튼 클릭 시점 토큰 만료
+    if (!userInfo) {
+      return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
+    }
+
+    dispatch(setOpenModal('report'));
+    handleMoreBoxClose();
+  };
+
+  /* 신고하기 */
+  const handleReport = async () => {
+    if (!userInfo) {
+      return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
+    }
+
+    if (!isPost || userInfo?.id === isPost?.memberId) return;
+
+    const params = {
+      targetMemberId: isPost.memberId,
+      reportTypeIdList: checkedItems,
+      contents: reportDetail
+    };
+
+    try {
+      await reportMember(params);
+      await handleModalClose();
+    } catch (error) {
+    }
+  };
+
+  /* 차단하기 */
+  const handleBlock = async () => {
+    if (!userInfo) {
+      return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
+    }
+
+    if (!isPost || userInfo?.id === isPost?.memberId) return;
+
+    if ('isBlocked' in isPost && isPost.isBlocked) return;
+
+    try {
+      await blockMember(isPost.memberId);
+      await handleMoreBoxClose();
+      await setIsBlockedStatus(true);
+    } catch (error) {
+    }
+  };
+
+  /* 차단 해제 */
+  const handleUnblock = async () => {
+    if (!userInfo) {
+      return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
+    }
+
+    if (!isPost || userInfo?.id === isPost?.memberId) return;
+
+    if ('isBlocked' in isPost && !isPost.isBlocked) return;
+
+    try {
+      await unblockMember(isPost.memberId);
+      await handleMoreBoxClose();
+      await setIsBlockedStatus(false);
+    } catch (error) {
+    }
+  };
+
+  /* 친구 추가 */
+  const handleFriendAdd = async () => {
+    if (!userInfo) {
+      return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
+    }
+
+    if (!isPost || userInfo?.id === isPost?.memberId) return;
+
+    if ('isBlocked' in isPost && isPost?.isBlocked ||
+      'isFriend' in isPost && isPost?.isFriend ||
+      'friendRequestMemberId' in isPost && isPost?.friendRequestMemberId
+    ) return;
+
+    try {
+      await reqFriend(isPost.memberId);
+      await handleMoreBoxClose();
+      setIsFriendStatus(true);
+    } catch (error) {
+    }
+
+    handleMoreBoxClose();
+  };
+
+  /* 친구 삭제 */
+  const handleFriendDelete = async () => {
+    if (!userInfo) {
+      return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
+    }
+
+    if (!isPost || userInfo?.id === isPost?.memberId) return;
+
+    if ('isFriend' in isPost && !isPost?.isFriend) return;
+
+    try {
+      await deleteFriend(isPost.memberId);
+      await handleMoreBoxClose();
+      setIsFriendStatus(false);
+    } catch (error) {
+    }
+
+    handleMoreBoxClose();
+  }
+
+  /* 매너레벨 박스 열기 */
+  const handleMannerLevelBoxOpen = () => {
+    if (!userInfo) {
+      return showAlertWithContent(loginRequiredMessage, () => setShowAlert(false), "확인");
+    }
+
+    setIsMannerLevelBoxOpen((prevState) => !prevState);
+  };
+
+  /* 신고하기 사유 */
+  const handleCheckboxChange = (checked: number) => {
+    setCheckedItems((prev) =>
+      prev.includes(checked) ? prev.filter((c) => c !== checked) : [...prev, checked]
+    );
+  };
+
+  /* 게시글 수정 */
+  const handleEdit = async () => {
+    if (!userInfo) {
+      return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
+    }
+
+    if (userInfo?.id !== isPost?.memberId) return;
+
+    if (isPost) {
+      dispatch(setCurrentPost({ currentPost: isPost, currentPostId: postId }));
+      dispatch(setOpenPostingModal());
+      dispatch(setCloseReadingModal());
+    }
+  };
+
+  /* 게시글 삭제 */
+  const handleDelete = async () => {
+    if (!userInfo) {
+      return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
+    }
+
+    if (userInfo?.id !== isPost?.memberId) return;
+
+    try {
+      await deletePost(postId);
+      await onClose();
+      // 게시글 업로드 해야하나?
+    } catch (error) {
+    }
+  };
+
+  /* 더보기 버튼 토글 */
   const handleMoreBoxToggle = () => {
+    if (!userInfo) {
+      return showAlertWithContent(loginRequiredMessage, () => setShowAlert(false), "확인");
+    }
+
     setIsMoreBoxOpen((prevState) => !prevState);
   };
 
+  /* 더보기 버튼 닫기 */
   const handleMoreBoxClose = () => {
     setIsMoreBoxOpen(false);
   };
 
-  const handleReport = () => {
-    console.log('신고하기');
-    handleMoreBoxClose();
+  /* 더보기 버튼 메뉴 */
+  const MoreBoxMenuItems: MoreBoxMenuItems[] = [];
+
+  if (!userInfo || userInfo?.id === isPost?.memberId) {
+    MoreBoxMenuItems.push(
+      { text: '수정', onClick: handleEdit },
+      { text: '삭제', onClick: handleDelete }
+    );
+  }
+
+  //친구 삭제 - 차단되어있을 때, 친구일 때, 친구 추가 요청 중일 때
+  //친구 추가 - 친구가 아닐 때, 차단되어있지 않을 때, 친구 추가 요청 중이 아닐 때
+  //차단하기 - 친구 추가 요청 중일 때, 친구 삭제된 상태일 때, 차단되어있지 않을 때
+  //차단해제 - 차단되어 있을 때, 
+
+  if (!userInfo || userInfo?.id !== isPost?.memberId) {
+    let friendText = '친구 추가';
+    let friendFunc = handleFriendAdd;
+    let blockText = '차단하기';
+    let blockFunc = handleBlock;
+
+    if (!!isPost && 'isBlocked' in isPost && 'isFriend' in isPost && 'friendRequestMemberId' in isPost) {
+      if (isPost?.isBlocked || isPost?.isFriend) {
+        friendText = '친구 삭제';
+        friendFunc = handleFriendDelete;
+      }
+      if (!isPost?.isBlocked || !isPost?.isFriend || !isPost?.friendRequestMemberId) {
+        friendText = '친구 추가';
+        friendFunc = handleFriendAdd;
+      }
+      if (isPost?.friendRequestMemberId) {
+        friendText = '친구 요청 중';
+      }
+
+      if (isPost?.friendRequestMemberId || !isPost?.isFriend, !isPost?.isBlocked) {
+        blockText = '차단하기';
+        blockFunc = handleBlock;
+      }
+
+      if (isPost?.isBlocked) {
+        blockText = '차단 해제';
+        friendText = '';
+        blockFunc = handleUnblock;
+      }
+    }
+
+    if (friendText) {
+      MoreBoxMenuItems.push({ text: friendText, onClick: friendFunc });
+    }
+    MoreBoxMenuItems.push(
+      { text: blockText, onClick: blockFunc },
+      { text: '신고하기', onClick: handleReportModal }
+    );
+
+  }
+
+  /* 게시글 api */
+  useEffect(() => {
+    const getPostData = async () => {
+      setLoading(true);
+      if (!!userInfo) {
+        const memberData = await getMemberPost(postId);
+        setIsPost(memberData.result);
+        setLoading(false);
+      }
+
+      if (!userInfo) {
+        const nonMember = await getNonMemberPost(postId);
+        setIsPost(nonMember.result);
+        setLoading(false);
+      }
+    };
+
+    getPostData();
+  }, [isBlockedStatus, isFriendStatus, userInfo, postId])
+
+  let gameType = '';
+  if (isPost?.mainPosition ||
+    isPost?.subPosition ||
+    isPost?.wantPosition) {
+    gameType = "canyon"
+  } else {
+    gameType = "wind"
+  }
+
+  /* 유저 정보 api */
+  useEffect(() => {
+    const getUserData = async () => {
+      const data = await getUserInfo();
+      setUserInfo(data.result);
+      console.log('유저,', data.result)
+    };
+
+    getUserData();
+  }, [])
+
+  /* 신고하기 모달 닫기 */
+  const handleModalClose = () => {
+    setCheckedItems([]);
+    setReportDetail("");
+    dispatch(setCloseModal());
   };
 
-  const handleBlock = () => {
-    console.log('차단하기')
-    handleMoreBoxClose();
+  // 스피너 진주님과 합치기
+  if (loading) {
+    return (
+      <LoadingContainer>
+        <LoadingSpinner />
+      </LoadingContainer>
+    );
+  }
+
+  /* 채팅방 연결 */
+  const handleChatStart = () => {
+    if (!userInfo) {
+      return showAlertWithContent(loginRequiredMessage, () => setShowAlert(false), "확인");
+    }
+
+    onClose();
   };
 
-  const handleAddFriend = () => {
-    console.log('친구추가')
-    handleMoreBoxClose();
+  const handleAlertClose = () => {
+    setShowAlert(false);
   };
-
-  const handleMannerLevelBoxOpen = () => {
-    setIsMannerLevelBoxOpen((prevState) => !prevState);
-  };
-
-  // 더보기 버튼 메뉴
-  const MoreBoxMenuItems: MoreBoxMenuItems[] = [
-    { text: '친구 추가', onClick: handleAddFriend },
-    { text: '차단하기', onClick: handleBlock },
-    { text: '신고하기', onClick: handleReport },
-  ];
-
-  // const [user, setUser] = useState<userInfo>()
-
-  // TODO: api 연결
-  // useEffect(() => {
-  //     axios.get('http://localhost:3001/user')
-  //         .then(response => {
-  //             setUser(response.data)
-  //         })
-  //         .catch(error => {
-  //             console.error('Error fetching data:', error);
-  //         });
-  // }, [])
 
   return (
-    <CRModal type="reading" onClose={onClose}>
-      {isMoreBoxOpen && (
-        <MoreBox 
-        items={MoreBoxMenuItems}
-        top={67}
-        left={552} />
-      )}
-      {isMannerLevelBoxOpen && <MannerLevelBox top="14%" right="-28%" />}
-      <UpdatedDate>게시일 : 24.05.06. 12:45</UpdatedDate>
-      <UserSection>
-        <UserLeft>
-          <ProfileImage
-            image={userData.image} />
-          <UserNManner>
-            <User
-              account={userData.account}
-              tag={userData.tag}
-              tier={userData.tier} />
-            <MannerLevel
-              level={userData.manner_level}
-              onClick={handleMannerLevelBoxOpen}
-              position="top"
-              isBalloon={isMannerBalloonVisible} />
-          </UserNManner>
-        </UserLeft>
-        <UserRight>
-          <Mic
-            status={userData.mic} />
-          <MoreBoxButton onClick={handleMoreBoxToggle} />
-        </UserRight>
-      </UserSection>
-      <ChampionNQueueSection>
-        <Champion
-          list={userData.champions} />
-        <QueueType
-          value={userData.queue} />
-      </ChampionNQueueSection>
-      {gameType === "canyon" &&
-        <PositionSection>
-          <Title>포지션</Title>
-          <PositionBox status="reading" />
-        </PositionSection>
+    <>
+      <CRModal type="reading" onClose={onClose}>
+        {showAlert && <Alert {...alertProps} />}
+        {isPost && (
+          <>
+            {isMoreBoxOpen && (
+              <MoreBox
+                items={MoreBoxMenuItems}
+                top={67}
+                left={776} />
+            )}
+            {isMannerLevelBoxOpen &&
+              <MannerLevelBox
+                memberId={isPost.memberId}
+                level={isPost.mannerLevel}
+                top="14%"
+                right="22%" />}
+            <UpdatedDate>게시일 : {setPostingDateFormatter(isPost.createdAt)}</UpdatedDate>
+            <UserSection>
+              <UserLeft>
+                <ProfileImage
+                  image={isPost.profileImage} />
+                <UserNManner>
+                  <User
+                    account={isPost.gameName}
+                    tag={isPost.tag}
+                    tier={isPost.tier} />
+                  <MannerLevel
+                    level={isPost.mannerLevel}
+                    onClick={handleMannerLevelBoxOpen}
+                    position="top"
+                    isBalloon={isMannerBalloonVisible} />
+                </UserNManner>
+              </UserLeft>
+              <UserRight>
+                <Mic
+                  status={isPost.mike} />
+                <MoreBoxButton onClick={handleMoreBoxToggle} />
+              </UserRight>
+            </UserSection>
+            <ChampionNQueueSection>
+              <Champion
+                list={isPost.championList}
+                size={14} />
+              <QueueType
+                value={isPost.gameMode} />
+            </ChampionNQueueSection>
+            {isPost.mainPosition &&
+              isPost.subPosition &&
+              isPost.wantPosition &&
+              <PositionSection>
+                <Title>포지션</Title>
+                <PositionBox
+                  main={isPost.mainPosition}
+                  sub={isPost.subPosition}
+                  want={isPost.wantPosition} />
+              </PositionSection>
+            }
+            <WinningRateSection $gameType={gameType}>
+              <WinningRate
+                completed={isPost.winRate}
+                history={isPost.recentGameCount} />
+            </WinningRateSection>
+            <StyleSection $gameType={gameType}>
+              <Title>게임 스타일</Title>
+              <GameStyle styles={isPost.gameStyles} />
+            </StyleSection>
+            <MemoSection $gameType={gameType}>
+              <Title>메모</Title>
+              <Memo>
+                <MemoData>
+                  {isPost.contents}
+                </MemoData>
+              </Memo>
+            </MemoSection>
+            <ButtonContent $gameType={gameType}>
+              <Button
+                type="submit"
+                buttonType="primary"
+                text="말 걸어보기"
+                onClick={handleChatStart} />
+            </ButtonContent>
+          </>
+        )}
+      </CRModal>
+      {isModalType === 'report' &&
+        <FormModal
+          type="checkbox"
+          title="유저 신고하기"
+          width="494px"
+          height="721px"
+          closeButtonWidth={17}
+          closeButtonHeight={17}
+          borderRadius="20px"
+          onClose={handleModalClose}
+        >
+          <div>
+            <ReportLabel>신고 사유</ReportLabel>
+            <ReportReasonContent>
+              {REPORT_REASON.map((data) => (
+                <Checkbox
+                  key={data.id}
+                  value={data.id}
+                  label={data.text}
+                  fontSize="regular18"
+                  isArraychecked={checkedItems.includes(data.id)}
+                  onArrayChange={handleCheckboxChange}
+                  id={`report${data.id}`}
+                />
+              ))}
+            </ReportReasonContent>
+            <ReportLabel>상세 내용</ReportLabel>
+            <ReportContent>
+              <Input
+                inputType="textarea"
+                value={reportDetail}
+                onChange={(value) => {
+                  setReportDetail(value);
+                }}
+                placeholder="내용을 입력하세요. (선택)"
+                borderRadius="8px"
+                fontSize="regular18"
+                height="134px"
+                id="report"
+                maxLeng={500}
+              />
+            </ReportContent>
+            <ReportButton>
+              <Button
+                type="submit"
+                onClick={handleReport}
+                buttonType="primary"
+                text="신고하기"
+                disabled={checkedItems.length === 0}
+              />
+            </ReportButton>
+          </div>
+        </FormModal>
       }
-      <WinningRateSection $gameType={gameType}>
-        <WinningRate
-          completed={userData.winning_rate.completed}
-          history={userData.winning_rate.history} />
-      </WinningRateSection>
-      <StyleSection $gameType={gameType}>
-        <Title>게임 스타일</Title>
-        <GameStyle styles={EX_GAME_STYLE} />
-      </StyleSection>
-      <MemoSection $gameType={gameType}>
-        <Title>메모</Title>
-        <Memo>
-          <MemoData>
-            가볍게 같이 즐기실 분 구해요 !
-          </MemoData>
-        </Memo>
-      </MemoSection>
-      <ButtonContent $gameType={gameType}>
-        <Button
-          type="submit"
-          buttonType="primary"
-          text="말 걸어보기"
-          onClick={onClose} />
-      </ButtonContent>
-    </CRModal>
+    </>
   );
 };
 
@@ -263,23 +610,30 @@ const ButtonContent = styled.p<{ $gameType: string }>`
     text-align: center;
 `;
 
-const MoreBoxImage = styled(Image)`
-    cursor: pointer;
+const LoadingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 `;
 
-// const ReportBox = styled.div`
-//     position: absolute;
-//     top: 8.5%;
-//     right: -31%;
-//     z-index: 100;
-//     box-shadow: 0 0 21.3px 0 #00000026;
-//     background: ${theme.colors.white}; 
-//     padding:10px 103px 10px 20px;
-//     border-radius: 10px;
-// `;
+const ReportLabel = styled.p`
+  color: ${theme.colors.gray600};
+  ${(props) => props.theme.fonts.semiBold18};
+  margin-bottom: 12px;
+`;
 
-// const ReportText = styled.p`
-//     ${(props) => props.theme.fonts.medium15};
-//     color: #606060;
-//     cursor: pointer;
-// `;
+const ReportContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+`;
+
+const ReportReasonContent = styled(ReportContent)`
+  margin-bottom: 38px;
+`;
+
+const ReportButton = styled.div`
+  margin-top:21px;
+`;

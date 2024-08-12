@@ -6,7 +6,7 @@ interface FileInputProps {
     setIsProfileListOpen: Dispatch<React.SetStateAction<boolean>>;
     isProfileListOpen: boolean;
     onImageClick: (index: number) => void;
-    selectedImageIndex: number;
+    selectedImageIndex: number | undefined;
 }
 
 const UpdateProfileImage = (props: FileInputProps) => {
@@ -19,11 +19,13 @@ const UpdateProfileImage = (props: FileInputProps) => {
 
     return (
         <Wrapper>
-            <ProfileImage
-                src={`/assets/images/profile/profile${selectedImageIndex}.svg`}
-                width={51}
-                height={48}
-                alt='profile image' />
+            {selectedImageIndex &&
+                <ProfileImage
+                    src={`/assets/images/profile/profile${selectedImageIndex}.svg`}
+                    width={51}
+                    height={48}
+                    alt='프로필 이미지' />
+            }
             <Label htmlFor="profileImg">
                 <CameraImgBg
                     onClick={() => setIsProfileListOpen(!isProfileListOpen)}
@@ -114,8 +116,8 @@ const ProfileListBox = styled.div`
     border-radius: 13px;
     background: rgba(0, 0, 0, 0.64);
     position: fixed;
-    top: 136px;
-    left: 34px;
+    top: 164px;
+    left: 253px;
     z-index: 100;
 `;
 

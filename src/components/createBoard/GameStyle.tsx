@@ -2,17 +2,19 @@ import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import SelectedStylePopup from "../match/SelectedStylePopup";
 import Image from "next/image";
-import { useState } from "react";
+import { Dispatch, useEffect, useState } from "react";
+import { GAME_STYLE } from "@/data/profile";
 
 interface GameStyleProps {
-    gameStyles: string[];
+    selectedIds: number[] | [];
+    setSelectedStyleIds: Dispatch<React.SetStateAction<number[] | []>>;
 }
 
 const GameStyle = (props: GameStyleProps) => {
-    const { gameStyles } = props;
+    const { selectedIds, setSelectedStyleIds } = props;
 
     const [styledPopup, setStyledPopup] = useState(false);
-    const [selectedStyles, setSelectedStyles] = useState<string[]>(gameStyles);
+    const [selectedStyles, setSelectedStyles] = useState<number[] | []>(selectedIds);
 
     const handleStylePopup = () => {
         setStyledPopup(prevState => !prevState);
@@ -22,26 +24,34 @@ const GameStyle = (props: GameStyleProps) => {
         setStyledPopup(false);
     };
 
-    const handleSelectStyle = (style: string, e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    const handleSelectStyle = (style: number, e: React.MouseEvent<HTMLElement, MouseEvent>) => {
         e.preventDefault();
-        setSelectedStyles((prevStyles) => {
+        setSelectedStyles((prevStyles: number[]) => {
             if (prevStyles.includes(style)) {
-                return prevStyles.filter((s) => s! == style);
+                return prevStyles.filter((s: number) => s !== style);
             } else if (prevStyles.length < 3) {
                 return [...prevStyles, style];
             } else {
-                return prevStyles;
+                return [...prevStyles.slice(1), style];
             }
         });
     };
+
+    useEffect(() => {
+        setSelectedStyleIds(selectedStyles);
+    }, [selectedStyles, setSelectedStyleIds]);
+
     return (
         <>
             <StylesWrapper>
-                {selectedStyles.map((data, index) => (
-                    <Content key={index}>
-                        {data}
-                    </Content>
-                ))}
+                {selectedStyles.map((styleId) => {
+                    const style = GAME_STYLE.find(item => item.id === styleId);
+                    return (
+                        <Content key={styleId}>
+                            {style?.text}
+                        </Content>
+                    );
+                })}
             </StylesWrapper>
             <Div>
                 <AddGameStyle onClick={handleStylePopup}>
@@ -91,13 +101,13 @@ const Div = styled.div`
 
 const AddGameStyle = styled.p`
   display: flex;
-  width: 39Px;
-  height: 30px;
-  padding: 8px 12px;
   justify-content: center;
   align-items: center;
+  width: 39px;
+  height: 30px;
+  padding: 8px 12px;
   margin-top: 15px;
   border-radius: 17px;
-  background: ${theme.colors.purple300};
+   background: ${theme.colors.purple300};
   cursor: pointer;
-`;
+`; 

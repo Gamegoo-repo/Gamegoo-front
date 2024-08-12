@@ -47,7 +47,7 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
   const [isBlockConfirmOpen, setIsBlockConfrimOpen] = useState(false);
   const [isProfileListOpen, setIsProfileListOpen] = useState(false);
   const [reportDetail, setReportDetail] = useState<string>("");
-  const [checkedItems, setCheckedItems] = useState<string[]>([]);
+  const [checkedItems, setCheckedItems] = useState<number[]>([]);
 
   /* 포지션 */
   const [positions, setPositions] = useState(POSITIONS);
@@ -126,9 +126,9 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
   ];
 
   // 신고하기 체크
-  const handleCheckboxChange = (checked: string) => {
+  const handleCheckboxChange = (checked: number) => {
     setCheckedItems((prev) =>
-      prev.includes(checked) ? prev.filter((r) => r !== checked) : [...prev, checked]
+      prev.includes(checked) ? prev.filter((c) => c !== checked) : [...prev, checked]
     );
   };
 
@@ -238,10 +238,10 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                         {REPORT_REASON.map((data) => (
                           <Checkbox
                             key={data.id}
-                            value={data.text}
+                            value={data.id}
                             label={data.text}
                             fontSize="regular18"
-                            isArraychecked={checkedItems.includes(data.text)}
+                            isArraychecked={checkedItems.includes(data.id)}
                             onArrayChange={handleCheckboxChange}
                           />
                         ))}

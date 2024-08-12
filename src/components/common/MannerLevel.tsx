@@ -14,20 +14,22 @@ const MannerLevel = (props: MannerLevelProps) => {
 
   return (
     <>
-      <LevelWrapper>
-        <Level>
-          <ClickArea onClick={onClick}>
-            <Text>LV.{level}</Text>
-          </ClickArea>
-          {isBalloon &&
-            <BubbleWrapper $position={position}>
-              <Bubble>
-                <P>클릭해서 매너키워드 보기</P>
-              </Bubble>
-            </BubbleWrapper>
-          }
-        </Level>
-      </LevelWrapper>
+      {level &&
+        <LevelWrapper>
+          <Level>
+            <ClickArea onClick={onClick}>
+              <Text>LV.{level}</Text>
+            </ClickArea>
+            {isBalloon &&
+              <BubbleWrapper $position={position}>
+                <Bubble>
+                  <P>클릭해서 매너키워드 보기</P>
+                </Bubble>
+              </BubbleWrapper>
+            }
+          </Level>
+        </LevelWrapper>
+      }
     </>
   );
 };

@@ -18,6 +18,7 @@ interface InputProps {
   fontSize?: string;
   borderRadius?: string;
   onBlur?: () => void;
+  maxLeng?: number;
 }
 
 const Input = (props: InputProps) => {
@@ -36,6 +37,7 @@ const Input = (props: InputProps) => {
     fontSize,
     borderRadius,
     onBlur,
+    maxLeng
   } = props;
 
   const handleChange = (event: any) => {
@@ -57,6 +59,7 @@ const Input = (props: InputProps) => {
           $fontSize={fontSize || "regular20"}
           $borderRadius={borderRadius || "15px"}
           onBlur={onBlur}
+          maxLength={maxLeng}
         />
       ) : (
         <Box>
@@ -117,15 +120,15 @@ const StyledInput = styled.input<InputProps>`
     isValid === undefined
       ? `1px solid #b5b5b5`
       : isValid === true
-      ? `1px solid ${theme.colors.purple300}`
-      : `1px solid ${theme.colors.error100}`};
+        ? `1px solid ${theme.colors.purple300}`
+        : `1px solid ${theme.colors.error100}`};
   color: ${theme.colors.black};
   ${(props) => props.theme.fonts.regular16}
 
   &:focus {
     outline: none;
     border: ${({ isValid }) =>
-      isValid === undefined && `1px solid ${theme.colors.purple300}`};
+    isValid === undefined && `1px solid ${theme.colors.purple300}`};
   }
 
   &:disabled {

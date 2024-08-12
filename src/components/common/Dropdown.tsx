@@ -1,10 +1,10 @@
 import Image from "next/image";
-import { Dispatch, forwardRef } from "react";
+import { Dispatch, forwardRef, useState } from "react";
 import { theme } from "@/styles/theme";
 import styled from "styled-components";
 
 interface ListProps {
-    id: number;
+    id: number | null;
     value: string;
 };
 
@@ -15,14 +15,43 @@ interface DropdownProps {
     width: string;
     open: boolean;
     setOpen: Dispatch<React.SetStateAction<boolean>>;
-    onDropValue: (value: string) => void;
-    defaultValue: string;
+    onDropValue: (id: number | null) => void;
+    defaultValue: number | string | null;
 };
 
 const Dropdown = forwardRef(function Dropdown(props: DropdownProps, ref: React.ForwardedRef<HTMLDivElement>) {
     const { type, list, width, open, padding, setOpen, onDropValue, defaultValue } = props;
 
+    const initialItem = list.find(item => item.id === defaultValue) || list[0];
+    const [selectedValue, setSelectedValue] = useState(initialItem.value);
+
     const toggling = () => setOpen((prevState) => !prevState);
+
+    // const handleItemClick = (id: number | null) => {
+    //     const selectedItem = list.find(item => item.id === id);
+    //     if (selectedItem) {
+    //         setSelectedValue(selectedItem.value);
+    //         onDropValue(id);
+    //     }
+    // }
+    const handleItemClick = (id: number | null) => {
+        const selectedItem = list.find(item => item.id === id);
+        if (selectedItem) {
+            setSelectedValue(selectedItem.value);
+            onDropValue(id);
+        }
+        // const selectedItem = list.find(item => item.id === id);
+        // if (selectedItem) {
+        //     setSelectedValue(selectedItem.value);
+            
+        //     // id가 null인 경우에만 null을 부모 컴포넌트로 전달
+        //     if (id === null) {
+        //         onDropValue(null);
+        //     } else {
+        //         onDropValue(id);
+        //     }
+        // }
+    };
 
     return (
         <Wrapper
@@ -34,13 +63,13 @@ const Dropdown = forwardRef(function Dropdown(props: DropdownProps, ref: React.F
                 $width={width}
                 $padding={padding}>
                 <Title>
-                    {defaultValue}
+                    {selectedValue}
                 </Title>
                 <Image
                     src='/assets/icons/down_arrow.svg'
                     width={16}
                     height={9}
-                    alt='down-arrow' />
+                    alt='화살표' />
             </DropdownHeader>
             {open && (
                 <DropBox>
@@ -50,7 +79,10 @@ const Dropdown = forwardRef(function Dropdown(props: DropdownProps, ref: React.F
                     >
                         {list.map(data => (
                             <ListItem
-                                onClick={() => onDropValue(data.value)} key={data.id}
+                                // key={data.id}
+                                key={data.id !== null ? data.id : 'null'}
+                                // onClick={() => handleItemClick(data.id)}
+                                onClick={() => handleItemClick(data.id as number | null)}
                                 className={type}
                                 $type={type}
                                 $width={width}>
