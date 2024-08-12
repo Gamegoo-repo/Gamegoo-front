@@ -19,6 +19,7 @@ import { UserInfo } from "@/interface/profile";
 import { clearCurrentPost } from "@/redux/slices/postSlice";
 import { PostReq } from "@/interface/board";
 import Alert from "../common/Alert";
+import { useRouter } from "next/navigation";
 
 interface PostBoardProps {
     onClose: () => void;
@@ -36,6 +37,7 @@ const PostBoard = (props: PostBoardProps) => {
     const { onClose, onCompletedPosting } = props;
 
     const dispatch = useDispatch();
+    const router = useRouter();
 
     const isCompletedModal = useSelector((state: RootState) => state.modal.modalType);
     const currentPost = useSelector((state: RootState) => state.post.currentPost);
@@ -218,9 +220,9 @@ const PostBoard = (props: PostBoardProps) => {
                     icon="exclamation"
                     width={68}
                     height={58}
-                    content="로그아웃 되었습니다."
-                    alt="경고"
-                    onClose={() => setShowAlert(false)}
+                    content="로그아웃 되었습니다. 다시 로그인 해주세요."
+                    alt="로그인 필요"
+                    onClose={() => router.push("/")}
                 />}
 
             {isCompletedModal &&

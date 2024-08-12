@@ -33,6 +33,7 @@ import { UserInfo } from "@/interface/profile";
 import { deleteFriend, reqFriend } from "@/api/friends";
 import Alert from "../common/Alert";
 import { AlertProps } from "@/interface/modal";
+import { useRouter } from "next/navigation";
 
 interface ReadBoardProps {
   onClose: () => void;
@@ -43,6 +44,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   const { onClose, postId } = props;
 
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const [isPost, setIsPost] = useState<MemberPost | NonMemberPost>();
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
@@ -62,6 +64,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     content: "",
     alt: "",
     onClose: () => { },
+    buttonText: "",
   });
 
   const isModalType = useSelector((state: RootState) => state.modal.modalType);
@@ -76,10 +79,10 @@ const ReadBoard = (props: ReadBoardProps) => {
   }, []);
 
   /* 로그아웃 시, 비회원 접근 시 알럿 props 설정 함수 */
-  const logoutMessage = "로그아웃 되었습니다.";
+  const logoutMessage = "로그아웃 되었습니다. 다시 로그인 해주세요.";
   const loginRequiredMessage = "로그인이 필요한 서비스입니다.";
 
-  const showAlertWithContent = (content: string) => {
+  const showAlertWithContent = (content: string, handleAlertClose: () => void, btnText: string) => {
     setAlertProps({
       icon: "exclamation",
       width: 68,
@@ -87,6 +90,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       content: content,
       alt: "경고",
       onClose: handleAlertClose,
+      buttonText: btnText
     });
     setShowAlert(true);
   };
@@ -95,7 +99,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   const handleReportModal = () => {
     // 신고하기 버튼 클릭 시점 토큰 만료
     if (!userInfo) {
-      return showAlertWithContent(logoutMessage);
+      return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
     }
 
     dispatch(setOpenModal('report'));
@@ -105,7 +109,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   /* 신고하기 */
   const handleReport = async () => {
     if (!userInfo) {
-      return showAlertWithContent(logoutMessage);
+      return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
     }
 
     if (!isPost || userInfo?.id === isPost?.memberId) return;
@@ -126,7 +130,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   /* 차단하기 */
   const handleBlock = async () => {
     if (!userInfo) {
-      return showAlertWithContent(logoutMessage);
+      return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
     }
 
     if (!isPost || userInfo?.id === isPost?.memberId) return;
@@ -144,7 +148,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   /* 차단 해제 */
   const handleUnblock = async () => {
     if (!userInfo) {
-      return showAlertWithContent(logoutMessage);
+      return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
     }
 
     if (!isPost || userInfo?.id === isPost?.memberId) return;
@@ -162,7 +166,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   /* 친구 추가 */
   const handleFriendAdd = async () => {
     if (!userInfo) {
-      return showAlertWithContent(logoutMessage);
+      return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
     }
 
     if (!isPost || userInfo?.id === isPost?.memberId) return;
@@ -185,7 +189,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   /* 친구 삭제 */
   const handleFriendDelete = async () => {
     if (!userInfo) {
-      return showAlertWithContent(logoutMessage);
+      return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
     }
 
     if (!isPost || userInfo?.id === isPost?.memberId) return;
@@ -205,7 +209,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   /* 매너레벨 박스 열기 */
   const handleMannerLevelBoxOpen = () => {
     if (!userInfo) {
-      return showAlertWithContent(loginRequiredMessage);
+      return showAlertWithContent(loginRequiredMessage, () => setShowAlert(false), "확인");
     }
 
     setIsMannerLevelBoxOpen((prevState) => !prevState);
@@ -221,7 +225,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   /* 게시글 수정 */
   const handleEdit = async () => {
     if (!userInfo) {
-      return showAlertWithContent(logoutMessage);
+      return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
     }
 
     if (userInfo?.id !== isPost?.memberId) return;
@@ -236,7 +240,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   /* 게시글 삭제 */
   const handleDelete = async () => {
     if (!userInfo) {
-      return showAlertWithContent(logoutMessage);
+      return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
     }
 
     if (userInfo?.id !== isPost?.memberId) return;
@@ -252,7 +256,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   /* 더보기 버튼 토글 */
   const handleMoreBoxToggle = () => {
     if (!userInfo) {
-      return showAlertWithContent(loginRequiredMessage);
+      return showAlertWithContent(loginRequiredMessage, () => setShowAlert(false), "확인");
     }
 
     setIsMoreBoxOpen((prevState) => !prevState);
@@ -378,7 +382,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   /* 채팅방 연결 */
   const handleChatStart = () => {
     if (!userInfo) {
-      return showAlertWithContent(loginRequiredMessage);
+      return showAlertWithContent(loginRequiredMessage, () => setShowAlert(false), "확인");
     }
 
     onClose();

@@ -20,6 +20,7 @@ import { BoardList } from "@/interface/board";
 import { getUserInfo } from "@/api/member";
 import { UserInfo } from "@/interface/profile";
 import Alert from "@/components/common/Alert";
+import { useRouter } from "next/navigation";
 
 const ITEMS_PER_PAGE = 20;
 
@@ -41,6 +42,7 @@ const BoardPage = () => {
   const tierRef = useRef<HTMLDivElement>(null);
 
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const isPostingModal = useSelector((state: RootState) => state.modal.postingModal);
   const isCompletedPosting = useSelector((state: RootState) => state.modal.modalType);
@@ -217,9 +219,9 @@ const BoardPage = () => {
           icon="exclamation"
           width={68}
           height={58}
-          content="로그아웃되었습니다."
+          content="로그아웃 되었습니다. 다시 로그인 해주세요."
           alt="로그인 필요"
-          onClose={() => setShowAlert(false)}
+          onClose={() => router.push("/")}
         />
       )}
       {isPostingModal &&

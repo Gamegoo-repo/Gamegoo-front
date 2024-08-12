@@ -4,7 +4,7 @@ import Image from "next/image";
 import { AlertProps } from "@/interface/modal";
 
 const Alert = (props: AlertProps) => {
-    const { icon, width, height, content, alt, onClose } = props;
+    const { icon, width, height, content, alt, onClose,buttonText } = props;
 
     return (
         <Overlay>
@@ -18,7 +18,7 @@ const Alert = (props: AlertProps) => {
                     <Text>{content}</Text>
                 </TextWrapper>
                 <ButtonWrapper>
-                    <Button onClick={onClose}>확인</Button>
+                    <Button onClick={onClose}>{buttonText}</Button>
                 </ButtonWrapper>
             </Wrapper>
         </Overlay>
