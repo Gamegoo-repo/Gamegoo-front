@@ -35,6 +35,7 @@ const BoardPage = () => {
   const [selectedTier, setSelectedTier] = useState<string | null>("티어 선택");
   const [userInfo, setUserInfo] = useState<UserInfo>();
   const [showAlert, setShowAlert] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   const gameModeRef = useRef<HTMLDivElement>(null);
   const tierRef = useRef<HTMLDivElement>(null);
@@ -167,7 +168,8 @@ const BoardPage = () => {
     selectedTier,
     isPosition,
     micStatus,
-    isCompletedPosting
+    isCompletedPosting,
+    refresh
   ]);
 
   /* 페이지네이션 이전 클릭 */
@@ -204,6 +206,10 @@ const BoardPage = () => {
     getUserData();
   }, [])
 
+  const handleRefresh = () => {
+    setRefresh((prevStatus) => !prevStatus);
+  }
+
   return (
     <>
       {showAlert && (
@@ -227,6 +233,7 @@ const BoardPage = () => {
             <FirstRow>
               <Title>게시판</Title>
               <RefreshImage
+                onClick={handleRefresh}
                 src="/assets/icons/refresh.svg"
                 width={30}
                 height={27}
@@ -306,7 +313,9 @@ const BoardPage = () => {
             }
             <Footer>
               <ChatBoxContent>
-                <ChatButton count={3} />
+                <ChatButton
+                  user={userInfo}
+                  count={3} />
               </ChatBoxContent>
             </Footer>
           </BoardContent>
@@ -322,6 +331,7 @@ const Wrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
+  padding-top: 140px;
 `;
 
 const BoardContent = styled.div`

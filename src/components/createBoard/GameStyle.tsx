@@ -108,6 +108,6 @@ const AddGameStyle = styled.p`
   padding: 8px 12px;
   margin-top: 15px;
   border-radius: 17px;
-  background: ${theme.colors.purple300};
+   background: ${theme.colors.purple300};
   cursor: pointer;
-`;
+`; 

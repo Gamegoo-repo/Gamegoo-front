@@ -87,6 +87,12 @@ const Table = (props: TableProps) => {
         }
     };
 
+    /* 다른 사람 프로필 이동 */
+    const handleUserProfilePage = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        router.push('/user')
+    }
+
     return (
         <>
             {showAlert && <Alert
@@ -98,7 +104,7 @@ const Table = (props: TableProps) => {
                 onClose={() => setShowAlert(false)}
             />}
             {isReadingModal &&
-                <ReadBoard onClose={handlePostClose} postId={isBoardId} gameType="canyon" />
+                <ReadBoard onClose={handlePostClose} postId={isBoardId} />
             }
             <TableWrapper>
                 <TableHead>
@@ -113,7 +119,7 @@ const Table = (props: TableProps) => {
                         return (
                             <Row key={data.boardId}
                                 onClick={() => handlePostOpen(data.boardId)}>
-                                <First className="table_width">
+                                <First className="table_width" onClick={handleUserProfilePage}>
                                     <Image
                                         src={setProfileImg(data.profileImage)}
                                         width={50}

@@ -1,6 +1,5 @@
 "use client";
 import StyledJsxRegistry from "./registry";
-
 import GlobalStyles from "@/styles/GlobalStyles";
 import { ThemeProvider } from "styled-components";
 import { theme } from "@/styles/theme";

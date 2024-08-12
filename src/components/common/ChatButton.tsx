@@ -3,15 +3,23 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import ChatWindow from "../chat/ChatWindow";
+import { UserInfo } from "@/interface/profile";
+import Alert from "./Alert";
 
 interface msgCountProps {
   count: number;
+  user: UserInfo | undefined;
 }
 
 const ChatButton = (props: msgCountProps) => {
+  const { count, user } = props;
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
 
   const toggleChat = () => {
+    if (!user) {
+      return setShowAlert(true);
+    }
     setIsChatOpen((prevState) => !prevState);
   };
 
@@ -32,20 +40,32 @@ const ChatButton = (props: msgCountProps) => {
   }, [isChatOpen]);
 
   return (
-    <ChatBoxContent>
-      {isChatOpen && <ChatWindow onClose={handleChatWindowClose} />}
-      <MsgButton onClick={toggleChat}>
-        <Image
-          src="/assets/icons/chat_box.svg"
-          width={36}
-          height={34}
-          alt="채팅"
+    <>
+      {showAlert && (
+        <Alert
+          icon="exclamation"
+          width={68}
+          height={58}
+          content="로그인이 필요한 서비스입니다."
+          alt="경고"
+          onClose={() => setShowAlert(false)}
         />
-        <MsgCount>
-          <Count>{props.count}</Count>
-        </MsgCount>
-      </MsgButton>
-    </ChatBoxContent>
+      )}
+      <ChatBoxContent>
+        {isChatOpen && <ChatWindow onClose={handleChatWindowClose} />}
+        <MsgButton onClick={toggleChat}>
+          <Image
+            src="/assets/icons/chat_box.svg"
+            width={36}
+            height={34}
+            alt="채팅"
+          />
+          <MsgCount>
+            <Count>{count}</Count>
+          </MsgCount>
+        </MsgButton>
+      </ChatBoxContent>
+    </>
   );
 };
 

@@ -37,11 +37,10 @@ import { AlertProps } from "@/interface/modal";
 interface ReadBoardProps {
   onClose: () => void;
   postId: number;
-  gameType: 'canyon' | 'wind';
 }
 
 const ReadBoard = (props: ReadBoardProps) => {
-  const { onClose, postId, gameType } = props;
+  const { onClose, postId } = props;
 
   const dispatch = useDispatch();
 
@@ -340,6 +339,14 @@ const ReadBoard = (props: ReadBoardProps) => {
     getPostData();
   }, [isBlockedStatus, isFriendStatus, userInfo])
 
+  let gameType = '';
+  if (isPost?.mainPosition ||
+    isPost?.subPosition ||
+    isPost?.wantPosition) {
+    gameType = "canyon"
+  } else {
+    gameType = "wind"
+  }
 
   /* 유저 정보 api */
   useEffect(() => {
@@ -394,10 +401,10 @@ const ReadBoard = (props: ReadBoardProps) => {
                 left={776} />
             )}
             {isMannerLevelBoxOpen &&
-              <MannerLevelBox 
-              memberId={isPost.memberId}
-              level={isPost.mannerLevel}
-               top="14%"
+              <MannerLevelBox
+                memberId={isPost.memberId}
+                level={isPost.mannerLevel}
+                top="14%"
                 right="22%" />}
             <UpdatedDate>게시일 : {setPostingDateFormatter(isPost.createdAt)}</UpdatedDate>
             <UserSection>
