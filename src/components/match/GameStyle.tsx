@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Box from "../common/Box";
 import Toggle from "../common/Toggle";
@@ -26,9 +26,14 @@ const GameStyle = (props: GameStyleProps) => {
 
   const [isMike, setIsMike] = useState(mic);
   const [styledPopup, setStyledPopup] = useState(false);
-  const [selectedStyles, setSelectedStyles] = useState<GameStyle[]>(
-    gameStyleResponseDTOList
-  );
+  const [selectedStyles, setSelectedStyles] = useState<number[]>([]);
+
+  /* gameStyleResponseDTOList가 변경될 때 selectedStyles를 업데이트 */
+  useEffect(() => {
+    setSelectedStyles(
+      gameStyleResponseDTOList.map((style) => style.gameStyleId)
+    );
+  }, [gameStyleResponseDTOList]);
 
   const handleMike = () => {
     setIsMike(!isMike);
@@ -42,19 +47,25 @@ const GameStyle = (props: GameStyleProps) => {
     setStyledPopup(false);
   };
 
-  const handleSelectStyle = async (style: GameStyle) => {
-    const updatedStyles = selectedStyles.find(
-      (s) => s.gameStyleId === style.gameStyleId
-    )
-      ? selectedStyles.filter((s) => s.gameStyleId !== style.gameStyleId)
-      : selectedStyles.length < 3
-      ? [...selectedStyles, style]
-      : selectedStyles;
+  const handleSelectStyle = async (
+    style: number,
+    e: React.MouseEvent<HTMLElement, MouseEvent>
+  ) => {
+    const isSelected = selectedStyles.includes(style);
+    let updatedStyles: number[];
+
+    if (isSelected) {
+      updatedStyles = selectedStyles.filter((s) => s !== style);
+    } else {
+      if (selectedStyles.length < 3) {
+        updatedStyles = [...selectedStyles, style];
+      } else {
+        updatedStyles = [...selectedStyles.slice(1), style];
+      }
+    }
 
     setSelectedStyles(updatedStyles);
-
-    const gameStyleIdList = updatedStyles.map((s) => s.gameStyleId);
-    await putGameStyle(gameStyleIdList);
+    await putGameStyle(updatedStyles);
   };
 
   return (
@@ -62,14 +73,16 @@ const GameStyle = (props: GameStyleProps) => {
       <LeftLabel $profileType={profileType}>
         게임 스타일
         <GameBox $profileType={profileType}>
-          {selectedStyles.map((data, index) => (
-            <Box
-              key={index}
-              text={data.gameStyleName}
-              shape="round"
-              profileType={profileType}
-            />
-          ))}
+          {gameStyleResponseDTOList
+            .filter((style) => selectedStyles.includes(style.gameStyleId))
+            .map((style) => (
+              <Box
+                key={style.gameStyleId}
+                text={style.gameStyleName}
+                shape="round"
+                profileType={profileType}
+              />
+            ))}
           {profileType !== "other" && (
             <Div>
               <AddGameStyle
