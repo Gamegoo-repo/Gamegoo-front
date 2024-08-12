@@ -1,11 +1,13 @@
 /* 토큰 저장 */
 export const setToken = (accessToken: string, refreshToken: string, autoLogin: boolean) => {
-    if (autoLogin) {
-        localStorage.setItem('accessToken', accessToken);
-        localStorage.setItem('refreshToken', refreshToken);
-    } else {
-        sessionStorage.setItem('accessToken', accessToken);
-        sessionStorage.setItem('refreshToken', refreshToken);
+    if (typeof window !== 'undefined') {
+        if (autoLogin) {
+            localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('refreshToken', refreshToken);
+        } else {
+            sessionStorage.setItem('accessToken', accessToken);
+            sessionStorage.setItem('refreshToken', refreshToken);
+        }
     }
 };
 
