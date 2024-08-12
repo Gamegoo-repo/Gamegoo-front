@@ -17,6 +17,9 @@ interface UserState {
   tag: string;
   tier: string;
   rank: string;
+  mike: boolean;
+  mainP: string;
+  subP: string;
   updatedAt: string;
   gameStyleResponseDTOList: GameStyle[];
   championResponseDTOList: Champion[];
@@ -29,6 +32,9 @@ const initialState: UserState = {
   tag: '',
   tier: '',
   rank: '',
+  mike: false,
+  mainP: '',
+  subP: '',
   updatedAt: '',
   gameStyleResponseDTOList: [],
   championResponseDTOList: [],
