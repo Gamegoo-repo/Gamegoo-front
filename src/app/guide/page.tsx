@@ -3,26 +3,11 @@
 import styled from "styled-components";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import RadioCard from "@/components/common/RadioCard";
-import Dropdown from "@/components/common/Dropdown";
-import ChatButton from "@/components/common/ChatButton";
 import ConfirmModal from "@/components/common/ConfirmModal";
-import PositionCategory from "@/components/common/PositionCategory";
 import Toggle from "@/components/common/Toggle";
 import CompleteProfile from "@/components/match/CompleteProfile";
-
-const DROP_DATA1 = [
-  { id: 1, value: "솔로1" },
-  { id: 2, value: "솔로2" },
-  { id: 3, value: "솔로3" },
-];
-
-const DROP_DATA2 = [
-  { id: 1, value: "티어1" },
-  { id: 2, value: "티어2" },
-  { id: 3, value: "티어3" },
-];
 
 const Guide = () => {
   /* Input State */
@@ -45,11 +30,6 @@ const Guide = () => {
 
   /* Toggle */
   const [isOn, setisOn] = useState(false);
-
-  /* Dropdown State*/
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedDropOption, setSelectedDropOption] = useState("솔로 랭크");
 
   const handleOptionChange = (value: string) => {
     setIsSelected(value);
@@ -87,29 +67,6 @@ const Guide = () => {
     setIsPosition(value);
     setOpenPosition(false);
   };
-
-  /* Dropdown */
-  const handleDropValue = (value: string) => {
-    console.log(value);
-    setSelectedDropOption(value);
-    setIsDropdownOpen(false);
-  };
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      dropdownRef.current &&
-      !dropdownRef.current.contains(event.target as Node)
-    ) {
-      setIsDropdownOpen(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   return (
     <Layout>
@@ -193,35 +150,6 @@ const Guide = () => {
       />
       <p>Selected Option: {isSelected}</p>
 
-      <H2>Dropdown</H2>
-      <Dropdown
-        type="type1"
-        width="138px"
-        padding="16.5px 21px"
-        list={DROP_DATA1}
-        ref={dropdownRef}
-        setOpen={setIsDropdownOpen}
-        open={isDropdownOpen}
-        onDropValue={handleDropValue}
-        defaultValue={selectedDropOption}
-      />
-      <p>TYPE 1</p>
-
-      {/* <Dropdown
-        type="type2"
-        width="243px"
-        padding="16.5px 21px"
-        list={DROP_DATA2}
-        ref={dropdownRef}
-        setOpen={setIsDropdownOpen}
-        open={isDropdownOpen}
-        onDropValue={handleDropValue}
-        defaultValue={selectedDropOption} />
-      <p>TYPE 2</p> */}
-
-      <H2>Chat Box</H2>
-      <ChatButton count={3} />
-
       <H2>Confirm Modal</H2>
       <button
         style={{ border: "1px solid black", padding: "10px" }}
@@ -262,20 +190,6 @@ const Guide = () => {
         텍스트 모달 열기 버튼
       </button>
 
-      <H2>Position</H2>
-      <button
-        style={{ border: "1px solid black", padding: "10px" }}
-        onClick={() => setOpenPosition(true)}
-      >
-        포지션 열기 버튼
-      </button>
-      {openPosition && (
-        <PositionCategory
-          onClose={handlePositionClose}
-          onSelect={handlePosition}
-          boxName="position"
-        />
-      )}
       <H2>Toggle</H2>
       <Toggle isOn={isOn} onToggle={toggleHandler} />
       <H2>매칭완료 프로필</H2>

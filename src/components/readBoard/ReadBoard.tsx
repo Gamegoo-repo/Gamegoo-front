@@ -17,7 +17,7 @@ import GameStyle from "./GameStyle";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import MoreBox from "../common/MoreBox";
 import { MemberPost, NonMemberPost } from "@/interface/board";
-import { deletePost, editPost, getMemberPost, getNonMemberPost } from "@/api/board";
+import { deletePost, getMemberPost, getNonMemberPost } from "@/api/board";
 import LoadingSpinner from "../common/LoadingSpinner";
 import { setPostingDateFormatter } from "@/utils/custom";
 import { blockMember, getUserInfo, reportMember, unblockMember } from "@/api/member";
