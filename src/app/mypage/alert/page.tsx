@@ -73,13 +73,13 @@ const MyAlertPage = () => {
               />
             ))}
           </AlertList>
-          <Pagination
+          {/* <Pagination
             currentPage={currentPage}
             totalItems={EX_ALARM.length}
             itemsPerPage={itemsPerPage}
             pageButtonCount={pageButtonCount}
             onPageChange={handlePageChange}
-          />
+          /> */}
         </Alert>
       </MyAlertContent>
     </Wrapper>
