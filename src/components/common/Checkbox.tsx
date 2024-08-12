@@ -27,6 +27,7 @@ const Checkbox = (props: CheckboxProps) => {
   const [checked, setChecked] = useState<boolean>(isChecked);
 
   useEffect(() => {
+    if (typeof value === "number") return;
     setChecked(isChecked);
   }, [isChecked]);
 
@@ -36,6 +37,7 @@ const Checkbox = (props: CheckboxProps) => {
     if (onChange) {
       onChange(newValue);
     }
+    if (typeof value === "string") return;
     if (onArrayChange) {
       onArrayChange(value);
     }
