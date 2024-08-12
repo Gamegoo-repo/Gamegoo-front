@@ -67,8 +67,7 @@ const Container = styled.div<{
   $position: positionType | undefined;
   $profileType: profileType;
 }>`
-  width: ${({ $position }) => ($position ? "574px" : "796px")};
-  height: ${({ $position }) => ($position ? "214px" : "310px")};
+  width: ${({ $position }) => ($position ? "574px" : "885px")};
   padding: ${({ $position }) => ($position ? "13px 22px" : "28px")};
   display: flex;
   flex-direction: column;
@@ -135,8 +134,8 @@ const Box = styled.button<{
   $profileType: profileType;
 }>`
   display: flex;
-  height: ${({ $position }) => ($position ? "29px" : "40px")};
-  padding: ${({ $position }) => ($position ? "6px 20px" : "10px 25px")};
+  height: ${({ $position }) => ($position ? "29px" : "48px")};
+  padding: ${({ $position }) => ($position ? "6px 20px" : "12px 28px")};
   justify-content: center;
   align-items: center;
   border-radius: 59.263px;
@@ -144,7 +143,7 @@ const Box = styled.button<{
     selected ? theme.colors.purple100 : theme.colors.gray200};
   color: ${theme.colors.white};
   font-size: ${({ $position }) =>
-    $position ? theme.fonts.medium14 : theme.fonts.regular20};
+    $position ? theme.fonts.medium14 : theme.fonts.medium20};
 
   /* 프로필 미니 */
   ${({ $profileType }) =>

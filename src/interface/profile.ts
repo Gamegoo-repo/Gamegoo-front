@@ -17,6 +17,9 @@ export interface User {
   tag: string;
   tier: string;
   rank: string;
+  mike: boolean;
+  mainP: string;
+  subP: string;
   updatedAt: string;
   gameStyleResponseDTOList: GameStyle[];
   championResponseDTOList: Champion[];

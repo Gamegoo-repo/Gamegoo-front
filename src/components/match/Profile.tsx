@@ -17,23 +17,9 @@ import PositionCategory from "../common/PositionCategory";
 import MoreBox from "../common/MoreBox";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import { User } from "@/interface/profile";
+import { toLowerCaseString } from "@/utils/string";
 
 type profileType = "fun" | "hard" | "other" | "me";
-
-interface Champion {
-  id: number;
-  value: string;
-}
-
-// interface User {
-//   image: string;
-//   account: string;
-//   tag: string;
-//   tier: string;
-//   mic: boolean;
-//   champions?: Champion[];
-//   gameStyleResponseDTOList: string[];
-// }
 
 interface Profile {
   user: User;
@@ -41,8 +27,7 @@ interface Profile {
 }
 
 const Profile: React.FC<Profile> = ({ profileType, user }) => {
-  // const [isMike, setIsMike] = useState(user.mic);
-  const [isMike, setIsMike] = useState(false);
+  const [isMike, setIsMike] = useState(user.mike);
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
   const [isReportBoxOpen, setIsReportBoxOpen] = useState(false);
   const [isBlockBoxOpen, setIsBlockBoxOpen] = useState(false);
@@ -61,7 +46,7 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
 
   /* 선택된 현재 프로필 이미지 */
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(
-    parseInt(user.profileImg.slice(-1))
+    user.profileImg
   );
 
   /* 프로필 이미지 리스트 중 클릭시*/
@@ -190,10 +175,12 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
               <Span>{`#${user.tag}`}</Span>
               <Rank>
                 <Image
-                  src={`/assets/images/rank_${user.tier}.svg`}
+                  src={`/assets/images/tier/${
+                    toLowerCaseString(user.tier) || "ur"
+                  }.svg`}
                   width={52}
                   height={52}
-                  alt="B3"
+                  alt="tier"
                 />
                 {user.tier}
               </Rank>

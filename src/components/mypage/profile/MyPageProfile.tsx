@@ -4,6 +4,7 @@ import { Profile } from "@/interface/profile";
 import { setUserProfile, setUserProfileImg } from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
+import { toLowerCaseString } from "@/utils/string";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -98,10 +99,12 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
       <Div>
         <Top>
           <Image
-            src={`/assets/images/rank_${user.tier || "b3"}.svg`}
+            src={`/assets/images/tier/${
+              toLowerCaseString(user.tier) || "ur"
+            }.svg`}
             width={43}
             height={43}
-            alt="profile"
+            alt="tier"
           />
           {user.gameName}
           <Tag>#{user.tag}</Tag>
