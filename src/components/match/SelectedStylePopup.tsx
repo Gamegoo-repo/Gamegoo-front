@@ -7,20 +7,12 @@ import styled, { css } from "styled-components";
 type profileType = "me" | "other" | "none" | "mini";
 type positionType = "board";
 
-interface GameStyle {
-  gameStyleId: number;
-  gameStyleName: string;
-}
-
 interface SelectedStylePopupProps {
   profileType: profileType;
   onClose: () => void;
-  selectedStyles: GameStyle[];
+  selectedStyles: number[];
   onSelectStyle: (
-    style: GameStyle,
-    // selectedStyles: number[];
-    // onSelectStyle: (
-    //   style: number,
+    style: number,
     event: React.MouseEvent<HTMLElement, MouseEvent>
   ) => void;
   position?: positionType;
@@ -51,21 +43,10 @@ const SelectedStylePopup: React.FC<SelectedStylePopupProps> = ({
             $position={position}
             $profileType={profileType}
             key={data.gameStyleId}
-            onClick={(e) => onSelectStyle(data, e)}
-            selected={selectedStyles.some(
-              (s) => s.gameStyleId === data.gameStyleId
-            )}
+            onClick={(e) => onSelectStyle(data.gameStyleId, e)}
+            selected={selectedStyles.some((s) => s === data.gameStyleId)}
           >
             {data.gameStyleName}
-            {/* <Boxs $position={position}>
-        {GAME_STYLE.map((style) => (
-          <Box
-            $position={position}
-            key={style.id}
-            selected={selectedStyles.includes(style.id)}
-            onClick={(e) => onSelectStyle(style.id, e)}
-          >
-            {style.text} */}
           </Box>
         ))}
       </Boxs>
