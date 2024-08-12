@@ -6,15 +6,9 @@ interface ReportInterface {
     contents: string;
 }
 
-let token = JSON.stringify(localStorage.getItem('refreshToken'));
-
-const headers = {
-    Authorization: `Bearer ${token}`
-};
-
 export const getUserInfo = async () => {
     try {
-        const response = await AuthAxios.get("/v1/member/profile", { headers });
+        const response = await AuthAxios.get("/v1/member/profile");
         console.log("유저 데이터 성공:", response.data);
         return response.data;
     } catch (error) {

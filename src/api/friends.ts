@@ -1,14 +1,8 @@
 import { AuthAxios } from "./auth";
 
-let token = JSON.stringify(localStorage.getItem('refreshToken'));
-
-const headers = {
-    Authorization: `Bearer ${token}`
-};
-
 export const reqFriend = async (memberId: number) => {
     try {
-        const response = await AuthAxios.post(`/v1/friends/request/${memberId}`, { headers });
+        const response = await AuthAxios.post(`/v1/friends/request/${memberId}`);
         console.log("친구 요청 완료:", response.data);
         return response.data;
     } catch (error) {

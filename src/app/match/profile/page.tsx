@@ -33,7 +33,7 @@ const ProfilePage = () => {
     };
 
     fetchProfile();
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (
