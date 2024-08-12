@@ -41,7 +41,7 @@ export function setProfileImg(profile: number) {
 export function setPositionImg(position: number) {
     switch (position) {
         case 0:
-            return '/assets/icons/position_random_purple.svg';
+            return '/assets/icons/position_all_purple.svg';
         case 1:
             return '/assets/icons/position_top_purple.svg';
         case 2:
@@ -53,7 +53,7 @@ export function setPositionImg(position: number) {
         case 5:
             return '/assets/icons/position_supporter_purple.svg';
         default:
-            return '/assets/icons/position_random_purple.svg';
+            return '/assets/icons/position_all_purple.svg';
     };
 };
 

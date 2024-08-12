@@ -4,11 +4,10 @@ import { useState } from "react";
 import PositionCategory from "../common/PositionCategory";
 
 interface PositionBoxProps {
-  status: "posting" | "reading" | "editing";
   onPositionChange?: (newPositionValue: PositionState) => void;
   main: number | undefined;
   sub: number | undefined;
-  want: number;
+  want: number | undefined;
 }
 
 type Position = "main" | "sub" | "want";
@@ -16,20 +15,22 @@ type Position = "main" | "sub" | "want";
 export interface PositionState {
   main: number | undefined;
   sub: number | undefined;
-  want: number;
+  want: number | undefined;
 }
 
 const PositionBox = (props: PositionBoxProps) => {
-  const { status, onPositionChange, main, sub, want } = props;
+  const { onPositionChange, main, sub, want } = props;
   const [selectedBox, setSelectedBox] = useState("");
   const [openPosition, setOpenPosition] = useState<Position | null>(null);
   const [positionValue, setPositionValue] = useState<PositionState>({
     main: main,
     sub: sub,
-    want: 0,
+    want: want,
   });
 
   const handleCategoryButtonClick = (positionId: number) => {
+    console.log(positionId)
+
     if (selectedBox) {
       const newPositionValue = {
         ...positionValue,
@@ -42,10 +43,10 @@ const PositionBox = (props: PositionBoxProps) => {
     }
   };
 
-  const handlePositionImgSet = (positionId: number) => {
+  const handlePositionImgSet = (positionId: number | undefined) => {
     switch (positionId) {
       case 0:
-        return "/assets/icons/position_random_purple.svg";
+        return "/assets/icons/position_all_purple.svg";
       case 1:
         return "/assets/icons/position_top_purple.svg";
       case 2:
@@ -57,7 +58,7 @@ const PositionBox = (props: PositionBoxProps) => {
       case 5:
         return "/assets/icons/position_supporter_purple.svg";
       default:
-        return "/assets/icons/position_random_purple.svg";
+        return "/assets/icons/position_all_purple.svg";
     }
   };
 
@@ -82,10 +83,7 @@ const PositionBox = (props: PositionBoxProps) => {
           <StyledImage
             $status={status}
             onClick={() => handleBoxClick("main")}
-            src={
-              handlePositionImgSet(
-                status === "posting" ? positionValue.main : main
-              )}
+            src={handlePositionImgSet(positionValue.main)}
             width={35}
             height={34}
             alt="메인 포지션"
@@ -103,13 +101,10 @@ const PositionBox = (props: PositionBoxProps) => {
           <StyledImage
             $status={status}
             onClick={() => handleBoxClick("sub")}
-            src={
-              handlePositionImgSet(
-                status === "posting" ? positionValue.sub : sub
-              )}
+            src={handlePositionImgSet(positionValue.sub)}
             width={35}
             height={34}
-            alt="서브 포지션"
+            alt="부 포지션"
           />
           {openPosition === "sub" && (
             <PositionCategory
@@ -125,10 +120,7 @@ const PositionBox = (props: PositionBoxProps) => {
         <StyledImage
           $status={status}
           onClick={() => handleBoxClick("want")}
-          src={
-            handlePositionImgSet(
-              status === "posting" ? positionValue.want : want
-            )}
+          src={handlePositionImgSet(positionValue.want)}
           width={35}
           height={34}
           alt="찾는 포지션"

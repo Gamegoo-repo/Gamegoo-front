@@ -11,7 +11,7 @@ interface UserProps {
 
 const User = (props: UserProps) => {
     const { account, tag, tier } = props;
-console.log(tier)
+
     return (
         <Wrapper>
             <UserAccount>

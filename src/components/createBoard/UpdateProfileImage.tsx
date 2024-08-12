@@ -16,6 +16,7 @@ const UpdateProfileImage = (props: FileInputProps) => {
         onImageClick,
         selectedImageIndex
     } = props;
+
     return (
         <Wrapper>
             {selectedImageIndex &&

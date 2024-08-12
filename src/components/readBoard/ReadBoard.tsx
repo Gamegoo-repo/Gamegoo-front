@@ -394,7 +394,11 @@ const ReadBoard = (props: ReadBoardProps) => {
                 left={776} />
             )}
             {isMannerLevelBoxOpen &&
-              <MannerLevelBox memberId={isPost.memberId} top="14%" right="22%" />}
+              <MannerLevelBox 
+              memberId={isPost.memberId}
+              level={isPost.mannerLevel}
+               top="14%"
+                right="22%" />}
             <UpdatedDate>게시일 : {setPostingDateFormatter(isPost.createdAt)}</UpdatedDate>
             <UserSection>
               <UserLeft>
@@ -431,7 +435,6 @@ const ReadBoard = (props: ReadBoardProps) => {
               <PositionSection>
                 <Title>포지션</Title>
                 <PositionBox
-                  status="reading"
                   main={isPost.mainPosition}
                   sub={isPost.subPosition}
                   want={isPost.wantPosition} />

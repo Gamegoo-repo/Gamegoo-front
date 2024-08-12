@@ -15,9 +15,10 @@ import { setOpenModal } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
 import { editPost, postBoard } from "@/api/board";
 import { getUserInfo } from "@/api/member";
-import { GameStyleList, UserInfo } from "@/interface/profile";
+import { UserInfo } from "@/interface/profile";
 import { clearCurrentPost } from "@/redux/slices/postSlice";
 import { PostReq } from "@/interface/board";
+import Alert from "../common/Alert";
 
 interface PostBoardProps {
     onClose: () => void;
@@ -45,21 +46,25 @@ const PostBoard = (props: PostBoardProps) => {
     const dropdownRef = useRef<HTMLDivElement>(null);
     const [userInfo, setUserInfo] = useState<UserInfo>();
     const [selectedImageIndex, setSelectedImageIndex] = useState<number | undefined>(
-        currentPost?.profileImage || userInfo?.profileImg
+        currentPost?.profileImage ?? userInfo?.profileImg
     );
     const [selectedDropOption, setSelectedDropOption] = useState<number>(
         currentPost?.gameMode || 1
     );
     const [positionValue, setPositionValue] = useState<PositionState | undefined>({
-        main: currentPost?.mainPosition || userInfo?.mainP,
-        sub: currentPost?.subPosition || userInfo?.subP,
-        want: currentPost?.wantPosition || 1,
+        main: currentPost?.mainPosition || userInfo?.mainP || 0,
+        sub: currentPost?.subPosition || userInfo?.subP || 0,
+        want: currentPost?.wantPosition || 0,
     });
+
     const [isMicOn, setIsMicOn] = useState<boolean>(currentPost?.mike || false);
-    const [selectedStyleIds, setSelectedStyleIds] = useState<number[] | GameStyleList[] | undefined>(
-        currentPost?.gameStyles || userInfo?.gameStyleResponseDTOList
+    const gameStyleIds = userInfo?.gameStyleResponseDTOList?.map(item => item.gameStyleId) || [];
+    const [selectedStyleIds, setSelectedStyleIds] = useState<number[]>(
+        currentPost?.gameStyles ?? gameStyleIds
     );
     const [textareaValue, setTextareaValue] = useState<string>(currentPost?.contents || '');
+    const [showAlert, setShowAlert] = useState(false);
+
 
     useEffect(() => {
         if (!!currentPost) {
@@ -71,12 +76,26 @@ const PostBoard = (props: PostBoardProps) => {
                 want: currentPost.wantPosition,
             });
 
+            setSelectedImageIndex(currentPost.profileImage);
             setIsMicOn(currentPost.mike);
             setSelectedStyleIds(currentPost.gameStyles);
-            setTextareaValue(currentPost.contents || '');
-            setSelectedImageIndex(currentPost.profileImage);
+            setTextareaValue(currentPost.contents);
         }
     }, [currentPost]);
+
+    /* userInfo가 업데이트된 후 상태 업데이트 */
+    useEffect(() => {
+        if (!!userInfo && !currentPost) {
+            setPositionValue({
+                main: userInfo.mainP ? userInfo.mainP : 0,
+                sub: userInfo.subP ? userInfo.subP : 0,
+                want: 0,
+            })
+            setSelectedImageIndex(userInfo.profileImg);
+            const ids = userInfo?.gameStyleResponseDTOList?.map(item => item.gameStyleId) || [];
+            setSelectedStyleIds(ids);
+        }
+    }, [userInfo, currentPost]);
 
     /* 프로필 이미지 리스트 중 클릭시 */
     const handleImageClick = (index: number) => {
@@ -87,7 +106,8 @@ const PostBoard = (props: PostBoardProps) => {
     };
 
     /* 큐타입 선택 */
-    const handleDropValue = (id: number) => {
+    const handleDropValue = (id: number | null) => {
+        if (!id) return;
         setSelectedDropOption(id);
         setIsDropdownOpen(false);
     };
@@ -130,11 +150,21 @@ const PostBoard = (props: PostBoardProps) => {
     /* 글쓰기 */
     const handlePost = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
-        if (!selectedImageIndex
-            || !selectedStyleIds
-            || !positionValue
-        ) return;
+        if (!userInfo) {
+            return setShowAlert(true);
+        }
+        if (
+            selectedImageIndex === undefined ||
+            selectedDropOption === undefined ||
+            !positionValue ||
+            positionValue.main === undefined ||
+            positionValue.sub === undefined ||
+            positionValue.want === undefined ||
+            selectedStyleIds.length === 0 ||
+            textareaValue.trim() === ""
+        ) {
+            return;
+        }
 
         const params = {
             boardProfileImage: selectedImageIndex,
@@ -153,10 +183,6 @@ const PostBoard = (props: PostBoardProps) => {
         }
 
         if (!currentPost) {
-
-            // if (selectedStyleIds.length === 0 || textareaValue.trim() == "") {
-            //     return;
-            // }
 
             try {
                 await postBoard(params);
@@ -182,20 +208,21 @@ const PostBoard = (props: PostBoardProps) => {
         getUserData();
     }, [])
 
-    /* userInfo가 업데이트된 후 selectedImageIndex 상태 업데이트 */
-    useEffect(() => {
-        if (userInfo) {
-            setSelectedImageIndex(currentPost?.profileImage || userInfo.profileImg);
-            setSelectedStyleIds(currentPost?.gameStyles || userInfo.gameStyleResponseDTOList);
-        }
-    }, [userInfo, currentPost]);
-
-
     return (
         <CRModal
             type='posting'
             onClose={handleModalClose}
         >
+            {showAlert &&
+                <Alert
+                    icon="exclamation"
+                    width={68}
+                    height={58}
+                    content="로그아웃 되었습니다."
+                    alt="경고"
+                    onClose={() => setShowAlert(false)}
+                />}
+
             {isCompletedModal &&
                 <ConfirmModal
                     width="540px"
@@ -247,27 +274,18 @@ const PostBoard = (props: PostBoardProps) => {
                 <PositionSection>
                     <Title className="positionTitle">포지션</Title>
                     <PositionBox
-                        status={!!currentPost ? "editing" : "posting"}
                         onPositionChange={handlePositionChange}
-                        main={positionValue.main}
-                        sub={positionValue.sub}
-                        want={positionValue.want}
+                        main={positionValue?.main}
+                        sub={positionValue?.sub}
+                        want={positionValue?.want}
                     />
                 </PositionSection>
                 <StyleSection>
                     <Title className="gameStyleTitle">게임 스타일</Title>
                     {userInfo && (
                         <GameStyle
-                            type={!!currentPost ? "editing" : "posting"}
-                            setSelectedIds={setSelectedStyleIds}
                             selectedIds={selectedStyleIds}
-                            gameStyles={
-                                currentPost ?
-                                    currentPost.gameStyles
-                                    :
-                                    userInfo.gameStyleResponseDTOList
-                            }
-                        />
+                            setSelectedStyleIds={setSelectedStyleIds} />
                     )}
                 </StyleSection>
                 <MemoSection>

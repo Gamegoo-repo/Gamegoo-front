@@ -28,9 +28,9 @@ const HomePage = () => {
             return (
               <ContentWrapper
                 key={content.id}
+                onClick={() => router.push(content.pathname)}
               >
-                <StyledImage
-                  onClick={() => router.push(content.pathname)}
+                <Image
                   src={content.image}
                   width={0}
                   height={0}
@@ -83,9 +83,6 @@ const Main = styled.main`
 
 const ContentWrapper = styled.div`
   position: relative;
-`;
-
-const StyledImage = styled(Image)`
   cursor: pointer;
 `;
 

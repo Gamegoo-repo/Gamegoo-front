@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { setCloseReadingModal, setOpenReadingModal } from "@/redux/slices/modalSlice";
 import { useRouter } from "next/navigation";
+import Alert from "../common/Alert";
 
 interface TableTitleProps {
     id: number;
@@ -38,7 +39,8 @@ interface TableProps {
 const Table = (props: TableProps) => {
     const { title, content } = props;
 
-    const [isBoardId, setIsBoardId] = useState<number>(0);
+    const [isBoardId, setIsBoardId] = useState(0);
+    const [showAlert, setShowAlert] = useState(false);
 
     const isReadingModal = useSelector((state: RootState) => state.modal.readingModal);
 
@@ -47,6 +49,12 @@ const Table = (props: TableProps) => {
 
     /* 게시글 열기 */
     const handlePostOpen = (id: number) => {
+        // const exists = content.some(board => board.boardId === id);
+        // console.log(exists)
+        // if (!exists) {
+        //     return setShowAlert(true);
+        // }
+
         dispatch(setOpenReadingModal());
         setIsBoardId(id);
     };
@@ -81,6 +89,14 @@ const Table = (props: TableProps) => {
 
     return (
         <>
+            {showAlert && <Alert
+                icon="trash"
+                width={45}
+                height={50}
+                content="해당 글은 삭제된 글입니다."
+                alt="삭제된 글"
+                onClose={() => setShowAlert(false)}
+            />}
             {isReadingModal &&
                 <ReadBoard onClose={handlePostClose} postId={isBoardId} gameType="canyon" />
             }

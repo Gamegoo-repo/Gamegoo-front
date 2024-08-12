@@ -289,9 +289,13 @@ const BoardPage = () => {
               </SecondBlock>
             </SecondRow>
             <Main>
-              <Table title={BOARD_TITLE} content={boardList} />
+              {boardList?.length > 0 ? (
+                <Table title={BOARD_TITLE} content={boardList} />
+              ) : (
+                <p>데이터가 없습니다.</p>
+              )}
             </Main>
-            {boardList.length > 0 &&
+            {boardList?.length > 0 &&
               <Pagination
                 currentPage={currentPage}
                 hasMoreItems={hasMoreItems}

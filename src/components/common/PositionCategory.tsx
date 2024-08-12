@@ -1,6 +1,6 @@
 import { theme } from "@/styles/theme";
 import styled from "styled-components";
-import Random from "../../../public/assets/icons/position_random_unclicked.svg";
+import All from "../../../public/assets/icons/position_all_unclicked.svg";
 import Top from "../../../public/assets/icons/position_top_unclicked.svg";
 import Jungle from "../../../public/assets/icons/position_jungle_unclicked.svg";
 import Mid from "../../../public/assets/icons/position_mid_unclicked.svg";
@@ -24,22 +24,22 @@ const PositionCategory = (props: PositionComponentProps) => {
   return (
     <Wrapper>
       <Box>
-        <RandomButton onClick={() => handlePositionCategory(1)}>
-          <Random />
-        </RandomButton>
-        <TopButton onClick={() => handlePositionCategory(2)}>
+        <AllButton onClick={() => handlePositionCategory(0)}>
+          <All />
+        </AllButton>
+        <TopButton onClick={() => handlePositionCategory(1)}>
           <Top />
         </TopButton>
-        <JungleButton onClick={() => handlePositionCategory(3)}>
+        <JungleButton onClick={() => handlePositionCategory(2)}>
           <Jungle />
         </JungleButton>
-        <MidButton onClick={() => handlePositionCategory(4)}>
+        <MidButton onClick={() => handlePositionCategory(3)}>
           <Mid />
         </MidButton>
-        <OneDealButton onClick={() => handlePositionCategory(5)}>
+        <OneDealButton onClick={() => handlePositionCategory(4)}>
           <OndDeal />
         </OneDealButton>
-        <SupporterButton onClick={() => handlePositionCategory(6)}>
+        <SupporterButton onClick={() => handlePositionCategory(5)}>
           <Supporter />
         </SupporterButton>
       </Box>
@@ -89,7 +89,7 @@ const Box = styled.div`
   }
 `;
 
-const RandomButton = styled.button`
+const AllButton = styled.button`
   &:hover path {
     stroke: ${theme.colors.purple200};
   }

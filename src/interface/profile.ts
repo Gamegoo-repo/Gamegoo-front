@@ -32,7 +32,7 @@ export interface ChampionList {
 
 export interface UserInfo {
   id: number;
-  isAgree: number;
+  isAgree: boolean;
   isBlind: boolean;
   mainP: number;
   subP: number;
@@ -46,5 +46,6 @@ export interface UserInfo {
   updatedAt: string,
   gameStyleResponseDTOList: GameStyleList[];
   championResponseDTOList: ChampionList[];
+  loginType: string;
 }
 
