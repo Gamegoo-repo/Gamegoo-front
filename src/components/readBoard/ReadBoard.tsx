@@ -212,7 +212,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   };
 
   /* 신고하기 사유 */
-  const handleCheckboxChange = (checked: number|) => {
+  const handleCheckboxChange = (checked: number) => {
     setCheckedItems((prev) =>
       prev.includes(checked) ? prev.filter((c) => c !== checked) : [...prev, checked]
     );
