@@ -4,14 +4,13 @@ import styled from "styled-components";
 import ChatButton from "@/components/common/ChatButton";
 import GraphicBox from "@/components/match/GraphicBox";
 import { MATCH_TYPE_PAGE_DATA } from "@/data/match";
+import HeaderTitle from "@/components/common/HeaderTitle";
 
 const MatchTypePage = () => {
   return (
     <Wrapper>
       <MatchContent>
-        <Header>
-          <Title>바로 매칭하기</Title>
-        </Header>
+        <HeaderTitle title="바로 매칭하기" />
         <Main>
           {MATCH_TYPE_PAGE_DATA.map((box) => {
             return (
@@ -23,8 +22,12 @@ const MatchTypePage = () => {
                   height={box.height}
                   top={box.top}
                   left={box.left}
+                  background={box.background}
                 >
-                  {box.title}
+                  <div>
+                    {box.title}
+                    <Sub>{box.sub}</Sub>
+                  </div>
                 </GraphicBox>
               </BoxWrapper>
             );
@@ -52,15 +55,7 @@ const Wrapper = styled.div`
 const MatchContent = styled.div`
   max-width: 1440px;
   width: 100%;
-  padding: 0 80px;
-`;
-
-const Header = styled.header`
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  width: 100%;
-  margin-bottom: 32px;
+  padding: 60px 80px 0px 80px;
 `;
 
 const Title = styled.div`
@@ -74,6 +69,11 @@ const Main = styled.main`
   width: 100%;
   gap: 27px;
   margin-bottom: 37px;
+`;
+
+const Sub = styled.div`
+  ${(props) => props.theme.fonts.regular18};
+  white-space: pre-wrap;
 `;
 
 const BoxWrapper = styled.div`

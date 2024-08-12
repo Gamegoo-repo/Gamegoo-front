@@ -29,6 +29,7 @@ const HomePage = () => {
                 height={box.height}
                 top={box.top}
                 left={box.left}
+                background={box.background}
               >
                 {box.title}
               </GraphicBox>
@@ -73,10 +74,14 @@ const SubTitle = styled.div`
 
 const Main = styled.main`
   display: flex;
-  flex-direction: column;
   align-items: center;
-  row-gap: 30px;
+  gap: 59px;
   margin-bottom: 37px;
+
+  @media (max-width: 1200px) {
+    flex-direction: column;
+    justify-content: center;
+  }
 `;
 const Footer = styled.footer`
   display: flex;
