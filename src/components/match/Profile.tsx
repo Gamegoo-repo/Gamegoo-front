@@ -317,6 +317,7 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                         alt="포지션"
                         onClick={() => handlePosition(index)}
                       />
+                      {/* 오류 발생 부분 */}
                       {isPositionOpen[index] && (
                         <PositionCategory
                           onClose={() => handlePositionClose(index)}
@@ -331,7 +332,12 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                 ))}
               </Position>
               {user.championResponseDTOList && (
-                <Champion size={14} list={user.championResponseDTOList} />
+                <Champion
+                  size={14}
+                  list={user.championResponseDTOList.map(
+                    (champion) => champion.championId
+                  )}
+                />
               )}
               {profileType === "other" && (
                 <Mike>
