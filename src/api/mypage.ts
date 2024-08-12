@@ -52,7 +52,7 @@ export const putPosition = async ({ minP, subP }: { minP: string, subP: string }
 export const deleteMember = async () => {
     const endpoint = '/v1/member';
     try {
-      const response = await AuthAxios.post(endpoint);
+      const response = await AuthAxios.delete(endpoint);
       console.log('회원탈퇴 성공:', response.data);
       return response.data;
     } catch (error) {
