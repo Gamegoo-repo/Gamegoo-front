@@ -14,17 +14,24 @@ export interface BoardList {
     createdAt: string;
 }
 
+interface MannerKeywords {
+    isPositive: boolean;
+    mannerKeywordId: number;
+    count: number;
+}
+
 export interface MemberPost {
     boardId: number;
     memberId: number;
     isBlocked: boolean;
     isFriend: boolean;
-    friendRequestMemberId:number;
+    friendRequestMemberId: number;
     createdAt: string;
     profileImage: number;
     gameName: string;
     tag: string;
     mannerLevel: number;
+    mannerKeywords: MannerKeywords[];
     tier: string;
     mike: boolean;
     championList: number[];
@@ -32,10 +39,10 @@ export interface MemberPost {
     mainPosition?: number;
     subPosition?: number;
     wantPosition?: number;
+    recentGameCount: number;
     winRate: number;
     gameStyles: number[];
     contents: string;
-    recentGameCount: number;
 }
 
 export interface NonMemberPost {
@@ -53,10 +60,10 @@ export interface NonMemberPost {
     mainPosition?: number;
     subPosition?: number;
     wantPosition?: number;
+    recentGameCount: number;
     winRate: number;
     gameStyles: number[];
     contents: string;
-    recentGameCount:number;
 }
 
 export interface PostReq {

@@ -1,9 +1,9 @@
-import { AuthAxios } from "./auth";
+import Axios from ".";
 
 /* 매너평가 조회 */
 export const getMannerValues = async (memberId: number) => {
     try {
-        const response = await AuthAxios.get(`/v1/manner/good/${memberId}`);
+        const response = await Axios.get(`/v1/manner/good/${memberId}`);
         console.log("매너 평가 조회 완료:", response.data);
         return response.data;
     } catch (error) {
@@ -15,7 +15,7 @@ export const getMannerValues = async (memberId: number) => {
 /* 비매너평가 조회 */
 export const getBadMannerValues = async (memberId: number) => {
     try {
-        const response = await AuthAxios.get(`/v1/manner/bad/${memberId}`);
+        const response = await Axios.get(`/v1/manner/bad/${memberId}`);
         console.log("비매너 평가 조회 완료:", response.data);
         return response.data;
     } catch (error) {

@@ -6,10 +6,10 @@ import { Dispatch, useEffect, useState } from 'react';
 import MoreBox from '../common/MoreBox';
 import { MoreBoxMenuItems } from '@/interface/moreBox';
 import { getChatrooms } from '@/api/chat';
-import { ChatRoomList } from '@/interface/chat';
+import { ChatroomList } from '@/interface/chat';
 
 interface ChatListProps {
-    onChatRoom: (id: number) => void;
+    onChatRoom: (uuid: string) => void;
     setIsMoreBoxOpen: Dispatch<React.SetStateAction<number | null>>;
     isMoreBoxOpen: number | null;
     onModalChange: (modalType: string) => void;
@@ -18,7 +18,7 @@ interface ChatListProps {
 const ChatList = (props: ChatListProps) => {
     const { onChatRoom, setIsMoreBoxOpen, isMoreBoxOpen, onModalChange } = props;
 
-    const [chatrooms, setChatrooms] = useState<ChatRoomList[]>([]);
+    const [chatrooms, setChatrooms] = useState<ChatroomList[]>([]);
 
     useEffect(() => {
         const handleFetchChatrooms = async () => {
@@ -75,7 +75,7 @@ const ChatList = (props: ChatListProps) => {
                     return (
                         <UserContent
                             onClick={() =>
-                                onChatRoom(room.chatroomId)}
+                                onChatRoom(room.uuid)}
                             key={room.chatroomId}>
                             {isMoreBoxOpen === room.chatroomId &&
                                 <MoreBox

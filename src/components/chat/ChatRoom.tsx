@@ -13,10 +13,11 @@ import { useRouter } from "next/navigation";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import MoreBox from "../common/MoreBox";
 import Button from "../common/Button";
-import { getChatrooms } from "@/api/chat";
+import { enterChatroom } from "@/api/chat";
+import { Chat } from "@/interface/chat";
 
 interface ChatRoomProps {
-    id: number;
+    uuid: string;
     onClose: () => void;
     onGoback: () => void;
 }
@@ -33,13 +34,13 @@ const MESSAGE_LIST = [
 ];
 
 const ChatRoom = (props: ChatRoomProps) => {
-    const { id, onClose, onGoback } = props;
+    const { uuid, onClose, onGoback } = props;
 
     const dispatch = useDispatch();
     const router = useRouter();
 
     const [message, setMessage] = useState("");
-    const [messageList, setMessageList] = useState([]);
+    const [chatData, setChatData] = useState<Chat>();
     const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
     const [checkedItems, setCheckedItems] = useState<number[]>([]);
 
@@ -51,6 +52,19 @@ const ChatRoom = (props: ChatRoomProps) => {
     //     setMessageList((prevState)=> prevState.concat(message));
     // });
     // },[]);
+
+    useEffect(() => {
+        const handleFetchChatData = async () => {
+            try {
+                const data = await enterChatroom(uuid);
+                setChatData(data.result);
+            } catch (error) {
+                console.error("에러:", error);
+            }
+        };
+
+        handleFetchChatData();
+    }, [])
 
     const sendMessage = (event: any) => {
         event.preventDefault();
@@ -126,42 +140,45 @@ const ChatRoom = (props: ChatRoomProps) => {
                             height={11}
                             alt='닫기' />
                     </CloseButton>
-                    <ChatHeader>
-                        <PrevImage
-                            onClick={onGoback}
-                            src="/assets/icons/left_arrow.svg"
-                            width={9}
-                            height={18}
-                            alt="뒤로가기" />
-                        <Middle>
-                            <ProfileImage
-                                onClick={() => router.push("/user")}
-                                src="/assets/icons/gray_circle.svg"
-                                width={47.43}
-                                height={47.43}
-                                alt="프로필 이미지" />
-                            <Div>
-                                <UserName>김철수</UserName>
-                                <Online>온라인</Online>
-                                <OnlineImage
-                                    src="/assets/icons/online.svg"
-                                    width={5}
-                                    height={5}
-                                    alt="온라인" />
-                            </Div>
-                        </Middle>
-                        <ThreeDotsImage
-                            onClick={handleMoreBoxOpen}
-                            src="/assets/icons/three_dots_button.svg"
-                            width={3}
-                            height={15}
-                            alt="상세보기" />
-                    </ChatHeader>
+                    {chatData &&
+                        <ChatHeader>
+                            <PrevImage
+                                onClick={onGoback}
+                                src="/assets/icons/left_arrow.svg"
+                                width={9}
+                                height={18}
+                                alt="뒤로가기" />
+                            <Middle>
+                                <ProfileImage
+                                    onClick={() => router.push("/user")}
+                                    src={`/assets/images/profile/profile${chatData.memberProfileImg}.svg`}
+                                    width={47.43}
+                                    height={47.43}
+                                    alt="프로필 이미지" />
+                                <Div>
+                                    <UserName>{chatData.gameName}</UserName>
+                                    <Online>온라인</Online>
+                                    <OnlineImage
+                                        src="/assets/icons/online.svg"
+                                        width={5}
+                                        height={5}
+                                        alt="온라인" />
+                                </Div>
+                            </Middle>
+                            <ThreeDotsImage
+                                onClick={handleMoreBoxOpen}
+                                src="/assets/icons/three_dots_button.svg"
+                                width={3}
+                                height={15}
+                                alt="상세보기" />
+                        </ChatHeader>
+                    }
                     <ChatBorder>
                         <ChatMain>
-                            <System>매칭이 이루어졌어요 !</System>
-                            <MessageContainer
-                                messageList={MESSAGE_LIST} />
+                            {chatData &&
+                                <MessageContainer
+                                    message={chatData} />
+                            }
                         </ChatMain>
                     </ChatBorder>
                     <ChatFooter>
@@ -307,17 +324,6 @@ const ChatMain = styled.main`
     }
     -ms-overflow-style: none;
     scrollbar-width: none;
-`;
-
-const System = styled.p`
-    width: 100%;
-    text-align: center;
-    padding:11px 0px;
-    background: #000000A3;
-    ${(props) => props.theme.fonts.regular12};
-    color: ${theme.colors.white}; 
-    border-radius: 14px;
-    margin-bottom: 11px;
 `;
 
 const ChatFooter = styled.footer``;

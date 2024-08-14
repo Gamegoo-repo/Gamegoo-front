@@ -14,7 +14,7 @@ interface FriendListInterface {
 
 interface FriendListProps {
     list: FriendListInterface[];
-    onChatRoom: (id: number) => void;
+    onChatRoom: (uuid: string) => void;
 }
 
 const FriendsList = ({ list, onChatRoom }: FriendListProps) => {

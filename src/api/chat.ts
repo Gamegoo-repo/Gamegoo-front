@@ -12,3 +12,15 @@ export const getChatrooms = async () => {
         throw error;
     }
 };
+
+/* 채팅방 입장 */
+export const enterChatroom = async (chatroomUuid: string) => {
+    try {
+        const response = await AuthAxios.get(`/v1/chat/${chatroomUuid}/enter`);
+        console.log("채팅방 입장 성공:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("채팅방 입장 실패:", error);
+        throw error;
+    }
+};

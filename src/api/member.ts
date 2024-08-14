@@ -1,4 +1,5 @@
 import { AuthAxios } from "./auth";
+import Axios from ".";
 
 interface ReportInterface {
     targetMemberId: number;
@@ -6,6 +7,7 @@ interface ReportInterface {
     contents: string;
 }
 
+/* 유저 정보 가져오기 */
 export const getUserInfo = async () => {
     try {
         const response = await AuthAxios.get("/v1/member/profile");
@@ -17,9 +19,10 @@ export const getUserInfo = async () => {
     }
 };
 
+/* 차단하기 */
 export const blockMember = async (memberId: number) => {
     try {
-        const response = await AuthAxios.post(`/v1/member/block/${memberId}`);
+        const response = await Axios.post(`/v1/member/block/${memberId}`);
         console.log("차단 성공:", response.data);
         return response.data;
     } catch (error) {
@@ -28,9 +31,10 @@ export const blockMember = async (memberId: number) => {
     }
 };
 
+/* 차단 해제 */
 export const unblockMember = async (memberId: number) => {
     try {
-        const response = await AuthAxios.delete(`/v1/member/block/${memberId}`);
+        const response = await Axios.delete(`/v1/member/block/${memberId}`);
         console.log("차단 해제 성공:", response.data);
         return response.data;
     } catch (error) {
@@ -39,9 +43,10 @@ export const unblockMember = async (memberId: number) => {
     }
 };
 
+/* 신고하기 */
 export const reportMember = async (params: ReportInterface) => {
     try {
-        const response = await AuthAxios.post("/v1/reports", params);
+        const response = await Axios.post("/v1/reports", params);
         console.log("신고 성공:", response.data);
         return response.data;
     } catch (error) {

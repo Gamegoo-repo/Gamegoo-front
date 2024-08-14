@@ -50,14 +50,14 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
     const [activeTab, setActiveTab] = useState<string>('friends');
     const [isChatRoomVisible, setIsChatRoomVisible] = useState(false);
     const [isMoreBoxOpen, setIsMoreBoxOpen] = useState<number | null>(null);
-    const [chatId, setChatId] = useState<number | null>(null);
+    const [chatUuid, setChatUuid] = useState<string | null>(null);
     const [checkedItems, setCheckedItems] = useState<number[]>([]);
     const [reportDetail, setReportDetail] = useState<string>("");
 
     const isModalType = useSelector((state: RootState) => state.modal.modalType);
 
-    const handleGoToChatRoom = (id: number) => {
-        setChatId(id);
+    const handleGoToChatRoom = (uuid: string) => {
+        setChatUuid(uuid);
         setIsChatRoomVisible(true);
     };
 
@@ -158,11 +158,11 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                 </Wrapper>
             </Overlay>
 
-            {isChatRoomVisible && chatId !== null &&
+            {isChatRoomVisible && chatUuid !== null &&
                 <ChatRoom
                     onClose={onClose}
                     onGoback={handleBackToChatWindow}
-                    id={chatId} />
+                    uuid={chatUuid} />
             }
 
             {/* 채팅창 나가기 팝업 */}

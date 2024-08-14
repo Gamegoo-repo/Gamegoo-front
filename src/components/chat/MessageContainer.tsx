@@ -6,58 +6,64 @@ import { useEffect, useState } from 'react';
 import { setChatDateFormatter, setChatTimeFormatter } from '@/utils/custom';
 import ConfirmModal from '../common/ConfirmModal';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCloseMannerStatusModal, setOpenMannerStatusModal } from '@/redux/slices/modalSlice';
+import { setCloseMannerStatusModal, setCloseReadingModal, setOpenMannerStatusModal, setOpenReadingModal } from '@/redux/slices/modalSlice';
 import { RootState } from '@/redux/store';
-
-interface MessageInterface {
-  user: string;
-  msg: string;
-  msgId: number;
-  userId: number;
-  date: string;
-}
+import { Chat, ChatMessageDto, ChatMessageList } from '@/interface/chat';
+import ReadBoard from '../readBoard/ReadBoard';
 
 interface MessageContainerProps {
-  messageList: MessageInterface[];
+  message: Chat;
+}
+
+interface SystemMessageProps {
+  message: string;
+  onClick?: () => void;
 }
 
 const MessageContainer = (props: MessageContainerProps) => {
-  const { messageList } = props;
+  const { message } = props;
 
   const dispatch = useDispatch();
 
   const isFeedbackModalOpen = useSelector((state: RootState) => state.modal.isOpen);
+  const isReadingModal = useSelector((state: RootState) => state.modal.readingModal);
 
+  const [messageList, setMessageList] = useState<ChatMessageList>();
   const [isFeedbackDateVisible, setIsFeedbackDateVisible] = useState(false);
   const [isFeedbackDate, setIsFeedbackDate] = useState("");
+  const [isBoardId, setIsBoardId] = useState(0);
 
   const handleMannerTypeClose = () => {
     dispatch(setCloseMannerStatusModal());
   };
 
-  const handleDisplayDate = (messages: MessageInterface[], index: number): boolean => {
+  useEffect(() => {
+    setMessageList(message?.chatMessageList);
+  }, [message])
+
+  const handleDisplayDate = (messages: ChatMessageDto[], index: number): boolean => {
     if (index === 0) return true;
 
-    const currentDate = dayjs(messages[index].date).format('YYYY-M-D');
-    const previousDate = dayjs(messages[index - 1].date).format('YYYY-M-D');
+    const currentDate = dayjs(messages[index].createdAt).format('YYYY-M-D');
+    const previousDate = dayjs(messages[index - 1].createdAt).format('YYYY-M-D');
 
     return currentDate !== previousDate;
   };
 
-  const handleDisplayProfileImage = (messages: MessageInterface[], index: number): boolean => {
+  const handleDisplayProfileImage = (messages: ChatMessageDto[], index: number): boolean => {
     if (index === 0) return true;
 
-    return messages[index].userId !== messages[index - 1].userId;
+    return messages[index].senderId !== message.memberId;
   };
 
-  const handleDisplayTime = (messages: MessageInterface[], index: number): boolean => {
+  const handleDisplayTime = (messages: ChatMessageDto[], index: number): boolean => {
     if (index === messages.length - 1) return true;
 
-    const currentTime = dayjs(messages[index].date).format('A h:mm');
-    const nextTime = dayjs(messages[index + 1].date).format('A h:mm');
+    const currentTime = dayjs(messages[index].createdAt).format('A hh:mm');
+    const nextTime = dayjs(messages[index + 1].createdAt).format('A hh:mm');
 
     const isSameTime = currentTime === nextTime;
-    const isSameSender = messages[index].userId === messages[index + 1].userId;
+    const isSameSender = messages[index].senderId !== message.memberId
 
     /* 시간과 보낸 사람이 같으면 마지막 메시지에만 시간 표시 */
     return !isSameTime || !isSameSender;
@@ -65,12 +71,12 @@ const MessageContainer = (props: MessageContainerProps) => {
 
   /* 마지막 채팅을 보낸 날짜에서 1시간을 더했을 때, 마지막 보낸 채팅 날짜랑 피드백 날짜가 다를 때만 보여주기 */
   useEffect(() => {
-    const lastMessage = messageList[messageList.length - 1];
-    const feedbackTimestamp = dayjs(lastMessage.date).add(1, 'hour');
+    const lastMessage = messageList?.chatMessageDtoList[messageList.chatMessageDtoList.length - 1];
+    const feedbackTimestamp = dayjs(lastMessage?.createdAt).add(1, 'hour');
     const feedbackFullDate = dayjs(feedbackTimestamp).format('YYYY-MM-DDTHH:mm:ss');
 
     const feedbackDate = dayjs(feedbackTimestamp).format('YYYY-M-D');
-    const lastMessageDate = dayjs(lastMessage.date).format('YYYY-M-D');
+    const lastMessageDate = dayjs(lastMessage?.createdAt).format('YYYY-M-D');
 
     setIsFeedbackDate(feedbackFullDate);
 
@@ -79,40 +85,81 @@ const MessageContainer = (props: MessageContainerProps) => {
     }
   }, [messageList])
 
+  /* 게시글 열기 */
+  const handlePostOpen = (id: number) => {
+    dispatch(setOpenReadingModal());
+    setIsBoardId(id);
+  };
+
+  /* 게시글 닫기 */
+  const handlePostClose = () => {
+    dispatch(setCloseReadingModal());
+  };
+
+  /* 시스템 메시지를 처리하는 컴포넌트 */
+  const SystemMessage = (props: SystemMessageProps) => {
+    const { message, onClick } = props;
+
+    const highlightedText = "게시한 글";
+    const parts = message.split(highlightedText);
+
+    return (
+      <SystemMessageContainer>
+        {parts.length > 1 ? (
+          <>
+            {parts[0]}
+            <UnderlinedText onClick={onClick}>{highlightedText}</UnderlinedText>
+            {parts[1]}
+          </>
+        ) : (
+          message
+        )}
+      </SystemMessageContainer>
+    );
+  };
+
   return (
     <>
-      {messageList.map((message, index) => {
-        const hasProfileImage = handleDisplayProfileImage(messageList, index);
-        const showTime = handleDisplayTime(messageList, index);
+      {isReadingModal &&
+        <ReadBoard onClose={handlePostClose} postId={isBoardId} />
+      }
+      {messageList?.chatMessageDtoList.map((data, index) => {
+        const hasProfileImage = handleDisplayProfileImage(messageList.chatMessageDtoList, index);
+        const showTime = handleDisplayTime(messageList.chatMessageDtoList, index);
 
         return (
           <MsgContainer
-            key={message.msgId}>
-            {handleDisplayDate(messageList, index) && (
-              <Timestamp>{setChatDateFormatter(message.date)}</Timestamp>
+            key={data.timestamp}>
+            {handleDisplayDate(messageList.chatMessageDtoList, index) && (
+              <Timestamp>{setChatDateFormatter(data.createdAt)}</Timestamp>
             )}
-            {message.user === "you" ? (
-              <YourMessageContainer>
-                {handleDisplayProfileImage(messageList, index) && (
-                  <Image
-                    src="/assets/icons/gray_circle.svg"
-                    width={47.43}
-                    height={47.43}
-                    alt="프로필 이미지" />
-                )}
-                <YourDiv $hasProfileImage={hasProfileImage}>
-                  <YourMessage>{message.msg}</YourMessage>
-                  {showTime ? <YourDate>{setChatTimeFormatter(message.date)}</YourDate> : null}
-                </YourDiv>
-              </YourMessageContainer>
-            ) : (
-              <MyMessageContainer>
-                <MyDiv>
-                  {showTime ? <MyDate>{setChatTimeFormatter(message.date)}</MyDate> : null}
-                  <MyMessage>{message.msg}</MyMessage>
-                </MyDiv>
-              </MyMessageContainer>
-            )
+            {data.senderName === "SYSTEM" ? (
+              <SystemMessage
+                onClick={data.boardId ? () => handlePostOpen(data.boardId as number) : undefined}
+                message={data.message} />
+            ) :
+              data.senderId !== message.memberId ? (
+                <YourMessageContainer>
+                  {handleDisplayProfileImage(messageList.chatMessageDtoList, index) && (
+                    <Image
+                      src={`/assets/images/profile/profile${data.senderProfileImg}.svg`}
+                      width={47.43}
+                      height={47.43}
+                      alt="프로필 이미지" />
+                  )}
+                  <YourDiv $hasProfileImage={hasProfileImage}>
+                    <YourMessage>{data.message}</YourMessage>
+                    {showTime ? <YourDate>{setChatTimeFormatter(data.createdAt)}</YourDate> : null}
+                  </YourDiv>
+                </YourMessageContainer>
+              ) : (
+                <MyMessageContainer>
+                  <MyDiv>
+                    {showTime ? <MyDate>{setChatTimeFormatter(data.createdAt)}</MyDate> : null}
+                    <MyMessage>{data.message}</MyMessage>
+                  </MyDiv>
+                </MyMessageContainer>
+              )
             }
           </MsgContainer>
         )
@@ -294,4 +341,19 @@ const FeedbackTime = styled.p`
   margin-left:9px;
   ${(props) => props.theme.fonts.regular8};
   color: ${theme.colors.gray700}; 
+`;
+
+const SystemMessageContainer = styled.div`
+    width: 100%;
+    text-align: center;
+    padding:11px 0px;
+    background: #000000A3;
+    ${(props) => props.theme.fonts.regular12};
+    color: ${theme.colors.white}; 
+    border-radius: 14px;
+    margin-bottom: 11px;
+`;
+
+const UnderlinedText = styled.span`
+  text-decoration: underline;
 `;
