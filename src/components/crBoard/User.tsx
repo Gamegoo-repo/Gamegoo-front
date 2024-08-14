@@ -28,7 +28,7 @@ const User = (props: UserProps) => {
                             height={20}
                             alt="티어 이미지"
                         />
-                        <Tier>{tier}</Tier>
+                        <Tier>{!tier ? "UR" : tier}</Tier>
                     </>
                     :
                     <NoData />

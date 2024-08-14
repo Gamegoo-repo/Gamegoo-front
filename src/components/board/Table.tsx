@@ -141,7 +141,7 @@ const Table = (props: TableProps) => {
                                         height={13}
                                         alt="티어 이미지"
                                     />
-                                    <P>{data.tier}</P>
+                                    <P>{!data.tier ? "UR" : data.tier}</P>
                                 </Third>
                                 <Fourth className="table_width">
                                     <Image

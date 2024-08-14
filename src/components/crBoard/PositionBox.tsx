@@ -3,7 +3,10 @@ import Image from "next/image";
 import { useState } from "react";
 import PositionCategory from "../common/PositionCategory";
 
+type status = "reading";
+
 interface PositionBoxProps {
+  status?: status;
   onPositionChange?: (newPositionValue: PositionState) => void;
   main: number | undefined;
   sub: number | undefined;
@@ -19,7 +22,7 @@ export interface PositionState {
 }
 
 const PositionBox = (props: PositionBoxProps) => {
-  const { onPositionChange, main, sub, want } = props;
+  const { status, onPositionChange, main, sub, want } = props;
   const [selectedBox, setSelectedBox] = useState("");
   const [openPosition, setOpenPosition] = useState<Position | null>(null);
   const [positionValue, setPositionValue] = useState<PositionState>({
@@ -63,7 +66,7 @@ const PositionBox = (props: PositionBoxProps) => {
   };
 
   const handleBoxClick = (position: Position) => {
-    if (status === "reading") return;
+    // if (status === "reading") return;
     setOpenPosition((prevPosition) =>
       prevPosition === position ? null : position
     );
@@ -80,8 +83,8 @@ const PositionBox = (props: PositionBoxProps) => {
       <FirstBox>
         <Section>
           <Title>주 포지션</Title>
-          <StyledImage
-            $status={status}
+          <Image
+            // $status={status}
             onClick={() => handleBoxClick("main")}
             src={handlePositionImgSet(positionValue.main)}
             width={35}
@@ -98,8 +101,8 @@ const PositionBox = (props: PositionBoxProps) => {
         </Section>
         <Section>
           <Title>부 포지션</Title>
-          <StyledImage
-            $status={status}
+          <Image
+            // $status={status}
             onClick={() => handleBoxClick("sub")}
             src={handlePositionImgSet(positionValue.sub)}
             width={35}
@@ -117,8 +120,8 @@ const PositionBox = (props: PositionBoxProps) => {
       </FirstBox>
       <SecondBox>
         <Title>찾는 포지션</Title>
-        <StyledImage
-          $status={status}
+        <Image
+          // $status={status}
           onClick={() => handleBoxClick("want")}
           src={handlePositionImgSet(positionValue.want)}
           width={35}

@@ -14,7 +14,7 @@ const WinningRate = (props: WinningRateProps) => {
             <FirstRow>
                 <Left>
                     <WinningTitle>승률</WinningTitle>
-                    <Percent>{completed === null ? 0 : completed}%</Percent>
+                    <Percent>{!completed ? 0 : completed}%</Percent>
                 </Left>
                 <Right>
                     {!!history &&

@@ -56,6 +56,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
   const [reportDetail, setReportDetail] = useState<string>("");
   const [userInfo, setUserInfo] = useState<UserInfo>();
+  const [type, setType] = useState<string>('canyon');
   const [showAlert, setShowAlert] = useState(false);
   const [alertProps, setAlertProps] = useState<AlertProps>({
     icon: "",
@@ -298,7 +299,7 @@ const ReadBoard = (props: ReadBoardProps) => {
         friendFunc = handleFriendAdd;
       }
       if (isPost?.friendRequestMemberId) {
-        friendText = '친구 요청 중';
+        friendText = '친구 요청 취소';
       }
 
       if (isPost?.friendRequestMemberId || !isPost?.isFriend, !isPost?.isBlocked) {
@@ -330,6 +331,10 @@ const ReadBoard = (props: ReadBoardProps) => {
       if (!!userInfo) {
         const memberData = await getMemberPost(postId);
         setIsPost(memberData.result);
+        const hasPosition = memberData.result.some((item: MemberPost) => 'mainPosition' in item);
+
+        // 글 type 설정
+        setType(hasPosition ? 'canyon' : 'wind');
         setLoading(false);
       }
 
@@ -343,14 +348,14 @@ const ReadBoard = (props: ReadBoardProps) => {
     getPostData();
   }, [isBlockedStatus, isFriendStatus, userInfo, postId])
 
-  let gameType = '';
-  if (isPost?.mainPosition ||
-    isPost?.subPosition ||
-    isPost?.wantPosition) {
-    gameType = "canyon"
-  } else {
-    gameType = "wind"
-  }
+  // let gameType = '';
+  // if (isPost?.mainPosition ||
+  //   isPost?.subPosition ||
+  //   isPost?.wantPosition) {
+  //   gameType = "canyon"
+  // } else {
+  //   gameType = "wind"
+  // }
 
   /* 유저 정보 api */
   useEffect(() => {
@@ -386,10 +391,6 @@ const ReadBoard = (props: ReadBoardProps) => {
     }
 
     onClose();
-  };
-
-  const handleAlertClose = () => {
-    setShowAlert(false);
   };
 
   return (
@@ -440,27 +441,29 @@ const ReadBoard = (props: ReadBoardProps) => {
               <QueueType
                 value={isPost.gameMode} />
             </ChampionNQueueSection>
-            {isPost.mainPosition &&
+            {/* {isPost.mainPosition &&
               isPost.subPosition &&
-              isPost.wantPosition &&
+              isPost.wantPosition && */}
+            {type === "canyon" &&
               <PositionSection>
                 <Title>포지션</Title>
                 <PositionBox
+                  status="reading"
                   main={isPost.mainPosition}
                   sub={isPost.subPosition}
                   want={isPost.wantPosition} />
               </PositionSection>
             }
-            <WinningRateSection $gameType={gameType}>
+            <WinningRateSection $gameType={type}>
               <WinningRate
                 completed={isPost.winRate}
                 history={isPost.recentGameCount} />
             </WinningRateSection>
-            <StyleSection $gameType={gameType}>
+            <StyleSection $gameType={type}>
               <Title>게임 스타일</Title>
               <GameStyle styles={isPost.gameStyles} />
             </StyleSection>
-            <MemoSection $gameType={gameType}>
+            <MemoSection $gameType={type}>
               <Title>메모</Title>
               <Memo>
                 <MemoData>
@@ -468,7 +471,7 @@ const ReadBoard = (props: ReadBoardProps) => {
                 </MemoData>
               </Memo>
             </MemoSection>
-            <ButtonContent $gameType={gameType}>
+            <ButtonContent $gameType={type}>
               <Button
                 type="submit"
                 buttonType="primary"
