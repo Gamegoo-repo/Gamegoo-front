@@ -1,8 +1,8 @@
 import { getAccessToken } from "@/utils/storage";
 import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosInstance } from "axios";
 
-export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-export const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL;
+export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL as string;
+export const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL as string;
 
 /* Axios 인스턴스 생성 */
 const Axios: AxiosInstance = axios.create({
