@@ -148,7 +148,6 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                             }
                             {activeTab === 'chat' &&
                                 <ChatList
-                                    list={CHAT}
                                     setIsMoreBoxOpen={setIsMoreBoxOpen}
                                     isMoreBoxOpen={isMoreBoxOpen}
                                     onModalChange={handleModalChange}

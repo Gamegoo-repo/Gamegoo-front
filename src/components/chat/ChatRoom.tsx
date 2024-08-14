@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MessageContainer from "./MessageContainer";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import MoreBox from "../common/MoreBox";
 import Button from "../common/Button";
-
+import { getChatrooms } from "@/api/chat";
 
 interface ChatRoomProps {
     id: number;

@@ -18,7 +18,6 @@ import { setClosePostingModal, setOpenModal, setOpenPostingModal } from "@/redux
 import { getBoardList } from "@/api/board";
 import { BoardList } from "@/interface/board";
 import { getUserInfo } from "@/api/member";
-import { UserInfo } from "@/interface/profile";
 import Alert from "@/components/common/Alert";
 import { useRouter } from "next/navigation";
 
@@ -34,7 +33,6 @@ const BoardPage = () => {
   const [isTierDropdownOpen, setIsTierDropdownOpen] = useState(false);
   const [selectedGameMode, setSelectedGameMode] = useState<string | number | null>("솔로 랭크");
   const [selectedTier, setSelectedTier] = useState<string | null>("티어 선택");
-  const [userInfo, setUserInfo] = useState<UserInfo>();
   const [showAlert, setShowAlert] = useState(false);
   const [refresh, setRefresh] = useState(false);
 
@@ -46,6 +44,7 @@ const BoardPage = () => {
 
   const isPostingModal = useSelector((state: RootState) => state.modal.postingModal);
   const isCompletedPosting = useSelector((state: RootState) => state.modal.modalType);
+  const userName = useSelector((state: RootState) => state.user.gameName);
 
   // 게임모드 드롭
   const handleGameModeDropValue = (id: number | null) => {
@@ -135,7 +134,7 @@ const BoardPage = () => {
 
   /* 글쓰기 모달 오픈 */
   const handlePostingOpen = () => {
-    if (!userInfo) {
+    if (!userName) {
       return setShowAlert(true);
     }
     dispatch(setOpenPostingModal());
@@ -198,16 +197,6 @@ const BoardPage = () => {
     dispatch(setOpenModal(""));
   };
 
-  /* 유저 정보 api */
-  useEffect(() => {
-    const getUserData = async () => {
-      const data = await getUserInfo();
-      await setUserInfo(data);
-    };
-
-    getUserData();
-  }, [])
-
   const handleRefresh = () => {
     setRefresh((prevStatus) => !prevStatus);
   }
@@ -222,6 +211,7 @@ const BoardPage = () => {
           content="로그아웃 되었습니다. 다시 로그인 해주세요."
           alt="로그인 필요"
           onClose={() => router.push("/")}
+          buttonText="로그인하기"
         />
       )}
       {isPostingModal &&
@@ -315,9 +305,7 @@ const BoardPage = () => {
             }
             <Footer>
               <ChatBoxContent>
-                <ChatButton
-                  user={userInfo}
-                  count={3} />
+                <ChatButton count={3} />
               </ChatBoxContent>
             </Footer>
           </BoardContent>

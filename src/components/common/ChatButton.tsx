@@ -10,18 +10,17 @@ import { RootState } from "@/redux/store";
 
 interface msgCountProps {
   count: number;
-  user?: UserInfo | undefined;
 }
 
 const ChatButton = (props: msgCountProps) => {
-  const { count, user } = props;
+  const { count } = props;
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
-  const name = useSelector((state: RootState) => state.user.gameName);
+  const userName = useSelector((state: RootState) => state.user.gameName);
 
   const toggleChat = () => {
-    if (!user) {
+    if (!userName) {
       return setShowAlert(true);
     }
     setIsChatOpen((prevState) => !prevState);

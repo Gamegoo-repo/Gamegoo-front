@@ -2,20 +2,13 @@ import styled from 'styled-components';
 import { theme } from "@/styles/theme";
 import Image from 'next/image';
 import { setChatRoomDateFormatter } from '@/utils/custom';
-import { Dispatch } from 'react';
+import { Dispatch, useEffect, useState } from 'react';
 import MoreBox from '../common/MoreBox';
 import { MoreBoxMenuItems } from '@/interface/moreBox';
-
-interface ChatListInterface {
-    id: number;
-    image: string;
-    userName: string;
-    msg: string;
-    date: string;
-}
+import { getChatrooms } from '@/api/chat';
+import { ChatRoomList } from '@/interface/chat';
 
 interface ChatListProps {
-    list: ChatListInterface[];
     onChatRoom: (id: number) => void;
     setIsMoreBoxOpen: Dispatch<React.SetStateAction<number | null>>;
     isMoreBoxOpen: number | null;
@@ -23,7 +16,22 @@ interface ChatListProps {
 }
 
 const ChatList = (props: ChatListProps) => {
-    const { list, onChatRoom, setIsMoreBoxOpen, isMoreBoxOpen, onModalChange } = props;
+    const { onChatRoom, setIsMoreBoxOpen, isMoreBoxOpen, onModalChange } = props;
+
+    const [chatrooms, setChatrooms] = useState<ChatRoomList[]>([]);
+
+    useEffect(() => {
+        const handleFetchChatrooms = async () => {
+            try {
+                const data = await getChatrooms();
+                setChatrooms(data.result);
+            } catch (error) {
+                console.error("에러:", error);
+            }
+        };
+
+        handleFetchChatrooms();
+    }, [])
 
     const handleMoreBoxOpen = (chatId: number, e: React.MouseEvent) => {
         e.stopPropagation();
@@ -63,13 +71,13 @@ const ChatList = (props: ChatListProps) => {
     return (
         <>
             <List>
-                {list.map(chat => {
+                {chatrooms.map(room => {
                     return (
                         <UserContent
                             onClick={() =>
-                                onChatRoom(chat.id)}
-                            key={chat.id}>
-                            {isMoreBoxOpen === chat.id &&
+                                onChatRoom(room.chatroomId)}
+                            key={room.chatroomId}>
+                            {isMoreBoxOpen === room.chatroomId &&
                                 <MoreBox
                                     items={menuItems}
                                     top={10}
@@ -78,23 +86,25 @@ const ChatList = (props: ChatListProps) => {
                             }
                             <Left>
                                 <ProfileImage
-                                    src={chat.image}
+                                    src={`/assets/images/profile/profile${room.targetMemberImg}.svg`}
                                     width={45}
                                     height={45}
                                     alt="사용자 프로필" />
                                 <Middle>
                                     <Row>
-                                        <UserName>{chat.userName}</UserName>
-                                        <Unread>10</Unread>
+                                        <UserName>{room.targetMemberName}</UserName>
+                                        {room.notReadMsgCnt !== 0 &&
+                                            <Unread>{room.notReadMsgCnt}</Unread>
+                                        }
                                     </Row>
                                     <Row>
-                                        <Msg>{chat.msg}</Msg>
-                                        <Date>{setChatRoomDateFormatter(chat.date)}</Date>
+                                        <Msg>{room.lastMsg}</Msg>
+                                        <Date>{setChatRoomDateFormatter(room.lastMsgAt)}</Date>
                                     </Row>
                                 </Middle>
                             </Left>
                             <Right
-                                onClick={(e) => handleMoreBoxOpen(chat.id, e)}>
+                                onClick={(e) => handleMoreBoxOpen(room.chatroomId, e)}>
                                 <MoreImage
                                     src="/assets/icons/three_dots_button.svg"
                                     width={3}
