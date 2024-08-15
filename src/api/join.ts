@@ -1,14 +1,15 @@
 import Axios from ".";
 
 interface joinProps {
+  isAgree: boolean;
     email: string;
     password: string;
     gameName: string;
     tag: string;
 }
 
-export const sendEmail= async ({ email }: { email: string }) => {
-  const endpoint = '/v1/member/email/send';
+export const sendJoinEmail= async ({ email }: { email: string }) => {
+  const endpoint = '/v1/member/email/send/join';
 
   try {
     const response = await Axios.post(endpoint, { email });
@@ -45,19 +46,26 @@ export const checkRiot = async ({ gameName, tag }: { gameName: string, tag: stri
 };
 
 export const joinMember = async ({
+    isAgree, 
     email,
     password,
     gameName,
     tag
   }: joinProps) => {
+    console.log(isAgree, 
+      email,
+      password,
+      gameName,
+      tag);
     try {
       const response = await Axios.post('/v1/member/join', {
-        email, password, gameName, tag
+        isAgree, email, password, gameName, tag
       });
       console.log('회원가입 성공:', response.data);
       return response.data;
     } catch (error) {
       console.error('회원가입 실패:', error);
+      console.log()
       throw error;
     }
   };

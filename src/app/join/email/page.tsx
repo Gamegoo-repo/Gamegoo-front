@@ -1,6 +1,6 @@
 "use client";
 
-import { sendAuth, sendEmail } from "@/api/join";
+import { sendAuth, sendJoinEmail } from "@/api/join";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import { emailRegEx } from "@/constants/regEx";
@@ -80,7 +80,7 @@ const Email = () => {
   const handleSendEmail = async () => {
     setIsSendClick(true);
     try {
-      await sendEmail({ email });
+      await sendJoinEmail({ email });
       setAuthCode("");
       setAuthCodeValid(undefined);
       dispatch(updateEmailAuth(""));
@@ -129,10 +129,12 @@ const Email = () => {
       try {
         await sendAuth({ email, code: authCode });
 
+        console.log("여기", email, authCode);
         // Redux 상태 업데이트
         dispatch(updateEmail(email));
         dispatch(updateEmailAuth(authCode));
         dispatch(updateAuthStatus(true));
+        console.log("ㅎㅎ", authStatusRedux);
 
         setAuthCodeValid(true);
         router.push("/join/password");
@@ -159,7 +161,7 @@ const Email = () => {
         }}
         placeholder="이메일 주소"
         isValid={emailValid}
-        disabled={isSendClick}
+        disabled={isSend}
       />
       {isSend && !authCodeRedux && (
         <CodeBox>
@@ -188,7 +190,7 @@ const Email = () => {
           )}
         </CodeBox>
       )}
-      {isSend || authCodeRedux ? (
+      {isSend || authStatusRedux ? (
         <Button
           buttonType="primary"
           text="인증 완료"

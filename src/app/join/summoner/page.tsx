@@ -23,6 +23,7 @@ const Summoner = () => {
   const [name, setName] = useState("");
   const [tag, setTag] = useState("");
 
+  const isAgree = useSelector((state: RootState) => state.signIn.terms[2]);
   const email = useSelector((state: RootState) => state.signIn.email);
   const password = useSelector((state: RootState) => state.signIn.password);
 
@@ -73,6 +74,7 @@ const Summoner = () => {
     if (isCheckRiot) {
       try {
         await joinMember({
+          isAgree,
           email,
           password,
           gameName: name,
@@ -175,5 +177,6 @@ const Error = styled.div`
   color: ${theme.colors.error100};
   ${(props) => props.theme.fonts.regular12};
   margin-left: 18px;
-  margin-bottom: 15px;
+  margin-right: 18px;
+  margin-bottom: 30px;
 `;
