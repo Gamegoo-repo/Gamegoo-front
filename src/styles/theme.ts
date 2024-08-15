@@ -21,6 +21,8 @@ const colors = {
 
     error100: "#FF5252",
     error200: "#FF7474",
+
+    darkGray100: "#7C7C7C",
 } as const;
 
 interface Font {
@@ -164,6 +166,11 @@ const fonts = {
     regular8: FONT({
         weight: 400,
         size: 8,
+    }),
+
+    light32: FONT({
+        weight: 300,
+        size: 32,
     }),
 }
 

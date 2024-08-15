@@ -5,11 +5,13 @@ import styled from "styled-components";
 interface CheckboxProps {
   value: number | string;
   label?: string;
+  children?: React.ReactNode;
   isChecked?: boolean;
   onChange?: (isChecked: boolean) => void;
   isArraychecked?: boolean;
   onArrayChange?: (checked: number) => void;
   fontSize?: string;
+  color?: string;
   id?: string;
 }
 
@@ -17,12 +19,14 @@ const Checkbox = (props: CheckboxProps) => {
   const {
     value,
     label,
+    children,
     isChecked = false,
     onChange,
     isArraychecked,
     onArrayChange,
     fontSize,
-    id
+    color,
+    id,
   } = props;
   const [checked, setChecked] = useState<boolean>(isChecked);
 
@@ -44,7 +48,10 @@ const Checkbox = (props: CheckboxProps) => {
   };
 
   return (
-    <StyledCheckbox fontSize={fontSize || "semiBold16"}>
+    <StyledCheckbox
+      fontSize={fontSize || "semiBold16"}
+      color={color || "black"}
+    >
       <Check
         id={id}
         value={value}
@@ -52,14 +59,14 @@ const Checkbox = (props: CheckboxProps) => {
         checked={isChecked ? checked : isArraychecked}
         onChange={handleChange}
       />
-      {label}
+      <div>{label || children}</div>
     </StyledCheckbox>
   );
 };
 
 export default Checkbox;
 
-const StyledCheckbox = styled.div<{ fontSize: string }>`
+const StyledCheckbox = styled.div<{ fontSize: string; color: string }>`
   display: flex;
   align-items: center;
   gap: 1.7rem;
@@ -69,9 +76,13 @@ const StyledCheckbox = styled.div<{ fontSize: string }>`
     props.fontSize
       ? props.theme.fonts[props.fontSize as keyof typeof props.theme.fonts]
       : props.theme.fonts.semiBold16};
-  color: ${theme.colors.black};
+  color: ${(props) =>
+    props.color
+      ? props.theme.colors[props.color as keyof typeof props.theme.colors]
+      : props.theme.colors.black};
   cursor: pointer;
 `;
+
 const Check = styled.input`
   width: 100%;
   appearance: none;
