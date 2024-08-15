@@ -80,7 +80,7 @@ const Summoner = () => {
           gameName: name,
           tag,
         });
-        router.push("/");
+        router.push("/login");
       } catch (err) {
         const error = err as AxiosError<RiotErrorResponse>;
         console.log(error);

@@ -57,7 +57,7 @@ const Header = () => {
     <Head>
       <HeaderBar>
         <Left>
-          <Link href="/home">
+          <Link href="/">
             <Image
               src="/assets/icons/logo.svg"
               width={102}
