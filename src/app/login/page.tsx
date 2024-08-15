@@ -52,7 +52,7 @@ const Login = () => {
 
       dispatch(setUserName(response.result.name));
       dispatch(setUserProfileImg(response.result.profileImage));
-      router.push("/login");
+      router.push("/");
     } catch (error) {
       if (error instanceof AxiosError) {
         const status = error.response?.status;

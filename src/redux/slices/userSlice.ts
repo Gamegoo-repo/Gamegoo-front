@@ -53,9 +53,23 @@ export const userSlice = createSlice({
     setUserProfile: (state:any, action: PayloadAction<UserState>) => {
       return { ...state, ...action.payload };
     },
+    clearUserProfile(state) {
+      state.profileImg = 0;
+      state.email=  '';
+      state.gameName=  '';
+      state.tag=  '';
+      state. tier=  '';
+      state.rank=  '';
+      state.mike=  false;
+      state.mainP=  0;
+      state. subP=  0;
+      state.updatedAt=  '';
+      state. gameStyleResponseDTOList= [];
+      state.championResponseDTOList= [];
+    },
   },
 });
 
-export const {setUserName, setUserProfileImg, setUserProfile} = userSlice.actions;
+export const {setUserName, setUserProfileImg, setUserProfile, clearUserProfile} = userSlice.actions;
 
 export default userSlice.reducer;
