@@ -12,7 +12,7 @@ import {
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
@@ -25,6 +25,7 @@ const Email = () => {
   const [authCodeValid, setAuthCodeValid] = useState<boolean | undefined>(
     undefined
   );
+  const [isSendClick, setIsSendClick] = useState(false);
   const [isSend, setIsSend] = useState(false);
 
   const emailRedux = useSelector((state: RootState) => state.signIn.email);
@@ -34,6 +35,28 @@ const Email = () => {
   const authStatusRedux = useSelector(
     (state: RootState) => state.signIn.authStatus
   );
+
+  const handlePopState = useCallback(() => {
+    setAuthCode("");
+    setEmailValid(undefined);
+    setAuthCodeValid(undefined);
+    setIsSendClick(false);
+    setIsSend(false);
+    dispatch(updateEmailAuth(""));
+    dispatch(updateAuthStatus(false));
+  }, [dispatch, isSend]);
+
+  /* 뒤로가기 이벤트 감지 */
+  useEffect(() => {
+    if (isSendClick) {
+      history.pushState(null, "", window.location.href);
+      window.addEventListener("popstate", handlePopState);
+    }
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [handlePopState, isSendClick]);
 
   /* redux 업데이트 */
   useEffect(() => {
@@ -50,6 +73,7 @@ const Email = () => {
   };
 
   const handleSendEmail = async () => {
+    setIsSendClick(true);
     try {
       await sendEmail({ email });
       setAuthCode("");
@@ -91,6 +115,7 @@ const Email = () => {
         }}
         placeholder="이메일 주소"
         isValid={emailValid}
+        disabled={isSendClick}
       />
       {(isSend || authCodeRedux) && (
         <Input
