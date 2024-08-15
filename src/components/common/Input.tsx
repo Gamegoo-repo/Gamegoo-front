@@ -15,6 +15,7 @@ interface InputProps {
   disabled?: boolean;
   height?: string;
   errorMsg?: string;
+  checkIcon?: boolean;
   fontSize?: string;
   borderRadius?: string;
   onBlur?: () => void;
@@ -34,6 +35,7 @@ const Input = (props: InputProps) => {
     disabled,
     height,
     errorMsg = "사용불가",
+    checkIcon = true,
     fontSize,
     borderRadius,
     onBlur,
@@ -77,7 +79,7 @@ const Input = (props: InputProps) => {
           />
           {isValid !== undefined && (
             <Valid>
-              {isValid === true && (
+              {isValid === true && checkIcon === true && (
                 <Image
                   src="/assets/icons/check.svg"
                   width={19}
