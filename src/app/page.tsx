@@ -120,7 +120,8 @@ const Login = () => {
                 value="autoLogin"
                 isChecked={autoLogin}
                 onChange={(isChecked) => setAutoLogin(isChecked)}
-              ></Checkbox>
+                gap="0px"
+              />
               자동 로그인
               <Bar />
               <Link href="/password/find">비밀번호 찾기</Link>

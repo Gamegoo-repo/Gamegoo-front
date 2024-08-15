@@ -11,6 +11,7 @@ interface CheckboxProps {
   isArraychecked?: boolean;
   onArrayChange?: (checked: number) => void;
   fontSize?: string;
+  gap?: string;
   color?: string;
   id?: string;
 }
@@ -26,6 +27,7 @@ const Checkbox = (props: CheckboxProps) => {
     onArrayChange,
     fontSize,
     color,
+    gap,
     id,
   } = props;
   const [checked, setChecked] = useState<boolean>(isChecked);
@@ -51,6 +53,7 @@ const Checkbox = (props: CheckboxProps) => {
     <StyledCheckbox
       fontSize={fontSize || "semiBold16"}
       color={color || "black"}
+      gap={gap || "1.7rem"}
     >
       <Check
         id={id}
@@ -66,10 +69,14 @@ const Checkbox = (props: CheckboxProps) => {
 
 export default Checkbox;
 
-const StyledCheckbox = styled.div<{ fontSize: string; color: string }>`
+const StyledCheckbox = styled.div<{
+  fontSize: string;
+  color: string;
+  gap: string;
+}>`
   display: flex;
   align-items: center;
-  gap: 1.7rem;
+  gap: ${({ gap }) => (gap ? gap : "1.7rem")};
   row-gap: 20rem;
   cursor: pointer;
   ${(props) =>
