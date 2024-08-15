@@ -18,6 +18,7 @@ const ProfilePage = () => {
   const [profileType, setProfileType] = useState<profileType | undefined>();
   const searchParams = useSearchParams();
   const params = searchParams.get("type");
+  const rank = searchParams.get("rank");
 
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user);
@@ -36,25 +37,21 @@ const ProfilePage = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (
-      params &&
-      (params === "fun" ||
-        params === "hard" ||
-        params === "other" ||
-        params === "me")
-    ) {
-      setProfileType(params as profileType);
+    if (rank === "wind" || params === "other" || params === "me") {
+      setProfileType(rank as profileType);
+    } else if (rank === "personal" || "free" || "fast") {
+      setProfileType("normal");
     } else {
       setProfileType(undefined);
     }
-  }, [params]);
+  }, [rank, params]);
 
   return (
     <Wrapper>
       <MatchContent>
         <HeaderTitle title="프로필 설정" />
         <Main>
-          <Profile profileType={profileType ?? "fun"} user={user} />
+          <Profile profileType={profileType ?? "normal"} user={user} />
           <Button
             buttonType="primary"
             width="380px"

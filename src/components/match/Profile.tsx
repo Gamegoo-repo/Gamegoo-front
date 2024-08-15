@@ -20,7 +20,7 @@ import { User } from "@/interface/profile";
 import { toLowerCaseString } from "@/utils/string";
 import { PositionState } from "../crBoard/PositionBox";
 
-type profileType = "fun" | "hard" | "other" | "me";
+type profileType = "normal" | "wind" | "other" | "me";
 
 interface Profile {
   user: User;
@@ -310,7 +310,7 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
               </More>
             )}
           </TopContainer>
-          {profileType === "fun" ? (
+          {profileType === "wind" ? (
             <GameStyle
               profileType="none"
               gameStyleResponseDTOList={user.gameStyleResponseDTOList}
@@ -367,9 +367,9 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
           )}
         </StyledBox>
       </Row>
-      {(profileType === "hard" || profileType === "other") && (
+      {(profileType === "normal" || profileType === "other") && (
         <GameStyle
-          profileType={profileType === "hard" ? "none" : profileType}
+          profileType={profileType === "normal" ? "none" : profileType}
           gameStyleResponseDTOList={user.gameStyleResponseDTOList}
           // mic={user.mic}
           mic={false}

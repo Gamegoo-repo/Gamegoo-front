@@ -1,4 +1,4 @@
-export type profileType = "fun" | "hard" | "other" | "me";
+export type profileType = "normal" | "wind" | "other" | "me";
 
 export interface Champion {
   championId: number;
