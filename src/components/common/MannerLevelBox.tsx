@@ -2,8 +2,8 @@ import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
 import { useEffect, useState } from "react";
-import { getBadMannerValues, getMannerValues } from "@/api/manner";
-import { MannerList } from "@/interface/manner";
+import { MannerKeywords, OthersManner } from "@/interface/manner";
+import { getOthersManner } from "@/api/manner";
 
 const data = {
   good_manner: {
@@ -37,25 +37,29 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
   const mannerEvaluations = Object.entries(data.good_manner);
   const badMannerEvaluations = Object.entries(data.bad_manner);
 
-  const [mannerData, setMannerData] = useState<MannerList>();
-  const [badMannerData, setBadMannerData] = useState<MannerList>();
+  const [mannerData, setMannerData] = useState<OthersManner>();
+  const [positiveKeywords, setPositiveKeywords] = useState<MannerKeywords[]>([]);
+  const [negativeKeywords, setNegativeKeywords] = useState<MannerKeywords[]>([]);
 
   useEffect(() => {
-    const getManner = async () => {
-      const good = await getMannerValues(memberId);
-      setMannerData(good.result);
-      console.log("good:", good.result);
+    const getManners = async () => {
+      const manner = await getOthersManner(memberId);
+      await setMannerData(manner.result);
+      const positive = manner.result.mannerKeywords.filter((keyword: MannerKeywords) => keyword.isPositive);
+      const negative = manner.result.mannerKeywords.filter((keyword: MannerKeywords) => !keyword.isPositive);
+
+      setPositiveKeywords(positive);
+      setNegativeKeywords(negative);
+      console.log("manner:", manner.result);
     };
 
-    const getBadManner = async () => {
-      const bad = await getBadMannerValues(memberId);
-      setBadMannerData(bad.result);
-      console.log("bad:", bad.result);
-    };
-
-    getManner();
-    getBadManner();
+    getManners();
   }, [memberId]);
+
+  const getMannerText = (id: number) => {
+    const match = MANNER_TYPES.find(type => type.id === id);
+    return match ? match.text : '';  
+  };
 
   return (
     <Wrapper $top={top} $right={right}>
@@ -63,8 +67,17 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
       <MannerEvaluations>
         <Div>
           <SubTitle>받은 매너평가</SubTitle>
-          <MannerListBox>
-            <ValueWrapper>
+          {positiveKeywords.map((positive, index) => {
+            return (
+              <MannerListBox key={index}>
+                <ValueWrapper>
+                  {positive.count}
+                </ValueWrapper>
+                <TypeWrapper>
+                  {getMannerText(positive.mannerKeywordId)}
+                </TypeWrapper>
+
+                {/* <ValueWrapper>
               {mannerEvaluations.map(([key, value]) => {
                 return (
                   <Value
@@ -89,8 +102,10 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
                   </Type>
                 );
               })}
-            </TypeWrapper>
-          </MannerListBox>
+            </TypeWrapper> */}
+              </MannerListBox>
+            )
+          })}
         </Div>
         <Div>
           <SubTitle>받은 비매너평가</SubTitle>

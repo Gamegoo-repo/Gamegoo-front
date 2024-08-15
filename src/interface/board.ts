@@ -1,3 +1,5 @@
+import { MannerKeywords } from "./manner";
+
 export interface BoardList {
     boardId: number;
     memberId: number;
@@ -12,12 +14,6 @@ export interface BoardList {
     championList: number[];
     winRate: number;
     createdAt: string;
-}
-
-interface MannerKeywords {
-    isPositive: boolean;
-    mannerKeywordId: number;
-    count: number;
 }
 
 export interface MemberPost {
