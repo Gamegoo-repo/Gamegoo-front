@@ -24,3 +24,15 @@ export const enterChatroom = async (chatroomUuid: string) => {
         throw error;
     }
 };
+
+/* 친구 목록 */
+export const getFriends = async () => {
+    try {
+        const response = await Axios.get("/v1/member/friends");
+        console.log("친구 목록 가져오기 성공:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("친구 목록 가져오기F 실패:", error);
+        throw error;
+    }
+};

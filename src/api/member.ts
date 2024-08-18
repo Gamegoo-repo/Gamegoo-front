@@ -7,18 +7,6 @@ interface ReportInterface {
     contents: string;
 }
 
-/* 유저 정보 가져오기 */
-export const getUserInfo = async () => {
-    try {
-        const response = await AuthAxios.get("/v1/member/profile");
-        console.log("유저 데이터 성공:", response.data);
-        return response.data;
-    } catch (error) {
-        console.error("유저 데이터 불러오기 실패:", error);
-        throw error;
-    }
-};
-
 /* 차단하기 */
 export const blockMember = async (memberId: number) => {
     try {

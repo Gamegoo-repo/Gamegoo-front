@@ -3,7 +3,6 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import ChatWindow from "../chat/ChatWindow";
-import { UserInfo } from "@/interface/profile";
 import Alert from "./Alert";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -17,10 +16,10 @@ const ChatButton = (props: msgCountProps) => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
-  const userName = useSelector((state: RootState) => state.user.gameName);
+  const isUser = useSelector((state: RootState) => state.user);
 
   const toggleChat = () => {
-    if (!userName) {
+    if (!isUser.id) {
       return setShowAlert(true);
     }
     setIsChatOpen((prevState) => !prevState);

@@ -51,3 +51,10 @@ export interface Chat {
     timestamp?: number;
     chatMessageList: ChatMessageList;
 }
+
+export interface FriendsList {
+    memberId: number;
+    name: string;
+    memberProfileImg: number;
+    liked: boolean;
+}

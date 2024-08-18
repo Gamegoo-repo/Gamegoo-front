@@ -17,7 +17,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { setClosePostingModal, setOpenModal, setOpenPostingModal } from "@/redux/slices/modalSlice";
 import { getBoardList } from "@/api/board";
 import { BoardList } from "@/interface/board";
-import { getUserInfo } from "@/api/member";
 import Alert from "@/components/common/Alert";
 import { useRouter } from "next/navigation";
 
@@ -44,7 +43,7 @@ const BoardPage = () => {
 
   const isPostingModal = useSelector((state: RootState) => state.modal.postingModal);
   const isCompletedPosting = useSelector((state: RootState) => state.modal.modalType);
-  const userName = useSelector((state: RootState) => state.user.gameName);
+  const isUser = useSelector((state: RootState) => state.user);
 
   // 게임모드 드롭
   const handleGameModeDropValue = (id: number | null) => {
@@ -134,7 +133,7 @@ const BoardPage = () => {
 
   /* 글쓰기 모달 오픈 */
   const handlePostingOpen = () => {
-    if (!userName) {
+    if (!isUser.id) {
       return setShowAlert(true);
     }
     dispatch(setOpenPostingModal());

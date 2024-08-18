@@ -14,7 +14,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { setOpenModal } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
 import { editPost, postBoard } from "@/api/board";
-import { getUserInfo } from "@/api/member";
 import { UserInfo } from "@/interface/profile";
 import { clearCurrentPost } from "@/redux/slices/postSlice";
 import { PostReq } from "@/interface/board";
@@ -46,28 +45,28 @@ const PostBoard = (props: PostBoardProps) => {
   const currentPostId = useSelector(
     (state: RootState) => state.post.currentPostId
   );
+  const isUser = useSelector((state:RootState)=>state.user);
 
   const [isProfileListOpen, setIsProfileListOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [userInfo, setUserInfo] = useState<UserInfo>();
   const [selectedImageIndex, setSelectedImageIndex] = useState<
     number | undefined
-  >(currentPost?.profileImage ?? userInfo?.profileImg);
+  >(currentPost?.profileImage ?? isUser?.profileImg);
   const [selectedDropOption, setSelectedDropOption] = useState<number>(
     currentPost?.gameMode || 1
   );
   const [positionValue, setPositionValue] = useState<PositionState | undefined>(
     {
-      main: currentPost?.mainPosition || userInfo?.mainP || 0,
-      sub: currentPost?.subPosition || userInfo?.subP || 0,
+      main: currentPost?.mainPosition || isUser?.mainP || 0,
+      sub: currentPost?.subPosition || isUser?.subP || 0,
       want: currentPost?.wantPosition || 0,
     }
   );
 
   const [isMicOn, setIsMicOn] = useState<boolean>(currentPost?.mike || false);
   const gameStyleIds =
-    userInfo?.gameStyleResponseDTOList?.map((item) => item.gameStyleId) || [];
+  isUser?.gameStyleResponseDTOList?.map((item) => item.gameStyleId) || [];
   const [selectedStyleIds, setSelectedStyleIds] = useState<number[]>(
     currentPost?.gameStyles ?? gameStyleIds
   );
@@ -95,19 +94,19 @@ const PostBoard = (props: PostBoardProps) => {
 
   /* userInfo가 업데이트된 후 상태 업데이트 */
   useEffect(() => {
-    if (!!userInfo && !currentPost) {
+    if (!!isUser.id && !currentPost) {
       setPositionValue({
-        main: userInfo.mainP ? userInfo.mainP : 0,
-        sub: userInfo.subP ? userInfo.subP : 0,
+        main: isUser.mainP ? isUser.mainP : 0,
+        sub: isUser.subP ? isUser.subP : 0,
         want: 0,
       });
-      setSelectedImageIndex(userInfo.profileImg);
+      setSelectedImageIndex(isUser.profileImg);
       const ids =
-        userInfo?.gameStyleResponseDTOList?.map((item) => item.gameStyleId) ||
+      isUser?.gameStyleResponseDTOList?.map((item) => item.gameStyleId) ||
         [];
       setSelectedStyleIds(ids);
     }
-  }, [userInfo, currentPost]);
+  }, [isUser, currentPost]);
 
   /* 프로필 이미지 리스트 중 클릭시 */
   const handleImageClick = (index: number) => {
@@ -164,7 +163,7 @@ const PostBoard = (props: PostBoardProps) => {
   /* 글쓰기 */
   const handlePost = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!userInfo) {
+    if (!isUser.id) {
       return setShowAlert(true);
     }
     if (
@@ -210,16 +209,6 @@ const PostBoard = (props: PostBoardProps) => {
     dispatch(clearCurrentPost());
   };
 
-  /* 유저 정보 api */
-  useEffect(() => {
-    const getUserData = async () => {
-      const data = await getUserInfo();
-      setUserInfo(data.result);
-    };
-
-    getUserData();
-  }, []);
-
   return (
     <CRModal type="posting" onClose={handleModalClose}>
       {showAlert && (
@@ -243,7 +232,7 @@ const PostBoard = (props: PostBoardProps) => {
         </ConfirmModal>
       )}
       <Form onSubmit={handlePost}>
-        {userInfo && (
+        {isUser.id && (
           <UserSection>
             <UpdateProfileImage
               selectedImageIndex={selectedImageIndex}
@@ -252,9 +241,9 @@ const PostBoard = (props: PostBoardProps) => {
               onImageClick={handleImageClick}
             />
             <User
-              account={userInfo.gameName}
-              tag={userInfo.tag}
-              tier={userInfo.tier}
+              account={isUser.gameName}
+              tag={isUser.tag}
+              tier={isUser.tier}
             />
           </UserSection>
         )}
@@ -290,7 +279,7 @@ const PostBoard = (props: PostBoardProps) => {
         </PositionSection>
         <StyleSection>
           <Title className="gameStyleTitle">게임 스타일</Title>
-          {userInfo && (
+          {isUser.id && (
             <GameStyle
               selectedIds={selectedStyleIds}
               setSelectedStyleIds={setSelectedStyleIds}
