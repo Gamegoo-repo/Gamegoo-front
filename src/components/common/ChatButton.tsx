@@ -19,9 +19,9 @@ const ChatButton = (props: msgCountProps) => {
   const isUser = useSelector((state: RootState) => state.user);
 
   const toggleChat = () => {
-    if (!isUser.id) {
-      return setShowAlert(true);
-    }
+    // if (!isUser.id) {
+    //   return setShowAlert(true);
+    // }
     setIsChatOpen((prevState) => !prevState);
   };
 

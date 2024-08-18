@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useState } from "react";
 import PositionCategory from "../common/PositionCategory";
 
-type status = "reading";
+type status = "reading" | "posting";
 
 interface PositionBoxProps {
   status?: status;
@@ -66,7 +66,7 @@ const PositionBox = (props: PositionBoxProps) => {
   };
 
   const handleBoxClick = (position: Position) => {
-    // if (status === "reading") return;
+    if (status === "reading") return;
     setOpenPosition((prevPosition) =>
       prevPosition === position ? null : position
     );
@@ -83,8 +83,8 @@ const PositionBox = (props: PositionBoxProps) => {
       <FirstBox>
         <Section>
           <Title>주 포지션</Title>
-          <Image
-            // $status={status}
+          <StyledImage
+            $status={status}
             onClick={() => handleBoxClick("main")}
             src={handlePositionImgSet(positionValue.main)}
             width={35}
@@ -101,8 +101,8 @@ const PositionBox = (props: PositionBoxProps) => {
         </Section>
         <Section>
           <Title>부 포지션</Title>
-          <Image
-            // $status={status}
+          <StyledImage
+            $status={status}
             onClick={() => handleBoxClick("sub")}
             src={handlePositionImgSet(positionValue.sub)}
             width={35}
@@ -120,8 +120,8 @@ const PositionBox = (props: PositionBoxProps) => {
       </FirstBox>
       <SecondBox>
         <Title>찾는 포지션</Title>
-        <Image
-          // $status={status}
+        <StyledImage
+          $status={status}
           onClick={() => handleBoxClick("want")}
           src={handlePositionImgSet(positionValue.want)}
           width={35}

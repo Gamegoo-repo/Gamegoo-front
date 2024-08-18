@@ -45,7 +45,7 @@ const PostBoard = (props: PostBoardProps) => {
   const currentPostId = useSelector(
     (state: RootState) => state.post.currentPostId
   );
-  const isUser = useSelector((state:RootState)=>state.user);
+  const isUser = useSelector((state: RootState) => state.user);
 
   const [isProfileListOpen, setIsProfileListOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -66,7 +66,7 @@ const PostBoard = (props: PostBoardProps) => {
 
   const [isMicOn, setIsMicOn] = useState<boolean>(currentPost?.mike || false);
   const gameStyleIds =
-  isUser?.gameStyleResponseDTOList?.map((item) => item.gameStyleId) || [];
+    isUser?.gameStyleResponseDTOList?.map((item) => item.gameStyleId) || [];
   const [selectedStyleIds, setSelectedStyleIds] = useState<number[]>(
     currentPost?.gameStyles ?? gameStyleIds
   );
@@ -102,7 +102,7 @@ const PostBoard = (props: PostBoardProps) => {
       });
       setSelectedImageIndex(isUser.profileImg);
       const ids =
-      isUser?.gameStyleResponseDTOList?.map((item) => item.gameStyleId) ||
+        isUser?.gameStyleResponseDTOList?.map((item) => item.gameStyleId) ||
         [];
       setSelectedStyleIds(ids);
     }
@@ -157,7 +157,7 @@ const PostBoard = (props: PostBoardProps) => {
     try {
       await editPost(currentPostId, params);
       // await onClose();
-    } catch (error) {}
+    } catch (error) { }
   };
 
   /* 글쓰기 */
@@ -199,7 +199,7 @@ const PostBoard = (props: PostBoardProps) => {
       try {
         await postBoard(params);
         await dispatch(setOpenModal("completedPost"));
-      } catch (error) {}
+      } catch (error) { }
     }
   };
 
@@ -271,6 +271,7 @@ const PostBoard = (props: PostBoardProps) => {
         <PositionSection>
           <Title className="positionTitle">포지션</Title>
           <PositionBox
+            status="posting"
             onPositionChange={handlePositionChange}
             main={positionValue?.main}
             sub={positionValue?.sub}

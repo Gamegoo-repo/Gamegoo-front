@@ -3,8 +3,6 @@ import { theme } from "@/styles/theme";
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import DeleteFriend from './DeleteFriend';
-import { getFriends } from '@/api/chat';
-import { FriendsList } from '@/interface/chat';
 
 interface FriendListInterface {
     id: number;
@@ -16,17 +14,17 @@ interface FriendListInterface {
 
 interface FriendListProps {
     list: FriendListInterface[];
-    onChatRoom: (uuid: string) => void;
+    onChatRoom: (id: number) => void;
 }
 
 const FriendsList = ({ list, onChatRoom }: FriendListProps) => {
 
-    const [friends, setFriends] = useState<FriendsList[]>([]);
+    const [friends, setFriends] = useState<FriendListInterface[]>(list);
 
     const [deleteMenu, setDeleteMenu] = useState<{ x: number, y: number, friendId: number | null }>({ x: 0, y: 0, friendId: null });
 
-    const favoriteFriends = friends.filter(friend => friend.liked);
-    const nonFavoriteFriends = friends.filter(friend => !friend.liked);
+    const favoriteFriends = friends.filter(friend => friend.favorites === 1);
+    const nonFavoriteFriends = friends.filter(friend => friend.favorites === 0);
 
     const handleContextMenu = (event: React.MouseEvent, friendId: number) => {
         event.preventDefault();
@@ -69,19 +67,6 @@ const FriendsList = ({ list, onChatRoom }: FriendListProps) => {
     if (friends.length === 0) {
         return null;
     }
-
-    useEffect(()=>{
-        const handleFetchFriends = async () => {
-            try {
-                const data = await getFriends();
-                setFriends(data.result);
-            } catch (error) {
-                console.error("에러:", error);
-            }
-        };
-
-        handleFetchFriends();
-    },[])
 
     return (
         <>
@@ -245,4 +230,3 @@ const Online = styled(Image)`
     top: 19%;
     right: -4%;
 `;
-

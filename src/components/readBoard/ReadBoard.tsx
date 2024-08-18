@@ -331,7 +331,7 @@ const ReadBoard = (props: ReadBoardProps) => {
         const memberData = await getMemberPost(postId);
         setIsPost(memberData.result);
         const hasPosition = memberData.result.some((item: MemberPost) => 'mainPosition' in item);
-console.log("유저있다")
+
         // 글 type 설정
         setType(hasPosition ? 'canyon' : 'wind');
         setLoading(false);
@@ -339,7 +339,6 @@ console.log("유저있다")
 
       if (!isUser.id) {
         const nonMember = await getNonMemberPost(postId);
-console.log("유저없다")
 
         setIsPost(nonMember.result);
         setLoading(false);

@@ -32,7 +32,7 @@ export const getFriends = async () => {
         console.log("친구 목록 가져오기 성공:", response.data);
         return response.data;
     } catch (error) {
-        console.error("친구 목록 가져오기F 실패:", error);
+        console.error("친구 목록 가져오기 실패:", error);
         throw error;
     }
 };
