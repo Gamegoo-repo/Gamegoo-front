@@ -20,7 +20,7 @@ import { MemberPost, NonMemberPost } from "@/interface/board";
 import { deletePost, getMemberPost, getNonMemberPost } from "@/api/board";
 import LoadingSpinner from "../common/LoadingSpinner";
 import { setPostingDateFormatter } from "@/utils/custom";
-import { blockMember,  reportMember, unblockMember } from "@/api/member";
+import { blockMember, reportMember, unblockMember } from "@/api/member";
 import FormModal from "../common/FormModal";
 import Input from "../common/Input";
 import Checkbox from "../common/Checkbox";
@@ -187,17 +187,17 @@ const ReadBoard = (props: ReadBoardProps) => {
   };
 
   /* 친구 요청 취소 */
-  const handleCancelFriendReq = async()=>{
+  const handleCancelFriendReq = async () => {
     if (!isUser.id) {
       return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
     }
- 
+
     if (!isPost || isUser?.id === isPost?.memberId) return;
 
     try {
       await cancelFriendReq(isPost.memberId);
       await handleMoreBoxClose();
-      setIsFriendStatus(true);
+      setIsFriendStatus(false);
     } catch (error) {
     }
 

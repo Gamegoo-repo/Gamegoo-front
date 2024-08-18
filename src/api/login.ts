@@ -1,6 +1,5 @@
 import axios from "axios";
 import { BASE_URL } from ".";
-import { connectSocket } from "@/socket";
 
 interface loginProps {
     email: string;
@@ -23,9 +22,7 @@ export const postLogin = async ({
         },
       });
       console.log('로그인 성공:', response.data);
-      
-      /* 로그인 시 소켓 연결 */
-      connectSocket();
+  
       return response.data;
     } catch (error) {
       console.error('로그인 실패:', error);
