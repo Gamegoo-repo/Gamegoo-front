@@ -89,5 +89,5 @@ export function setChatRoomDateFormatter(date: string) {
 };
 
 export function setPostingDateFormatter(date: string) {
-    return dayjs(date).format('YYYY.MM.DD hh:mm');
+    return dayjs(date).format('YYYY.MM.DD HH:mm');
 };
