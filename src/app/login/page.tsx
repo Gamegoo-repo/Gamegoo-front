@@ -12,7 +12,7 @@ import { AxiosError } from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
@@ -39,6 +39,14 @@ const Login = () => {
       setPasswordValid(true);
     }
   };
+
+  useEffect(() => {
+    if (email.length !== 0) {
+      validateEmail(email);
+    } else if (password.length !== 0) {
+      validatePassword(password);
+    }
+  }, [email, password]);
 
   /* 로그인 */
   const handleLogin = async () => {

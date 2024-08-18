@@ -43,7 +43,6 @@ export default Button;
 const StyledButton = styled.button<{ width?: string }>`
   width: ${({ width }) => width || "100%"};
   padding: 19px 30px;
-  border: none;
   border-radius: 15px;
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.bold14};
