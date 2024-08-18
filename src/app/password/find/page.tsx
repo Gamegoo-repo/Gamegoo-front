@@ -1,17 +1,35 @@
 "use client";
 
+import { sendEmail } from "@/api/password";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
+import {
+  updateAuthStatus,
+  updateEmail,
+  updateEmailAuth,
+} from "@/redux/slices/passwordSlice";
+import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 const Find = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [emailValid, setEmailValid] = useState<boolean | undefined>(undefined);
-  const [isSend, setIsSend] = useState(false);
+
+  const emailRedux = useSelector((state: RootState) => state.password.email);
+
+  /* redux 업데이트 */
+  useEffect(() => {
+    setEmail(emailRedux);
+    if (emailRedux.length !== 0) {
+      validateEmail(emailRedux);
+    }
+  }, [emailRedux]);
 
   const emailRegEx =
     /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
@@ -20,8 +38,15 @@ const Find = () => {
     setEmailValid(emailRegEx.test(email));
   };
 
-  const handleSendEmail = () => {
-    setIsSend(true);
+  const handleSendEmail = async () => {
+    try {
+      await sendEmail({ email });
+      dispatch(updateEmail(email));
+      dispatch(updateEmailAuth(""));
+      dispatch(updateAuthStatus(false));
+    } catch (error) {
+      setEmailValid(false);
+    }
     router.push("/password/auth");
   };
 
@@ -41,7 +66,6 @@ const Find = () => {
           }}
           placeholder="이메일 주소"
           isValid={emailValid}
-          disabled={isSend}
         />
         <Button
           buttonType="primary"

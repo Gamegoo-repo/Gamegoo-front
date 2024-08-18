@@ -48,6 +48,7 @@ const StyledButton = styled.button<{ width?: string }>`
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.bold14};
   white-space: nowrap;
+  transition: color 200ms, background-color 200ms;
 
   /*buttonType*/
   &.primary {

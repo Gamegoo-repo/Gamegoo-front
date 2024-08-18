@@ -15,8 +15,10 @@ interface InputProps {
   disabled?: boolean;
   height?: string;
   errorMsg?: string;
+  checkIcon?: boolean;
   fontSize?: string;
   borderRadius?: string;
+  tag?: boolean;
   onBlur?: () => void;
   maxLeng?: number;
 }
@@ -34,10 +36,12 @@ const Input = (props: InputProps) => {
     disabled,
     height,
     errorMsg = "사용불가",
+    checkIcon = true,
     fontSize,
     borderRadius,
+    tag = false,
     onBlur,
-    maxLeng
+    maxLeng,
   } = props;
 
   const handleChange = (event: any) => {
@@ -73,11 +77,13 @@ const Input = (props: InputProps) => {
             disabled={disabled}
             borderRadius={borderRadius || "15px"}
             height={height}
+            tag={tag}
             onBlur={onBlur}
           />
+          {tag && <Tag>#</Tag>}
           {isValid !== undefined && (
             <Valid>
-              {isValid === true && (
+              {isValid === true && checkIcon === true && (
                 <Image
                   src="/assets/icons/check.svg"
                   width={19}
@@ -113,22 +119,22 @@ const StyledLabel = styled.label`
 const StyledInput = styled.input<InputProps>`
   width: 100%;
   min-height: ${({ height }) => (height ? height : "58px")};
-  padding: 11px 20px;
+  padding: ${({ tag }) => (tag ? "11px 30px" : "11px 20px")};
   border-radius: ${({ borderRadius }) =>
     borderRadius ? borderRadius : "15px"};
   border: ${({ isValid }) =>
     isValid === undefined
       ? `1px solid #b5b5b5`
       : isValid === true
-        ? `1px solid ${theme.colors.purple300}`
-        : `1px solid ${theme.colors.error100}`};
+      ? `1px solid ${theme.colors.purple300}`
+      : `1px solid ${theme.colors.error100}`};
   color: ${theme.colors.black};
   ${(props) => props.theme.fonts.regular16}
 
   &:focus {
     outline: none;
     border: ${({ isValid }) =>
-    isValid === undefined && `1px solid ${theme.colors.purple300}`};
+      isValid === undefined && `1px solid ${theme.colors.purple300}`};
   }
 
   &:disabled {
@@ -171,6 +177,15 @@ const StyledTextarea = styled.textarea<{
 
 const Box = styled.div`
   position: relative;
+`;
+
+const Tag = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  transform: translate(0, -50%);
+  color: ${theme.colors.black};
+  ${(props) => props.theme.fonts.medium16}
 `;
 
 const Valid = styled.div`

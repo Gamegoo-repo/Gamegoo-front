@@ -5,6 +5,7 @@ import { updateEmail, updatePassword } from '../slices/signInSlice';
 import { AxiosError } from 'axios';
 
 interface SignInData {
+  isAgree: boolean;
   email: string;
   password: string;
   gameName: string;
@@ -20,6 +21,7 @@ export const postSignIn = createAsyncThunk(
 
        /* API 호출을 위한 요청 데이터 준비 */
       const joinData = {
+        isAgree: signInState.terms[2],
         email: signInState.email,
         password: signInState.password,
         gameName: signInState.summonerName,

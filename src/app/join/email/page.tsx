@@ -1,6 +1,6 @@
 "use client";
 
-import { sendAuth, sendEmail } from "@/api/join";
+import { sendAuth, sendJoinEmail } from "@/api/join";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import { emailRegEx } from "@/constants/regEx";
@@ -12,7 +12,7 @@ import {
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
@@ -25,7 +25,11 @@ const Email = () => {
   const [authCodeValid, setAuthCodeValid] = useState<boolean | undefined>(
     undefined
   );
+  const [isSendClick, setIsSendClick] = useState(false);
   const [isSend, setIsSend] = useState(false);
+  /* 타이머 */
+  const [timer, setTimer] = useState<number>(180);
+  const [timerColor, setTimerColor] = useState<string>(theme.colors.purple100);
 
   const emailRedux = useSelector((state: RootState) => state.signIn.email);
   const authCodeRedux = useSelector(
@@ -34,6 +38,30 @@ const Email = () => {
   const authStatusRedux = useSelector(
     (state: RootState) => state.signIn.authStatus
   );
+
+  const handlePopState = useCallback(() => {
+    setAuthCode("");
+    setEmailValid(undefined);
+    setAuthCodeValid(undefined);
+    setIsSendClick(false);
+    setIsSend(false);
+    dispatch(updateEmailAuth(""));
+    dispatch(updateAuthStatus(false));
+  }, [dispatch, isSendClick, authStatusRedux]);
+
+  /* 뒤로가기 이벤트 감지 */
+  useEffect(() => {
+    if (isSendClick && !authStatusRedux) {
+      console.log(isSendClick, authStatusRedux);
+      history.pushState(null, "", window.location.href);
+      window.addEventListener("popstate", handlePopState);
+    }
+
+    console.log(isSendClick, authStatusRedux);
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [handlePopState, isSendClick, authStatusRedux]);
 
   /* redux 업데이트 */
   useEffect(() => {
@@ -50,31 +78,69 @@ const Email = () => {
   };
 
   const handleSendEmail = async () => {
+    setIsSendClick(true);
     try {
-      await sendEmail({ email });
+      await sendJoinEmail({ email });
       setAuthCode("");
       setAuthCodeValid(undefined);
       dispatch(updateEmailAuth(""));
       dispatch(updateAuthStatus(false));
       setIsSend(true);
+      setTimer(180);
     } catch (error) {
       setEmailValid(false);
     }
   };
 
+  /* 타이머 */
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout;
+
+    if (isSend) {
+      intervalId = setInterval(() => {
+        setTimer((prev) => {
+          if (prev <= 0) {
+            clearInterval(intervalId);
+            setIsSend(false);
+            setAuthCodeValid(false);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      // 타이머 색상 업데이트
+      if (timer <= 30) {
+        setTimerColor(theme.colors.error100);
+      } else {
+        setTimerColor(theme.colors.purple100);
+      }
+    }
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [isSend, timer]);
+
   const handleSendCode = async () => {
-    try {
-      await sendAuth({ email, code: authCode });
-
-      // Redux 상태 업데이트
-      dispatch(updateEmail(email));
-      dispatch(updateEmailAuth(authCode));
-      dispatch(updateAuthStatus(true));
-
-      setAuthCodeValid(true);
+    if (authCodeRedux) {
       router.push("/join/password");
-    } catch (error) {
-      setAuthCodeValid(false);
+    } else {
+      try {
+        await sendAuth({ email, code: authCode });
+
+        console.log("여기", email, authCode);
+        // Redux 상태 업데이트
+        dispatch(updateEmail(email));
+        dispatch(updateEmailAuth(authCode));
+        dispatch(updateAuthStatus(true));
+        console.log("ㅎㅎ", authStatusRedux);
+
+        setAuthCodeValid(true);
+        router.push("/join/password");
+      } catch (error) {
+        setAuthCodeValid(false);
+      }
     }
   };
 
@@ -88,33 +154,48 @@ const Email = () => {
           setEmail(value);
           setIsSend(false);
           validateEmail(value);
+          if (authCodeRedux) {
+            setIsSend(false);
+            dispatch(updateAuthStatus(false));
+          }
         }}
         placeholder="이메일 주소"
         isValid={emailValid}
+        disabled={isSend}
       />
-      {(isSend || authCodeRedux) && (
-        <Input
-          inputType="input"
-          value={authCode}
-          onChange={(value) => {
-            setAuthCode(value);
-            if (value.length === 5) {
-              setAuthCodeValid(true);
-            } else if (value.length === 0) {
-              setAuthCodeValid(undefined);
-            } else {
-              setAuthCodeValid(false);
-            }
-          }}
-          placeholder="인증 코드 입력"
-          isValid={authCodeValid}
-        />
+      {isSend && !authCodeRedux && (
+        <CodeBox>
+          <Input
+            inputType="input"
+            value={authCode}
+            onChange={(value) => {
+              setAuthCode(value);
+              if (value.length === 5) {
+                setAuthCodeValid(true);
+              } else if (value.length === 0) {
+                setAuthCodeValid(undefined);
+              } else {
+                setAuthCodeValid(false);
+              }
+            }}
+            placeholder="인증 코드 입력"
+            isValid={authCodeValid}
+            errorMsg=""
+            checkIcon={false}
+          />
+          {!authCodeRedux && (
+            <Timer color={timerColor}>{`${Math.floor(timer / 60)}:${String(
+              timer % 60
+            ).padStart(2, "0")}`}</Timer>
+          )}
+        </CodeBox>
       )}
-      {isSend || authCodeRedux ? (
+      {isSend || authStatusRedux ? (
         <Button
           buttonType="primary"
           text="인증 완료"
           onClick={handleSendCode}
+          disabled={!authCodeValid}
         />
       ) : (
         <Button
@@ -143,6 +224,22 @@ const Div = styled.div`
 const Label = styled.div`
   color: ${theme.colors.gray700};
   ${(props) => props.theme.fonts.regular25};
+`;
+
+const CodeBox = styled.div`
+  width: 100%;
+  height: 58px;
+  position: relative;
+`;
+
+const Timer = styled.div<{ color: string }>`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  transform: translate(0, -50%);
+  font-size: 16px;
+  color: ${(props) => props.color};
+  margin-top: 10px;
 `;
 
 const ReButton = styled.button`

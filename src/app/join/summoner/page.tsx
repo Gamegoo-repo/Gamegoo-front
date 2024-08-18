@@ -2,6 +2,7 @@
 
 import { checkRiot, joinMember } from "@/api/join";
 import Button from "@/components/common/Button";
+import ConfirmModal from "@/components/common/ConfirmModal";
 import Input from "@/components/common/Input";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
@@ -22,12 +23,14 @@ const Summoner = () => {
   const [name, setName] = useState("");
   const [tag, setTag] = useState("");
 
+  const isAgree = useSelector((state: RootState) => state.signIn.terms[2]);
   const email = useSelector((state: RootState) => state.signIn.email);
   const password = useSelector((state: RootState) => state.signIn.password);
 
   const [isCheckRiot, setIsCheckRiot] = useState<boolean | undefined>(
     undefined
   );
+  const [isCheckRiotModal, setIsCheckRiotModal] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState("");
 
   const summonerNameRedux = useSelector(
@@ -43,38 +46,23 @@ const Summoner = () => {
     setTag(summonerTagRedux);
   }, [summonerNameRedux, summonerTagRedux]);
 
-  /* input focus out 시 소환사명 조회 */
+  /* 소환사명 조회 */
   const handleCheckSummoner = async () => {
-    console.log("소환사명 조회(onBlur)");
     try {
       await checkRiot({ gameName: name, tag });
+      setIsCheckRiotModal(true);
       setIsCheckRiot(true);
       setErrorMsg("");
     } catch (err) {
       const error = err as AxiosError<RiotErrorResponse>;
-      setIsCheckRiot(false);
-      setErrorMsg(
-        error.response?.data?.message || "소환사명 인증에 실패했습니다."
-      );
+      console.log(error);
+      if (error) {
+        setErrorMsg(error.message);
+      } else {
+        setErrorMsg("소환사명 인증에 실패했습니다");
+      }
     }
   };
-
-  /* input 변경 시마다 소환사명 조회 */
-  // useEffect(() => {
-  //   const checkSummoner = async () => {
-  //     try {
-  //       await checkRiot({ gameName: name, tag });
-  //       setIsCheckRiot(true);
-  //     } catch (error) {
-  //       setIsCheckRiot(false);
-  //     }
-  //   };
-
-  //   if (name !== "" && tag !== "") {
-  //     checkSummoner();
-  //     console.log("소환사명 조회(useEffect)");
-  //   }
-  // }, [name, tag]);
 
   const handleSendJoin = async () => {
     console.log(email, password);
@@ -86,6 +74,7 @@ const Summoner = () => {
     if (isCheckRiot) {
       try {
         await joinMember({
+          isAgree,
           email,
           password,
           gameName: name,
@@ -94,14 +83,13 @@ const Summoner = () => {
         router.push("/");
       } catch (err) {
         const error = err as AxiosError<RiotErrorResponse>;
-        console.error(error.response?.data?.message);
-        setErrorMsg(
-          error.response?.data?.message ||
-            "회원가입에 실패했습니다. 다시 시도해주세요."
-        );
+        console.log(error);
+        if (error) {
+          setErrorMsg(error.message);
+        } else {
+          setErrorMsg("회원가입에 실패했습니다. 다시 시도해주세요.");
+        }
       }
-    } else {
-      setErrorMsg("소환사명을 인증해주세요.");
     }
   };
 
@@ -114,28 +102,51 @@ const Summoner = () => {
           value={name}
           onChange={(value) => {
             setName(value);
+            setIsCheckRiot(undefined);
+            setErrorMsg("");
           }}
-          onBlur={handleCheckSummoner}
           placeholder="소환사명"
+          errorMsg=""
           isValid={isCheckRiot}
         />
         <Input
           inputType="input"
           value={tag}
-          onBlur={handleCheckSummoner}
           onChange={(value) => {
             setTag(value);
+            setIsCheckRiot(undefined);
+            setErrorMsg("");
           }}
           placeholder="소환사 태그 (예시 : #KR1)"
+          tag={true}
+          errorMsg=""
           isValid={isCheckRiot}
         />
       </Row>
       <Error>{errorMsg}</Error>
-      <Button
-        buttonType="primary"
-        text="회원가입 완료"
-        onClick={handleSendJoin}
-      />
+      {isCheckRiot ? (
+        <Button
+          buttonType="primary"
+          text="회원가입 완료"
+          onClick={handleSendJoin}
+        />
+      ) : (
+        <Button
+          buttonType="primary"
+          text="확인"
+          onClick={handleCheckSummoner}
+          disabled={!name || !tag}
+        />
+      )}
+      {isCheckRiotModal && (
+        <ConfirmModal
+          width="540px"
+          primaryButtonText="확인"
+          onPrimaryClick={() => setIsCheckRiotModal(false)}
+        >
+          소환사명 인증이 완료되었습니다.
+        </ConfirmModal>
+      )}
     </Div>
   );
 };
@@ -146,22 +157,26 @@ const Div = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 22px;
 `;
 
 const Label = styled.div`
   color: #44515c;
   ${(props) => props.theme.fonts.regular25};
+  margin-bottom: 22px;
 `;
 
 const Row = styled.div`
   width: 100%;
   display: flex;
   gap: 15px;
+  margin-bottom: 6px;
 `;
 
 const Error = styled.div`
   height: 15px;
   color: ${theme.colors.error100};
-  ${(props) => props.theme.fonts.regular12}
+  ${(props) => props.theme.fonts.regular12};
+  margin-left: 18px;
+  margin-right: 18px;
+  margin-bottom: 30px;
 `;

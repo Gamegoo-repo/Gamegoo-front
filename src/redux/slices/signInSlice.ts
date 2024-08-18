@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface SignInState {
+    terms: boolean[];
     email: string;
     emailAuth: string;
     password: string;
@@ -10,6 +11,7 @@ interface SignInState {
 };
 
 const initialState: SignInState = {
+    terms: [false, false, false],
     email: '',
     emailAuth: '',
     password: '',
@@ -22,6 +24,9 @@ export const signInSlice = createSlice({
   name: 'signIn',
   initialState,
   reducers: {
+    updateTerms: (state, action: PayloadAction<boolean[]>) => {
+      state.terms = action.payload;
+    },
     updateEmail: (state, action: PayloadAction<string>) => {
       state.email = action.payload;
     },
@@ -41,6 +46,6 @@ export const signInSlice = createSlice({
   },
 });
 
-export const {updateEmail, updateEmailAuth, updatePassword, updateAuthStatus } = signInSlice.actions;
+export const {updateTerms, updateEmail, updateEmailAuth, updatePassword, updateAuthStatus } = signInSlice.actions;
 
 export default signInSlice.reducer;

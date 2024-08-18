@@ -1,32 +1,93 @@
 "use client";
 
+import { sendAuth } from "@/api/password";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import { theme } from "@/styles/theme";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 import styled from "styled-components";
+import {
+  updateAuthStatus,
+  updateEmailAuth,
+} from "@/redux/slices/passwordSlice";
 
-const Find = () => {
+const Auth = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [auth, setAuth] = useState("");
   const [authValid, setAuthValid] = useState<boolean | undefined>(undefined);
-  const [isSend, setIsSend] = useState(false);
+  const [authStatus, setAuthStatus] = useState(false);
+  const emailRedux = useSelector((state: RootState) => state.password.email);
+  const authRedux = useSelector((state: RootState) => state.password.emailAuth);
+  const authStatusRedux = useSelector(
+    (state: RootState) => state.password.authStatus
+  );
 
-  const emailRegEx =
-    /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
+  /* 타이머 */
+  const [timer, setTimer] = useState<number>(180);
+  const [timerColor, setTimerColor] = useState<string>(theme.colors.purple100);
+
+  useEffect(() => {
+    setAuth(authRedux);
+    if (authRedux.length !== 0) {
+      validateAuth(authRedux);
+    }
+  }, [emailRedux, authRedux, authStatusRedux]);
+
+  /* redux 업데이트 */
+  useEffect(() => {
+    setAuth(authRedux);
+    setAuthStatus(authStatus);
+  }, [authRedux, authStatus]);
 
   const validateAuth = (auth: string) => {
-    if (auth.length === 6) {
+    if (auth.length === 5) {
       setAuthValid(true);
     } else {
       setAuthValid(false);
     }
   };
 
-  const handleSendEmail = () => {
-    setIsSend(true);
-    router.push("/password/new");
+  /* 타이머 */
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout;
+
+    intervalId = setInterval(() => {
+      setTimer((prev) => {
+        if (prev <= 0) {
+          clearInterval(intervalId);
+          setAuthValid(false);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    // 타이머 색상 업데이트
+    if (timer <= 30) {
+      setTimerColor(theme.colors.error100);
+    } else {
+      setTimerColor(theme.colors.purple100);
+    }
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [timer]);
+
+  const handleSendCode = async () => {
+    try {
+      await sendAuth({ email: emailRedux, code: auth });
+      setAuthValid(true);
+      dispatch(updateEmailAuth(auth));
+      dispatch(updateAuthStatus(true));
+      router.push("/password/new");
+    } catch (error) {
+      setAuthValid(false);
+    }
   };
 
   return (
@@ -36,30 +97,39 @@ const Find = () => {
           비밀번호 재설정하기
           <Sub>이메일로 전송된 인증 코드를 입력해주세요.</Sub>
         </Title>
-        <Input
-          inputType="input"
-          value={auth}
-          onChange={(value) => {
-            setAuth(value);
-            validateAuth(value);
-          }}
-          placeholder="인증코드 입력"
-          isValid={authValid}
-          disabled={isSend}
-          errorMsg="잘못된 인증 코드입니다."
-        />
+        <CodeBox>
+          <Input
+            inputType="input"
+            value={auth}
+            onChange={(value) => {
+              setAuth(value);
+              validateAuth(value);
+              console.log();
+            }}
+            placeholder="인증코드 입력"
+            disabled={authStatusRedux}
+            isValid={authValid}
+            errorMsg=""
+            checkIcon={false}
+          />
+          {!authStatusRedux && (
+            <Timer color={timerColor}>{`${Math.floor(timer / 60)}:${String(
+              timer % 60
+            ).padStart(2, "0")}`}</Timer>
+          )}
+        </CodeBox>
         <Button
           buttonType="primary"
           text="인증 완료"
-          onClick={handleSendEmail}
-          disabled={!authValid}
+          onClick={handleSendCode}
+          disabled={!authValid && !authStatusRedux}
         />
       </Div>
     </Container>
   );
 };
 
-export default Find;
+export default Auth;
 
 const Container = styled.div`
   width: 100%;
@@ -88,4 +158,20 @@ const Title = styled.div`
 const Sub = styled.div`
   color: ${theme.colors.gray200};
   ${(props) => props.theme.fonts.regular18};
+`;
+
+const CodeBox = styled.div`
+  width: 100%;
+  height: 58px;
+  position: relative;
+`;
+
+const Timer = styled.div<{ color: string }>`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  transform: translate(0, -50%);
+  font-size: 16px;
+  color: ${(props) => props.color};
+  margin-top: 10px;
 `;
