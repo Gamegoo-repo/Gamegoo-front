@@ -12,6 +12,17 @@ export const reqFriend = async (memberId: number) => {
     }
 };
 
+export const cancelFriendReq = async (memberId: number) => {
+    try {
+        const response = await Axios.delete(`/v1/friends/request/${memberId}`);
+        console.log("친구 요청 취소 성공:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("친구 요청 취소 실패:", error);
+        throw error;
+    }
+}
+
 
 export const deleteFriend = async (memberId: number) => {
     try {
@@ -23,3 +34,4 @@ export const deleteFriend = async (memberId: number) => {
         throw error;
     }
 };
+

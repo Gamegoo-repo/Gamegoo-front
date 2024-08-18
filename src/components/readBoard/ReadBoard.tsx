@@ -29,7 +29,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { setCloseModal, setCloseReadingModal, setOpenModal, setOpenPostingModal } from "@/redux/slices/modalSlice";
 import { setCurrentPost } from "@/redux/slices/postSlice";
-import { deleteFriend, reqFriend } from "@/api/friends";
+import { cancelFriendReq, deleteFriend, reqFriend } from "@/api/friends";
 import Alert from "../common/Alert";
 import { AlertProps } from "@/interface/modal";
 import { useRouter } from "next/navigation";
@@ -186,6 +186,24 @@ const ReadBoard = (props: ReadBoardProps) => {
     handleMoreBoxClose();
   };
 
+  /* 친구 요청 취소 */
+  const handleCancelFriendReq = async()=>{
+    if (!isUser.id) {
+      return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
+    }
+ 
+    if (!isPost || isUser?.id === isPost?.memberId) return;
+
+    try {
+      await cancelFriendReq(isPost.memberId);
+      await handleMoreBoxClose();
+      setIsFriendStatus(true);
+    } catch (error) {
+    }
+
+    handleMoreBoxClose();
+  }
+
   /* 친구 삭제 */
   const handleFriendDelete = async () => {
     if (!isUser.id) {
@@ -278,7 +296,8 @@ const ReadBoard = (props: ReadBoardProps) => {
   }
 
   //친구 삭제 - 차단되어있을 때, 친구일 때, 친구 추가 요청 중일 때
-  //친구 추가 - 친구가 아닐 때, 차단되어있지 않을 때, 친구 추가 요청 중이 아닐 때
+  //친구 추가(친구 요청) - 친구가 아닐 때, 차단되어있지 않을 때, 친구 추가 요청 중이 아닐 때
+  //친구 요청 취소 - 친구 추가 요청 중일 떄
   //차단하기 - 친구 추가 요청 중일 때, 친구 삭제된 상태일 때, 차단되어있지 않을 때
   //차단해제 - 차단되어 있을 때, 
 
@@ -299,6 +318,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       }
       if (isPost?.friendRequestMemberId) {
         friendText = '친구 요청 취소';
+        friendFunc = handleCancelFriendReq;
       }
 
       if (isPost?.friendRequestMemberId || !isPost?.isFriend, !isPost?.isBlocked) {
