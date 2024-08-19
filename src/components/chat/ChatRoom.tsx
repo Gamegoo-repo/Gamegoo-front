@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import MoreBox from "../common/MoreBox";
 import Button from "../common/Button";
-import { enterChatroom } from "@/api/chat";
+import { enterChatroom, leaveChatroom } from "@/api/chat";
 import { Chat } from "@/interface/chat";
 
 interface ChatRoomProps {
@@ -21,17 +21,6 @@ interface ChatRoomProps {
     onClose: () => void;
     onGoback: () => void;
 }
-
-const MESSAGE_LIST = [
-    { user: "me", msg: '안녕하세요 저는 안녕하세요 저는 안녕하세요 저는', msgId: 1, userId: 1, date: "2024-05-01T23:25:00" },
-    { user: "me", msg: '텍스트 텍스', msgId: 2, userId: 1, date: "2024-05-11T23:27:00" },
-    { user: "you", msg: '아 네, 안녕하세요 하이하이라라', msgId: 3, userId: 2, date: "2024-07-02T01:08:00" },
-    { user: "you", msg: '하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라', msgId: 4, userId: 2, date: "2024-07-02T01:11:00" },
-    { user: "me", msg: '안녕하세요 저는 안녕하세요 저는 안녕하세요 저는22', msgId: 5, userId: 1, date: "2024-07-02T23:27:00" },
-    { user: "me", msg: '텍스트 텍스22', msgId: 6, userId: 1, date: "2024-07-02T23:27:00" },
-    { user: "you", msg: '아 네, 안녕하세요 하이하이라라22', msgId: 7, userId: 2, date: "2024-07-04T22:52:00" },
-    { user: "you", msg: '하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라22', msgId: 8, userId: 2, date: "2024-07-04T22:52:00" },
-];
 
 const ChatRoom = (props: ChatRoomProps) => {
     const { uuid, onClose, onGoback } = props;
@@ -86,7 +75,9 @@ const ChatRoom = (props: ChatRoomProps) => {
         }
     };
 
-    const handleModalChange = (modalType: string) => {
+    const handleModalChange = (e: React.MouseEvent,modalType: string) => {
+        e.stopPropagation();
+
         dispatch(setOpenModal(modalType));
         setIsMoreBoxOpen(false);
     };
@@ -101,18 +92,13 @@ const ChatRoom = (props: ChatRoomProps) => {
         console.log('친구 추가')
     };
 
-    const handleChangeModal = (e: React.MouseEvent, type: string) => {
-        e.stopPropagation();
-        handleModalChange(type);
-    };
-
     const menuItems: MoreBoxMenuItems[] = [
-        { text: '채팅방 나가기', onClick: (e) => handleChangeModal(e, 'leave') },
+        { text: '채팅방 나가기', onClick: (e) => handleModalChange(e, 'leave') },
         { text: '친구 추가', onClick: handleFriendAdd },
-        { text: '차단하기', onClick: (e) => handleChangeModal(e, 'block') },
-        { text: '신고하기', onClick: (e) => handleChangeModal(e, 'report') },
-        { text: '매너 평가', onClick: (e) => handleChangeModal(e, 'manner') },
-        { text: '비매너 평가', onClick: (e) => handleChangeModal(e, 'badManner') },
+        { text: '차단하기', onClick: (e) => handleModalChange(e, 'block') },
+        { text: '신고하기', onClick: (e) => handleModalChange(e, 'report') },
+        { text: '매너 평가', onClick: (e) => handleModalChange(e, 'manner') },
+        { text: '비매너 평가', onClick: (e) => handleModalChange(e, 'badManner') },
     ];
 
     const handleCheckboxChange = (checked: number) => {

@@ -4,6 +4,13 @@ import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosInstance } from 
 export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL as string;
 export const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL as string;
 
+export const socketAxios = axios.create({
+  baseURL: SOCKET_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
 /* Axios 인스턴스 생성 */
 const Axios: AxiosInstance = axios.create({
   baseURL: BASE_URL,

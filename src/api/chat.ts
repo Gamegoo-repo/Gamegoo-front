@@ -25,14 +25,14 @@ export const enterChatroom = async (chatroomUuid: string) => {
     }
 };
 
-/* 친구 목록 */
-export const getFriends = async () => {
+/* 채팅방 나가기 */
+export const leaveChatroom = async (chatroomUuid: string) => {
     try {
-        const response = await Axios.get("/v1/member/friends");
-        console.log("친구 목록 가져오기 성공:", response.data);
+        const response = await AuthAxios.patch(`/v1/chat/${chatroomUuid}/exit `);
+        console.log("채팅방 나가기 성공:", response.data);
         return response.data;
     } catch (error) {
-        console.error("친구 목록 가져오기 실패:", error);
+        console.error("채팅방 나가기 실패:", error);
         throw error;
     }
 };

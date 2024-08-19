@@ -350,7 +350,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       if (!!isUser.id) {
         const memberData = await getMemberPost(postId);
         setIsPost(memberData.result);
-        const hasPosition = memberData.result.some((item: MemberPost) => 'mainPosition' in item);
+        const hasPosition = await memberData.result.some((item: MemberPost) => 'mainPosition' in item);
 
         // 글 type 설정
         setType(hasPosition ? 'canyon' : 'wind');

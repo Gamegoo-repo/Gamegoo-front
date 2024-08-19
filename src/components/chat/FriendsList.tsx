@@ -3,13 +3,13 @@ import { theme } from "@/styles/theme";
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import DeleteFriend from './DeleteFriend';
+import { getFriendsList } from '@/api/friends';
 
 interface FriendListInterface {
-    id: number;
-    image: string;
-    userName: string;
-    online: string;
-    favorites: number;
+    memberId: number;
+    name: string;
+    memberProfileImg: number;
+    liked: boolean;
 }
 
 interface FriendListProps {
@@ -18,13 +18,25 @@ interface FriendListProps {
 }
 
 const FriendsList = ({ list, onChatRoom }: FriendListProps) => {
-
-    const [friends, setFriends] = useState<FriendListInterface[]>(list);
+    const [friends, setFriends] = useState<FriendListInterface[]>([]);
 
     const [deleteMenu, setDeleteMenu] = useState<{ x: number, y: number, friendId: number | null }>({ x: 0, y: 0, friendId: null });
 
-    const favoriteFriends = friends.filter(friend => friend.favorites === 1);
-    const nonFavoriteFriends = friends.filter(friend => friend.favorites === 0);
+    const favoriteFriends = friends.filter(friend => friend.liked);
+    const nonFavoriteFriends = friends.filter(friend => !friend.liked);
+
+    useEffect(() => {
+        const handleFetchFriendsList = async () => {
+            try {
+                const data = await getFriendsList();
+                setFriends(data.result);
+            } catch (error) {
+                console.error("에러:", error);
+            }
+        }
+
+        handleFetchFriendsList();
+    }, [])
 
     const handleContextMenu = (event: React.MouseEvent, friendId: number) => {
         event.preventDefault();
@@ -51,7 +63,7 @@ const FriendsList = ({ list, onChatRoom }: FriendListProps) => {
     const handleFavoriteToggle = (event: React.MouseEvent, friendId: number) => {
         event.stopPropagation();
         setFriends(friends.map(friend =>
-            friend.id === friendId ? { ...friend, favorites: friend.favorites === 1 ? 0 : 1 } : friend
+            friend.memberId === friendId ? { ...friend, favorites: friend.liked ? 0 : 1 } : friend
         ));
     };
 
@@ -79,12 +91,12 @@ const FriendsList = ({ list, onChatRoom }: FriendListProps) => {
                     }
                     {favoriteFriends.map(friend => (
                         <UserContent
-                            onContextMenu={(e) => handleContextMenu(e, friend.id)}
+                            onContextMenu={(e) => handleContextMenu(e, friend.memberId)}
                             onClick={() =>
-                                onChatRoom(friend.id)}
-                            key={friend.id}
+                                onChatRoom(friend.memberId)}
+                            key={friend.memberId}
                         >
-                            {deleteMenu.friendId === friend.id && (
+                            {deleteMenu.friendId === friend.memberId && (
                                 <>
                                     <DeleteFriend
                                         x={deleteMenu.x}
@@ -96,23 +108,23 @@ const FriendsList = ({ list, onChatRoom }: FriendListProps) => {
                             )}
                             <Left>
                                 <Image
-                                    src={friend.image}
+                                    src={`/assets/images/profile/profile${friend.memberProfileImg}.svg`}
                                     width={40.79}
                                     height={40.79}
                                     alt="사용자 프로필" />
-                                <UserName>{friend.userName}</UserName>
-                                {friend.online === "on" &&
+                                <UserName>{friend.name}</UserName>
+                                {/* {friend.online === "on" &&
                                     <Online
                                         src="/assets/icons/online.svg"
                                         width={5}
                                         height={5}
                                         alt="온라인" />
-                                }
+                                } */}
                             </Left>
                             <Image
-                                onClick={(e) => handleFavoriteToggle(e, friend.id)}
+                                onClick={(e) => handleFavoriteToggle(e, friend.memberId)}
                                 src={
-                                    friend.favorites === 1
+                                    friend.liked
                                         ? "/assets/icons/favorites.svg"
                                         : "/assets/icons/nonFavorites.svg"
                                 }
@@ -123,17 +135,17 @@ const FriendsList = ({ list, onChatRoom }: FriendListProps) => {
                         </UserContent>
                     ))}
                 </FavoritesWrapper>
-                <FriendsWrapper $length={favoriteFriends.length}>
+                <FriendsWrapper $length={nonFavoriteFriends.length}>
                     <FriendsTitle>
-                        친구 {friends.length}
+                        친구 {nonFavoriteFriends.length}
                     </FriendsTitle>
                     {nonFavoriteFriends.map(friend => (
                         <UserContent
-                            onContextMenu={(event) => handleContextMenu(event, friend.id)}
-                            onClick={() => onChatRoom(friend.id)}
-                            key={friend.id}
+                            onContextMenu={(event) => handleContextMenu(event, friend.memberId)}
+                            onClick={() => onChatRoom(friend.memberId)}
+                            key={friend.memberId}
                         >
-                            {deleteMenu.friendId === friend.id && (
+                            {deleteMenu.friendId === friend.memberId && (
                                 <DeleteFriend
                                     x={deleteMenu.x}
                                     y={deleteMenu.y}
@@ -143,23 +155,23 @@ const FriendsList = ({ list, onChatRoom }: FriendListProps) => {
                             )}
                             <Left>
                                 <Image
-                                    src={friend.image}
+                                    src={`/assets/images/profile/profile${friend.memberProfileImg}.svg`}
                                     width={40.79}
                                     height={40.79}
                                     alt="사용자 프로필" />
-                                <UserName>{friend.userName}</UserName>
-                                {friend.online === "on" &&
+                                <UserName>{friend.name}</UserName>
+                                {/* {friend.online === "on" &&
                                     <Online
                                         src="/assets/icons/online.svg"
                                         width={5}
                                         height={5}
                                         alt="온라인" />
-                                }
+                                } */}
                             </Left>
                             <Image
-                                onClick={(e) => handleFavoriteToggle(e, friend.id)}
+                                onClick={(e) => handleFavoriteToggle(e, friend.memberId)}
                                 src={
-                                    friend.favorites === 1
+                                    friend.liked
                                         ? "/assets/icons/favorites.svg"
                                         : "/assets/icons/nonFavorites.svg"
                                 }
