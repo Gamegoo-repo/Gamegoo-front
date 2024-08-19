@@ -11,13 +11,27 @@ interface PaginationProps {
   totalItems?: number;
   itemsPerPage?: number;
   pageButtonCount?: number;
+  totalPage?: number;
 }
 
 const Pagination = (props: PaginationProps) => {
-  const { currentPage, hasMoreItems, onPrevPage, onNextPage, onPageClick } =
-    props;
+  const {
+    currentPage,
+    hasMoreItems,
+    onPrevPage,
+    onNextPage,
+    onPageClick,
+    totalItems,
+    itemsPerPage,
+    pageButtonCount = 5,
+    totalPage,
+  } = props;
 
-  const totalPages = hasMoreItems ? currentPage + 1 : currentPage;
+  const totalPages = totalPage
+    ? totalPage
+    : hasMoreItems
+    ? currentPage + 1
+    : currentPage;
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
