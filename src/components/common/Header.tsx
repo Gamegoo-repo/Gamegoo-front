@@ -67,7 +67,9 @@ const Header = () => {
       }
     };
 
-    fetchNotiCount();
+    if (name && profileImg) {
+      fetchNotiCount();
+    }
   }, []);
 
   /* 알림 내용 불러오기 */
