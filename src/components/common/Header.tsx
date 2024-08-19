@@ -24,8 +24,8 @@ const Header = () => {
 
   const myPageRef = useRef<HTMLDivElement>(null);
 
-  const name = useSelector((state: RootState) => state.user.gameName);
-  const profileImg = useSelector((state: RootState) => state.user.profileImg);
+  const name = localStorage.getItem("name");
+  const profileImg = localStorage.getItem("profileImg");
 
   console.log(profileImg);
   /* 알림창 열고 닫는 함수 */
