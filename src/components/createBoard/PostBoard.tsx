@@ -14,7 +14,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { setOpenModal } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
 import { editPost, postBoard } from "@/api/board";
-import { UserInfo } from "@/interface/profile";
 import { clearCurrentPost } from "@/redux/slices/postSlice";
 import { PostReq } from "@/interface/board";
 import Alert from "../common/Alert";

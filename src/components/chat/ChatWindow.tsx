@@ -3,7 +3,7 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 import FriendsList from "./FriendsList";
 import ChatList from "./ChatList";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ChatRoom from "./ChatRoom";
 import { useDispatch, useSelector } from "react-redux";
 import { setCloseModal, setOpenModal } from "@/redux/slices/modalSlice";
@@ -15,33 +15,13 @@ import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
 import { REPORT_REASON } from "@/data/report";
 import Input from "../common/Input";
 import Button from "../common/Button";
+import { postMannerValue } from "@/api/manner";
+import { enterUsingMemberId, enterUsingUuid } from "@/api/chat";
+import { Chat } from "@/interface/chat";
 
 interface ChatWindowProps {
     onClose: () => void;
 }
-
-const FRIENDS = [
-    { id: 1, image: "/assets/icons/gray_circle.svg", userName: "김철수", online: 'on', favorites: 1 },
-    { id: 2, image: "/assets/icons/gray_circle.svg", userName: "김철수", online: 'on', favorites: 0 },
-    { id: 3, image: "/assets/icons/gray_circle.svg", userName: "김철수", online: 'off', favorites: 1 },
-    { id: 4, image: "/assets/icons/gray_circle.svg", userName: "김철수", online: 'on', favorites: 0 },
-    { id: 5, image: "/assets/icons/gray_circle.svg", userName: "김철수", online: 'off', favorites: 1 },
-    { id: 6, image: "/assets/icons/gray_circle.svg", userName: "김철수", online: 'off', favorites: 1 },
-    { id: 7, image: "/assets/icons/gray_circle.svg", userName: "김철수", online: 'off', favorites: 0 },
-    { id: 8, image: "/assets/icons/gray_circle.svg", userName: "김철수", online: 'on', favorites: 0 },
-    { id: 9, image: "/assets/icons/gray_circle.svg", userName: "김철수", online: 'off', favorites: 1 },
-    { id: 10, image: "/assets/icons/gray_circle.svg", userName: "김철수", online: 'off', favorites: 0 },
-    { id: 11, image: "/assets/icons/gray_circle.svg", userName: "김철수", online: 'on', favorites: 1 },
-    { id: 12, image: "/assets/icons/gray_circle.svg", userName: "김철수", online: 'off', favorites: 0 },
-    { id: 13, image: "/assets/icons/gray_circle.svg", userName: "김철수", online: 'off', favorites: 0 },
-];
-
-const CHAT = [
-    { id: 1, image: "/assets/icons/gray_circle.svg", userName: "김철수", msg: '마지막 메시지', date: "2024-07-06 16:07" },
-    { id: 2, image: "/assets/icons/gray_circle.svg", userName: "김철수", msg: '마지막 메시지', date: "2024-07-06 01:27" },
-    { id: 3, image: "/assets/icons/gray_circle.svg", userName: "김철수", msg: '마지막 메시지', date: "2024-07-05 13:27" },
-    { id: 4, image: "/assets/icons/gray_circle.svg", userName: "김철수", msg: '마지막 메시지', date: "2024-05-19 11:27" },
-];
 
 const ChatWindow = ({ onClose }: ChatWindowProps) => {
 
@@ -50,14 +30,16 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
     const [activeTab, setActiveTab] = useState<string>('friends');
     const [isChatRoomVisible, setIsChatRoomVisible] = useState(false);
     const [isMoreBoxOpen, setIsMoreBoxOpen] = useState<number | null>(null);
-    const [chatUuid, setChatUuid] = useState<string | null>(null);
+    const [chatId, setChatId] = useState<string | number | undefined>();
     const [checkedItems, setCheckedItems] = useState<number[]>([]);
     const [reportDetail, setReportDetail] = useState<string>("");
+    const [chatData, setChatData] = useState<Chat>();
 
     const isModalType = useSelector((state: RootState) => state.modal.modalType);
+    const isUser = useSelector((state: RootState) => state.user);
 
-    const handleGoToChatRoom = (uuid: string) => {
-        setChatUuid(uuid);
+    const handleGoToChatRoom = (id: string | number) => {
+        setChatId(id);
         setIsChatRoomVisible(true);
     };
 
@@ -74,6 +56,20 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
         setCheckedItems([]);
         setReportDetail("");
         dispatch(setCloseModal());
+    };
+
+    const handleMannerPost = async () => {
+        const params = {
+            toMemberId: 1,
+            mannerRatingKeywordList: checkedItems,
+        };
+        
+        try {
+            await postMannerValue(params);
+            await handleModalClose();
+        } catch (error) {
+            console.error("에러:", error);
+        }
     };
 
     const handleChatLeave = () => {
@@ -96,10 +92,39 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
     };
 
     const handleCheckboxChange = (checked: number) => {
-        setCheckedItems((prev) =>
-            prev.includes(checked) ? prev.filter((c) => c !== checked) : [...prev, checked]
-        );
+        // setCheckedItems((prev) =>
+        //     prev.includes(checked) ? prev.filter((c) => c !== checked) : [...prev, checked]
+        // );
+        setCheckedItems((prev) => {
+            const newCheckedItems = prev.includes(checked)
+                ? prev.filter((c) => c !== checked)
+                : [...prev, checked];
+            console.log("Updated checkedItems:", newCheckedItems);
+            return newCheckedItems;
+        });
     };
+
+    /* 채팅방 입장 */
+    useEffect(() => {
+        const handleFetchChatData = async () => {
+            try {
+                if (typeof chatId === 'string') {
+                    const data = await enterUsingUuid(chatId);
+                    setChatData(data.result);
+                }
+                if (typeof chatId === 'number') {
+                    const data = await enterUsingMemberId(chatId);
+                    setChatData(data.result);
+                }
+            } catch (error) {
+                console.error("에러:", error);
+            }
+        };
+
+        handleFetchChatData();
+    }, [chatId])
+
+    console.log(chatData)
 
     return (
         <>
@@ -139,12 +164,9 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                     <ChatMain className={activeTab === 'friends' ? 'friends' : 'chat'}>
                         <Content className={activeTab === 'friends' ? 'friends' : 'chat'}>
                             {activeTab === 'friends' &&
-                                <div>
-                                    <FriendsList
-                                        onChatRoom={handleGoToChatRoom}
-                                        list={FRIENDS}
-                                    />
-                                </div>
+                                <FriendsList
+                                    onChatRoom={handleGoToChatRoom}
+                                />
                             }
                             {activeTab === 'chat' &&
                                 <ChatList
@@ -158,11 +180,11 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                 </Wrapper>
             </Overlay>
 
-            {isChatRoomVisible && chatUuid !== null &&
+            {isChatRoomVisible && chatId !== null &&
                 <ChatRoom
                     onClose={onClose}
                     onGoback={handleBackToChatWindow}
-                    uuid={chatUuid} />
+                    chatData={chatData} />
             }
 
             {/* 채팅창 나가기 팝업 */}
@@ -292,7 +314,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                     </CheckContent>
                     <ModalSubmitBtn>
                         <Button
-                            onClick={handleModalClose}
+                            onClick={handleMannerPost}
                             buttonType="primary"
                             text="완료"
                             disabled={checkedItems.length === 0}

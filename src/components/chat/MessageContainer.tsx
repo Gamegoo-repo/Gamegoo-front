@@ -10,6 +10,7 @@ import { setCloseMannerStatusModal, setCloseReadingModal, setOpenMannerStatusMod
 import { RootState } from '@/redux/store';
 import { Chat, ChatMessageDto, ChatMessageList } from '@/interface/chat';
 import ReadBoard from '../readBoard/ReadBoard';
+import { useRouter } from 'next/navigation';
 
 interface MessageContainerProps {
   message: Chat;
@@ -24,6 +25,7 @@ const MessageContainer = (props: MessageContainerProps) => {
   const { message } = props;
 
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const isFeedbackModalOpen = useSelector((state: RootState) => state.modal.isOpen);
   const isReadingModal = useSelector((state: RootState) => state.modal.readingModal);
@@ -141,7 +143,8 @@ const MessageContainer = (props: MessageContainerProps) => {
               data.senderId !== message.memberId ? (
                 <YourMessageContainer>
                   {handleDisplayProfileImage(messageList.chatMessageDtoList, index) && (
-                    <Image
+                    <ProfileImage
+                      onClick={() => router.push("/user")}
                       src={`/assets/images/profile/profile${data.senderProfileImg}.svg`}
                       width={47.43}
                       height={47.43}
@@ -223,6 +226,10 @@ const YourMessageContainer = styled.div`
   align-items: center;
   justify-content: flex-start;
   margin-bottom: 10px;
+`;
+
+const ProfileImage = styled(Image)`
+  cursor: pointer;
 `;
 
 const YourDiv = styled.div<{ $hasProfileImage: boolean }>`

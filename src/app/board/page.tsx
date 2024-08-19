@@ -287,11 +287,7 @@ const BoardPage = () => {
               </SecondBlock>
             </SecondRow>
             <Main>
-              {boardList?.length > 0 ? (
-                <Table title={BOARD_TITLE} content={boardList} />
-              ) : (
-                <p>데이터가 없습니다.</p>
-              )}
+              <Table title={BOARD_TITLE} content={boardList} />
             </Main>
             {boardList?.length > 0 &&
               <Pagination
@@ -390,4 +386,10 @@ const Footer = styled.footer`
 
 const ChatBoxContent = styled.div`
   margin-left: auto;
+`;
+
+const NoData = styled.p`
+  color: ${theme.colors.gray800};
+  ${(props) => props.theme.fonts.medium16};
+  text-align: center;
 `;

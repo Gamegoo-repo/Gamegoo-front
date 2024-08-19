@@ -33,13 +33,13 @@ const setupSocketListeners = () => {
 
 };
 
-export const disconnectSocket = (): void => {
-  if (socket) {
-    socket.disconnect();
-    console.log("소켓 연결 해지");
-    localStorage.removeItem('gamegooSocketId');
-  } else {
-    console.log("소켓이 연결되지 않았습니다.");
-  }
-};
+// export const disconnectSocket = (): void => {
+//   if (socket) {
+//     socket.disconnect();
+//     console.log("소켓 연결 해지");
+//     localStorage.removeItem('gamegooSocketId');
+//   } else {
+//     console.log("소켓이 연결되지 않았습니다.");
+//   }
+// };
 

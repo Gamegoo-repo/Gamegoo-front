@@ -13,10 +13,22 @@ export const getChatrooms = async () => {
     }
 };
 
-/* 채팅방 입장 */
-export const enterChatroom = async (chatroomUuid: string) => {
+/* 대화방에서 채팅방 입장 */
+export const enterUsingUuid = async (chatroomUuid: string) => {
     try {
         const response = await AuthAxios.get(`/v1/chat/${chatroomUuid}/enter`);
+        console.log("채팅방 입장 성공:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("채팅방 입장 실패:", error);
+        throw error;
+    }
+};
+
+/* 친구 목록에서 채팅방 입장 */
+export const enterUsingMemberId = async (memberId: number) => {
+    try {
+        const response = await AuthAxios.get(`/v1/chat/start/member/${memberId} `);
         console.log("채팅방 입장 성공:", response.data);
         return response.data;
     } catch (error) {

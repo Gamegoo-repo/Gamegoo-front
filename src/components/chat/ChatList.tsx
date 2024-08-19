@@ -20,6 +20,7 @@ const ChatList = (props: ChatListProps) => {
 
     const [chatrooms, setChatrooms] = useState<ChatroomList[]>([]);
 
+    /* 대화창 목록 가져오기  */
     useEffect(() => {
         const handleFetchChatrooms = async () => {
             try {

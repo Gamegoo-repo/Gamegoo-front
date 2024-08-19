@@ -13,23 +13,21 @@ import { useRouter } from "next/navigation";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import MoreBox from "../common/MoreBox";
 import Button from "../common/Button";
-import { enterChatroom, leaveChatroom } from "@/api/chat";
 import { Chat } from "@/interface/chat";
 
 interface ChatRoomProps {
-    uuid: string;
     onClose: () => void;
     onGoback: () => void;
+    chatData: Chat | undefined;
 }
 
 const ChatRoom = (props: ChatRoomProps) => {
-    const { uuid, onClose, onGoback } = props;
+    const { onClose, onGoback, chatData } = props;
 
     const dispatch = useDispatch();
     const router = useRouter();
 
     const [message, setMessage] = useState("");
-    const [chatData, setChatData] = useState<Chat>();
     const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
     const [checkedItems, setCheckedItems] = useState<number[]>([]);
 
@@ -42,18 +40,24 @@ const ChatRoom = (props: ChatRoomProps) => {
     // });
     // },[]);
 
-    useEffect(() => {
-        const handleFetchChatData = async () => {
-            try {
-                const data = await enterChatroom(uuid);
-                setChatData(data.result);
-            } catch (error) {
-                console.error("에러:", error);
-            }
-        };
+    // useEffect(() => {
+    //     const handleFetchChatData = async () => {
+    //         try {
+    //             if (typeof id === 'string') {
+    //                 const data = await enterUsingUuid(id);
+    //                 setChatData(data.result);
+    //             }
+    //             if (typeof id === 'number') {
+    //                 const data = await enterUsingMemberId(id);
+    //                 setChatData(data.result);
+    //             }
+    //         } catch (error) {
+    //             console.error("에러:", error);
+    //         }
+    //     };
 
-        handleFetchChatData();
-    }, [])
+    //     handleFetchChatData();
+    // }, [])
 
     const sendMessage = (event: any) => {
         event.preventDefault();
@@ -75,7 +79,7 @@ const ChatRoom = (props: ChatRoomProps) => {
         }
     };
 
-    const handleModalChange = (e: React.MouseEvent,modalType: string) => {
+    const handleModalChange = (e: React.MouseEvent, modalType: string) => {
         e.stopPropagation();
 
         dispatch(setOpenModal(modalType));
