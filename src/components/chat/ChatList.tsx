@@ -7,6 +7,7 @@ import MoreBox from '../common/MoreBox';
 import { MoreBoxMenuItems } from '@/interface/moreBox';
 import { getChatrooms } from '@/api/chat';
 import { ChatroomList } from '@/interface/chat';
+import { getProfileBgColor } from '@/utils/profile';
 
 interface ChatListProps {
     onChatRoom: (uuid: string) => void;
@@ -43,6 +44,7 @@ const ChatList = (props: ChatListProps) => {
         };
     };
 
+    /* 친구 추가 */
     const handleFriendAdd = (e: React.MouseEvent) => {
         e.stopPropagation();
 
@@ -86,11 +88,13 @@ const ChatList = (props: ChatListProps) => {
                                 />
                             }
                             <Left>
-                                <ProfileImage
-                                    src={`/assets/images/profile/profile${room.targetMemberImg}.svg`}
-                                    width={45}
-                                    height={45}
-                                    alt="사용자 프로필" />
+                                <ImageWrapper $bgColor={getProfileBgColor(room.targetMemberImg)}>
+                                    <ProfileImage
+                                        src={`/assets/images/profile/profile${room.targetMemberImg}.svg`}
+                                        width={38}
+                                        height={38}
+                                        alt="사용자 프로필" />
+                                </ImageWrapper>
                                 <Middle>
                                     <Row>
                                         <UserName>{room.targetMemberName}</UserName>
@@ -136,6 +140,7 @@ const UserContent = styled.div`
     background: ${theme.colors.gray500}; 
   }
 `;
+
 const Left = styled.div`
     display: flex;
     align-items: center;
@@ -143,17 +148,29 @@ const Left = styled.div`
     padding-left: 21px;
 `;
 
+const ImageWrapper = styled.div<{ $bgColor: string }>`
+    position: relative;
+    width: 47px;
+    height: 47px;
+    background: ${(props) => props.$bgColor};
+    border-radius: 50%;
+`;
+
 const ProfileImage = styled(Image)`
-    margin-right: 14px;
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%);
 `;
 
 const Middle = styled.div`
     min-width: 300px;
+    margin-left: 14px;
 `;
 
 const UserName = styled.p`
     ${(props) => props.theme.fonts.semiBold14};
-    color:${theme.colors.gray600};  
+    color:${theme.colors.gray600}; 
 `;
 
 const Unread = styled.p`
@@ -182,7 +199,7 @@ const Date = styled.p`
 `;
 
 const Right = styled.div`
-    padding: 0 7px 0 12px;;
+    padding: 0 7px 0 12px;
 `;
 
 const MoreImage = styled(Image)`

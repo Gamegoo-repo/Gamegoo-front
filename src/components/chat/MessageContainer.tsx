@@ -11,6 +11,7 @@ import { RootState } from '@/redux/store';
 import { Chat, ChatMessageDto, ChatMessageList } from '@/interface/chat';
 import ReadBoard from '../readBoard/ReadBoard';
 import { useRouter } from 'next/navigation';
+import { getProfileBgColor } from '@/utils/profile';
 
 interface MessageContainerProps {
   message: Chat;
@@ -143,12 +144,16 @@ const MessageContainer = (props: MessageContainerProps) => {
               data.senderId !== message.memberId ? (
                 <YourMessageContainer>
                   {handleDisplayProfileImage(messageList.chatMessageDtoList, index) && (
-                    <ProfileImage
-                      onClick={() => router.push("/user")}
-                      src={`/assets/images/profile/profile${data.senderProfileImg}.svg`}
-                      width={47.43}
-                      height={47.43}
-                      alt="프로필 이미지" />
+                    <>
+                      <ImageWrapper $bgColor={getProfileBgColor(data.senderProfileImg)}>
+                        <ProfileImage
+                          onClick={() => router.push("/user")}
+                          src={`/assets/images/profile/profile${data.senderProfileImg}.svg`}
+                          width={38}
+                          height={38}
+                          alt="프로필 이미지" />
+                      </ImageWrapper>
+                    </>
                   )}
                   <YourDiv $hasProfileImage={hasProfileImage}>
                     <YourMessage>{data.message}</YourMessage>
@@ -228,8 +233,20 @@ const YourMessageContainer = styled.div`
   margin-bottom: 10px;
 `;
 
+const ImageWrapper = styled.div<{ $bgColor: string }>`
+    position: relative;
+    width: 47px;
+    height: 47px;
+    background: ${(props) => props.$bgColor};
+    border-radius: 50%;
+`;
+
 const ProfileImage = styled(Image)`
-  cursor: pointer;
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
 `;
 
 const YourDiv = styled.div<{ $hasProfileImage: boolean }>`
@@ -249,7 +266,6 @@ const YourMessage = styled.div`
   word-break:keep-all;
   overflow-wrap: break-word;
 `;
-
 
 const YourDate = styled.p`
   margin-left:9px;

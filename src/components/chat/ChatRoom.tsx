@@ -14,6 +14,7 @@ import { MoreBoxMenuItems } from "@/interface/moreBox";
 import MoreBox from "../common/MoreBox";
 import Button from "../common/Button";
 import { Chat } from "@/interface/chat";
+import { getProfileBgColor } from "@/utils/profile";
 
 interface ChatRoomProps {
     onClose: () => void;
@@ -139,12 +140,14 @@ const ChatRoom = (props: ChatRoomProps) => {
                                 height={18}
                                 alt="뒤로가기" />
                             <Middle>
-                                <ProfileImage
-                                    onClick={() => router.push("/user")}
-                                    src={`/assets/images/profile/profile${chatData.memberProfileImg}.svg`}
-                                    width={47.43}
-                                    height={47.43}
-                                    alt="프로필 이미지" />
+                                <ImageWrapper $bgColor={getProfileBgColor(chatData.memberProfileImg)}>
+                                    <ProfileImage
+                                        onClick={() => router.push("/user")}
+                                        src={`/assets/images/profile/profile${chatData.memberProfileImg}.svg`}
+                                        width={38}
+                                        height={38}
+                                        alt="프로필 이미지" />
+                                </ImageWrapper>
                                 <Div>
                                     <UserName>{chatData.gameName}</UserName>
                                     <Online>온라인</Online>
@@ -329,7 +332,19 @@ const Middle = styled.div`
     width: 100%;
 `;
 
+const ImageWrapper = styled.div<{ $bgColor: string }>`
+    position: relative;
+    width: 47px;
+    height: 47px;
+    background: ${(props) => props.$bgColor};
+    border-radius: 50%;
+`;
+
 const ProfileImage = styled(Image)`
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%);
     cursor: pointer;
 `;
 

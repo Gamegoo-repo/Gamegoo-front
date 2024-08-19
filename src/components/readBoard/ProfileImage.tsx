@@ -9,10 +9,9 @@ interface ProfileImageProps {
 
 const ProfileImage = (props: ProfileImageProps) => {
     const { image } = props;
-    const bgColor = getProfileBgColor(image);
 
     return (
-        <Wrapper $bgColor={bgColor}>
+        <Wrapper $bgColor={getProfileBgColor(image)}>
             <StyledImage
                 src={setProfileImg(image)}
                 width={51}
