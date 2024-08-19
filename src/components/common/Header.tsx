@@ -74,14 +74,13 @@ const Header = () => {
       }
     };
 
-    if (name && profileImg) {
-      fetchNotiCount();
-    }
+    fetchNotiCount();
   }, []);
 
-  /* 알림 내용 불러오기 */
+  useEffect(() => {
+    console.log(count);
+  }, [count]);
 
-  useEffect(() => {}, [count]);
   return (
     <Head>
       <HeaderBar>

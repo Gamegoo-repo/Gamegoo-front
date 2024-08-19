@@ -3,7 +3,6 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Post, { PostProps } from "@/components/mypage/post/Post";
-import { EX_POST } from "@/data/mypage";
 import { useEffect, useState } from "react";
 import { getMyPost } from "@/api/user";
 import Pagination from "@/components/common/Pagination";
@@ -12,7 +11,6 @@ const MyPostPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [postList, setPostList] = useState<PostProps[]>([]);
   const [hasMoreItems, setHasMoreItems] = useState(true);
-  // const itemsPerPage = 10;
   const pageButtonCount = 5;
   const ITEMS_PER_PAGE = 10;
 
