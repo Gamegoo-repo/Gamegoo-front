@@ -6,8 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import AlertWindow from "../alert/AlertWindow";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
+import { useDispatch } from "react-redux";
 import { clearTokens } from "@/utils/storage";
 import { clearUserProfile } from "@/redux/slices/userSlice";
 import { getNotiCount } from "@/api/notification";
@@ -70,6 +69,8 @@ const Header = () => {
 
     fetchNotiCount();
   }, []);
+
+  /* 알림 내용 불러오기 */
 
   useEffect(() => {}, [count]);
   return (
