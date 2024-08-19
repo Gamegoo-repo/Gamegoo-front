@@ -22,14 +22,21 @@ const Header = () => {
   const [isAlertWindow, setIsAlertWindow] = useState<Boolean>(false);
   const [isMyPage, setIsMyPage] = useState<Boolean>(false);
 
-  const myPageRef = useRef<HTMLDivElement>(null);
-
-  const name = localStorage.getItem("name");
-  const profileImg = localStorage.getItem("profileImg");
-
+  const [name, setName] = useState<string | null>(null);
+  const [profileImg, setProfileImg] = useState<string | null>(null);
   const [count, setCount] = useState<number>(0);
 
-  console.log(profileImg);
+  const myPageRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedName = localStorage.getItem("name");
+      const storedProfileImg = localStorage.getItem("profileImg");
+      setName(storedName);
+      setProfileImg(storedProfileImg);
+    }
+  }, []);
+
   /* 알림창 열고 닫는 함수 */
   const handleAlertWindow = () => {
     setIsAlertWindow(!isAlertWindow);
