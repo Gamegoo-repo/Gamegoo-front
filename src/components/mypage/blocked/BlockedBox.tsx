@@ -1,18 +1,26 @@
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import React, { useState } from "react";
-import styled, { css } from "styled-components";
+import React from "react";
+import styled from "styled-components";
 
-interface BlockedBoxProps {
+export interface BlockedBoxProps {
+  memberId: number;
+  profileImg: number;
+  email: string;
   name: string;
 }
 
-const BlockedBox: React.FC<BlockedBoxProps> = ({ name }) => {
+const BlockedBox: React.FC<BlockedBoxProps> = ({
+  memberId,
+  profileImg,
+  email,
+  name,
+}) => {
   return (
     <Container>
       <Gap>
         <Image
-          src="/assets/images/profile.svg"
+          src={`/assets/images/profile/profile${profileImg}.svg`}
           width={54}
           height={54}
           alt="profile"

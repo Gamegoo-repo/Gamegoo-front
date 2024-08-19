@@ -2,33 +2,57 @@
 
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
-import AlertBox from "@/components/mypage/notification/AlertBox";
-import Image from "next/image";
-import { EX_BLOCKED } from "@/data/mypage";
 import Pagination from "@/components/common/Pagination";
 import { useEffect, useState } from "react";
-import BlockedBox from "@/components/mypage/blocked/BlockedBox";
+import BlockedBox, {
+  BlockedBoxProps,
+} from "@/components/mypage/blocked/BlockedBox";
+import { getMyBlocked } from "@/api/user";
 
 const MyBlockedPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 7;
+  const [myBlockedList, setMyBlockedList] = useState<BlockedBoxProps[]>([]);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalItems, setTotalItems] = useState(0);
+  const itemsPerPage = 10;
   const pageButtonCount = 5;
-  const [currentItems, setCurrentItems] = useState(
-    EX_BLOCKED.slice(0, itemsPerPage)
-  );
 
   useEffect(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    setCurrentItems(EX_BLOCKED.slice(startIndex, endIndex));
+    const fetchGetMyBlocked = async () => {
+      try {
+        const response = await getMyBlocked(currentPage);
+        if (response.isSuccess) {
+          const { blockedMemberDTOList, totalPage, totalElements } =
+            response.result;
+          setMyBlockedList(blockedMemberDTOList);
+          setTotalPages(totalPage);
+          setTotalItems(totalElements);
+        } else {
+          console.error(response.message);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchGetMyBlocked();
   }, [currentPage]);
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
   };
 
-  // const startIndex = (currentPage - 1) * itemsPerPage;
-  // const endIndex = startIndex + itemsPerPage;
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePageClick = (page: number) => {
+    setCurrentPage(page);
+  };
 
   return (
     <Wrapper>
@@ -36,17 +60,27 @@ const MyBlockedPage = () => {
         <Blocked>
           <Top>차단목록</Top>
           <BlockedList>
-            {currentItems.map((data, index) => (
-              <BlockedBox key={data.id} name={data.name} />
+            {myBlockedList.map((data) => (
+              <BlockedBox
+                key={data.memberId}
+                memberId={data.memberId}
+                profileImg={data.profileImg}
+                email={data.email}
+                name={data.name}
+              />
             ))}
           </BlockedList>
-          {/* <Pagination
+          <Pagination
             currentPage={currentPage}
-            totalItems={EX_BLOCKED.length}
+            totalItems={totalItems}
+            totalPage={totalPages}
             itemsPerPage={itemsPerPage}
             pageButtonCount={pageButtonCount}
-            onPageChange={handlePageChange}
-          /> */}
+            hasMoreItems={currentPage < totalPages}
+            onPrevPage={handlePrevPage}
+            onNextPage={handleNextPage}
+            onPageClick={handlePageClick}
+          />
         </Blocked>
       </MyBlockedContent>
     </Wrapper>
