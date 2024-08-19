@@ -39,9 +39,9 @@ export const getNotiCount = async () => {
     }
   };
 
-/* 알림 모달 목록 조회 (cusor) */
-export const getNotiModal = async () => {
-    const endpoint = '/v1/notification';
+/* 알림 모달 목록 조회 (cursor) */
+export const getNotiModal = async (cursor: number|null) => {
+    const endpoint = cursor? `/v1/notification?cursor=${cursor}`:'/v1/notification';
     try {
       const response = await AuthAxios.get(endpoint);
       console.log("알림 모달 목록 조회 성공:", response.data);

@@ -3,8 +3,21 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import AlertBox from "../mypage/notification/AlertBox";
-import { EX_ALARM, EX_REQUEST_ALARM } from "@/data/mypage";
 import { useRouter } from "next/navigation";
+import { Notification } from "@/app/mypage/notification/page";
+import { getNotiModal, readNoti } from "@/api/notification";
+
+interface NotificationResponse {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: {
+    notificationDTOList: Notification[];
+    list_size: number;
+    has_next: boolean;
+    next_cursor: number | null;
+  };
+}
 
 interface AlertWindowProps {
   onClose: () => void;
@@ -16,9 +29,14 @@ const AlertWindow = (
 ) => {
   const router = useRouter();
   const { onClose } = props;
-  const [activeTab, setActiveTab] = useState<string>("receive");
 
   const alertWindowRef = useRef<HTMLDivElement>(null);
+
+  const [notiList, setNotiList] = useState<Notification[]>([]);
+  const [cursor, setCursor] = useState<number | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [hasMore, setHasMore] = useState<boolean>(true);
+  const [isAtBottom, setIsAtBottom] = useState<boolean>(false);
 
   const handleClickOutside = useCallback(
     (event: MouseEvent) => {
@@ -39,14 +57,101 @@ const AlertWindow = (
     };
   }, [handleClickOutside]);
 
+  /* 알림 목록 조회 */
+  const fetchNotiList = async (cursor: number | null) => {
+    if (loading || !hasMore) return;
+
+    setLoading(true);
+    try {
+      const response: NotificationResponse = await getNotiModal(cursor);
+      if (response.isSuccess) {
+        const { notificationDTOList, next_cursor, has_next } = response.result;
+        setNotiList((prevNotiList) => [
+          ...prevNotiList,
+          ...notificationDTOList,
+        ]);
+        setCursor(next_cursor);
+        setHasMore(has_next);
+      } else {
+        console.error(response.message);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /* 초기 호출 */
+  useEffect(() => {
+    fetchNotiList(cursor);
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (alertWindowRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } =
+          alertWindowRef.current;
+        if (scrollTop + clientHeight >= scrollHeight - 20) {
+          setIsAtBottom(true);
+        } else {
+          setIsAtBottom(false);
+        }
+      }
+    };
+
+    if (alertWindowRef.current) {
+      alertWindowRef.current.addEventListener("scroll", handleScroll);
+    }
+    return () => {
+      if (alertWindowRef.current) {
+        alertWindowRef.current.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isAtBottom && hasMore) {
+      fetchNotiList(cursor);
+    }
+  }, [isAtBottom]);
+
+  /* 알림 읽음으로 상태 변경 */
+  const handleClickAlert = async (notificationId: number, pageUrl: string) => {
+    // 관련 페이지 이동
+    router.push(pageUrl);
+
+    // 읽음 상태 업데이트
+    const notification = notiList.find(
+      (n) => n.notificationId === notificationId
+    );
+    if (notification && !notification.read) {
+      try {
+        await readNoti(notificationId);
+        setNotiList((prevNotiList) =>
+          prevNotiList.map((n) =>
+            n.notificationId === notificationId ? { ...n, read: true } : n
+          )
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
   return (
     <>
-      <Overlay ref={alertWindowRef}>
+      <Overlay>
         <Wrapper>
           <Header>
             <Top>
               <HeaderTitle>알림</HeaderTitle>
-              <AllButton onClick={() => router.push("/mypage/alert")}>
+              <AllButton
+                onClick={() => {
+                  router.push("/mypage/notification");
+                  onClose();
+                }}
+              >
                 전체보기
                 <Image
                   onClick={onClose}
@@ -58,46 +163,23 @@ const AlertWindow = (
               </AllButton>
             </Top>
             <TabContainer>
-              <Tab
-                $isActive={activeTab === "receive"}
-                onClick={() => setActiveTab("receive")}
-              >
-                받은 알림
-              </Tab>
-              <Tab
-                $isActive={activeTab === "request"}
-                onClick={() => setActiveTab("request")}
-              >
-                친구 요청
-              </Tab>
+              <Tab>받은 알림</Tab>
             </TabContainer>
           </Header>
-          {activeTab === "receive" && (
-            <Background>
-              {EX_ALARM.map((data, index) => (
-                <AlertBox
-                  key={index}
-                  content={data.content}
-                  createdAt={data.time}
-                  read={data.read}
-                  size="small"
-                />
-              ))}
-            </Background>
-          )}
-          {activeTab === "request" && (
-            <Background>
-              {EX_REQUEST_ALARM.map((data, index) => (
-                <AlertBox
-                  key={index}
-                  content={data.content}
-                  createdAt={data.time}
-                  read={data.read}
-                  size="small"
-                />
-              ))}
-            </Background>
-          )}
+          <Background ref={alertWindowRef}>
+            {notiList.map((data) => (
+              <AlertBox
+                key={data.notificationId}
+                notificationId={data.notificationId}
+                pageUrl={data.pageUrl || ""}
+                content={data.content}
+                createdAt={data.createdAt}
+                read={data.read}
+                size="small"
+                onClick={handleClickAlert}
+              />
+            ))}
+          </Background>
         </Wrapper>
       </Overlay>
     </>
@@ -122,7 +204,6 @@ const Wrapper = styled.div`
   flex-direction: column;
   width: 418px;
   box-shadow: 0 4px 46.7px 0 #0000001a;
-  overflow: hidden;
 `;
 
 const Header = styled.header`
@@ -157,7 +238,7 @@ const TabContainer = styled.div`
   padding: 0 30px;
 `;
 
-const Tab = styled.button<{ $isActive: boolean }>`
+const Tab = styled.button`
   position: relative;
   padding: 4px 0;
   ${(props) => props.theme.fonts.semiBold14};
@@ -167,7 +248,7 @@ const Tab = styled.button<{ $isActive: boolean }>`
     position: absolute;
     left: 50%;
     bottom: -2px;
-    width: ${(props) => (props.$isActive ? "100%" : "none")};
+    width: 100%;
     height: 4px;
     background-color: ${theme.colors.purple100};
     border-radius: 60px;
