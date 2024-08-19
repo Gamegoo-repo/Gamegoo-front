@@ -42,10 +42,28 @@ export const deleteFriend = async (memberId: number) => {
 export const getFriendsList = async () => {
     try {
         const response = await Axios.get(`/v1/friends`);
-        console.log("친구 목록 조회 완료:", response.data);
         return response.data;
     } catch (error) {
-        console.error("친구 목록 조회 실패:", error);
+        throw error;
+    }
+};
+
+/* 친구 즐겨찾기 추가 */
+export const likeFriend = async (memberId: number) => {
+    try {
+        const response = await AuthAxios.patch(`/v1/friends/${memberId}/star`);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+/* 친구 즐겨찾기 해제 */
+export const unLikeFriend = async (memberId: number) => {
+    try {
+        const response = await AuthAxios.delete(`/v1/friends/${memberId}/star`);
+        return response.data;
+    } catch (error) {
         throw error;
     }
 };

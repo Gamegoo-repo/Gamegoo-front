@@ -3,7 +3,7 @@ import { theme } from "@/styles/theme";
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import DeleteFriend from './DeleteFriend';
-import { getFriendsList } from '@/api/friends';
+import { getFriendsList, likeFriend, unLikeFriend } from '@/api/friends';
 
 interface FriendListInterface {
     memberId: number;
@@ -60,11 +60,35 @@ const FriendsList = ({ list, onChatRoom }: FriendListProps) => {
         }
     };
 
+    const toggleFavorite = async (friendId: number, liked: boolean) => {
+        try {
+            if (liked) {
+                await unLikeFriend(friendId);
+            } else {
+                // 즐겨찾기 추가 API 호출
+                await likeFriend(friendId);
+            }
+        } catch (error) {
+            console.error('즐겨찾기 상태 변경 중 에러:', error);
+        }
+    };
+
     const handleFavoriteToggle = (event: React.MouseEvent, friendId: number) => {
         event.stopPropagation();
-        setFriends(friends.map(friend =>
-            friend.memberId === friendId ? { ...friend, favorites: friend.liked ? 0 : 1 } : friend
-        ));
+
+        const updatedFriends = friends.map(friend => {
+            if (friend.memberId === friendId) {
+                const newLikedStatus = !friend.liked;
+                toggleFavorite(friendId, friend.liked);
+                return { ...friend, liked: newLikedStatus };
+            }
+            return friend;
+        });
+
+        setFriends(updatedFriends);
+        // setFriends(friends.map(friend =>
+        //     friend.memberId === friendId ? { ...friend, favorites: friend.liked ? 0 : 1 } : friend
+        // ));
     };
 
     /* 브라우저 너비 변경 시 삭제하기 버튼 닫기 */
@@ -135,7 +159,7 @@ const FriendsList = ({ list, onChatRoom }: FriendListProps) => {
                         </UserContent>
                     ))}
                 </FavoritesWrapper>
-                <FriendsWrapper $length={nonFavoriteFriends.length}>
+                <FriendsWrapper $length={favoriteFriends.length}>
                     <FriendsTitle>
                         친구 {nonFavoriteFriends.length}
                     </FriendsTitle>
@@ -197,7 +221,7 @@ const FavoritesWrapper = styled.div<{ $length: number }>`
 `;
 
 const FriendsWrapper = styled.div<{ $length: number }>`
-    border-top: ${({ $length }) => ($length > 0 ? `1px solid ${theme.colors.gray400}` : 'none')};
+    border-top: ${({ $length }) => ($length > 0 ? `1px solid ${theme.colors.gray400}` : 'unset')};
     padding: 6px 0 11px;
 `;
 
