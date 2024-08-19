@@ -148,6 +148,7 @@ const Header = () => {
                 router.push("/mypage/notification");
                 setIsMyPage(false);
               }}
+              style={{ cursor: "pointer" }}
             />
           </MyProfile>
           <TabMenu>
