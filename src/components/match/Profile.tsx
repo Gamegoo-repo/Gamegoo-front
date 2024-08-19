@@ -20,7 +20,7 @@ import { User } from "@/interface/profile";
 import { toLowerCaseString } from "@/utils/string";
 import { PositionState } from "../crBoard/PositionBox";
 import { putPosition } from "@/api/user";
-import { setPositionImg } from "@/utils/custom";
+import { setAbbrevTier, setPositionImg } from "@/utils/custom";
 
 type profileType = "normal" | "wind" | "other" | "me";
 
@@ -221,8 +221,7 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                   height={52}
                   alt="tier"
                 />
-                {user.tier}
-                {` `}
+                {setAbbrevTier(user.tier)}
                 {user.rank}
               </Rank>
             </Top>
@@ -528,6 +527,7 @@ const Top = styled.div`
   gap: 16px;
   color: ${theme.colors.gray100};
   font-size: ${theme.fonts.bold32};
+  white-space: nowrap;
 `;
 
 const Span = styled.span`
