@@ -19,6 +19,8 @@ import { MoreBoxMenuItems } from "@/interface/moreBox";
 import { User } from "@/interface/profile";
 import { toLowerCaseString } from "@/utils/string";
 import { PositionState } from "../crBoard/PositionBox";
+import { putPosition } from "@/api/mypage";
+import { setPositionImg } from "@/utils/custom";
 
 type profileType = "normal" | "wind" | "other" | "me";
 
@@ -92,9 +94,16 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
 
   /* 포지션 선택창 관련 함수*/
   // 포지션 선택창 열기 (포지션 클릭시 동작)
-  const handlePosition = (index: number) => {
+  const handlePosition = async (index: number) => {
     setIsPositionOpen((prev) =>
       prev.map((isOpen, i) => (i === index ? !isOpen : false))
+    );
+    setSelectedBox(
+      index === 0
+        ? "main" ?? null
+        : index === 1
+        ? "sub" ?? null
+        : "want" ?? null
     );
   };
 
@@ -106,18 +115,31 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
   };
 
   // 포지션 선택해 변경하기
-  const handlePositionChange = (newPositionValue: PositionState) => {
-    setPositionValue(newPositionValue);
+  const handlePositionChange = async (newPositionValue: PositionState) => {
+    // setPositionValue(newPositionValue);
+    if (newPositionValue.main && newPositionValue.sub) {
+      try {
+        // 포지션 변경 API 호출
+        await putPosition({
+          mainP: newPositionValue.main,
+          subP: newPositionValue.sub,
+        });
+
+        // 포지션 상태 업데이트
+        setPositionValue(newPositionValue);
+      } catch (error) {
+        console.error("포지션 변경 실패:", error);
+      }
+    }
   };
 
   const handleCategoryButtonClick = (positionId: number) => {
-    console.log(positionId);
-
     if (selectedBox) {
       const newPositionValue = {
         ...positionValue,
         [selectedBox]: positionId,
       };
+      console.log(positionId);
       setPositionValue(newPositionValue);
       handlePositionChange(newPositionValue);
     }
@@ -326,30 +348,31 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                 ).map((position, index) => (
                   <>
                     <Posi key={index} className={profileType}>
-                      {position.label}
+                      {POSITIONS[index].label}
                       <Image
-                        src={`/assets/icons/position_${position.position}_purple.svg`}
+                        src={setPositionImg(
+                          index === 0
+                            ? positionValue.main ?? 0
+                            : index === 1
+                            ? positionValue.sub ?? 0
+                            : positionValue.want ?? 0
+                        )}
                         width={55}
                         height={40}
                         alt="포지션"
                         onClick={() => handlePosition(index)}
                       />
-                      {/* 오류 발생 부분 */}
                       {isPositionOpen[index] && (
                         <PositionCategory
                           onClose={() => handlePositionClose(index)}
-                          // onSelect={(newPosition: string) =>
-                          //   handlePositionSelect(index, newPosition)
-                          // }
                           onSelect={handleCategoryButtonClick}
-                          boxName={selectedBox}
                         />
                       )}
                     </Posi>
                   </>
                 ))}
               </Position>
-              {user.championResponseDTOList && (
+              {profileType === "other" && user.championResponseDTOList && (
                 <Champion
                   size={14}
                   list={user.championResponseDTOList.map(
@@ -516,6 +539,7 @@ const Rank = styled.div`
   color: #44515c;
   font-size: ${theme.fonts.regular25};
   font-weight: 300;
+  gap: 10px;
 `;
 
 const More = styled.div`

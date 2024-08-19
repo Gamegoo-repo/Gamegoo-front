@@ -25,7 +25,7 @@ export const GAME_STYLE = [
 ];
 
 export const POSITIONS = [
-    { label: "주 포지션", position: "supporter" },
-    { label: "부 포지션", position: "jungle" },
-    { label: "내가 찾는 포지션", position: "jungle" },
-]
+    { label: "주 포지션" },
+    { label: "부 포지션" },
+    { label: "내가 찾는 포지션" },
+  ];

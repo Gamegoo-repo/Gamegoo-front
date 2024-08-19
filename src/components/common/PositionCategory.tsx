@@ -9,7 +9,7 @@ import Supporter from "../../../public/assets/icons/position_supporter_unclicked
 
 interface PositionComponentProps {
   onClose: () => void;
-  boxName: string;
+  boxName?: string;
   onSelect: (positionId: number) => void;
 }
 
