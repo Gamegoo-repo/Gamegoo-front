@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { getNotiCount, getNotiTotal, readNoti } from "@/api/notification";
 import { useRouter } from "next/navigation";
 
-interface Notification {
+export interface Notification {
   notificationId: number;
   notificationType: number;
   content: string;

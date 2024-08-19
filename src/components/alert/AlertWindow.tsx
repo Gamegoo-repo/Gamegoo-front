@@ -167,11 +167,11 @@ const AlertWindow = (
             </TabContainer>
           </Header>
           <Background ref={alertWindowRef}>
-            {notiList.map((data) => (
+            {notiList.map((data, index) => (
               <AlertBox
-                key={data.notificationId}
+                key={`${data.notificationId}-${index}`}
                 notificationId={data.notificationId}
-                pageUrl={data.pageUrl || ""}
+                pageUrl={data.pageUrl}
                 content={data.content}
                 createdAt={data.createdAt}
                 read={data.read}
