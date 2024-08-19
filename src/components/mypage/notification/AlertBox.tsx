@@ -27,7 +27,7 @@ const AlertBox: React.FC<AlertBoxProps> = ({
   };
   return (
     <Container $read={read} onClick={handleChangeRead} size={size}>
-      <AlertImage>
+      <AlertImage size={size}>
         <Round size={size}></Round>
         <Read $read={read} size={size}></Read>
       </AlertImage>
@@ -50,16 +50,16 @@ const Container = styled.div<{ $read: boolean; size: string }>`
   box-shadow: 0px 0px 16.8px 0px rgba(0, 0, 0, 0.15);
   display: flex;
   opacity: ${(props) => (props.$read ? 0.5 : 1)};
+  cursor: pointer;
 
   ${(props) =>
     props.size === "small" &&
     css`
-      height: 80px;
       padding: 22px 10px;
     `}
 `;
 
-const AlertImage = styled.div`
+const AlertImage = styled.div<{ size: string }>`
   min-width: 50px;
   min-height: 50px;
   position: relative;
@@ -69,6 +69,14 @@ const AlertImage = styled.div`
   @media (max-width: 1200px) {
     margin-right: 16px;
   }
+
+  ${(props) =>
+    props.size === "small" &&
+    css`
+      min-width: 38px;
+      min-height: 38px;
+      margin-right: 20px;
+    `}
 `;
 
 const Round = styled.div<{ size: string }>`
@@ -109,7 +117,7 @@ const Read = styled.div<{ $read: boolean; size: string }>`
 const Div = styled.div`
   display: flex;
   flex-direction: column;
-
+  justify-content: space-between;
   align-items: flex-start;
 `;
 
