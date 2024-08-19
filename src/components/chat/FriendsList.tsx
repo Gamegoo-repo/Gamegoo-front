@@ -3,7 +3,7 @@ import { theme } from "@/styles/theme";
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import DeleteFriend from './DeleteFriend';
-import { getFriendsList, likeFriend, unLikeFriend } from '@/api/friends';
+import { deleteFriend, getFriendsList, likeFriend, unLikeFriend } from '@/api/friends';
 
 interface FriendListInterface {
     memberId: number;
@@ -13,11 +13,10 @@ interface FriendListInterface {
 }
 
 interface FriendListProps {
-    list: FriendListInterface[];
     onChatRoom: (id: number) => void;
 }
 
-const FriendsList = ({ list, onChatRoom }: FriendListProps) => {
+const FriendsList = ({ onChatRoom }: FriendListProps) => {
     const [friends, setFriends] = useState<FriendListInterface[]>([]);
 
     const [deleteMenu, setDeleteMenu] = useState<{ x: number, y: number, friendId: number | null }>({ x: 0, y: 0, friendId: null });
@@ -25,6 +24,7 @@ const FriendsList = ({ list, onChatRoom }: FriendListProps) => {
     const favoriteFriends = friends.filter(friend => friend.liked);
     const nonFavoriteFriends = friends.filter(friend => !friend.liked);
 
+    /* 친구 목록 가져오기 */
     useEffect(() => {
         const handleFetchFriendsList = async () => {
             try {
@@ -36,8 +36,9 @@ const FriendsList = ({ list, onChatRoom }: FriendListProps) => {
         }
 
         handleFetchFriendsList();
-    }, [])
+    }, [friends])
 
+    /* 삭제 하기 버튼 열기 */
     const handleContextMenu = (event: React.MouseEvent, friendId: number) => {
         event.preventDefault();
         event.stopPropagation();
@@ -47,25 +48,31 @@ const FriendsList = ({ list, onChatRoom }: FriendListProps) => {
         setDeleteMenu({ x: x, y: y, friendId });
     };
 
+    /* 삭제하기 버튼 닫기 */
     const handleCloseDeletetMenu = () => {
         setDeleteMenu({ x: 0, y: 0, friendId: null });
     };
 
-    const handleDeleteFriend = () => {
+    /* 친구 삭제 */
+    const handleDeleteFriend = async () => {
         const { friendId } = deleteMenu;
-        if (friendId) {
-            console.log(`${friendId}삭제`)
-            // setFriends(friends.filter((friend) => friend.id !== friendId));
-            handleCloseDeletetMenu();
+
+        try {
+            if (friendId) {
+                await deleteFriend(friendId);
+                await handleCloseDeletetMenu();
+            }
+        } catch (error) {
+            console.error('친구 삭제 에러:', error);
         }
     };
 
+    /* 친구 즐겨찾기 상태 변경 */
     const toggleFavorite = async (friendId: number, liked: boolean) => {
         try {
             if (liked) {
                 await unLikeFriend(friendId);
             } else {
-                // 즐겨찾기 추가 API 호출
                 await likeFriend(friendId);
             }
         } catch (error) {
@@ -86,9 +93,6 @@ const FriendsList = ({ list, onChatRoom }: FriendListProps) => {
         });
 
         setFriends(updatedFriends);
-        // setFriends(friends.map(friend =>
-        //     friend.memberId === friendId ? { ...friend, favorites: friend.liked ? 0 : 1 } : friend
-        // ));
     };
 
     /* 브라우저 너비 변경 시 삭제하기 버튼 닫기 */
