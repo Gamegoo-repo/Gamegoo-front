@@ -1,35 +1,39 @@
 import { theme } from "@/styles/theme";
+import { formatTimeAgo } from "@/utils/custom";
 import React, { useState } from "react";
 import styled, { css } from "styled-components";
 
 interface AlertBoxProps {
+  notificationId: number;
+  pageUrl: string;
   content: string;
-  time: string;
+  createdAt: string;
   read: boolean;
   size?: "small" | "medium";
+  onClick: (notificationId: number, pageUrl: string) => void;
 }
 
 const AlertBox: React.FC<AlertBoxProps> = ({
+  notificationId,
+  pageUrl,
   content,
-  time,
-  read: initialRead,
+  createdAt,
+  read,
   size = "medium",
+  onClick,
 }) => {
-  const [read, setRead] = useState(initialRead);
-
   const handleChangeRead = () => {
-    !read && setRead((prevRead) => !prevRead);
+    onClick(notificationId, pageUrl);
   };
-
   return (
     <Container $read={read} onClick={handleChangeRead} size={size}>
       <AlertImage>
         <Round size={size}></Round>
-        <Read size={size}></Read>
+        <Read $read={read} size={size}></Read>
       </AlertImage>
       <Div>
         <Text size={size}>{content}</Text>
-        <Time size={size}>{time} 전</Time>
+        <Time size={size}>{formatTimeAgo(createdAt)}</Time>
       </Div>
     </Container>
   );
@@ -39,13 +43,12 @@ export default AlertBox;
 
 const Container = styled.div<{ $read: boolean; size: string }>`
   width: 100%;
-  height: 110px;
   border-radius: 10px;
   padding: 32px 23px;
+  box-sizing: border-box;
   background: ${theme.colors.white};
   box-shadow: 0px 0px 16.8px 0px rgba(0, 0, 0, 0.15);
   display: flex;
-  gap: 26px;
   opacity: ${(props) => (props.$read ? 0.5 : 1)};
 
   ${(props) =>
@@ -57,9 +60,15 @@ const Container = styled.div<{ $read: boolean; size: string }>`
 `;
 
 const AlertImage = styled.div`
-  width: 46px;
-  height: 46px;
+  min-width: 50px;
+  min-height: 50px;
   position: relative;
+
+  margin-right: 26px;
+
+  @media (max-width: 1200px) {
+    margin-right: 16px;
+  }
 `;
 
 const Round = styled.div<{ size: string }>`
@@ -79,14 +88,15 @@ const Round = styled.div<{ size: string }>`
     `}
 `;
 
-const Read = styled.div<{ size: string }>`
+const Read = styled.div<{ $read: boolean; size: string }>`
   width: 10px;
   height: 10px;
   background: ${theme.colors.purple100};
+  opacity: ${(props) => (props.$read ? 0 : 1)};
   border-radius: 100px;
   position: absolute;
-  top: 2px;
-  right: 2px;
+  top: 5px;
+  right: 5px;
 
   ${(props) =>
     props.size === "small" &&
@@ -99,6 +109,7 @@ const Read = styled.div<{ size: string }>`
 const Div = styled.div`
   display: flex;
   flex-direction: column;
+
   align-items: flex-start;
 `;
 
