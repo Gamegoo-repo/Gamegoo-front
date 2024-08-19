@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { clearTokens } from "@/utils/storage";
 import { clearUserProfile } from "@/redux/slices/userSlice";
+import { getNotiCount } from "@/api/notification";
 
 interface HeaderProps {
   selected: boolean;
@@ -26,6 +27,8 @@ const Header = () => {
 
   const name = localStorage.getItem("name");
   const profileImg = localStorage.getItem("profileImg");
+
+  const [count, setCount] = useState<number>(0);
 
   console.log(profileImg);
   /* 알림창 열고 닫는 함수 */
@@ -55,6 +58,20 @@ const Header = () => {
     setIsMyPage(false);
   }, [pathname]);
 
+  useEffect(() => {
+    const fetchNotiCount = async () => {
+      try {
+        const response = await getNotiCount();
+        setCount(response.result);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchNotiCount();
+  }, []);
+
+  useEffect(() => {}, [count]);
   return (
     <Head>
       <HeaderBar>
@@ -77,10 +94,10 @@ const Header = () => {
             </Menu>
           </Menus>
         </Left>
-        {name ? (
+        {name && profileImg ? (
           <Right>
             <Image
-              src="/assets/icons/noti_on.svg"
+              src={`/assets/icons/noti_${count > 0 ? "on" : "off"}.svg`}
               width={24}
               height={30}
               alt="noti"
@@ -122,10 +139,14 @@ const Header = () => {
             />
             <MyName>{name}</MyName>
             <Image
-              src="/assets/icons/noti_on.svg"
+              src={`/assets/icons/noti_${count > 0 ? "on" : "off"}.svg`}
               width={24}
               height={30}
               alt="noti"
+              onClick={() => {
+                router.push("/mypage/notification");
+                setIsMyPage(false);
+              }}
             />
           </MyProfile>
           <TabMenu>

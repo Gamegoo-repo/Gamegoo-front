@@ -5,7 +5,7 @@ import { theme } from "@/styles/theme";
 import AlertBox from "@/components/mypage/notification/AlertBox";
 import Pagination from "@/components/common/Pagination";
 import { useEffect, useState } from "react";
-import { getNotiTotal, readNoti } from "@/api/notification";
+import { getNotiCount, getNotiTotal, readNoti } from "@/api/notification";
 import { useRouter } from "next/navigation";
 
 interface Notification {
@@ -26,6 +26,8 @@ const MyAlertPage = () => {
   const itemsPerPage = 10;
   const pageButtonCount = 5;
 
+  const [count, setCount] = useState<number>(0);
+
   useEffect(() => {
     const fetchNotiList = async () => {
       try {
@@ -44,10 +46,20 @@ const MyAlertPage = () => {
       }
     };
 
+    const fetchNotiCount = async () => {
+      try {
+        const response = await getNotiCount();
+        setCount(response.result);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     fetchNotiList();
+    fetchNotiCount();
   }, [currentPage]);
 
-  useEffect(() => {}, [totalPages, totalItems]);
+  useEffect(() => {}, [totalPages, totalItems, count]);
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
@@ -92,7 +104,7 @@ const MyAlertPage = () => {
       <MyAlertContent>
         <Alert>
           <Top>
-            <Small>알림 페이지</Small>
+            <Small>알림 페이지 ({count})</Small>
           </Top>
           <AlertList>
             {notiList.map((data) => (
@@ -110,6 +122,7 @@ const MyAlertPage = () => {
           <Pagination
             currentPage={currentPage}
             totalItems={totalItems}
+            totalPage={totalPages}
             itemsPerPage={itemsPerPage}
             pageButtonCount={pageButtonCount}
             hasMoreItems={currentPage < totalPages}
@@ -155,6 +168,8 @@ const Top = styled.div`
 
 const Small = styled.div`
   width: 100%;
+  display: flex;
+  justify-content: space-between;
   ${(props) => props.theme.fonts.medium16};
   color: ${theme.colors.gray700};
   padding-bottom: 27px;
