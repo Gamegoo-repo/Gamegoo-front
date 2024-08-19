@@ -6,7 +6,7 @@ import Toggle from "../common/Toggle";
 import { theme } from "@/styles/theme";
 import SelectedStylePopup from "./SelectedStylePopup";
 import { css } from "styled-components";
-import { putGameStyle } from "@/api/mypage";
+import { putGameStyle } from "@/api/user";
 import { GAME_STYLE } from "@/data/profile";
 
 type profileType = "me" | "other" | "none" | "mini";

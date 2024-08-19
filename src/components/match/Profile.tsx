@@ -19,7 +19,7 @@ import { MoreBoxMenuItems } from "@/interface/moreBox";
 import { User } from "@/interface/profile";
 import { toLowerCaseString } from "@/utils/string";
 import { PositionState } from "../crBoard/PositionBox";
-import { putPosition } from "@/api/mypage";
+import { putPosition } from "@/api/user";
 import { setPositionImg } from "@/utils/custom";
 
 type profileType = "normal" | "wind" | "other" | "me";
@@ -30,7 +30,7 @@ interface Profile {
 }
 
 const Profile: React.FC<Profile> = ({ profileType, user }) => {
-  const [isMike, setIsMike] = useState(user.mike);
+  const [isMike, setIsMike] = useState<boolean>(user.mike);
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
   const [isReportBoxOpen, setIsReportBoxOpen] = useState(false);
   const [isBlockBoxOpen, setIsBlockBoxOpen] = useState(false);
@@ -68,9 +68,9 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
     }, 300); // 300ms 후에 창이 닫히도록 설정
   };
 
-  // useEffect(() => {
-  //   setIsMike(user.mic);
-  // }, [user.mic]);
+  useEffect(() => {
+    setIsMike(user.mike);
+  }, [user.mike]);
 
   const handleMike = () => {
     setIsMike(!isMike);

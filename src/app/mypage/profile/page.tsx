@@ -6,7 +6,7 @@ import MyPageProfile from "@/components/mypage/profile/MyPageProfile";
 import PasswordModal from "@/components/mypage/profile/PasswordModal";
 import { useEffect, useState } from "react";
 import ConfirmModal from "@/components/common/ConfirmModal";
-import { deleteMember, getProfile } from "@/api/mypage";
+import { deleteMember, getProfile } from "@/api/user";
 import { setUserProfile } from "@/redux/slices/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";

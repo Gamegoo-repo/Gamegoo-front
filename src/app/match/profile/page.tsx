@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { profileType } from "@/interface/profile";
 import { Suspense } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getProfile } from "@/api/mypage";
+import { getProfile } from "@/api/user";
 import { setUserProfile } from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
 
@@ -51,7 +51,11 @@ const ProfilePage = () => {
       <MatchContent>
         <HeaderTitle title="프로필 설정" />
         <Main>
-          <Profile profileType={profileType ?? "normal"} user={user} />
+          {user ? (
+            <Profile profileType={profileType ?? "normal"} user={user} />
+          ) : (
+            <p>Loading...</p>
+          )}
           <Button
             buttonType="primary"
             width="380px"
