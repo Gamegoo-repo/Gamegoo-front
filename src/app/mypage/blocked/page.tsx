@@ -2,7 +2,7 @@
 
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
-import AlertBox from "@/components/mypage/alert/AlertBox";
+import AlertBox from "@/components/mypage/notification/AlertBox";
 import Image from "next/image";
 import { EX_BLOCKED } from "@/data/mypage";
 import Pagination from "@/components/common/Pagination";
