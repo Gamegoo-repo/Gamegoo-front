@@ -1,6 +1,6 @@
 import { AuthAxios } from "./auth";
 
-export const getProfile= async () => {
+export const getProfile = async () => {
   const endpoint = '/v1/member/profile';
   try {
     const response = await AuthAxios.get(endpoint);
@@ -12,7 +12,7 @@ export const getProfile= async () => {
   }
 };
 
-export const putProfileImg= async (profileImage: number) => {
+export const putProfileImg = async (profileImage: number) => {
   const endpoint = '/v1/member/profile_image';
   try {
     console.log("선택한 프로필 이미지", profileImage);
@@ -60,3 +60,40 @@ export const deleteMember = async () => {
       throw error;
     }
   };
+
+  export const getMyPost= async (pageIdx:number) => {
+    const endpoint = `/v1/posts/my?pageIdx=${pageIdx}`;
+    try {
+      const response = await AuthAxios.get(endpoint);
+      console.log("내가 작성한 글 목록 조회 성공:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("내가 작성한 글 목록 조회 실패:", error);
+      throw error;
+    }
+  };
+  
+  export const getMyManner= async () => {
+    const endpoint = '/v1/manner';
+    try {
+      const response = await AuthAxios.get(endpoint);
+      console.log("내가 받은 매너평가 조회 성공:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("내가 받은 매너평가 조회 실패:", error);
+      throw error;
+    }
+  };
+  
+  export const getMyBlocked= async (page: number) => {
+    const endpoint = `/v1/member/block?page=${page}`;
+    try {
+      const response = await AuthAxios.get(endpoint);
+      console.log("내가 차단한 회원 목록 조회 성공:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("내가 차단한 회원 목록 조회 실패:", error);
+      throw error;
+    }
+  };
+  

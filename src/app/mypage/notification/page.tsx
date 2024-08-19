@@ -156,7 +156,7 @@ const Alert = styled.header`
   flex-direction: column;
   align-items: flex-start;
   width: 100%;
-  margin-bottom: 32px;
+  margin-bottom: 100px;
 `;
 
 const Top = styled.div`
@@ -173,29 +173,6 @@ const Small = styled.div`
   ${(props) => props.theme.fonts.medium16};
   color: ${theme.colors.gray700};
   padding-bottom: 27px;
-`;
-
-const Right = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 10px;
-  gap: 47px;
-  white-space: nowrap;
-`;
-
-const AllRead = styled.button`
-  height: 16px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  color: ${theme.colors.gray800};
-  ${(props) => props.theme.fonts.semiBold14};
-`;
-
-const Select = styled.button`
-  height: 16px;
-  color: ${theme.colors.gray800};
-  ${(props) => props.theme.fonts.semiBold14};
 `;
 
 const AlertList = styled.div`

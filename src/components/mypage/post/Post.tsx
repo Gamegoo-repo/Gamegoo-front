@@ -2,28 +2,36 @@ import MoreBox from "@/components/common/MoreBox";
 import Report from "@/components/readBoard/MoreBoxButton";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import { theme } from "@/styles/theme";
+import {
+  formatTimeAgo,
+  setAbbrevTier,
+  setChatRoomDateFormatter,
+} from "@/utils/custom";
+import { toLowerCaseString } from "@/utils/string";
 import Image from "next/image";
 import React, { useState } from "react";
 import styled from "styled-components";
 
-interface PostProps {
-  index: number;
-  profileImg: string;
-  nickname: string;
+export interface PostProps {
+  boardId: number;
+  memberId: number;
+  profileImage: number;
+  gameName: string;
   tag: string;
   tier: string;
-  text: string;
-  time: string;
+  contents: string;
+  createdAt: string;
 }
 
 const Post: React.FC<PostProps> = ({
-  index,
-  profileImg,
-  nickname,
+  boardId,
+  memberId,
+  profileImage,
+  gameName,
   tag,
   tier,
-  text,
-  time,
+  contents,
+  createdAt,
 }) => {
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
 
@@ -41,52 +49,51 @@ const Post: React.FC<PostProps> = ({
     setIsMoreBoxOpen(false);
   };
 
-   // 더보기 버튼 메뉴
-   const MoreBoxMenuItems: MoreBoxMenuItems[] = [
-    { text: '수정', onClick: handleModify },
-    { text: '삭제', onClick: handleDelete },
+  // 더보기 버튼 메뉴
+  const MoreBoxMenuItems: MoreBoxMenuItems[] = [
+    { text: "수정", onClick: handleModify },
+    { text: "삭제", onClick: handleDelete },
   ];
 
   return (
     <Container>
-      {index}
+      {boardId}
       <Content>
         <Name>
           <ProfileImage>
             <PersonImage
-              src={`/assets/images/profile/${profileImg}.svg`}
+              src={`/assets/images/profile/profile${profileImage - 1}.svg`}
               width={40}
               height={40}
               alt="프로필"
             />
           </ProfileImage>
           <Div>
-            {nickname}
+            {gameName}
             <Tag>#{tag}</Tag>
           </Div>
         </Name>
         <Tier>
           <Image
-            src={`/assets/images/rank_${tier}.svg`}
+            src={`/assets/images/tier/${toLowerCaseString(tier) || "ur"}.svg`}
             width={26}
             height={26}
-            alt="profile"
+            alt="tier"
           />
-          {tier}
+          {setAbbrevTier(tier)}
+          {/* {rank} */}
+          {3}
         </Tier>
-        <Memo>{text}</Memo>
+        <Memo>{contents}</Memo>
         <Date>
-          {time} <Minute>20분 전</Minute>
+          {setChatRoomDateFormatter(createdAt)}{" "}
+          <Minute>{formatTimeAgo(createdAt)}</Minute>
         </Date>
       </Content>
       <More>
         <Report onClick={handleMoreBoxOpen} />
         {isMoreBoxOpen && (
-          <MoreBox
-          items={MoreBoxMenuItems}
-          top={-10}
-          left={45}
-          />
+          <MoreBox items={MoreBoxMenuItems} top={-10} left={45} />
         )}
       </More>
     </Container>
@@ -140,7 +147,7 @@ const PersonImage = styled(Image)`
 const Div = styled.div`
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 5px;
 `;
 
 const Tag = styled.div`
