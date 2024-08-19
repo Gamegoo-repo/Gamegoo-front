@@ -1,12 +1,12 @@
-"use client";
-
 import styled from "styled-components";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Profile from "@/components/match/Profile";
 import HeaderTitle from "@/components/common/HeaderTitle";
 import { theme } from "@/styles/theme";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
 import MannerLevelBar from "@/components/common/MannerLevelBar";
+import { useEffect, useState } from "react";
+import { getOtherProfile } from "@/api/member";
 
 const data = {
   good_manner: {
@@ -38,52 +38,39 @@ export interface GameStyle {
 }
 
 export interface User {
-  gameName: string;
-  profileImg: string;
+  id?: number;
+  profileImg: number;
+  mike: boolean;
   email: string;
+  gameName: string;
   tag: string;
   tier: string;
-  rank: string;
+  rank: number;
+  manner: number;
   updatedAt: string;
+  mainP: number;
+  subP: number;
+  isAgree: boolean;
+  isBlind: boolean;
+  loginType: string;
+  winrate: number;
   gameStyleResponseDTOList: GameStyle[];
   championResponseDTOList: Champion[];
 }
 
-const userData = {
-  profileImg: "profile6",
-  gameName: "유니콘의 비밀",
-  email: "이메일 어쩌구 예시",
-  tag: "KR1",
-  tier: "B3",
-  manner_level: 5,
-  mic: true,
-  championResponseDTOList: [
-    { championId: 1, championName: "/assets/icons/gray_circle.svg" },
-    { championId: 2, championName: "/assets/icons/gray_circle.svg" },
-    { championId: 3, championName: "/assets/icons/gray_circle.svg" },
-  ],
-  gameStyleResponseDTOList: [
-    { gameStyleId: 2, gameStyleName: "과도한 핑은 사절이에요" },
-    { gameStyleId: 3, gameStyleName: "랭크 올리고 싶어요" },
-  ],
-};
-
-const UserProfile = () => {
-  const params = useParams();
-  const id = +params.id;
-
+const UserProfile = ({ profile }: { profile: User }) => {
   const mannerEvaluations = Object.entries(data.good_manner);
   const badMannerEvaluations = Object.entries(data.bad_manner);
 
   return (
     <Wrapper>
       <MatchContent>
-        <HeaderTitle title="장시은 님의 프로필" size="regular" />
+        <HeaderTitle title={`${profile.gameName} 님의 프로필`} size="regular" />
         <Main>
-          {/* <Profile profileType="other" user={userData} /> */}
+          <Profile profileType="other" user={profile} />
           <Content>
             <div>
-              <Title>장시은 님의 매너레벨</Title>
+              <Title>{`${profile.gameName}의 매너레벨`}</Title>
               <Box>
                 <Text>
                   매너 키워드는 하나 당 1점, 비매너 키워드는 -2점으로 계산해요.

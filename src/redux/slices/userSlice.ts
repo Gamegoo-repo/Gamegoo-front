@@ -11,31 +11,43 @@ interface Champion {
 }
 
 interface UserState {
-  gameName: string;
+  id?: number;
   profileImg: number;
+  mike: boolean;
   email: string;
+  gameName: string;
   tag: string;
   tier: string;
-  rank: string;
-  mike: boolean;
-  mainP: number;
-  subP: number;
+  rank: number;
+  manner: number;
   updatedAt: string;
+  mainP: number;
+  subP:number;
+  isAgree: boolean;
+  isBlind: boolean;
+  loginType: string;
+  winrate: number;
   gameStyleResponseDTOList: GameStyle[];
   championResponseDTOList: Champion[];
 };
 
 const initialState: UserState = {
+  id: 0,
   profileImg: 0,
+  mike: false,
   email: '',
   gameName: '',
   tag: '',
   tier: '',
-  rank: '',
-  mike: false,
+  rank: 0,
+  manner: 0,
+  updatedAt: '',
   mainP: 0,
   subP: 0,
-  updatedAt: '',
+  isAgree: false,
+  isBlind: false,
+  loginType: '',
+  winrate: 0,
   gameStyleResponseDTOList: [],
   championResponseDTOList: [],
 };
@@ -54,16 +66,22 @@ export const userSlice = createSlice({
       return { ...state, ...action.payload };
     },
     clearUserProfile(state) {
-      state.profileImg = 0;
-      state.email=  '';
-      state.gameName=  '';
-      state.tag=  '';
-      state. tier=  '';
-      state.rank=  '';
-      state.mike=  false;
-      state.mainP=  0;
-      state. subP=  0;
-      state.updatedAt=  '';
+       state.id= 0;
+       state.profileImg= 0;
+       state. mike=false;
+       state.email= '';
+       state.gameName= '';
+       state.tag= '';
+       state. tier= '';
+       state.rank= 0;
+       state.manner= 0;
+       state.updatedAt= '';
+       state.mainP= 0;
+       state.subP= 0;
+       state.isAgree=false;
+       state.isBlind= false;
+       state.loginType='';
+       state. winrate= 0;
       state. gameStyleResponseDTOList= [];
       state.championResponseDTOList= [];
     },
