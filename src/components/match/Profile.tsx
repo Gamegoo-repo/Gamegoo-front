@@ -222,6 +222,8 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                   alt="tier"
                 />
                 {user.tier}
+                {` `}
+                {user.rank}
               </Rank>
             </Top>
             {profileType === "other" && (
