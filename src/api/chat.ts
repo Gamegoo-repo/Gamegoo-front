@@ -28,7 +28,7 @@ export const enterUsingUuid = async (chatroomUuid: string) => {
 /* 친구 목록에서 채팅방 입장 */
 export const enterUsingMemberId = async (memberId: number) => {
     try {
-        const response = await AuthAxios.get(`/v1/chat/start/member/${memberId} `);
+        const response = await AuthAxios.get(`/v1/chat/start/member/${memberId}`);
         console.log("채팅방 입장 성공:", response.data);
         return response.data;
     } catch (error) {

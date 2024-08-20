@@ -97,6 +97,9 @@ const ChatRoom = (props: ChatRoomProps) => {
         console.log('친구 추가')
     };
 
+    // 서로 친구이면, '친구 추가' 대신 '친구삭제' 버튼
+    // 서로 친구 요청 중이면, '친구 추가' 대신 '친구 요청 취소' 버튼
+    
     const menuItems: MoreBoxMenuItems[] = [
         { text: '채팅방 나가기', onClick: (e) => handleModalChange(e, 'leave') },
         { text: '친구 추가', onClick: handleFriendAdd },

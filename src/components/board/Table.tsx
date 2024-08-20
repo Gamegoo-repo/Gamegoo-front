@@ -6,9 +6,10 @@ import ReadBoard from "../readBoard/ReadBoard";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { setCloseReadingModal, setOpenReadingModal } from "@/redux/slices/modalSlice";
+import { setCloseModal, setCloseReadingModal, setOpenModal, setOpenReadingModal } from "@/redux/slices/modalSlice";
 import { useRouter } from "next/navigation";
 import Alert from "../common/Alert";
+import ConfirmModal from "../common/ConfirmModal";
 
 interface TableTitleProps {
     id: number;
@@ -43,6 +44,7 @@ const Table = (props: TableProps) => {
     const [showAlert, setShowAlert] = useState(false);
 
     const isReadingModal = useSelector((state: RootState) => state.modal.readingModal);
+    const isModalType = useSelector((state: RootState) => state.modal.modalType);
 
     const dispatch = useDispatch();
     const router = useRouter();
@@ -82,6 +84,7 @@ const Table = (props: TableProps) => {
         const copied = `#${gameName.replace(/\s+/g, '')}`;
         try {
             await navigator.clipboard.writeText(copied);
+            await dispatch(setOpenModal("copied"));
         } catch (error) {
             console.error('복사 실패', error);
         }
@@ -92,6 +95,11 @@ const Table = (props: TableProps) => {
         e.stopPropagation();
         router.push('/user')
     }
+
+    /* 모달 닫기 */
+    const handleModalClose = () => {
+        dispatch(setCloseModal());
+    };
 
     return (
         <>
@@ -194,6 +202,20 @@ const Table = (props: TableProps) => {
                     <NoData>게시된 글이 없습니다.</NoData>
                 )}
             </TableWrapper>
+
+            {/* 소환사명 복사 모달 */}
+            {isModalType === 'copied' &&
+                <ConfirmModal
+                    width="540px"
+                    primaryButtonText="확인"
+                    secondaryButtonText="나가기"
+                    onPrimaryClick={handleModalClose}
+                >
+                    <Text>
+                        {`소환사명이 클립보드에 복사되었습니다.`}
+                    </Text>
+                </ConfirmModal>
+            }
         </>
     )
 };
@@ -315,4 +337,11 @@ const NoData = styled.p`
   ${(props) => props.theme.fonts.medium16};
   text-align: center;
   margin-top: 47px;
+`;
+
+const Text = styled.div`
+  text-align: center;
+  color: ${theme.colors.gray600};
+  ${(props) => props.theme.fonts.regular18};
+  margin: 28px 0;
 `;

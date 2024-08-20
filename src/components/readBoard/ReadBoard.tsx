@@ -422,6 +422,7 @@ const ReadBoard = (props: ReadBoardProps) => {
                     tag={isPost.tag}
                     tier={isPost.tier} />
                   <MannerLevel
+                    forNoData={isPost.tier}
                     level={isPost.mannerLevel}
                     onClick={handleMannerLevelBoxOpen}
                     position="top"
