@@ -25,9 +25,10 @@ const Button = (props: ButtonProps) => {
   if (size) {
     buttonClassName += " ${size}";
   }
-
+  console.log('Button component is rendered');
   return (
     <StyledButton
+      type="submit"
       className={buttonType}
       onClick={onClick}
       disabled={disabled}

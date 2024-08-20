@@ -8,16 +8,21 @@ import { MoreBoxMenuItems } from '@/interface/moreBox';
 import { getChatrooms } from '@/api/chat';
 import { ChatroomList } from '@/interface/chat';
 import { getProfileBgColor } from '@/utils/profile';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 interface ChatListProps {
     onChatRoom: (uuid: string) => void;
     setIsMoreBoxOpen: Dispatch<React.SetStateAction<number | null>>;
     isMoreBoxOpen: number | null;
     onModalChange: (modalType: string) => void;
+    isUuid: (uuid: string) => void;
 }
 
 const ChatList = (props: ChatListProps) => {
-    const { onChatRoom, setIsMoreBoxOpen, isMoreBoxOpen, onModalChange } = props;
+    const { onChatRoom, setIsMoreBoxOpen, isMoreBoxOpen, onModalChange, isUuid } = props;
+
+    const isModalType = useSelector((state: RootState) => state.modal.modalType);
 
     const [chatrooms, setChatrooms] = useState<ChatroomList[]>([]);
 
@@ -33,13 +38,14 @@ const ChatList = (props: ChatListProps) => {
         };
 
         handleFetchChatrooms();
-    }, [])
+    }, [isModalType])
 
-    const handleMoreBoxOpen = (chatId: number, e: React.MouseEvent) => {
+    const handleMoreBoxOpen = (chatId: number, uuid: string, e: React.MouseEvent) => {
         e.stopPropagation();
         if (isMoreBoxOpen === chatId) {
             setIsMoreBoxOpen(null);
         } else {
+            isUuid(uuid);
             setIsMoreBoxOpen(chatId);
         };
     };
@@ -109,7 +115,7 @@ const ChatList = (props: ChatListProps) => {
                                 </Middle>
                             </Left>
                             <Right
-                                onClick={(e) => handleMoreBoxOpen(room.chatroomId, e)}>
+                                onClick={(e) => handleMoreBoxOpen(room.chatroomId, room.uuid, e)}>
                                 <MoreImage
                                     src="/assets/icons/three_dots_button.svg"
                                     width={3}

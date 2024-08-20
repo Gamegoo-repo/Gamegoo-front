@@ -16,7 +16,7 @@ import { REPORT_REASON } from "@/data/report";
 import Input from "../common/Input";
 import Button from "../common/Button";
 import { postMannerValue } from "@/api/manner";
-import { enterUsingMemberId, enterUsingUuid } from "@/api/chat";
+import { enterUsingMemberId, enterUsingUuid, leaveChatroom } from "@/api/chat";
 import { Chat } from "@/interface/chat";
 
 interface ChatWindowProps {
@@ -34,10 +34,12 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
     const [checkedItems, setCheckedItems] = useState<number[]>([]);
     const [reportDetail, setReportDetail] = useState<string>("");
     const [chatData, setChatData] = useState<Chat>();
+    const [isUuid, setIsUuid] = useState("");
 
     const isModalType = useSelector((state: RootState) => state.modal.modalType);
     const isUser = useSelector((state: RootState) => state.user);
 
+    /* 채팅방 입장 */
     const handleGoToChatRoom = (id: string | number) => {
         setChatId(id);
         setIsChatRoomVisible(true);
@@ -47,11 +49,13 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
         setIsChatRoomVisible(false);
     };
 
+    /* 모달 타입 변경 */
     const handleModalChange = (modalType: string) => {
         dispatch(setOpenModal(modalType));
         setIsMoreBoxOpen(null);
     };
 
+    /* 모달 닫기 */
     const handleModalClose = () => {
         setCheckedItems([]);
         setReportDetail("");
@@ -59,31 +63,45 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
     };
 
     const handleMannerPost = async () => {
-        const params = {
-            toMemberId: 1,
-            mannerRatingKeywordList: checkedItems,
-        };
-        
+        console.log('button')
+        // const params = {
+        //     toMemberId: 1,
+        //     mannerRatingKeywordList: checkedItems,
+        // };
+
+        // try {
+        //     await postMannerValue(params);
+        //     await handleModalClose();
+        // } catch (error) {
+        //     console.error("에러:", error);
+        // }
+    };
+
+    /* 채팅 uuid 가져오기 */
+    const handleUuidGet = (uuid: string) => {
+        setIsUuid(uuid);
+    };
+
+    /* 채팅방 나가기 */
+    const handleChatLeave = async () => {
         try {
-            await postMannerValue(params);
-            await handleModalClose();
+            await leaveChatroom(isUuid);
+            await dispatch(setCloseModal());
         } catch (error) {
             console.error("에러:", error);
         }
-    };
-
-    const handleChatLeave = () => {
-        console.log('채팅창 나가기')
         handleModalClose();
         handleBackToChatWindow();
     };
 
+    /* 차단하기 */
     const handleChatBlock = () => {
         handleBackToChatWindow();
         handleModalClose();
         dispatch(setOpenModal('doneBlock'));
     };
 
+    /* 더보기 버튼 외부 클릭 시 닫힘 */
     const handleOutsideModalClick = (e: React.MouseEvent<HTMLDivElement>) => {
         e.stopPropagation();
         if (isMoreBoxOpen) {
@@ -91,17 +109,18 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
         }
     };
 
+    /* 체크박스 */
     const handleCheckboxChange = (checked: number) => {
-        // setCheckedItems((prev) =>
-        //     prev.includes(checked) ? prev.filter((c) => c !== checked) : [...prev, checked]
-        // );
-        setCheckedItems((prev) => {
-            const newCheckedItems = prev.includes(checked)
-                ? prev.filter((c) => c !== checked)
-                : [...prev, checked];
-            console.log("Updated checkedItems:", newCheckedItems);
-            return newCheckedItems;
-        });
+        setCheckedItems((prev) =>
+            prev.includes(checked) ? prev.filter((c) => c !== checked) : [...prev, checked]
+        );
+        // setCheckedItems((prev) => {
+        //     const newCheckedItems = prev.includes(checked)
+        //         ? prev.filter((c) => c !== checked)
+        //         : [...prev, checked];
+        //     console.log("Updated checkedItems:", newCheckedItems);
+        //     return newCheckedItems;
+        // });
     };
 
     /* 채팅방 입장 */
@@ -123,8 +142,6 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
 
         handleFetchChatData();
     }, [chatId])
-
-    console.log(chatData)
 
     return (
         <>
@@ -174,6 +191,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                                     isMoreBoxOpen={isMoreBoxOpen}
                                     onModalChange={handleModalChange}
                                     onChatRoom={handleGoToChatRoom}
+                                    isUuid={handleUuidGet}
                                 />}
                         </Content>
                     </ChatMain>
@@ -205,7 +223,8 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                     {/* <Text>
                         {`채팅방을 나가시겠어요?`}
                     </Text> */}
-                </ConfirmModal>}
+                </ConfirmModal>
+            }
 
             {/* 차단하기 팝업 */}
             {isModalType === 'block' &&
@@ -225,7 +244,8 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                     {/* <Text>
                      {`채팅방을 나가시겠어요?`}
                  </Text> */}
-                </ConfirmModal>}
+                </ConfirmModal>
+            }
 
             {/* 차단 완료 팝업 */}
             {isModalType === 'doneBlock' && (
@@ -287,7 +307,8 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                             />
                         </ReportButton>
                     </div>
-                </FormModal>}
+                </FormModal>
+            }
 
             {/* 매너평가 팝업 */}
             {isModalType === 'manner' &&
@@ -320,7 +341,8 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                             disabled={checkedItems.length === 0}
                         />
                     </ModalSubmitBtn>
-                </FormModal>}
+                </FormModal>
+            }
 
             {/* 비매너 평가 팝업 */}
             {isModalType === 'badManner' &&
@@ -347,13 +369,14 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                     </CheckContent>
                     <ModalSubmitBtn>
                         <Button
-                            onClick={handleModalClose}
+                            onClick={handleMannerPost}
                             buttonType="primary"
                             text="완료"
                             disabled={checkedItems.length === 0}
                         />
                     </ModalSubmitBtn>
-                </FormModal>}
+                </FormModal>
+            }
         </>
     )
 };

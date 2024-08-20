@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { setChatDateFormatter, setChatTimeFormatter } from '@/utils/custom';
 import ConfirmModal from '../common/ConfirmModal';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCloseMannerStatusModal, setCloseReadingModal, setOpenMannerStatusModal, setOpenReadingModal } from '@/redux/slices/modalSlice';
+import { setCloseMannerStatusModal, setCloseModal, setCloseReadingModal, setOpenMannerStatusModal, setOpenReadingModal } from '@/redux/slices/modalSlice';
 import { RootState } from '@/redux/store';
 import { Chat, ChatMessageDto, ChatMessageList } from '@/interface/chat';
 import ReadBoard from '../readBoard/ReadBoard';
@@ -193,13 +193,14 @@ const MessageContainer = (props: MessageContainerProps) => {
               width={22}
               height={22}
               alt="스마일 이모티콘" />
-            <Button onClick={() => dispatch(setOpenMannerStatusModal())}>
+            <StyledButton onClick={() => dispatch(setOpenMannerStatusModal())}>
               매너평가 하기
-            </Button>
+            </StyledButton>
           </Feedback>
         </FeedbackContainer>
         <FeedbackTime>{setChatTimeFormatter(isFeedbackDate)}</FeedbackTime>
       </FeedbackDiv>
+
       {isFeedbackModalOpen &&
         <ConfirmModal
           type="manner"
@@ -350,7 +351,7 @@ const Text = styled.p`
     }
 `;
 
-const Button = styled.button`
+const StyledButton = styled.button`
   width: 100%;
   border-radius: 53px;
   margin-top:12px;
