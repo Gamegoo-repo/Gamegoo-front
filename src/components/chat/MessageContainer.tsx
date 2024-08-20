@@ -173,18 +173,13 @@ const MessageContainer = (props: MessageContainerProps) => {
         )
       })}
 
-      {isFeedbackDateVisible &&
+      {/* {isFeedbackDateVisible &&
         <FeedbackDate className={isFeedbackDateVisible ? 'visibleDate' : 'invisibleDate'}>
           <Timestamp>{setChatDateFormatter(isFeedbackDate)}</Timestamp>
         </FeedbackDate>
-      }
+      } */}
       <FeedbackDiv className={isFeedbackDateVisible ? 'visibleDate' : 'invisibleDate'}>
         <FeedbackContainer>
-          <Image
-            src="/assets/icons/gray_circle.svg"
-            width={47.43}
-            height={47.43}
-            alt="프로필 이미지" />
           <Feedback>
             <Text>매칭은 어떠셨나요?</Text>
             <Text>상대방의 매너를 평가해주세요!</Text>
@@ -198,7 +193,7 @@ const MessageContainer = (props: MessageContainerProps) => {
             </StyledButton>
           </Feedback>
         </FeedbackContainer>
-        <FeedbackTime>{setChatTimeFormatter(isFeedbackDate)}</FeedbackTime>
+        {/* <FeedbackTime>{setChatTimeFormatter(isFeedbackDate)}</FeedbackTime> */}
       </FeedbackDiv>
 
       {isFeedbackModalOpen &&
@@ -313,30 +308,24 @@ const FeedbackDate = styled.div`
 
 `;
 const FeedbackDiv = styled.div`
-  display: flex;
-  align-items: end;
-  &.visibleDate{
+  margin-top: 35px;
+  /* &.visibleDate{
     margin-top: 10px;
   }
   &.invisibleDate{
     margin-top: 35px;
-  }
+  } */
 `;
 
-const FeedbackContainer = styled.div`
-  display: flex;
-  justify-content: flex-start;
-`;
+const FeedbackContainer = styled.div``;
 
 const Feedback = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 229px;
   padding: 18px 15px 10px;
   background: ${theme.colors.white}; 
   border-radius: 13px;
-  margin-left: 11px;
 `;
 
 const SmileImage = styled(Image)`
