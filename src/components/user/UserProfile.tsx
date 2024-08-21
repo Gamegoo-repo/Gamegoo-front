@@ -1,31 +1,9 @@
 import styled from "styled-components";
-import { useParams } from "next/navigation";
 import Profile from "@/components/match/Profile";
 import HeaderTitle from "@/components/common/HeaderTitle";
 import { theme } from "@/styles/theme";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
 import MannerLevelBar from "@/components/common/MannerLevelBar";
-import { useEffect, useState } from "react";
-import { getOtherProfile } from "@/api/member";
-
-// const data = {
-//   good_manner: {
-//     "1": 8,
-//     "2": 5,
-//     "3": 2,
-//     "4": 5,
-//     "5": 0,
-//     "6": 5,
-//   },
-//   bad_manner: {
-//     "1": 1,
-//     "2": 0,
-//     "3": 0,
-//     "4": 0,
-//     "5": 0,
-//     "6": 0,
-//   },
-// };
 
 export interface Champion {
   championId: number;
@@ -59,7 +37,7 @@ export interface User {
 }
 
 export interface Manner {
-  memberId: number;
+  memberId?: number;
   mannerLevel: number;
   mannerKeywords: [
     {
