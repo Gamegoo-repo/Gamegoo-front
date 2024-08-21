@@ -1,31 +1,31 @@
-"use client";
-
 import styled from "styled-components";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Profile from "@/components/match/Profile";
 import HeaderTitle from "@/components/common/HeaderTitle";
 import { theme } from "@/styles/theme";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
 import MannerLevelBar from "@/components/common/MannerLevelBar";
+import { useEffect, useState } from "react";
+import { getOtherProfile } from "@/api/member";
 
-const data = {
-  good_manner: {
-    "1": 8,
-    "2": 5,
-    "3": 2,
-    "4": 5,
-    "5": 0,
-    "6": 5,
-  },
-  bad_manner: {
-    "1": 1,
-    "2": 0,
-    "3": 0,
-    "4": 0,
-    "5": 0,
-    "6": 0,
-  },
-};
+// const data = {
+//   good_manner: {
+//     "1": 8,
+//     "2": 5,
+//     "3": 2,
+//     "4": 5,
+//     "5": 0,
+//     "6": 5,
+//   },
+//   bad_manner: {
+//     "1": 1,
+//     "2": 0,
+//     "3": 0,
+//     "4": 0,
+//     "5": 0,
+//     "6": 0,
+//   },
+// };
 
 export interface Champion {
   championId: number;
@@ -38,60 +38,85 @@ export interface GameStyle {
 }
 
 export interface User {
-  gameName: string;
-  profileImg: string;
+  id?: number;
+  profileImg: number;
+  mike: boolean;
   email: string;
+  gameName: string;
   tag: string;
   tier: string;
-  rank: string;
+  rank: number;
+  manner: number;
   updatedAt: string;
+  mainP: number;
+  subP: number;
+  isAgree: boolean;
+  isBlind: boolean;
+  loginType: string;
+  winrate: number;
   gameStyleResponseDTOList: GameStyle[];
   championResponseDTOList: Champion[];
 }
 
-const userData = {
-  profileImg: "profile6",
-  gameName: "유니콘의 비밀",
-  email: "이메일 어쩌구 예시",
-  tag: "KR1",
-  tier: "B3",
-  manner_level: 5,
-  mic: true,
-  championResponseDTOList: [
-    { championId: 1, championName: "/assets/icons/gray_circle.svg" },
-    { championId: 2, championName: "/assets/icons/gray_circle.svg" },
-    { championId: 3, championName: "/assets/icons/gray_circle.svg" },
-  ],
-  gameStyleResponseDTOList: [
-    { gameStyleId: 2, gameStyleName: "과도한 핑은 사절이에요" },
-    { gameStyleId: 3, gameStyleName: "랭크 올리고 싶어요" },
-  ],
-};
+export interface Manner {
+  memberId: number;
+  mannerLevel: number;
+  mannerKeywords: [
+    {
+      isPositive: boolean;
+      mannerKeywordId: number;
+      count: number;
+    }
+  ];
+}
 
-const UserProfile = () => {
-  const params = useParams();
-  const id = +params.id;
+const UserProfile = ({
+  profile,
+  manner,
+}: {
+  profile: User;
+  manner: Manner;
+}) => {
+  const goodMannerEvaluations =
+    manner.mannerKeywords
+      .filter((keyword) => keyword.isPositive)
+      .map((keyword) => ({
+        id: keyword.mannerKeywordId,
+        count: keyword.count,
+      })) || [];
+  const badMannerEvaluations =
+    manner.mannerKeywords
+      .filter((keyword) => !keyword.isPositive)
+      .map((keyword) => ({
+        id: keyword.mannerKeywordId,
+        count: keyword.count,
+      })) || [];
 
-  const mannerEvaluations = Object.entries(data.good_manner);
-  const badMannerEvaluations = Object.entries(data.bad_manner);
+  const goodMannerCount = (
+    goodMannerEvaluations as { id: number; count: number }[]
+  ).reduce((total, item) => total + item.count, 0);
 
   return (
     <Wrapper>
       <MatchContent>
-        <HeaderTitle title="장시은 님의 프로필" size="regular" />
+        <HeaderTitle title={`${profile.gameName} 님의 프로필`} size="regular" />
         <Main>
-          {/* <Profile profileType="other" user={userData} /> */}
+          <Profile profileType="other" user={profile} />
           <Content>
             <div>
-              <Title>장시은 님의 매너레벨</Title>
+              <Title>{`${profile.gameName}의 매너레벨`}</Title>
               <Box>
                 <Text>
                   매너 키워드는 하나 당 1점, 비매너 키워드는 -2점으로 계산해요.
                   <br />
-                  최근 <Span>4</Span>명의 사용자가 장시은 님에게 긍정적 매너
-                  평가를 남겼어요.
+                  최근 <Span>{goodMannerCount}</Span>명의 사용자가{` `}
+                  {profile.gameName}
+                  {` `}님에게 긍정적 매너 평가를 남겼어요.
                 </Text>
-                <MannerLevelBar recentLevel={4} percentage={15} />
+                <MannerLevelBar
+                  recentLevel={manner.mannerLevel}
+                  percentage={15}
+                />
               </Box>
             </div>
             <div>
@@ -99,24 +124,24 @@ const UserProfile = () => {
               <Box>
                 <MannerList>
                   <ValueWrapper>
-                    {mannerEvaluations.map(([key, value]) => {
-                      return (
-                        <Value
-                          key={key}
-                          className={value > 0 ? "mannerEmph" : "default"}
-                        >
-                          {value}
-                        </Value>
-                      );
-                    })}
+                    {goodMannerEvaluations.map((item) => (
+                      <Value
+                        key={item.id}
+                        className={item.count > 0 ? "mannerEmph" : "default"}
+                      >
+                        {item.count}
+                      </Value>
+                    ))}
                   </ValueWrapper>
                   <TypeWrapper>
-                    {MANNER_TYPES.map((type, index) => {
+                    {MANNER_TYPES.map((type) => {
                       return (
                         <Type
                           key={type.id}
                           className={
-                            mannerEvaluations[index][1] > 0
+                            (goodMannerEvaluations.find(
+                              (evaluation) => evaluation.id === type.id
+                            )?.count ?? 0) > 0
                               ? "mannerEmph"
                               : "default"
                           }
@@ -134,32 +159,30 @@ const UserProfile = () => {
               <Box>
                 <MannerList>
                   <ValueWrapper>
-                    {badMannerEvaluations.map(([key, value]) => {
-                      return (
-                        <Value
-                          key={key}
-                          className={value > 0 ? "badEmph" : "default"}
-                        >
-                          {value}
-                        </Value>
-                      );
-                    })}
+                    {badMannerEvaluations.map((item) => (
+                      <Value
+                        key={item.id}
+                        className={item.count > 0 ? "badEmph" : "default"}
+                      >
+                        {item.count}
+                      </Value>
+                    ))}
                   </ValueWrapper>
                   <TypeWrapper>
-                    {BAD_MANNER_TYPES.map((type, index) => {
-                      return (
-                        <Type
-                          key={type.id}
-                          className={
-                            badMannerEvaluations[index][1] > 0
-                              ? "badEmph"
-                              : "default"
-                          }
-                        >
-                          {type.text}
-                        </Type>
-                      );
-                    })}
+                    {BAD_MANNER_TYPES.map((type) => (
+                      <Type
+                        key={type.id}
+                        className={
+                          (badMannerEvaluations.find(
+                            (evaluation) => evaluation.id === type.id
+                          )?.count ?? 0) > 0
+                            ? "badEmph"
+                            : "default"
+                        }
+                      >
+                        {type.text}
+                      </Type>
+                    ))}
                   </TypeWrapper>
                 </MannerList>
               </Box>

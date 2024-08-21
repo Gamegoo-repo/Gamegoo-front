@@ -6,9 +6,10 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import AlertWindow from "../alert/AlertWindow";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { clearTokens } from "@/utils/storage";
+import { clearUserProfile } from "@/redux/slices/userSlice";
 
 interface HeaderProps {
   selected: boolean;
@@ -16,6 +17,7 @@ interface HeaderProps {
 
 const Header = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const pathname = usePathname();
   const [isAlertWindow, setIsAlertWindow] = useState<Boolean>(false);
   const [isMyPage, setIsMyPage] = useState<Boolean>(false);
@@ -57,7 +59,7 @@ const Header = () => {
     <Head>
       <HeaderBar>
         <Left>
-          <Link href="/home">
+          <Link href="/">
             <Image
               src="/assets/icons/logo.svg"
               width={102}
@@ -75,33 +77,37 @@ const Header = () => {
             </Menu>
           </Menus>
         </Left>
-        <Right>
-          <Image
-            src="/assets/icons/noti_on.svg"
-            width={24}
-            height={30}
-            alt="noti"
-            onClick={handleAlertWindow}
-          />
-          <Profile>
+        {name ? (
+          <Right>
             <Image
-              src={`/assets/images/profile/profile${profileImg}.svg`}
-              width={29}
-              height={29}
-              alt="profile"
-              style={{ background: "#C1B7FF", borderRadius: "50%" }}
+              src="/assets/icons/noti_on.svg"
+              width={24}
+              height={30}
+              alt="noti"
+              onClick={handleAlertWindow}
             />
-            {name}
-            <button onClick={() => setIsMyPage(!isMyPage)}>
+            <Profile>
               <Image
-                src="/assets/icons/chevron_down.svg"
-                width={7}
-                height={7}
-                alt="more"
+                src={`/assets/images/profile/profile${profileImg}.svg`}
+                width={29}
+                height={29}
+                alt="profile"
+                style={{ background: "#C1B7FF", borderRadius: "50%" }}
               />
-            </button>
-          </Profile>
-        </Right>
+              {name}
+              <button onClick={() => setIsMyPage(!isMyPage)}>
+                <Image
+                  src="/assets/icons/chevron_down.svg"
+                  width={7}
+                  height={7}
+                  alt="more"
+                />
+              </button>
+            </Profile>
+          </Right>
+        ) : (
+          <Login onClick={() => router.push("/login")}>로그인</Login>
+        )}
       </HeaderBar>
       {isAlertWindow && <AlertWindow onClose={() => setIsAlertWindow(false)} />}
       {isMyPage && (
@@ -132,7 +138,9 @@ const Header = () => {
                       router.push(`${data.url}`);
                     } else {
                       clearTokens();
-                      // router.push("/login");
+                      dispatch(clearUserProfile());
+                      router.push("/");
+                      window.location.reload();
                     }
                   }}
                 >
@@ -210,6 +218,11 @@ const Profile = styled.div`
   display: flex;
   align-items: center;
   gap: 6px;
+`;
+
+const Login = styled.button`
+  color: ${theme.colors.purple100};
+  ${(props) => props.theme.fonts.bold14}
 `;
 
 const MyPageModal = styled.div`

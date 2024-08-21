@@ -1,9 +1,8 @@
 "use client";
 
 import GraphicBox from "@/components/match/GraphicBox";
-import Image from "next/image";
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { GAME_MODE_PAGE_DATA } from "@/data/match";
 import HeaderTitle from "@/components/common/HeaderTitle";
@@ -15,17 +14,6 @@ const GameModePage = () => {
   const searchParams = useSearchParams();
   const params = searchParams.get("type");
 
-  useEffect(() => {
-    if (params === "fun") {
-      setDisplayedData(GAME_MODE_PAGE_DATA);
-      return;
-    }
-    if (params === "hard") {
-      setDisplayedData(GAME_MODE_PAGE_DATA.slice(0, -1));
-      return;
-    }
-  }, [params]);
-
   return (
     <Wrapper>
       <MatchContent>
@@ -36,6 +24,7 @@ const GameModePage = () => {
               <BoxWrapper key={box.id}>
                 <GraphicBox
                   type={params || ""}
+                  rank={box.rank}
                   pathname={box.pathname}
                   height={box.height}
                   top={box.top}

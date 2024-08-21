@@ -19,8 +19,10 @@ import { MoreBoxMenuItems } from "@/interface/moreBox";
 import { User } from "@/interface/profile";
 import { toLowerCaseString } from "@/utils/string";
 import { PositionState } from "../crBoard/PositionBox";
+import { putPosition } from "@/api/user";
+import { setAbbrevTier, setPositionImg } from "@/utils/custom";
 
-type profileType = "fun" | "hard" | "other" | "me";
+type profileType = "normal" | "wind" | "other" | "me";
 
 interface Profile {
   user: User;
@@ -28,7 +30,7 @@ interface Profile {
 }
 
 const Profile: React.FC<Profile> = ({ profileType, user }) => {
-  const [isMike, setIsMike] = useState(user.mike);
+  const [isMike, setIsMike] = useState<boolean>(user.mike);
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
   const [isReportBoxOpen, setIsReportBoxOpen] = useState(false);
   const [isBlockBoxOpen, setIsBlockBoxOpen] = useState(false);
@@ -66,9 +68,9 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
     }, 300); // 300ms 후에 창이 닫히도록 설정
   };
 
-  // useEffect(() => {
-  //   setIsMike(user.mic);
-  // }, [user.mic]);
+  useEffect(() => {
+    setIsMike(user.mike);
+  }, [user.mike]);
 
   const handleMike = () => {
     setIsMike(!isMike);
@@ -92,9 +94,16 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
 
   /* 포지션 선택창 관련 함수*/
   // 포지션 선택창 열기 (포지션 클릭시 동작)
-  const handlePosition = (index: number) => {
+  const handlePosition = async (index: number) => {
     setIsPositionOpen((prev) =>
       prev.map((isOpen, i) => (i === index ? !isOpen : false))
+    );
+    setSelectedBox(
+      index === 0
+        ? "main" ?? null
+        : index === 1
+        ? "sub" ?? null
+        : "want" ?? null
     );
   };
 
@@ -106,18 +115,31 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
   };
 
   // 포지션 선택해 변경하기
-  const handlePositionChange = (newPositionValue: PositionState) => {
-    setPositionValue(newPositionValue);
+  const handlePositionChange = async (newPositionValue: PositionState) => {
+    // setPositionValue(newPositionValue);
+    if (newPositionValue.main && newPositionValue.sub) {
+      try {
+        // 포지션 변경 API 호출
+        await putPosition({
+          mainP: newPositionValue.main,
+          subP: newPositionValue.sub,
+        });
+
+        // 포지션 상태 업데이트
+        setPositionValue(newPositionValue);
+      } catch (error) {
+        console.error("포지션 변경 실패:", error);
+      }
+    }
   };
 
   const handleCategoryButtonClick = (positionId: number) => {
-    console.log(positionId);
-
     if (selectedBox) {
       const newPositionValue = {
         ...positionValue,
         [selectedBox]: positionId,
       };
+      console.log(positionId);
       setPositionValue(newPositionValue);
       handlePositionChange(newPositionValue);
     }
@@ -199,7 +221,8 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                   height={52}
                   alt="tier"
                 />
-                {user.tier}
+                {setAbbrevTier(user.tier)}
+                {user.rank}
               </Rank>
             </Top>
             {profileType === "other" && (
@@ -310,7 +333,7 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
               </More>
             )}
           </TopContainer>
-          {profileType === "fun" ? (
+          {profileType === "wind" ? (
             <GameStyle
               profileType="none"
               gameStyleResponseDTOList={user.gameStyleResponseDTOList}
@@ -326,30 +349,31 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                 ).map((position, index) => (
                   <>
                     <Posi key={index} className={profileType}>
-                      {position.label}
+                      {POSITIONS[index].label}
                       <Image
-                        src={`/assets/icons/position_${position.position}_purple.svg`}
+                        src={setPositionImg(
+                          index === 0
+                            ? positionValue.main ?? 0
+                            : index === 1
+                            ? positionValue.sub ?? 0
+                            : positionValue.want ?? 0
+                        )}
                         width={55}
                         height={40}
                         alt="포지션"
                         onClick={() => handlePosition(index)}
                       />
-                      {/* 오류 발생 부분 */}
                       {isPositionOpen[index] && (
                         <PositionCategory
                           onClose={() => handlePositionClose(index)}
-                          // onSelect={(newPosition: string) =>
-                          //   handlePositionSelect(index, newPosition)
-                          // }
                           onSelect={handleCategoryButtonClick}
-                          boxName={selectedBox}
                         />
                       )}
                     </Posi>
                   </>
                 ))}
               </Position>
-              {user.championResponseDTOList && (
+              {profileType === "other" && user.championResponseDTOList && (
                 <Champion
                   size={14}
                   list={user.championResponseDTOList.map(
@@ -367,9 +391,9 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
           )}
         </StyledBox>
       </Row>
-      {(profileType === "hard" || profileType === "other") && (
+      {(profileType === "normal" || profileType === "other") && (
         <GameStyle
-          profileType={profileType === "hard" ? "none" : profileType}
+          profileType={profileType === "normal" ? "none" : profileType}
           gameStyleResponseDTOList={user.gameStyleResponseDTOList}
           // mic={user.mic}
           mic={false}
@@ -503,6 +527,7 @@ const Top = styled.div`
   gap: 16px;
   color: ${theme.colors.gray100};
   font-size: ${theme.fonts.bold32};
+  white-space: nowrap;
 `;
 
 const Span = styled.span`
@@ -516,6 +541,7 @@ const Rank = styled.div`
   color: #44515c;
   font-size: ${theme.fonts.regular25};
   font-weight: 300;
+  gap: 10px;
 `;
 
 const More = styled.div`

@@ -14,7 +14,11 @@ import PostBoard from "@/components/createBoard/PostBoard";
 import ChatButton from "@/components/common/ChatButton";
 import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { setClosePostingModal, setOpenModal, setOpenPostingModal } from "@/redux/slices/modalSlice";
+import {
+  setClosePostingModal,
+  setOpenModal,
+  setOpenPostingModal,
+} from "@/redux/slices/modalSlice";
 import { getBoardList } from "@/api/board";
 import { BoardList } from "@/interface/board";
 import { getUserInfo } from "@/api/member";
@@ -32,7 +36,9 @@ const BoardPage = () => {
   const [micStatus, setMicStatus] = useState(true);
   const [isGameModeDropdownOpen, setIsGameModeDropdownOpen] = useState(false);
   const [isTierDropdownOpen, setIsTierDropdownOpen] = useState(false);
-  const [selectedGameMode, setSelectedGameMode] = useState<string | number | null>("솔로 랭크");
+  const [selectedGameMode, setSelectedGameMode] = useState<
+    string | number | null
+  >("솔로 랭크");
   const [selectedTier, setSelectedTier] = useState<string | null>("티어 선택");
   const [userInfo, setUserInfo] = useState<UserInfo>();
   const [showAlert, setShowAlert] = useState(false);
@@ -44,8 +50,12 @@ const BoardPage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const isPostingModal = useSelector((state: RootState) => state.modal.postingModal);
-  const isCompletedPosting = useSelector((state: RootState) => state.modal.modalType);
+  const isPostingModal = useSelector(
+    (state: RootState) => state.modal.postingModal
+  );
+  const isCompletedPosting = useSelector(
+    (state: RootState) => state.modal.modalType
+  );
 
   // 게임모드 드롭
   const handleGameModeDropValue = (id: number | null) => {
@@ -106,10 +116,7 @@ const BoardPage = () => {
 
   // 두번째 드롭 외부 클릭
   const handleTierDropdownClickOutside = (event: MouseEvent) => {
-    if (
-      tierRef.current &&
-      !tierRef.current.contains(event.target as Node)
-    ) {
+    if (tierRef.current && !tierRef.current.contains(event.target as Node)) {
       setIsTierDropdownOpen(false);
     }
   };
@@ -118,7 +125,10 @@ const BoardPage = () => {
     document.addEventListener("mousedown", handleGameModeDropdownClickOutside);
     document.addEventListener("mousedown", handleTierDropdownClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleGameModeDropdownClickOutside);
+      document.removeEventListener(
+        "mousedown",
+        handleGameModeDropdownClickOutside
+      );
       document.removeEventListener("mousedown", handleTierDropdownClickOutside);
     };
   }, []);
@@ -149,13 +159,16 @@ const BoardPage = () => {
   /* 게시글 목록 */
   useEffect(() => {
     const getList = async () => {
-
       const params = {
         pageIdx: currentPage,
-        mode: selectedGameMode === '솔로 랭크' ? setSelectedGameMode(null) : selectedGameMode,
-        tier: selectedTier === '티어 선택' ? setSelectedTier(null) : selectedTier,
+        mode:
+          selectedGameMode === "솔로 랭크"
+            ? setSelectedGameMode(null)
+            : selectedGameMode,
+        tier:
+          selectedTier === "티어 선택" ? setSelectedTier(null) : selectedTier,
         mainPosition: isPosition,
-        mike: micStatus
+        mike: micStatus,
       };
 
       const data = await getBoardList(params);
@@ -171,7 +184,7 @@ const BoardPage = () => {
     isPosition,
     micStatus,
     isCompletedPosting,
-    refresh
+    refresh,
   ]);
 
   /* 페이지네이션 이전 클릭 */
@@ -206,11 +219,11 @@ const BoardPage = () => {
     };
 
     getUserData();
-  }, [])
+  }, []);
 
   const handleRefresh = () => {
     setRefresh((prevStatus) => !prevStatus);
-  }
+  };
 
   return (
     <>
@@ -221,15 +234,16 @@ const BoardPage = () => {
           height={58}
           content="로그아웃 되었습니다. 다시 로그인 해주세요."
           alt="로그인 필요"
-          onClose={() => router.push("/")}
+          onClose={() => router.push("/login")}
         />
       )}
-      {isPostingModal &&
+      {isPostingModal && (
         <PostBoard
           onClose={handlePostingClose}
           onCompletedPosting={handleModalClose}
-        />}
-      {boardList &&
+        />
+      )}
+      {boardList && (
         <Wrapper>
           <BoardContent>
             <FirstRow>
@@ -304,7 +318,7 @@ const BoardPage = () => {
                 <p>데이터가 없습니다.</p>
               )}
             </Main>
-            {boardList?.length > 0 &&
+            {boardList?.length > 0 && (
               <Pagination
                 currentPage={currentPage}
                 hasMoreItems={hasMoreItems}
@@ -312,17 +326,15 @@ const BoardPage = () => {
                 onNextPage={handleNextPage}
                 onPageClick={handlePageClick}
               />
-            }
+            )}
             <Footer>
               <ChatBoxContent>
-                <ChatButton
-                  user={userInfo}
-                  count={3} />
+                <ChatButton user={userInfo} count={3} />
               </ChatBoxContent>
             </Footer>
           </BoardContent>
         </Wrapper>
-      }
+      )}
     </>
   );
 };

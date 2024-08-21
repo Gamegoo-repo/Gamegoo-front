@@ -17,6 +17,21 @@ export const getUserInfo = async () => {
     }
 };
 
+export const getOtherProfile= async (id:number) => {
+    const endpoint = '/v1/member/profile/other';
+    try {
+        const response = await AuthAxios.get(endpoint, {
+            params: { id },
+          });
+      console.log("다른 유저 프로필 조회 성공:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("다른 유저 프로필 조회 실패:", error);
+      throw error;
+    }
+  };
+
+
 export const blockMember = async (memberId: number) => {
     try {
         const response = await AuthAxios.post(`/v1/member/block/${memberId}`);

@@ -37,10 +37,10 @@ export const putGameStyle = async (gameStyleIdList: number[]) => {
   }
 };
 
-export const putPosition = async ({ minP, subP }: { minP: string, subP: string }) => {
+export const putPosition = async ({ mainP, subP }: { mainP: number, subP: number }) => {
   const endpoint = '/v1/member/position';
   try {
-    const response = await AuthAxios.put(endpoint, { minP, subP});
+    const response = await AuthAxios.put(endpoint, { mainP, subP});
     console.log("포지션 수정 성공:", response.data);
     return response.data;
   } catch (error) {

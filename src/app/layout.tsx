@@ -22,7 +22,7 @@ export default function RootLayout({
 
   const pathname = usePathname();
   const isHeader = !(
-    pathname === "/" ||
+    pathname === "/login" ||
     pathname.includes("/join") ||
     pathname.includes("/password")
   );

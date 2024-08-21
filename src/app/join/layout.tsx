@@ -18,7 +18,7 @@ const Layout = (props: any) => {
           height={88}
           alt="logo"
           onClick={() => {
-            router.push("/");
+            router.push("/login");
           }}
         />
         <Title>{isTerm ? "이용 약관 동의" : "회원가입"}</Title>
