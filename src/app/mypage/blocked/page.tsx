@@ -8,6 +8,7 @@ import { EX_BLOCKED } from "@/data/mypage";
 import Pagination from "@/components/common/Pagination";
 import { useEffect, useState } from "react";
 import BlockedBox from "@/components/mypage/blocked/BlockedBox";
+import ChatButton from "@/components/common/ChatButton";
 
 const MyBlockedPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -49,6 +50,11 @@ const MyBlockedPage = () => {
           /> */}
         </Blocked>
       </MyBlockedContent>
+      <Footer>
+          <ChatBoxContent>
+            <ChatButton count={3} />
+          </ChatBoxContent>
+        </Footer>
     </Wrapper>
   );
 };
@@ -91,4 +97,13 @@ const BlockedList = styled.div`
   flex-direction: column;
   margin-bottom: 32px;
   border-top: 1px solid ${theme.colors.gray300};
+`;
+
+const Footer = styled.footer`
+  display: flex;
+  margin-bottom: 78px;
+`;
+
+const ChatBoxContent = styled.div`
+  margin-left: auto;
 `;

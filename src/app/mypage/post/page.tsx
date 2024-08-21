@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Post from "@/components/mypage/post/Post";
 import { EX_POST } from "@/data/mypage";
+import ChatButton from "@/components/common/ChatButton";
 
 const MyPostPage = () => {
   return (
@@ -31,6 +32,11 @@ const MyPostPage = () => {
           ))}
         </PostPage>
       </MyPostContent>
+      <Footer>
+          <ChatBoxContent>
+            <ChatButton count={3} />
+          </ChatBoxContent>
+        </Footer>
     </Wrapper>
   );
 };
@@ -78,4 +84,13 @@ const Columns = styled.div`
 
 const Center = styled.div`
   text-align: center;
+`;
+
+const Footer = styled.footer`
+  display: flex;
+  margin-bottom: 78px;
+`;
+
+const ChatBoxContent = styled.div`
+  margin-left: auto;
 `;

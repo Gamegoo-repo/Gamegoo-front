@@ -6,6 +6,7 @@ import SquareProfile from "@/components/match/SquareProfile";
 import Button from "@/components/common/Button";
 import { theme } from "@/styles/theme";
 import { useRouter } from "next/navigation";
+import ChatButton from "@/components/common/ChatButton";
 
 const Progress = () => {
   const router = useRouter();
@@ -25,6 +26,11 @@ const Progress = () => {
             <Text>10초 뒤 자동으로 대화방이 생성됩니다.</Text>
           </Oppnent>
         </Main>
+        <Footer>
+          <ChatBoxContent>
+            <ChatButton count={3} />
+          </ChatBoxContent>
+        </Footer>
       </MatchContent>
     </Wrapper>
   );
@@ -64,4 +70,13 @@ const Oppnent = styled.div`
 const Text = styled.div`
   color: ${theme.colors.purple100};
   ${(props) => props.theme.fonts.regular18};
+`;
+
+const Footer = styled.footer`
+  display: flex;
+  margin-bottom: 78px;
+`;
+
+const ChatBoxContent = styled.div`
+  margin-left: auto;
 `;

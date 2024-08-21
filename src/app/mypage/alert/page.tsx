@@ -7,6 +7,7 @@ import Image from "next/image";
 import { EX_ALARM as initialEX_ALARM } from "@/data/mypage";
 import Pagination from "@/components/common/Pagination";
 import { useEffect, useState } from "react";
+import ChatButton from "@/components/common/ChatButton";
 
 const MyAlertPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -82,6 +83,11 @@ const MyAlertPage = () => {
           /> */}
         </Alert>
       </MyAlertContent>
+      <Footer>
+          <ChatBoxContent>
+            <ChatButton count={3} />
+          </ChatBoxContent>
+        </Footer>
     </Wrapper>
   );
 };
@@ -154,3 +160,13 @@ const AlertList = styled.div`
   margin-top: 32px;
   margin-bottom: 60px;
 `;
+
+const Footer = styled.footer`
+  display: flex;
+  margin-bottom: 78px;
+`;
+
+const ChatBoxContent = styled.div`
+  margin-left: auto;
+`;
+
