@@ -69,7 +69,7 @@ export const editPost = async (postId: number, params: PostReq) => {
     }
 };
 
-/*게시글 삭제 */
+/* 게시글 삭제 */
 export const deletePost = async (postId: number) => {
     try {
         const response = await Axios.delete(`/v1/posts/${postId}`);

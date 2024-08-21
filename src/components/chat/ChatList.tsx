@@ -5,11 +5,11 @@ import { setChatRoomDateFormatter } from '@/utils/custom';
 import { Dispatch, useEffect, useState } from 'react';
 import MoreBox from '../common/MoreBox';
 import { MoreBoxMenuItems } from '@/interface/moreBox';
-import { getChatrooms } from '@/api/chat';
 import { ChatroomList } from '@/interface/chat';
 import { getProfileBgColor } from '@/utils/profile';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import { cancelFriendReq, deleteFriend, reqFriend } from '@/api/friends';
 
 interface ChatListProps {
     onChatRoom: (uuid: string) => void;
@@ -17,49 +17,79 @@ interface ChatListProps {
     isMoreBoxOpen: number | null;
     onModalChange: (modalType: string) => void;
     isUuid: (uuid: string) => void;
+    chatrooms: ChatroomList[];
+    onSelectChatroom: (chatroom: ChatroomList) => void;
+    triggerReloadChatrooms: () => void;
+    onMemberId: (id: number) => void;
 }
 
 const ChatList = (props: ChatListProps) => {
-    const { onChatRoom, setIsMoreBoxOpen, isMoreBoxOpen, onModalChange, isUuid } = props;
+    const {
+        onChatRoom,
+        setIsMoreBoxOpen,
+        isMoreBoxOpen,
+        onModalChange,
+        isUuid,
+        chatrooms,
+        onSelectChatroom,
+        triggerReloadChatrooms,
+        onMemberId,
+    } = props;
 
     const isModalType = useSelector((state: RootState) => state.modal.modalType);
+    const isUser = useSelector((state: RootState) => state.user);
 
-    const [chatrooms, setChatrooms] = useState<ChatroomList[]>([]);
-
-    /* 대화창 목록 가져오기  */
-    useEffect(() => {
-        const handleFetchChatrooms = async () => {
-            try {
-                const data = await getChatrooms();
-                setChatrooms(data.result);
-            } catch (error) {
-                console.error("에러:", error);
-            }
-        };
-
-        handleFetchChatrooms();
-    }, [isModalType])
-
-    const handleMoreBoxOpen = (chatId: number, uuid: string, e: React.MouseEvent) => {
+    /* 더보기 버튼 여닫기 */
+    const handleMoreBoxOpen = (chatId: number, uuid: string, room: ChatroomList, e: React.MouseEvent) => {
         e.stopPropagation();
         if (isMoreBoxOpen === chatId) {
             setIsMoreBoxOpen(null);
         } else {
             isUuid(uuid);
             setIsMoreBoxOpen(chatId);
+            onSelectChatroom(room);
         };
     };
 
     /* 친구 추가 */
-    const handleFriendAdd = (e: React.MouseEvent) => {
+    const handleFriendAdd = async (e: React.MouseEvent, memberId: number) => {
         e.stopPropagation();
+        try {
+            await reqFriend(memberId);
+            triggerReloadChatrooms();
+        } catch (error) {
+            console.log('에러', error);
+        }
 
         if (setIsMoreBoxOpen) {
             setIsMoreBoxOpen(null);
         }
-        console.log('친구 추가')
     };
 
+    /* 친구 삭제 */
+    const handleFriendDelete = async (e: React.MouseEvent, memberId: number) => {
+        e.stopPropagation();
+
+        try {
+            await deleteFriend(memberId);
+            triggerReloadChatrooms();
+        } catch (error) {
+            console.log('에러', error);
+        }
+    }
+    /* 친구 요청 취소 */
+    const handleCancelFriendReq = async (e: React.MouseEvent, memberId: number) => {
+        e.stopPropagation();
+
+        try {
+            await cancelFriendReq(memberId);
+            triggerReloadChatrooms();
+        } catch (error) {
+            console.log('에러', error);
+        }
+    }
+
+    /* 모달 타입 변경 */
     const handleChangeModal = (e: React.MouseEvent, type: string) => {
         if (type) {
             e.stopPropagation();
@@ -68,14 +98,57 @@ const ChatList = (props: ChatListProps) => {
         onModalChange(type);
     };
 
-    const menuItems: MoreBoxMenuItems[] = [
-        { text: '채팅방 나가기', onClick: (e) => handleChangeModal(e, 'leave') },
-        { text: '친구 추가', onClick: (e) => handleFriendAdd(e) },
-        { text: '차단하기', onClick: (e) => handleChangeModal(e, 'block') },
-        { text: '신고하기', onClick: (e) => handleChangeModal(e, 'report') },
-        { text: '매너 평가', onClick: (e) => handleChangeModal(e, 'manner') },
-        { text: '비매너 평가', onClick: (e) => handleChangeModal(e, 'badManner') },
-    ];
+    /* 더보기 버튼 친구 관련 함수 */
+    const handleFriendAction = (e: React.MouseEvent, room: ChatroomList) => {
+        setIsMoreBoxOpen(null);
+
+        if (room.friend) {
+            // 친구 삭제
+            handleFriendDelete(e, room.targetMemberId);
+        } else if (room.friendRequestMemberId) {
+            //친구 요청 취소
+            handleCancelFriendReq(e, room.targetMemberId);
+        } else {
+            // 친구 추가
+            handleFriendAdd(e, room.targetMemberId);
+        }
+    };
+
+    /* 더보기 버튼 상태 */
+    const generateMenuItems = (room: ChatroomList): MoreBoxMenuItems[] => {
+        onMemberId(room.targetMemberId);
+
+        let friendText = '';
+
+        // 친구 상태에 따른 텍스트 설정 및 버튼 표시 여부
+        if (room.friend) {
+            friendText = '친구 삭제';
+        } else if (room.friend) {
+            friendText = '친구 삭제';
+        } else if (room.friendRequestMemberId && room.friendRequestMemberId === isUser.id) {
+            friendText = '친구 요청 취소';
+        } else if (!room.friend && (!room.friendRequestMemberId || room.friendRequestMemberId !== isUser.id)) {
+            friendText = '친구 추가';
+        }
+
+        const items: MoreBoxMenuItems[] = [
+            { text: `채팅방 나가기`, onClick: (e) => handleChangeModal(e, 'leave') },
+        ];
+
+        // friendText가 빈 문자가 아닐 때만 버튼 추가
+        if (friendText) {
+            items.push({ text: friendText, onClick: (e) => handleFriendAction(e, room) });
+        }
+
+        items.push(
+            { text: `차단하기`, onClick: (e) => handleChangeModal(e, 'block') },
+            { text: `신고하기`, onClick: (e) => handleChangeModal(e, 'report') },
+            { text: `매너 평가`, onClick: (e) => handleChangeModal(e, 'manner') },
+            { text: `비매너 평가`, onClick: (e) => handleChangeModal(e, 'badManner') }
+        );
+
+        return items;
+    };
 
     return (
         <>
@@ -88,7 +161,7 @@ const ChatList = (props: ChatListProps) => {
                             key={room.chatroomId}>
                             {isMoreBoxOpen === room.chatroomId &&
                                 <MoreBox
-                                    items={menuItems}
+                                    items={generateMenuItems(room)}
                                     top={10}
                                     left={208}
                                 />
@@ -115,7 +188,7 @@ const ChatList = (props: ChatListProps) => {
                                 </Middle>
                             </Left>
                             <Right
-                                onClick={(e) => handleMoreBoxOpen(room.chatroomId, room.uuid, e)}>
+                                onClick={(e) => handleMoreBoxOpen(room.chatroomId, room.uuid, room, e)}>
                                 <MoreImage
                                     src="/assets/icons/three_dots_button.svg"
                                     width={3}

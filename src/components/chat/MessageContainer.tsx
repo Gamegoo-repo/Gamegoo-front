@@ -56,7 +56,7 @@ const MessageContainer = (props: MessageContainerProps) => {
   const handleDisplayProfileImage = (messages: ChatMessageDto[], index: number): boolean => {
     if (index === 0) return true;
 
-    return messages[index].senderId !== message.memberId;
+    return messages[index].senderId === message.memberId;
   };
 
   const handleDisplayTime = (messages: ChatMessageDto[], index: number): boolean => {
@@ -66,10 +66,15 @@ const MessageContainer = (props: MessageContainerProps) => {
     const nextTime = dayjs(messages[index + 1].createdAt).format('A hh:mm');
 
     const isSameTime = currentTime === nextTime;
-    const isSameSender = messages[index].senderId !== message.memberId
+    const isSameSender = messages[index].senderId === messages[index + 1].senderId;
 
-    /* 시간과 보낸 사람이 같으면 마지막 메시지에만 시간 표시 */
-    return !isSameTime || !isSameSender;
+    // 시간이 같고, 보낸 사람도 같으면 마지막 메시지에만 시간 표시
+    if (isSameTime && isSameSender) {
+      return false; // 시간을 표시하지 않음
+    }
+
+    // 시간이 다르거나, 보낸 사람이 다르면 현재 메시지에 시간을 표시
+    return true;
   };
 
   /* 마지막 채팅을 보낸 날짜에서 1시간을 더했을 때, 마지막 보낸 채팅 날짜랑 피드백 날짜가 다를 때만 보여주기 */
@@ -141,7 +146,7 @@ const MessageContainer = (props: MessageContainerProps) => {
                 onClick={data.boardId ? () => handlePostOpen(data.boardId as number) : undefined}
                 message={data.message} />
             ) :
-              data.senderId !== message.memberId ? (
+              data.senderId === message.memberId ? (
                 <YourMessageContainer>
                   {handleDisplayProfileImage(messageList.chatMessageDtoList, index) && (
                     <>

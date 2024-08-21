@@ -15,15 +15,18 @@ import MoreBox from "../common/MoreBox";
 import Button from "../common/Button";
 import { Chat } from "@/interface/chat";
 import { getProfileBgColor } from "@/utils/profile";
+import { cancelFriendReq, deleteFriend, reqFriend } from "@/api/friends";
+import { enterUsingMemberId, enterUsingUuid } from "@/api/chat";
 
 interface ChatRoomProps {
     onClose: () => void;
     onGoback: () => void;
-    chatData: Chat | undefined;
+    chatId: string | number | undefined;
+    onMemberId: (id: number) => void;
 }
 
 const ChatRoom = (props: ChatRoomProps) => {
-    const { onClose, onGoback, chatData } = props;
+    const { onClose, onGoback, chatId, onMemberId } = props;
 
     const dispatch = useDispatch();
     const router = useRouter();
@@ -31,6 +34,7 @@ const ChatRoom = (props: ChatRoomProps) => {
     const [message, setMessage] = useState("");
     const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
     const [checkedItems, setCheckedItems] = useState<number[]>([]);
+    const [dataUpdated, setDataUpdated] = useState(false);
 
     const isEvaluationModalOpen = useSelector((state: RootState) => state.modal.evaluationModal);
     const isMannerStatus = useSelector((state: RootState) => state.mannerStatus.mannerStatus);
@@ -40,25 +44,33 @@ const ChatRoom = (props: ChatRoomProps) => {
     //     setMessageList((prevState)=> prevState.concat(message));
     // });
     // },[]);
+    const [chatData, setChatData] = useState<Chat>();
 
-    // useEffect(() => {
-    //     const handleFetchChatData = async () => {
-    //         try {
-    //             if (typeof id === 'string') {
-    //                 const data = await enterUsingUuid(id);
-    //                 setChatData(data.result);
-    //             }
-    //             if (typeof id === 'number') {
-    //                 const data = await enterUsingMemberId(id);
-    //                 setChatData(data.result);
-    //             }
-    //         } catch (error) {
-    //             console.error("에러:", error);
-    //         }
-    //     };
+    /* 채팅방 입장 */
+    useEffect(() => {
+        const handleFetchChatData = async () => {
+            try {
+                if (typeof chatId === 'string') {
+                    const data = await enterUsingUuid(chatId);
+                    setChatData(data.result);
+                    onMemberId(data.result.memberId);
+                }
+                if (typeof chatId === 'number') {
+                    const data = await enterUsingMemberId(chatId);
+                    setChatData(data.result);
+                    onMemberId(data.result.memberId);
+                }
+            } catch (error) {
+                console.error("에러:", error);
+            }
+        };
 
-    //     handleFetchChatData();
-    // }, [])
+        handleFetchChatData();
+    }, [chatId, dataUpdated])
+
+    const triggerDataUpdate = () => {
+        setDataUpdated((prev) => !prev);
+    };
 
     const sendMessage = (event: any) => {
         event.preventDefault();
@@ -92,22 +104,57 @@ const ChatRoom = (props: ChatRoomProps) => {
         dispatch(setCloseEvaluationModal());
     };
 
-    const handleFriendAdd = () => {
-        setIsMoreBoxOpen(false);
-        console.log('친구 추가')
+    /* 친구 추가 */
+    const handleFriendAdd = async () => {
+        if (!chatData) return;
+        try {
+            await reqFriend(chatData.memberId);
+            triggerDataUpdate();
+        } catch (error) {
+            console.log('에러', error)
+        }
     };
 
-    // 서로 친구이면, '친구 추가' 대신 '친구삭제' 버튼
-    // 서로 친구 요청 중이면, '친구 추가' 대신 '친구 요청 취소' 버튼
-    
+    /* 친구 요청 취소 */
+    const handleCancelFriendReq = async () => {
+        if (!chatData) return;
+
+        try {
+            await cancelFriendReq(chatData.memberId);
+            triggerDataUpdate();
+        } catch (error) {
+            console.log('에러', error)
+        }
+    };
+
+    /* 친구 취소 */
+    const handleFriendDelete = async () => {
+        if (!chatData) return;
+
+        try {
+            await deleteFriend(chatData.memberId);
+            triggerDataUpdate();
+        } catch (error) {
+            console.log('에러', error)
+        }
+    };
+
     const menuItems: MoreBoxMenuItems[] = [
-        { text: '채팅방 나가기', onClick: (e) => handleModalChange(e, 'leave') },
+        { text: '채팅방 나가기', onClick: (e: React.MouseEvent) => handleModalChange(e, 'leave') },
+        // 친구 추가 조건: 친구가 아니고, 친구 요청도 하지 않은 경우
+        !chatData?.friend && !chatData?.friendRequestMemberId &&
         { text: '친구 추가', onClick: handleFriendAdd },
-        { text: '차단하기', onClick: (e) => handleModalChange(e, 'block') },
-        { text: '신고하기', onClick: (e) => handleModalChange(e, 'report') },
-        { text: '매너 평가', onClick: (e) => handleModalChange(e, 'manner') },
-        { text: '비매너 평가', onClick: (e) => handleModalChange(e, 'badManner') },
-    ];
+        // 친구 취소 조건: 친구인 경우
+        chatData?.friend &&
+        { text: '친구 취소', onClick: handleFriendDelete },
+        // 친구 요청 취소 조건: 친구가 아니고, 친구 요청을 이미 한 경우
+        !chatData?.friend && chatData?.friendRequestMemberId &&
+        { text: '친구 요청 취소', onClick: handleCancelFriendReq },
+        { text: '차단하기', onClick: (e: React.MouseEvent) => handleModalChange(e, 'block') },
+        { text: '신고하기', onClick: (e: React.MouseEvent) => handleModalChange(e, 'report') },
+        { text: '매너 평가', onClick: (e: React.MouseEvent) => handleModalChange(e, 'manner') },
+        { text: '비매너 평가', onClick: (e: React.MouseEvent) => handleModalChange(e, 'badManner') },
+    ].filter(item => item) as MoreBoxMenuItems[];
 
     const handleCheckboxChange = (checked: number) => {
         setCheckedItems((prev) =>
@@ -117,86 +164,92 @@ const ChatRoom = (props: ChatRoomProps) => {
 
     return (
         <>
-            <Overlay>
-                <Wrapper onClick={handleOutsideModalClick}>
-                    {isMoreBoxOpen &&
-                        <MoreBox
-                            items={menuItems}
-                            top={35}
-                            left={200}
-                        />
-                    }
-                    <CloseButton>
-                        <CloseImage
-                            onClick={onClose}
-                            src='/assets/icons/close.svg'
-                            width={11}
-                            height={11}
-                            alt='닫기' />
-                    </CloseButton>
-                    {chatData &&
-                        <ChatHeader>
-                            <PrevImage
-                                onClick={onGoback}
-                                src="/assets/icons/left_arrow.svg"
-                                width={9}
-                                height={18}
-                                alt="뒤로가기" />
-                            <Middle>
-                                <ImageWrapper $bgColor={getProfileBgColor(chatData.memberProfileImg)}>
-                                    <ProfileImage
-                                        onClick={() => router.push("/user")}
-                                        src={`/assets/images/profile/profile${chatData.memberProfileImg}.svg`}
-                                        width={38}
-                                        height={38}
-                                        alt="프로필 이미지" />
-                                </ImageWrapper>
-                                <Div>
-                                    <UserName>{chatData.gameName}</UserName>
-                                    <Online>온라인</Online>
-                                    <OnlineImage
-                                        src="/assets/icons/online.svg"
-                                        width={5}
-                                        height={5}
-                                        alt="온라인" />
-                                </Div>
-                            </Middle>
-                            <ThreeDotsImage
-                                onClick={handleMoreBoxOpen}
-                                src="/assets/icons/three_dots_button.svg"
-                                width={3}
-                                height={15}
-                                alt="상세보기" />
-                        </ChatHeader>
-                    }
-                    <ChatBorder>
-                        <ChatMain>
-                            {chatData &&
-                                <MessageContainer
-                                    message={chatData} />
-                            }
-                        </ChatMain>
-                    </ChatBorder>
-                    <ChatFooter>
-                        <TextareaContainer>
-                            <Form onSubmit={sendMessage}>
-                                <Textarea
-                                    maxLength={1000}
-                                    value={message}
-                                    onChange={(event) => setMessage(event.target.value)}
-                                />
-                                <SubmitButton
-                                    disabled={message === ""}
-                                    type="submit"
-                                    className="send-button"
-                                >
-                                    전송
-                                </SubmitButton>
-                            </Form>
-                        </TextareaContainer>
-                    </ChatFooter>
-                </Wrapper>
-            </Overlay>
+            {chatData &&
+                <Overlay>
+                    <Wrapper onClick={handleOutsideModalClick}>
+                        {isMoreBoxOpen &&
+                            <MoreBox
+                                items={menuItems}
+                                top={35}
+                                left={200}
+                            />
+                        }
+                        <CloseButton>
+                            <CloseImage
+                                onClick={onClose}
+                                src='/assets/icons/close.svg'
+                                width={11}
+                                height={11}
+                                alt='닫기' />
+                        </CloseButton>
+                        {chatData &&
+                            <ChatHeader>
+                                <PrevImage
+                                    onClick={onGoback}
+                                    src="/assets/icons/left_arrow.svg"
+                                    width={9}
+                                    height={18}
+                                    alt="뒤로가기" />
+                                <Middle>
+                                    <ImageWrapper $bgColor={getProfileBgColor(chatData.memberProfileImg)}>
+                                        <ProfileImage
+                                            onClick={() => router.push("/user")}
+                                            src={`/assets/images/profile/profile${chatData.memberProfileImg}.svg`}
+                                            width={38}
+                                            height={38}
+                                            alt="프로필 이미지" />
+                                    </ImageWrapper>
+                                    <Div>
+                                        <UserName>{chatData.gameName}</UserName>
+                                        <Online>온라인</Online>
+                                        <OnlineImage
+                                            src="/assets/icons/online.svg"
+                                            width={5}
+                                            height={5}
+                                            alt="온라인" />
+                                    </Div>
+                                </Middle>
+                                <ThreeDotsImage
+                                    onClick={handleMoreBoxOpen}
+                                    src="/assets/icons/three_dots_button.svg"
+                                    width={3}
+                                    height={15}
+                                    alt="상세보기" />
+                            </ChatHeader>
+                        }
+                        <ChatBorder>
+                            <ChatMain>
+                                {chatData &&
+                                    <MessageContainer
+                                        message={chatData} />
+                                }
+                            </ChatMain>
+                        </ChatBorder>
+                        <ChatFooter>
+                            <TextareaContainer>
+                                <Form
+                                    onSubmit={sendMessage}
+                                    className={!!chatData.blocked ? 'disabledInput' : ''}>
+                                    <Textarea
+                                        maxLength={1000}
+                                        value={message}
+                                        onChange={(event) => setMessage(event.target.value)}
+                                        disabled={!!chatData.blocked}
+                                        placeholder={!!chatData?.blocked ? "입력창 내 대화를 보낼 수 없는 상대입니다." : ""}
+                                    />
+                                    <SubmitButton
+                                        disabled={message === "" || !!chatData.blocked}
+                                        type="submit"
+                                        className={!!chatData.blocked?"disabled-button":""}
+                                    >
+                                        전송
+                                    </SubmitButton>
+                                </Form>
+                            </TextareaContainer>
+                        </ChatFooter>
+                    </Wrapper>
+                </Overlay>
+            }
 
             {isEvaluationModalOpen && isMannerStatus === "manner" &&
                 <FormModal
@@ -388,6 +441,10 @@ const Form = styled.form`
     height: 100%;
     border-radius: 0 0 20px 20px;
     box-shadow: 0 4px 46.7px 0 #0000001A;
+    &.disabledInput {
+        background:#000000A3;
+        opacity: 0.3;
+    }
 `;
 
 const Textarea = styled.textarea`
@@ -400,6 +457,12 @@ const Textarea = styled.textarea`
     &:focus{
     outline:none;
   }
+  &:disabled {
+    background-color: unset;
+    &::placeholder {
+      color: ${theme.colors.white}; 
+    }
+  }
 `;
 
 const SubmitButton = styled.button`
@@ -411,6 +474,9 @@ const SubmitButton = styled.button`
   background: ${theme.colors.purple100};
   border-radius: 25px;
   padding: 12px 20px;
+  &.disabled-button{
+    cursor: not-allowed;
+  }
 `;
 
 const CheckContent = styled.div`

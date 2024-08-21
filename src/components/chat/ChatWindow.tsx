@@ -16,9 +16,9 @@ import { REPORT_REASON } from "@/data/report";
 import Input from "../common/Input";
 import Button from "../common/Button";
 import { postMannerValue } from "@/api/manner";
-import { enterUsingMemberId, enterUsingUuid, leaveChatroom } from "@/api/chat";
-import { Chat } from "@/interface/chat";
-
+import { getChatrooms, leaveChatroom } from "@/api/chat";
+import { ChatroomList } from "@/interface/chat";
+import { blockMember } from "@/api/member";
 interface ChatWindowProps {
     onClose: () => void;
 }
@@ -33,11 +33,33 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
     const [chatId, setChatId] = useState<string | number | undefined>();
     const [checkedItems, setCheckedItems] = useState<number[]>([]);
     const [reportDetail, setReportDetail] = useState<string>("");
-    const [chatData, setChatData] = useState<Chat>();
+    const [isMemberId, setIsMemberId] = useState<number>();
     const [isUuid, setIsUuid] = useState("");
+    const [chatrooms, setChatrooms] = useState<ChatroomList[]>([]);
+    const [selectedChatroom, setSelectedChatroom] = useState<ChatroomList | null>(null);
+    const [reloadChatrooms, setReloadChatrooms] = useState(false);
 
     const isModalType = useSelector((state: RootState) => state.modal.modalType);
     const isUser = useSelector((state: RootState) => state.user);
+
+    /* 대화방 목록 가져오기  */
+    useEffect(() => {
+        const handleFetchChatrooms = async () => {
+            try {
+                const data = await getChatrooms();
+                setChatrooms(data.result);
+            } catch (error) {
+                console.error("에러:", error);
+            }
+        };
+
+        handleFetchChatrooms();
+    }, [isModalType, reloadChatrooms])
+
+    /* 상태 변경하여 useEffect 트리거 */
+    const triggerReloadChatrooms = () => {
+        setReloadChatrooms(prev => !prev);
+    };
 
     /* 채팅방 입장 */
     const handleGoToChatRoom = (id: string | number) => {
@@ -48,6 +70,10 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
     const handleBackToChatWindow = () => {
         setIsChatRoomVisible(false);
     };
+
+    const handleMemberIdGet = (id: number) => {
+        setIsMemberId(id);
+    }
 
     /* 모달 타입 변경 */
     const handleModalChange = (modalType: string) => {
@@ -95,10 +121,18 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
     };
 
     /* 차단하기 */
-    const handleChatBlock = () => {
+    const handleChatBlock = async () => {
+        if (!isMemberId) return;
+
         handleBackToChatWindow();
         handleModalClose();
-        dispatch(setOpenModal('doneBlock'));
+        try {
+            await blockMember(isMemberId);
+            await dispatch(setCloseModal());
+        } catch (error) {
+            console.error("에러:", error);
+        }
+        await dispatch(setOpenModal('doneBlock'));
     };
 
     /* 더보기 버튼 외부 클릭 시 닫힘 */
@@ -124,25 +158,25 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
     };
 
     /* 채팅방 입장 */
-    useEffect(() => {
-        const handleFetchChatData = async () => {
-            try {
-                if (typeof chatId === 'string') {
-                    const data = await enterUsingUuid(chatId);
-                    setChatData(data.result);
-                }
-                if (typeof chatId === 'number') {
-                    const data = await enterUsingMemberId(chatId);
-                    setChatData(data.result);
-                }
-            } catch (error) {
-                console.error("에러:", error);
-            }
-        };
+    // useEffect(() => {
+    //     const handleFetchChatData = async () => {
+    //         try {
+    //             if (typeof chatId === 'string') {
+    //                 const data = await enterUsingUuid(chatId);
+    //                 setChatData(data.result);
+    //             }
+    //             if (typeof chatId === 'number') {
+    //                 const data = await enterUsingMemberId(chatId);
+    //                 setChatData(data.result);
+    //             }
+    //         } catch (error) {
+    //             console.error("에러:", error);
+    //         }
+    //     };
 
-        handleFetchChatData();
-    }, [chatId])
-
+    //     handleFetchChatData();
+    // }, [chatId])
+    console.log('chat', chatrooms)
     return (
         <>
             <Overlay>
@@ -192,21 +226,34 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                                     onModalChange={handleModalChange}
                                     onChatRoom={handleGoToChatRoom}
                                     isUuid={handleUuidGet}
+                                    chatrooms={chatrooms}
+                                    onSelectChatroom={setSelectedChatroom}
+                                    triggerReloadChatrooms={triggerReloadChatrooms}
+                                    onMemberId={handleMemberIdGet}
                                 />}
                         </Content>
                     </ChatMain>
                 </Wrapper>
             </Overlay>
 
-            {isChatRoomVisible && chatId !== null &&
+            {/* {isChatRoomVisible && chatId !== null && chatData &&
                 <ChatRoom
                     onClose={onClose}
                     onGoback={handleBackToChatWindow}
                     chatData={chatData} />
+            } */}
+
+            {isChatRoomVisible && chatId !== null &&
+                <ChatRoom
+                    onClose={onClose}
+                    onGoback={handleBackToChatWindow}
+                    chatId={chatId}
+                    onMemberId={handleMemberIdGet}
+                />
             }
 
             {/* 채팅창 나가기 팝업 */}
-            {isModalType === 'leave' &&
+            {isModalType === 'leave' && selectedChatroom &&
                 <ConfirmModal
                     width="540px"
                     primaryButtonText="취소"
@@ -214,15 +261,16 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                     onPrimaryClick={handleModalClose}
                     onSecondaryClick={handleChatLeave}
                 >
-                    {/* 친구아닐떄 */}
-                    <Text>
-                        {`친구 추가 하지 않은 상대방입니다\n채팅방을 나가시겠어요?`}
-                    </Text>
+                    {selectedChatroom.friend ? (
+                        <Text>
+                            {`채팅방을 나가시겠어요?`}
+                        </Text>
+                    ) : (
+                        <Text>
+                            {`친구 추가 하지 않은 상대방입니다\n채팅방을 나가시겠어요?`}
+                        </Text>
+                    )}
 
-                    {/* 친구일떄 */}
-                    {/* <Text>
-                        {`채팅방을 나가시겠어요?`}
-                    </Text> */}
                 </ConfirmModal>
             }
 
@@ -235,15 +283,14 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                     onPrimaryClick={handleModalClose}
                     onSecondaryClick={handleChatBlock}
                 >
-                    {/* 친구아닐떄 */}
-                    <Text>
-                        {`차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다.\n\n또한, 다시 차단 해제할 수 없습니다.\n차단하시겠습니까?`}
-                    </Text>
-
-                    {/* 친구일떄 */}
-                    {/* <Text>
-                     {`채팅방을 나가시겠어요?`}
-                 </Text> */}
+                    <div>
+                        <Text>
+                            {`차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다. 차단하시겠습니까?`}
+                        </Text>
+                        <SmallText>
+                            {` 차단 해제는 마이페이지에서 가능합니다.`}
+                        </SmallText>
+                    </div>
                 </ConfirmModal>
             }
 
@@ -546,8 +593,15 @@ const ReportButton = styled.div`
 const Text = styled.div`
   text-align: center;
   color: ${theme.colors.gray600};
-  ${(props) => props.theme.fonts.regular18};
+  ${(props) => props.theme.fonts.regular20};
   margin: 28px 0;
+`;
+
+const SmallText = styled.div`
+  text-align: center;
+  color: ${theme.colors.gray200};
+  ${(props) => props.theme.fonts.regular14};
+  margin-top: 13px;
 `;
 
 const MsgConfirm = styled(Text)`

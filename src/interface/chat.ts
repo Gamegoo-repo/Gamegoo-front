@@ -1,6 +1,10 @@
 export interface ChatroomList {
+    blocked: boolean;
     chatroomId: number;
+    friend: boolean;
+    friendRequestMemberId: number;
     uuid: string;
+    targetMemberId:number;
     targetMemberImg: number;
     targetMemberName: string;
     lastMsg: string;
@@ -42,6 +46,7 @@ export interface Chat {
     memberProfileImg: number;
     friend: boolean;
     blocked: boolean;
+    friendRequestMemberId: number;
     system?: SystemMessage | null;
     senderId?: number;
     senderName?: string;
