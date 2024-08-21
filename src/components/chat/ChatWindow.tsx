@@ -165,7 +165,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
         //     return newCheckedItems;
         // });
     };
-    
+
     const handleReport = async () => {
         if (!targetMemberId) return;
 
@@ -227,17 +227,22 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                                     onChatRoom={handleGoToChatRoom}
                                 />
                             }
-                            {activeTab === 'chat' &&
-                                <ChatList
-                                    setIsMoreBoxOpen={setIsMoreBoxOpen}
-                                    isMoreBoxOpen={isMoreBoxOpen}
-                                    onModalChange={handleModalChange}
-                                    onChatRoom={handleGoToChatRoom}
-                                    isUuid={handleUuidGet}
-                                    chatrooms={chatrooms}
-                                    onSelectChatroom={setSelectedChatroom}
-                                    triggerReloadChatrooms={triggerReloadChatrooms}
-                                />}
+                            {activeTab === 'chat' && (
+                                chatrooms?.length > 0 ? (
+                                    <ChatList
+                                        setIsMoreBoxOpen={setIsMoreBoxOpen}
+                                        isMoreBoxOpen={isMoreBoxOpen}
+                                        onModalChange={handleModalChange}
+                                        onChatRoom={handleGoToChatRoom}
+                                        isUuid={handleUuidGet}
+                                        chatrooms={chatrooms}
+                                        onSelectChatroom={setSelectedChatroom}
+                                        triggerReloadChatrooms={triggerReloadChatrooms}
+                                    />
+                                ) : (
+                                    <NoData>생성된 대화방이 없습니다.</NoData>
+                                )
+                            )}
                         </Content>
                     </ChatMain>
                 </Wrapper>
@@ -614,6 +619,13 @@ const SmallText = styled.div`
 const MsgConfirm = styled(Text)`
   ${(props) => props.theme.fonts.regular25};
   margin: 80px 0;
+`;
+
+const NoData = styled.p`
+  text-align: center;
+  color: ${theme.colors.gray600};
+  ${(props) => props.theme.fonts.regular16};
+  margin-top:50%;
 `;
 
 

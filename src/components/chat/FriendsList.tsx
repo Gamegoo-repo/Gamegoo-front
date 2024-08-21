@@ -99,7 +99,7 @@ const FriendsList = ({ onChatRoom }: FriendListProps) => {
     }, []);
 
     if (friends.length === 0) {
-        return null;
+        return <NoData>{`새로운 친구를 추가하고\n함께 게임을 즐겨보세요 !`}</NoData>;
     }
 
     return (
@@ -288,4 +288,11 @@ const Online = styled(Image)`
     position: absolute;
     top: 19%;
     right: -4%;
+`;
+
+const NoData = styled.p`
+  text-align: center;
+  color: ${theme.colors.gray600};
+  ${(props) => props.theme.fonts.regular16};
+  margin-top:50%;
 `;
