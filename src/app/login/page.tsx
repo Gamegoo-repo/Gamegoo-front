@@ -60,6 +60,9 @@ const Login = () => {
 
       dispatch(setUserName(response.result.name));
       dispatch(setUserProfileImg(response.result.profileImage));
+      localStorage.setItem("name", response.result.name);
+      localStorage.setItem("profileImg", response.result.profileImage);
+
       router.push("/");
     } catch (error) {
       if (error instanceof AxiosError) {

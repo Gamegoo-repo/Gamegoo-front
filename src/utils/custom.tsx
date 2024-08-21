@@ -145,3 +145,42 @@ export function setChatRoomDateFormatter(date: string) {
 export function setPostingDateFormatter(date: string) {
   return dayjs(date).format("YYYY.MM.DD hh:mm");
 }
+
+export function formatTimeAgo(dateString: string) {
+  const now = new Date();
+  const date = new Date(dateString);
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+  const intervals = {
+    year: 60 * 60 * 24 * 365,
+    month: 60 * 60 * 24 * 30,
+    day: 60 * 60 * 24,
+    hour: 60 * 60,
+    minute: 60,
+    second: 1,
+  };
+
+  for (const [unit, seconds] of Object.entries(intervals)) {
+    const interval = Math.floor(diffInSeconds / seconds);
+    if (interval >= 1) {
+      switch (unit) {
+        case "year":
+          return `${interval}년 전`;
+        case "month":
+          return `${interval}개월 전`;
+        case "day":
+          return `${interval}일 전`;
+        case "hour":
+          return `${interval}시간 전`;
+        case "minute":
+          return `${interval}분 전`;
+        case "second":
+          return `${interval}초 전`;
+        default:
+          return "방금 전";
+      }
+    }
+  }
+
+  return "방금 전";
+}

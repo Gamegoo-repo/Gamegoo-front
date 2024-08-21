@@ -6,10 +6,10 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import AlertWindow from "../alert/AlertWindow";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
+import { useDispatch } from "react-redux";
 import { clearTokens } from "@/utils/storage";
 import { clearUserProfile } from "@/redux/slices/userSlice";
+import { getNotiCount } from "@/api/notification";
 
 interface HeaderProps {
   selected: boolean;
@@ -22,12 +22,21 @@ const Header = () => {
   const [isAlertWindow, setIsAlertWindow] = useState<Boolean>(false);
   const [isMyPage, setIsMyPage] = useState<Boolean>(false);
 
+  const [name, setName] = useState<string | null>(null);
+  const [profileImg, setProfileImg] = useState<string | null>(null);
+  const [count, setCount] = useState<number>(0);
+
   const myPageRef = useRef<HTMLDivElement>(null);
 
-  const name = useSelector((state: RootState) => state.user.gameName);
-  const profileImg = useSelector((state: RootState) => state.user.profileImg);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedName = localStorage.getItem("name");
+      const storedProfileImg = localStorage.getItem("profileImg");
+      setName(storedName);
+      setProfileImg(storedProfileImg);
+    }
+  }, []);
 
-  console.log(profileImg);
   /* 알림창 열고 닫는 함수 */
   const handleAlertWindow = () => {
     setIsAlertWindow(!isAlertWindow);
@@ -55,6 +64,24 @@ const Header = () => {
     setIsMyPage(false);
   }, [pathname]);
 
+  useEffect(() => {
+    const fetchNotiCount = async () => {
+      try {
+        const response = await getNotiCount();
+        setCount(response.result);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (name && profileImg) {
+      fetchNotiCount();
+    }
+  }, []);
+
+  /* 알림 내용 불러오기 */
+
+  useEffect(() => {}, [count]);
   return (
     <Head>
       <HeaderBar>
@@ -77,10 +104,10 @@ const Header = () => {
             </Menu>
           </Menus>
         </Left>
-        {name ? (
+        {name && profileImg ? (
           <Right>
             <Image
-              src="/assets/icons/noti_on.svg"
+              src={`/assets/icons/noti_${count > 0 ? "on" : "off"}.svg`}
               width={24}
               height={30}
               alt="noti"
@@ -122,10 +149,15 @@ const Header = () => {
             />
             <MyName>{name}</MyName>
             <Image
-              src="/assets/icons/noti_on.svg"
+              src={`/assets/icons/noti_${count > 0 ? "on" : "off"}.svg`}
               width={24}
               height={30}
               alt="noti"
+              onClick={() => {
+                router.push("/mypage/notification");
+                setIsMyPage(false);
+              }}
+              style={{ cursor: "pointer" }}
             />
           </MyProfile>
           <TabMenu>

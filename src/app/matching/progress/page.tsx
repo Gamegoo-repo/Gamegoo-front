@@ -5,14 +5,34 @@ import HeaderTitle from "@/components/common/HeaderTitle";
 import SquareProfile from "@/components/match/SquareProfile";
 import Image from "next/image";
 import { theme } from "@/styles/theme";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ConfirmModal from "@/components/common/ConfirmModal";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { getProfile } from "@/api/user";
+import { setUserProfile } from "@/redux/slices/userSlice";
 
 const Progress = () => {
   /* 모달창 */
   const [isFirstRetry, setIsFirstRetry] = useState<boolean>(true);
   const [isSecondYes, setIsSecondYes] = useState<boolean>(false);
   const [isSecondNo, setIsSecondNo] = useState<boolean>(false);
+
+  const dispatch = useDispatch();
+  const user = useSelector((state: RootState) => state.user);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await getProfile();
+        dispatch(setUserProfile(response.result));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchProfile();
+  }, [dispatch]);
 
   return (
     <Wrapper>
@@ -24,7 +44,7 @@ const Progress = () => {
           </Time>
         </Header>
         <Main>
-          <SquareProfile />
+          <SquareProfile user={user} />
           <Waiting>
             <Image
               src="/assets/images/wait_heart.svg"
