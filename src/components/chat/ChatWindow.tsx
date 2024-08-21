@@ -18,7 +18,8 @@ import Button from "../common/Button";
 import { postMannerValue } from "@/api/manner";
 import { getChatrooms, leaveChatroom } from "@/api/chat";
 import { ChatroomList } from "@/interface/chat";
-import { blockMember } from "@/api/member";
+import { blockMember, reportMember } from "@/api/member";
+
 interface ChatWindowProps {
     onClose: () => void;
 }
@@ -38,6 +39,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
     const [chatrooms, setChatrooms] = useState<ChatroomList[]>([]);
     const [selectedChatroom, setSelectedChatroom] = useState<ChatroomList | null>(null);
     const [reloadChatrooms, setReloadChatrooms] = useState(false);
+    const [targetMemberId, setTargetMemberId] = useState<number | null>(null);
 
     const isModalType = useSelector((state: RootState) => state.modal.modalType);
     const isUser = useSelector((state: RootState) => state.user);
@@ -67,16 +69,23 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
         setIsChatRoomVisible(true);
     };
 
+    /* 채팅창 뒤로가기 */
     const handleBackToChatWindow = () => {
         setIsChatRoomVisible(false);
     };
 
     const handleMemberIdGet = (id: number) => {
         setIsMemberId(id);
+        setTargetMemberId(id);
     }
 
     /* 모달 타입 변경 */
-    const handleModalChange = (modalType: string) => {
+    const handleModalChange = async (modalType: string, targetMemberId?: number) => {
+        if (modalType === 'report' && targetMemberId !== undefined) {
+            await setTargetMemberId(targetMemberId);
+            handleMemberIdGet(targetMemberId);
+        }
+
         dispatch(setOpenModal(modalType));
         setIsMoreBoxOpen(null);
     };
@@ -156,27 +165,26 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
         //     return newCheckedItems;
         // });
     };
+    
+    const handleReport = async () => {
+        if (!targetMemberId) return;
 
-    /* 채팅방 입장 */
-    // useEffect(() => {
-    //     const handleFetchChatData = async () => {
-    //         try {
-    //             if (typeof chatId === 'string') {
-    //                 const data = await enterUsingUuid(chatId);
-    //                 setChatData(data.result);
-    //             }
-    //             if (typeof chatId === 'number') {
-    //                 const data = await enterUsingMemberId(chatId);
-    //                 setChatData(data.result);
-    //             }
-    //         } catch (error) {
-    //             console.error("에러:", error);
-    //         }
-    //     };
+        const params = {
+            targetMemberId: targetMemberId,
+            reportTypeIdList: checkedItems,
+            contents: reportDetail
+        };
 
-    //     handleFetchChatData();
-    // }, [chatId])
-    console.log('chat', chatrooms)
+        try {
+            await reportMember(params)
+            await handleModalClose();
+        } catch (error) {
+            console.error("에러:", error);
+        }
+    }
+
+    console.log(chatrooms)
+
     return (
         <>
             <Overlay>
@@ -229,7 +237,6 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                                     chatrooms={chatrooms}
                                     onSelectChatroom={setSelectedChatroom}
                                     triggerReloadChatrooms={triggerReloadChatrooms}
-                                    onMemberId={handleMemberIdGet}
                                 />}
                         </Content>
                     </ChatMain>
@@ -347,7 +354,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                         </ReportContent>
                         <ReportButton>
                             <Button
-                                onClick={handleModalClose}
+                                onClick={handleReport}
                                 buttonType="primary"
                                 text="신고하기"
                                 disabled={checkedItems.length === 0}

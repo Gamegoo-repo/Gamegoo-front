@@ -15,12 +15,11 @@ interface ChatListProps {
     onChatRoom: (uuid: string) => void;
     setIsMoreBoxOpen: Dispatch<React.SetStateAction<number | null>>;
     isMoreBoxOpen: number | null;
-    onModalChange: (modalType: string) => void;
+    onModalChange: (modalType: string, targetMemberId?: number) => void;
     isUuid: (uuid: string) => void;
     chatrooms: ChatroomList[];
     onSelectChatroom: (chatroom: ChatroomList) => void;
     triggerReloadChatrooms: () => void;
-    onMemberId: (id: number) => void;
 }
 
 const ChatList = (props: ChatListProps) => {
@@ -33,7 +32,6 @@ const ChatList = (props: ChatListProps) => {
         chatrooms,
         onSelectChatroom,
         triggerReloadChatrooms,
-        onMemberId,
     } = props;
 
     const isModalType = useSelector((state: RootState) => state.modal.modalType);
@@ -90,12 +88,12 @@ const ChatList = (props: ChatListProps) => {
     }
 
     /* 모달 타입 변경 */
-    const handleChangeModal = (e: React.MouseEvent, type: string) => {
+    const handleChangeModal = (e: React.MouseEvent, type: string, targetMemberId?: number) => {
         if (type) {
             e.stopPropagation();
         }
 
-        onModalChange(type);
+        onModalChange(type, targetMemberId);
     };
 
     /* 더보기 버튼 친구 관련 함수 */
@@ -114,9 +112,14 @@ const ChatList = (props: ChatListProps) => {
         }
     };
 
+    /* 신고하기 */
+    const handleReportClick = (e: React.MouseEvent, targetMemberId: number) => {
+        handleChangeModal(e, 'report', targetMemberId);
+    }
+
     /* 더보기 버튼 상태 */
     const generateMenuItems = (room: ChatroomList): MoreBoxMenuItems[] => {
-        onMemberId(room.targetMemberId);
+        // onMemberId(room.targetMemberId);
 
         let friendText = '';
 
@@ -142,7 +145,7 @@ const ChatList = (props: ChatListProps) => {
 
         items.push(
             { text: `차단하기`, onClick: (e) => handleChangeModal(e, 'block') },
-            { text: `신고하기`, onClick: (e) => handleChangeModal(e, 'report') },
+            { text: `신고하기`, onClick: (e) => handleReportClick(e, room.targetMemberId) },
             { text: `매너 평가`, onClick: (e) => handleChangeModal(e, 'manner') },
             { text: `비매너 평가`, onClick: (e) => handleChangeModal(e, 'badManner') }
         );

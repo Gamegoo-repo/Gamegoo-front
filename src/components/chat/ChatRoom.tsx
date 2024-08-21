@@ -23,6 +23,7 @@ interface ChatRoomProps {
     onGoback: () => void;
     chatId: string | number | undefined;
     onMemberId: (id: number) => void;
+
 }
 
 const ChatRoom = (props: ChatRoomProps) => {
@@ -92,12 +93,25 @@ const ChatRoom = (props: ChatRoomProps) => {
         }
     };
 
-    const handleModalChange = (e: React.MouseEvent, modalType: string) => {
+    /* 모달 타입 변경 */
+    const handleModalChange = (e: React.MouseEvent, modalType: string, memberId?: number) => {
         e.stopPropagation();
+console.log(memberId)
+        // onModalChange(modalType, memberId);
+        if (modalType === 'report' && memberId !== undefined) {
+            onMemberId(memberId);
+        }
 
         dispatch(setOpenModal(modalType));
         setIsMoreBoxOpen(false);
     };
+
+    /* 신고하기 */
+    const handleReportClick = (e: React.MouseEvent, memberId: number) => {
+        if (chatData?.memberId) {
+            handleModalChange(e, 'report', chatData.memberId);
+        }
+    }
 
     const handleFormModalClose = () => {
         setCheckedItems([]);
@@ -151,7 +165,7 @@ const ChatRoom = (props: ChatRoomProps) => {
         !chatData?.friend && chatData?.friendRequestMemberId &&
         { text: '친구 요청 취소', onClick: handleCancelFriendReq },
         { text: '차단하기', onClick: (e: React.MouseEvent) => handleModalChange(e, 'block') },
-        { text: '신고하기', onClick: (e: React.MouseEvent) => handleModalChange(e, 'report') },
+        { text: '신고하기', onClick: (e: React.MouseEvent) => chatData?.memberId && handleReportClick(e, chatData.memberId) },
         { text: '매너 평가', onClick: (e: React.MouseEvent) => handleModalChange(e, 'manner') },
         { text: '비매너 평가', onClick: (e: React.MouseEvent) => handleModalChange(e, 'badManner') },
     ].filter(item => item) as MoreBoxMenuItems[];
@@ -240,7 +254,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                                     <SubmitButton
                                         disabled={message === "" || !!chatData.blocked}
                                         type="submit"
-                                        className={!!chatData.blocked?"disabled-button":""}
+                                        className={!!chatData.blocked ? "disabled-button" : ""}
                                     >
                                         전송
                                     </SubmitButton>
