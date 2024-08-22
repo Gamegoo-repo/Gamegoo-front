@@ -102,8 +102,8 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
       index === 0
         ? "main" ?? null
         : index === 1
-        ? "sub" ?? null
-        : "want" ?? null
+          ? "sub" ?? null
+          : "want" ?? null
     );
   };
 
@@ -214,9 +214,8 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
               <Span>{`#${user.tag}`}</Span>
               <Rank>
                 <Image
-                  src={`/assets/images/tier/${
-                    toLowerCaseString(user.tier) || "ur"
-                  }.svg`}
+                  src={`/assets/images/tier/${toLowerCaseString(user.tier) || "ur"
+                    }.svg`}
                   width={52}
                   height={52}
                   alt="tier"
@@ -269,7 +268,7 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                             value={data.id}
                             label={data.text}
                             fontSize="regular18"
-                            isArraychecked={checkedItems.includes(data.id)}
+                            isChecked={checkedItems.includes(data.id)}
                             onArrayChange={handleCheckboxChange}
                           />
                         ))}
@@ -355,8 +354,8 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                           index === 0
                             ? positionValue.main ?? 0
                             : index === 1
-                            ? positionValue.sub ?? 0
-                            : positionValue.want ?? 0
+                              ? positionValue.sub ?? 0
+                              : positionValue.want ?? 0
                         )}
                         width={55}
                         height={40}
@@ -486,7 +485,7 @@ const ProfileList = styled.div`
   grid-template-rows: repeat(2, 1fr);
 `;
 
-const ProfileListImage = styled(Image)<{ $isSelected: boolean }>`
+const ProfileListImage = styled(Image) <{ $isSelected: boolean }>`
   cursor: pointer;
   transition: opacity 0.3s ease-in-out;
 
