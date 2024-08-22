@@ -135,8 +135,6 @@ const ReadBoard = (props: ReadBoardProps) => {
 
     if (!isPost || isUser?.id === isPost?.memberId) return;
 
-    if ('isBlocked' in isPost && isPost.isBlocked) return;
-
     try {
       await blockMember(isPost.memberId);
       await handleMoreBoxClose();
@@ -171,8 +169,7 @@ const ReadBoard = (props: ReadBoardProps) => {
 
     if (!isPost || isUser?.id === isPost?.memberId) return;
 
-    if ('isBlocked' in isPost && isPost?.isBlocked ||
-      'isFriend' in isPost && isPost?.isFriend ||
+    if ('isFriend' in isPost && isPost?.isFriend ||
       'friendRequestMemberId' in isPost && isPost?.friendRequestMemberId
     ) return;
 
@@ -499,7 +496,7 @@ const ReadBoard = (props: ReadBoardProps) => {
                   value={data.id}
                   label={data.text}
                   fontSize="regular18"
-                  isArraychecked={checkedItems.includes(data.id)}
+                  isChecked={checkedItems.includes(data.id)}
                   onArrayChange={handleCheckboxChange}
                   id={`report${data.id}`}
                 />
