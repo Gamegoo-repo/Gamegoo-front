@@ -102,7 +102,8 @@ const ChatRoom = (props: ChatRoomProps) => {
     };
 
     const handleMoreBoxOpen = () => {
-        if (!chatData) return;
+        if (!chatData || !chatData.memberId) return;
+
         handleMannerValuesGet(chatData.memberId);
         handleBadMannerValuesGet(chatData.memberId);
         setIsMoreBoxOpen(prevState => !prevState);

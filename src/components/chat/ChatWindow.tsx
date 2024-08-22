@@ -320,8 +320,11 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                     onGoback={handleBackToChatWindow}
                     chatId={chatId}
                     onMemberId={handleMemberIdGet}
+                    onMannerEdit={handleMannerEdit}
                     onMannerCheckboxChange={handleMannerCheckboxChange}
                     onBadMannerCheckboxChange={handleBadMannerCheckboxChange}
+                    onMannerPost={handleMannerPost}
+                    onBadMannerPost={handleBadMannerPost}
                 />
             }
 
