@@ -14,7 +14,11 @@ import PostBoard from "@/components/createBoard/PostBoard";
 import ChatButton from "@/components/common/ChatButton";
 import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { setClosePostingModal, setOpenModal, setOpenPostingModal } from "@/redux/slices/modalSlice";
+import {
+  setClosePostingModal,
+  setOpenModal,
+  setOpenPostingModal,
+} from "@/redux/slices/modalSlice";
 import { getBoardList } from "@/api/board";
 import { BoardList } from "@/interface/board";
 import Alert from "@/components/common/Alert";
@@ -106,10 +110,7 @@ const BoardPage = () => {
 
   /* 티어 드롭박스 외부 클릭 */
   const handleTierDropdownClickOutside = (event: MouseEvent) => {
-    if (
-      tierRef.current &&
-      !tierRef.current.contains(event.target as Node)
-    ) {
+    if (tierRef.current && !tierRef.current.contains(event.target as Node)) {
       setIsTierDropdownOpen(false);
     }
   };
@@ -130,7 +131,10 @@ const BoardPage = () => {
     document.addEventListener("mousedown", handleTierDropdownClickOutside);
     document.addEventListener("mousedown", handleMicDropdownClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleGameModeDropdownClickOutside);
+      document.removeEventListener(
+        "mousedown",
+        handleGameModeDropdownClickOutside
+      );
       document.removeEventListener("mousedown", handleTierDropdownClickOutside);
       document.removeEventListener("mousedown", handleMicDropdownClickOutside);
     };
@@ -174,11 +178,14 @@ const BoardPage = () => {
   /* 게시글 목록 */
   useEffect(() => {
     const getList = async () => {
-
       const params = {
         pageIdx: currentPage,
-        mode: selectedGameMode === '솔로 랭크' ? setSelectedGameMode(null) : selectedGameMode,
-        tier: selectedTier === '티어 선택' ? setSelectedTier(null) : selectedTier,
+        mode:
+          selectedGameMode === "솔로 랭크"
+            ? setSelectedGameMode(null)
+            : selectedGameMode,
+        tier:
+          selectedTier === "티어 선택" ? setSelectedTier(null) : selectedTier,
         mainPosition: isPosition,
         mike: selectedMic === '음성 채팅' ? setSelectedMic(null) : selectedMic
       };
@@ -196,7 +203,7 @@ const BoardPage = () => {
     isPosition,
     selectedMic,
     isCompletedPosting,
-    refresh
+    refresh,
   ]);
 
   /* 페이지네이션 이전 클릭 */
@@ -225,7 +232,7 @@ const BoardPage = () => {
 
   const handleRefresh = () => {
     setRefresh((prevStatus) => !prevStatus);
-  }
+  };
 
   return (
     <>
@@ -236,16 +243,16 @@ const BoardPage = () => {
           height={58}
           content="로그아웃 되었습니다. 다시 로그인 해주세요."
           alt="로그인 필요"
-          onClose={() => router.push("/")}
-          buttonText="로그인하기"
+          onClose={() => router.push("/login")}
         />
       )}
-      {isPostingModal &&
+      {isPostingModal && (
         <PostBoard
           onClose={handlePostingClose}
           onCompletedPosting={handleModalClose}
-        />}
-      {boardList &&
+        />
+      )}
+      {boardList && (
         <Wrapper>
           <BoardContent>
             <FirstRow>
@@ -312,7 +319,7 @@ const BoardPage = () => {
             <Main>
               <Table title={BOARD_TITLE} content={boardList} />
             </Main>
-            {boardList?.length > 0 &&
+            {boardList?.length > 0 && (
               <Pagination
                 currentPage={currentPage}
                 hasMoreItems={hasMoreItems}
@@ -320,7 +327,7 @@ const BoardPage = () => {
                 onNextPage={handleNextPage}
                 onPageClick={handlePageClick}
               />
-            }
+            )}
             <Footer>
               <ChatBoxContent>
                 <ChatButton count={3} />
@@ -328,7 +335,7 @@ const BoardPage = () => {
             </Footer>
           </BoardContent>
         </Wrapper>
-      }
+      )}
     </>
   );
 };

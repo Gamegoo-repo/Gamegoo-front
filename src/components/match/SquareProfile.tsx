@@ -6,12 +6,19 @@ import styled from "styled-components";
 import Mic from "../readBoard/Mic";
 import Box from "../common/Box";
 import MannerLevelBox from "../common/MannerLevelBox";
+import { setAbbrevTier, setPositionImg } from "@/utils/custom";
+import { User } from "@/interface/profile";
+import { toLowerCaseString } from "@/utils/string";
 
 interface SquareProfileProps {
   opponent?: boolean;
+  user: User;
 }
 
-const SquareProfile: React.FC<SquareProfileProps> = ({ opponent = false }) => {
+const SquareProfile: React.FC<SquareProfileProps> = ({
+  opponent = false,
+  user,
+}) => {
   const [mannerPopup, setMannerPopup] = useState<boolean>(false);
 
   const handleMannerLevel = () => {
@@ -22,15 +29,18 @@ const SquareProfile: React.FC<SquareProfileProps> = ({ opponent = false }) => {
     <Container opponent={opponent}>
       <Column>
         <Top>
-          유니콘의 비밀
+          {user.gameName}
           <Rank>
             <Image
-              src="/assets/images/rank_b3.svg"
+              src={`/assets/images/tier/${
+                toLowerCaseString(user.tier) || "ur"
+              }.svg`}
               width={43}
               height={43}
-              alt="B3"
+              alt={user.tier}
             />
-            B3
+            {setAbbrevTier(user.tier)}
+            {user.rank}
           </Rank>
         </Top>
         <ImageContainer>
@@ -64,9 +74,9 @@ const SquareProfile: React.FC<SquareProfileProps> = ({ opponent = false }) => {
           <Position>
             {POSITIONS.slice(0, 2).map((position, index) => (
               <Posi key={index}>
-                {position.label}
+                {POSITIONS[index].label}
                 <Image
-                  src={`/assets/icons/position_${position.position}_purple.svg`}
+                  src={setPositionImg(index === 0 ? user.mainP : user.subP)}
                   width={39}
                   height={31}
                   alt="포지션"
@@ -77,9 +87,11 @@ const SquareProfile: React.FC<SquareProfileProps> = ({ opponent = false }) => {
           <Position>
             {POSITIONS.slice(-1).map((position, index) => (
               <Posi key={index}>
-                {position.label}
+                {POSITIONS[2].label}
                 <Image
-                  src={`/assets/icons/position_${position.position}_purple.svg`}
+                  // 추후 want 값 받아서
+                  // src={setPositionImg(user.want)}
+                  src={setPositionImg(user.mainP)}
                   width={39}
                   height={31}
                   alt="포지션"

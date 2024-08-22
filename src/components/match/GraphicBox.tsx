@@ -6,6 +6,7 @@ import styled, { css } from "styled-components";
 
 interface GraphicBoxProps {
   type?: string;
+  rank?: string;
   pathname: string;
   children: React.ReactNode;
   width?: string;
@@ -17,11 +18,26 @@ interface GraphicBoxProps {
 
 const GraphicBox = (props: GraphicBoxProps) => {
   const router = useRouter();
-  const { type, pathname, children, width, height, top, left, background } =
-    props;
+  const {
+    type,
+    rank,
+    pathname,
+    children,
+    width,
+    height,
+    top,
+    left,
+    background,
+  } = props;
 
   const hadleClick = () => {
-    router.push(type ? `${pathname}?type=${type}` : pathname);
+    router.push(
+      type
+        ? rank
+          ? `${pathname}?type=${type}&rank=${rank}`
+          : `${pathname}?type=${type}`
+        : pathname
+    );
   };
   return (
     <>

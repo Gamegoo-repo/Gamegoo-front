@@ -11,22 +11,22 @@ interface Champion {
 }
 
 interface UserState {
-  id: number;
-  gameName: string;
+  id?: number;
   profileImg: number;
+  mike: boolean;
   email: string;
+  gameName: string;
   tag: string;
   tier: string;
   rank: number;
   manner: number;
-  mike: boolean;
+  updatedAt: string;
   mainP: number;
   subP: number;
-  updatedAt: string;
   isAgree: boolean;
   isBlind: boolean;
   loginType: string;
-  winRate: number;
+  winrate: number;
   gameStyleResponseDTOList: GameStyle[];
   championResponseDTOList: Champion[];
 };
@@ -34,20 +34,20 @@ interface UserState {
 const initialState: UserState = {
   id: 0,
   profileImg: 0,
+  mike: false,
   email: '',
   gameName: '',
   tag: '',
   tier: '',
   rank: 0,
   manner: 0,
-  mike: false,
+  updatedAt: '',
   mainP: 0,
   subP: 0,
-  updatedAt: '',
-  isAgree: true,
-  isBlind: true,
+  isAgree: false,
+  isBlind: false,
   loginType: '',
-  winRate: 0,
+  winrate: 0,
   gameStyleResponseDTOList: [],
   championResponseDTOList: [],
 };
@@ -65,9 +65,29 @@ export const userSlice = createSlice({
     setUserProfile: (state: any, action: PayloadAction<UserState>) => {
       return { ...state, ...action.payload };
     },
+    clearUserProfile(state) {
+      state.id = 0;
+      state.profileImg = 0;
+      state.mike = false;
+      state.email = '';
+      state.gameName = '';
+      state.tag = '';
+      state.tier = '';
+      state.rank = 0;
+      state.manner = 0;
+      state.updatedAt = '';
+      state.mainP = 0;
+      state.subP = 0;
+      state.isAgree = false;
+      state.isBlind = false;
+      state.loginType = '';
+      state.winrate = 0;
+      state.gameStyleResponseDTOList = [];
+      state.championResponseDTOList = [];
+    },
   },
 });
 
-export const { setUserName, setUserProfileImg, setUserProfile } = userSlice.actions;
+export const { setUserName, setUserProfileImg, setUserProfile, clearUserProfile } = userSlice.actions;
 
 export default userSlice.reducer;

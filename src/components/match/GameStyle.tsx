@@ -6,7 +6,8 @@ import Toggle from "../common/Toggle";
 import { theme } from "@/styles/theme";
 import SelectedStylePopup from "./SelectedStylePopup";
 import { css } from "styled-components";
-import { putGameStyle } from "@/api/mypage";
+import { putGameStyle } from "@/api/user";
+import { GAME_STYLE } from "@/data/profile";
 
 type profileType = "me" | "other" | "none" | "mini";
 
@@ -26,13 +27,16 @@ const GameStyle = (props: GameStyleProps) => {
 
   const [isMike, setIsMike] = useState(mic);
   const [styledPopup, setStyledPopup] = useState(false);
-  const [selectedStyles, setSelectedStyles] = useState<number[]>([]);
+  const [selectedStyles, setSelectedStyles] = useState<number[]>(
+    gameStyleResponseDTOList.map((style) => style.gameStyleId)
+  );
 
-  /* gameStyleResponseDTOList가 변경될 때 selectedStyles를 업데이트 */
   useEffect(() => {
-    setSelectedStyles(
-      gameStyleResponseDTOList.map((style) => style.gameStyleId)
-    );
+    if (gameStyleResponseDTOList.length > 0) {
+      setSelectedStyles(
+        gameStyleResponseDTOList.map((style) => style.gameStyleId)
+      );
+    }
   }, [gameStyleResponseDTOList]);
 
   const handleMike = () => {
@@ -68,12 +72,22 @@ const GameStyle = (props: GameStyleProps) => {
     await putGameStyle(updatedStyles);
   };
 
+  /* gameStyleResponseDTOList가 변경될 때 selectedStyles를 업데이트 */
+  useEffect(() => {
+    setSelectedStyles(selectedStyles);
+    console.log("useEffect");
+  }, [selectedStyles]);
+
+  const selectedStyleObjects = GAME_STYLE.filter((style) =>
+    selectedStyles.includes(style.gameStyleId)
+  );
+
   return (
     <Style>
       <LeftLabel $profileType={profileType}>
         게임 스타일
         <GameBox $profileType={profileType}>
-          {gameStyleResponseDTOList
+          {selectedStyleObjects
             .filter((style) => selectedStyles.includes(style.gameStyleId))
             .map((style) => (
               <Box

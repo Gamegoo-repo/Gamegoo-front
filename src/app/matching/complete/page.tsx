@@ -7,17 +7,39 @@ import Button from "@/components/common/Button";
 import { theme } from "@/styles/theme";
 import { useRouter } from "next/navigation";
 import ChatButton from "@/components/common/ChatButton";
+import { useEffect } from "react";
+import { getProfile } from "@/api/user";
+import { setUserProfile } from "@/redux/slices/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 const Progress = () => {
   const router = useRouter();
+
+  const dispatch = useDispatch();
+  const user = useSelector((state: RootState) => state.user);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await getProfile();
+        dispatch(setUserProfile(response.result));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchProfile();
+  }, [dispatch]);
+
   return (
     <Wrapper>
       <MatchContent>
         <HeaderTitle title="매칭 완료" sub="듀오 상대를 찾았어요!" />
         <Main>
-          <SquareProfile />
+          <SquareProfile user={user} />
           <Oppnent>
-            <SquareProfile opponent={true} />
+            <SquareProfile opponent={true} user={user} />
             <Button
               buttonType="secondary"
               text="매칭 다시하기"

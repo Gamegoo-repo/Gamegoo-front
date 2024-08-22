@@ -5,29 +5,37 @@ import { theme } from "@/styles/theme";
 import MannerLevelBar from "@/components/common/MannerLevelBar";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
 import ChatButton from "@/components/common/ChatButton";
-
-const data = {
-  good_manner: {
-    "1": 8,
-    "2": 5,
-    "3": 2,
-    "4": 5,
-    "5": 0,
-    "6": 5,
-  },
-  bad_manner: {
-    "1": 1,
-    "2": 0,
-    "3": 0,
-    "4": 0,
-    "5": 0,
-    "6": 0,
-  },
-};
+import { useEffect, useState } from "react";
+import { getMyManner } from "@/api/user";
+import { Manner } from "@/components/user/UserProfile";
 
 const MyReviewPage = () => {
-  const mannerEvaluations = Object.entries(data.good_manner);
-  const badMannerEvaluations = Object.entries(data.bad_manner);
+  const [myManner, setMyManner] = useState<Manner>();
+
+  useEffect(() => {
+    const fetchGetMyManner = async () => {
+      const response = await getMyManner();
+      setMyManner(response.result);
+    };
+
+    fetchGetMyManner();
+  }, []);
+
+  const goodMannerEvaluations =
+    myManner?.mannerKeywords
+      .filter((keyword) => keyword.isPositive)
+      .map((keyword) => ({
+        id: keyword.mannerKeywordId,
+        count: keyword.count,
+      })) || [];
+
+  const badMannerEvaluations =
+    myManner?.mannerKeywords
+      .filter((keyword) => !keyword.isPositive)
+      .map((keyword) => ({
+        id: keyword.mannerKeywordId,
+        count: keyword.count,
+      })) || [];
 
   return (
     <Wrapper>
@@ -41,7 +49,7 @@ const MyReviewPage = () => {
                 매너 키워드는 하나 당 1점, 비매너 키워드는 -2점으로 계산해요.
               </Gray>
             </Top>
-            <MannerLevelBar recentLevel={4} />
+            <MannerLevelBar recentLevel={myManner?.mannerLevel || 1} />
           </Box>
         </Review>
         <Private>
@@ -51,16 +59,14 @@ const MyReviewPage = () => {
               <MannerBox>
                 <MannerList>
                   <ValueWrapper>
-                    {mannerEvaluations.map(([key, value]) => {
-                      return (
-                        <Value
-                          key={key}
-                          className={value > 0 ? "mannerEmph" : "default"}
-                        >
-                          {value}
-                        </Value>
-                      );
-                    })}
+                    {goodMannerEvaluations.map((item) => (
+                      <Value
+                        key={item.id}
+                        className={item.count > 0 ? "mannerEmph" : "default"}
+                      >
+                        {item.count}
+                      </Value>
+                    ))}
                   </ValueWrapper>
                   <TypeWrapper>
                     {MANNER_TYPES.map((type, index) => {
@@ -68,7 +74,9 @@ const MyReviewPage = () => {
                         <Type
                           key={index}
                           className={
-                            mannerEvaluations[index][1] > 0
+                            (goodMannerEvaluations.find(
+                              (evaluation) => evaluation.id === type.id
+                            )?.count ?? 0) > 0
                               ? "mannerEmph"
                               : "default"
                           }
@@ -86,16 +94,14 @@ const MyReviewPage = () => {
               <MannerBox>
                 <MannerList>
                   <ValueWrapper>
-                    {badMannerEvaluations.map(([key, value]) => {
-                      return (
-                        <Value
-                          key={key}
-                          className={value > 0 ? "badEmph" : "default"}
-                        >
-                          {value}
-                        </Value>
-                      );
-                    })}
+                    {badMannerEvaluations.map((item) => (
+                      <Value
+                        key={item.id}
+                        className={item.count > 0 ? "badEmph" : "default"}
+                      >
+                        {item.count}
+                      </Value>
+                    ))}
                   </ValueWrapper>
                   <TypeWrapper>
                     {BAD_MANNER_TYPES.map((type, index) => {
@@ -103,7 +109,9 @@ const MyReviewPage = () => {
                         <Type
                           key={index}
                           className={
-                            badMannerEvaluations[index][1] > 0
+                            (badMannerEvaluations.find(
+                              (evaluation) => evaluation.id === type.id
+                            )?.count ?? 0) > 0
                               ? "badEmph"
                               : "default"
                           }
@@ -256,7 +264,6 @@ const TypeWrapper = styled.div`
 `;
 
 const Type = styled.p`
-  height: 100%;
   ${(props) => props.theme.fonts.medium16};
 
   &.default {

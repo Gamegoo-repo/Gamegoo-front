@@ -1,4 +1,4 @@
-export type profileType = "fun" | "hard" | "other" | "me";
+export type profileType = "normal" | "wind" | "other" | "me";
 
 export interface Champion {
   championId: number;
@@ -11,16 +11,22 @@ export interface GameStyle {
 }
 
 export interface User {
-  gameName: string;
+  id?: number;
   profileImg: number;
+  mike: boolean;
   email: string;
+  gameName: string;
   tag: string;
   tier: string;
-  rank: string;
-  mike: boolean;
-  mainP: number;
-  subP: number;
+  rank: number;
+  manner: number;
   updatedAt: string;
+  mainP: number;
+  subP:number;
+  isAgree: boolean;
+  isBlind: boolean;
+  loginType: string;
+  winrate: number;
   gameStyleResponseDTOList: GameStyle[];
   championResponseDTOList: Champion[];
 }

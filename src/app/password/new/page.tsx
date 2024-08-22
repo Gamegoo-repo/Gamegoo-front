@@ -55,7 +55,7 @@ const New = () => {
     if (passwordValid && repasswordValid) {
       try {
         await resetPassword({ email, password });
-        router.push("/");
+        router.push("/login");
       } catch {}
     }
   };

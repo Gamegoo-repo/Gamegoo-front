@@ -6,10 +6,11 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import AlertWindow from "../alert/AlertWindow";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
+import { useDispatch } from "react-redux";
 import { clearTokens } from "@/utils/storage";
 import { getProfileBgColor } from "@/utils/profile";
+import { clearUserProfile } from "@/redux/slices/userSlice";
+import { getNotiCount } from "@/api/notification";
 
 interface HeaderProps {
   selected: boolean;
@@ -17,16 +18,26 @@ interface HeaderProps {
 
 const Header = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const pathname = usePathname();
   const [isAlertWindow, setIsAlertWindow] = useState<Boolean>(false);
   const [isMyPage, setIsMyPage] = useState<Boolean>(false);
 
+  const [name, setName] = useState<string | null>(null);
+  const [profileImg, setProfileImg] = useState<string | null>(null);
+  const [count, setCount] = useState<number>(0);
+
   const myPageRef = useRef<HTMLDivElement>(null);
 
-  const name = useSelector((state: RootState) => state.user.gameName);
-  const profileImg = useSelector((state: RootState) => state.user.profileImg);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedName = localStorage.getItem("name");
+      const storedProfileImg = localStorage.getItem("profileImg");
+      setName(storedName);
+      setProfileImg(storedProfileImg);
+    }
+  }, []);
 
-  console.log(profileImg);
   /* 알림창 열고 닫는 함수 */
   const handleAlertWindow = () => {
     setIsAlertWindow(!isAlertWindow);
@@ -54,11 +65,28 @@ const Header = () => {
     setIsMyPage(false);
   }, [pathname]);
 
+  useEffect(() => {
+    const fetchNotiCount = async () => {
+      try {
+        const response = await getNotiCount();
+        setCount(response.result);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchNotiCount();
+  }, []);
+
+  useEffect(() => {
+    console.log(count);
+  }, [count]);
+
   return (
     <Head>
       <HeaderBar>
         <Left>
-          <Link href="/home">
+          <Link href="/">
             <Image
               src="/assets/icons/logo.svg"
               width={102}
@@ -76,53 +104,65 @@ const Header = () => {
             </Menu>
           </Menus>
         </Left>
-        <Right>
-          <Image
-            src="/assets/icons/noti_on.svg"
-            width={24}
-            height={30}
-            alt="noti"
-            onClick={handleAlertWindow}
-          />
-          <Profile>
-            <HeaderProfileImgWrapper $bgColor={getProfileBgColor(profileImg)}>
-              <HeaderProfileImg
-                src={`/assets/images/profile/profile${profileImg}.svg`}
-                width={29}
-                height={29}
-                alt="profile"
-              />
-            </HeaderProfileImgWrapper>
-            {name}
-            <button onClick={() => setIsMyPage(!isMyPage)}>
-              <Image
-                src="/assets/icons/chevron_down.svg"
-                width={7}
-                height={7}
-                alt="more"
-              />
-            </button>
-          </Profile>
-        </Right>
+        {name && profileImg ? (
+          <Right>
+            <Image
+              src={`/assets/icons/noti_${count > 0 ? "on" : "off"}.svg`}
+              width={24}
+              height={30}
+              alt="noti"
+              onClick={handleAlertWindow}
+            />
+            <Profile>
+              <HeaderProfileImgWrapper $bgColor={getProfileBgColor(parseInt(profileImg))}>
+                <HeaderProfileImg
+                  src={`/assets/images/profile/profile${profileImg}.svg`}
+                  width={29}
+                  height={29}
+                  alt="profile"
+                  style={{ background: "#C1B7FF", borderRadius: "50%" }}
+                />
+              </HeaderProfileImgWrapper>
+              {name}
+              <button onClick={() => setIsMyPage(!isMyPage)}>
+                <Image
+                  src="/assets/icons/chevron_down.svg"
+                  width={7}
+                  height={7}
+                  alt="more"
+                />
+              </button>
+            </Profile>
+          </Right>
+        ) : (
+          <Login onClick={() => router.push("/login")}>로그인</Login>
+        )}
       </HeaderBar>
       {isAlertWindow && <AlertWindow onClose={() => setIsAlertWindow(false)} />}
       {isMyPage && (
         <MyPageModal ref={myPageRef}>
           <MyProfile>
-            <ProfileImgWrapper $bgColor={getProfileBgColor(profileImg)}>
-              <ProfileImg
-                src={`/assets/images/profile/profile${profileImg}.svg`}
-                width={52}
-                height={52}
-                alt="profile"
-              />
-            </ProfileImgWrapper>
+            {profileImg &&
+              <ProfileImgWrapper $bgColor={getProfileBgColor(parseInt(profileImg))}>
+                <ProfileImg
+                  src={`/assets/images/profile/profile${profileImg}.svg`}
+                  width={52}
+                  height={52}
+                  alt="profile"
+                />
+              </ProfileImgWrapper>
+            }
             <MyName>{name}</MyName>
             <Image
-              src="/assets/icons/noti_on.svg"
+              src={`/assets/icons/noti_${count > 0 ? "on" : "off"}.svg`}
               width={24}
               height={30}
               alt="noti"
+              onClick={() => {
+                router.push("/mypage/notification");
+                setIsMyPage(false);
+              }}
+              style={{ cursor: "pointer" }}
             />
           </MyProfile>
           <TabMenu>
@@ -135,7 +175,9 @@ const Header = () => {
                       router.push(`${data.url}`);
                     } else {
                       clearTokens();
-                      // router.push("/login");
+                      dispatch(clearUserProfile());
+                      router.push("/");
+                      window.location.reload();
                     }
                   }}
                 >
@@ -228,81 +270,86 @@ const HeaderProfileImg = styled(Image)`
     top:50%;
     left:50%;
     transform: translate(-50%, -50%);
+    `;
+
+const Login = styled.button`
+color: ${theme.colors.purple100};
+  ${(props) => props.theme.fonts.bold14}
 `;
 
 const MyPageModal = styled.div`
-  width: 408px;
-  border-radius: 10px;
-  padding: 25px 27px;
-  background: ${theme.colors.white};
-  box-shadow: 2px 11px 44.1px 0px rgba(0, 0, 0, 0.15);
-  position: absolute;
-  top: 50px;
-  right: 50px;
-  z-index: 100;
+width: 408px;
+border-radius: 10px;
+padding: 25px 27px;
+background: ${theme.colors.white};
+box-shadow: 2px 11px 44.1px 0px rgba(0, 0, 0, 0.15);
+position: absolute;
+top: 50px;
+right: 50px;
+z-index: 100;
 `;
 
 const MyProfile = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 9px 23px 9px;
-  border-bottom: 1px solid #d4d4d4;
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 0 9px 23px 9px;
+border-bottom: 1px solid #d4d4d4;
 `;
 
 const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
-    position: relative;
-    width: 75px;
-    height: 75px;
-    background: ${(props) => props.$bgColor};
-    border-radius: 50%;
+position: relative;
+width: 75px;
+height: 75px;
+background: ${(props) => props.$bgColor};
+border-radius: 50%;
 `;
 
 const ProfileImg = styled(Image)`
-    position: absolute;
-    top:50%;
-    left:50%;
-    transform: translate(-50%, -50%);
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
 `;
 
 const MyName = styled.div`
-  margin-left: 15px;
-  margin-right: auto;
-  color: ${theme.colors.black};
+margin-left: 15px;
+margin-right: auto;
+color: ${theme.colors.black};
   ${(props) => props.theme.fonts.bold20};
-  white-space: nowrap;
+white-space: nowrap;
 `;
 
 const TabMenu = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  padding-top: 18px;
-  gap: 4px;
-  color: ${theme.colors.black};
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+justify-content: center;
+padding-top: 18px;
+gap: 4px;
+color: ${theme.colors.black};
   ${(props) => props.theme.fonts.semiBold18};
 `;
 
 const Line = styled.div`
-  width: 100%;
-  height: 52px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  padding-left: 9px;
-  gap: 18px;
-  cursor: pointer;
-  border-radius: 10px;
+width: 100%;
+height: 52px;
+display: flex;
+justify-content: flex-start;
+align-items: center;
+padding-left: 9px;
+gap: 18px;
+cursor: pointer;
+border-radius: 10px;
 
   &:hover {
-    background: ${theme.colors.gray500};
-  }
+  background: ${theme.colors.gray500};
+}
 `;
 
 const Divider = styled.div`
-  width: 100%;
-  height: 1px;
-  background-color: #d4d4d4;
-  margin: 18px 0;
+width: 100%;
+height: 1px;
+background-color: #d4d4d4;
+margin: 18px 0;
 `;

@@ -1,4 +1,4 @@
-import { getProfile, putProfileImg } from "@/api/mypage";
+import { getProfile, putProfileImg } from "@/api/user";
 import GameStyle from "@/components/match/GameStyle";
 import { Profile } from "@/interface/profile";
 import { setUserProfile, setUserProfileImg } from "@/redux/slices/userSlice";
