@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 interface CheckboxProps {
-  value: number;
+  value: number | string;
   label?: string;
   children?: React.ReactNode;
   isChecked?: boolean;

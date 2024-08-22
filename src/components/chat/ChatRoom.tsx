@@ -28,6 +28,8 @@ interface ChatRoomProps {
     onMannerEdit: (type: string) => void;
     onMannerCheckboxChange: (checked: number) => void;
     onBadMannerCheckboxChange: (checked: number) => void;
+    onMannerPost: () => void;
+    onBadMannerPost: () => void;
 }
 
 const ChatRoom = (props: ChatRoomProps) => {
@@ -38,7 +40,9 @@ const ChatRoom = (props: ChatRoomProps) => {
         onMemberId,
         onMannerEdit,
         onMannerCheckboxChange,
-        onBadMannerCheckboxChange
+        onBadMannerCheckboxChange,
+        onMannerPost,
+        onBadMannerPost
     } = props;
 
     const dispatch = useDispatch();
@@ -175,7 +179,6 @@ const ChatRoom = (props: ChatRoomProps) => {
 
     /* 매너 평가하기 */
     const handleMannerClick = (e: React.MouseEvent, targetMemberId: number) => {
-        // handleModalChange(e, 'manner', targetMemberId);
         if (chatData?.memberId) {
             handleModalChange(e, 'manner', targetMemberId);
         }
@@ -183,7 +186,6 @@ const ChatRoom = (props: ChatRoomProps) => {
 
     /* 비매너 평가하기 */
     const handleBadMannerClick = (e: React.MouseEvent, targetMemberId: number) => {
-        // handleModalChange(e, 'badManner', targetMemberId); 
         if (chatData?.memberId) {
             handleModalChange(e, 'badManner', targetMemberId);
         }
@@ -321,7 +323,7 @@ const ChatRoom = (props: ChatRoomProps) => {
             {isEvaluationModalOpen && isMannerModalStatus === "manner" &&
                 <FormModal
                     type="checkbox"
-                    title="매너 평가하기"
+                    title={isMannerStatus?.isExist ? "내가 남긴 매너 평가" : "매너 평가하기"}
                     width="418px"
                     closeButtonWidth={17}
                     closeButtonHeight={17}
@@ -343,9 +345,9 @@ const ChatRoom = (props: ChatRoomProps) => {
                     </CheckContent>
                     <ModalSubmitBtn>
                         <Button
-                            onClick={handleFormModalClose}
+                            onClick={() => isMannerStatus?.isExist ? onMannerEdit('manner') : onMannerPost()}
                             buttonType="primary"
-                            text="완료"
+                            text={isMannerStatus?.isExist ? "수정하기" : "완료"}
                             disabled={checkedMannerItems.length === 0}
                         />
                     </ModalSubmitBtn>
@@ -355,7 +357,7 @@ const ChatRoom = (props: ChatRoomProps) => {
             {isEvaluationModalOpen && isMannerModalStatus === "badManner" &&
                 <FormModal
                     type="checkbox"
-                    title="비매너 평가하기"
+                    title={isBadMannerStatus?.isExist ? "내가 남긴 비매너 평가" : "비매너 평가하기"}
                     width="418px"
                     closeButtonWidth={17}
                     closeButtonHeight={17}
@@ -377,9 +379,9 @@ const ChatRoom = (props: ChatRoomProps) => {
                     </CheckContent>
                     <ModalSubmitBtn>
                         <Button
-                            onClick={handleFormModalClose}
+                            onClick={() => isBadMannerStatus?.isExist ? onMannerEdit('badManner') : onBadMannerPost()}
                             buttonType="primary"
-                            text="완료"
+                            text={isBadMannerStatus?.isExist ? "수정하기" : "완료"}
                             disabled={checkedBadMannerItems.length === 0}
                         />
                     </ModalSubmitBtn>
