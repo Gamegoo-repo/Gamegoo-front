@@ -88,7 +88,6 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
     const handleModalChange = async (modalType: string, targetMemberId?: number) => {
         if (targetMemberId !== undefined) {
             await setTargetMemberId(targetMemberId);
-            // handleMemberIdGet(targetMemberId);
             setIsMemberId(targetMemberId);
         }
 
@@ -218,11 +217,15 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
         }
     };
 
+    /* 기존 매너, 비매너 평가 내역 가져오기 */
     useEffect(() => {
         if (isModalType === 'manner' && isMannerStatus?.isExist && isMannerStatus.mannerRatingKeywordList) {
             setCheckedMannerItems(isMannerStatus.mannerRatingKeywordList);
         }
-    }, [isModalType, isMannerStatus]);
+        if (isModalType === 'badManner' && isBadMannerStatus?.isExist && isBadMannerStatus.mannerRatingKeywordList) {
+            setCheckedBadMannerItems(isBadMannerStatus.mannerRatingKeywordList);
+        }
+    }, [isModalType, isMannerStatus, isBadMannerStatus, isMoreBoxOpen]);
 
     /* 매너, 비매너 평가 수정 */
     const handleMannerEdit = async (type: string) => {
@@ -234,14 +237,13 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
         const mannerIdNumber = parseInt(mannerId, 10);
         const badMannerIdNumber = parseInt(badMannerId, 10);
 
-        if (isNaN(mannerIdNumber) || isNaN(badMannerIdNumber)) return;
-
         const params = {
-            mannerRatingKeywordList: checkedMannerItems,
+            mannerRatingKeywordList: type === 'manner' ? checkedMannerItems : checkedBadMannerItems,
         };
 
         try {
             await editManners(type === 'manner' ? mannerIdNumber : badMannerIdNumber, params);
+            await handleModalClose();
         } catch (error) {
             console.log('에러', error);
         }
@@ -318,6 +320,9 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                     onGoback={handleBackToChatWindow}
                     chatId={chatId}
                     onMemberId={handleMemberIdGet}
+                    onMannerEdit={handleMannerEdit}
+                    onMannerCheckboxChange={handleMannerCheckboxChange}
+                    onBadMannerCheckboxChange={handleBadMannerCheckboxChange}
                 />
             }
 

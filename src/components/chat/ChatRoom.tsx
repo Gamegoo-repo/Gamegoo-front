@@ -17,28 +17,43 @@ import { Chat } from "@/interface/chat";
 import { getProfileBgColor } from "@/utils/profile";
 import { cancelFriendReq, deleteFriend, reqFriend } from "@/api/friends";
 import { enterUsingMemberId, enterUsingUuid } from "@/api/chat";
+import { getBadMannerValues, getMannerValues } from "@/api/manner";
+import { Mannerstatus } from "@/interface/manner";
 
 interface ChatRoomProps {
     onClose: () => void;
     onGoback: () => void;
     chatId: string | number | undefined;
     onMemberId: (id: number) => void;
-
+    onMannerEdit: (type: string) => void;
+    onMannerCheckboxChange: (checked: number) => void;
+    onBadMannerCheckboxChange: (checked: number) => void;
 }
 
 const ChatRoom = (props: ChatRoomProps) => {
-    const { onClose, onGoback, chatId, onMemberId } = props;
+    const {
+        onClose,
+        onGoback,
+        chatId,
+        onMemberId,
+        onMannerEdit,
+        onMannerCheckboxChange,
+        onBadMannerCheckboxChange
+    } = props;
 
     const dispatch = useDispatch();
     const router = useRouter();
 
     const [message, setMessage] = useState("");
     const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
-    const [checkedItems, setCheckedItems] = useState<number[]>([]);
     const [dataUpdated, setDataUpdated] = useState(false);
+    const [checkedMannerItems, setCheckedMannerItems] = useState<number[]>([]);
+    const [checkedBadMannerItems, setCheckedBadMannerItems] = useState<number[]>([]);
+    const [isMannerStatus, setIsMannerStatus] = useState<Mannerstatus | undefined>();
+    const [isBadMannerStatus, setIsBadMannerStatus] = useState<Mannerstatus | undefined>();
 
     const isEvaluationModalOpen = useSelector((state: RootState) => state.modal.evaluationModal);
-    const isMannerStatus = useSelector((state: RootState) => state.mannerStatus.mannerStatus);
+    const isMannerModalStatus = useSelector((state: RootState) => state.mannerStatus.mannerStatus);
 
     // useEffect(() => {
     //     socket.on(“message”, (message) => {
@@ -83,6 +98,9 @@ const ChatRoom = (props: ChatRoomProps) => {
     };
 
     const handleMoreBoxOpen = () => {
+        if (!chatData) return;
+        handleMannerValuesGet(chatData.memberId);
+        handleBadMannerValuesGet(chatData.memberId);
         setIsMoreBoxOpen(prevState => !prevState);
     };
 
@@ -95,10 +113,11 @@ const ChatRoom = (props: ChatRoomProps) => {
 
     /* 모달 타입 변경 */
     const handleModalChange = (e: React.MouseEvent, modalType: string, memberId?: number) => {
-        e.stopPropagation();
-console.log(memberId)
-        // onModalChange(modalType, memberId);
-        if (modalType === 'report' && memberId !== undefined) {
+        if (modalType) {
+            e.stopPropagation();
+        }
+
+        if (memberId !== undefined) {
             onMemberId(memberId);
         }
 
@@ -109,12 +128,13 @@ console.log(memberId)
     /* 신고하기 */
     const handleReportClick = (e: React.MouseEvent, memberId: number) => {
         if (chatData?.memberId) {
-            handleModalChange(e, 'report', chatData.memberId);
+            handleModalChange(e, 'report', memberId);
         }
     }
 
     const handleFormModalClose = () => {
-        setCheckedItems([]);
+        setCheckedMannerItems([]);
+        setCheckedBadMannerItems([]);
         dispatch(setCloseEvaluationModal());
     };
 
@@ -153,6 +173,45 @@ console.log(memberId)
         }
     };
 
+    /* 매너 평가하기 */
+    const handleMannerClick = (e: React.MouseEvent, targetMemberId: number) => {
+        // handleModalChange(e, 'manner', targetMemberId);
+        if (chatData?.memberId) {
+            handleModalChange(e, 'manner', targetMemberId);
+        }
+    };
+
+    /* 비매너 평가하기 */
+    const handleBadMannerClick = (e: React.MouseEvent, targetMemberId: number) => {
+        // handleModalChange(e, 'badManner', targetMemberId); 
+        if (chatData?.memberId) {
+            handleModalChange(e, 'badManner', targetMemberId);
+        }
+    };
+
+
+    /* 매너평가 조회 */
+    const handleMannerValuesGet = async (memberId: number) => {
+        try {
+            const response = await getMannerValues(memberId);
+            await setIsMannerStatus(response.result);
+        } catch (error) {
+            console.log('에러', error);
+        }
+    };
+
+    /* 비매너평가 조회 */
+    const handleBadMannerValuesGet = async (memberId: number) => {
+        try {
+            const response = await getBadMannerValues(memberId);
+            await setIsBadMannerStatus(response.result);
+            console.log(response.result)
+        } catch (error) {
+            console.log('에러', error);
+        }
+    };
+
+    /* 더보기 버튼 */
     const menuItems: MoreBoxMenuItems[] = [
         { text: '채팅방 나가기', onClick: (e: React.MouseEvent) => handleModalChange(e, 'leave') },
         // 친구 추가 조건: 친구가 아니고, 친구 요청도 하지 않은 경우
@@ -166,15 +225,9 @@ console.log(memberId)
         { text: '친구 요청 취소', onClick: handleCancelFriendReq },
         { text: '차단하기', onClick: (e: React.MouseEvent) => handleModalChange(e, 'block') },
         { text: '신고하기', onClick: (e: React.MouseEvent) => chatData?.memberId && handleReportClick(e, chatData.memberId) },
-        { text: '매너 평가', onClick: (e: React.MouseEvent) => handleModalChange(e, 'manner') },
-        { text: '비매너 평가', onClick: (e: React.MouseEvent) => handleModalChange(e, 'badManner') },
+        { text: '매너 평가', onClick: (e: React.MouseEvent) => chatData?.memberId && handleMannerClick(e, chatData.memberId) },
+        { text: '비매너 평가', onClick: (e: React.MouseEvent) => chatData?.memberId && handleBadMannerClick(e, chatData.memberId) },
     ].filter(item => item) as MoreBoxMenuItems[];
-
-    const handleCheckboxChange = (checked: number) => {
-        setCheckedItems((prev) =>
-            prev.includes(checked) ? prev.filter((c) => c !== checked) : [...prev, checked]
-        );
-    };
 
     return (
         <>
@@ -265,7 +318,7 @@ console.log(memberId)
                 </Overlay>
             }
 
-            {isEvaluationModalOpen && isMannerStatus === "manner" &&
+            {isEvaluationModalOpen && isMannerModalStatus === "manner" &&
                 <FormModal
                     type="checkbox"
                     title="매너 평가하기"
@@ -277,14 +330,14 @@ console.log(memberId)
                     disabled
                 >
                     <CheckContent>
-                        {isMannerStatus === "manner" && MANNER_TYPES.map((data) => (
+                        {isMannerModalStatus === "manner" && MANNER_TYPES.map((data) => (
                             <Checkbox
                                 key={data.id}
                                 value={data.id}
                                 label={data.text}
                                 fontSize="semiBold16"
-                                isArraychecked={checkedItems.includes(data.id)}
-                                onArrayChange={handleCheckboxChange}
+                                isChecked={checkedMannerItems.includes(data.id)}
+                                onArrayChange={onMannerCheckboxChange}
                             />
                         ))}
                     </CheckContent>
@@ -293,13 +346,13 @@ console.log(memberId)
                             onClick={handleFormModalClose}
                             buttonType="primary"
                             text="완료"
-                            disabled={checkedItems.length === 0}
+                            disabled={checkedMannerItems.length === 0}
                         />
                     </ModalSubmitBtn>
                 </FormModal>
             }
 
-            {isEvaluationModalOpen && isMannerStatus === "badManner" &&
+            {isEvaluationModalOpen && isMannerModalStatus === "badManner" &&
                 <FormModal
                     type="checkbox"
                     title="비매너 평가하기"
@@ -311,14 +364,14 @@ console.log(memberId)
                     disabled
                 >
                     <CheckContent>
-                        {isMannerStatus === "badManner" && BAD_MANNER_TYPES.map((data) => (
+                        {isMannerModalStatus === "badManner" && BAD_MANNER_TYPES.map((data) => (
                             <Checkbox
                                 key={data.id}
-                                value={data.text}
+                                value={data.id}
                                 label={data.text}
                                 fontSize="semiBold16"
-                                isArraychecked={checkedItems.includes(data.id)}
-                                onArrayChange={handleCheckboxChange}
+                                isChecked={checkedBadMannerItems.includes(data.id)}
+                                onArrayChange={onBadMannerCheckboxChange}
                             />
                         ))}
                     </CheckContent>
@@ -327,7 +380,7 @@ console.log(memberId)
                             onClick={handleFormModalClose}
                             buttonType="primary"
                             text="완료"
-                            disabled={checkedItems.length === 0}
+                            disabled={checkedBadMannerItems.length === 0}
                         />
                     </ModalSubmitBtn>
                 </FormModal>

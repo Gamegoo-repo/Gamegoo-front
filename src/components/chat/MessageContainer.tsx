@@ -137,7 +137,7 @@ const MessageContainer = (props: MessageContainerProps) => {
 
         return (
           <MsgContainer
-            key={data.timestamp}>
+            key={index}>
             {handleDisplayDate(messageList.chatMessageDtoList, index) && (
               <Timestamp>{setChatDateFormatter(data.createdAt)}</Timestamp>
             )}

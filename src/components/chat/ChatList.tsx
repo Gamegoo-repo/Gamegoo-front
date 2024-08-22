@@ -187,6 +187,7 @@ const ChatList = (props: ChatListProps) => {
         try {
             const response = await getBadMannerValues(memberId);
             await setIsBadMannerStatus(response.result);
+            console.log(response.result)
         } catch (error) {
             console.log('에러', error);
         }
