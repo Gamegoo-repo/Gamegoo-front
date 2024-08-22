@@ -15,3 +15,9 @@ export interface OthersManner {
     mannerLevel: number;
     mannerKeywords: MannerKeywords[];
 }
+
+export interface Mannerstatus {
+    isPositive: boolean;
+    isExist: boolean;
+    mannerRatingKeywordList: number[];
+}

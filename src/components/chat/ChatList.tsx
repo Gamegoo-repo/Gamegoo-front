@@ -10,6 +10,8 @@ import { getProfileBgColor } from '@/utils/profile';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { cancelFriendReq, deleteFriend, reqFriend } from '@/api/friends';
+import { getBadMannerValues, getMannerValues } from '@/api/manner';
+import { Mannerstatus } from '@/interface/manner';
 
 interface ChatListProps {
     onChatRoom: (uuid: string) => void;
@@ -20,6 +22,8 @@ interface ChatListProps {
     chatrooms: ChatroomList[];
     onSelectChatroom: (chatroom: ChatroomList) => void;
     triggerReloadChatrooms: () => void;
+    setIsMannerStatus: Dispatch<React.SetStateAction<Mannerstatus | undefined>>;
+    setIsBadMannerStatus: Dispatch<React.SetStateAction<Mannerstatus | undefined>>;
 }
 
 const ChatList = (props: ChatListProps) => {
@@ -32,6 +36,8 @@ const ChatList = (props: ChatListProps) => {
         chatrooms,
         onSelectChatroom,
         triggerReloadChatrooms,
+        setIsMannerStatus,
+        setIsBadMannerStatus
     } = props;
 
     const isModalType = useSelector((state: RootState) => state.modal.modalType);
@@ -39,6 +45,9 @@ const ChatList = (props: ChatListProps) => {
 
     /* 더보기 버튼 여닫기 */
     const handleMoreBoxOpen = (chatId: number, uuid: string, room: ChatroomList, e: React.MouseEvent) => {
+        handleMannerValuesGet(room.targetMemberId);
+        handleBadMannerValuesGet(room.targetMemberId);
+
         e.stopPropagation();
         if (isMoreBoxOpen === chatId) {
             setIsMoreBoxOpen(null);
@@ -74,7 +83,8 @@ const ChatList = (props: ChatListProps) => {
         } catch (error) {
             console.log('에러', error);
         }
-    }
+    };
+
     /* 친구 요청 취소 */
     const handleCancelFriendReq = async (e: React.MouseEvent, memberId: number) => {
         e.stopPropagation();
@@ -85,7 +95,7 @@ const ChatList = (props: ChatListProps) => {
         } catch (error) {
             console.log('에러', error);
         }
-    }
+    };
 
     /* 모달 타입 변경 */
     const handleChangeModal = (e: React.MouseEvent, type: string, targetMemberId?: number) => {
@@ -115,11 +125,20 @@ const ChatList = (props: ChatListProps) => {
     /* 신고하기 */
     const handleReportClick = (e: React.MouseEvent, targetMemberId: number) => {
         handleChangeModal(e, 'report', targetMemberId);
-    }
+    };
+
+    /* 매너 평가하기 */
+    const handleMannerClick = (e: React.MouseEvent, targetMemberId: number) => {
+        handleChangeModal(e, 'manner', targetMemberId);
+    };
+
+    /* 비매너 평가하기 */
+    const handleBadMannerClick = (e: React.MouseEvent, targetMemberId: number) => {
+        handleChangeModal(e, 'badManner', targetMemberId);
+    };
 
     /* 더보기 버튼 상태 */
     const generateMenuItems = (room: ChatroomList): MoreBoxMenuItems[] => {
-        // onMemberId(room.targetMemberId);
 
         let friendText = '';
 
@@ -146,12 +165,33 @@ const ChatList = (props: ChatListProps) => {
         items.push(
             { text: `차단하기`, onClick: (e) => handleChangeModal(e, 'block') },
             { text: `신고하기`, onClick: (e) => handleReportClick(e, room.targetMemberId) },
-            { text: `매너 평가`, onClick: (e) => handleChangeModal(e, 'manner') },
-            { text: `비매너 평가`, onClick: (e) => handleChangeModal(e, 'badManner') }
+            { text: `매너 평가`, onClick: (e) => handleMannerClick(e, room.targetMemberId) },
+            { text: `비매너 평가`, onClick: (e) => handleBadMannerClick(e, room.targetMemberId) }
         );
 
         return items;
     };
+
+    /* 매너평가 조회 */
+    const handleMannerValuesGet = async (memberId: number) => {
+        try {
+            const response = await getMannerValues(memberId);
+            await setIsMannerStatus(response.result);
+        } catch (error) {
+            console.log('에러', error);
+        }
+    };
+
+    /* 비매너평가 조회 */
+    const handleBadMannerValuesGet = async (memberId: number) => {
+        try {
+            const response = await getBadMannerValues(memberId);
+            await setIsBadMannerStatus(response.result);
+        } catch (error) {
+            console.log('에러', error);
+        }
+    };
+
 
     return (
         <>

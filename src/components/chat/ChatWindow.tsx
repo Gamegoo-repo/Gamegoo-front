@@ -15,10 +15,11 @@ import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
 import { REPORT_REASON } from "@/data/report";
 import Input from "../common/Input";
 import Button from "../common/Button";
-import { postMannerValue } from "@/api/manner";
+import { editManners, postBadMannerValue, postMannerValue } from "@/api/manner";
 import { getChatrooms, leaveChatroom } from "@/api/chat";
 import { ChatroomList } from "@/interface/chat";
 import { blockMember, reportMember } from "@/api/member";
+import { Mannerstatus } from "@/interface/manner";
 
 interface ChatWindowProps {
     onClose: () => void;
@@ -32,7 +33,9 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
     const [isChatRoomVisible, setIsChatRoomVisible] = useState(false);
     const [isMoreBoxOpen, setIsMoreBoxOpen] = useState<number | null>(null);
     const [chatId, setChatId] = useState<string | number | undefined>();
-    const [checkedItems, setCheckedItems] = useState<number[]>([]);
+    const [checkedReportItems, setCheckedReportItems] = useState<number[]>([]);
+    const [checkedMannerItems, setCheckedMannerItems] = useState<number[]>([]);
+    const [checkedBadMannerItems, setCheckedBadMannerItems] = useState<number[]>([]);
     const [reportDetail, setReportDetail] = useState<string>("");
     const [isMemberId, setIsMemberId] = useState<number>();
     const [isUuid, setIsUuid] = useState("");
@@ -40,6 +43,8 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
     const [selectedChatroom, setSelectedChatroom] = useState<ChatroomList | null>(null);
     const [reloadChatrooms, setReloadChatrooms] = useState(false);
     const [targetMemberId, setTargetMemberId] = useState<number | null>(null);
+    const [isMannerStatus, setIsMannerStatus] = useState<Mannerstatus | undefined>();
+    const [isBadMannerStatus, setIsBadMannerStatus] = useState<Mannerstatus | undefined>();
 
     const isModalType = useSelector((state: RootState) => state.modal.modalType);
     const isUser = useSelector((state: RootState) => state.user);
@@ -81,9 +86,10 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
 
     /* 모달 타입 변경 */
     const handleModalChange = async (modalType: string, targetMemberId?: number) => {
-        if (modalType === 'report' && targetMemberId !== undefined) {
+        if (targetMemberId !== undefined) {
             await setTargetMemberId(targetMemberId);
-            handleMemberIdGet(targetMemberId);
+            // handleMemberIdGet(targetMemberId);
+            setIsMemberId(targetMemberId);
         }
 
         dispatch(setOpenModal(modalType));
@@ -92,24 +98,11 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
 
     /* 모달 닫기 */
     const handleModalClose = () => {
-        setCheckedItems([]);
+        setCheckedReportItems([]);
+        setCheckedMannerItems([]);
+        setCheckedBadMannerItems([]);
         setReportDetail("");
         dispatch(setCloseModal());
-    };
-
-    const handleMannerPost = async () => {
-        console.log('button')
-        // const params = {
-        //     toMemberId: 1,
-        //     mannerRatingKeywordList: checkedItems,
-        // };
-
-        // try {
-        //     await postMannerValue(params);
-        //     await handleModalClose();
-        // } catch (error) {
-        //     console.error("에러:", error);
-        // }
     };
 
     /* 채팅 uuid 가져오기 */
@@ -152,26 +145,34 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
         }
     };
 
-    /* 체크박스 */
-    const handleCheckboxChange = (checked: number) => {
-        setCheckedItems((prev) =>
+    /* 신고하기 체크박스 */
+    const handleReportCheckboxChange = (checked: number) => {
+        setCheckedReportItems((prev) =>
             prev.includes(checked) ? prev.filter((c) => c !== checked) : [...prev, checked]
         );
-        // setCheckedItems((prev) => {
-        //     const newCheckedItems = prev.includes(checked)
-        //         ? prev.filter((c) => c !== checked)
-        //         : [...prev, checked];
-        //     console.log("Updated checkedItems:", newCheckedItems);
-        //     return newCheckedItems;
-        // });
     };
 
+    /* 매너 평가 체크박스 */
+    const handleMannerCheckboxChange = (checked: number) => {
+        setCheckedMannerItems((prev) =>
+            prev.includes(checked) ? prev.filter((c) => c !== checked) : [...prev, checked]
+        );
+    };
+
+    /* 비매너 평가 체크박스 */
+    const handleBadMannerCheckboxChange = (checked: number) => {
+        setCheckedBadMannerItems((prev) =>
+            prev.includes(checked) ? prev.filter((c) => c !== checked) : [...prev, checked]
+        );
+    };
+
+    /* 신고하기 */
     const handleReport = async () => {
         if (!targetMemberId) return;
 
         const params = {
             targetMemberId: targetMemberId,
-            reportTypeIdList: checkedItems,
+            reportTypeIdList: checkedReportItems,
             contents: reportDetail
         };
 
@@ -181,9 +182,70 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
         } catch (error) {
             console.error("에러:", error);
         }
-    }
+    };
 
-    console.log(chatrooms)
+    /* 매너평가 등록 */
+    const handleMannerPost = async () => {
+        if (!targetMemberId) return;
+
+        const params = {
+            toMemberId: targetMemberId,
+            mannerRatingKeywordList: checkedMannerItems,
+        };
+
+        try {
+            await postMannerValue(params)
+            await handleModalClose();
+        } catch (error) {
+            console.error("에러:", error);
+        }
+    };
+
+    /* 비매너평가 등록 */
+    const handleBadMannerPost = async () => {
+        if (!targetMemberId) return;
+
+        const params = {
+            toMemberId: targetMemberId,
+            mannerRatingKeywordList: checkedBadMannerItems,
+        };
+
+        try {
+            await postBadMannerValue(params)
+            await handleModalClose();
+        } catch (error) {
+            console.error("에러:", error);
+        }
+    };
+
+    useEffect(() => {
+        if (isModalType === 'manner' && isMannerStatus?.isExist && isMannerStatus.mannerRatingKeywordList) {
+            setCheckedMannerItems(isMannerStatus.mannerRatingKeywordList);
+        }
+    }, [isModalType, isMannerStatus]);
+
+    /* 매너, 비매너 평가 수정 */
+    const handleMannerEdit = async (type: string) => {
+        const mannerId = localStorage.getItem('mannerId');
+        const badMannerId = localStorage.getItem('badMannerId');
+
+        if (!type || !mannerId || !badMannerId) return;
+
+        const mannerIdNumber = parseInt(mannerId, 10);
+        const badMannerIdNumber = parseInt(badMannerId, 10);
+
+        if (isNaN(mannerIdNumber) || isNaN(badMannerIdNumber)) return;
+
+        const params = {
+            mannerRatingKeywordList: checkedMannerItems,
+        };
+
+        try {
+            await editManners(type === 'manner' ? mannerIdNumber : badMannerIdNumber, params);
+        } catch (error) {
+            console.log('에러', error);
+        }
+    };
 
     return (
         <>
@@ -238,6 +300,8 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                                         chatrooms={chatrooms}
                                         onSelectChatroom={setSelectedChatroom}
                                         triggerReloadChatrooms={triggerReloadChatrooms}
+                                        setIsMannerStatus={setIsMannerStatus}
+                                        setIsBadMannerStatus={setIsBadMannerStatus}
                                     />
                                 ) : (
                                     <NoData>생성된 대화방이 없습니다.</NoData>
@@ -247,13 +311,6 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                     </ChatMain>
                 </Wrapper>
             </Overlay>
-
-            {/* {isChatRoomVisible && chatId !== null && chatData &&
-                <ChatRoom
-                    onClose={onClose}
-                    onGoback={handleBackToChatWindow}
-                    chatData={chatData} />
-            } */}
 
             {isChatRoomVisible && chatId !== null &&
                 <ChatRoom
@@ -338,8 +395,8 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                                     value={data.id}
                                     label={data.text}
                                     fontSize="regular18"
-                                    isArraychecked={checkedItems.includes(data.id)}
-                                    onArrayChange={handleCheckboxChange}
+                                    isChecked={checkedReportItems.includes(data.id)}
+                                    onArrayChange={handleReportCheckboxChange}
                                 />
                             ))}
                         </ReportReasonContent>
@@ -362,7 +419,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                                 onClick={handleReport}
                                 buttonType="primary"
                                 text="신고하기"
-                                disabled={checkedItems.length === 0}
+                                disabled={checkedReportItems.length === 0}
                             />
                         </ReportButton>
                     </div>
@@ -370,10 +427,10 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
             }
 
             {/* 매너평가 팝업 */}
-            {isModalType === 'manner' &&
+            {isModalType === 'manner' && isMannerStatus && (
                 <FormModal
                     type="checkbox"
-                    title="매너 평가하기"
+                    title={isMannerStatus.isExist ? "내가 남긴 매너 평가" : "매너 평가하기"}
                     width="418px"
                     closeButtonWidth={17}
                     closeButtonHeight={17}
@@ -384,30 +441,30 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                         {isModalType === "manner" && MANNER_TYPES.map((data) => (
                             <Checkbox
                                 key={data.id}
-                                value={data.text}
+                                value={data.id}
                                 label={data.text}
                                 fontSize="semiBold16"
-                                isArraychecked={checkedItems.includes(data.id)}
-                                onArrayChange={handleCheckboxChange}
+                                isChecked={checkedMannerItems.includes(data.id)}
+                                onArrayChange={handleMannerCheckboxChange}
                             />
                         ))}
                     </CheckContent>
                     <ModalSubmitBtn>
                         <Button
-                            onClick={handleMannerPost}
+                            onClick={() => isMannerStatus.isExist ? handleMannerEdit('manner') : handleMannerPost()}
                             buttonType="primary"
-                            text="완료"
-                            disabled={checkedItems.length === 0}
+                            text={isMannerStatus.isExist ? "수정하기" : "완료"}
+                            disabled={checkedMannerItems.length === 0}
                         />
                     </ModalSubmitBtn>
                 </FormModal>
-            }
+            )}
 
             {/* 비매너 평가 팝업 */}
-            {isModalType === 'badManner' &&
+            {isModalType === 'badManner' && isBadMannerStatus && (
                 <FormModal
                     type="checkbox"
-                    title="비매너 평가하기"
+                    title={isBadMannerStatus?.isExist ? "내가 남긴 비매너 평가" : "비매너 평가하기"}
                     width="418px"
                     closeButtonWidth={17}
                     closeButtonHeight={17}
@@ -418,24 +475,24 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                         {isModalType === "badManner" && BAD_MANNER_TYPES.map((data) => (
                             <Checkbox
                                 key={data.id}
-                                value={data.text}
+                                value={data.id}
                                 label={data.text}
                                 fontSize="semiBold16"
-                                isArraychecked={checkedItems.includes(data.id)}
-                                onArrayChange={handleCheckboxChange}
+                                isChecked={checkedBadMannerItems.includes(data.id)}
+                                onArrayChange={handleBadMannerCheckboxChange}
                             />
                         ))}
                     </CheckContent>
                     <ModalSubmitBtn>
                         <Button
-                            onClick={handleMannerPost}
+                            onClick={() => isBadMannerStatus.isExist ? handleMannerEdit('badManner') : handleBadMannerPost()}
                             buttonType="primary"
-                            text="완료"
-                            disabled={checkedItems.length === 0}
+                            text={isBadMannerStatus.isExist ? "수정하기" : "완료"}
+                            disabled={checkedBadMannerItems.length === 0}
                         />
                     </ModalSubmitBtn>
                 </FormModal>
-            }
+            )}
         </>
     )
 };
