@@ -7,7 +7,7 @@ import Image from "next/image";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import { useEffect } from "react";
-import { connectSocket, disconnectSocket } from "@/socket";
+import { connectSocket } from "@/socket";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 

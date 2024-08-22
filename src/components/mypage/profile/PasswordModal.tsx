@@ -5,7 +5,7 @@ import Image from "next/image";
 import Input from "@/components/common/Input";
 import FormModal from "@/components/common/FormModal";
 import Button from "@/components/common/Button";
-import { checkPassword, resetPassword } from "@/api/password";
+import { checkPassword, resetJwtPassword } from "@/api/password";
 
 interface PasswordModalProps {
   onClose: () => void;
@@ -42,7 +42,7 @@ const PasswordModal = (props: PasswordModalProps) => {
       setIsPasswordValid(true);
 
       if (validation) {
-        await resetPassword(newPassword);
+        await resetJwtPassword(newPassword);
         onClose();
       } else {
         console.log("신규 비밀번호 확인 실패");

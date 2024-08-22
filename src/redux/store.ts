@@ -4,11 +4,13 @@ import userReducer from "./slices/userSlice";
 import modalReducer from "./slices/modalSlice";
 import mannerStatusReducer from "./slices/mannerStatusSlice";
 import postReducer from "./slices/postSlice";
+import passwordReducer from "./slices/passwordSlice";
 
 export const store = () => {
   return configureStore({
     reducer: {
       signIn: signInReducer,
+      password: passwordReducer,
       user: userReducer,
       modal: modalReducer,
       mannerStatus: mannerStatusReducer,

@@ -1,12 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import styled from "styled-components";
 
 const Layout = (props: any) => {
   const router = useRouter();
 
+  const pathname = usePathname();
+  const isTerm = pathname === "/join/terms";
   return (
     <Container>
       <Box>
@@ -19,7 +21,7 @@ const Layout = (props: any) => {
             router.push("/");
           }}
         />
-        <Title>회원가입</Title>
+        <Title>{isTerm ? "이용 약관 동의" : "회원가입"}</Title>
         <Content>{props.children}</Content>
       </Box>
     </Container>
@@ -47,7 +49,7 @@ const Box = styled.div`
 
 const Title = styled.div`
   color: #44515c;
-  ${(props) => props.theme.fonts.regular35};
+  ${(props) => props.theme.fonts.light32};
 `;
 
 const Content = styled.div`
