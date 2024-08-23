@@ -3,23 +3,25 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import ChatWindow from "../chat/ChatWindow";
-import { UserInfo } from "@/interface/profile";
 import Alert from "./Alert";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 interface msgCountProps {
   count: number;
-  user?: UserInfo | undefined;
 }
 
 const ChatButton = (props: msgCountProps) => {
-  const { count, user } = props;
+  const { count } = props;
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
+  const isUser = useSelector((state: RootState) => state.user);
+
   const toggleChat = () => {
-    if (!user) {
-      return setShowAlert(true);
-    }
+    // if (!isUser.id) {
+    //   return setShowAlert(true);
+    // }
     setIsChatOpen((prevState) => !prevState);
   };
 
@@ -49,6 +51,7 @@ const ChatButton = (props: msgCountProps) => {
           content="로그인이 필요한 서비스입니다."
           alt="경고"
           onClose={() => setShowAlert(false)}
+          buttonText="확인"
         />
       )}
       <ChatBoxContent>

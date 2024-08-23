@@ -21,7 +21,7 @@ export const postBoard = async (params: PostReq) => {
 /* 게시글 목록 조회 */
 export const getBoardList = async (params: ListInterface) => {
     try {
-        const response = await AuthAxios.get("/v1/posts/list", { params });
+        const response = await Axios.get("/v1/posts/list", { params });
         console.log("게시판 목록:", response.data);
         return response.data;
     } catch (error) {
@@ -33,7 +33,7 @@ export const getBoardList = async (params: ListInterface) => {
 /* 회원 게시글 조회 */
 export const getMemberPost = async (postId: number) => {
     try {
-        const response = await AuthAxios.get(`/v1/posts/member/list/${postId}`);
+        const response = await Axios.get(`/v1/posts/member/list/${postId}`);
         console.log("로그인 상태 게시글 조회 성공:", response.data);
         return response.data;
 
@@ -57,9 +57,9 @@ export const getNonMemberPost = async (postId: number) => {
 };
 
 /* 게시글 수정 */
-export const editPost = async (postId: number, params:PostReq) => {
+export const editPost = async (postId: number, params: PostReq) => {
     try {
-        const response = await AuthAxios.put(`/v1/posts/${postId}`, params);
+        const response = await Axios.put(`/v1/posts/${postId}`, params);
         console.log("게시글 수정 성공:", response.data);
         return response.data;
 
@@ -69,10 +69,10 @@ export const editPost = async (postId: number, params:PostReq) => {
     }
 };
 
-/*게시글 삭제 */
+/* 게시글 삭제 */
 export const deletePost = async (postId: number) => {
     try {
-        const response = await AuthAxios.delete(`/v1/posts/${postId}`);
+        const response = await Axios.delete(`/v1/posts/${postId}`);
         console.log("게시글 삭제 성공:", response.data);
         return response.data;
 

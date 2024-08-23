@@ -57,33 +57,6 @@ export function setPositionImg(position: number) {
   }
 }
 
-// export function setTierImg(tier: string) {
-//     switch (tier) {
-//         case "IRON":
-//             return '/assets/images/tier/iron.svg';
-//         case "BRONZE":
-//             return '/assets/images/tier/bronze.svg';
-//         case "SILVER":
-//             return '/assets/images/tier/silver.svg';
-//         case "GOLD":
-//             return '/assets/images/tier/gold.svg';
-//         case "PLATINUM":
-//             return '/assets/images/tier/platinum.svg';
-//         case "EMERALD":
-//             return '/assets/images/tier/emerald.svg';
-//         case "DIAMOND":
-//             return '/assets/images/tier/diamond.svg';
-//         case "MASTER":
-//             return '/assets/images/tier/master.svg';
-//         case "GRANDMASTER":
-//             return '/assets/images/tier/grandmaster.svg';
-//         case "CHALLENGER":
-//             return '/assets/images/tier/challenger.svg';
-//         default:
-//             return '/assets/images/tier/unrank.svg';
-//     };
-// };
-
 export function setAbbrevTier(tier: string) {
   switch (tier) {
     case "IRON":
@@ -143,8 +116,8 @@ export function setChatRoomDateFormatter(date: string) {
 }
 
 export function setPostingDateFormatter(date: string) {
-  return dayjs(date).format("YYYY.MM.DD hh:mm");
-}
+  return dayjs(date).format('YYYY.MM.DD HH:mm');
+};
 
 export function formatTimeAgo(dateString: string) {
   const now = new Date();

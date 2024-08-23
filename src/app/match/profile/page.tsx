@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getProfile } from "@/api/user";
 import { setUserProfile } from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
+import ChatButton from "@/components/common/ChatButton";
 
 const ProfilePage = () => {
   const router = useRouter();
@@ -65,6 +66,11 @@ const ProfilePage = () => {
             }}
           />
         </Main>
+        <Footer>
+          <ChatBoxContent>
+            <ChatButton count={3} />
+          </ChatBoxContent>
+        </Footer>
       </MatchContent>
     </Wrapper>
   );
@@ -98,4 +104,13 @@ const Main = styled.main`
   width: 100%;
   gap: 14px;
   margin-bottom: 37px;
+`;
+
+const Footer = styled.footer`
+  display: flex;
+  margin-bottom: 78px;
+`;
+
+const ChatBoxContent = styled.div`
+  margin-left: auto;
 `;

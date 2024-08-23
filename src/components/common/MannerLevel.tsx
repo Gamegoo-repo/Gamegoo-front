@@ -3,6 +3,7 @@ import { theme } from "@/styles/theme";
 
 type positionType = "top" | "right";
 interface MannerLevelProps {
+  forNoData: string;
   level: number;
   onClick: (e: React.MouseEvent) => void;
   position?: positionType;
@@ -10,14 +11,16 @@ interface MannerLevelProps {
 }
 
 const MannerLevel = (props: MannerLevelProps) => {
-  const { level, onClick, position = "top", isBalloon } = props;
-
+  const { forNoData, level, onClick, position = "top", isBalloon } = props;
+  
   return (
     <>
       {level &&
         <LevelWrapper>
           <Level>
-            <ClickArea onClick={onClick}>
+            <ClickArea
+              onClick={onClick}
+              className={!forNoData ? 'bigMargin' : ''}>
               <Text>LV.{level}</Text>
             </ClickArea>
             {isBalloon &&
@@ -89,6 +92,9 @@ const Level = styled.div`
 `;
 
 const ClickArea = styled.div`
+ &.bigMargin{
+  margin-left: 40.63px;
+ }
   width: 53px;
   height: 26px;
   background: #000000a6;

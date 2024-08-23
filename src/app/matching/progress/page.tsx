@@ -7,6 +7,7 @@ import Image from "next/image";
 import { theme } from "@/styles/theme";
 import { useEffect, useState } from "react";
 import ConfirmModal from "@/components/common/ConfirmModal";
+import ChatButton from "@/components/common/ChatButton";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { getProfile } from "@/api/user";
@@ -96,6 +97,11 @@ const Progress = () => {
           </ConfirmModal>
         )}
       </MatchContent>
+      <Footer>
+          <ChatBoxContent>
+            <ChatButton count={3} />
+          </ChatBoxContent>
+        </Footer>
     </Wrapper>
   );
 };
@@ -155,4 +161,13 @@ const Waiting = styled.div`
   gap: 42px;
   color: ${theme.colors.gray600};
   ${(props) => props.theme.fonts.regular25};
+`;
+
+const Footer = styled.footer`
+  display: flex;
+  margin-bottom: 78px;
+`;
+
+const ChatBoxContent = styled.div`
+  margin-left: auto;
 `;

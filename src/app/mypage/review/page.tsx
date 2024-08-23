@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import MannerLevelBar from "@/components/common/MannerLevelBar";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
+import ChatButton from "@/components/common/ChatButton";
 import { useEffect, useState } from "react";
 import { getMyManner } from "@/api/user";
 import { Manner } from "@/components/user/UserProfile";
@@ -126,6 +127,11 @@ const MyReviewPage = () => {
           </Row>
         </Private>
       </MyReviewContent>
+      <Footer>
+          <ChatBoxContent>
+            <ChatButton count={3} />
+          </ChatBoxContent>
+        </Footer>
     </Wrapper>
   );
 };
@@ -271,4 +277,13 @@ const Type = styled.p`
   &.badEmph {
     color: ${theme.colors.error200};
   }
+`;
+
+const Footer = styled.footer`
+  display: flex;
+  margin-bottom: 78px;
+`;
+
+const ChatBoxContent = styled.div`
+  margin-left: auto;
 `;

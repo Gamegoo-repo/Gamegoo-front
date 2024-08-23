@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import Image from "next/image";
 import { setProfileImg } from "@/utils/custom";
+import { getProfileBgColor } from "@/utils/profile";
 
 interface ProfileImageProps {
     image: number;
@@ -10,7 +11,7 @@ const ProfileImage = (props: ProfileImageProps) => {
     const { image } = props;
 
     return (
-        <Wrapper>
+        <Wrapper $bgColor={getProfileBgColor(image)}>
             <StyledImage
                 src={setProfileImg(image)}
                 width={51}
@@ -22,11 +23,11 @@ const ProfileImage = (props: ProfileImageProps) => {
 
 export default ProfileImage;
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ $bgColor: string }>`
     position: relative;
     width: 75px;
     height: 76px;
-    background: #C3B9FF;
+    background: ${(props) => props.$bgColor};
     border-radius: 50%;
     margin-right: 17px;
 `;

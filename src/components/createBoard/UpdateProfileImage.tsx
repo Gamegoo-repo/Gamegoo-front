@@ -1,6 +1,7 @@
 import styled, { css } from "styled-components";
 import Image from "next/image";
 import { Dispatch } from 'react';
+import { getProfileBgColor } from "@/utils/profile";
 
 interface FileInputProps {
     setIsProfileListOpen: Dispatch<React.SetStateAction<boolean>>;
@@ -20,11 +21,13 @@ const UpdateProfileImage = (props: FileInputProps) => {
     return (
         <Wrapper>
             {selectedImageIndex &&
-                <ProfileImage
-                    src={`/assets/images/profile/profile${selectedImageIndex}.svg`}
-                    width={51}
-                    height={48}
-                    alt='프로필 이미지' />
+                <ImageWrapper $bgColor={getProfileBgColor(selectedImageIndex)}>
+                    <ProfileImage
+                        src={`/assets/images/profile/profile${selectedImageIndex}.svg`}
+                        width={62}
+                        height={60}
+                        alt='프로필 이미지' />
+                </ImageWrapper>
             }
             <Label htmlFor="profileImg">
                 <CameraImgBg
@@ -49,20 +52,25 @@ const UpdateProfileImage = (props: FileInputProps) => {
                     />
                     <ProfileList>
                         {[1, 2, 3, 4, 5, 6, 7, 8].map((item, index) => (
-                            <ProfileListImage
-                                key={index}
-                                src={`/assets/images/profile/profile${item}.svg`}
-                                width={68}
-                                height={68}
-                                alt="프로필 이미지"
-                                $isSelected={index + 1 === selectedImageIndex}
-                                onClick={() => onImageClick(index)}
-                            />
+                            <>
+                                <ProfileListWrapper $bgColor={getProfileBgColor(item)}>
+                                    <ProfileListImage
+                                        key={index}
+                                        src={`/assets/images/profile/profile${item}.svg`}
+                                        width={69}
+                                        height={69}
+                                        alt="프로필 이미지"
+                                        $isSelected={index + 1 === selectedImageIndex}
+                                        onClick={() => onImageClick(index)}
+                                    />
+                                </ProfileListWrapper>
+                            </>
                         ))}
                     </ProfileList>
                 </ProfileListBox>
-            )}
-        </Wrapper>
+            )
+            }
+        </Wrapper >
     )
 };
 
@@ -73,6 +81,22 @@ const Wrapper = styled.div`
     width: 74.98px;
     height: 74.98px;
     background: #C3B9FF;
+    border-radius: 50%;
+`;
+
+const ProfileListWrapper = styled.div<{ $bgColor: string }>`
+    position: relative;
+    width: 96px;
+    height: 96px;
+    background: ${(props) => props.$bgColor};
+    border-radius: 50%;
+`;
+
+const ImageWrapper = styled.div<{ $bgColor: string }>`
+    position: relative;
+    width: 74px;
+    height: 74px;
+    background: ${(props) => props.$bgColor};
     border-radius: 50%;
 `;
 

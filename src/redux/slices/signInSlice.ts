@@ -1,23 +1,26 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface SignInState {
-    terms: boolean[];
-    email: string;
-    emailAuth: string;
-    password: string;
-    authStatus: boolean;
-    summonerName: string;
-    summonerTag: string;
+  terms: boolean[];
+  email: string;
+  emailAuth: string;
+  password: string;
+  authStatus: boolean;
+  summonerName: string;
+  summonerTag: string;
+  socketId: string | undefined;
 };
 
 const initialState: SignInState = {
-    terms: [false, false, false],
-    email: '',
-    emailAuth: '',
-    password: '',
-    authStatus: false,
-    summonerName: '',
-    summonerTag: '',
+  terms: [false, false, false],
+  email: '',
+  emailAuth: '',
+  password: '',
+  authStatus: false,
+  summonerName: '',
+  summonerTag: '',
+  socketId: '' || undefined,
+
 };
 
 export const signInSlice = createSlice({
@@ -46,6 +49,6 @@ export const signInSlice = createSlice({
   },
 });
 
-export const {updateTerms, updateEmail, updateEmailAuth, updatePassword, updateAuthStatus } = signInSlice.actions;
+export const { updateTerms, updateEmail, updateEmailAuth, updatePassword, updateAuthStatus } = signInSlice.actions;
 
 export default signInSlice.reducer;

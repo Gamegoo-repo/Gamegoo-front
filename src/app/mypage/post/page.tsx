@@ -2,6 +2,7 @@
 
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
+import ChatButton from "@/components/common/ChatButton";
 import Post, { PostProps } from "@/components/mypage/post/Post";
 import { useEffect, useState } from "react";
 import { getMyPost } from "@/api/user";
@@ -78,6 +79,11 @@ const MyPostPage = () => {
           />
         </PostPage>
       </MyPostContent>
+      <Footer>
+          <ChatBoxContent>
+            <ChatButton count={3} />
+          </ChatBoxContent>
+        </Footer>
     </Wrapper>
   );
 };
@@ -127,6 +133,14 @@ const Center = styled.div`
   text-align: center;
 `;
 
+const Footer = styled.footer`
+  display: flex;
+  margin-bottom: 78px;
+`;
+
+const ChatBoxContent = styled.div`
+  margin-left: auto;
+`;
 const PostList = styled.div`
   width: 100%;
   display: flex;

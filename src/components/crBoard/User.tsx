@@ -20,7 +20,7 @@ const User = (props: UserProps) => {
                 }
             </UserAccount>
             <UserTier>
-                {tier ?
+                {tier &&
                     <>
                         <Image
                             src={!tier ? "/assets/images/tier/UNRANK.svg" : `/assets/images/tier/${tier}.svg`}
@@ -28,10 +28,8 @@ const User = (props: UserProps) => {
                             height={20}
                             alt="티어 이미지"
                         />
-                        <Tier>{tier}</Tier>
+                        <Tier>{!tier ? "UR" : tier}</Tier>
                     </>
-                    :
-                    <NoData />
                 }
             </UserTier>
         </Wrapper>
@@ -68,8 +66,4 @@ const UserTier = styled.div`
 const Tier = styled.p`
     ${(props) => props.theme.fonts.regular18};
     color:#44515C;
-`;
-
-const NoData = styled.div`
-    height: 27px;
 `;

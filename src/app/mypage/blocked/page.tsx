@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Pagination from "@/components/common/Pagination";
 import { useEffect, useState } from "react";
+import ChatButton from "@/components/common/ChatButton";
 import BlockedBox, {
   BlockedBoxProps,
 } from "@/components/mypage/blocked/BlockedBox";
@@ -83,6 +84,11 @@ const MyBlockedPage = () => {
           />
         </Blocked>
       </MyBlockedContent>
+      <Footer>
+          <ChatBoxContent>
+            <ChatButton count={3} />
+          </ChatBoxContent>
+        </Footer>
     </Wrapper>
   );
 };
@@ -125,4 +131,13 @@ const BlockedList = styled.div`
   flex-direction: column;
   margin-bottom: 32px;
   border-top: 1px solid ${theme.colors.gray300};
+`;
+
+const Footer = styled.footer`
+  display: flex;
+  margin-bottom: 78px;
+`;
+
+const ChatBoxContent = styled.div`
+  margin-left: auto;
 `;

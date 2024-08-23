@@ -8,6 +8,7 @@ import styled from "styled-components";
 import AlertWindow from "../alert/AlertWindow";
 import { useDispatch } from "react-redux";
 import { clearTokens } from "@/utils/storage";
+import { getProfileBgColor } from "@/utils/profile";
 import { clearUserProfile } from "@/redux/slices/userSlice";
 import { getNotiCount } from "@/api/notification";
 
@@ -113,13 +114,15 @@ const Header = () => {
               onClick={handleAlertWindow}
             />
             <Profile>
-              <Image
-                src={`/assets/images/profile/profile${profileImg}.svg`}
-                width={29}
-                height={29}
-                alt="profile"
-                style={{ background: "#C1B7FF", borderRadius: "50%" }}
-              />
+              <HeaderProfileImgWrapper $bgColor={getProfileBgColor(parseInt(profileImg))}>
+                <HeaderProfileImg
+                  src={`/assets/images/profile/profile${profileImg}.svg`}
+                  width={29}
+                  height={29}
+                  alt="profile"
+                  style={{ background: "#C1B7FF", borderRadius: "50%" }}
+                />
+              </HeaderProfileImgWrapper>
               {name}
               <button onClick={() => setIsMyPage(!isMyPage)}>
                 <Image
@@ -139,13 +142,16 @@ const Header = () => {
       {isMyPage && (
         <MyPageModal ref={myPageRef}>
           <MyProfile>
-            <Image
-              src={`/assets/images/profile/profile${profileImg}.svg`}
-              width={75}
-              height={75}
-              alt="profile"
-              style={{ background: "#C1B7FF", borderRadius: "50%" }}
-            />
+            {profileImg &&
+              <ProfileImgWrapper $bgColor={getProfileBgColor(parseInt(profileImg))}>
+                <ProfileImg
+                  src={`/assets/images/profile/profile${profileImg}.svg`}
+                  width={52}
+                  height={52}
+                  alt="profile"
+                />
+              </ProfileImgWrapper>
+            }
             <MyName>{name}</MyName>
             <Image
               src={`/assets/icons/noti_${count > 0 ? "on" : "off"}.svg`}
@@ -223,7 +229,7 @@ const Menus = styled.div`
   gap: 25px;
 `;
 
-const Menu = styled(Link)<HeaderProps>`
+const Menu = styled(Link) <HeaderProps>`
   font-weight: ${({ selected }) => (selected ? "700" : "400")};
 `;
 
@@ -251,69 +257,99 @@ const Profile = styled.div`
   gap: 6px;
 `;
 
+const HeaderProfileImgWrapper = styled.div<{ $bgColor: string }>`
+    position: relative;
+    width: 37px;
+    height: 37px;
+    background: ${(props) => props.$bgColor};
+    border-radius: 50%;
+`;
+
+const HeaderProfileImg = styled(Image)`
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+    `;
+
 const Login = styled.button`
-  color: ${theme.colors.purple100};
+color: ${theme.colors.purple100};
   ${(props) => props.theme.fonts.bold14}
 `;
 
 const MyPageModal = styled.div`
-  width: 408px;
-  border-radius: 10px;
-  padding: 25px 27px;
-  background: ${theme.colors.white};
-  box-shadow: 2px 11px 44.1px 0px rgba(0, 0, 0, 0.15);
-  position: absolute;
-  top: 50px;
-  right: 50px;
-  z-index: 100;
+width: 408px;
+border-radius: 10px;
+padding: 25px 27px;
+background: ${theme.colors.white};
+box-shadow: 2px 11px 44.1px 0px rgba(0, 0, 0, 0.15);
+position: absolute;
+top: 50px;
+right: 50px;
+z-index: 100;
 `;
 
 const MyProfile = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 9px 23px 9px;
-  border-bottom: 1px solid #d4d4d4;
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 0 9px 23px 9px;
+border-bottom: 1px solid #d4d4d4;
+`;
+
+const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
+position: relative;
+width: 75px;
+height: 75px;
+background: ${(props) => props.$bgColor};
+border-radius: 50%;
+`;
+
+const ProfileImg = styled(Image)`
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
 `;
 
 const MyName = styled.div`
-  margin-left: 15px;
-  margin-right: auto;
-  color: ${theme.colors.black};
+margin-left: 15px;
+margin-right: auto;
+color: ${theme.colors.black};
   ${(props) => props.theme.fonts.bold20};
-  white-space: nowrap;
+white-space: nowrap;
 `;
 
 const TabMenu = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  padding-top: 18px;
-  gap: 4px;
-  color: ${theme.colors.black};
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+justify-content: center;
+padding-top: 18px;
+gap: 4px;
+color: ${theme.colors.black};
   ${(props) => props.theme.fonts.semiBold18};
 `;
 
 const Line = styled.div`
-  width: 100%;
-  height: 52px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  padding-left: 9px;
-  gap: 18px;
-  cursor: pointer;
-  border-radius: 10px;
+width: 100%;
+height: 52px;
+display: flex;
+justify-content: flex-start;
+align-items: center;
+padding-left: 9px;
+gap: 18px;
+cursor: pointer;
+border-radius: 10px;
 
   &:hover {
-    background: ${theme.colors.gray500};
-  }
+  background: ${theme.colors.gray500};
+}
 `;
 
 const Divider = styled.div`
-  width: 100%;
-  height: 1px;
-  background-color: #d4d4d4;
-  margin: 18px 0;
+width: 100%;
+height: 1px;
+background-color: #d4d4d4;
+margin: 18px 0;
 `;

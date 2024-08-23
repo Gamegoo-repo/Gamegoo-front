@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MessageContainer from "./MessageContainer";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -13,44 +13,84 @@ import { useRouter } from "next/navigation";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import MoreBox from "../common/MoreBox";
 import Button from "../common/Button";
-
+import { Chat } from "@/interface/chat";
+import { getProfileBgColor } from "@/utils/profile";
+import { cancelFriendReq, deleteFriend, reqFriend } from "@/api/friends";
+import { enterUsingMemberId, enterUsingUuid } from "@/api/chat";
+import { getBadMannerValues, getMannerValues } from "@/api/manner";
+import { Mannerstatus } from "@/interface/manner";
 
 interface ChatRoomProps {
-    id: number;
     onClose: () => void;
     onGoback: () => void;
+    chatId: string | number | undefined;
+    onMemberId: (id: number) => void;
+    onMannerEdit: (type: string) => void;
+    onMannerCheckboxChange: (checked: number) => void;
+    onBadMannerCheckboxChange: (checked: number) => void;
+    onMannerPost: () => void;
+    onBadMannerPost: () => void;
 }
 
-const MESSAGE_LIST = [
-    { user: "me", msg: '안녕하세요 저는 안녕하세요 저는 안녕하세요 저는', msgId: 1, userId: 1, date: "2024-05-01T23:25:00" },
-    { user: "me", msg: '텍스트 텍스', msgId: 2, userId: 1, date: "2024-05-11T23:27:00" },
-    { user: "you", msg: '아 네, 안녕하세요 하이하이라라', msgId: 3, userId: 2, date: "2024-07-02T01:08:00" },
-    { user: "you", msg: '하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라', msgId: 4, userId: 2, date: "2024-07-02T01:11:00" },
-    { user: "me", msg: '안녕하세요 저는 안녕하세요 저는 안녕하세요 저는22', msgId: 5, userId: 1, date: "2024-07-02T23:27:00" },
-    { user: "me", msg: '텍스트 텍스22', msgId: 6, userId: 1, date: "2024-07-02T23:27:00" },
-    { user: "you", msg: '아 네, 안녕하세요 하이하이라라22', msgId: 7, userId: 2, date: "2024-07-04T22:52:00" },
-    { user: "you", msg: '하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라하이하이라라22', msgId: 8, userId: 2, date: "2024-07-04T22:52:00" },
-];
-
 const ChatRoom = (props: ChatRoomProps) => {
-    const { id, onClose, onGoback } = props;
+    const {
+        onClose,
+        onGoback,
+        chatId,
+        onMemberId,
+        onMannerEdit,
+        onMannerCheckboxChange,
+        onBadMannerCheckboxChange,
+        onMannerPost,
+        onBadMannerPost
+    } = props;
 
     const dispatch = useDispatch();
     const router = useRouter();
 
     const [message, setMessage] = useState("");
-    const [messageList, setMessageList] = useState([]);
     const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
-    const [checkedItems, setCheckedItems] = useState<number[]>([]);
+    const [dataUpdated, setDataUpdated] = useState(false);
+    const [checkedMannerItems, setCheckedMannerItems] = useState<number[]>([]);
+    const [checkedBadMannerItems, setCheckedBadMannerItems] = useState<number[]>([]);
+    const [isMannerStatus, setIsMannerStatus] = useState<Mannerstatus | undefined>();
+    const [isBadMannerStatus, setIsBadMannerStatus] = useState<Mannerstatus | undefined>();
 
     const isEvaluationModalOpen = useSelector((state: RootState) => state.modal.evaluationModal);
-    const isMannerStatus = useSelector((state: RootState) => state.mannerStatus.mannerStatus);
+    const isMannerModalStatus = useSelector((state: RootState) => state.mannerStatus.mannerStatus);
 
     // useEffect(() => {
     //     socket.on(“message”, (message) => {
     //     setMessageList((prevState)=> prevState.concat(message));
     // });
     // },[]);
+    const [chatData, setChatData] = useState<Chat>();
+
+    /* 채팅방 입장 */
+    useEffect(() => {
+        const handleFetchChatData = async () => {
+            try {
+                if (typeof chatId === 'string') {
+                    const data = await enterUsingUuid(chatId);
+                    setChatData(data.result);
+                    onMemberId(data.result.memberId);
+                }
+                if (typeof chatId === 'number') {
+                    const data = await enterUsingMemberId(chatId);
+                    setChatData(data.result);
+                    onMemberId(data.result.memberId);
+                }
+            } catch (error) {
+                console.error("에러:", error);
+            }
+        };
+
+        handleFetchChatData();
+    }, [chatId, dataUpdated])
+
+    const triggerDataUpdate = () => {
+        setDataUpdated((prev) => !prev);
+    };
 
     const sendMessage = (event: any) => {
         event.preventDefault();
@@ -62,6 +102,10 @@ const ChatRoom = (props: ChatRoomProps) => {
     };
 
     const handleMoreBoxOpen = () => {
+        if (!chatData || !chatData.memberId) return;
+
+        handleMannerValuesGet(chatData.memberId);
+        handleBadMannerValuesGet(chatData.memberId);
         setIsMoreBoxOpen(prevState => !prevState);
     };
 
@@ -72,123 +116,215 @@ const ChatRoom = (props: ChatRoomProps) => {
         }
     };
 
-    const handleModalChange = (modalType: string) => {
+    /* 모달 타입 변경 */
+    const handleModalChange = (e: React.MouseEvent, modalType: string, memberId?: number) => {
+        if (modalType) {
+            e.stopPropagation();
+        }
+
+        if (memberId !== undefined) {
+            onMemberId(memberId);
+        }
+
         dispatch(setOpenModal(modalType));
         setIsMoreBoxOpen(false);
     };
 
+    /* 신고하기 */
+    const handleReportClick = (e: React.MouseEvent, memberId: number) => {
+        if (chatData?.memberId) {
+            handleModalChange(e, 'report', memberId);
+        }
+    }
+
     const handleFormModalClose = () => {
-        setCheckedItems([]);
+        setCheckedMannerItems([]);
+        setCheckedBadMannerItems([]);
         dispatch(setCloseEvaluationModal());
     };
 
-    const handleFriendAdd = () => {
-        setIsMoreBoxOpen(false);
-        console.log('친구 추가')
+    /* 친구 추가 */
+    const handleFriendAdd = async () => {
+        if (!chatData) return;
+        try {
+            await reqFriend(chatData.memberId);
+            triggerDataUpdate();
+        } catch (error) {
+            console.log('에러', error)
+        }
     };
 
-    const handleChangeModal = (e: React.MouseEvent, type: string) => {
-        e.stopPropagation();
-        handleModalChange(type);
+    /* 친구 요청 취소 */
+    const handleCancelFriendReq = async () => {
+        if (!chatData) return;
+
+        try {
+            await cancelFriendReq(chatData.memberId);
+            triggerDataUpdate();
+        } catch (error) {
+            console.log('에러', error)
+        }
     };
 
+    /* 친구 취소 */
+    const handleFriendDelete = async () => {
+        if (!chatData) return;
+
+        try {
+            await deleteFriend(chatData.memberId);
+            triggerDataUpdate();
+        } catch (error) {
+            console.log('에러', error)
+        }
+    };
+
+    /* 매너 평가하기 */
+    const handleMannerClick = (e: React.MouseEvent, targetMemberId: number) => {
+        if (chatData?.memberId) {
+            handleModalChange(e, 'manner', targetMemberId);
+        }
+    };
+
+    /* 비매너 평가하기 */
+    const handleBadMannerClick = (e: React.MouseEvent, targetMemberId: number) => {
+        if (chatData?.memberId) {
+            handleModalChange(e, 'badManner', targetMemberId);
+        }
+    };
+
+
+    /* 매너평가 조회 */
+    const handleMannerValuesGet = async (memberId: number) => {
+        try {
+            const response = await getMannerValues(memberId);
+            await setIsMannerStatus(response.result);
+        } catch (error) {
+            console.log('에러', error);
+        }
+    };
+
+    /* 비매너평가 조회 */
+    const handleBadMannerValuesGet = async (memberId: number) => {
+        try {
+            const response = await getBadMannerValues(memberId);
+            await setIsBadMannerStatus(response.result);
+            console.log(response.result)
+        } catch (error) {
+            console.log('에러', error);
+        }
+    };
+
+    /* 더보기 버튼 */
     const menuItems: MoreBoxMenuItems[] = [
-        { text: '채팅방 나가기', onClick: (e) => handleChangeModal(e, 'leave') },
+        { text: '채팅방 나가기', onClick: (e: React.MouseEvent) => handleModalChange(e, 'leave') },
+        // 친구 추가 조건: 친구가 아니고, 친구 요청도 하지 않은 경우
+        !chatData?.friend && !chatData?.friendRequestMemberId &&
         { text: '친구 추가', onClick: handleFriendAdd },
-        { text: '차단하기', onClick: (e) => handleChangeModal(e, 'block') },
-        { text: '신고하기', onClick: (e) => handleChangeModal(e, 'report') },
-        { text: '매너 평가', onClick: (e) => handleChangeModal(e, 'manner') },
-        { text: '비매너 평가', onClick: (e) => handleChangeModal(e, 'badManner') },
-    ];
-
-    const handleCheckboxChange = (checked: number) => {
-        setCheckedItems((prev) =>
-            prev.includes(checked) ? prev.filter((c) => c !== checked) : [...prev, checked]
-        );
-    };
+        // 친구 취소 조건: 친구인 경우
+        chatData?.friend &&
+        { text: '친구 취소', onClick: handleFriendDelete },
+        // 친구 요청 취소 조건: 친구가 아니고, 친구 요청을 이미 한 경우
+        !chatData?.friend && chatData?.friendRequestMemberId &&
+        { text: '친구 요청 취소', onClick: handleCancelFriendReq },
+        { text: '차단하기', onClick: (e: React.MouseEvent) => handleModalChange(e, 'block') },
+        { text: '신고하기', onClick: (e: React.MouseEvent) => chatData?.memberId && handleReportClick(e, chatData.memberId) },
+        { text: '매너 평가', onClick: (e: React.MouseEvent) => chatData?.memberId && handleMannerClick(e, chatData.memberId) },
+        { text: '비매너 평가', onClick: (e: React.MouseEvent) => chatData?.memberId && handleBadMannerClick(e, chatData.memberId) },
+    ].filter(item => item) as MoreBoxMenuItems[];
 
     return (
         <>
-            <Overlay>
-                <Wrapper onClick={handleOutsideModalClick}>
-                    {isMoreBoxOpen &&
-                        <MoreBox
-                            items={menuItems}
-                            top={35}
-                            left={200}
-                        />
-                    }
-                    <CloseButton>
-                        <CloseImage
-                            onClick={onClose}
-                            src='/assets/icons/close.svg'
-                            width={11}
-                            height={11}
-                            alt='닫기' />
-                    </CloseButton>
-                    <ChatHeader>
-                        <PrevImage
-                            onClick={onGoback}
-                            src="/assets/icons/left_arrow.svg"
-                            width={9}
-                            height={18}
-                            alt="뒤로가기" />
-                        <Middle>
-                            <ProfileImage
-                                onClick={() => router.push("/user")}
-                                src="/assets/icons/gray_circle.svg"
-                                width={47.43}
-                                height={47.43}
-                                alt="프로필 이미지" />
-                            <Div>
-                                <UserName>김철수</UserName>
-                                <Online>온라인</Online>
-                                <OnlineImage
-                                    src="/assets/icons/online.svg"
-                                    width={5}
-                                    height={5}
-                                    alt="온라인" />
-                            </Div>
-                        </Middle>
-                        <ThreeDotsImage
-                            onClick={handleMoreBoxOpen}
-                            src="/assets/icons/three_dots_button.svg"
-                            width={3}
-                            height={15}
-                            alt="상세보기" />
-                    </ChatHeader>
-                    <ChatBorder>
-                        <ChatMain>
-                            <System>매칭이 이루어졌어요 !</System>
-                            <MessageContainer
-                                messageList={MESSAGE_LIST} />
-                        </ChatMain>
-                    </ChatBorder>
-                    <ChatFooter>
-                        <TextareaContainer>
-                            <Form onSubmit={sendMessage}>
-                                <Textarea
-                                    maxLength={1000}
-                                    value={message}
-                                    onChange={(event) => setMessage(event.target.value)}
-                                />
-                                <SubmitButton
-                                    disabled={message === ""}
-                                    type="submit"
-                                    className="send-button"
-                                >
-                                    전송
-                                </SubmitButton>
-                            </Form>
-                        </TextareaContainer>
-                    </ChatFooter>
-                </Wrapper>
-            </Overlay>
+            {chatData &&
+                <Overlay>
+                    <Wrapper onClick={handleOutsideModalClick}>
+                        {isMoreBoxOpen &&
+                            <MoreBox
+                                items={menuItems}
+                                top={35}
+                                left={200}
+                            />
+                        }
+                        <CloseButton>
+                            <CloseImage
+                                onClick={onClose}
+                                src='/assets/icons/close.svg'
+                                width={11}
+                                height={11}
+                                alt='닫기' />
+                        </CloseButton>
+                        {chatData &&
+                            <ChatHeader>
+                                <PrevImage
+                                    onClick={onGoback}
+                                    src="/assets/icons/left_arrow.svg"
+                                    width={9}
+                                    height={18}
+                                    alt="뒤로가기" />
+                                <Middle>
+                                    <ImageWrapper $bgColor={getProfileBgColor(chatData.memberProfileImg)}>
+                                        <ProfileImage
+                                            onClick={() => router.push("/user")}
+                                            src={`/assets/images/profile/profile${chatData.memberProfileImg}.svg`}
+                                            width={38}
+                                            height={38}
+                                            alt="프로필 이미지" />
+                                    </ImageWrapper>
+                                    <Div>
+                                        <UserName>{chatData.gameName}</UserName>
+                                        <Online>온라인</Online>
+                                        <OnlineImage
+                                            src="/assets/icons/online.svg"
+                                            width={5}
+                                            height={5}
+                                            alt="온라인" />
+                                    </Div>
+                                </Middle>
+                                <ThreeDotsImage
+                                    onClick={handleMoreBoxOpen}
+                                    src="/assets/icons/three_dots_button.svg"
+                                    width={3}
+                                    height={15}
+                                    alt="상세보기" />
+                            </ChatHeader>
+                        }
+                        <ChatBorder>
+                            <ChatMain>
+                                {chatData &&
+                                    <MessageContainer
+                                        message={chatData} />
+                                }
+                            </ChatMain>
+                        </ChatBorder>
+                        <ChatFooter>
+                            <TextareaContainer>
+                                <Form
+                                    onSubmit={sendMessage}
+                                    className={!!chatData.blocked ? 'disabledInput' : ''}>
+                                    <Textarea
+                                        maxLength={1000}
+                                        value={message}
+                                        onChange={(event) => setMessage(event.target.value)}
+                                        disabled={!!chatData.blocked}
+                                        placeholder={!!chatData?.blocked ? "입력창 내 대화를 보낼 수 없는 상대입니다." : ""}
+                                    />
+                                    <SubmitButton
+                                        disabled={message === "" || !!chatData.blocked}
+                                        type="submit"
+                                        className={!!chatData.blocked ? "disabled-button" : ""}
+                                    >
+                                        전송
+                                    </SubmitButton>
+                                </Form>
+                            </TextareaContainer>
+                        </ChatFooter>
+                    </Wrapper>
+                </Overlay>
+            }
 
-            {isEvaluationModalOpen && isMannerStatus === "manner" &&
+            {isEvaluationModalOpen && isMannerModalStatus === "manner" &&
                 <FormModal
                     type="checkbox"
-                    title="매너 평가하기"
+                    title={isMannerStatus?.isExist ? "내가 남긴 매너 평가" : "매너 평가하기"}
                     width="418px"
                     closeButtonWidth={17}
                     closeButtonHeight={17}
@@ -197,32 +333,32 @@ const ChatRoom = (props: ChatRoomProps) => {
                     disabled
                 >
                     <CheckContent>
-                        {isMannerStatus === "manner" && MANNER_TYPES.map((data) => (
+                        {isMannerModalStatus === "manner" && MANNER_TYPES.map((data) => (
                             <Checkbox
                                 key={data.id}
                                 value={data.id}
                                 label={data.text}
                                 fontSize="semiBold16"
-                                isArraychecked={checkedItems.includes(data.id)}
-                                onArrayChange={handleCheckboxChange}
+                                isChecked={checkedMannerItems.includes(data.id)}
+                                onArrayChange={onMannerCheckboxChange}
                             />
                         ))}
                     </CheckContent>
                     <ModalSubmitBtn>
                         <Button
-                            onClick={handleFormModalClose}
+                            onClick={() => isMannerStatus?.isExist ? onMannerEdit('manner') : onMannerPost()}
                             buttonType="primary"
-                            text="완료"
-                            disabled={checkedItems.length === 0}
+                            text={isMannerStatus?.isExist ? "수정하기" : "완료"}
+                            disabled={checkedMannerItems.length === 0}
                         />
                     </ModalSubmitBtn>
                 </FormModal>
             }
 
-            {isEvaluationModalOpen && isMannerStatus === "badManner" &&
+            {isEvaluationModalOpen && isMannerModalStatus === "badManner" &&
                 <FormModal
                     type="checkbox"
-                    title="비매너 평가하기"
+                    title={isBadMannerStatus?.isExist ? "내가 남긴 비매너 평가" : "비매너 평가하기"}
                     width="418px"
                     closeButtonWidth={17}
                     closeButtonHeight={17}
@@ -231,23 +367,23 @@ const ChatRoom = (props: ChatRoomProps) => {
                     disabled
                 >
                     <CheckContent>
-                        {isMannerStatus === "badManner" && BAD_MANNER_TYPES.map((data) => (
+                        {isMannerModalStatus === "badManner" && BAD_MANNER_TYPES.map((data) => (
                             <Checkbox
                                 key={data.id}
-                                value={data.text}
+                                value={data.id}
                                 label={data.text}
                                 fontSize="semiBold16"
-                                isArraychecked={checkedItems.includes(data.id)}
-                                onArrayChange={handleCheckboxChange}
+                                isChecked={checkedBadMannerItems.includes(data.id)}
+                                onArrayChange={onBadMannerCheckboxChange}
                             />
                         ))}
                     </CheckContent>
                     <ModalSubmitBtn>
                         <Button
-                            onClick={handleFormModalClose}
+                            onClick={() => isBadMannerStatus?.isExist ? onMannerEdit('badManner') : onBadMannerPost()}
                             buttonType="primary"
-                            text="완료"
-                            disabled={checkedItems.length === 0}
+                            text={isBadMannerStatus?.isExist ? "수정하기" : "완료"}
+                            disabled={checkedBadMannerItems.length === 0}
                         />
                     </ModalSubmitBtn>
                 </FormModal>
@@ -309,17 +445,6 @@ const ChatMain = styled.main`
     scrollbar-width: none;
 `;
 
-const System = styled.p`
-    width: 100%;
-    text-align: center;
-    padding:11px 0px;
-    background: #000000A3;
-    ${(props) => props.theme.fonts.regular12};
-    color: ${theme.colors.white}; 
-    border-radius: 14px;
-    margin-bottom: 11px;
-`;
-
 const ChatFooter = styled.footer``;
 
 const PrevImage = styled(Image)`
@@ -333,7 +458,19 @@ const Middle = styled.div`
     width: 100%;
 `;
 
+const ImageWrapper = styled.div<{ $bgColor: string }>`
+    position: relative;
+    width: 47px;
+    height: 47px;
+    background: ${(props) => props.$bgColor};
+    border-radius: 50%;
+`;
+
 const ProfileImage = styled(Image)`
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%);
     cursor: pointer;
 `;
 
@@ -374,6 +511,10 @@ const Form = styled.form`
     height: 100%;
     border-radius: 0 0 20px 20px;
     box-shadow: 0 4px 46.7px 0 #0000001A;
+    &.disabledInput {
+        background:#000000A3;
+        opacity: 0.3;
+    }
 `;
 
 const Textarea = styled.textarea`
@@ -386,6 +527,12 @@ const Textarea = styled.textarea`
     &:focus{
     outline:none;
   }
+  &:disabled {
+    background-color: unset;
+    &::placeholder {
+      color: ${theme.colors.white}; 
+    }
+  }
 `;
 
 const SubmitButton = styled.button`
@@ -397,6 +544,9 @@ const SubmitButton = styled.button`
   background: ${theme.colors.purple100};
   border-radius: 25px;
   padding: 12px 20px;
+  &.disabled-button{
+    cursor: not-allowed;
+  }
 `;
 
 const CheckContent = styled.div`

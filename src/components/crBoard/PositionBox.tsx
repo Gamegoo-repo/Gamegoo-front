@@ -3,7 +3,10 @@ import Image from "next/image";
 import { useState } from "react";
 import PositionCategory from "../common/PositionCategory";
 
+type Status = "reading" | "posting";
+
 interface PositionBoxProps {
+  status?: Status;
   onPositionChange?: (newPositionValue: PositionState) => void;
   main: number | undefined;
   sub: number | undefined;
@@ -19,7 +22,7 @@ export interface PositionState {
 }
 
 const PositionBox = (props: PositionBoxProps) => {
-  const { onPositionChange, main, sub, want } = props;
+  const { status, onPositionChange, main, sub, want } = props;
   const [selectedBox, setSelectedBox] = useState("");
   const [openPosition, setOpenPosition] = useState<Position | null>(null);
   const [positionValue, setPositionValue] = useState<PositionState>({
@@ -175,6 +178,6 @@ const Title = styled.p`
   margin-bottom: 6px;
 `;
 
-const StyledImage = styled(Image) <{ $status: string }>`
+const StyledImage = styled(Image) <{ $status: string | undefined }>`
   cursor: ${({ $status }) => ($status === "posting" ? "pointer" : "unset")};
 `;

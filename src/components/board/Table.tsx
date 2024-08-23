@@ -6,9 +6,10 @@ import ReadBoard from "../readBoard/ReadBoard";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { setCloseReadingModal, setOpenReadingModal } from "@/redux/slices/modalSlice";
+import { setCloseModal, setCloseReadingModal, setOpenModal, setOpenReadingModal } from "@/redux/slices/modalSlice";
 import { useRouter } from "next/navigation";
 import Alert from "../common/Alert";
+import ConfirmModal from "../common/ConfirmModal";
 
 interface TableTitleProps {
     id: number;
@@ -43,6 +44,7 @@ const Table = (props: TableProps) => {
     const [showAlert, setShowAlert] = useState(false);
 
     const isReadingModal = useSelector((state: RootState) => state.modal.readingModal);
+    const isModalType = useSelector((state: RootState) => state.modal.modalType);
 
     const dispatch = useDispatch();
     const router = useRouter();
@@ -82,6 +84,7 @@ const Table = (props: TableProps) => {
         const copied = `#${gameName.replace(/\s+/g, '')}`;
         try {
             await navigator.clipboard.writeText(copied);
+            await dispatch(setOpenModal("copied"));
         } catch (error) {
             console.error('복사 실패', error);
         }
@@ -92,6 +95,11 @@ const Table = (props: TableProps) => {
         e.stopPropagation();
         router.push('/user')
     }
+
+    /* 모달 닫기 */
+    const handleModalClose = () => {
+        dispatch(setCloseModal());
+    };
 
     return (
         <>
@@ -114,82 +122,100 @@ const Table = (props: TableProps) => {
                         )
                     })}
                 </TableHead>
-                <TableContent>
-                    {content?.map(data => {
-                        return (
-                            <Row key={data.boardId}
-                                onClick={() => handlePostOpen(data.boardId)}>
-                                <First className="table_width" onClick={handleUserProfilePage}>
-                                    <Image
-                                        src={setProfileImg(data.profileImage)}
-                                        width={50}
-                                        height={50}
-                                        alt="프로필 이미지"
-                                    />
-                                    <P onClick={(e) => handleTextClick(data.gameName, e)}>{data.gameName}</P>
-                                </First>
-                                <Second className="table_width">
-                                    {data.mannerLevel &&
-                                        <P>LV.{data.mannerLevel}</P>
-                                    }
-                                </Second>
-                                <Third className="table_width">
-                                    <Image
-                                        src={
-                                            !data.tier ? "/assets/images/tier/UNRANK.svg" : `/assets/images/tier/${data.tier}.svg`}
-                                        width={26}
-                                        height={13}
-                                        alt="티어 이미지"
-                                    />
-                                    <P>{data.tier}</P>
-                                </Third>
-                                <Fourth className="table_width">
-                                    <Image
-                                        src={setPositionImg(data.mainPosition)}
-                                        width={35}
-                                        height={28}
-                                        alt="메인 포지션"
-                                    />
-                                    <Image
-                                        src={setPositionImg(data.subPosition)}
-                                        width={35}
-                                        height={28}
-                                        alt="서브 포지션"
-                                    />
-                                </Fourth>
-                                <Fifth className="table_width">
-                                    <Image
-                                        src={setPositionImg(data.wantPosition)}
-                                        width={35}
-                                        height={28}
-                                        alt="찾는 포지션"
-                                    />
-                                </Fifth>
-                                <Sixth className="table_width">
-                                    {data.championList.map((data, index) => (
-                                        // <Image
-                                        //     key={index}
-                                        //     src={data}
-                                        //     width={50}
-                                        //     height={50}
-                                        //     alt="챔피언 이미지"
-                                        // />
-                                        data
-                                    ))}
-                                </Sixth>
-                                <Seventh className="table_width">
-                                    {data.winRate &&
-                                        <P className={data.winRate >= 50 ? 'emph' : 'basic'}>{data.winRate}%</P>
-                                    }
-                                </Seventh>
-                                <Eighth className="table_width">
-                                    <P>{setDateFormatter(data.createdAt)}</P>
-                                </Eighth>
-                            </Row>
-                        )
-                    })}
-                </TableContent>
+                {content?.length > 0 ? (
+                    <TableContent>
+                        {content?.map(data => {
+                            return (
+                                <Row key={data.boardId}
+                                    onClick={() => handlePostOpen(data.boardId)}>
+                                    <First className="table_width" onClick={handleUserProfilePage}>
+                                        <Image
+                                            src={setProfileImg(data.profileImage)}
+                                            width={50}
+                                            height={50}
+                                            alt="프로필 이미지"
+                                        />
+                                        <P onClick={(e) => handleTextClick(data.gameName, e)}>{data.gameName}</P>
+                                    </First>
+                                    <Second className="table_width">
+                                        {data.mannerLevel &&
+                                            <P>LV.{data.mannerLevel}</P>
+                                        }
+                                    </Second>
+                                    <Third className="table_width">
+                                        <Image
+                                            src={
+                                                !data.tier ? "/assets/images/tier/UNRANK.svg" : `/assets/images/tier/${data.tier}.svg`}
+                                            width={26}
+                                            height={13}
+                                            alt="티어 이미지"
+                                        />
+                                        <P>{!data.tier ? "UR" : data.tier}</P>
+                                    </Third>
+                                    <Fourth className="table_width">
+                                        <Image
+                                            src={setPositionImg(data.mainPosition)}
+                                            width={35}
+                                            height={28}
+                                            alt="메인 포지션"
+                                        />
+                                        <Image
+                                            src={setPositionImg(data.subPosition)}
+                                            width={35}
+                                            height={28}
+                                            alt="서브 포지션"
+                                        />
+                                    </Fourth>
+                                    <Fifth className="table_width">
+                                        <Image
+                                            src={setPositionImg(data.wantPosition)}
+                                            width={35}
+                                            height={28}
+                                            alt="찾는 포지션"
+                                        />
+                                    </Fifth>
+                                    <Sixth className="table_width">
+                                        {data.championList.map((data, index) => (
+                                            // <Image
+                                            //     key={index}
+                                            //     src={data}
+                                            //     width={50}
+                                            //     height={50}
+                                            //     alt="챔피언 이미지"
+                                            // />
+                                            data
+                                        ))}
+                                    </Sixth>
+                                    <Seventh className="table_width">
+                                        {data.winRate &&
+                                            <P className={data.winRate >= 50 ? 'emph' : 'basic'}>{data.winRate}%</P>
+                                        }
+                                    </Seventh>
+                                    <Eighth className="table_width">
+                                        <P>{setDateFormatter(data.createdAt)}</P>
+                                    </Eighth>
+                                </Row>
+                            )
+                        })}
+                    </TableContent>
+                ) : (
+                    <NoData>게시된 글이 없습니다.</NoData>
+                )}
             </TableWrapper>
+
+            {/* 소환사명 복사 모달 */}
+            {isModalType === 'copied' &&
+                <ConfirmModal
+                    width="540px"
+                    primaryButtonText="확인"
+                    secondaryButtonText="나가기"
+                    onPrimaryClick={handleModalClose}
+                >
+                    <Text>
+                        {`소환사명이 클립보드에 복사되었습니다.`}
+                    </Text>
+                </ConfirmModal>
+            }
         </>
     )
 };
@@ -233,7 +259,7 @@ const TableHead = styled.div`
     justify-content: space-between;
     padding:14px 21px;
     ${(props) => props.theme.fonts.bold16};
-    background:#5C5C5C;
+    background: ${theme.colors.gray600};
     color:${theme.colors.white};
     border-radius:8px;
 `;
@@ -304,4 +330,18 @@ const P = styled.p`
     color:${theme.colors.black};
     ${(props) => props.theme.fonts.medium16};
     }
+`;
+
+const NoData = styled.p`
+  color: ${theme.colors.gray800};
+  ${(props) => props.theme.fonts.medium16};
+  text-align: center;
+  margin-top: 47px;
+`;
+
+const Text = styled.div`
+  text-align: center;
+  color: ${theme.colors.gray600};
+  ${(props) => props.theme.fonts.regular18};
+  margin: 28px 0;
 `;

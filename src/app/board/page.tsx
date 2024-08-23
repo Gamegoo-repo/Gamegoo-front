@@ -4,7 +4,7 @@ import styled from "styled-components";
 import Image from "next/image";
 import { theme } from "@/styles/theme";
 import { useEffect, useRef, useState } from "react";
-import { BOARD_TITLE, GAME_MODE, TIER } from "@/data/board";
+import { BOARD_TITLE, GAME_MODE, MIC, TIER } from "@/data/board";
 import Button from "@/components/common/Button";
 import Dropdown from "@/components/common/Dropdown";
 import Table from "@/components/board/Table";
@@ -21,8 +21,6 @@ import {
 } from "@/redux/slices/modalSlice";
 import { getBoardList } from "@/api/board";
 import { BoardList } from "@/interface/board";
-import { getUserInfo } from "@/api/member";
-import { UserInfo } from "@/interface/profile";
 import Alert from "@/components/common/Alert";
 import { useRouter } from "next/navigation";
 
@@ -33,37 +31,33 @@ const BoardPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMoreItems, setHasMoreItems] = useState(true);
   const [isPosition, setIsPosition] = useState(0);
-  const [micStatus, setMicStatus] = useState(true);
   const [isGameModeDropdownOpen, setIsGameModeDropdownOpen] = useState(false);
   const [isTierDropdownOpen, setIsTierDropdownOpen] = useState(false);
-  const [selectedGameMode, setSelectedGameMode] = useState<
-    string | number | null
-  >("솔로 랭크");
+  const [isMicDropdownOpen, setIsMicDropdownOpen] = useState(false);
+  const [selectedGameMode, setSelectedGameMode] = useState<string | number | null>("솔로 랭크");
   const [selectedTier, setSelectedTier] = useState<string | null>("티어 선택");
-  const [userInfo, setUserInfo] = useState<UserInfo>();
+  const [selectedMic, setSelectedMic] = useState<boolean | string | null>("음성 채팅");
   const [showAlert, setShowAlert] = useState(false);
   const [refresh, setRefresh] = useState(false);
 
   const gameModeRef = useRef<HTMLDivElement>(null);
   const tierRef = useRef<HTMLDivElement>(null);
+  const micRef = useRef<HTMLDivElement>(null);
 
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const isPostingModal = useSelector(
-    (state: RootState) => state.modal.postingModal
-  );
-  const isCompletedPosting = useSelector(
-    (state: RootState) => state.modal.modalType
-  );
+  const isPostingModal = useSelector((state: RootState) => state.modal.postingModal);
+  const isCompletedPosting = useSelector((state: RootState) => state.modal.modalType);
+  const isUser = useSelector((state: RootState) => state.user);
 
-  // 게임모드 드롭
+  /* 게임모드 드롭 */
   const handleGameModeDropValue = (id: number | null) => {
     setSelectedGameMode(id);
     setIsGameModeDropdownOpen(false);
   };
 
-  // 티어 드롭
+  /* 티어 드롭 */
   const handleTierDropValue = (id: number | null) => {
     switch (id) {
       case 1:
@@ -104,7 +98,7 @@ const BoardPage = () => {
     setIsTierDropdownOpen(false);
   };
 
-  // 첫번째 드롭 외부 클릭
+  /* 게임모드 드롭박스 외부 클릭 */
   const handleGameModeDropdownClickOutside = (event: MouseEvent) => {
     if (
       gameModeRef.current &&
@@ -114,22 +108,35 @@ const BoardPage = () => {
     }
   };
 
-  // 두번째 드롭 외부 클릭
+  /* 티어 드롭박스 외부 클릭 */
   const handleTierDropdownClickOutside = (event: MouseEvent) => {
     if (tierRef.current && !tierRef.current.contains(event.target as Node)) {
       setIsTierDropdownOpen(false);
     }
   };
 
+
+  /* 마이크 드롭박스 외부 클릭 */
+  const handleMicDropdownClickOutside = (event: MouseEvent) => {
+    if (
+      micRef.current &&
+      !micRef.current.contains(event.target as Node)
+    ) {
+      setIsMicDropdownOpen(false);
+    }
+  };
+
   useEffect(() => {
     document.addEventListener("mousedown", handleGameModeDropdownClickOutside);
     document.addEventListener("mousedown", handleTierDropdownClickOutside);
+    document.addEventListener("mousedown", handleMicDropdownClickOutside);
     return () => {
       document.removeEventListener(
         "mousedown",
         handleGameModeDropdownClickOutside
       );
       document.removeEventListener("mousedown", handleTierDropdownClickOutside);
+      document.removeEventListener("mousedown", handleMicDropdownClickOutside);
     };
   }, []);
 
@@ -138,14 +145,26 @@ const BoardPage = () => {
     setIsPosition(id);
   };
 
-  /* 마이크 여부 */
-  const handleMic = () => {
-    setMicStatus((prevStatus) => !prevStatus);
+  /* 마이크 드롭 */
+  const handleMicDropValue = (id: number | null) => {
+    switch (id) {
+      case 1:
+        setSelectedMic(true);
+        break;
+      case 2:
+        setSelectedMic(false);
+        break;
+      default:
+        setSelectedMic(null);
+        break;
+    }
+
+    setIsMicDropdownOpen(false);
   };
 
   /* 글쓰기 모달 오픈 */
   const handlePostingOpen = () => {
-    if (!userInfo) {
+    if (!isUser.id) {
       return setShowAlert(true);
     }
     dispatch(setOpenPostingModal());
@@ -168,7 +187,7 @@ const BoardPage = () => {
         tier:
           selectedTier === "티어 선택" ? setSelectedTier(null) : selectedTier,
         mainPosition: isPosition,
-        mike: micStatus,
+        mike: selectedMic === '음성 채팅' ? setSelectedMic(null) : selectedMic
       };
 
       const data = await getBoardList(params);
@@ -182,7 +201,7 @@ const BoardPage = () => {
     selectedGameMode,
     selectedTier,
     isPosition,
-    micStatus,
+    selectedMic,
     isCompletedPosting,
     refresh,
   ]);
@@ -210,16 +229,6 @@ const BoardPage = () => {
     /* 글쓰기 완료 모달 닫기 */
     dispatch(setOpenModal(""));
   };
-
-  /* 유저 정보 api */
-  useEffect(() => {
-    const getUserData = async () => {
-      const data = await getUserInfo();
-      await setUserInfo(data);
-    };
-
-    getUserData();
-  }, []);
 
   const handleRefresh = () => {
     setRefresh((prevStatus) => !prevStatus);
@@ -286,21 +295,17 @@ const BoardPage = () => {
                     isPosition={isPosition}
                   />
                 </PositionBox>
-                <MicButton
-                  onClick={handleMic}
-                  className={micStatus ? "clicked" : "unClicked"}
-                >
-                  <Image
-                    src={
-                      micStatus
-                        ? "/assets/icons/availabled_mic.svg"
-                        : "/assets/icons/unavailabled_mic.svg"
-                    }
-                    width={21}
-                    height={26}
-                    alt="마이크 버튼"
-                  />
-                </MicButton>
+                <Dropdown
+                  type="type1"
+                  width="138px"
+                  padding="18px 21px"
+                  list={MIC}
+                  ref={micRef}
+                  open={isMicDropdownOpen}
+                  setOpen={setIsMicDropdownOpen}
+                  onDropValue={handleMicDropValue}
+                  defaultValue={selectedMic}
+                />
               </FirstBlock>
               <SecondBlock>
                 <Button
@@ -312,11 +317,7 @@ const BoardPage = () => {
               </SecondBlock>
             </SecondRow>
             <Main>
-              {boardList?.length > 0 ? (
-                <Table title={BOARD_TITLE} content={boardList} />
-              ) : (
-                <p>데이터가 없습니다.</p>
-              )}
+              <Table title={BOARD_TITLE} content={boardList} />
             </Main>
             {boardList?.length > 0 && (
               <Pagination
@@ -329,7 +330,7 @@ const BoardPage = () => {
             )}
             <Footer>
               <ChatBoxContent>
-                <ChatButton user={userInfo} count={3} />
+                <ChatButton count={3} />
               </ChatBoxContent>
             </Footer>
           </BoardContent>

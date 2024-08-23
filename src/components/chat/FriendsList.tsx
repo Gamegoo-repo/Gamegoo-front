@@ -3,29 +3,36 @@ import { theme } from "@/styles/theme";
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import DeleteFriend from './DeleteFriend';
-
-interface FriendListInterface {
-    id: number;
-    image: string;
-    userName: string;
-    online: string;
-    favorites: number;
-}
+import { deleteFriend, getFriendsList, likeFriend, unLikeFriend } from '@/api/friends';
+import { FriendListInterface } from '@/interface/friends';
+import { getProfileBgColor } from '@/utils/profile';
 
 interface FriendListProps {
-    list: FriendListInterface[];
     onChatRoom: (id: number) => void;
 }
 
-const FriendsList = ({ list, onChatRoom }: FriendListProps) => {
-
-    const [friends, setFriends] = useState<FriendListInterface[]>(list);
+const FriendsList = ({ onChatRoom }: FriendListProps) => {
+    const [friends, setFriends] = useState<FriendListInterface[]>([]);
 
     const [deleteMenu, setDeleteMenu] = useState<{ x: number, y: number, friendId: number | null }>({ x: 0, y: 0, friendId: null });
 
-    const favoriteFriends = friends.filter(friend => friend.favorites === 1);
-    const nonFavoriteFriends = friends.filter(friend => friend.favorites === 0);
+    const favoriteFriends = friends.filter(friend => friend.liked);
 
+    /* 친구 목록 가져오기 */
+    useEffect(() => {
+        const handleFetchFriendsList = async () => {
+            try {
+                const data = await getFriendsList();
+                setFriends(data.result);
+            } catch (error) {
+                console.error("에러:", error);
+            }
+        }
+
+        handleFetchFriendsList();
+    }, [])
+
+    /* 삭제 하기 버튼 열기 */
     const handleContextMenu = (event: React.MouseEvent, friendId: number) => {
         event.preventDefault();
         event.stopPropagation();
@@ -35,24 +42,51 @@ const FriendsList = ({ list, onChatRoom }: FriendListProps) => {
         setDeleteMenu({ x: x, y: y, friendId });
     };
 
+    /* 삭제하기 버튼 닫기 */
     const handleCloseDeletetMenu = () => {
         setDeleteMenu({ x: 0, y: 0, friendId: null });
     };
 
-    const handleDeleteFriend = () => {
+    /* 친구 삭제 */
+    const handleDeleteFriend = async () => {
         const { friendId } = deleteMenu;
-        if (friendId) {
-            console.log(`${friendId}삭제`)
-            // setFriends(friends.filter((friend) => friend.id !== friendId));
-            handleCloseDeletetMenu();
+
+        try {
+            if (friendId) {
+                await deleteFriend(friendId);
+                await handleCloseDeletetMenu();
+            }
+        } catch (error) {
+            console.error('친구 삭제 에러:', error);
+        }
+    };
+
+    /* 친구 즐겨찾기 상태 변경 */
+    const toggleFavorite = async (friendId: number, liked: boolean) => {
+        try {
+            if (liked) {
+                await unLikeFriend(friendId);
+            } else {
+                await likeFriend(friendId);
+            }
+        } catch (error) {
+            console.error('즐겨찾기 상태 변경 중 에러:', error);
         }
     };
 
     const handleFavoriteToggle = (event: React.MouseEvent, friendId: number) => {
         event.stopPropagation();
-        setFriends(friends.map(friend =>
-            friend.id === friendId ? { ...friend, favorites: friend.favorites === 1 ? 0 : 1 } : friend
-        ));
+
+        const updatedFriends = friends.map(friend => {
+            if (friend.memberId === friendId) {
+                const newLikedStatus = !friend.liked;
+                toggleFavorite(friendId, friend.liked);
+                return { ...friend, liked: newLikedStatus };
+            }
+            return friend;
+        });
+
+        setFriends(updatedFriends);
     };
 
     /* 브라우저 너비 변경 시 삭제하기 버튼 닫기 */
@@ -65,111 +99,121 @@ const FriendsList = ({ list, onChatRoom }: FriendListProps) => {
     }, []);
 
     if (friends.length === 0) {
-        return null;
+        return <NoData>{`새로운 친구를 추가하고\n함께 게임을 즐겨보세요 !`}</NoData>;
     }
 
     return (
         <>
             <List>
-                <FavoritesWrapper $length={favoriteFriends.length}>
-                    {favoriteFriends?.length > 0 &&
+                {favoriteFriends?.length > 0 &&
+                    <FavoritesWrapper $length={favoriteFriends.length}>
                         <FavoritesTitle>
                             즐겨찾기
                         </FavoritesTitle>
-                    }
-                    {favoriteFriends.map(friend => (
-                        <UserContent
-                            onContextMenu={(e) => handleContextMenu(e, friend.id)}
-                            onClick={() =>
-                                onChatRoom(friend.id)}
-                            key={friend.id}
-                        >
-                            {deleteMenu.friendId === friend.id && (
-                                <>
-                                    <DeleteFriend
-                                        x={deleteMenu.x}
-                                        y={deleteMenu.y}
-                                        onClose={handleCloseDeletetMenu}
-                                        onDelete={handleDeleteFriend}
+                        {favoriteFriends.map(friend => {
+                            return (
+                                <UserContent
+                                    onContextMenu={(e) => handleContextMenu(e, friend.memberId)}
+                                    onClick={() =>
+                                        onChatRoom(friend.memberId)}
+                                    key={friend.memberId}
+                                >
+                                    {deleteMenu.friendId === friend.memberId && (
+                                        <>
+                                            <DeleteFriend
+                                                x={deleteMenu.x}
+                                                y={deleteMenu.y}
+                                                onClose={handleCloseDeletetMenu}
+                                                onDelete={handleDeleteFriend}
+                                            />
+                                        </>
+                                    )}
+                                    <Left>
+                                        <ImageWrapper $bgColor={getProfileBgColor(friend.memberProfileImg)}>
+                                            <StyledImage
+                                                src={`/assets/images/profile/profile${friend.memberProfileImg}.svg`}
+                                                width={38}
+                                                height={38}
+                                                alt="사용자 프로필" />
+                                        </ImageWrapper>
+                                        <UserName>{friend.name}</UserName>
+                                        {/* {friend.online === "on" &&
+                                    <Online
+                                        src="/assets/icons/online.svg"
+                                        width={5}
+                                        height={5}
+                                        alt="온라인" />
+                                } */}
+                                    </Left>
+                                    <Image
+                                        onClick={(e) => handleFavoriteToggle(e, friend.memberId)}
+                                        src={
+                                            friend.liked
+                                                ? "/assets/icons/favorites.svg"
+                                                : "/assets/icons/nonFavorites.svg"
+                                        }
+                                        width={15}
+                                        height={15}
+                                        alt="즐겨찾기 버튼"
                                     />
-                                </>
-                            )}
-                            <Left>
-                                <Image
-                                    src={friend.image}
-                                    width={40.79}
-                                    height={40.79}
-                                    alt="사용자 프로필" />
-                                <UserName>{friend.userName}</UserName>
-                                {friend.online === "on" &&
+                                </UserContent>
+                            )
+                        })}
+                    </FavoritesWrapper>
+                }
+                {friends.length > 0 &&
+                    <FriendsWrapper $length={favoriteFriends.length}>
+                        <FriendsTitle>
+                            친구 {friends.length}
+                        </FriendsTitle>
+                        {friends.map(friend => {
+                            return (
+                                <UserContent
+                                    onContextMenu={(event) => handleContextMenu(event, friend.memberId)}
+                                    onClick={() => onChatRoom(friend.memberId)}
+                                    key={friend.memberId}
+                                >
+                                    {deleteMenu.friendId === friend.memberId && (
+                                        <DeleteFriend
+                                            x={deleteMenu.x}
+                                            y={deleteMenu.y}
+                                            onClose={handleCloseDeletetMenu}
+                                            onDelete={handleDeleteFriend}
+                                        />
+                                    )}
+                                    <Left>
+                                        <ImageWrapper $bgColor={getProfileBgColor(friend.memberProfileImg)}>
+                                            <StyledImage
+                                                src={`/assets/images/profile/profile${friend.memberProfileImg}.svg`}
+                                                width={38}
+                                                height={38}
+                                                alt="사용자 프로필" />
+                                        </ImageWrapper>
+                                        <UserName>{friend.name}</UserName>
+                                        {/* {friend.online === "on" &&
                                     <Online
                                         src="/assets/icons/online.svg"
                                         width={5}
                                         height={5}
                                         alt="온라인" />
-                                }
-                            </Left>
-                            <Image
-                                onClick={(e) => handleFavoriteToggle(e, friend.id)}
-                                src={
-                                    friend.favorites === 1
-                                        ? "/assets/icons/favorites.svg"
-                                        : "/assets/icons/nonFavorites.svg"
-                                }
-                                width={15}
-                                height={15}
-                                alt="즐겨찾기 버튼"
-                            />
-                        </UserContent>
-                    ))}
-                </FavoritesWrapper>
-                <FriendsWrapper $length={favoriteFriends.length}>
-                    <FriendsTitle>
-                        친구 {friends.length}
-                    </FriendsTitle>
-                    {nonFavoriteFriends.map(friend => (
-                        <UserContent
-                            onContextMenu={(event) => handleContextMenu(event, friend.id)}
-                            onClick={() => onChatRoom(friend.id)}
-                            key={friend.id}
-                        >
-                            {deleteMenu.friendId === friend.id && (
-                                <DeleteFriend
-                                    x={deleteMenu.x}
-                                    y={deleteMenu.y}
-                                    onClose={handleCloseDeletetMenu}
-                                    onDelete={handleDeleteFriend}
-                                />
-                            )}
-                            <Left>
-                                <Image
-                                    src={friend.image}
-                                    width={40.79}
-                                    height={40.79}
-                                    alt="사용자 프로필" />
-                                <UserName>{friend.userName}</UserName>
-                                {friend.online === "on" &&
-                                    <Online
-                                        src="/assets/icons/online.svg"
-                                        width={5}
-                                        height={5}
-                                        alt="온라인" />
-                                }
-                            </Left>
-                            <Image
-                                onClick={(e) => handleFavoriteToggle(e, friend.id)}
-                                src={
-                                    friend.favorites === 1
-                                        ? "/assets/icons/favorites.svg"
-                                        : "/assets/icons/nonFavorites.svg"
-                                }
-                                width={15}
-                                height={15}
-                                alt="즐겨찾기 버튼"
-                            />
-                        </UserContent>
-                    ))}
-                </FriendsWrapper>
+                                } */}
+                                    </Left>
+                                    <Image
+                                        onClick={(e) => handleFavoriteToggle(e, friend.memberId)}
+                                        src={
+                                            friend.liked
+                                                ? "/assets/icons/favorites.svg"
+                                                : "/assets/icons/nonFavorites.svg"
+                                        }
+                                        width={15}
+                                        height={15}
+                                        alt="즐겨찾기 버튼"
+                                    />
+                                </UserContent>
+                            )
+                        })}
+                    </FriendsWrapper>
+                }
             </List>
         </>
     );
@@ -185,7 +229,7 @@ const FavoritesWrapper = styled.div<{ $length: number }>`
 `;
 
 const FriendsWrapper = styled.div<{ $length: number }>`
-    border-top: ${({ $length }) => ($length > 0 ? `1px solid ${theme.colors.gray400}` : 'none')};
+    border-top: ${({ $length }) => ($length > 0 ? `1px solid ${theme.colors.gray400}` : 'unset')};
     padding: 6px 0 11px;
 `;
 
@@ -220,6 +264,21 @@ const Left = styled.div`
     gap: 16px;
 `;
 
+const ImageWrapper = styled.div<{ $bgColor: string }>`
+    position: relative;
+    width: 47px;
+    height: 47px;
+    background: ${(props) => props.$bgColor};
+    border-radius: 50%;
+`;
+
+const StyledImage = styled(Image)`
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+`;
+
 const UserName = styled.p`
     ${(props) => props.theme.fonts.semiBold14};
     color: ${theme.colors.gray600};  
@@ -231,3 +290,9 @@ const Online = styled(Image)`
     right: -4%;
 `;
 
+const NoData = styled.p`
+  text-align: center;
+  color: ${theme.colors.gray600};
+  ${(props) => props.theme.fonts.regular16};
+  margin-top:50%;
+`;

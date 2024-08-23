@@ -60,6 +60,7 @@ const Wrapper = styled.div`
     box-shadow: 0 4px 96.4px 0 #00000040;
     max-width:555px;
     width: 100%;
+    min-height: 837px;
 `;
 
 const Header = styled.header<{ $type: string }>` 

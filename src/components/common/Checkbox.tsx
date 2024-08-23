@@ -8,7 +8,6 @@ interface CheckboxProps {
   children?: React.ReactNode;
   isChecked?: boolean;
   onChange?: (isChecked: boolean) => void;
-  isArraychecked?: boolean;
   onArrayChange?: (checked: number) => void;
   fontSize?: string;
   gap?: string;
@@ -23,7 +22,6 @@ const Checkbox = (props: CheckboxProps) => {
     children,
     isChecked = false,
     onChange,
-    isArraychecked,
     onArrayChange,
     fontSize,
     color,
@@ -59,7 +57,7 @@ const Checkbox = (props: CheckboxProps) => {
         id={id}
         value={value}
         type="checkbox"
-        checked={isChecked ? checked : isArraychecked}
+        checked={isChecked}
         onChange={handleChange}
       />
       <div>{label || children}</div>

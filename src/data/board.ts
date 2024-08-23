@@ -30,3 +30,9 @@ export const TIER = [
     { id: 9, value: '그랜드마스터' },
     { id: 10, value: '챌린저' },
 ];
+
+export const MIC = [
+    { id: null, value: '음성 채팅' },
+    { id: 1, value: '음성 ON' },
+    { id: 2, value: '음성 OFF' },
+]
