@@ -244,6 +244,7 @@ const BoardPage = () => {
           content="로그아웃 되었습니다. 다시 로그인 해주세요."
           alt="로그인 필요"
           onClose={() => router.push("/login")}
+          buttonText="로그인하기"
         />
       )}
       {isPostingModal && (
