@@ -502,8 +502,8 @@ const Profile: React.FC<Profile> = ({
                     }}
                   >
                     <MsgConfirm>{`${
-                      user.blocked ? "차단 해제" : "차단"
-                    }이 완료되었습니다.`}</MsgConfirm>
+                      user.blocked ? "차단 해제가" : "차단이"
+                    } 완료되었습니다.`}</MsgConfirm>
                   </ConfirmModal>
                 )}
                 {/* 차단 해제하기 확인 팝업 */}

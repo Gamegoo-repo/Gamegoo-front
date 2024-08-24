@@ -9,8 +9,33 @@ export const reqFriend = async (memberId: number) => {
         console.log("친구 요청 완료:", response.data);
         return response.data;
     } catch (error: any) {
-        if (error.response && error.response.data && error.response.data.code === "FRIEND403") {
-          const errorMessage = "나를 차단한 회원입니다.\n친구 요청을 보낼 수 없습니다.";
+        if (error.response && error.response.data) {
+            let errorMessage = "친구 요청이 실패했습니다.";
+            switch(error.response.data.code){
+                case "MEMBER404":
+                    errorMessage = "해당 사용자를 찾을 수 없습니다.";
+                    break;
+                case "FRIEND401":
+                    errorMessage = "본인에게는 친구 요청을 할 수 없습니다.";
+                    break;
+                case "FRIEND402":
+                    errorMessage = "내가 차단한 회원입니다.\n친구 요청을 보낼 수 없습니다.";
+                    break;
+                case "FRIEND403":
+                    errorMessage = "나를 차단한 회원입니다.\n친구 요청을 보낼 수 없습니다.";
+                    break;
+                case "FRIEND404":
+                    errorMessage = "해당 회원에게 보낸 수락 대기 중인 친구 요청이 존재합니다.";
+                    break;
+                case "FRIEND405":
+                    errorMessage = "해당 회원이 나에게 보낸 친구 요청이 수락 대기 중 입니다.\n해당 요청을 수락 해주세요.";
+                    break;
+                case "FRIEND406":
+                    errorMessage = "두 회원은 이미 친구 관계 입니다.\n친구 요청을 보낼 수 없습니다.";
+                    break;
+                default:
+                    break;
+            }
 
           notify({ text: errorMessage, icon: '🚫', type: 'error' });
           console.error(errorMessage);
@@ -27,8 +52,28 @@ export const cancelFriendReq = async (memberId: number) => {
         const response = await Axios.delete(`/v1/friends/request/${memberId}`);
         console.log("친구 요청 취소 성공:", response.data);
         return response.data;
-    } catch (error) {
-        console.error("친구 요청 취소 실패:", error);
+    } catch (error: any) {
+        let errorMessage = "친구 요청 취소에 실패했습니다.";
+        if (error.response) {
+            if (error.response.status === 404) {
+                errorMessage = "취소/수락/거절할 친구 요청이 존재하지 않습니다.";
+            } else if (error.response.data) {
+                switch(error.response.data.code){
+                    case "FRIEND401":
+                        errorMessage = "본인에게는 친구 요청 취소를 할 수 없습니다.";
+                        break;
+                    case "FRIEND407":
+                        errorMessage = "취소/수락/거절할 친구 요청이 존재하지 않습니다.";
+                        break;
+                    default:
+                        break;
+                }
+            }
+            console.error(errorMessage);
+        } else {
+            console.error("친구 요청 취소 실패:", error);
+        }
+        notify({ text: errorMessage, icon: '🚫', type: 'error' });
         throw error;
     }
 }
