@@ -19,6 +19,7 @@ export interface PostProps {
   gameName: string;
   tag: string;
   tier: string;
+  rank: string;
   contents: string;
   createdAt: string;
 }
@@ -30,6 +31,7 @@ const Post: React.FC<PostProps> = ({
   gameName,
   tag,
   tier,
+  rank,
   contents,
   createdAt,
 }) => {
@@ -81,8 +83,7 @@ const Post: React.FC<PostProps> = ({
             alt="tier"
           />
           {setAbbrevTier(tier)}
-          {/* {rank} */}
-          {3}
+          {rank}
         </Tier>
         <Memo>{contents}</Memo>
         <Date>

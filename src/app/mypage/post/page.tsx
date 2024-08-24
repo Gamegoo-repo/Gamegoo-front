@@ -63,6 +63,7 @@ const MyPostPage = () => {
                 gameName={item.gameName}
                 tag={item.tag}
                 tier={item.tier}
+                rank={item.rank}
                 contents={item.contents}
                 createdAt={item.createdAt}
               />
@@ -80,10 +81,10 @@ const MyPostPage = () => {
         </PostPage>
       </MyPostContent>
       <Footer>
-          <ChatBoxContent>
-            <ChatButton count={3} />
-          </ChatBoxContent>
-        </Footer>
+        <ChatBoxContent>
+          <ChatButton count={3} />
+        </ChatBoxContent>
+      </Footer>
     </Wrapper>
   );
 };

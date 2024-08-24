@@ -7,6 +7,7 @@ export interface BoardList {
     gameName: string;
     mannerLevel: number;
     tier: string;
+    rank: number;
     gameMode: number;
     mainPosition: number;
     subPosition: number;
