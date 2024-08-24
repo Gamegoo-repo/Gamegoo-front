@@ -1,5 +1,6 @@
 import { AuthAxios } from "./auth";
 import Axios from ".";
+import { notify } from "@/hooks/notify";
 
 /* 친구 요청 */
 export const reqFriend = async (memberId: number) => {
@@ -7,8 +8,15 @@ export const reqFriend = async (memberId: number) => {
         const response = await AuthAxios.post(`/v1/friends/request/${memberId}`);
         console.log("친구 요청 완료:", response.data);
         return response.data;
-    } catch (error) {
-        console.error("친구 요청 실패:", error);
+    } catch (error: any) {
+        if (error.response && error.response.data && error.response.data.code === "FRIEND403") {
+          const errorMessage = "나를 차단한 회원입니다.\n친구 요청을 보낼 수 없습니다.";
+
+          notify({ text: errorMessage, icon: '🚫', type: 'error' });
+          console.error(errorMessage);
+        } else {
+          console.error("친구 요청 실패:", error);
+        }
         throw error;
     }
 };

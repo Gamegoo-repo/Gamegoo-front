@@ -9,6 +9,8 @@ import { Provider } from "react-redux";
 import { useRef } from "react";
 import { AppStore, store } from "@/redux/store";
 import { usePathname } from "next/navigation";
+import { ToastContainer } from "react-toastify";
+import { Toaster } from "react-hot-toast";
 
 export default function RootLayout({
   children,
@@ -37,6 +39,7 @@ export default function RootLayout({
           <div id="modal-root"></div>
           <GlobalStyles />
           <ThemeProvider theme={theme}>
+            <Toaster />
             <Provider store={storeRef.current}>
               {isHeader && <Header />}
               {children}
