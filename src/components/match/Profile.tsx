@@ -32,6 +32,7 @@ import { useParams } from "next/navigation";
 import { blockMember, reportMember, unblockMember } from "@/api/member";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { getProfileBgColor } from "@/utils/profile";
 
 type profileType = "normal" | "wind" | "other" | "me";
 
@@ -85,7 +86,7 @@ const Profile: React.FC<Profile> = ({
 
   /* 프로필 이미지 리스트 중 클릭시*/
   const handleImageClick = (index: number) => {
-    setSelectedImageIndex(index + 1);
+    setSelectedImageIndex(index);
 
     setTimeout(() => {
       setIsProfileListOpen(false);
@@ -348,14 +349,14 @@ const Profile: React.FC<Profile> = ({
     <Container className={profileType}>
       <Row>
         <ImageContainer>
-          <ProfileImage>
+          <ProfileImgWrapper $bgColor={getProfileBgColor(selectedImageIndex)}>
             <PersonImage
               src={`/assets/images/profile/profile${selectedImageIndex}.svg`}
               width={136}
               height={136}
               alt="프로필"
             />
-          </ProfileImage>
+          </ProfileImgWrapper>
           {profileType !== "other" && (
             <CameraImage
               src="/assets/icons/profile_camera.svg"
@@ -376,16 +377,21 @@ const Profile: React.FC<Profile> = ({
                 onClick={() => setIsProfileListOpen(false)}
               />
               <ProfileList>
-                {[1, 2, 3, 4, 5, 6, 7, 8].map((item, index) => (
-                  <ProfileListImage
-                    key={index}
-                    src={`/assets/images/profile/profile${item}.svg`}
-                    width={104}
-                    height={104}
-                    alt="프로필 이미지"
-                    $isSelected={index + 1 === selectedImageIndex}
-                    onClick={() => handleImageClick(index)}
-                  />
+                {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
+                  <SelectProfileImgWrapper
+                    key={item}
+                    $bgColor={getProfileBgColor(item)}
+                    $isSelected={item === selectedImageIndex}
+                    onClick={() => handleImageClick(item)}
+                  >
+                    <ProfileListImage
+                      key={item}
+                      src={`/assets/images/profile/profile${item}.svg`}
+                      width={70}
+                      height={70}
+                      alt="프로필 이미지"
+                    />
+                  </SelectProfileImgWrapper>
                 ))}
               </ProfileList>
             </ProfileListBox>
@@ -483,13 +489,15 @@ const Profile: React.FC<Profile> = ({
                       setIsBlockBoxOpen(false);
                     }}
                   >
-                    <Msg>
-                      {`${
-                        user.blocked
-                          ? "차단을 해제 하시겠습니까?"
-                          : "차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다.\n\n또한, 다시 차단 해제할 수 없습니다.\n차단하시겠습니까?"
-                      }`}
-                    </Msg>
+                    {user.blocked ? (
+                      <MsgConfirm>{"차단을 해제 하시겠습니까?"}</MsgConfirm>
+                    ) : (
+                      <Msg>
+                        {
+                          "차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다.\n\n차단하시겠습니까?"
+                        }
+                      </Msg>
+                    )}
                   </ConfirmModal>
                 )}
                 {/* 차단하기 확인 팝업 */}
@@ -502,7 +510,7 @@ const Profile: React.FC<Profile> = ({
                     }}
                   >
                     <MsgConfirm>{`${
-                      user.blocked ? "차단 해제가" : "차단이"
+                      user.blocked ? "차단이" : "차단 해제가"
                     } 완료되었습니다.`}</MsgConfirm>
                   </ConfirmModal>
                 )}
@@ -623,11 +631,11 @@ const ImageContainer = styled.div`
   position: relative;
 `;
 
-const ProfileImage = styled.div`
+const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
   width: 186px;
   height: 186px;
-  border-radius: 93px;
-  background: ${theme.colors.purple300};
+  border-radius: 50%;
+  background: ${(props) => props.$bgColor};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -671,10 +679,15 @@ const ProfileList = styled.div`
   grid-template-rows: repeat(2, 1fr);
 `;
 
-const ProfileListImage = styled(Image)<{ $isSelected: boolean }>`
-  cursor: pointer;
-  transition: opacity 0.3s ease-in-out;
-
+const SelectProfileImgWrapper = styled.div<{
+  $bgColor: string;
+  $isSelected: boolean;
+}>`
+  position: relative;
+  width: 96px;
+  height: 96px;
+  background: ${(props) => props.$bgColor};
+  border-radius: 50%;
   ${({ $isSelected }) =>
     $isSelected &&
     css`
@@ -685,6 +698,14 @@ const ProfileListImage = styled(Image)<{ $isSelected: boolean }>`
     filter: drop-shadow(0px 4px 10px rgba(138, 117, 255, 0.7));
     transition: box-shadow 0.3s ease-in-out;
   }
+`;
+
+const ProfileListImage = styled(Image)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
 `;
 
 const StyledBox = styled.div`
@@ -766,12 +787,12 @@ const ReportButton = styled.div`
 const Msg = styled.div`
   text-align: center;
   color: ${theme.colors.gray600};
-  ${(props) => props.theme.fonts.regular18};
+  ${(props) => props.theme.fonts.regular20};
   margin: 28px 0;
 `;
 
 const MsgConfirm = styled(Msg)`
-  ${(props) => props.theme.fonts.regular25};
+  ${(props) => props.theme.fonts.regular20};
   margin: 80px 0;
 `;
 
