@@ -25,6 +25,29 @@ export const cancelFriendReq = async (memberId: number) => {
     }
 }
 
+/* 친구 요청 수락 */
+export const acceptFreindReq = async (memberId: number) => {
+    try {
+        const response = await AuthAxios.patch(`/v1/friends/request/${memberId}/accept`);
+        console.log("친구 요청 수락 성공:", response.data);
+        return response.data;
+    } catch (error) {
+        console.log("친구 요청 수락 실패:", error);
+        throw error;
+    }
+};
+
+/* 친구 요청 거절 */
+export const rejectFreindReq = async (memberId: number) => {
+    try {
+        const response = await AuthAxios.patch(`/v1/friends/request/${memberId}/reject`);
+        console.log("친구 요청 거절 성공:", response.data);
+        return response.data;
+    } catch (error) {
+        console.log("친구 요청 거절 실패:", error);
+        throw error;
+    }
+};
 
 /* 친구 삭제 */
 export const deleteFriend = async (memberId: number) => {

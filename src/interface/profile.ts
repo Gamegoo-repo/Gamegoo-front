@@ -11,7 +11,7 @@ export interface GameStyle {
 }
 
 export interface User {
-  id?: number;
+  id: number;
   profileImg: number;
   mike: boolean;
   email: string;
@@ -29,6 +29,8 @@ export interface User {
   winrate: number;
   gameStyleResponseDTOList: GameStyle[];
   championResponseDTOList: Champion[];
+  friend: boolean;
+  friendRequestMemberId: number | null;
 }
 
 export interface Profile {

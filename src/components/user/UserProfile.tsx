@@ -5,37 +5,7 @@ import { theme } from "@/styles/theme";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
 import MannerLevelBar from "@/components/common/MannerLevelBar";
 import ChatButton from "@/components/common/ChatButton";
-
-export interface Champion {
-  championId: number;
-  championName: string;
-}
-
-export interface GameStyle {
-  gameStyleId: number;
-  gameStyleName: string;
-}
-
-export interface User {
-  id?: number;
-  profileImg: number;
-  mike: boolean;
-  email: string;
-  gameName: string;
-  tag: string;
-  tier: string;
-  rank: number;
-  manner: number;
-  updatedAt: string;
-  mainP: number;
-  subP: number;
-  isAgree: boolean;
-  isBlind: boolean;
-  loginType: string;
-  winrate: number;
-  gameStyleResponseDTOList: GameStyle[];
-  championResponseDTOList: Champion[];
-}
+import { User } from "@/interface/profile";
 
 export interface Manner {
   memberId?: number;

@@ -21,6 +21,13 @@ import { toLowerCaseString } from "@/utils/string";
 import { PositionState } from "../crBoard/PositionBox";
 import { putPosition } from "@/api/user";
 import { setAbbrevTier, setPositionImg } from "@/utils/custom";
+import {
+  acceptFreindReq,
+  cancelFriendReq,
+  deleteFriend,
+  reqFriend,
+} from "@/api/friends";
+import { useParams } from "next/navigation";
 
 type profileType = "normal" | "wind" | "other" | "me";
 
@@ -30,6 +37,9 @@ interface Profile {
 }
 
 const Profile: React.FC<Profile> = ({ profileType, user }) => {
+  const { id } = useParams();
+  const memberId = Number(id);
+
   const [isMike, setIsMike] = useState<boolean>(user.mike);
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
   const [isReportBoxOpen, setIsReportBoxOpen] = useState(false);
@@ -102,8 +112,8 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
       index === 0
         ? "main" ?? null
         : index === 1
-          ? "sub" ?? null
-          : "want" ?? null
+        ? "sub" ?? null
+        : "want" ?? null
     );
   };
 
@@ -144,6 +154,96 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
       handlePositionChange(newPositionValue);
     }
   };
+
+  const handleFriendState = async (state: string) => {
+    try {
+      switch (state) {
+        case "add":
+          await reqFriend(memberId);
+          break;
+        case "cancel":
+          await cancelFriendReq(memberId);
+          break;
+        case "accept":
+          await acceptFreindReq(memberId);
+          break;
+        case "reject":
+          await acceptFreindReq(memberId);
+          break;
+        case "delete":
+          await deleteFriend(memberId);
+          break;
+        default:
+          throw new Error("존재하지 않는 친구 상태입니다.");
+      }
+    } catch (error) {
+      console.error("Error handling friend state:", error);
+    }
+  };
+
+  // 친구 추가
+  const renderFriendsButton = () => {
+    // 친구 추가
+    // 친구 삭제 (끊기)
+    // 친구 요청 전송 (나)
+    // 친구 요청 취소 (나)
+    // 친구 수락/거절 (상대)
+    // 자기 자신 프로필
+    if (user.friend) {
+      return (
+        <Button
+          buttonType="secondary"
+          width="218px"
+          text="친구 끊기"
+          onClick={() => handleFriendState("delete")}
+        />
+      );
+    } else {
+      if (user.friendRequestMemberId) {
+        if (user.friendRequestMemberId === memberId) {
+          return (
+            <Row>
+              <Button
+                buttonType="secondary"
+                width="163px"
+                text="친구 거절"
+                onClick={() => handleFriendState("reject")}
+              />
+              <Button
+                buttonType="primary"
+                width="163px"
+                text="친구 수락"
+                onClick={() => handleFriendState("accept")}
+              />
+            </Row>
+          );
+        } else {
+          return (
+            <Button
+              buttonType="secondary"
+              width="218px"
+              text="친구 요청 취소"
+              onClick={() => handleFriendState("cancel")}
+            />
+          );
+        }
+      } else if (memberId === user.id) {
+        return null;
+      }
+      return (
+        <Button
+          buttonType="secondary"
+          width="218px"
+          text="친구 추가"
+          onClick={() => handleFriendState("add")}
+        />
+      );
+    }
+  };
+
+  useEffect(() => {
+    renderFriendsButton();
+  }, [user.friend, user.friendRequestMemberId]);
 
   // 더보기 버튼 메뉴
   const MoreBoxMenuItems: MoreBoxMenuItems[] = [
@@ -214,8 +314,9 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
               <Span>{`#${user.tag}`}</Span>
               <Rank>
                 <Image
-                  src={`/assets/images/tier/${toLowerCaseString(user.tier) || "ur"
-                    }.svg`}
+                  src={`/assets/images/tier/${
+                    toLowerCaseString(user.tier) || "ur"
+                  }.svg`}
                   width={52}
                   height={52}
                   alt="tier"
@@ -226,27 +327,16 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
             </Top>
             {profileType === "other" && (
               <More>
-                <Admit>
-                  <Button
-                    buttonType="primary"
-                    width="218px"
-                    text="친구 요청 수락하기"
-                  />
-                  {/* <Button buttonType="secondary" width="218px" text="친구 추가" />
-                <Button
-                  buttonType="secondary"
-                  width="218px"
-                  disabled={true}
-                  text="친구 요청 전송됨"
-                /> */}
-                </Admit>
+                <Admit>{renderFriendsButton()}</Admit>
                 {/* 더보기 버튼 */}
-                <MoreDiv>
-                  <Report onClick={handleMoreBoxOpen} />
-                  {isMoreBoxOpen && (
-                    <MoreBox items={MoreBoxMenuItems} top={15} left={45} />
-                  )}
-                </MoreDiv>
+                {memberId !== user.id && (
+                  <MoreDiv>
+                    <Report onClick={handleMoreBoxOpen} />
+                    {isMoreBoxOpen && (
+                      <MoreBox items={MoreBoxMenuItems} top={15} left={45} />
+                    )}
+                  </MoreDiv>
+                )}
                 {/* 신고하기 팝업 */}
                 {isReportBoxOpen && (
                   <FormModal
@@ -354,8 +444,8 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                           index === 0
                             ? positionValue.main ?? 0
                             : index === 1
-                              ? positionValue.sub ?? 0
-                              : positionValue.want ?? 0
+                            ? positionValue.sub ?? 0
+                            : positionValue.want ?? 0
                         )}
                         width={55}
                         height={40}
@@ -485,7 +575,7 @@ const ProfileList = styled.div`
   grid-template-rows: repeat(2, 1fr);
 `;
 
-const ProfileListImage = styled(Image) <{ $isSelected: boolean }>`
+const ProfileListImage = styled(Image)<{ $isSelected: boolean }>`
   cursor: pointer;
   transition: opacity 0.3s ease-in-out;
 
