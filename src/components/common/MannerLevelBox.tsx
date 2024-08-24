@@ -5,25 +5,6 @@ import { useEffect, useState } from "react";
 import { MannerKeywords, OthersManner } from "@/interface/manner";
 import { getOthersManner } from "@/api/manner";
 
-const data = {
-  good_manner: {
-    "1": 8,
-    "2": 5,
-    "3": 2,
-    "4": 5,
-    "5": 0,
-    "6": 5,
-  },
-  bad_manner: {
-    "1": 1,
-    "2": 0,
-    "3": 0,
-    "4": 0,
-    "5": 0,
-    "6": 0,
-  },
-};
-
 interface MannerLevelBoxProps {
   memberId: number;
   level: number;
@@ -34,17 +15,12 @@ interface MannerLevelBoxProps {
 const MannerLevelBox = (props: MannerLevelBoxProps) => {
   const { memberId, level, top, right } = props;
 
-  const mannerEvaluations = Object.entries(data.good_manner);
-  const badMannerEvaluations = Object.entries(data.bad_manner);
-
-  const [mannerData, setMannerData] = useState<OthersManner>();
   const [positiveKeywords, setPositiveKeywords] = useState<MannerKeywords[]>([]);
   const [negativeKeywords, setNegativeKeywords] = useState<MannerKeywords[]>([]);
 
   useEffect(() => {
     const getManners = async () => {
       const manner = await getOthersManner(memberId);
-      await setMannerData(manner.result);
       const positive = manner.result.mannerKeywords.filter((keyword: MannerKeywords) => keyword.isPositive);
       const negative = manner.result.mannerKeywords.filter((keyword: MannerKeywords) => !keyword.isPositive);
 
@@ -56,9 +32,16 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
     getManners();
   }, [memberId]);
 
+  /* id로 매너 텍스트 가져오기 */
   const getMannerText = (id: number) => {
     const match = MANNER_TYPES.find(type => type.id === id);
-    return match ? match.text : '';  
+    return match ? match.text : '';
+  };
+
+  /* id로 비매너 텍스트 가져오기 */
+  const getBadMannerText = (id: number) => {
+    const match = BAD_MANNER_TYPES.find(type => type.id === id);
+    return match ? match.text : '';
   };
 
   return (
@@ -67,76 +50,35 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
       <MannerEvaluations>
         <Div>
           <SubTitle>받은 매너평가</SubTitle>
-          {positiveKeywords.map((positive, index) => {
+          {positiveKeywords.map((positive) => {
             return (
-              <MannerListBox key={index}>
-                <ValueWrapper>
+              <MannerListBox key={positive.mannerKeywordId}>
+                <Value
+                  className={positive.count > 0 ? "mannerEmph" : "default"}>
                   {positive.count}
-                </ValueWrapper>
-                <TypeWrapper>
+                </Value>
+                <Type className={positive.count > 0 ? "mannerEmph" : "default"}>
                   {getMannerText(positive.mannerKeywordId)}
-                </TypeWrapper>
-
-                {/* <ValueWrapper>
-              {mannerEvaluations.map(([key, value]) => {
-                return (
-                  <Value
-                    key={key}
-                    className={value > 0 ? "mannerEmph" : "default"}
-                  >
-                    {value}
-                  </Value>
-                );
-              })}
-            </ValueWrapper>
-            <TypeWrapper>
-              {MANNER_TYPES.map((type, index) => {
-                return (
-                  <Type
-                    key={type.id}
-                    className={
-                      mannerEvaluations[index][1] > 0 ? "mannerEmph" : "default"
-                    }
-                  >
-                    {type.text}
-                  </Type>
-                );
-              })}
-            </TypeWrapper> */}
+                </Type>
               </MannerListBox>
             )
           })}
         </Div>
         <Div>
           <SubTitle>받은 비매너평가</SubTitle>
-          <MannerListBox>
-            <ValueWrapper>
-              {badMannerEvaluations.map(([key, value]) => {
-                return (
-                  <Value
-                    key={key}
-                    className={value > 0 ? "badEmph" : "default"}
-                  >
-                    {value}
-                  </Value>
-                );
-              })}
-            </ValueWrapper>
-            <TypeWrapper>
-              {BAD_MANNER_TYPES.map((type, index) => {
-                return (
-                  <Type
-                    key={type.id}
-                    className={
-                      badMannerEvaluations[index][1] > 0 ? "badEmph" : "default"
-                    }
-                  >
-                    {type.text}
-                  </Type>
-                );
-              })}
-            </TypeWrapper>
-          </MannerListBox>
+          {negativeKeywords.map((negative) => {
+            return (
+              <MannerListBox key={negative.mannerKeywordId}>
+                <Value
+                  className={negative.count > 0 ? "badEmph" : "default"}>
+                  {negative.count}
+                </Value>
+                <Type className={negative.count > 0 ? "badEmph" : "default"}>
+                  {getBadMannerText(negative.mannerKeywordId)}
+                </Type>
+              </MannerListBox>
+            )
+          })}
         </Div>
       </MannerEvaluations>
     </Wrapper>
@@ -183,14 +125,10 @@ const SubTitle = styled.p`
 const MannerListBox = styled.div`
   display: flex;
   align-items: center;
-`;
-
-const ValueWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-right: 11px;
-  row-gap: 26px;
+  margin-bottom:26px;
+  &:last-child {
+    margin-bottom: unset;
+  }
 `;
 
 const Value = styled.p`
@@ -209,15 +147,9 @@ const Value = styled.p`
   }
 `;
 
-const TypeWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  row-gap: 26px;
-`;
-
 const Type = styled.p`
   ${(props) => props.theme.fonts.semiBold16};
-
+  margin-left: 11px;
   &.default {
     color: ${theme.colors.gray200};
   }

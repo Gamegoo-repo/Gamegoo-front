@@ -1,6 +1,7 @@
 "use client";
 
 import { postLogin } from "@/api/login";
+import { socketLogin } from "@/api/socket";
 import Button from "@/components/common/Button";
 import Checkbox from "@/components/common/Checkbox";
 import Input from "@/components/common/Input";
@@ -58,6 +59,9 @@ const Login = () => {
       /* 자동 로그인 체크 여부에 따라 토큰 저장 위치 결정 */
       setToken(accessToken, refreshToken, autoLogin);
 
+      /* 로켓 로그인 */
+      socketLogin();
+      
       dispatch(setUserName(response.result.name));
       dispatch(setUserProfileImg(response.result.profileImage));
       localStorage.setItem("name", response.result.name);

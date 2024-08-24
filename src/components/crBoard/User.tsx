@@ -7,10 +7,11 @@ interface UserProps {
     account: string;
     tag: string;
     tier: string;
+    rank: number;
 }
 
 const User = (props: UserProps) => {
-    const { account, tag, tier } = props;
+    const { account, tag, tier, rank } = props;
 
     return (
         <Wrapper>
@@ -29,7 +30,7 @@ const User = (props: UserProps) => {
                             height={20}
                             alt="티어 이미지"
                         />
-                        <Tier>{!tier ? "UR" : setAbbrevTier(tier)}</Tier>
+                        <Tier>{!tier ? "UR" : setAbbrevTier(tier)}{rank}</Tier>
                     </>
                 }
             </UserTier>

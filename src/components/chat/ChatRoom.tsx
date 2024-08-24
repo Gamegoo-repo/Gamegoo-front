@@ -192,7 +192,6 @@ const ChatRoom = (props: ChatRoomProps) => {
         }
     };
 
-
     /* 매너평가 조회 */
     const handleMannerValuesGet = async (memberId: number) => {
         try {
@@ -263,7 +262,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                                 <Middle>
                                     <ImageWrapper $bgColor={getProfileBgColor(chatData.memberProfileImg)}>
                                         <ProfileImage
-                                            onClick={() => router.push("/user")}
+                                            onClick={() => router.push(`/user/${chatData.memberId}`)}
                                             src={`/assets/images/profile/profile${chatData.memberProfileImg}.svg`}
                                             width={38}
                                             height={38}
@@ -298,14 +297,13 @@ const ChatRoom = (props: ChatRoomProps) => {
                         <ChatFooter>
                             <TextareaContainer>
                                 <Form
-                                    onSubmit={sendMessage}
-                                    className={!!chatData.blocked ? 'disabledInput' : ''}>
+                                    onSubmit={sendMessage}>
                                     <Textarea
                                         maxLength={1000}
                                         value={message}
                                         onChange={(event) => setMessage(event.target.value)}
                                         disabled={!!chatData.blocked}
-                                        placeholder={!!chatData?.blocked ? "입력창 내 대화를 보낼 수 없는 상대입니다." : ""}
+                                        placeholder={!!chatData?.blocked ? "메시지를 보낼 수 없는 상대입니다." : ""}
                                     />
                                     <SubmitButton
                                         disabled={message === "" || !!chatData.blocked}
@@ -511,10 +509,6 @@ const Form = styled.form`
     height: 100%;
     border-radius: 0 0 20px 20px;
     box-shadow: 0 4px 46.7px 0 #0000001A;
-    &.disabledInput {
-        background:#000000A3;
-        opacity: 0.3;
-    }
 `;
 
 const Textarea = styled.textarea`
@@ -530,7 +524,7 @@ const Textarea = styled.textarea`
   &:disabled {
     background-color: unset;
     &::placeholder {
-      color: ${theme.colors.white}; 
+      color: ${theme.colors.gray200}; 
     }
   }
 `;

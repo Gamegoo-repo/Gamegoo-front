@@ -7,12 +7,12 @@ let socket: Socket | null = null;
 let socketId: string | null = null;
 
 export const connectSocket = (): void => {
-  const token = sessionStorage.getItem('refreshToken');
+  const token = sessionStorage.getItem('accessToken');
 
   const options = token ? { auth: { token } } : {};
 
   socket = io(SOCKET_URL, options);
-  // socket = io(SOCKET_URL);
+
   socket.on("connect", () => {
     console.log("서버 연결. Socket ID:", socket?.id);
     socketId = socket?.id || null;
@@ -21,11 +21,11 @@ export const connectSocket = (): void => {
 
   socket.on("disconnect", () => {
     console.log("서버 연결 끊김");
-    localStorage.removeItem('gamegooSocketId');
     socketId = null;
+    localStorage.removeItem('gamegooSocketId');
   });
 
-  setupSocketListeners();
+  // setupSocketListeners();
 };
 
 const setupSocketListeners = () => {

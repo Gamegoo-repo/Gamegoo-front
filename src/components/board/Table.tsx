@@ -10,31 +10,16 @@ import { setCloseModal, setCloseReadingModal, setOpenModal, setOpenReadingModal 
 import { useRouter } from "next/navigation";
 import Alert from "../common/Alert";
 import ConfirmModal from "../common/ConfirmModal";
+import { BoardList } from "@/interface/board";
 
 interface TableTitleProps {
     id: number;
     name: string;
 };
 
-interface TableContentProps {
-    boardId: number;
-    memberId: number;
-    profileImage: number;
-    gameName: string;
-    mannerLevel: number;
-    tier: string;
-    gameMode: number;
-    mainPosition: number;
-    subPosition: number;
-    wantPosition: number;
-    championList: number[];
-    winRate: number;
-    createdAt: string;
-};
-
 interface TableProps {
     title: TableTitleProps[];
-    content: TableContentProps[];
+    content: BoardList[];
 };
 
 const Table = (props: TableProps) => {
@@ -45,6 +30,7 @@ const Table = (props: TableProps) => {
 
     const isReadingModal = useSelector((state: RootState) => state.modal.readingModal);
     const isModalType = useSelector((state: RootState) => state.modal.modalType);
+    const isUser = useSelector((state: RootState) => state.user);
 
     const dispatch = useDispatch();
     const router = useRouter();
@@ -91,9 +77,11 @@ const Table = (props: TableProps) => {
     };
 
     /* 다른 사람 프로필 이동 */
-    const handleUserProfilePage = (e: React.MouseEvent) => {
+    const handleUserProfilePage = (e: React.MouseEvent, memberId: number) => {
+        if (!isUser.id) return;
+
         e.stopPropagation();
-        router.push('/user')
+        router.push(`/user/${memberId}`);
     }
 
     /* 모달 닫기 */
@@ -128,7 +116,7 @@ const Table = (props: TableProps) => {
                             return (
                                 <Row key={data.boardId}
                                     onClick={() => handlePostOpen(data.boardId)}>
-                                    <First className="table_width" onClick={handleUserProfilePage}>
+                                    <First className="table_width" onClick={(e) => handleUserProfilePage(e, data.memberId)}>
                                         <Image
                                             src={setProfileImg(data.profileImage)}
                                             width={50}
@@ -150,7 +138,7 @@ const Table = (props: TableProps) => {
                                             height={13}
                                             alt="티어 이미지"
                                         />
-                                        <P>{!data.tier ? "UR" : setAbbrevTier(data.tier)}</P>
+                                        <P>{!data.tier ? "UR" : setAbbrevTier(data.tier)}{data.rank}</P>
                                     </Third>
                                     <Fourth className="table_width">
                                         <Image

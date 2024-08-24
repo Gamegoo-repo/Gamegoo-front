@@ -120,7 +120,6 @@ const Header = () => {
                   width={29}
                   height={29}
                   alt="profile"
-                  style={{ background: "#C1B7FF", borderRadius: "50%" }}
                 />
               </HeaderProfileImgWrapper>
               {name}

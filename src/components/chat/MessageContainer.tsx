@@ -152,7 +152,7 @@ const MessageContainer = (props: MessageContainerProps) => {
                     <>
                       <ImageWrapper $bgColor={getProfileBgColor(data.senderProfileImg)}>
                         <ProfileImage
-                          onClick={() => router.push("/user")}
+                          onClick={() => router.push(`/user/${data.senderId}`)}
                           src={`/assets/images/profile/profile${data.senderProfileImg}.svg`}
                           width={38}
                           height={38}
@@ -218,7 +218,7 @@ const MsgContainer = styled.div``;
 
 const Timestamp = styled.p`
     max-width: 79px;
-    margin: 0 auto 10px auto;
+    margin: 0 auto 10px;
     text-align: center;
     background: #000000A3;
     border-radius: 14px;

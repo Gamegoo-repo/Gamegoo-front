@@ -14,7 +14,9 @@ export interface BoardList {
     championList: number[];
     winRate: number;
     createdAt: string;
-}
+    mike: boolean;
+    rank: number;
+};
 
 export interface MemberPost {
     boardId: number;
@@ -39,6 +41,7 @@ export interface MemberPost {
     winRate: number;
     gameStyles: number[];
     contents: string;
+    rank:number;
 }
 
 export interface NonMemberPost {
@@ -60,6 +63,7 @@ export interface NonMemberPost {
     winRate: number;
     gameStyles: number[];
     contents: string;
+    rank:number;
 }
 
 export interface PostReq {
