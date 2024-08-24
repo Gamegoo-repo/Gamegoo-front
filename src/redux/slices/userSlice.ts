@@ -33,7 +33,7 @@ interface UserState {
 
 const initialState: UserState = {
   id: 0,
-  profileImg: 0,
+  profileImg: 1,
   mike: false,
   email: '',
   gameName: '',
@@ -67,7 +67,7 @@ export const userSlice = createSlice({
     },
     clearUserProfile(state) {
       state.id = 0;
-      state.profileImg = 0;
+      state.profileImg = 1;
       state.mike = false;
       state.email = '';
       state.gameName = '';
