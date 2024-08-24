@@ -22,9 +22,14 @@ export interface Manner {
 const UserProfile = ({
   profile,
   manner,
+  updateFriendState,
 }: {
   profile: User;
   manner: Manner;
+  updateFriendState: (state: {
+    friend: boolean;
+    friendRequestMemberId: number | null;
+  }) => void;
 }) => {
   const goodMannerEvaluations =
     manner.mannerKeywords
@@ -50,7 +55,11 @@ const UserProfile = ({
       <MatchContent>
         <HeaderTitle title={`${profile.gameName} 님의 프로필`} size="regular" />
         <Main>
-          <Profile profileType="other" user={profile} />
+          <Profile
+            profileType="other"
+            user={profile}
+            updateFriendState={updateFriendState}
+          />
           <Content>
             <div>
               <Title>{`${profile.gameName}의 매너레벨`}</Title>

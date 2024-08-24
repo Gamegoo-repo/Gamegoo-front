@@ -23,6 +23,7 @@ export interface User {
   updatedAt: string;
   mainP: number;
   subP:number;
+  blocked: boolean;
   isAgree: boolean;
   isBlind: boolean;
   loginType: string;

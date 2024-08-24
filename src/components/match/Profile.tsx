@@ -28,18 +28,30 @@ import {
   reqFriend,
 } from "@/api/friends";
 import { useParams } from "next/navigation";
+import { blockMember, reportMember, unblockMember } from "@/api/member";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 type profileType = "normal" | "wind" | "other" | "me";
 
 interface Profile {
   user: User;
   profileType: profileType;
+  updateFriendState?: (state: {
+    friend: boolean;
+    friendRequestMemberId: number | null;
+  }) => void;
 }
 
-const Profile: React.FC<Profile> = ({ profileType, user }) => {
+const Profile: React.FC<Profile> = ({
+  profileType,
+  user,
+  updateFriendState,
+}) => {
   const { id } = useParams();
   const memberId = Number(id);
 
+  const myId = useSelector((state: RootState) => state.user.id);
   const [isMike, setIsMike] = useState<boolean>(user.mike);
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
   const [isReportBoxOpen, setIsReportBoxOpen] = useState(false);
@@ -90,16 +102,35 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
     setIsMoreBoxOpen((prevState) => !prevState);
   };
 
-  const handleReport = () => {
+  const handleReport = async () => {
     // 신고하기 api
     setIsReportBoxOpen(!isReportBoxOpen);
     setIsMoreBoxOpen(false);
+    // if (!targetMemberId) return;
+
+    // const params = {
+    //   targetMemberId: targetMemberId,
+    //   reportTypeIdList: checkedReportItems,
+    //   contents: reportDetail,
+    // };
+
+    // try {
+    //   await reportMember(params);
+    //   await handleModalClose();
+    // } catch (error) {
+    //   console.error("에러:", error);
+    // }
   };
 
-  const handleBlock = () => {
+  const handleBlock = async () => {
     // 차단하기 api
     setIsBlockBoxOpen(!isBlockBoxOpen);
     setIsMoreBoxOpen(false);
+    if (user.isBlind) {
+      await unblockMember(memberId);
+    } else {
+      await blockMember(memberId);
+    }
   };
 
   /* 포지션 선택창 관련 함수*/
@@ -155,23 +186,39 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
     }
   };
 
+  const [friendState, setFriendState] = useState<{
+    friend: boolean;
+    friendRequestMemberId: number | null;
+  }>({
+    friend: user.friend,
+    friendRequestMemberId: user.friendRequestMemberId,
+  });
+
   const handleFriendState = async (state: string) => {
     try {
       switch (state) {
         case "add":
           await reqFriend(memberId);
+          updateFriendState?.({
+            friend: false,
+            friendRequestMemberId: myId || null,
+          });
           break;
         case "cancel":
           await cancelFriendReq(memberId);
+          updateFriendState?.({ friend: false, friendRequestMemberId: null });
           break;
         case "accept":
           await acceptFreindReq(memberId);
+          updateFriendState?.({ friend: true, friendRequestMemberId: null });
           break;
         case "reject":
           await acceptFreindReq(memberId);
+          updateFriendState?.({ friend: false, friendRequestMemberId: null });
           break;
         case "delete":
           await deleteFriend(memberId);
+          updateFriendState?.({ friend: false, friendRequestMemberId: null });
           break;
         default:
           throw new Error("존재하지 않는 친구 상태입니다.");
@@ -227,7 +274,7 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
             />
           );
         }
-      } else if (memberId === user.id) {
+      } else if (memberId === myId) {
         return null;
       }
       return (
@@ -241,14 +288,15 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
     }
   };
 
-  useEffect(() => {
-    renderFriendsButton();
-  }, [user.friend, user.friendRequestMemberId]);
+  // useEffect(() => {
+  //   alert("변경");
+  //   renderFriendsButton();
+  // }, [friendState.friend, friendState.friendRequestMemberId]);
 
   // 더보기 버튼 메뉴
   const MoreBoxMenuItems: MoreBoxMenuItems[] = [
     { text: "신고하기", onClick: handleReport },
-    { text: "차단하기", onClick: handleBlock },
+    { text: user.blocked ? "차단 해제" : "차단하기", onClick: handleBlock },
   ];
 
   // 신고하기 체크
@@ -329,7 +377,7 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
               <More>
                 <Admit>{renderFriendsButton()}</Admit>
                 {/* 더보기 버튼 */}
-                {memberId !== user.id && (
+                {memberId !== myId && (
                   <MoreDiv>
                     <Report onClick={handleMoreBoxOpen} />
                     {isMoreBoxOpen && (
@@ -394,10 +442,7 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                     width="540px"
                     primaryButtonText="예"
                     secondaryButtonText="아니요"
-                    onPrimaryClick={() => {
-                      setIsBlockBoxOpen(false);
-                      setIsBlockConfrimOpen(true);
-                    }}
+                    onPrimaryClick={() => handleBlock}
                     onSecondaryClick={() => {
                       setIsBlockBoxOpen(false);
                     }}
