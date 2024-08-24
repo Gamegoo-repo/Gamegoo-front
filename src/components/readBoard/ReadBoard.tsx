@@ -223,9 +223,9 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 매너레벨 박스 열기 */
   const handleMannerLevelBoxOpen = () => {
-    // if (!isUser.id) {
-    //   return showAlertWithContent(loginRequiredMessage, () => setShowAlert(false), "확인");
-    // }
+    if (!isUser.id) {
+      return showAlertWithContent(loginRequiredMessage, () => setShowAlert(false), "확인");
+    }
 
     setIsMannerLevelBoxOpen((prevState) => !prevState);
   };

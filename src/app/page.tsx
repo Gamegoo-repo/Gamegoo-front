@@ -6,22 +6,41 @@ import { MATCH_PAGE_DATA } from "@/data/match";
 import Image from "next/image";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
-import { useEffect } from "react";
-import { connectSocket } from "@/socket";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { socket } from "@/socket";
+import { ConnectionManager } from "@/components/common/ConnectionManager";
 
 const HomePage = () => {
   const router = useRouter();
 
   const isUser = useSelector((state: RootState) => state.user);
 
-  /* 로그인 이전 소켓 연결 */
-  useEffect(() => {
-    // if (!!isUser.id) return;
+  const [isConnected, setIsConnected] = useState(socket.connected);
 
-    connectSocket();
-  }, [])
+  useEffect(() => {
+    function onConnect() {
+      setIsConnected(true);
+      console.log(socket.id)
+      const socketId = socket.id || ''
+      localStorage.setItem('gamegooSocketId', socketId)
+    }
+
+    function onDisconnect() {
+      setIsConnected(false);
+    }
+
+
+    socket.on('connect', onConnect);
+    socket.on('disconnect', onDisconnect);
+
+
+    return () => {
+      socket.off('connect', onConnect);
+      socket.off('disconnect', onDisconnect);
+    };
+  }, []);
 
 
   return (
@@ -36,6 +55,7 @@ const HomePage = () => {
             alt="logo"
           />
           <SubTitle>겜구 커뮤니티에 오신 것을 환영합니다.</SubTitle>
+          <ConnectionManager />
         </Header>
         <Main>
           {MATCH_PAGE_DATA.map((content) => {

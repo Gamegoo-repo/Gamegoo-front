@@ -1,34 +1,7 @@
-"use client";
+import { io } from 'socket.io-client';
+import { SOCKET_URL } from './api';
 
-import { io, Socket } from "socket.io-client";
-import { SOCKET_URL } from "@/api";
+// "undefined" means the URL will be computed from the `window.location` object
+const URL = process.env.NODE_ENV === 'production' ? undefined : SOCKET_URL;
 
-let socket: Socket | null = null;
-let socketId: string | null = null;
-
-export const connectSocket = (): void => {
-  const token = sessionStorage.getItem('accessToken');
-
-  const options = token ? { auth: { token } } : {};
-
-  socket = io(SOCKET_URL, options);
-
-  socket.on("connect", () => {
-    console.log("서버 연결. Socket ID:", socket?.id);
-    socketId = socket?.id || null;
-    localStorage.setItem('gamegooSocketId', socketId || '');
-  });
-
-  socket.on("disconnect", () => {
-    console.log("서버 연결 끊김");
-    socketId = null;
-    localStorage.removeItem('gamegooSocketId');
-  });
-
-  // setupSocketListeners();
-};
-
-const setupSocketListeners = () => {
-  if (!socket) return;
-
-};
+export const socket = io(SOCKET_URL);
