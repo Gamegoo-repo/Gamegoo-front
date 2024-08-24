@@ -25,6 +25,7 @@ import {
   acceptFreindReq,
   cancelFriendReq,
   deleteFriend,
+  rejectFreindReq,
   reqFriend,
 } from "@/api/friends";
 import { useParams } from "next/navigation";
@@ -40,6 +41,7 @@ interface Profile {
   updateFriendState?: (state: {
     friend: boolean;
     friendRequestMemberId: number | null;
+    blocked: boolean;
   }) => void;
 }
 
@@ -123,14 +125,29 @@ const Profile: React.FC<Profile> = ({
   };
 
   const handleBlock = async () => {
-    // 차단하기 api
     setIsBlockBoxOpen(!isBlockBoxOpen);
     setIsMoreBoxOpen(false);
-    if (user.isBlind) {
+  };
+
+  const handleRunBlock = async () => {
+    // 차단하기 api
+    setIsBlockBoxOpen(false);
+    if (user.blocked) {
       await unblockMember(memberId);
+      updateFriendState?.({
+        friend: user.friend,
+        friendRequestMemberId: user.friendRequestMemberId,
+        blocked: false,
+      });
     } else {
       await blockMember(memberId);
+      updateFriendState?.({
+        friend: user.friend,
+        friendRequestMemberId: user.friendRequestMemberId,
+        blocked: true,
+      });
     }
+    setIsBlockConfrimOpen(true);
   };
 
   /* 포지션 선택창 관련 함수*/
@@ -186,14 +203,6 @@ const Profile: React.FC<Profile> = ({
     }
   };
 
-  const [friendState, setFriendState] = useState<{
-    friend: boolean;
-    friendRequestMemberId: number | null;
-  }>({
-    friend: user.friend,
-    friendRequestMemberId: user.friendRequestMemberId,
-  });
-
   const handleFriendState = async (state: string) => {
     try {
       switch (state) {
@@ -202,23 +211,40 @@ const Profile: React.FC<Profile> = ({
           updateFriendState?.({
             friend: false,
             friendRequestMemberId: myId || null,
+            blocked: user.blocked,
           });
           break;
         case "cancel":
           await cancelFriendReq(memberId);
-          updateFriendState?.({ friend: false, friendRequestMemberId: null });
+          updateFriendState?.({
+            friend: false,
+            friendRequestMemberId: null,
+            blocked: user.blocked,
+          });
           break;
         case "accept":
           await acceptFreindReq(memberId);
-          updateFriendState?.({ friend: true, friendRequestMemberId: null });
+          updateFriendState?.({
+            friend: true,
+            friendRequestMemberId: memberId,
+            blocked: user.blocked,
+          });
           break;
         case "reject":
-          await acceptFreindReq(memberId);
-          updateFriendState?.({ friend: false, friendRequestMemberId: null });
+          await rejectFreindReq(memberId);
+          updateFriendState?.({
+            friend: false,
+            friendRequestMemberId: null,
+            blocked: user.blocked,
+          });
           break;
         case "delete":
           await deleteFriend(memberId);
-          updateFriendState?.({ friend: false, friendRequestMemberId: null });
+          updateFriendState?.({
+            friend: false,
+            friendRequestMemberId: null,
+            blocked: user.blocked,
+          });
           break;
         default:
           throw new Error("존재하지 않는 친구 상태입니다.");
@@ -236,6 +262,16 @@ const Profile: React.FC<Profile> = ({
     // 친구 요청 취소 (나)
     // 친구 수락/거절 (상대)
     // 자기 자신 프로필
+    if (user.blocked) {
+      return (
+        <Button
+          buttonType="secondary"
+          width="218px"
+          text="차단된 유저"
+          disabled={true}
+        />
+      );
+    }
     if (user.friend) {
       return (
         <Button
@@ -249,7 +285,7 @@ const Profile: React.FC<Profile> = ({
       if (user.friendRequestMemberId) {
         if (user.friendRequestMemberId === memberId) {
           return (
-            <Row>
+            <FriendRow>
               <Button
                 buttonType="secondary"
                 width="163px"
@@ -262,7 +298,7 @@ const Profile: React.FC<Profile> = ({
                 text="친구 수락"
                 onClick={() => handleFriendState("accept")}
               />
-            </Row>
+            </FriendRow>
           );
         } else {
           return (
@@ -442,13 +478,17 @@ const Profile: React.FC<Profile> = ({
                     width="540px"
                     primaryButtonText="예"
                     secondaryButtonText="아니요"
-                    onPrimaryClick={() => handleBlock}
+                    onPrimaryClick={() => handleRunBlock()}
                     onSecondaryClick={() => {
                       setIsBlockBoxOpen(false);
                     }}
                   >
                     <Msg>
-                      {`차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다.\n\n또한, 다시 차단 해제할 수 없습니다.\n차단하시겠습니까?`}
+                      {`${
+                        user.blocked
+                          ? "차단을 해제 하시겠습니까?"
+                          : "차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다.\n\n또한, 다시 차단 해제할 수 없습니다.\n차단하시겠습니까?"
+                      }`}
                     </Msg>
                   </ConfirmModal>
                 )}
@@ -461,9 +501,12 @@ const Profile: React.FC<Profile> = ({
                       setIsBlockConfrimOpen(false);
                     }}
                   >
-                    <MsgConfirm>{`차단이 완료되었습니다.`}</MsgConfirm>
+                    <MsgConfirm>{`${
+                      user.blocked ? "차단 해제" : "차단"
+                    }이 완료되었습니다.`}</MsgConfirm>
                   </ConfirmModal>
                 )}
+                {/* 차단 해제하기 확인 팝업 */}
               </More>
             )}
           </TopContainer>
@@ -562,6 +605,14 @@ const Row = styled.div`
   justify-content: flex-start;
   align-items: center;
   gap: 38px;
+`;
+
+const FriendRow = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 17px;
 `;
 
 const UnderRow = styled(Row)`

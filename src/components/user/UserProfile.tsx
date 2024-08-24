@@ -29,6 +29,7 @@ const UserProfile = ({
   updateFriendState: (state: {
     friend: boolean;
     friendRequestMemberId: number | null;
+    blocked: boolean;
   }) => void;
 }) => {
   const goodMannerEvaluations =

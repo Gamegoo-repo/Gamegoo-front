@@ -14,9 +14,11 @@ const UserProfilePage = () => {
   const [friendState, setFriendState] = useState<{
     friend: boolean;
     friendRequestMemberId: number | null;
+    blocked: boolean;
   }>({
     friend: false,
     friendRequestMemberId: null,
+    blocked: false,
   });
 
   useEffect(() => {
@@ -46,6 +48,7 @@ const UserProfilePage = () => {
   const updateFriendState = (newFriendState: {
     friend: boolean;
     friendRequestMemberId: number | null;
+    blocked: boolean;
   }) => {
     setFriendState(newFriendState);
   };
