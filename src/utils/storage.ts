@@ -30,6 +30,10 @@ export const getRefreshToken = () => {
 export const clearTokens = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    localStorage.removeItem('name');
+    localStorage.removeItem('profileImg');
     sessionStorage.removeItem('accessToken');
     sessionStorage.removeItem('refreshToken');
+    sessionStorage.removeItem('name');
+    sessionStorage.removeItem('profileImg');
 };

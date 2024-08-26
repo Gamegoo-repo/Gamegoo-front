@@ -33,21 +33,21 @@ const Header = () => {
   const [count, setCount] = useState<number>(0);
 
   const myPageRef = useRef<HTMLDivElement>(null);
-  const storedProfileImg = useSelector(
-    (state: RootState) => state.user.profileImg
-  );
 
   useEffect(() => {
-    const storedName = localStorage.getItem("name");
-    const storedProfileImg = Number(localStorage.getItem("profileImg"));
+    const storedName =
+      localStorage.getItem("name") || sessionStorage.getItem("name");
+    const storedProfileImg =
+      Number(localStorage.getItem("profileImg")) ||
+      Number(sessionStorage.getItem("profileImg"));
 
-    if (storedName && !name) {
+    if (storedName) {
       dispatch(setUserName(storedName));
     }
-    if (storedProfileImg && !profileImg) {
+    if (storedProfileImg) {
       dispatch(setUserProfileImg(storedProfileImg));
     }
-  }, [dispatch, name, profileImg]);
+  }, []);
 
   /* 알림창 열고 닫는 함수 */
   const handleAlertWindow = () => {
@@ -181,13 +181,12 @@ const Header = () => {
                 <Line
                   key={data.id}
                   onClick={() => {
-                    if (data.url) {
+                    if (data.id !== 6) {
                       router.push(`${data.url}`);
                     } else {
                       clearTokens();
                       dispatch(clearUserProfile());
-                      router.push("/");
-                      window.location.reload();
+                      router.push("/login");
                     }
                   }}
                 >
