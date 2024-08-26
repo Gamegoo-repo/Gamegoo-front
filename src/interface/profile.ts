@@ -11,7 +11,7 @@ export interface GameStyle {
 }
 
 export interface User {
-  id: number;
+  id?: number;
   profileImg: number;
   mike: boolean;
   email: string;

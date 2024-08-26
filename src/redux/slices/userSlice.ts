@@ -11,7 +11,7 @@ interface Champion {
 }
 
 interface UserState {
-  id?: number;
+  id?: number | undefined;
   profileImg: number;
   mike: boolean;
   email: string;
@@ -29,6 +29,9 @@ interface UserState {
   winrate: number;
   gameStyleResponseDTOList: GameStyle[];
   championResponseDTOList: Champion[];
+  blocked: boolean;
+  friend: boolean;
+  friendRequestMemberId: number | null;
 };
 
 const initialState: UserState = {
@@ -50,6 +53,9 @@ const initialState: UserState = {
   winrate: 0,
   gameStyleResponseDTOList: [],
   championResponseDTOList: [],
+  blocked: false,
+  friend: false,
+  friendRequestMemberId: null,
 };
 
 export const userSlice = createSlice({
@@ -84,6 +90,9 @@ export const userSlice = createSlice({
       state.winrate = 0;
       state.gameStyleResponseDTOList = [];
       state.championResponseDTOList = [];
+      state.blocked = false;
+      state.friend = false;
+      state.friendRequestMemberId = null;
     },
   },
 });
