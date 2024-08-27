@@ -7,14 +7,14 @@ import React from 'react';
 export function ConnectionManager() {
   function connect() {
     socket.connect();
-    console.log(socket.id)
-    const socketId = socket.id || ''
-    localStorage.setItem('gamegooSocketId', socketId)
+    // console.log(socket.id)
+    // const socketId = socket.id || ''
+    // localStorage.setItem('gamegooSocketId', socketId)
   }
 
   function disconnect() {
     socket.disconnect();
-    localStorage.removeItem('gamegooSocketId')
+    // localStorage.removeItem('gamegooSocketId')
   }
 
   return (

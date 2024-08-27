@@ -1,5 +1,4 @@
 "use client";
-import StyledJsxRegistry from "./registry";
 import GlobalStyles from "@/styles/GlobalStyles";
 import { ThemeProvider } from "styled-components";
 import { theme } from "@/styles/theme";
@@ -9,12 +8,14 @@ import { Provider } from "react-redux";
 import { useRef } from "react";
 import { AppStore, store } from "@/redux/store";
 import { usePathname } from "next/navigation";
+import { useSocketConnection } from "@/hooks/useSocketConnection";
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   const storeRef = useRef<AppStore>();
   if (!storeRef.current) {
     storeRef.current = store();
@@ -26,6 +27,9 @@ export default function RootLayout({
     pathname.includes("/join") ||
     pathname.includes("/password")
   );
+
+  /* 소켓 연결 */
+  useSocketConnection();
 
   return (
     <html>
@@ -47,3 +51,4 @@ export default function RootLayout({
     </html>
   );
 }
+

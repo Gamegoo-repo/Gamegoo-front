@@ -37,7 +37,7 @@ const ChatList = (props: ChatListProps) => {
         onSelectChatroom,
         triggerReloadChatrooms,
         setIsMannerStatus,
-        setIsBadMannerStatus
+        setIsBadMannerStatus,
     } = props;
 
     const isModalType = useSelector((state: RootState) => state.modal.modalType);

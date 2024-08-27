@@ -10,37 +10,11 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { socket } from "@/socket";
-import { ConnectionManager } from "@/components/common/ConnectionManager";
 
 const HomePage = () => {
   const router = useRouter();
 
   const isUser = useSelector((state: RootState) => state.user);
-
-  const [isConnected, setIsConnected] = useState(socket.connected);
-
-  useEffect(() => {
-    function onConnect() {
-      setIsConnected(true);
-      console.log(socket.id)
-      const socketId = socket.id || ''
-      localStorage.setItem('gamegooSocketId', socketId)
-    }
-
-    function onDisconnect() {
-      setIsConnected(false);
-    }
-
-
-    socket.on('connect', onConnect);
-    socket.on('disconnect', onDisconnect);
-
-
-    return () => {
-      socket.off('connect', onConnect);
-      socket.off('disconnect', onDisconnect);
-    };
-  }, []);
 
 
   return (
@@ -55,7 +29,6 @@ const HomePage = () => {
             alt="logo"
           />
           <SubTitle>겜구 커뮤니티에 오신 것을 환영합니다.</SubTitle>
-          <ConnectionManager />
         </Header>
         <Main>
           {MATCH_PAGE_DATA.map((content) => {

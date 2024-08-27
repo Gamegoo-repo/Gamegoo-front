@@ -14,7 +14,7 @@ export const store = () => {
       user: userReducer,
       modal: modalReducer,
       mannerStatus: mannerStatusReducer,
-      post: postReducer
+      post: postReducer,
     },
   })
 }

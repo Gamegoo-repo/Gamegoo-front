@@ -61,7 +61,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
         };
 
         handleFetchChatrooms();
-    }, [isModalType, reloadChatrooms])
+    }, [isModalType, reloadChatrooms, activeTab])
 
     /* 상태 변경하여 useEffect 트리거 */
     const triggerReloadChatrooms = () => {
@@ -289,6 +289,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                             {activeTab === 'friends' &&
                                 <FriendsList
                                     onChatRoom={handleGoToChatRoom}
+                                    activeTab={activeTab}
                                 />
                             }
                             {activeTab === 'chat' && (

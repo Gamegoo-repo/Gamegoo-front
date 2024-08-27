@@ -6,13 +6,17 @@ import DeleteFriend from './DeleteFriend';
 import { deleteFriend, getFriendsList, likeFriend, unLikeFriend } from '@/api/friends';
 import { FriendListInterface } from '@/interface/friends';
 import { getProfileBgColor } from '@/utils/profile';
+import { socket } from '@/socket';
+import { useSocketEvents } from '@/hooks/useSocketEvents';
 
 interface FriendListProps {
     onChatRoom: (id: number) => void;
+    activeTab: string;
 }
 
-const FriendsList = ({ onChatRoom }: FriendListProps) => {
+const FriendsList = ({ onChatRoom, activeTab }: FriendListProps) => {
     const [friends, setFriends] = useState<FriendListInterface[]>([]);
+    const [onlineFriends, setOnlineFriends] = useState<number[]>([]);
 
     const [deleteMenu, setDeleteMenu] = useState<{ x: number, y: number, friendId: number | null }>({ x: 0, y: 0, friendId: null });
 
@@ -30,7 +34,36 @@ const FriendsList = ({ onChatRoom }: FriendListProps) => {
         }
 
         handleFetchFriendsList();
-    }, [])
+
+    }, [activeTab]);
+
+    // useEffect(() => {
+    //     // 소켓 연결 시도 중 에러 확인
+    //     socket.on("connect_error", (err) => {
+    //         console.error("Socket connection error:", err);
+    //     });
+
+    //     if (socket.connected) {
+    //         console.log("Socket is already connected:", socket.id);
+    //         // socket.emit("init-online-friend-list", friends);
+    //     } else {
+    //         socket.on("connect", () => {
+    //             console.log("Socket connected:", socket.id);
+    //             // socket.emit("init-online-friend-list", friends);
+    //         });
+    //     }
+
+    //     socket.on("init-online-friend-list", (response) => {
+    //         console.log("Received online friends list:", response);
+    //         setOnlineFriends(response.data.onlineFriendMemberIdList);
+    //     });
+
+    //     return () => {
+    //         socket.off("connect");
+    //         socket.off("init-online-friend-list");
+    //         socket.off("connect_error");
+    //     };
+    // }, [socket, friends]);
 
     /* 삭제 하기 버튼 열기 */
     const handleContextMenu = (event: React.MouseEvent, friendId: number) => {
@@ -111,6 +144,7 @@ const FriendsList = ({ onChatRoom }: FriendListProps) => {
                             즐겨찾기
                         </FavoritesTitle>
                         {favoriteFriends.map(friend => {
+                            const isOnline = onlineFriends.includes(friend.memberId);
                             return (
                                 <UserContent
                                     onContextMenu={(e) => handleContextMenu(e, friend.memberId)}
@@ -144,6 +178,13 @@ const FriendsList = ({ onChatRoom }: FriendListProps) => {
                                         height={5}
                                         alt="온라인" />
                                 } */}
+                                        {isOnline && (
+                                            <Online
+                                                src="/assets/icons/online.svg"
+                                                width={5}
+                                                height={5}
+                                                alt="온라인" />
+                                        )}
                                     </Left>
                                     <Image
                                         onClick={(e) => handleFavoriteToggle(e, friend.memberId)}

@@ -61,7 +61,7 @@ const Login = () => {
 
       /* 로켓 로그인 */
       socketLogin();
-      
+
       dispatch(setUserName(response.result.name));
       dispatch(setUserProfileImg(response.result.profileImage));
       localStorage.setItem("name", response.result.name);
