@@ -21,7 +21,7 @@ const FriendsList = ({ onChatRoom, activeTab }: FriendListProps) => {
     const favoriteFriends = friends.filter(friend => friend.liked);
 
     const onlineFriends = useSelector((state: RootState) => state.chat.onlineFriends);
-
+console.log(onlineFriends)
     /* 친구 목록 가져오기 */
     useEffect(() => {
         const handleFetchFriendsList = async () => {

@@ -9,7 +9,7 @@ import { useEffect, useRef } from "react";
 import { AppStore, store } from "@/redux/store";
 import { usePathname } from "next/navigation";
 import { socket } from "@/socket";
-import { friendOnline, memberId } from "@/redux/slices/chatSlice";
+import { friendOffline, friendOnline, memberId } from "@/redux/slices/chatSlice";
 
 export default function RootLayout({
   children,
@@ -69,7 +69,31 @@ export default function RootLayout({
       // init-online-friend-list 이벤트 리스너 등록
       socket.on("init-online-friend-list", async (res, cb) => {
         try {
-          dispatch(friendOnline(res.data.onlineFriendMemberIdList));
+          const onlineFriendsList = res.data.onlineFriendMemberIdList;
+          // onlineFriendsList 전체를 저장
+          dispatch(friendOnline(onlineFriendsList));
+        } catch (error) {
+          cb({ ok: false, error: error });
+        }
+      });
+
+      // friend-online 이벤트 리스너 등록
+      socket.on("friend-online", async (res, cb) => {
+        try {
+          const onlineFriendId = res.data.memberId;
+          // friendOnline 배열에 해당 id 없으면 추가
+          dispatch(friendOnline(onlineFriendId));
+        } catch (error) {
+          cb({ ok: false, error: error });
+        }
+      });
+
+      // friend-offline 이벤트 리스너 등록
+      socket.on("friend-offline", async (res, cb) => {
+        try {
+          const onlineFriendId = res.data.memberId;
+          // friendOnline 배열에 해당 id가 있으면 제거
+          dispatch(friendOffline(onlineFriendId));
         } catch (error) {
           cb({ ok: false, error: error });
         }
@@ -80,6 +104,8 @@ export default function RootLayout({
         socket.off("disconnect", onDisconnect);
         socket.off("member-info");
         socket.off("init-online-friend-list");
+        socket.off("friend-online");
+        socket.off("friend-offline");
       };
     }, [dispatch]);
     return null;

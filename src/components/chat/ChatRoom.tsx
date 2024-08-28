@@ -58,12 +58,8 @@ const ChatRoom = (props: ChatRoomProps) => {
 
     const isEvaluationModalOpen = useSelector((state: RootState) => state.modal.evaluationModal);
     const isMannerModalStatus = useSelector((state: RootState) => state.mannerStatus.mannerStatus);
+    const onlineFriends = useSelector((state: RootState) => state.chat.onlineFriends);
 
-    // useEffect(() => {
-    //     socket.on(“message”, (message) => {
-    //     setMessageList((prevState)=> prevState.concat(message));
-    // });
-    // },[]);
     const [chatData, setChatData] = useState<Chat>();
 
     /* 채팅방 입장 */
@@ -269,14 +265,21 @@ const ChatRoom = (props: ChatRoomProps) => {
                                             alt="프로필 이미지" />
                                     </ImageWrapper>
                                     <Div>
-                                        <UserName>{chatData.gameName}</UserName>
-                                        <Online>온라인</Online>
-                                        <OnlineImage
-                                            src="/assets/icons/online.svg"
-                                            width={5}
-                                            height={5}
-                                            alt="온라인" />
-                                    </Div>
+        <UserName>{chatData.gameName}</UserName>
+        {onlineFriends.includes(chatData.memberId) ? (
+            <>
+                <OnlineStatus>온라인</OnlineStatus>
+                <OnlineImage
+                    src="/assets/icons/online.svg"
+                    width={5}
+                    height={5}
+                    alt="온라인"
+                />
+            </>
+        ) : (
+            <OnlineStatus>오프라인</OnlineStatus>
+        )}
+    </Div>
                                 </Middle>
                                 <ThreeDotsImage
                                     onClick={handleMoreBoxOpen}
@@ -486,7 +489,7 @@ const UserName = styled.p`
     color: ${theme.colors.gray600}; 
 `;
 
-const Online = styled.p`
+const OnlineStatus = styled.p`
    ${(props) => props.theme.fonts.medium11};
     color: ${theme.colors.gray200}; 
 `;
