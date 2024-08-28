@@ -5,6 +5,7 @@ import modalReducer from "./slices/modalSlice";
 import mannerStatusReducer from "./slices/mannerStatusSlice";
 import postReducer from "./slices/postSlice";
 import passwordReducer from "./slices/passwordSlice";
+import chatReducer from "./slices/chatSlice";
 
 export const store = () => {
   return configureStore({
@@ -15,6 +16,7 @@ export const store = () => {
       modal: modalReducer,
       mannerStatus: mannerStatusReducer,
       post: postReducer,
+      chat: chatReducer,
     },
   })
 }
