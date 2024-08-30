@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import MessageContainer from "./MessageContainer";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -48,6 +48,7 @@ const ChatRoom = (props: ChatRoomProps) => {
 
     const dispatch = useDispatch();
     const router = useRouter();
+    const chatRef = useRef<HTMLDivElement>(null);
 
     const [message, setMessage] = useState("");
     const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
@@ -85,8 +86,7 @@ const ChatRoom = (props: ChatRoomProps) => {
         };
 
         handleChatEnter();
-    }, [chatId, dataUpdated])
-
+    }, [chatId, dataUpdated]);
 
     const triggerDataUpdate = () => {
         setDataUpdated((prev) => !prev);
@@ -294,10 +294,11 @@ const ChatRoom = (props: ChatRoomProps) => {
                             </ChatHeader>
                         }
                         <ChatBorder>
-                            <ChatMain>
+                            <ChatMain ref={chatRef}>
                                 {chatEnterData &&
                                     <MessageContainer
-                                        chatEnterData={chatEnterData} />
+                                        chatEnterData={chatEnterData}
+                                        chatRef={chatRef} />
                                 }
                             </ChatMain>
                         </ChatBorder>

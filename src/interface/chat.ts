@@ -36,7 +36,7 @@ export interface ChatMessageList {
     chatMessageDtoList: ChatMessageDto[];
     list_size: number;
     has_next: boolean;
-    next_cursor: string | null;
+    next_cursor: number | null;
 }
 
 export interface Chat {
