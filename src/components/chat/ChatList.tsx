@@ -65,7 +65,7 @@ const ChatList = (props: ChatListProps) => {
             await reqFriend(memberId);
             triggerReloadChatrooms();
         } catch (error) {
-            console.log('에러', error);
+            console.error(error);
         }
 
         if (setIsMoreBoxOpen) {
@@ -81,7 +81,7 @@ const ChatList = (props: ChatListProps) => {
             await deleteFriend(memberId);
             triggerReloadChatrooms();
         } catch (error) {
-            console.log('에러', error);
+            console.error(error);
         }
     };
 
@@ -93,7 +93,7 @@ const ChatList = (props: ChatListProps) => {
             await cancelFriendReq(memberId);
             triggerReloadChatrooms();
         } catch (error) {
-            console.log('에러', error);
+            console.error(error);
         }
     };
 
@@ -178,7 +178,7 @@ const ChatList = (props: ChatListProps) => {
             const response = await getMannerValues(memberId);
             await setIsMannerStatus(response.result);
         } catch (error) {
-            console.log('에러', error);
+            console.error(error);
         }
     };
 
@@ -189,7 +189,7 @@ const ChatList = (props: ChatListProps) => {
             await setIsBadMannerStatus(response.result);
             console.log(response.result)
         } catch (error) {
-            console.log('에러', error);
+            console.error(error);
         }
     };
 

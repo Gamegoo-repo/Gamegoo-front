@@ -4,7 +4,7 @@ export interface ChatroomList {
     friend: boolean;
     friendRequestMemberId: number;
     uuid: string;
-    targetMemberId:number;
+    targetMemberId: number;
     targetMemberImg: number;
     targetMemberName: string;
     lastMsg: string;
@@ -62,4 +62,11 @@ export interface FriendsList {
     name: string;
     memberProfileImg: number;
     liked: boolean;
+}
+
+export interface UnreadResponse {
+    code: string;
+    isSuccess: boolean;
+    message: string;
+    result: string[];
 }

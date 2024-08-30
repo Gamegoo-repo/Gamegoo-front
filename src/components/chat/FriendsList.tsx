@@ -21,7 +21,7 @@ const FriendsList = ({ onChatRoom, activeTab }: FriendListProps) => {
     const favoriteFriends = friends.filter(friend => friend.liked);
 
     const onlineFriends = useSelector((state: RootState) => state.chat.onlineFriends);
-console.log(onlineFriends)
+    console.log(onlineFriends)
     /* 친구 목록 가져오기 */
     useEffect(() => {
         const handleFetchFriendsList = async () => {
@@ -29,7 +29,7 @@ console.log(onlineFriends)
                 const data = await getFriendsList();
                 setFriends(data.result);
             } catch (error) {
-                console.error("에러:", error);
+                console.error(error);
             }
         }
 
@@ -62,7 +62,7 @@ console.log(onlineFriends)
                 await handleCloseDeletetMenu();
             }
         } catch (error) {
-            console.error('친구 삭제 에러:', error);
+            console.error(error);
         }
     };
 
@@ -75,7 +75,7 @@ console.log(onlineFriends)
                 await likeFriend(friendId);
             }
         } catch (error) {
-            console.error('즐겨찾기 상태 변경 중 에러:', error);
+            console.error(error);
         }
     };
 

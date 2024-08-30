@@ -19,6 +19,7 @@ import { cancelFriendReq, deleteFriend, reqFriend } from "@/api/friends";
 import { enterUsingMemberId, enterUsingUuid } from "@/api/chat";
 import { getBadMannerValues, getMannerValues } from "@/api/manner";
 import { Mannerstatus } from "@/interface/manner";
+import { setCurrentChatUuid } from "@/redux/slices/chatSlice";
 
 interface ChatRoomProps {
     onClose: () => void;
@@ -55,34 +56,37 @@ const ChatRoom = (props: ChatRoomProps) => {
     const [checkedBadMannerItems, setCheckedBadMannerItems] = useState<number[]>([]);
     const [isMannerStatus, setIsMannerStatus] = useState<Mannerstatus | undefined>();
     const [isBadMannerStatus, setIsBadMannerStatus] = useState<Mannerstatus | undefined>();
+    const [chatEnterData, setChatEnterData] = useState<Chat>();
 
     const isEvaluationModalOpen = useSelector((state: RootState) => state.modal.evaluationModal);
     const isMannerModalStatus = useSelector((state: RootState) => state.mannerStatus.mannerStatus);
     const onlineFriends = useSelector((state: RootState) => state.chat.onlineFriends);
 
-    const [chatData, setChatData] = useState<Chat>();
 
     /* 채팅방 입장 */
     useEffect(() => {
-        const handleFetchChatData = async () => {
+        const handleChatEnter = async () => {
             try {
                 if (typeof chatId === 'string') {
                     const data = await enterUsingUuid(chatId);
-                    setChatData(data.result);
+                    setChatEnterData(data.result);
                     onMemberId(data.result.memberId);
+                    dispatch(setCurrentChatUuid(data.result.uuid));
                 }
                 if (typeof chatId === 'number') {
                     const data = await enterUsingMemberId(chatId);
-                    setChatData(data.result);
+                    setChatEnterData(data.result);
                     onMemberId(data.result.memberId);
+                    dispatch(setCurrentChatUuid(data.result.uuid));
                 }
             } catch (error) {
-                console.error("에러:", error);
+                console.error(error);
             }
         };
 
-        handleFetchChatData();
+        handleChatEnter();
     }, [chatId, dataUpdated])
+
 
     const triggerDataUpdate = () => {
         setDataUpdated((prev) => !prev);
@@ -98,10 +102,10 @@ const ChatRoom = (props: ChatRoomProps) => {
     };
 
     const handleMoreBoxOpen = () => {
-        if (!chatData || !chatData.memberId) return;
+        if (!chatEnterData || !chatEnterData.memberId) return;
 
-        handleMannerValuesGet(chatData.memberId);
-        handleBadMannerValuesGet(chatData.memberId);
+        handleMannerValuesGet(chatEnterData.memberId);
+        handleBadMannerValuesGet(chatEnterData.memberId);
         setIsMoreBoxOpen(prevState => !prevState);
     };
 
@@ -128,7 +132,7 @@ const ChatRoom = (props: ChatRoomProps) => {
 
     /* 신고하기 */
     const handleReportClick = (e: React.MouseEvent, memberId: number) => {
-        if (chatData?.memberId) {
+        if (chatEnterData?.memberId) {
             handleModalChange(e, 'report', memberId);
         }
     }
@@ -141,49 +145,49 @@ const ChatRoom = (props: ChatRoomProps) => {
 
     /* 친구 추가 */
     const handleFriendAdd = async () => {
-        if (!chatData) return;
+        if (!chatEnterData) return;
         try {
-            await reqFriend(chatData.memberId);
+            await reqFriend(chatEnterData.memberId);
             triggerDataUpdate();
         } catch (error) {
-            console.log('에러', error)
+            console.error(error);
         }
     };
 
     /* 친구 요청 취소 */
     const handleCancelFriendReq = async () => {
-        if (!chatData) return;
+        if (!chatEnterData) return;
 
         try {
-            await cancelFriendReq(chatData.memberId);
+            await cancelFriendReq(chatEnterData.memberId);
             triggerDataUpdate();
         } catch (error) {
-            console.log('에러', error)
+            console.error(error);
         }
     };
 
     /* 친구 취소 */
     const handleFriendDelete = async () => {
-        if (!chatData) return;
+        if (!chatEnterData) return;
 
         try {
-            await deleteFriend(chatData.memberId);
+            await deleteFriend(chatEnterData.memberId);
             triggerDataUpdate();
         } catch (error) {
-            console.log('에러', error)
+            console.error(error);
         }
     };
 
     /* 매너 평가하기 */
     const handleMannerClick = (e: React.MouseEvent, targetMemberId: number) => {
-        if (chatData?.memberId) {
+        if (chatEnterData?.memberId) {
             handleModalChange(e, 'manner', targetMemberId);
         }
     };
 
     /* 비매너 평가하기 */
     const handleBadMannerClick = (e: React.MouseEvent, targetMemberId: number) => {
-        if (chatData?.memberId) {
+        if (chatEnterData?.memberId) {
             handleModalChange(e, 'badManner', targetMemberId);
         }
     };
@@ -194,7 +198,7 @@ const ChatRoom = (props: ChatRoomProps) => {
             const response = await getMannerValues(memberId);
             await setIsMannerStatus(response.result);
         } catch (error) {
-            console.log('에러', error);
+            console.error(error);
         }
     };
 
@@ -205,7 +209,7 @@ const ChatRoom = (props: ChatRoomProps) => {
             await setIsBadMannerStatus(response.result);
             console.log(response.result)
         } catch (error) {
-            console.log('에러', error);
+            console.error(error);
         }
     };
 
@@ -213,23 +217,23 @@ const ChatRoom = (props: ChatRoomProps) => {
     const menuItems: MoreBoxMenuItems[] = [
         { text: '채팅방 나가기', onClick: (e: React.MouseEvent) => handleModalChange(e, 'leave') },
         // 친구 추가 조건: 친구가 아니고, 친구 요청도 하지 않은 경우
-        !chatData?.friend && !chatData?.friendRequestMemberId &&
+        !chatEnterData?.friend && !chatEnterData?.friendRequestMemberId &&
         { text: '친구 추가', onClick: handleFriendAdd },
         // 친구 취소 조건: 친구인 경우
-        chatData?.friend &&
+        chatEnterData?.friend &&
         { text: '친구 취소', onClick: handleFriendDelete },
         // 친구 요청 취소 조건: 친구가 아니고, 친구 요청을 이미 한 경우
-        !chatData?.friend && chatData?.friendRequestMemberId &&
+        !chatEnterData?.friend && chatEnterData?.friendRequestMemberId &&
         { text: '친구 요청 취소', onClick: handleCancelFriendReq },
         { text: '차단하기', onClick: (e: React.MouseEvent) => handleModalChange(e, 'block') },
-        { text: '신고하기', onClick: (e: React.MouseEvent) => chatData?.memberId && handleReportClick(e, chatData.memberId) },
-        { text: '매너 평가', onClick: (e: React.MouseEvent) => chatData?.memberId && handleMannerClick(e, chatData.memberId) },
-        { text: '비매너 평가', onClick: (e: React.MouseEvent) => chatData?.memberId && handleBadMannerClick(e, chatData.memberId) },
+        { text: '신고하기', onClick: (e: React.MouseEvent) => chatEnterData?.memberId && handleReportClick(e, chatEnterData.memberId) },
+        { text: '매너 평가', onClick: (e: React.MouseEvent) => chatEnterData?.memberId && handleMannerClick(e, chatEnterData.memberId) },
+        { text: '비매너 평가', onClick: (e: React.MouseEvent) => chatEnterData?.memberId && handleBadMannerClick(e, chatEnterData.memberId) },
     ].filter(item => item) as MoreBoxMenuItems[];
 
     return (
         <>
-            {chatData &&
+            {chatEnterData &&
                 <Overlay>
                     <Wrapper onClick={handleOutsideModalClick}>
                         {isMoreBoxOpen &&
@@ -247,7 +251,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                                 height={11}
                                 alt='닫기' />
                         </CloseButton>
-                        {chatData &&
+                        {chatEnterData &&
                             <ChatHeader>
                                 <PrevImage
                                     onClick={onGoback}
@@ -256,30 +260,30 @@ const ChatRoom = (props: ChatRoomProps) => {
                                     height={18}
                                     alt="뒤로가기" />
                                 <Middle>
-                                    <ImageWrapper $bgColor={getProfileBgColor(chatData.memberProfileImg)}>
+                                    <ImageWrapper $bgColor={getProfileBgColor(chatEnterData.memberProfileImg)}>
                                         <ProfileImage
-                                            onClick={() => router.push(`/user/${chatData.memberId}`)}
-                                            src={`/assets/images/profile/profile${chatData.memberProfileImg}.svg`}
+                                            onClick={() => router.push(`/user/${chatEnterData.memberId}`)}
+                                            src={`/assets/images/profile/profile${chatEnterData.memberProfileImg}.svg`}
                                             width={38}
                                             height={38}
                                             alt="프로필 이미지" />
                                     </ImageWrapper>
                                     <Div>
-        <UserName>{chatData.gameName}</UserName>
-        {onlineFriends.includes(chatData.memberId) ? (
-            <>
-                <OnlineStatus>온라인</OnlineStatus>
-                <OnlineImage
-                    src="/assets/icons/online.svg"
-                    width={5}
-                    height={5}
-                    alt="온라인"
-                />
-            </>
-        ) : (
-            <OnlineStatus>오프라인</OnlineStatus>
-        )}
-    </Div>
+                                        <UserName>{chatEnterData.gameName}</UserName>
+                                        {onlineFriends.includes(chatEnterData.memberId) ? (
+                                            <>
+                                                <OnlineStatus>온라인</OnlineStatus>
+                                                <OnlineImage
+                                                    src="/assets/icons/online.svg"
+                                                    width={5}
+                                                    height={5}
+                                                    alt="온라인"
+                                                />
+                                            </>
+                                        ) : (
+                                            <OnlineStatus>오프라인</OnlineStatus>
+                                        )}
+                                    </Div>
                                 </Middle>
                                 <ThreeDotsImage
                                     onClick={handleMoreBoxOpen}
@@ -291,9 +295,9 @@ const ChatRoom = (props: ChatRoomProps) => {
                         }
                         <ChatBorder>
                             <ChatMain>
-                                {chatData &&
+                                {chatEnterData &&
                                     <MessageContainer
-                                        message={chatData} />
+                                        chatEnterData={chatEnterData} />
                                 }
                             </ChatMain>
                         </ChatBorder>
@@ -305,13 +309,13 @@ const ChatRoom = (props: ChatRoomProps) => {
                                         maxLength={1000}
                                         value={message}
                                         onChange={(event) => setMessage(event.target.value)}
-                                        disabled={!!chatData.blocked}
-                                        placeholder={!!chatData?.blocked ? "메시지를 보낼 수 없는 상대입니다." : ""}
+                                        disabled={!!chatEnterData.blocked}
+                                        placeholder={!!chatEnterData?.blocked ? "메시지를 보낼 수 없는 상대입니다." : ""}
                                     />
                                     <SubmitButton
-                                        disabled={message === "" || !!chatData.blocked}
+                                        disabled={message === "" || !!chatEnterData.blocked}
                                         type="submit"
-                                        className={!!chatData.blocked ? "disabled-button" : ""}
+                                        className={!!chatEnterData.blocked ? "disabled-button" : ""}
                                     >
                                         전송
                                     </SubmitButton>

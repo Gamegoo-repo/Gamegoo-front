@@ -52,7 +52,7 @@ const HomePage = () => {
         </Main>
         <Footer>
           <ChatBoxContent>
-            <ChatButton count={3} />
+            <ChatButton/>
           </ChatBoxContent>
         </Footer>
       </HomeContent>

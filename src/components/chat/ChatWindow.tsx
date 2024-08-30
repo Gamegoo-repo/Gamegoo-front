@@ -20,6 +20,7 @@ import { getChatrooms, leaveChatroom } from "@/api/chat";
 import { ChatroomList } from "@/interface/chat";
 import { blockMember, reportMember } from "@/api/member";
 import { Mannerstatus } from "@/interface/manner";
+import useChatMessage from "@/hooks/useChatMessage";
 
 interface ChatWindowProps {
     onClose: () => void;
@@ -56,7 +57,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                 const data = await getChatrooms();
                 setChatrooms(data.result);
             } catch (error) {
-                console.error("에러:", error);
+                console.error(error);
             }
         };
 
@@ -115,7 +116,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
             await leaveChatroom(isUuid);
             await dispatch(setCloseModal());
         } catch (error) {
-            console.error("에러:", error);
+            console.error(error);
         }
         handleModalClose();
         handleBackToChatWindow();
@@ -131,7 +132,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
             await blockMember(isMemberId);
             await dispatch(setCloseModal());
         } catch (error) {
-            console.error("에러:", error);
+            console.error(error);
         }
         await dispatch(setOpenModal('doneBlock'));
     };
@@ -179,7 +180,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
             await reportMember(params)
             await handleModalClose();
         } catch (error) {
-            console.error("에러:", error);
+            console.error(error);
         }
     };
 
@@ -196,7 +197,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
             await postMannerValue(params)
             await handleModalClose();
         } catch (error) {
-            console.error("에러:", error);
+            console.error(error);
         }
     };
 
@@ -213,7 +214,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
             await postBadMannerValue(params)
             await handleModalClose();
         } catch (error) {
-            console.error("에러:", error);
+            console.error(error);
         }
     };
 
@@ -245,7 +246,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
             await editManners(type === 'manner' ? mannerIdNumber : badMannerIdNumber, params);
             await handleModalClose();
         } catch (error) {
-            console.log('에러', error);
+            console.error(error);
         }
     };
 

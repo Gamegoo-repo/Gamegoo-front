@@ -4,19 +4,30 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import ChatWindow from "../chat/ChatWindow";
 import Alert from "./Alert";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 
-interface msgCountProps {
-  count: number;
-}
+const ChatButton = () => {
 
-const ChatButton = (props: msgCountProps) => {
-  const { count } = props;
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [unreadChatUuids, setUnreadChatUuids] = useState<string[]>([]);
 
   const isUser = useSelector((state: RootState) => state.user);
+  const unreadUuid = useSelector((state: RootState) => state.chat.unreadUuids);
+
+  useEffect(() => {
+    setUnreadChatUuids(unreadUuid);
+  }, [unreadUuid])
+
+  useEffect(() => {
+    const localUnreadChatUuids = localStorage.getItem('unreadChatUuids');
+    if (localUnreadChatUuids) {
+      setUnreadChatUuids(JSON.parse(localUnreadChatUuids));
+    } 
+  }, [unreadUuid]);
+
+  const chatCount = unreadChatUuids ? unreadChatUuids.length : 0;
 
   const toggleChat = () => {
     // if (!isUser.id) {
@@ -64,7 +75,7 @@ const ChatButton = (props: msgCountProps) => {
             alt="채팅"
           />
           <MsgCount>
-            <Count>{count}</Count>
+            <Count>{chatCount}</Count>
           </MsgCount>
         </MsgButton>
       </ChatBoxContent>

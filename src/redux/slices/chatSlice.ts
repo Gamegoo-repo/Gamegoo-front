@@ -3,11 +3,15 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface ChatState {
     memberId: number;
     onlineFriends: number[];
+    unreadUuids: string[];
+    currentChatUuid: string | null;
 }
 
 const initialState: ChatState = {
     memberId: 0,
     onlineFriends: [],
+    currentChatUuid: null,
+    unreadUuids: [],
 };
 
 const chatSlice = createSlice({
@@ -32,12 +36,20 @@ const chatSlice = createSlice({
             // id를 배열에서 제거
             state.onlineFriends = state.onlineFriends.filter(id => id !== action.payload);
         },
+        setCurrentChatUuid(state, action: PayloadAction<string>) {
+            state.currentChatUuid = action.payload;
+        },
+        unreadUuid(state, action: PayloadAction<string[]>) {
+            state.unreadUuids = action.payload;
+        },
     },
 });
 
 export const {
     memberId,
     friendOnline,
-    friendOffline
+    friendOffline,
+    unreadUuid,
+    setCurrentChatUuid,
 } = chatSlice.actions;
 export default chatSlice.reducer;

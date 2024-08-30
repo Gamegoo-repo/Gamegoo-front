@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { theme } from "@/styles/theme";
 import Image from 'next/image';
 import dayjs from 'dayjs';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { setChatDateFormatter, setChatTimeFormatter } from '@/utils/custom';
 import ConfirmModal from '../common/ConfirmModal';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,9 +12,11 @@ import { Chat, ChatMessageDto, ChatMessageList } from '@/interface/chat';
 import ReadBoard from '../readBoard/ReadBoard';
 import { useRouter } from 'next/navigation';
 import { getProfileBgColor } from '@/utils/profile';
+import { getChatList } from '@/api/chat';
+import { socket } from '@/socket';
 
 interface MessageContainerProps {
-  message: Chat;
+  chatEnterData: Chat;
 }
 
 interface SystemMessageProps {
@@ -23,26 +25,75 @@ interface SystemMessageProps {
 }
 
 const MessageContainer = (props: MessageContainerProps) => {
-  const { message } = props;
+  const { chatEnterData } = props;
 
   const dispatch = useDispatch();
   const router = useRouter();
+  const chatRef = useRef<HTMLDivElement>(null);
 
   const isFeedbackModalOpen = useSelector((state: RootState) => state.modal.isOpen);
   const isReadingModal = useSelector((state: RootState) => state.modal.readingModal);
 
-  const [messageList, setMessageList] = useState<ChatMessageList>();
+  const [messageList, setMessageList] = useState<ChatMessageDto[]>([]);
+  const [messageData, setMessageData] = useState<ChatMessageList>();
   const [isFeedbackDateVisible, setIsFeedbackDateVisible] = useState(false);
   const [isFeedbackDate, setIsFeedbackDate] = useState("");
   const [isBoardId, setIsBoardId] = useState(0);
+  const [cursor, setCursor] = useState<number | null>(null);
+  const [hasMore, setHasMore] = useState<boolean>(true);
+  const [isAtBottom, setIsAtBottom] = useState<boolean>(false);
 
   const handleMannerTypeClose = () => {
     dispatch(setCloseMannerStatusModal());
   };
 
   useEffect(() => {
-    setMessageList(message?.chatMessageList);
-  }, [message])
+    const handleFetchChatData = async (cursor: number | null) => {
+      const params = {
+        uuid: chatEnterData.uuid,
+        cursor: cursor
+      };
+
+      try {
+        const data = await getChatList(params);
+        const { chatMessageDtoList, next_cursor, has_next } = data.result;
+        setMessageList((prevNotiList) => [
+          ...prevNotiList,
+          ...chatMessageDtoList,
+        ]);
+        setMessageData(data.result);
+        setCursor(next_cursor);
+        setHasMore(has_next);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    handleFetchChatData(cursor);
+  }, [chatEnterData])
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (chatRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } =
+          chatRef.current;
+        if (scrollTop + clientHeight >= scrollHeight - 20) {
+          setIsAtBottom(true);
+        } else {
+          setIsAtBottom(false);
+        }
+      }
+    };
+
+    if (chatRef.current) {
+      chatRef.current.addEventListener("scroll", handleScroll);
+    }
+    return () => {
+      if (chatRef.current) {
+        chatRef.current.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, []);
 
   const handleDisplayDate = (messages: ChatMessageDto[], index: number): boolean => {
     if (index === 0) return true;
@@ -56,7 +107,7 @@ const MessageContainer = (props: MessageContainerProps) => {
   const handleDisplayProfileImage = (messages: ChatMessageDto[], index: number): boolean => {
     if (index === 0) return true;
 
-    return messages[index].senderId === message.memberId;
+    return messages[index].senderId === chatEnterData.memberId;
   };
 
   const handleDisplayTime = (messages: ChatMessageDto[], index: number): boolean => {
@@ -79,7 +130,7 @@ const MessageContainer = (props: MessageContainerProps) => {
 
   /* 마지막 채팅을 보낸 날짜에서 1시간을 더했을 때, 마지막 보낸 채팅 날짜랑 피드백 날짜가 다를 때만 보여주기 */
   useEffect(() => {
-    const lastMessage = messageList?.chatMessageDtoList[messageList.chatMessageDtoList.length - 1];
+    const lastMessage = messageData?.chatMessageDtoList[messageData.chatMessageDtoList.length - 1];
     const feedbackTimestamp = dayjs(lastMessage?.createdAt).add(1, 'hour');
     const feedbackFullDate = dayjs(feedbackTimestamp).format('YYYY-MM-DDTHH:mm:ss');
 
@@ -131,14 +182,15 @@ const MessageContainer = (props: MessageContainerProps) => {
       {isReadingModal &&
         <ReadBoard onClose={handlePostClose} postId={isBoardId} />
       }
-      {messageList?.chatMessageDtoList.map((data, index) => {
-        const hasProfileImage = handleDisplayProfileImage(messageList.chatMessageDtoList, index);
-        const showTime = handleDisplayTime(messageList.chatMessageDtoList, index);
+      {messageData?.chatMessageDtoList.map((data, index) => {
+        const hasProfileImage = handleDisplayProfileImage(messageData.chatMessageDtoList, index);
+        const showTime = handleDisplayTime(messageData.chatMessageDtoList, index);
 
         return (
           <MsgContainer
-            key={index}>
-            {handleDisplayDate(messageList.chatMessageDtoList, index) && (
+            key={index}
+            ref={chatRef}>
+            {handleDisplayDate(messageData.chatMessageDtoList, index) && (
               <Timestamp>{setChatDateFormatter(data.createdAt)}</Timestamp>
             )}
             {data.senderName === "SYSTEM" ? (
@@ -146,9 +198,9 @@ const MessageContainer = (props: MessageContainerProps) => {
                 onClick={data.boardId ? () => handlePostOpen(data.boardId as number) : undefined}
                 message={data.message} />
             ) :
-              data.senderId === message.memberId ? (
+              data.senderId === chatEnterData.memberId ? (
                 <YourMessageContainer>
-                  {handleDisplayProfileImage(messageList.chatMessageDtoList, index) && (
+                  {handleDisplayProfileImage(messageData.chatMessageDtoList, index) && (
                     <>
                       <ImageWrapper $bgColor={getProfileBgColor(data.senderProfileImg)}>
                         <ProfileImage

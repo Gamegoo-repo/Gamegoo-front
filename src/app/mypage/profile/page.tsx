@@ -153,10 +153,10 @@ const MyProfilePage = () => {
         )}
       </MyProfileContent>
       <Footer>
-          <ChatBoxContent>
-            <ChatButton count={3} />
-          </ChatBoxContent>
-        </Footer>
+        <ChatBoxContent>
+          <ChatButton />
+        </ChatBoxContent>
+      </Footer>
     </Wrapper>
   );
 };

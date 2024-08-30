@@ -1,11 +1,13 @@
 "use client";
 
+import { getUnreadUuid } from "@/api/chat";
 import { postLogin } from "@/api/login";
 import { socketLogin } from "@/api/socket";
 import Button from "@/components/common/Button";
 import Checkbox from "@/components/common/Checkbox";
 import Input from "@/components/common/Input";
 import { emailRegEx } from "@/constants/regEx";
+import { unreadUuid } from "@/redux/slices/chatSlice";
 import { setUserName, setUserProfileImg } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
 import { setToken } from "@/utils/storage";
@@ -61,6 +63,14 @@ const Login = () => {
 
       /* 로켓 로그인 */
       socketLogin();
+
+      const data = await getUnreadUuid();
+      if (data.isSuccess) {
+        // 실시간 안읽은 채팅방 수 가져오기 위함
+        dispatch(unreadUuid(data.result));
+        // 새로고침시 채팅방 수 가져오기 위함
+        localStorage.setItem('unreadChatUuids', JSON.stringify(data.result));
+      }
 
       dispatch(setUserName(response.result.name));
       dispatch(setUserProfileImg(response.result.profileImage));
