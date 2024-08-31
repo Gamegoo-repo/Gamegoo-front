@@ -18,6 +18,8 @@ const MyReviewPage = () => {
       setMyManner(response.result);
     };
 
+    console.log("badMannerEvaluations", badMannerEvaluations);
+
     fetchGetMyManner();
   }, []);
 
@@ -69,19 +71,17 @@ const MyReviewPage = () => {
                     ))}
                   </ValueWrapper>
                   <TypeWrapper>
-                    {MANNER_TYPES.map((type, index) => {
+                    {goodMannerEvaluations.map((type, index) => {
                       return (
                         <Type
                           key={index}
-                          className={
-                            (goodMannerEvaluations.find(
-                              (evaluation) => evaluation.id === type.id
-                            )?.count ?? 0) > 0
-                              ? "mannerEmph"
-                              : "default"
-                          }
+                          className={type.count > 0 ? "mannerEmph" : "default"}
                         >
-                          {type.text}
+                          {
+                            MANNER_TYPES.find(
+                              (evaluation) => evaluation.id === type.id
+                            )?.text
+                          }
                         </Type>
                       );
                     })}
@@ -104,19 +104,17 @@ const MyReviewPage = () => {
                     ))}
                   </ValueWrapper>
                   <TypeWrapper>
-                    {BAD_MANNER_TYPES.map((type, index) => {
+                    {badMannerEvaluations.map((type, index) => {
                       return (
                         <Type
                           key={index}
-                          className={
-                            (badMannerEvaluations.find(
-                              (evaluation) => evaluation.id === type.id
-                            )?.count ?? 0) > 0
-                              ? "badEmph"
-                              : "default"
-                          }
+                          className={type.count > 0 ? "badEmph" : "default"}
                         >
-                          {type.text}
+                          {
+                            BAD_MANNER_TYPES.find(
+                              (evaluation) => evaluation.id === type.id
+                            )?.text
+                          }
                         </Type>
                       );
                     })}
@@ -128,10 +126,10 @@ const MyReviewPage = () => {
         </Private>
       </MyReviewContent>
       <Footer>
-          <ChatBoxContent>
-            <ChatButton count={3} />
-          </ChatBoxContent>
-        </Footer>
+        <ChatBoxContent>
+          <ChatButton count={3} />
+        </ChatBoxContent>
+      </Footer>
     </Wrapper>
   );
 };
