@@ -19,7 +19,7 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
 
   /* 선택된 현재 프로필 이미지 */
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(
-    userRedux.profileImg || 1
+    userRedux.profileImg
   );
 
   /* 프로필 이미지 리스트 중 클릭시*/
@@ -42,17 +42,18 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
       try {
         const userData = await getProfile();
         dispatch(setUserProfile(userData));
+        console.log("userData", userData);
       } catch (error) {
         console.error("프로필 정보 불러오기 실패:", error);
       }
     };
 
     fetchProfile();
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
-    console.log("selectedImageIndex", selectedImageIndex);
-  }, [selectedImageIndex]);
+    setSelectedImageIndex(userRedux.profileImg);
+  }, [userRedux.profileImg]);
 
   return (
     <Container>

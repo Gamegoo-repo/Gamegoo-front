@@ -5,7 +5,7 @@ export const getProfile = async () => {
   try {
     const response = await AuthAxios.get(endpoint);
     console.log("유저 프로필 조회 성공:", response.data);
-    return response.data;
+    return response.data.result;
   } catch (error) {
     console.error("유저 프로필 조회 실패:", error);
     throw error;
