@@ -7,6 +7,7 @@ import Post, { PostProps } from "@/components/mypage/post/Post";
 import { useEffect, useState } from "react";
 import { getMyPost } from "@/api/user";
 import Pagination from "@/components/common/Pagination";
+import { deletePost } from "@/api/board";
 
 const MyPostPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -24,6 +25,13 @@ const MyPostPage = () => {
 
     fetchGetMyPost();
   }, [currentPage]);
+
+  const handleDeletePost = async (boardId: number) => {
+    await deletePost(boardId);
+    setPostList((prevPosts) =>
+      prevPosts.filter((post) => post.boardId !== boardId)
+    );
+  };
 
   /* 페이지네이션 이전 클릭 */
   const handlePrevPage = () => {
@@ -66,6 +74,7 @@ const MyPostPage = () => {
                 rank={item.rank}
                 contents={item.contents}
                 createdAt={item.createdAt}
+                onDeletePost={handleDeletePost}
               />
             ))}
           </PostList>

@@ -1,4 +1,4 @@
-import { getMemberPost, getNonMemberPost } from "@/api/board";
+import { deletePost, getMemberPost, getNonMemberPost } from "@/api/board";
 import MoreBox from "@/components/common/MoreBox";
 import PostBoard from "@/components/createBoard/PostBoard";
 import Report from "@/components/readBoard/MoreBoxButton";
@@ -36,6 +36,7 @@ export interface PostProps {
   rank: string;
   contents: string;
   createdAt: string;
+  onDeletePost?: (boardId: number) => void;
 }
 
 const Post: React.FC<PostProps> = ({
@@ -48,6 +49,7 @@ const Post: React.FC<PostProps> = ({
   rank,
   contents,
   createdAt,
+  onDeletePost,
 }) => {
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
   const dispatch = useDispatch();
@@ -77,8 +79,11 @@ const Post: React.FC<PostProps> = ({
     setIsMoreBoxOpen(false);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     // 삭제하기 api
+    if (onDeletePost) {
+      await onDeletePost(boardId);
+    }
     setIsMoreBoxOpen(false);
   };
 
