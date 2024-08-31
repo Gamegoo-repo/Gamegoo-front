@@ -1,13 +1,9 @@
 /* 토큰 저장 */
 export const setToken = (accessToken: string, refreshToken: string, autoLogin: boolean) => {
     if (typeof window !== 'undefined') {
-        if (autoLogin) {
-            localStorage.setItem('accessToken', accessToken);
-            localStorage.setItem('refreshToken', refreshToken);
-        } else {
-            sessionStorage.setItem('accessToken', accessToken);
-            sessionStorage.setItem('refreshToken', refreshToken);
-        }
+        const storage = autoLogin ? localStorage : sessionStorage;
+        storage.setItem('accessToken', accessToken);
+        storage.setItem('refreshToken', refreshToken);
     }
 };
 
