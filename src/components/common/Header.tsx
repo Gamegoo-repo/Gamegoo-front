@@ -86,7 +86,9 @@ const Header = () => {
       }
     };
 
-    fetchNotiCount();
+    if (localStorage.getItem("name") || sessionStorage.getItem("name")) {
+      fetchNotiCount();
+    }
   }, []);
 
   useEffect(() => {
@@ -184,9 +186,9 @@ const Header = () => {
                     if (data.id !== 6) {
                       router.push(`${data.url}`);
                     } else {
+                      router.push("/login");
                       clearTokens();
                       dispatch(clearUserProfile());
-                      router.push("/login");
                     }
                   }}
                 >
