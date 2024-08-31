@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import { getMyPost } from "@/api/user";
 import Pagination from "@/components/common/Pagination";
 import { deletePost } from "@/api/board";
+import { RootState } from "@/redux/store";
+import { useSelector } from "react-redux";
 
 const MyPostPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -15,6 +17,8 @@ const MyPostPage = () => {
   const [hasMoreItems, setHasMoreItems] = useState(true);
   const pageButtonCount = 5;
   const ITEMS_PER_PAGE = 10;
+
+  const currentPost = useSelector((state: RootState) => state.post.currentPost);
 
   useEffect(() => {
     const fetchGetMyPost = async () => {
@@ -24,7 +28,19 @@ const MyPostPage = () => {
     };
 
     fetchGetMyPost();
-  }, [currentPage]);
+  }, [currentPage, currentPost]);
+
+  useEffect(() => {
+    const fetchGetMyPost = async () => {
+      const response = await getMyPost(currentPage);
+      setPostList(response.result);
+      console.log("수정내용 반영");
+    };
+
+    fetchGetMyPost();
+  }, [currentPost]);
+
+  useEffect(() => {}, [postList]);
 
   const handleDeletePost = async (boardId: number) => {
     await deletePost(boardId);

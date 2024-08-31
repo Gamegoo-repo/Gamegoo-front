@@ -65,6 +65,7 @@ const Post: React.FC<PostProps> = ({
   );
 
   const isUser = useSelector((state: RootState) => state.user);
+
   const handleModify = async () => {
     // 수정하기 api
     dispatch(setUserId(memberId));
