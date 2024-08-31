@@ -72,7 +72,7 @@ const MyPostPage = () => {
         <PostPage>
           <Title>내가 작성한 글</Title>
           <Columns>
-            <div>소환사명</div>
+            <Left>소환사명</Left>
             <Center>티어</Center>
             <Center>메모</Center>
             <Center>등록일시</Center>
@@ -150,9 +150,17 @@ const Columns = styled.div`
   background: ${theme.colors.gray600};
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.bold14};
-  padding: 13px 41px;
+  padding: 0 15px;
   display: grid;
-  grid-template-columns: 2fr 1fr 2fr 1fr;
+  align-items: center;
+  grid-template-columns: 1fr 0.6fr 1fr 0.7fr;
+  flex-shrink: 0;
+`;
+
+const Left = styled.div`
+  min-width: 200px;
+  text-align: left;
+  padding-left: 45px;
 `;
 
 const Center = styled.div`

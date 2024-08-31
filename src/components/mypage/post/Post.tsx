@@ -105,9 +105,9 @@ const Post: React.FC<PostProps> = ({
 
   return (
     <Container>
-      {boardId}
       <Content>
         <Name>
+          <Number>{boardId}</Number>
           <ProfileImgWrapper $bgColor={getProfileBgColor(profileImage)}>
             <ProfileImg
               src={`/assets/images/profile/profile${profileImage - 1}.svg`}
@@ -137,12 +137,14 @@ const Post: React.FC<PostProps> = ({
           <Minute>{formatTimeAgo(createdAt)}</Minute>
         </Date>
       </Content>
-      <More>
-        <Report onClick={handleMoreBoxOpen} />
-        {isMoreBoxOpen && (
-          <MoreBox items={MoreBoxMenuItems} top={-10} left={45} />
-        )}
-      </More>
+      <MoreContainer>
+        <More>
+          <Report onClick={handleMoreBoxOpen} />
+          {isMoreBoxOpen && (
+            <MoreBox items={MoreBoxMenuItems} top={-10} left={45} />
+          )}
+        </More>
+      </MoreContainer>
       {isPostingModal && boardId === isPost?.boardId && (
         <PostBoard
           onClose={handlePostingClose}
@@ -158,28 +160,37 @@ export default Post;
 const Container = styled.div`
   width: 100%;
   height: 95px;
-  padding: 23px 15px 23px 7px;
+  padding: 23px 15px;
   display: flex;
   align-items: center;
   background: ${theme.colors.white};
   border-bottom: 1px solid ${theme.colors.gray300};
   color: ${theme.colors.gray600};
-  ${(props) => props.theme.fonts.bold16};
+  ${(props) => props.theme.fonts.medium16};
   gap: 26px;
+  position: relative;
 `;
 
 const Content = styled.div`
   width: 100%;
+  height: 100%;
   display: grid;
-  grid-template-columns: 2fr 2fr 2fr 1fr;
+  grid-template-columns: 1fr 0.6fr 1fr 0.7fr;
   align-items: center;
 `;
 
 const Name = styled.div`
+  min-width: 200px;
   display: flex;
   align-items: center;
   gap: 22px;
   ${(props) => props.theme.fonts.medium16};
+  white-space: nowrap;
+`;
+
+const Number = styled.span`
+  color: ${theme.colors.gray600};
+  ${(props) => props.theme.fonts.bold16};
   white-space: nowrap;
 `;
 
@@ -207,6 +218,7 @@ const Div = styled.div`
 
 const Tag = styled.div`
   color: ${theme.colors.gray300};
+  ${(props) => props.theme.fonts.medium16};
 `;
 
 const Tier = styled.div`
@@ -217,8 +229,14 @@ const Tier = styled.div`
 `;
 
 const Memo = styled.div`
-  display: flex;
-  justify-content: center;
+  width: 100%;
+  height: 40px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  word-wrap: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   ${(props) => props.theme.fonts.regular14};
 `;
 
@@ -233,6 +251,13 @@ const Date = styled.div`
 const Minute = styled.div`
   color: ${theme.colors.gray600};
   ${(props) => props.theme.fonts.semiBold14};
+`;
+
+const MoreContainer = styled.div`
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
 `;
 
 const More = styled.div`
