@@ -1,5 +1,5 @@
 "use client";
-import StyledJsxRegistry from "./registry";
+
 import GlobalStyles from "@/styles/GlobalStyles";
 import { ThemeProvider } from "styled-components";
 import { theme } from "@/styles/theme";
@@ -9,7 +9,6 @@ import { Provider } from "react-redux";
 import { useRef } from "react";
 import { AppStore, store } from "@/redux/store";
 import { usePathname } from "next/navigation";
-import { ToastContainer } from "react-toastify";
 import { Toaster } from "react-hot-toast";
 
 export default function RootLayout({
@@ -23,7 +22,9 @@ export default function RootLayout({
   }
 
   const pathname = usePathname();
+  const isNotFoundPage = pathname === "/404" || pathname === "/not-found";
   const isHeader = !(
+    isNotFoundPage ||
     pathname === "/login" ||
     pathname.includes("/join") ||
     pathname.includes("/password")
