@@ -45,6 +45,7 @@ const PostBoard = (props: PostBoardProps) => {
     (state: RootState) => state.post.currentPostId
   );
   const isUser = useSelector((state: RootState) => state.user);
+  console.log("isUser PostBoard", isUser);
 
   const [isProfileListOpen, setIsProfileListOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -101,8 +102,7 @@ const PostBoard = (props: PostBoardProps) => {
       });
       setSelectedImageIndex(isUser.profileImg);
       const ids =
-        isUser?.gameStyleResponseDTOList?.map((item) => item.gameStyleId) ||
-        [];
+        isUser?.gameStyleResponseDTOList?.map((item) => item.gameStyleId) || [];
       setSelectedStyleIds(ids);
     }
   }, [isUser, currentPost]);
@@ -156,7 +156,7 @@ const PostBoard = (props: PostBoardProps) => {
     try {
       await editPost(currentPostId, params);
       // await onClose();
-    } catch (error) { }
+    } catch (error) {}
   };
 
   /* 글쓰기 */
@@ -198,7 +198,7 @@ const PostBoard = (props: PostBoardProps) => {
       try {
         await postBoard(params);
         await dispatch(setOpenModal("completedPost"));
-      } catch (error) { }
+      } catch (error) {}
     }
   };
 

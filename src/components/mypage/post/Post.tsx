@@ -1,15 +1,29 @@
+import { getMemberPost, getNonMemberPost } from "@/api/board";
 import MoreBox from "@/components/common/MoreBox";
+import PostBoard from "@/components/createBoard/PostBoard";
 import Report from "@/components/readBoard/MoreBoxButton";
+import { MemberPost, NonMemberPost } from "@/interface/board";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
+import {
+  setClosePostingModal,
+  setCloseReadingModal,
+  setOpenModal,
+  setOpenPostingModal,
+} from "@/redux/slices/modalSlice";
+import { setCurrentPost } from "@/redux/slices/postSlice";
+import { setUserId } from "@/redux/slices/userSlice";
+import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import {
   formatTimeAgo,
   setAbbrevTier,
   setChatRoomDateFormatter,
 } from "@/utils/custom";
+import { getProfileBgColor } from "@/utils/profile";
 import { toLowerCaseString } from "@/utils/string";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 export interface PostProps {
@@ -36,13 +50,30 @@ const Post: React.FC<PostProps> = ({
   createdAt,
 }) => {
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
+  const dispatch = useDispatch();
 
   const handleMoreBoxOpen = () => {
     setIsMoreBoxOpen((prevState) => !prevState);
   };
 
-  const handleModify = () => {
+  const [isPost, setIsPost] = useState<MemberPost>();
+
+  const isPostingModal = useSelector(
+    (state: RootState) => state.modal.postingModal
+  );
+
+  const isUser = useSelector((state: RootState) => state.user);
+  const handleModify = async () => {
     // 수정하기 api
+    dispatch(setUserId(memberId));
+    const memberData = await getMemberPost(boardId);
+    console.log("isUser", isUser);
+    dispatch(
+      setCurrentPost({ currentPost: memberData.result, currentPostId: boardId })
+    );
+    setIsPost(memberData.result);
+    dispatch(setOpenPostingModal());
+    dispatch(setCloseReadingModal());
     setIsMoreBoxOpen(false);
   };
 
@@ -57,19 +88,28 @@ const Post: React.FC<PostProps> = ({
     { text: "삭제", onClick: handleDelete },
   ];
 
+  const handlePostingClose = () => {
+    dispatch(setClosePostingModal());
+  };
+
+  const handleModalClose = () => {
+    handlePostingClose();
+    dispatch(setOpenModal(""));
+  };
+
   return (
     <Container>
       {boardId}
       <Content>
         <Name>
-          <ProfileImage>
-            <PersonImage
+          <ProfileImgWrapper $bgColor={getProfileBgColor(profileImage)}>
+            <ProfileImg
               src={`/assets/images/profile/profile${profileImage - 1}.svg`}
-              width={40}
-              height={40}
+              width={35}
+              height={35}
               alt="프로필"
             />
-          </ProfileImage>
+          </ProfileImgWrapper>
           <Div>
             {gameName}
             <Tag>#{tag}</Tag>
@@ -97,6 +137,12 @@ const Post: React.FC<PostProps> = ({
           <MoreBox items={MoreBoxMenuItems} top={-10} left={45} />
         )}
       </More>
+      {isPostingModal && boardId === isPost?.boardId && (
+        <PostBoard
+          onClose={handlePostingClose}
+          onCompletedPosting={handleModalClose}
+        />
+      )}
     </Container>
   );
 };
@@ -131,17 +177,19 @@ const Name = styled.div`
   white-space: nowrap;
 `;
 
-const ProfileImage = styled.div`
+const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
+  position: relative;
   width: 50px;
   height: 50px;
-  border-radius: 93px;
-  background: ${theme.colors.purple300};
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: ${(props) => props.$bgColor};
+  border-radius: 50%;
 `;
 
-const PersonImage = styled(Image)`
+const ProfileImg = styled(Image)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   filter: drop-shadow(-4px 10px 10px rgba(63, 53, 78, 0.582));
 `;
 

@@ -33,7 +33,7 @@ export const getBoardList = async (params: ListInterface) => {
 /* 회원 게시글 조회 */
 export const getMemberPost = async (postId: number) => {
     try {
-        const response = await Axios.get(`/v1/posts/member/list/${postId}`);
+        const response = await AuthAxios.get(`/v1/posts/member/list/${postId}`);
         console.log("로그인 상태 게시글 조회 성공:", response.data);
         return response.data;
 

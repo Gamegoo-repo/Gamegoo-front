@@ -62,6 +62,9 @@ export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+    setUserId: (state, action: PayloadAction<number>) => {
+      state.id = action.payload;
+    },
     setUserName: (state, action: PayloadAction<string>) => {
       state.gameName = action.payload;
     },
@@ -97,6 +100,6 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setUserName, setUserProfileImg, setUserProfile, clearUserProfile } = userSlice.actions;
+export const { setUserId, setUserName, setUserProfileImg, setUserProfile, clearUserProfile } = userSlice.actions;
 
 export default userSlice.reducer;
