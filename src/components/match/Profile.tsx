@@ -61,8 +61,9 @@ const Profile: React.FC<Profile> = ({
   const [isBlockBoxOpen, setIsBlockBoxOpen] = useState(false);
   const [isBlockConfirmOpen, setIsBlockConfrimOpen] = useState(false);
   const [isProfileListOpen, setIsProfileListOpen] = useState(false);
-  const [reportDetail, setReportDetail] = useState<string>("");
+  /* 신고 input */
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
+  const [reportDetail, setReportDetail] = useState<string>("");
 
   /* 포지션 */
   const [positions, setPositions] = useState(POSITIONS);
@@ -105,24 +106,37 @@ const Profile: React.FC<Profile> = ({
     setIsMoreBoxOpen((prevState) => !prevState);
   };
 
-  const handleReport = async () => {
-    // 신고하기 api
+  /* 신고하기 체크박스 */
+  const handleReportCheckboxChange = (checked: number) => {
+    setCheckedItems((prev) =>
+      prev.includes(checked)
+        ? prev.filter((c) => c !== checked)
+        : [...prev, checked]
+    );
+  };
+
+  const handleReport = () => {
     setIsReportBoxOpen(!isReportBoxOpen);
     setIsMoreBoxOpen(false);
-    // if (!targetMemberId) return;
+  };
 
-    // const params = {
-    //   targetMemberId: targetMemberId,
-    //   reportTypeIdList: checkedReportItems,
-    //   contents: reportDetail,
-    // };
+  const handleRunReport = async () => {
+    // 신고하기 api
+    if (myId === memberId) return;
 
-    // try {
-    //   await reportMember(params);
-    //   await handleModalClose();
-    // } catch (error) {
-    //   console.error("에러:", error);
-    // }
+    const params = {
+      targetMemberId: memberId,
+      reportTypeIdList: checkedItems,
+      contents: reportDetail,
+    };
+
+    setIsMoreBoxOpen(false);
+    try {
+      await reportMember(params);
+      setIsReportBoxOpen(!isReportBoxOpen);
+    } catch (error) {
+      console.error("에러:", error);
+    }
   };
 
   const handleBlock = async () => {
@@ -437,7 +451,10 @@ const Profile: React.FC<Profile> = ({
                     closeButtonWidth={17}
                     closeButtonHeight={17}
                     borderRadius="20px"
-                    onClose={handleReport}
+                    onClose={() => {
+                      setIsReportBoxOpen(!isReportBoxOpen);
+                      setIsMoreBoxOpen(false);
+                    }}
                   >
                     <div>
                       <ReportLabel>신고 사유</ReportLabel>
@@ -469,7 +486,7 @@ const Profile: React.FC<Profile> = ({
                       </ReportContent>
                       <ReportButton>
                         <Button
-                          onClick={handleReport}
+                          onClick={handleRunReport}
                           buttonType="primary"
                           text="신고하기"
                           disabled={checkedItems.length === 0}
