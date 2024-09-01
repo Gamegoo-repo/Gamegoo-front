@@ -8,7 +8,7 @@ import { ChatMessageDto } from '@/interface/chat';
 
 const useChatMessage = () => {
     const dispatch = useDispatch();
-    const [newMessage, setNewMessage] = useState<ChatMessageDto | null>(null); 
+    const [newMessage, setNewMessage] = useState<ChatMessageDto | null>(null);
 
     const currentChatUuid = useSelector((state: RootState) => state.chat.currentChatUuid);
     const unreadChatUuids = useSelector((state: RootState) => state.chat.unreadUuids);
@@ -46,19 +46,25 @@ const useChatMessage = () => {
         const handleMyMessage = (res: any) => {
             const newMessage = res.data;
             // 새로운 메시지 저장 (내가 쓴 메시지)
-            setNewMessage(newMessage); 
+            setNewMessage(newMessage);
+        };
+
+        const handleJoinedNewChatroom = () => {
+
         };
 
         socket.on("chat-message", handleChatMessage);
         socket.on("my-message-broadcast-success", handleMyMessage);
+        socket.on("joined-new-chatroom", handleJoinedNewChatroom);
 
         return () => {
             socket.off("chat-message", handleChatMessage);
             socket.off("my-message-broadcast-success", handleMyMessage);
+            socket.off("joined-new-chatroom", handleJoinedNewChatroom);
         };
     }, [currentChatUuid, unreadChatUuids, dispatch]);
 
-    return newMessage;
+    return  newMessage ;
 };
 
 export default useChatMessage;

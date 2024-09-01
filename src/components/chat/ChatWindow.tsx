@@ -21,6 +21,7 @@ import { ChatroomList } from "@/interface/chat";
 import { blockMember, reportMember } from "@/api/member";
 import { Mannerstatus } from "@/interface/manner";
 import { closeChat, closeChatRoom, openChatRoom, setChatRoomUuid } from "@/redux/slices/chatSlice";
+import useChatList from "@/hooks/useChatList";
 
 const ChatWindow = () => {
 
@@ -47,6 +48,13 @@ const ChatWindow = () => {
     const isUser = useSelector((state: RootState) => state.user);
     const isChatOpen = useSelector((state: RootState) => state.chat.isChatOpen);
     const isChatRoomOpen = useSelector((state: RootState) => state.chat.isChatRoomOpen);
+
+
+    /* chat 탭이 활성화된 경우만 */
+    const isChatListVisible = activeTab === 'chat';
+
+    /* 채팅방 목록 화면이 열려 있을 때만 joined-new-chatroom 이벤트를 리스닝 */
+    useChatList(isChatListVisible, setChatrooms);
 
     if (!isChatOpen) return null;
 
