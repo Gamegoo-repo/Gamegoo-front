@@ -7,7 +7,7 @@ import Input from "@/components/common/Input";
 import { emailRegEx } from "@/constants/regEx";
 import { setUserName, setUserProfileImg } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
-import { setToken } from "@/utils/storage";
+import { clearTokens, setToken } from "@/utils/storage";
 import { AxiosError } from "axios";
 import Image from "next/image";
 import Link from "next/link";
@@ -55,6 +55,7 @@ const Login = () => {
       const accessToken = response.result.accessToken;
       const refreshToken = response.result.refreshToken;
 
+      clearTokens();
       /* 자동 로그인 체크 여부에 따라 토큰 저장 위치 결정 */
       setToken(accessToken, refreshToken, autoLogin);
 

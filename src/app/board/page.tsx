@@ -34,9 +34,13 @@ const BoardPage = () => {
   const [isGameModeDropdownOpen, setIsGameModeDropdownOpen] = useState(false);
   const [isTierDropdownOpen, setIsTierDropdownOpen] = useState(false);
   const [isMicDropdownOpen, setIsMicDropdownOpen] = useState(false);
-  const [selectedGameMode, setSelectedGameMode] = useState<string | number | null>("솔로 랭크");
+  const [selectedGameMode, setSelectedGameMode] = useState<
+    string | number | null
+  >("솔로 랭크");
   const [selectedTier, setSelectedTier] = useState<string | null>("티어 선택");
-  const [selectedMic, setSelectedMic] = useState<boolean | string | null>("음성 채팅");
+  const [selectedMic, setSelectedMic] = useState<boolean | string | null>(
+    "음성 채팅"
+  );
   const [showAlert, setShowAlert] = useState(false);
   const [refresh, setRefresh] = useState(false);
 
@@ -47,8 +51,12 @@ const BoardPage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const isPostingModal = useSelector((state: RootState) => state.modal.postingModal);
-  const isCompletedPosting = useSelector((state: RootState) => state.modal.modalType);
+  const isPostingModal = useSelector(
+    (state: RootState) => state.modal.postingModal
+  );
+  const isCompletedPosting = useSelector(
+    (state: RootState) => state.modal.modalType
+  );
   const isUser = useSelector((state: RootState) => state.user);
 
   /* 게임모드 드롭 */
@@ -115,13 +123,9 @@ const BoardPage = () => {
     }
   };
 
-
   /* 마이크 드롭박스 외부 클릭 */
   const handleMicDropdownClickOutside = (event: MouseEvent) => {
-    if (
-      micRef.current &&
-      !micRef.current.contains(event.target as Node)
-    ) {
+    if (micRef.current && !micRef.current.contains(event.target as Node)) {
       setIsMicDropdownOpen(false);
     }
   };
@@ -187,7 +191,7 @@ const BoardPage = () => {
         tier:
           selectedTier === "티어 선택" ? setSelectedTier(null) : selectedTier,
         mainPosition: isPosition,
-        mike: selectedMic === '음성 채팅' ? setSelectedMic(null) : selectedMic
+        mike: selectedMic === "음성 채팅" ? setSelectedMic(null) : selectedMic,
       };
 
       const data = await getBoardList(params);

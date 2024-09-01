@@ -21,23 +21,49 @@ import { toLowerCaseString } from "@/utils/string";
 import { PositionState } from "../crBoard/PositionBox";
 import { putPosition } from "@/api/user";
 import { setAbbrevTier, setPositionImg } from "@/utils/custom";
+import {
+  acceptFreindReq,
+  cancelFriendReq,
+  deleteFriend,
+  rejectFreindReq,
+  reqFriend,
+} from "@/api/friends";
+import { useParams } from "next/navigation";
+import { blockMember, reportMember, unblockMember } from "@/api/member";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { getProfileBgColor } from "@/utils/profile";
 
 type profileType = "normal" | "wind" | "other" | "me";
 
 interface Profile {
   user: User;
   profileType: profileType;
+  updateFriendState?: (state: {
+    friend: boolean;
+    friendRequestMemberId: number | null;
+    blocked: boolean;
+  }) => void;
 }
 
-const Profile: React.FC<Profile> = ({ profileType, user }) => {
+const Profile: React.FC<Profile> = ({
+  profileType,
+  user,
+  updateFriendState,
+}) => {
+  const { id } = useParams();
+  const memberId = Number(id);
+
+  const myId = useSelector((state: RootState) => state.user.id);
   const [isMike, setIsMike] = useState<boolean>(user.mike);
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
   const [isReportBoxOpen, setIsReportBoxOpen] = useState(false);
   const [isBlockBoxOpen, setIsBlockBoxOpen] = useState(false);
   const [isBlockConfirmOpen, setIsBlockConfrimOpen] = useState(false);
   const [isProfileListOpen, setIsProfileListOpen] = useState(false);
-  const [reportDetail, setReportDetail] = useState<string>("");
+  /* 신고 input */
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
+  const [reportDetail, setReportDetail] = useState<string>("");
 
   /* 포지션 */
   const [positions, setPositions] = useState(POSITIONS);
@@ -61,7 +87,7 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
 
   /* 프로필 이미지 리스트 중 클릭시*/
   const handleImageClick = (index: number) => {
-    setSelectedImageIndex(index + 1);
+    setSelectedImageIndex(index);
 
     setTimeout(() => {
       setIsProfileListOpen(false);
@@ -80,16 +106,63 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
     setIsMoreBoxOpen((prevState) => !prevState);
   };
 
+  /* 신고하기 체크박스 */
+  const handleReportCheckboxChange = (checked: number) => {
+    setCheckedItems((prev) =>
+      prev.includes(checked)
+        ? prev.filter((c) => c !== checked)
+        : [...prev, checked]
+    );
+  };
+
   const handleReport = () => {
-    // 신고하기 api
     setIsReportBoxOpen(!isReportBoxOpen);
     setIsMoreBoxOpen(false);
   };
 
-  const handleBlock = () => {
-    // 차단하기 api
+  const handleRunReport = async () => {
+    // 신고하기 api
+    if (myId === memberId) return;
+
+    const params = {
+      targetMemberId: memberId,
+      reportTypeIdList: checkedItems,
+      contents: reportDetail,
+    };
+
+    setIsMoreBoxOpen(false);
+    try {
+      await reportMember(params);
+      setIsReportBoxOpen(!isReportBoxOpen);
+    } catch (error) {
+      console.error("에러:", error);
+    }
+  };
+
+  const handleBlock = async () => {
     setIsBlockBoxOpen(!isBlockBoxOpen);
     setIsMoreBoxOpen(false);
+  };
+
+  const handleRunBlock = async () => {
+    // 차단하기 api
+    setIsBlockBoxOpen(false);
+    if (user.blocked) {
+      await unblockMember(memberId);
+      updateFriendState?.({
+        friend: user.friend,
+        friendRequestMemberId: user.friendRequestMemberId,
+        blocked: false,
+      });
+    } else {
+      await blockMember(memberId);
+      updateFriendState?.({
+        friend: user.friend,
+        friendRequestMemberId: user.friendRequestMemberId,
+        blocked: true,
+      });
+    }
+    setIsBlockConfrimOpen(true);
   };
 
   /* 포지션 선택창 관련 함수*/
@@ -102,8 +175,8 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
       index === 0
         ? "main" ?? null
         : index === 1
-          ? "sub" ?? null
-          : "want" ?? null
+        ? "sub" ?? null
+        : "want" ?? null
     );
   };
 
@@ -145,10 +218,136 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
     }
   };
 
+  const handleFriendState = async (state: string) => {
+    try {
+      switch (state) {
+        case "add":
+          await reqFriend(memberId);
+          updateFriendState?.({
+            friend: false,
+            friendRequestMemberId: myId || null,
+            blocked: user.blocked,
+          });
+          break;
+        case "cancel":
+          await cancelFriendReq(memberId);
+          updateFriendState?.({
+            friend: false,
+            friendRequestMemberId: null,
+            blocked: user.blocked,
+          });
+          break;
+        case "accept":
+          await acceptFreindReq(memberId);
+          updateFriendState?.({
+            friend: true,
+            friendRequestMemberId: memberId,
+            blocked: user.blocked,
+          });
+          break;
+        case "reject":
+          await rejectFreindReq(memberId);
+          updateFriendState?.({
+            friend: false,
+            friendRequestMemberId: null,
+            blocked: user.blocked,
+          });
+          break;
+        case "delete":
+          await deleteFriend(memberId);
+          updateFriendState?.({
+            friend: false,
+            friendRequestMemberId: null,
+            blocked: user.blocked,
+          });
+          break;
+        default:
+          throw new Error("존재하지 않는 친구 상태입니다.");
+      }
+    } catch (error) {
+      console.error("Error handling friend state:", error);
+    }
+  };
+
+  // 친구 추가
+  const renderFriendsButton = () => {
+    // 친구 추가
+    // 친구 삭제 (끊기)
+    // 친구 요청 전송 (나)
+    // 친구 요청 취소 (나)
+    // 친구 수락/거절 (상대)
+    // 자기 자신 프로필
+    if (user.blocked) {
+      return (
+        <Button
+          buttonType="secondary"
+          width="218px"
+          text="차단된 유저"
+          disabled={true}
+        />
+      );
+    }
+    if (user.friend) {
+      return (
+        <Button
+          buttonType="secondary"
+          width="218px"
+          text="친구 끊기"
+          onClick={() => handleFriendState("delete")}
+        />
+      );
+    } else {
+      if (user.friendRequestMemberId) {
+        if (user.friendRequestMemberId === memberId) {
+          return (
+            <FriendRow>
+              <Button
+                buttonType="secondary"
+                width="163px"
+                text="친구 거절"
+                onClick={() => handleFriendState("reject")}
+              />
+              <Button
+                buttonType="primary"
+                width="163px"
+                text="친구 수락"
+                onClick={() => handleFriendState("accept")}
+              />
+            </FriendRow>
+          );
+        } else {
+          return (
+            <Button
+              buttonType="secondary"
+              width="218px"
+              text="친구 요청 취소"
+              onClick={() => handleFriendState("cancel")}
+            />
+          );
+        }
+      } else if (memberId === myId) {
+        return null;
+      }
+      return (
+        <Button
+          buttonType="secondary"
+          width="218px"
+          text="친구 추가"
+          onClick={() => handleFriendState("add")}
+        />
+      );
+    }
+  };
+
+  // useEffect(() => {
+  //   alert("변경");
+  //   renderFriendsButton();
+  // }, [friendState.friend, friendState.friendRequestMemberId]);
+
   // 더보기 버튼 메뉴
   const MoreBoxMenuItems: MoreBoxMenuItems[] = [
     { text: "신고하기", onClick: handleReport },
-    { text: "차단하기", onClick: handleBlock },
+    { text: user.blocked ? "차단 해제" : "차단하기", onClick: handleBlock },
   ];
 
   // 신고하기 체크
@@ -164,14 +363,14 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
     <Container className={profileType}>
       <Row>
         <ImageContainer>
-          <ProfileImage>
+          <ProfileImgWrapper $bgColor={getProfileBgColor(selectedImageIndex)}>
             <PersonImage
               src={`/assets/images/profile/profile${selectedImageIndex}.svg`}
               width={136}
               height={136}
               alt="프로필"
             />
-          </ProfileImage>
+          </ProfileImgWrapper>
           {profileType !== "other" && (
             <CameraImage
               src="/assets/icons/profile_camera.svg"
@@ -192,16 +391,21 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                 onClick={() => setIsProfileListOpen(false)}
               />
               <ProfileList>
-                {[1, 2, 3, 4, 5, 6, 7, 8].map((item, index) => (
-                  <ProfileListImage
-                    key={index}
-                    src={`/assets/images/profile/profile${item}.svg`}
-                    width={104}
-                    height={104}
-                    alt="프로필 이미지"
-                    $isSelected={index + 1 === selectedImageIndex}
-                    onClick={() => handleImageClick(index)}
-                  />
+                {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
+                  <SelectProfileImgWrapper
+                    key={item}
+                    $bgColor={getProfileBgColor(item)}
+                    $isSelected={item === selectedImageIndex}
+                    onClick={() => handleImageClick(item)}
+                  >
+                    <ProfileListImage
+                      key={item}
+                      src={`/assets/images/profile/profile${item}.svg`}
+                      width={70}
+                      height={70}
+                      alt="프로필 이미지"
+                    />
+                  </SelectProfileImgWrapper>
                 ))}
               </ProfileList>
             </ProfileListBox>
@@ -214,8 +418,9 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
               <Span>{`#${user.tag}`}</Span>
               <Rank>
                 <Image
-                  src={`/assets/images/tier/${toLowerCaseString(user.tier) || "ur"
-                    }.svg`}
+                  src={`/assets/images/tier/${
+                    toLowerCaseString(user.tier) || "ur"
+                  }.svg`}
                   width={52}
                   height={52}
                   alt="tier"
@@ -226,27 +431,16 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
             </Top>
             {profileType === "other" && (
               <More>
-                <Admit>
-                  <Button
-                    buttonType="primary"
-                    width="218px"
-                    text="친구 요청 수락하기"
-                  />
-                  {/* <Button buttonType="secondary" width="218px" text="친구 추가" />
-                <Button
-                  buttonType="secondary"
-                  width="218px"
-                  disabled={true}
-                  text="친구 요청 전송됨"
-                /> */}
-                </Admit>
+                <Admit>{renderFriendsButton()}</Admit>
                 {/* 더보기 버튼 */}
-                <MoreDiv>
-                  <Report onClick={handleMoreBoxOpen} />
-                  {isMoreBoxOpen && (
-                    <MoreBox items={MoreBoxMenuItems} top={15} left={45} />
-                  )}
-                </MoreDiv>
+                {memberId !== myId && (
+                  <MoreDiv>
+                    <Report onClick={handleMoreBoxOpen} />
+                    {isMoreBoxOpen && (
+                      <MoreBox items={MoreBoxMenuItems} top={15} left={45} />
+                    )}
+                  </MoreDiv>
+                )}
                 {/* 신고하기 팝업 */}
                 {isReportBoxOpen && (
                   <FormModal
@@ -257,7 +451,10 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                     closeButtonWidth={17}
                     closeButtonHeight={17}
                     borderRadius="20px"
-                    onClose={handleReport}
+                    onClose={() => {
+                      setIsReportBoxOpen(!isReportBoxOpen);
+                      setIsMoreBoxOpen(false);
+                    }}
                   >
                     <div>
                       <ReportLabel>신고 사유</ReportLabel>
@@ -289,7 +486,7 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                       </ReportContent>
                       <ReportButton>
                         <Button
-                          onClick={handleReport}
+                          onClick={handleRunReport}
                           buttonType="primary"
                           text="신고하기"
                           disabled={checkedItems.length === 0}
@@ -304,17 +501,20 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                     width="540px"
                     primaryButtonText="예"
                     secondaryButtonText="아니요"
-                    onPrimaryClick={() => {
-                      setIsBlockBoxOpen(false);
-                      setIsBlockConfrimOpen(true);
-                    }}
+                    onPrimaryClick={() => handleRunBlock()}
                     onSecondaryClick={() => {
                       setIsBlockBoxOpen(false);
                     }}
                   >
-                    <Msg>
-                      {`차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다.\n\n또한, 다시 차단 해제할 수 없습니다.\n차단하시겠습니까?`}
-                    </Msg>
+                    {user.blocked ? (
+                      <MsgConfirm>{"차단을 해제 하시겠습니까?"}</MsgConfirm>
+                    ) : (
+                      <Msg>
+                        {
+                          "차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다.\n\n차단하시겠습니까?"
+                        }
+                      </Msg>
+                    )}
                   </ConfirmModal>
                 )}
                 {/* 차단하기 확인 팝업 */}
@@ -326,9 +526,12 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                       setIsBlockConfrimOpen(false);
                     }}
                   >
-                    <MsgConfirm>{`차단이 완료되었습니다.`}</MsgConfirm>
+                    <MsgConfirm>{`${
+                      user.blocked ? "차단이" : "차단 해제가"
+                    } 완료되었습니다.`}</MsgConfirm>
                   </ConfirmModal>
                 )}
+                {/* 차단 해제하기 확인 팝업 */}
               </More>
             )}
           </TopContainer>
@@ -354,8 +557,8 @@ const Profile: React.FC<Profile> = ({ profileType, user }) => {
                           index === 0
                             ? positionValue.main ?? 0
                             : index === 1
-                              ? positionValue.sub ?? 0
-                              : positionValue.want ?? 0
+                            ? positionValue.sub ?? 0
+                            : positionValue.want ?? 0
                         )}
                         width={55}
                         height={40}
@@ -429,6 +632,14 @@ const Row = styled.div`
   gap: 38px;
 `;
 
+const FriendRow = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 17px;
+`;
+
 const UnderRow = styled(Row)`
   gap: 54px;
 `;
@@ -437,11 +648,11 @@ const ImageContainer = styled.div`
   position: relative;
 `;
 
-const ProfileImage = styled.div`
+const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
   width: 186px;
   height: 186px;
-  border-radius: 93px;
-  background: ${theme.colors.purple300};
+  border-radius: 50%;
+  background: ${(props) => props.$bgColor};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -485,10 +696,15 @@ const ProfileList = styled.div`
   grid-template-rows: repeat(2, 1fr);
 `;
 
-const ProfileListImage = styled(Image) <{ $isSelected: boolean }>`
-  cursor: pointer;
-  transition: opacity 0.3s ease-in-out;
-
+const SelectProfileImgWrapper = styled.div<{
+  $bgColor: string;
+  $isSelected: boolean;
+}>`
+  position: relative;
+  width: 96px;
+  height: 96px;
+  background: ${(props) => props.$bgColor};
+  border-radius: 50%;
   ${({ $isSelected }) =>
     $isSelected &&
     css`
@@ -499,6 +715,14 @@ const ProfileListImage = styled(Image) <{ $isSelected: boolean }>`
     filter: drop-shadow(0px 4px 10px rgba(138, 117, 255, 0.7));
     transition: box-shadow 0.3s ease-in-out;
   }
+`;
+
+const ProfileListImage = styled(Image)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
 `;
 
 const StyledBox = styled.div`
@@ -580,12 +804,12 @@ const ReportButton = styled.div`
 const Msg = styled.div`
   text-align: center;
   color: ${theme.colors.gray600};
-  ${(props) => props.theme.fonts.regular18};
+  ${(props) => props.theme.fonts.regular20};
   margin: 28px 0;
 `;
 
 const MsgConfirm = styled(Msg)`
-  ${(props) => props.theme.fonts.regular25};
+  ${(props) => props.theme.fonts.regular20};
   margin: 80px 0;
 `;
 

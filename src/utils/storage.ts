@@ -1,13 +1,9 @@
 /* 토큰 저장 */
 export const setToken = (accessToken: string, refreshToken: string, autoLogin: boolean) => {
     if (typeof window !== 'undefined') {
-        if (autoLogin) {
-            localStorage.setItem('accessToken', accessToken);
-            localStorage.setItem('refreshToken', refreshToken);
-        } else {
-            sessionStorage.setItem('accessToken', accessToken);
-            sessionStorage.setItem('refreshToken', refreshToken);
-        }
+        const storage = autoLogin ? localStorage : sessionStorage;
+        storage.setItem('accessToken', accessToken);
+        storage.setItem('refreshToken', refreshToken);
     }
 };
 
@@ -30,6 +26,10 @@ export const getRefreshToken = () => {
 export const clearTokens = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    localStorage.removeItem('name');
+    localStorage.removeItem('profileImg');
     sessionStorage.removeItem('accessToken');
     sessionStorage.removeItem('refreshToken');
+    sessionStorage.removeItem('name');
+    sessionStorage.removeItem('profileImg');
 };

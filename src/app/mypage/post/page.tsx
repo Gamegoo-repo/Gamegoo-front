@@ -7,6 +7,9 @@ import Post, { PostProps } from "@/components/mypage/post/Post";
 import { useEffect, useState } from "react";
 import { getMyPost } from "@/api/user";
 import Pagination from "@/components/common/Pagination";
+import { deletePost } from "@/api/board";
+import { RootState } from "@/redux/store";
+import { useSelector } from "react-redux";
 
 const MyPostPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -14,6 +17,8 @@ const MyPostPage = () => {
   const [hasMoreItems, setHasMoreItems] = useState(true);
   const pageButtonCount = 5;
   const ITEMS_PER_PAGE = 10;
+
+  const currentPost = useSelector((state: RootState) => state.post.currentPost);
 
   useEffect(() => {
     const fetchGetMyPost = async () => {
@@ -23,7 +28,26 @@ const MyPostPage = () => {
     };
 
     fetchGetMyPost();
-  }, [currentPage]);
+  }, [currentPage, currentPost]);
+
+  useEffect(() => {
+    const fetchGetMyPost = async () => {
+      const response = await getMyPost(currentPage);
+      setPostList(response.result);
+      console.log("수정내용 반영");
+    };
+
+    fetchGetMyPost();
+  }, [currentPost]);
+
+  useEffect(() => {}, [postList]);
+
+  const handleDeletePost = async (boardId: number) => {
+    await deletePost(boardId);
+    setPostList((prevPosts) =>
+      prevPosts.filter((post) => post.boardId !== boardId)
+    );
+  };
 
   /* 페이지네이션 이전 클릭 */
   const handlePrevPage = () => {
@@ -48,7 +72,7 @@ const MyPostPage = () => {
         <PostPage>
           <Title>내가 작성한 글</Title>
           <Columns>
-            <div>소환사명</div>
+            <Left>소환사명</Left>
             <Center>티어</Center>
             <Center>메모</Center>
             <Center>등록일시</Center>
@@ -63,8 +87,10 @@ const MyPostPage = () => {
                 gameName={item.gameName}
                 tag={item.tag}
                 tier={item.tier}
+                rank={item.rank}
                 contents={item.contents}
                 createdAt={item.createdAt}
+                onDeletePost={handleDeletePost}
               />
             ))}
           </PostList>
@@ -80,10 +106,10 @@ const MyPostPage = () => {
         </PostPage>
       </MyPostContent>
       <Footer>
-          <ChatBoxContent>
-            <ChatButton count={3} />
-          </ChatBoxContent>
-        </Footer>
+        <ChatBoxContent>
+          <ChatButton count={3} />
+        </ChatBoxContent>
+      </Footer>
     </Wrapper>
   );
 };
@@ -124,9 +150,17 @@ const Columns = styled.div`
   background: ${theme.colors.gray600};
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.bold14};
-  padding: 13px 41px;
+  padding: 0 15px;
   display: grid;
-  grid-template-columns: 2fr 1fr 2fr 1fr;
+  align-items: center;
+  grid-template-columns: 1fr 0.6fr 1fr 0.7fr;
+  flex-shrink: 0;
+`;
+
+const Left = styled.div`
+  min-width: 200px;
+  text-align: left;
+  padding-left: 45px;
 `;
 
 const Center = styled.div`

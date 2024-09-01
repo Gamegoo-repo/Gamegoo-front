@@ -1,16 +1,13 @@
-import { socketAxios } from ".";
+import { SocketAxios } from ".";
 
 export const socketLogin = async () => {
     try {
-        const jwtToken = sessionStorage.getItem('refreshToken');
+        const jwtToken = localStorage.getItem('refreshToken');
         const socketId = localStorage.getItem('gamegooSocketId');
 
-        if (!socketId) {
-            console.error('소켓 아이디 없음');
-            return;
-        }
+        if (!jwtToken || !socketId) return;
 
-        const response = await socketAxios.post("/login", {}, {
+        const response = await SocketAxios.post("/login", {}, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwtToken}`,

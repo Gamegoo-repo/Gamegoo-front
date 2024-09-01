@@ -11,7 +11,7 @@ interface Champion {
 }
 
 interface UserState {
-  id?: number;
+  id?: number | undefined;
   profileImg: number;
   mike: boolean;
   email: string;
@@ -29,11 +29,14 @@ interface UserState {
   winrate: number;
   gameStyleResponseDTOList: GameStyle[];
   championResponseDTOList: Champion[];
+  blocked: boolean;
+  friend: boolean;
+  friendRequestMemberId: number | null;
 };
 
 const initialState: UserState = {
   id: 0,
-  profileImg: 0,
+  profileImg: 1,
   mike: false,
   email: '',
   gameName: '',
@@ -50,12 +53,18 @@ const initialState: UserState = {
   winrate: 0,
   gameStyleResponseDTOList: [],
   championResponseDTOList: [],
+  blocked: false,
+  friend: false,
+  friendRequestMemberId: null,
 };
 
 export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+    setUserId: (state, action: PayloadAction<number>) => {
+      state.id = action.payload;
+    },
     setUserName: (state, action: PayloadAction<string>) => {
       state.gameName = action.payload;
     },
@@ -67,7 +76,7 @@ export const userSlice = createSlice({
     },
     clearUserProfile(state) {
       state.id = 0;
-      state.profileImg = 0;
+      state.profileImg = 1;
       state.mike = false;
       state.email = '';
       state.gameName = '';
@@ -84,10 +93,13 @@ export const userSlice = createSlice({
       state.winrate = 0;
       state.gameStyleResponseDTOList = [];
       state.championResponseDTOList = [];
+      state.blocked = false;
+      state.friend = false;
+      state.friendRequestMemberId = null;
     },
   },
 });
 
-export const { setUserName, setUserProfileImg, setUserProfile, clearUserProfile } = userSlice.actions;
+export const { setUserId, setUserName, setUserProfileImg, setUserProfile, clearUserProfile } = userSlice.actions;
 
 export default userSlice.reducer;
