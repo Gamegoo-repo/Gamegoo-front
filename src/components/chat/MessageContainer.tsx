@@ -13,6 +13,7 @@ import ReadBoard from '../readBoard/ReadBoard';
 import { useRouter } from 'next/navigation';
 import { getProfileBgColor } from '@/utils/profile';
 import { getChatList } from '@/api/chat';
+import useChatMessage from '@/hooks/useChatMessage';
 
 interface MessageContainerProps {
   chatEnterData: Chat;
@@ -41,6 +42,17 @@ const MessageContainer = (props: MessageContainerProps) => {
   const [hasMore, setHasMore] = useState<boolean>(chatEnterData.chatMessageList.has_next);
   const [isLoading, setIsLoading] = useState(false);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
+
+  /* 내가 쓴 새로운 메시지 받아옴 */
+  const newMessage = useChatMessage();
+
+  /* 새로운 메시지를 기존 메시지 리스트에 추가 */
+  useEffect(() => {
+    if (newMessage) {
+      setMessageList((prevMessages) => [...prevMessages, newMessage]);
+    }
+  }, [newMessage]);
+
   const handleMannerTypeClose = () => {
     dispatch(setCloseMannerStatusModal());
   };
@@ -176,11 +188,6 @@ const MessageContainer = (props: MessageContainerProps) => {
     setIsBoardId(id);
   };
 
-  /* 게시글 닫기 */
-  const handlePostClose = () => {
-    dispatch(setCloseReadingModal());
-  };
-
   /* 시스템 메시지를 처리하는 컴포넌트 */
   const SystemMessage = (props: SystemMessageProps) => {
     const { message, onClick } = props;
@@ -206,7 +213,7 @@ const MessageContainer = (props: MessageContainerProps) => {
   return (
     <>
       {isReadingModal &&
-        <ReadBoard onClose={handlePostClose} postId={isBoardId} />
+        <ReadBoard postId={isBoardId} />
       }
       {messageList.map((data, index) => {
         const hasProfileImage = handleDisplayProfileImage(messageList, index);

@@ -1,12 +1,15 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { socket } from '@/socket';
 import { setUnreadUuid } from '@/redux/slices/chatSlice';
 import { markChatAsRead } from '@/api/chat';
+import { ChatMessageDto } from '@/interface/chat';
+import { MutableRefObject } from 'react';
 
 const useChatMessage = () => {
     const dispatch = useDispatch();
+    const [newMessage, setNewMessage] = useState<ChatMessageDto | null>(null); 
 
     const currentChatUuid = useSelector((state: RootState) => state.chat.currentChatUuid);
     const unreadChatUuids = useSelector((state: RootState) => state.chat.unreadUuids);
@@ -38,24 +41,23 @@ const useChatMessage = () => {
                     localStorage.setItem('unreadChatUuids', JSON.stringify(updatedUnreadUuids));
                 }
             }
+        };
 
-            /* 새로운 채팅 등록 */
-        
-
-               // const msg = res.data.message;
-            // let requestData = { message: msg };
-
-            // if (res.data.system) {
-            //     requestData.system = res.data.system;
-            // };
+        const handleMyMessageBroad = (res: any) => {
+            const newMessage = res.data;
+            setNewMessage(newMessage); // 새로운 메시지를 상태에 저장
         };
 
         socket.on("chat-message", handleChatMessage);
+        socket.on("my-message-broadcast-success", handleMyMessageBroad);
 
         return () => {
-            socket.off("chat-message");
+            socket.off("chat-message", handleChatMessage);
+            socket.off("my-message-broadcast-success", handleMyMessageBroad);
         };
     }, [currentChatUuid, unreadChatUuids, dispatch]);
+
+    return newMessage;
 };
 
 export default useChatMessage;

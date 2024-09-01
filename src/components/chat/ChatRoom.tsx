@@ -20,6 +20,8 @@ import { enterUsingBoardId, enterUsingMemberId, enterUsingUuid } from "@/api/cha
 import { getBadMannerValues, getMannerValues } from "@/api/manner";
 import { Mannerstatus } from "@/interface/manner";
 import { closeChatRoom, setCurrentChatUuid } from "@/redux/slices/chatSlice";
+import { socket } from "@/socket";
+import useChatMessage from "@/hooks/useChatMessage";
 
 interface ChatRoomProps {
     api: "uuid" | "member" | "board";
@@ -72,6 +74,7 @@ const ChatRoom = (props: ChatRoomProps) => {
     const [isBadMannerStatus, setIsBadMannerStatus] = useState<Mannerstatus | undefined>();
     const [chatEnterData, setChatEnterData] = useState<Chat>();
     const [isSystemMsg, setIsSystemMsg] = useState<System>();
+    const [isSystemMsgSent, setIsSystemMsgSent] = useState(false); // 첫번째 메시지 이후 systemMsg 보내지 않기 위한 상태변경
     const [systemMsgArray, setSystemMsgArray] = useState<Array<SystemMessage>>([]);
 
     const isEvaluationModalOpen = useSelector((state: RootState) => state.modal.evaluationModal);
@@ -129,6 +132,11 @@ const ChatRoom = (props: ChatRoomProps) => {
                     }
 
                     setSystemMsgArray((prevMessages) => [...prevMessages, systemMessage]);
+
+                    setChatEnterData({
+                        ...data.result,
+                        messages: [...data.result.chatMessageList.chatMessageDtoList, systemMessage]
+                    });
                 }
             } catch (error) {
                 console.error(error);
@@ -142,13 +150,47 @@ const ChatRoom = (props: ChatRoomProps) => {
         setDataUpdated((prev) => !prev);
     };
 
+    /* 메시지 보내기 */
     const sendMessage = (event: any) => {
         event.preventDefault();
-        // socket.emit(“sendMessage”, message, (res) => {
-        //     console.log(“res”, res);
-        // })
-        setMessage("");
-        console.log(message)
+        if (message.trim()) {
+            let emitData;
+
+            if (chatEnterData?.system) {
+                // chatEnterData.system이 있는 경우
+                if (!isSystemMsgSent) {
+                    // 첫 번째 메시지일 경우, system 값을 포함
+                    emitData = {
+                        uuid: chatEnterData.uuid,
+                        message: message,
+                        system: isSystemMsg,
+                    };
+                    setIsSystemMsgSent(true); // 시스템 메시지를 보낸 후, 상태를 true로 설정
+                } else {
+                    // 이후 메시지에는 system 값을 포함시키지 않음
+                    emitData = {
+                        uuid: chatEnterData.uuid,
+                        message: message,
+                    };
+                }
+            } else {
+                // chatEnterData.system이 없는 경우
+                emitData = {
+                    uuid: chatEnterData?.uuid,
+                    message: message,
+                };
+            }
+
+            socket.emit("chat-message", emitData);
+            setMessage("");
+        }
+    };
+
+    const handlePressEnterKey = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault();
+            sendMessage(event);
+        }
     };
 
     const handleMoreBoxOpen = () => {
@@ -360,6 +402,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                                         maxLength={1000}
                                         value={message}
                                         onChange={(event) => setMessage(event.target.value)}
+                                        // onKeyDown={handlePressEnterKey}
                                         disabled={!!chatEnterData.blocked}
                                         placeholder={!!chatEnterData?.blocked ? "메시지를 보낼 수 없는 상대입니다." : ""}
                                     />
