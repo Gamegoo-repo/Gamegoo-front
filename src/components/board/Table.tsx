@@ -11,6 +11,8 @@ import { useRouter } from "next/navigation";
 import Alert from "../common/Alert";
 import ConfirmModal from "../common/ConfirmModal";
 import { BoardList } from "@/interface/board";
+import ChatRoom from "../chat/ChatRoom";
+import { editManners, postBadMannerValue, postMannerValue } from "@/api/manner";
 
 interface TableTitleProps {
     id: number;
@@ -45,11 +47,6 @@ const Table = (props: TableProps) => {
 
         dispatch(setOpenReadingModal());
         setIsBoardId(id);
-    };
-
-    /* 게시글 닫기 */
-    const handlePostClose = () => {
-        dispatch(setCloseReadingModal());
     };
 
     useEffect(() => {
@@ -88,7 +85,86 @@ const Table = (props: TableProps) => {
     const handleModalClose = () => {
         dispatch(setCloseModal());
     };
+  const isChatRoomOpen = useSelector((state: RootState) => state.chat.isChatRoomOpen);
+  const [isMemberId, setIsMemberId] = useState<number>();
+  const [targetMemberId, setTargetMemberId] = useState<number | null>(null);
+  const [checkedMannerItems, setCheckedMannerItems] = useState<number[]>([]);
+  const [checkedBadMannerItems, setCheckedBadMannerItems] = useState<number[]>([]);
 
+  const handleMemberIdGet = (id: number) => {
+    setIsMemberId(id);
+    setTargetMemberId(id);
+  };
+
+  /* 매너 평가 체크박스 */
+  const handleMannerCheckboxChange = (checked: number) => {
+    setCheckedMannerItems((prev) =>
+      prev.includes(checked) ? prev.filter((c) => c !== checked) : [...prev, checked]
+    );
+  };
+
+  /* 비매너 평가 체크박스 */
+  const handleBadMannerCheckboxChange = (checked: number) => {
+    setCheckedBadMannerItems((prev) =>
+      prev.includes(checked) ? prev.filter((c) => c !== checked) : [...prev, checked]
+    );
+  };
+
+  /* 매너평가 등록 */
+  const handleMannerPost = async () => {
+    if (!targetMemberId) return;
+
+    const params = {
+      toMemberId: targetMemberId,
+      mannerRatingKeywordList: checkedMannerItems,
+    };
+
+    try {
+      await postMannerValue(params)
+      await handleModalClose();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  /* 비매너평가 등록 */
+  const handleBadMannerPost = async () => {
+    if (!targetMemberId) return;
+
+    const params = {
+      toMemberId: targetMemberId,
+      mannerRatingKeywordList: checkedBadMannerItems,
+    };
+
+    try {
+      await postBadMannerValue(params)
+      await handleModalClose();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  /* 매너, 비매너 평가 수정 */
+  const handleMannerEdit = async (type: string) => {
+    const mannerId = localStorage.getItem('mannerId');
+    const badMannerId = localStorage.getItem('badMannerId');
+
+    if (!type || !mannerId || !badMannerId) return;
+
+    const mannerIdNumber = parseInt(mannerId, 10);
+    const badMannerIdNumber = parseInt(badMannerId, 10);
+
+    const params = {
+      mannerRatingKeywordList: type === 'manner' ? checkedMannerItems : checkedBadMannerItems,
+    };
+
+    try {
+      await editManners(type === 'manner' ? mannerIdNumber : badMannerIdNumber, params);
+      await handleModalClose();
+    } catch (error) {
+      console.error(error);
+    }
+  };
     return (
         <>
             {showAlert && <Alert
@@ -100,8 +176,18 @@ const Table = (props: TableProps) => {
                 onClose={() => setShowAlert(false)}
             />}
             {isReadingModal &&
-                <ReadBoard onClose={handlePostClose} postId={isBoardId} />
+                <ReadBoard postId={isBoardId} />
             }
+               {isChatRoomOpen && <ChatRoom 
+                         api="board"
+                         chatId={isBoardId}
+                         onMemberId={handleMemberIdGet}
+                         onMannerEdit={handleMannerEdit}
+                         onMannerCheckboxChange={handleMannerCheckboxChange}
+                         onBadMannerCheckboxChange={handleBadMannerCheckboxChange}
+                         onMannerPost={handleMannerPost}
+                         onBadMannerPost={handleBadMannerPost}
+               />}
             <TableWrapper>
                 <TableHead>
                     {title.map(data => {

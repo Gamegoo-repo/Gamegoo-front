@@ -20,18 +20,14 @@ import { getChatrooms, leaveChatroom } from "@/api/chat";
 import { ChatroomList } from "@/interface/chat";
 import { blockMember, reportMember } from "@/api/member";
 import { Mannerstatus } from "@/interface/manner";
-import useChatMessage from "@/hooks/useChatMessage";
+import { closeChat, closeChatRoom, openChatRoom, setChatRoomUuid } from "@/redux/slices/chatSlice";
 
-interface ChatWindowProps {
-    onClose: () => void;
-}
-
-const ChatWindow = ({ onClose }: ChatWindowProps) => {
+const ChatWindow = () => {
 
     const dispatch = useDispatch();
 
     const [activeTab, setActiveTab] = useState<string>('friends');
-    const [isChatRoomVisible, setIsChatRoomVisible] = useState(false);
+    // const [isChatRoomVisible, setIsChatRoomVisible] = useState(false);
     const [isMoreBoxOpen, setIsMoreBoxOpen] = useState<number | null>(null);
     const [chatId, setChatId] = useState<string | number | undefined>();
     const [checkedReportItems, setCheckedReportItems] = useState<number[]>([]);
@@ -49,6 +45,10 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
 
     const isModalType = useSelector((state: RootState) => state.modal.modalType);
     const isUser = useSelector((state: RootState) => state.user);
+    const isChatOpen = useSelector((state: RootState) => state.chat.isChatOpen);
+    const isChatRoomOpen = useSelector((state: RootState) => state.chat.isChatRoomOpen);
+
+    if (!isChatOpen) return null;
 
     /* 대화방 목록 가져오기  */
     useEffect(() => {
@@ -72,12 +72,11 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
     /* 채팅방 입장 */
     const handleGoToChatRoom = (id: string | number) => {
         setChatId(id);
-        setIsChatRoomVisible(true);
-    };
-
-    /* 채팅창 뒤로가기 */
-    const handleBackToChatWindow = () => {
-        setIsChatRoomVisible(false);
+        // setIsChatRoomVisible(true);
+        dispatch(openChatRoom());
+        if (typeof id === 'string') {
+            setChatRoomUuid(id);
+        }
     };
 
     const handleMemberIdGet = (id: number) => {
@@ -119,14 +118,16 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
             console.error(error);
         }
         handleModalClose();
-        handleBackToChatWindow();
+        dispatch(closeChatRoom());
+        // handleBackToChatWindow();
     };
 
     /* 차단하기 */
     const handleChatBlock = async () => {
         if (!isMemberId) return;
 
-        handleBackToChatWindow();
+        // handleBackToChatWindow();
+        dispatch(closeChatRoom());
         handleModalClose();
         try {
             await blockMember(isMemberId);
@@ -257,7 +258,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                     <ChatHeader>
                         <CloseButton>
                             <CloseImage
-                                onClick={onClose}
+                                onClick={() => dispatch(closeChat())}
                                 src='/assets/icons/close.svg'
                                 width={11}
                                 height={11}
@@ -316,10 +317,9 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                 </Wrapper>
             </Overlay>
 
-            {isChatRoomVisible && chatId !== null &&
+            {isChatRoomOpen && chatId !== null &&
                 <ChatRoom
-                    onClose={onClose}
-                    onGoback={handleBackToChatWindow}
+                    api={activeTab === "friend" ? "member" : "uuid"}
                     chatId={chatId}
                     onMemberId={handleMemberIdGet}
                     onMannerEdit={handleMannerEdit}

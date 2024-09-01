@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { socket } from '@/socket';
-import { friendOffline, friendOnline, memberId } from '@/redux/slices/chatSlice';
+import { setFriendOffline, setFriendOnline, setMemberId } from '@/redux/slices/chatSlice';
 import useChatMessage from '@/hooks/useChatMessage';
 
 const SocketConnection: React.FC = () => {
@@ -29,7 +29,7 @@ const SocketConnection: React.FC = () => {
 
         socket.on("member-info", async (res, cb) => {
             try {
-                dispatch(memberId(res.data.memberId));
+                dispatch(setMemberId(res.data.memberId));
             } catch (error) {
                 cb({ ok: false, error: error });
             }
@@ -38,7 +38,7 @@ const SocketConnection: React.FC = () => {
         socket.on("init-online-friend-list", async (res, cb) => {
             try {
                 const onlineFriendsList = res.data.onlineFriendMemberIdList;
-                dispatch(friendOnline(onlineFriendsList));
+                dispatch(setFriendOnline(onlineFriendsList));
             } catch (error) {
                 cb({ ok: false, error: error });
             }
@@ -47,7 +47,7 @@ const SocketConnection: React.FC = () => {
         socket.on("friend-online", async (res, cb) => {
             try {
                 const onlineFriendId = res.data.memberId;
-                dispatch(friendOnline(onlineFriendId));
+                dispatch(setFriendOnline(onlineFriendId));
             } catch (error) {
                 cb({ ok: false, error: error });
             }
@@ -56,7 +56,7 @@ const SocketConnection: React.FC = () => {
         socket.on("friend-offline", async (res, cb) => {
             try {
                 const onlineFriendId = res.data.memberId;
-                dispatch(friendOffline(onlineFriendId));
+                dispatch(setFriendOffline(onlineFriendId));
             } catch (error) {
                 cb({ ok: false, error: error });
             }

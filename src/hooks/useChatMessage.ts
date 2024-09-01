@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { socket } from '@/socket';
-import { unreadUuid } from '@/redux/slices/chatSlice';
+import { setUnreadUuid } from '@/redux/slices/chatSlice';
 import { markChatAsRead } from '@/api/chat';
 
 const useChatMessage = () => {
@@ -31,13 +31,23 @@ const useChatMessage = () => {
                 if (!unreadChatUuids.includes(chatroomUuid)) {
                     const updatedUnreadUuids = [...unreadChatUuids, chatroomUuid];
                     // 실시간 안읽은 채팅방 수 가져오기 위함
-                    dispatch(unreadUuid(updatedUnreadUuids));
+                    dispatch(setUnreadUuid(updatedUnreadUuids));
 
                     //TODO: 로그아웃할 때 unreadChatUuids값 지우기.
                     // 새로고침시 채팅방 수 가져오기 위함
                     localStorage.setItem('unreadChatUuids', JSON.stringify(updatedUnreadUuids));
                 }
             }
+
+            /* 새로운 채팅 등록 */
+        
+
+               // const msg = res.data.message;
+            // let requestData = { message: msg };
+
+            // if (res.data.system) {
+            //     requestData.system = res.data.system;
+            // };
         };
 
         socket.on("chat-message", handleChatMessage);

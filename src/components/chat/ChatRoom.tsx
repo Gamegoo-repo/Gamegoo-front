@@ -16,14 +16,13 @@ import Button from "../common/Button";
 import { Chat } from "@/interface/chat";
 import { getProfileBgColor } from "@/utils/profile";
 import { cancelFriendReq, deleteFriend, reqFriend } from "@/api/friends";
-import { enterUsingMemberId, enterUsingUuid } from "@/api/chat";
+import { enterUsingBoardId, enterUsingMemberId, enterUsingUuid } from "@/api/chat";
 import { getBadMannerValues, getMannerValues } from "@/api/manner";
 import { Mannerstatus } from "@/interface/manner";
-import { setCurrentChatUuid } from "@/redux/slices/chatSlice";
+import { closeChatRoom, setCurrentChatUuid } from "@/redux/slices/chatSlice";
 
 interface ChatRoomProps {
-    onClose: () => void;
-    onGoback: () => void;
+    api: "uuid" | "member" | "board";
     chatId: string | number | undefined;
     onMemberId: (id: number) => void;
     onMannerEdit: (type: string) => void;
@@ -33,10 +32,24 @@ interface ChatRoomProps {
     onBadMannerPost: () => void;
 }
 
+interface System {
+    flag: number;
+    boardId: number;
+}
+
+interface SystemMessage {
+    senderId: number;
+    senderName: string;
+    senderProfileImg: number;
+    message: string;
+    createdAt: null;
+    timestamp: null;
+    boardId: number
+}
+
 const ChatRoom = (props: ChatRoomProps) => {
     const {
-        onClose,
-        onGoback,
+        api,
         chatId,
         onMemberId,
         onMannerEdit,
@@ -58,6 +71,8 @@ const ChatRoom = (props: ChatRoomProps) => {
     const [isMannerStatus, setIsMannerStatus] = useState<Mannerstatus | undefined>();
     const [isBadMannerStatus, setIsBadMannerStatus] = useState<Mannerstatus | undefined>();
     const [chatEnterData, setChatEnterData] = useState<Chat>();
+    const [isSystemMsg, setIsSystemMsg] = useState<System>();
+    const [systemMsgArray, setSystemMsgArray] = useState<Array<SystemMessage>>([]);
 
     const isEvaluationModalOpen = useSelector((state: RootState) => state.modal.evaluationModal);
     const isMannerModalStatus = useSelector((state: RootState) => state.mannerStatus.mannerStatus);
@@ -67,18 +82,53 @@ const ChatRoom = (props: ChatRoomProps) => {
     /* 채팅방 입장 */
     useEffect(() => {
         const handleChatEnter = async () => {
+            if (!chatId) return;
             try {
-                if (typeof chatId === 'string') {
+                // 대화방에서 채팅방 입장
+                if (api === "uuid" && typeof chatId === "string") {
                     const data = await enterUsingUuid(chatId);
                     setChatEnterData(data.result);
                     onMemberId(data.result.memberId);
                     dispatch(setCurrentChatUuid(data.result.uuid));
                 }
-                if (typeof chatId === 'number') {
+                // 친구목록에서 채팅방 입장
+                if (api === "member" && typeof chatId === "number") {
                     const data = await enterUsingMemberId(chatId);
                     setChatEnterData(data.result);
                     onMemberId(data.result.memberId);
                     dispatch(setCurrentChatUuid(data.result.uuid));
+                }
+                // 게시글에서 채팅방 입장
+                if (api === "board" && typeof chatId === "number") {
+                    const data = await enterUsingBoardId(chatId);
+                    setChatEnterData(data.result);
+                    onMemberId(data.result.memberId);
+                    dispatch(setCurrentChatUuid(data.result.uuid));
+                    setIsSystemMsg(data.result.system);
+                    let systemMessage: SystemMessage;
+                    if (data.result.system.flag === 1) {
+                        systemMessage = {
+                            senderId: 0,
+                            senderName: "SYSTEM",
+                            senderProfileImg: 0,
+                            message: "상대방이 게시한 글을 보고 말을 걸었어요. 대화를 시작해보세요~",
+                            createdAt: null,
+                            timestamp: null,
+                            boardId: data.result.system.boardId,
+                        };
+                    } else {
+                        systemMessage = {
+                            senderId: 0,
+                            senderName: "SYSTEM",
+                            senderProfileImg: 0,
+                            message: "상대방이 게시한 글을 보고 말을 걸었어요.",
+                            createdAt: null,
+                            timestamp: null,
+                            boardId: data.result.system.boardId,
+                        };
+                    }
+
+                    setSystemMsgArray((prevMessages) => [...prevMessages, systemMessage]);
                 }
             } catch (error) {
                 console.error(error);
@@ -245,7 +295,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                         }
                         <CloseButton>
                             <CloseImage
-                                onClick={onClose}
+                                onClick={() => dispatch(closeChatRoom())}
                                 src='/assets/icons/close.svg'
                                 width={11}
                                 height={11}
@@ -254,7 +304,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                         {chatEnterData &&
                             <ChatHeader>
                                 <PrevImage
-                                    onClick={onGoback}
+                                    onClick={() => dispatch(closeChatRoom())}
                                     src="/assets/icons/left_arrow.svg"
                                     width={9}
                                     height={18}

@@ -243,7 +243,6 @@ const ChatList = (props: ChatListProps) => {
                     )
                 })}
             </List>
-
         </>
     )
 };

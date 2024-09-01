@@ -6,15 +6,18 @@ import ChatWindow from "../chat/ChatWindow";
 import Alert from "./Alert";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { closeChat, toggleChat } from '@/redux/slices/chatSlice';
 
 const ChatButton = () => {
 
-  const [isChatOpen, setIsChatOpen] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [unreadChatUuids, setUnreadChatUuids] = useState<string[]>([]);
 
   const isUser = useSelector((state: RootState) => state.user);
   const unreadUuid = useSelector((state: RootState) => state.chat.unreadUuids);
+  const isChatOpen = useSelector((state: RootState) => state.chat.isChatOpen);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setUnreadChatUuids(unreadUuid);
@@ -24,20 +27,21 @@ const ChatButton = () => {
     const localUnreadChatUuids = localStorage.getItem('unreadChatUuids');
     if (localUnreadChatUuids) {
       setUnreadChatUuids(JSON.parse(localUnreadChatUuids));
-    } 
+    }
   }, [unreadUuid]);
 
   const chatCount = unreadChatUuids ? unreadChatUuids.length : 0;
 
-  const toggleChat = () => {
+  const handleToggleChat = () => {
     // if (!isUser.id) {
     //   return setShowAlert(true);
-    // }
-    setIsChatOpen((prevState) => !prevState);
+    // } 
+    // setIsChatOpen((prevState) => !prevState);
+    dispatch(toggleChat());
   };
 
   const handleChatWindowClose = () => {
-    setIsChatOpen(false);
+    dispatch(closeChat());
   };
 
   useEffect(() => {
@@ -66,8 +70,8 @@ const ChatButton = () => {
         />
       )}
       <ChatBoxContent>
-        {isChatOpen && <ChatWindow onClose={handleChatWindowClose} />}
-        <MsgButton onClick={toggleChat}>
+        {isChatOpen && <ChatWindow />}
+        <MsgButton onClick={handleToggleChat}>
           <Image
             src="/assets/icons/chat_box.svg"
             width={36}

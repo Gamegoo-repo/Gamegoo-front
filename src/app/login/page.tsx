@@ -7,7 +7,7 @@ import Button from "@/components/common/Button";
 import Checkbox from "@/components/common/Checkbox";
 import Input from "@/components/common/Input";
 import { emailRegEx } from "@/constants/regEx";
-import { unreadUuid } from "@/redux/slices/chatSlice";
+import { setUnreadUuid } from "@/redux/slices/chatSlice";
 import { setUserName, setUserProfileImg } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
 import { setToken } from "@/utils/storage";
@@ -67,7 +67,7 @@ const Login = () => {
       const data = await getUnreadUuid();
       if (data.isSuccess) {
         // 실시간 안읽은 채팅방 수 가져오기 위함
-        dispatch(unreadUuid(data.result));
+        dispatch(setUnreadUuid(data.result));
         // 새로고침시 채팅방 수 가져오기 위함
         localStorage.setItem('unreadChatUuids', JSON.stringify(data.result));
       }

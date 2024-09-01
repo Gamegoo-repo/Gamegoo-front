@@ -1,6 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface ChatState {
+    isChatOpen: boolean;
+    isChatRoomOpen: boolean;
+    isChatRoomUuid: string;
     memberId: number;
     onlineFriends: number[];
     unreadUuids: string[];
@@ -8,6 +11,9 @@ interface ChatState {
 }
 
 const initialState: ChatState = {
+    isChatOpen: false,
+    isChatRoomOpen: false,
+    isChatRoomUuid: "",
     memberId: 0,
     onlineFriends: [],
     currentChatUuid: null,
@@ -18,10 +24,28 @@ const chatSlice = createSlice({
     name: 'chat',
     initialState,
     reducers: {
-        memberId: (state, action: PayloadAction<number>) => {
+        openChat(state) {
+            state.isChatOpen = true;
+        },
+        closeChat(state) {
+            state.isChatOpen = false;
+        },
+        toggleChat(state) {
+            state.isChatOpen = !state.isChatOpen;
+        },
+        openChatRoom(state) {
+            state.isChatRoomOpen = true;
+        },
+        closeChatRoom(state) {
+            state.isChatRoomOpen = false;
+        },
+        setChatRoomUuid(state, action: PayloadAction<string>) {
+            state.isChatRoomUuid = action.payload;
+        },
+        setMemberId: (state, action: PayloadAction<number>) => {
             state.memberId = action.payload;
         },
-        friendOnline: (state, action: PayloadAction<number | number[]>) => {
+        setFriendOnline: (state, action: PayloadAction<number | number[]>) => {
             if (Array.isArray(action.payload)) {
                 // 배열인 경우 전체를 업데이트
                 state.onlineFriends = action.payload;
@@ -32,24 +56,30 @@ const chatSlice = createSlice({
                 }
             }
         },
-        friendOffline: (state, action: PayloadAction<number>) => {
+        setFriendOffline: (state, action: PayloadAction<number>) => {
             // id를 배열에서 제거
             state.onlineFriends = state.onlineFriends.filter(id => id !== action.payload);
         },
         setCurrentChatUuid(state, action: PayloadAction<string>) {
             state.currentChatUuid = action.payload;
         },
-        unreadUuid(state, action: PayloadAction<string[]>) {
+        setUnreadUuid(state, action: PayloadAction<string[]>) {
             state.unreadUuids = action.payload;
         },
     },
 });
 
 export const {
-    memberId,
-    friendOnline,
-    friendOffline,
-    unreadUuid,
+    openChat,
+    closeChat,
+    toggleChat,
+    openChatRoom,
+    closeChatRoom,
+    setChatRoomUuid,
+    setMemberId,
+    setFriendOnline,
+    setFriendOffline,
+    setUnreadUuid,
     setCurrentChatUuid,
 } = chatSlice.actions;
 export default chatSlice.reducer;

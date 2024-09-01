@@ -37,6 +37,18 @@ export const enterUsingMemberId = async (memberId: number) => {
     }
 };
 
+/* 게시글에서 채팅방 입장 */
+export const enterUsingBoardId = async (boardId: number) => {
+    try {
+        const response = await Axios.get(`/v1/chat/start/board/${boardId}`);
+        console.log("채팅방 입장 성공:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("채팅방 입장 실패:", error);
+        throw error;
+    }
+};
+
 /* 채팅 내역 조회 */
 export const getChatList = async (uuid: string, cursor?: number | null) => {
     const url = !!cursor ? `/v1/chat/${uuid}/messages?cursor=${cursor}` : `/v1/chat/${uuid}/messages`;
@@ -79,16 +91,6 @@ export const markChatAsRead = async (uuid: string, timestamp = null) => {
 export const getUnreadUuid = async () => {
     try {
         const response = await Axios.get('/v1/chat/unread');
-        return response.data;
-    } catch (error) {
-        throw error;
-    }
-};
-
-/* 새로운 채팅 등록 */
-export const postChatMessage = async (chatroomUuid: string) => {
-    try {
-        const response = await Axios.post(`/v1/chat/${chatroomUuid}`);
         return response.data;
     } catch (error) {
         throw error;
