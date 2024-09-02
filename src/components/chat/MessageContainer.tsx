@@ -74,7 +74,7 @@ const MessageContainer = (props: MessageContainerProps) => {
         setIsSystemMessageShown(true);
       }
     }
-  }, [newMessage, systemMessage]);
+  }, [newMessage, systemMessage, isSystemMessageShown]);
 
   const handleMannerTypeClose = () => {
     dispatch(setCloseMannerStatusModal());
@@ -203,7 +203,7 @@ const MessageContainer = (props: MessageContainerProps) => {
     if (feedbackDate !== lastMessageDate) {
       setIsFeedbackDateVisible(true);
     }
-  }, [messageList])
+  }, [messageList, chatEnterData.chatMessageList.chatMessageDtoList])
 
   /* 게시글 열기 */
   const handlePostOpen = (id: number) => {
