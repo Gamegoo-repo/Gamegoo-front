@@ -95,7 +95,7 @@ export function setDateFormatter(date: string) {
 }
 
 export function setChatTimeFormatter(date: string) {
-  return dayjs(date).format("A h:m");
+  return dayjs(date).format("A h:mm");
 }
 
 export function setChatDateFormatter(date: string) {
@@ -107,7 +107,7 @@ export function setChatRoomDateFormatter(date: string) {
   const diffHours = now.diff(date, "hour");
 
   if (diffHours < 24) {
-    return dayjs(date).format("A h:m");
+    return dayjs(date).format("A h:mm");
   } else if (diffHours < 36) {
     return "어제";
   } else {

@@ -1,15 +1,17 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
+import { setAbbrevTier } from "@/utils/custom";
 
 interface UserProps {
     account: string;
     tag: string;
     tier: string;
+    rank: number;
 }
 
 const User = (props: UserProps) => {
-    const { account, tag, tier } = props;
+    const { account, tag, tier, rank } = props;
 
     return (
         <Wrapper>
@@ -28,7 +30,7 @@ const User = (props: UserProps) => {
                             height={20}
                             alt="티어 이미지"
                         />
-                        <Tier>{!tier ? "UR" : tier}</Tier>
+                        <Tier>{!tier ? "UR" : setAbbrevTier(tier)}{rank}</Tier>
                     </>
                 }
             </UserTier>

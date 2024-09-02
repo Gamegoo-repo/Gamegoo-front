@@ -4,29 +4,44 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import ChatWindow from "../chat/ChatWindow";
 import Alert from "./Alert";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { closeChat, toggleChat } from '@/redux/slices/chatSlice';
 
-interface msgCountProps {
-  count: number;
-}
+const ChatButton = () => {
 
-const ChatButton = (props: msgCountProps) => {
-  const { count } = props;
-  const [isChatOpen, setIsChatOpen] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [unreadChatUuids, setUnreadChatUuids] = useState<string[]>([]);
 
   const isUser = useSelector((state: RootState) => state.user);
+  const unreadUuid = useSelector((state: RootState) => state.chat.unreadUuids);
+  const isChatOpen = useSelector((state: RootState) => state.chat.isChatOpen);
 
-  const toggleChat = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    setUnreadChatUuids(unreadUuid);
+  }, [unreadUuid])
+
+  useEffect(() => {
+    const localUnreadChatUuids = localStorage.getItem('unreadChatUuids');
+    if (localUnreadChatUuids) {
+      setUnreadChatUuids(JSON.parse(localUnreadChatUuids));
+    }
+  }, [unreadUuid]);
+
+  const chatCount = unreadChatUuids ? unreadChatUuids.length : 0;
+
+  const handleToggleChat = () => {
     // if (!isUser.id) {
     //   return setShowAlert(true);
-    // }
-    setIsChatOpen((prevState) => !prevState);
+    // } 
+    // setIsChatOpen((prevState) => !prevState);
+    dispatch(toggleChat());
   };
 
   const handleChatWindowClose = () => {
-    setIsChatOpen(false);
+    dispatch(closeChat());
   };
 
   useEffect(() => {
@@ -55,8 +70,8 @@ const ChatButton = (props: msgCountProps) => {
         />
       )}
       <ChatBoxContent>
-        {isChatOpen && <ChatWindow onClose={handleChatWindowClose} />}
-        <MsgButton onClick={toggleChat}>
+        {isChatOpen && <ChatWindow />}
+        <MsgButton onClick={handleToggleChat}>
           <Image
             src="/assets/icons/chat_box.svg"
             width={36}
@@ -64,7 +79,7 @@ const ChatButton = (props: msgCountProps) => {
             alt="채팅"
           />
           <MsgCount>
-            <Count>{count}</Count>
+            <Count>{chatCount}</Count>
           </MsgCount>
         </MsgButton>
       </ChatBoxContent>

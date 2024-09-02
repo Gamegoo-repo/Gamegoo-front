@@ -2,251 +2,339 @@ import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import {
-  setAbbrevTier,
-  setDateFormatter,
-  setPositionImg,
-  setProfileImg,
+    setAbbrevTier,
+    setDateFormatter,
+    setPositionImg,
+    setProfileImg,
 } from "@/utils/custom";
 import ReadBoard from "../readBoard/ReadBoard";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import {
-  setCloseModal,
-  setCloseReadingModal,
-  setOpenModal,
-  setOpenReadingModal,
+    setCloseModal,
+    setCloseReadingModal,
+    setOpenModal,
+    setOpenReadingModal,
 } from "@/redux/slices/modalSlice";
 import { useRouter } from "next/navigation";
 import Alert from "../common/Alert";
 import ConfirmModal from "../common/ConfirmModal";
+import { BoardList } from "@/interface/board";
+import ChatRoom from "../chat/ChatRoom";
+import { editManners, postBadMannerValue, postMannerValue } from "@/api/manner";
 
 interface TableTitleProps {
-  id: number;
-  name: string;
+    id: number;
+    name: string;
 }
 
 interface TableContentProps {
-  boardId: number;
-  memberId: number;
-  profileImage: number;
-  gameName: string;
-  mannerLevel: number;
-  tier: string;
-  rank: number;
-  gameMode: number;
-  mainPosition: number;
-  subPosition: number;
-  wantPosition: number;
-  championList: number[];
-  winRate: number;
-  createdAt: string;
+    boardId: number;
+    memberId: number;
+    profileImage: number;
+    gameName: string;
+    mannerLevel: number;
+    tier: string;
+    rank: number;
+    gameMode: number;
+    mainPosition: number;
+    subPosition: number;
+    wantPosition: number;
+    championList: number[];
+    winRate: number;
+    createdAt: string;
 }
 
 interface TableProps {
-  title: TableTitleProps[];
-  content: TableContentProps[];
+    title: TableTitleProps[];
+    content: TableContentProps[];
 }
 
 const Table = (props: TableProps) => {
-  const { title, content } = props;
+    const { title, content } = props;
 
-  const [isBoardId, setIsBoardId] = useState(0);
-  const [showAlert, setShowAlert] = useState(false);
+    const [isBoardId, setIsBoardId] = useState(0);
+    const [showAlert, setShowAlert] = useState(false);
+    const isChatRoomOpen = useSelector((state: RootState) => state.chat.isChatRoomOpen);
+    const [isMemberId, setIsMemberId] = useState<number>();
+    const [targetMemberId, setTargetMemberId] = useState<number | null>(null);
+    const [checkedMannerItems, setCheckedMannerItems] = useState<number[]>([]);
+    const [checkedBadMannerItems, setCheckedBadMannerItems] = useState<number[]>([]);
 
-  const isReadingModal = useSelector(
-    (state: RootState) => state.modal.readingModal
-  );
-  const isModalType = useSelector((state: RootState) => state.modal.modalType);
+    const isReadingModal = useSelector((state: RootState) => state.modal.readingModal);
+    const isModalType = useSelector((state: RootState) => state.modal.modalType);
+    const isUser = useSelector((state: RootState) => state.user);
 
-  const dispatch = useDispatch();
-  const router = useRouter();
+    const dispatch = useDispatch();
+    const router = useRouter();
 
-  /* 게시글 열기 */
-  const handlePostOpen = (id: number) => {
-    // const exists = content.some(board => board.boardId === id);
-    // console.log(exists)
-    // if (!exists) {
-    //     return setShowAlert(true);
-    // }
+    /* 게시글 열기 */
+    const handlePostOpen = (id: number) => {
+        const exists = content.some(board => board.boardId === id);
+    
+        if (!exists) {
+            return setShowAlert(true);
+        }
 
-    dispatch(setOpenReadingModal());
-    setIsBoardId(id);
-  };
-
-  /* 게시글 닫기 */
-  const handlePostClose = () => {
-    dispatch(setCloseReadingModal());
-  };
-
-  useEffect(() => {
-    if (isReadingModal) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-
-    return () => {
-      document.body.style.overflow = "unset";
+        dispatch(setOpenReadingModal());
+        setIsBoardId(id);
     };
-  }, [isReadingModal]);
 
-  /* 소환사명 복사 */
-  const handleTextClick = async (gameName: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    const copied = `#${gameName.replace(/\s+/g, "")}`;
-    try {
-      await navigator.clipboard.writeText(copied);
-      await dispatch(setOpenModal("copied"));
-    } catch (error) {
-      console.error("복사 실패", error);
-    }
-  };
 
-  /* 다른 사람 프로필 이동 */
-  const handleUserProfilePage = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    router.push("/user");
-  };
+    useEffect(() => {
+        if (isReadingModal) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "unset";
+        }
 
-  /* 모달 닫기 */
-  const handleModalClose = () => {
-    dispatch(setCloseModal());
-  };
+        return () => {
+            document.body.style.overflow = "unset";
+        };
+    }, [isReadingModal]);
 
-  return (
-    <>
-      {showAlert && (
-        <Alert
-          icon="trash"
-          width={45}
-          height={50}
-          content="해당 글은 삭제된 글입니다."
-          alt="삭제된 글"
-          onClose={() => setShowAlert(false)}
-        />
-      )}
-      {isReadingModal && (
-        <ReadBoard onClose={handlePostClose} postId={isBoardId} />
-      )}
-      <TableWrapper>
-        <TableHead>
-          {title.map((data) => {
-            return (
-              <Title key={data.id} className="table_width">
-                {data.name}
-              </Title>
-            );
-          })}
-        </TableHead>
-        {content?.length > 0 ? (
-          <TableContent>
-            {content?.map((data) => {
-              return (
-                <Row
-                  key={data.boardId}
-                  onClick={() => handlePostOpen(data.boardId)}
+    /* 소환사명 복사 */
+    const handleTextClick = async (gameName: string, e: React.MouseEvent) => {
+        e.stopPropagation();
+        const copied = `#${gameName.replace(/\s+/g, "")}`;
+        try {
+            await navigator.clipboard.writeText(copied);
+            await dispatch(setOpenModal("copied"));
+        } catch (error) {
+            console.error("복사 실패", error);
+        }
+    };
+
+    /* 다른 사람 프로필 이동 */
+    const handleUserProfilePage = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        router.push("/user");
+    };
+
+    /* 모달 닫기 */
+    const handleModalClose = () => {
+        dispatch(setCloseModal());
+    };
+
+    const handleMemberIdGet = (id: number) => {
+        setIsMemberId(id);
+        setTargetMemberId(id);
+    };
+
+    /* 매너 평가 체크박스 */
+    const handleMannerCheckboxChange = (checked: number) => {
+        setCheckedMannerItems((prev) =>
+            prev.includes(checked) ? prev.filter((c) => c !== checked) : [...prev, checked]
+        );
+    };
+
+    /* 비매너 평가 체크박스 */
+    const handleBadMannerCheckboxChange = (checked: number) => {
+        setCheckedBadMannerItems((prev) =>
+            prev.includes(checked) ? prev.filter((c) => c !== checked) : [...prev, checked]
+        );
+    };
+
+    /* 매너평가 등록 */
+    const handleMannerPost = async () => {
+        if (!targetMemberId) return;
+
+        const params = {
+            toMemberId: targetMemberId,
+            mannerRatingKeywordList: checkedMannerItems,
+        };
+
+        try {
+            await postMannerValue(params)
+            await handleModalClose();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    /* 비매너평가 등록 */
+    const handleBadMannerPost = async () => {
+        if (!targetMemberId) return;
+
+        const params = {
+            toMemberId: targetMemberId,
+            mannerRatingKeywordList: checkedBadMannerItems,
+        };
+
+        try {
+            await postBadMannerValue(params)
+            await handleModalClose();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    /* 매너, 비매너 평가 수정 */
+    const handleMannerEdit = async (type: string) => {
+        const mannerId = localStorage.getItem('mannerId');
+        const badMannerId = localStorage.getItem('badMannerId');
+
+        if (!type || !mannerId || !badMannerId) return;
+
+        const mannerIdNumber = parseInt(mannerId, 10);
+        const badMannerIdNumber = parseInt(badMannerId, 10);
+
+        const params = {
+            mannerRatingKeywordList: type === 'manner' ? checkedMannerItems : checkedBadMannerItems,
+        };
+
+        try {
+            await editManners(type === 'manner' ? mannerIdNumber : badMannerIdNumber, params);
+            await handleModalClose();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    return (
+        <>
+            {showAlert && (
+                <Alert
+                    icon="trash"
+                    width={45}
+                    height={50}
+                    content="해당 글은 삭제된 글입니다."
+                    alt="삭제된 글"
+                    onClose={() => setShowAlert(false)}
+                />
+            )}
+            {isReadingModal && (
+                <ReadBoard postId={isBoardId} />
+            )}
+            {isChatRoomOpen && <ChatRoom
+                api="board"
+                chatId={isBoardId}
+                onMemberId={handleMemberIdGet}
+                onMannerEdit={handleMannerEdit}
+                onMannerCheckboxChange={handleMannerCheckboxChange}
+                onBadMannerCheckboxChange={handleBadMannerCheckboxChange}
+                onMannerPost={handleMannerPost}
+                onBadMannerPost={handleBadMannerPost}
+            />}
+            <TableWrapper>
+                <TableHead>
+                    {title.map((data) => {
+                        return (
+                            <Title key={data.id} className="table_width">
+                                {data.name}
+                            </Title>
+                        );
+                    })}
+                </TableHead>
+                {content?.length > 0 ? (
+                    <TableContent>
+                        {content?.map((data) => {
+                            return (
+                                <Row
+                                    key={data.boardId}
+                                    onClick={() => handlePostOpen(data.boardId)}
+                                >
+                                    <First
+                                        className="table_width"
+                                        onClick={handleUserProfilePage}
+                                    >
+                                        <Image
+                                            src={setProfileImg(data.profileImage)}
+                                            width={50}
+                                            height={50}
+                                            alt="프로필 이미지"
+                                        />
+                                        <P onClick={(e) => handleTextClick(data.gameName, e)}>
+                                            {data.gameName}
+                                        </P>
+                                    </First>
+                                    <Second className="table_width">
+                                        {data.mannerLevel && <P>LV.{data.mannerLevel}</P>}
+                                    </Second>
+                                    <Third className="table_width">
+                                        <Image
+                                            src={
+                                                !data.tier
+                                                    ? "/assets/images/tier/UNRANK.svg"
+                                                    : `/assets/images/tier/${data.tier}.svg`
+                                            }
+                                            width={26}
+                                            height={13}
+                                            alt="티어 이미지"
+                                        />
+                                        <P>
+                                            {setAbbrevTier(data.tier)}
+                                            {data.rank}
+                                        </P>
+                                    </Third>
+                                    <Fourth className="table_width">
+                                        <Image
+                                            src={setPositionImg(data.mainPosition)}
+                                            width={35}
+                                            height={28}
+                                            alt="메인 포지션"
+                                        />
+                                        <Image
+                                            src={setPositionImg(data.subPosition)}
+                                            width={35}
+                                            height={28}
+                                            alt="서브 포지션"
+                                        />
+                                    </Fourth>
+                                    <Fifth className="table_width">
+                                        <Image
+                                            src={setPositionImg(data.wantPosition)}
+                                            width={35}
+                                            height={28}
+                                            alt="찾는 포지션"
+                                        />
+                                    </Fifth>
+                                    <Sixth className="table_width">
+                                        {data.championList.map(
+                                            (data, index) =>
+                                                // <Image
+                                                //     key={index}
+                                                //     src={data}
+                                                //     width={50}
+                                                //     height={50}
+                                                //     alt="챔피언 이미지"
+                                                // />
+                                                data
+                                        )}
+                                    </Sixth>
+                                    <Seventh className="table_width">
+                                        {data.winRate && (
+                                            <P className={data.winRate >= 50 ? "emph" : "basic"}>
+                                                {data.winRate}%
+                                            </P>
+                                        )}
+                                    </Seventh>
+                                    <Eighth className="table_width">
+                                        <P>{setDateFormatter(data.createdAt)}</P>
+                                    </Eighth>
+                                </Row>
+                            );
+                        })}
+                    </TableContent>
+                ) : (
+                    <NoData>게시된 글이 없습니다.</NoData>
+                )}
+            </TableWrapper>
+
+            {/* 소환사명 복사 모달 */}
+            {isModalType === "copied" && (
+                <ConfirmModal
+                    width="540px"
+                    primaryButtonText="확인"
+                    secondaryButtonText="나가기"
+                    onPrimaryClick={handleModalClose}
                 >
-                  <First
-                    className="table_width"
-                    onClick={handleUserProfilePage}
-                  >
-                    <Image
-                      src={setProfileImg(data.profileImage)}
-                      width={50}
-                      height={50}
-                      alt="프로필 이미지"
-                    />
-                    <P onClick={(e) => handleTextClick(data.gameName, e)}>
-                      {data.gameName}
-                    </P>
-                  </First>
-                  <Second className="table_width">
-                    {data.mannerLevel && <P>LV.{data.mannerLevel}</P>}
-                  </Second>
-                  <Third className="table_width">
-                    <Image
-                      src={
-                        !data.tier
-                          ? "/assets/images/tier/UNRANK.svg"
-                          : `/assets/images/tier/${data.tier}.svg`
-                      }
-                      width={26}
-                      height={13}
-                      alt="티어 이미지"
-                    />
-                    <P>
-                      {setAbbrevTier(data.tier)}
-                      {data.rank}
-                    </P>
-                  </Third>
-                  <Fourth className="table_width">
-                    <Image
-                      src={setPositionImg(data.mainPosition)}
-                      width={35}
-                      height={28}
-                      alt="메인 포지션"
-                    />
-                    <Image
-                      src={setPositionImg(data.subPosition)}
-                      width={35}
-                      height={28}
-                      alt="서브 포지션"
-                    />
-                  </Fourth>
-                  <Fifth className="table_width">
-                    <Image
-                      src={setPositionImg(data.wantPosition)}
-                      width={35}
-                      height={28}
-                      alt="찾는 포지션"
-                    />
-                  </Fifth>
-                  <Sixth className="table_width">
-                    {data.championList.map(
-                      (data, index) =>
-                        // <Image
-                        //     key={index}
-                        //     src={data}
-                        //     width={50}
-                        //     height={50}
-                        //     alt="챔피언 이미지"
-                        // />
-                        data
-                    )}
-                  </Sixth>
-                  <Seventh className="table_width">
-                    {data.winRate && (
-                      <P className={data.winRate >= 50 ? "emph" : "basic"}>
-                        {data.winRate}%
-                      </P>
-                    )}
-                  </Seventh>
-                  <Eighth className="table_width">
-                    <P>{setDateFormatter(data.createdAt)}</P>
-                  </Eighth>
-                </Row>
-              );
-            })}
-          </TableContent>
-        ) : (
-          <NoData>게시된 글이 없습니다.</NoData>
-        )}
-      </TableWrapper>
-
-      {/* 소환사명 복사 모달 */}
-      {isModalType === "copied" && (
-        <ConfirmModal
-          width="540px"
-          primaryButtonText="확인"
-          secondaryButtonText="나가기"
-          onPrimaryClick={handleModalClose}
-        >
-          <Text>{`소환사명이 클립보드에 복사되었습니다.`}</Text>
-        </ConfirmModal>
-      )}
-    </>
-  );
+                    <Text>{`소환사명이 클립보드에 복사되었습니다.`}</Text>
+                </ConfirmModal>
+            )}
+        </>
+    );
 };
 
 export default Table;
