@@ -4,6 +4,7 @@ import { Profile } from "@/interface/profile";
 import { setUserProfile, setUserProfileImg } from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
+import { getProfileBgColor } from "@/utils/profile";
 import { toLowerCaseString } from "@/utils/string";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
@@ -28,6 +29,7 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
     await putProfileImg(index);
     const newUserData = await getProfile();
     dispatch(setUserProfileImg(index));
+    localStorage.setItem("profileImg", index + "");
     dispatch(setUserProfile(newUserData));
 
     setTimeout(() => {
@@ -40,29 +42,30 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
       try {
         const userData = await getProfile();
         dispatch(setUserProfile(userData));
+        console.log("userData", userData);
       } catch (error) {
         console.error("프로필 정보 불러오기 실패:", error);
       }
     };
 
     fetchProfile();
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
-    console.log("selectedImageIndex", selectedImageIndex);
-  }, [selectedImageIndex]);
+    setSelectedImageIndex(userRedux.profileImg);
+  }, [userRedux.profileImg]);
 
   return (
     <Container>
       <ImageContainer>
-        <ProfileImage>
+        <ProfileImgWrapper $bgColor={getProfileBgColor(selectedImageIndex)}>
           <PersonImage
             src={`/assets/images/profile/profile${selectedImageIndex}.svg`}
-            width={126}
-            height={126}
+            width={110}
+            height={110}
             alt="프로필"
           />
-        </ProfileImage>
+        </ProfileImgWrapper>
         <CameraImage
           src="/assets/icons/profile_camera.svg"
           width={34}
@@ -81,16 +84,20 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
               onClick={() => setIsProfileListOpen(false)}
             />
             <ProfileList>
-              {[0, 1, 2, 3, 4, 5, 6, 7].map((item) => (
-                <ProfileListImage
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
+                <SelectProfileImgWrapper
                   key={item}
-                  src={`/assets/images/profile/profile${item}.svg`}
-                  width={106.52}
-                  height={119.65}
-                  alt="프로필 이미지"
+                  $bgColor={getProfileBgColor(item)}
                   isSelected={item === selectedImageIndex}
                   onClick={() => handleImageClick(item)}
-                />
+                >
+                  <ProfileListImage
+                    src={`/assets/images/profile/profile${item}.svg`}
+                    width={90}
+                    height={100}
+                    alt="프로필 이미지"
+                  />
+                </SelectProfileImgWrapper>
               ))}
             </ProfileList>
           </ProfileListBox>
@@ -138,11 +145,11 @@ const ImageContainer = styled.div`
   position: relative;
 `;
 
-const ProfileImage = styled.div`
+const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
   width: 154px;
   height: 154px;
   border-radius: 93px;
-  background: ${theme.colors.purple300};
+  background: ${(props) => props.$bgColor};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -186,10 +193,15 @@ const ProfileList = styled.div`
   grid-template-rows: repeat(2, 1fr);
 `;
 
-const ProfileListImage = styled(Image)<{ isSelected: boolean }>`
-  cursor: pointer;
-  transition: opacity 0.3s ease-in-out;
-
+const SelectProfileImgWrapper = styled.div<{
+  $bgColor: string;
+  isSelected: boolean;
+}>`
+  position: relative;
+  width: 120px;
+  height: 120px;
+  background: ${(props) => props.$bgColor};
+  border-radius: 50%;
   ${({ isSelected }) =>
     isSelected &&
     css`
@@ -200,6 +212,15 @@ const ProfileListImage = styled(Image)<{ isSelected: boolean }>`
     filter: drop-shadow(0px 4px 10px rgba(138, 117, 255, 0.7));
     transition: box-shadow 0.3s ease-in-out;
   }
+`;
+
+const ProfileListImage = styled(Image)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  transition: opacity 0.3s ease-in-out;
 `;
 
 const Div = styled.div`

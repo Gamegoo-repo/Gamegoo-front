@@ -2,7 +2,7 @@ import { theme } from "@/styles/theme";
 import styled from "styled-components";
 
 interface ButtonProps {
-  buttonType?: "primary" | "secondary" | "default" | "";
+  buttonType?: "primary" | "secondary" | "default" | "light";
   type?: "submit" | "reset" | "button" | undefined;
   size?: "small" | "medium" | "large";
   width?: string;
@@ -25,7 +25,7 @@ const Button = (props: ButtonProps) => {
   if (size) {
     buttonClassName += " ${size}";
   }
-  
+
   return (
     <StyledButton
       type="submit"
@@ -58,7 +58,7 @@ const StyledButton = styled.button<{ width?: string }>`
       color: rgba(255, 255, 255, 0.42);
     }
     &:disabled {
-      background: #c5c5c7;
+      background: ${theme.colors.gray300};
     }
   }
   &.secondary {
@@ -82,7 +82,13 @@ const StyledButton = styled.button<{ width?: string }>`
       background: ${theme.colors.purple500};
     }
     &:disabled {
-      background: #c5c5c7;
+      background: ${theme.colors.gray300};
     }
+  }
+  &.light {
+    background: ${theme.colors.purple500};
+    border: 1px solid ${theme.colors.purple100};
+    color: ${theme.colors.gray100};
+    ${(props) => props.theme.fonts.medium16};
   }
 `;

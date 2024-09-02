@@ -28,5 +28,6 @@ const Wrapper = styled.div`
 `;
 
 const ThreeDotsImage = styled(Image)`
+  width: 15px;
   cursor: pointer;
 `;

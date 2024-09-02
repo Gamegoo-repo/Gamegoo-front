@@ -6,16 +6,14 @@ import { MATCH_PAGE_DATA } from "@/data/match";
 import Image from "next/image";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
-import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { socket } from "@/socket";
+import { useEffect } from "react";
 
 const HomePage = () => {
   const router = useRouter();
 
   const isUser = useSelector((state: RootState) => state.user);
-
 
   return (
     <Wrapper>

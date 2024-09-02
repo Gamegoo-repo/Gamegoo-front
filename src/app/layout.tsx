@@ -1,4 +1,5 @@
 "use client";
+
 import GlobalStyles from "@/styles/GlobalStyles";
 import { ThemeProvider } from "styled-components";
 import { theme } from "@/styles/theme";
@@ -9,6 +10,7 @@ import { useRef } from "react";
 import { AppStore, store } from "@/redux/store";
 import { usePathname } from "next/navigation";
 import SocketConnection from "@/components/socket/SocketConnection";
+import { Toaster } from "react-hot-toast";
 
 export default function RootLayout({
   children,
@@ -22,7 +24,9 @@ export default function RootLayout({
   }
 
   const pathname = usePathname();
+  const isNotFoundPage = pathname === "/404" || pathname === "/not-found";
   const isHeader = !(
+    isNotFoundPage ||
     pathname === "/login" ||
     pathname.includes("/join") ||
     pathname.includes("/password")
@@ -38,6 +42,7 @@ export default function RootLayout({
           <div id="modal-root"></div>
           <GlobalStyles />
           <ThemeProvider theme={theme}>
+            <Toaster />
             <Provider store={storeRef.current}>
               <SocketConnection />
               {isHeader && <Header />}

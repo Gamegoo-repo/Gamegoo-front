@@ -11,6 +11,15 @@ const UserProfilePage = () => {
   const { id } = useParams();
   const [otherProfile, setOtherProfile] = useState<User>();
   const [otherManner, setOtherManner] = useState<Manner>();
+  const [friendState, setFriendState] = useState<{
+    friend: boolean;
+    friendRequestMemberId: number | null;
+    blocked: boolean;
+  }>({
+    friend: false,
+    friendRequestMemberId: null,
+    blocked: false,
+  });
 
   useEffect(() => {
     const fetchOtherProfile = async () => {
@@ -33,10 +42,23 @@ const UserProfilePage = () => {
 
     fetchOtherProfile();
     fetchOtherManner();
-  }, []);
+  }, [id, friendState]);
+
+  // 상태 업데이트를 처리하는 함수
+  const updateFriendState = (newFriendState: {
+    friend: boolean;
+    friendRequestMemberId: number | null;
+    blocked: boolean;
+  }) => {
+    setFriendState(newFriendState);
+  };
 
   return otherProfile && otherManner ? (
-    <UserProfile profile={otherProfile} manner={otherManner} />
+    <UserProfile
+      profile={otherProfile}
+      manner={otherManner}
+      updateFriendState={updateFriendState}
+    />
   ) : (
     <p>Loading...</p>
   );

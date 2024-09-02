@@ -14,7 +14,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { setOpenModal } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
 import { editPost, postBoard } from "@/api/board";
-import { clearCurrentPost } from "@/redux/slices/postSlice";
+import {
+  clearCurrentPost,
+  PostUpdate,
+  setCurrentPost,
+  updateCurrentPost,
+} from "@/redux/slices/postSlice";
 import { PostReq } from "@/interface/board";
 import Alert from "../common/Alert";
 import { useRouter } from "next/navigation";
@@ -101,8 +106,7 @@ const PostBoard = (props: PostBoardProps) => {
       });
       setSelectedImageIndex(isUser.profileImg);
       const ids =
-        isUser?.gameStyleResponseDTOList?.map((item) => item.gameStyleId) ||
-        [];
+        isUser?.gameStyleResponseDTOList?.map((item) => item.gameStyleId) || [];
       setSelectedStyleIds(ids);
     }
   }, [isUser, currentPost]);
@@ -155,8 +159,15 @@ const PostBoard = (props: PostBoardProps) => {
 
     try {
       await editPost(currentPostId, params);
-      // await onClose();
-    } catch (error) { }
+      dispatch(
+        updateCurrentPost({
+          currentPostId,
+          updates: params as PostUpdate,
+        })
+      );
+
+      console.log("updates", params);
+    } catch (error) {}
   };
 
   /* 글쓰기 */
@@ -198,7 +209,7 @@ const PostBoard = (props: PostBoardProps) => {
       try {
         await postBoard(params);
         await dispatch(setOpenModal("completedPost"));
-      } catch (error) { }
+      } catch (error) {}
     }
   };
 

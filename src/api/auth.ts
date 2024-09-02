@@ -27,7 +27,7 @@ export const AuthAxios: AxiosInstance = axios.create({
 AuthAxios.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = getAccessToken();
-
+    console.log("토큰", token);
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
@@ -54,10 +54,17 @@ AuthAxios.interceptors.response.use(
       try {
         const originRequest = config;
         const response = await reissueToken();
+        console.log("토큰 재발급 성공");
         // refreshToken 요청 성공
-        const newAccessToken = response.token;
-        localStorage.setItem('accessToken', newAccessToken);
-        localStorage.setItem('refreshToken', response.refreshToken);
+        const newAccessToken = response.result.accessToken;
+        console.log(newAccessToken);
+        if (localStorage.getItem('accessToken')) {
+          localStorage.setItem('accessToken', newAccessToken);
+          localStorage.setItem('refreshToken', response.result.refreshToken);
+        } else {
+          sessionStorage.setItem('accessToken', newAccessToken);
+          sessionStorage.setItem('refreshToken', response.result.refreshToken);
+        }
         // 진행중이던 요청 이어서
         originRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
         return axios(originRequest);

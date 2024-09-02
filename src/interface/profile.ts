@@ -23,12 +23,15 @@ export interface User {
   updatedAt: string;
   mainP: number;
   subP:number;
+  blocked: boolean;
   isAgree: boolean;
   isBlind: boolean;
   loginType: string;
   winrate: number;
   gameStyleResponseDTOList: GameStyle[];
   championResponseDTOList: Champion[];
+  friend: boolean;
+  friendRequestMemberId: number | null;
 }
 
 export interface Profile {
