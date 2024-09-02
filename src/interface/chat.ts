@@ -20,7 +20,19 @@ export interface SystemMessage {
     createdAt: string;
     timestamp: number;
     boardId: number;
+    chatroomUuid:string;
 }
+
+export interface DesignedSystemMessage {
+    senderId: number;
+    senderName: string;
+    senderProfileImg: number;
+    message: string;
+    createdAt: null;
+    timestamp: null;
+    boardId: number;
+}
+
 
 export interface ChatMessageDto {
     senderId: number;

@@ -22,13 +22,13 @@ import { blockMember, reportMember } from "@/api/member";
 import { Mannerstatus } from "@/interface/manner";
 import { closeChat, closeChatRoom, openChatRoom, setChatRoomUuid } from "@/redux/slices/chatSlice";
 import useChatList from "@/hooks/useChatList";
+import { socket } from "@/socket";
 
 const ChatWindow = () => {
 
     const dispatch = useDispatch();
 
     const [activeTab, setActiveTab] = useState<string>('friends');
-    // const [isChatRoomVisible, setIsChatRoomVisible] = useState(false);
     const [isMoreBoxOpen, setIsMoreBoxOpen] = useState<number | null>(null);
     const [chatId, setChatId] = useState<string | number | undefined>();
     const [checkedReportItems, setCheckedReportItems] = useState<number[]>([]);
@@ -82,9 +82,10 @@ const ChatWindow = () => {
         setChatId(id);
         // setIsChatRoomVisible(true);
         dispatch(openChatRoom());
-        if (typeof id === 'string') {
-            setChatRoomUuid(id);
-        }
+        // TODO
+        // if (typeof id === 'string') {
+            // setChatRoomUuid(id);
+        // }
     };
 
     const handleMemberIdGet = (id: number) => {
@@ -119,22 +120,25 @@ const ChatWindow = () => {
 
     /* 채팅방 나가기 */
     const handleChatLeave = async () => {
+        console.log('나가기')
         try {
-            await leaveChatroom(isUuid);
+            const response = await leaveChatroom(isUuid);
+            if (response.isSuccess) {
+                socket.emit('exit-chatroom', { uuid: isUuid });
+            }
             await dispatch(setCloseModal());
         } catch (error) {
             console.error(error);
+        } finally {
+            handleModalClose();
+            dispatch(closeChatRoom());
         }
-        handleModalClose();
-        dispatch(closeChatRoom());
-        // handleBackToChatWindow();
     };
 
     /* 차단하기 */
     const handleChatBlock = async () => {
         if (!isMemberId) return;
 
-        // handleBackToChatWindow();
         dispatch(closeChatRoom());
         handleModalClose();
         try {
@@ -327,7 +331,7 @@ const ChatWindow = () => {
 
             {isChatRoomOpen && chatId !== null &&
                 <ChatRoom
-                    api={activeTab === "friend" ? "member" : "uuid"}
+                    api={activeTab === "friends" ? "member" : "uuid"}
                     chatId={chatId}
                     onMemberId={handleMemberIdGet}
                     onMannerEdit={handleMannerEdit}

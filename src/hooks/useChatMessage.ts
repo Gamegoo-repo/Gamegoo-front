@@ -4,11 +4,12 @@ import { RootState } from '@/redux/store';
 import { socket } from '@/socket';
 import { setUnreadUuid } from '@/redux/slices/chatSlice';
 import { markChatAsRead } from '@/api/chat';
-import { ChatMessageDto } from '@/interface/chat';
+import { SystemMessage, ChatMessageDto } from '@/interface/chat';
 
 const useChatMessage = () => {
     const dispatch = useDispatch();
     const [newMessage, setNewMessage] = useState<ChatMessageDto | null>(null);
+    const [systemMessage, setSystemMessage] = useState<SystemMessage | null>(null);
 
     const currentChatUuid = useSelector((state: RootState) => state.chat.currentChatUuid);
     const unreadChatUuids = useSelector((state: RootState) => state.chat.unreadUuids);
@@ -24,7 +25,7 @@ const useChatMessage = () => {
 
             /* 안 읽은 채팅방 처리 */
             if (
-                // 현재 채팅방과 새로 메시지가 온 채팅방이 다를 경우 (=== 새로온 메시지가 온 채팅방을 보고 있지 않은 경우 )
+                // 현재 채팅방과 새로 메시지가 온 채팅방이 다를 경우 (=== 새로온 메시지가 온 채팅방을 보고 있지 않은 경우)
                 currentChatUuid !== chatroomUuid ||
                 // 안읽은 uuid 목록에 새로 메시지가 온 채팅방이 없을 경우
                 !unreadChatUuids.includes(chatroomUuid)
@@ -53,18 +54,25 @@ const useChatMessage = () => {
 
         };
 
+        const handleSystemMessage = (res: any) => {
+            const systemMessage = res.data;
+            setSystemMessage(systemMessage);
+        };
+
         socket.on("chat-message", handleChatMessage);
         socket.on("my-message-broadcast-success", handleMyMessage);
         socket.on("joined-new-chatroom", handleJoinedNewChatroom);
+        socket.on("chat-system-message", handleSystemMessage);
 
         return () => {
             socket.off("chat-message", handleChatMessage);
             socket.off("my-message-broadcast-success", handleMyMessage);
             socket.off("joined-new-chatroom", handleJoinedNewChatroom);
+            socket.off("chat-system-message", handleSystemMessage);
         };
     }, [currentChatUuid, unreadChatUuids, dispatch]);
 
-    return  newMessage ;
+    return { newMessage, systemMessage };
 };
 
 export default useChatMessage;

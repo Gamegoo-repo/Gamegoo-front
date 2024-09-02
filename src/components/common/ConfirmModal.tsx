@@ -54,7 +54,6 @@ const ConfirmModal = (props: ConfirmModalProps) => {
   const [badMannerStatusClicked, setBadMannerStatusClicked] = useState(false);
 
   const handleMannerEvaluate = () => {
-    console.log('fffff')
     setMannerStatusClicked((prevState) => !prevState);
     setBadMannerStatusClicked(false);
     dispatch(setMannerStatus("manner"));

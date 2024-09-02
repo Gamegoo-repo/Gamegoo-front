@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface ChatState {
     isChatOpen: boolean;
     isChatRoomOpen: boolean;
-    isChatRoomUuid: string;
+    isChatRoomUuid: string | number;
     memberId: number;
     onlineFriends: number[];
     unreadUuids: string[];
@@ -13,7 +13,7 @@ interface ChatState {
 const initialState: ChatState = {
     isChatOpen: false,
     isChatRoomOpen: false,
-    isChatRoomUuid: "",
+    isChatRoomUuid: "" || 0,
     memberId: 0,
     onlineFriends: [],
     currentChatUuid: null,
@@ -39,7 +39,7 @@ const chatSlice = createSlice({
         closeChatRoom(state) {
             state.isChatRoomOpen = false;
         },
-        setChatRoomUuid(state, action: PayloadAction<string>) {
+        setChatRoomUuid(state, action: PayloadAction<string | number>) {
             state.isChatRoomUuid = action.payload;
         },
         setMemberId: (state, action: PayloadAction<number>) => {

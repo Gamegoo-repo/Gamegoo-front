@@ -6,9 +6,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { setChatDateFormatter, setChatTimeFormatter } from '@/utils/custom';
 import ConfirmModal from '../common/ConfirmModal';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCloseMannerStatusModal, setCloseModal, setCloseReadingModal, setOpenMannerStatusModal, setOpenReadingModal } from '@/redux/slices/modalSlice';
+import { setCloseMannerStatusModal, setOpenMannerStatusModal, setOpenReadingModal } from '@/redux/slices/modalSlice';
 import { RootState } from '@/redux/store';
-import { Chat, ChatMessageDto, ChatMessageList } from '@/interface/chat';
+import { Chat, ChatMessageDto, DesignedSystemMessage } from '@/interface/chat';
 import ReadBoard from '../readBoard/ReadBoard';
 import { useRouter } from 'next/navigation';
 import { getProfileBgColor } from '@/utils/profile';
@@ -18,6 +18,7 @@ import useChatMessage from '@/hooks/useChatMessage';
 interface MessageContainerProps {
   chatEnterData: Chat;
   chatRef: React.RefObject<HTMLDivElement>;
+  systemMessage: DesignedSystemMessage;
 }
 
 interface SystemMessageProps {
@@ -26,7 +27,7 @@ interface SystemMessageProps {
 }
 
 const MessageContainer = (props: MessageContainerProps) => {
-  const { chatEnterData, chatRef } = props;
+  const { chatEnterData, chatRef, systemMessage } = props;
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -42,16 +43,38 @@ const MessageContainer = (props: MessageContainerProps) => {
   const [hasMore, setHasMore] = useState<boolean>(chatEnterData.chatMessageList.has_next);
   const [isLoading, setIsLoading] = useState(false);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [isSystemMessageShown, setIsSystemMessageShown] = useState(false);
 
-  /* 내가 쓴 새로운 메시지 받아옴 */
-  const newMessage = useChatMessage();
+  /* 새로운 메시지 실시간으로 받아옴 */
+  const { newMessage } = useChatMessage();
 
-  /* 새로운 메시지를 기존 메시지 리스트에 추가 */
+  /* 새로운 메시지 전에 시스템 메시지 보여주기 */
   useEffect(() => {
     if (newMessage) {
-      setMessageList((prevMessages) => [...prevMessages, newMessage]);
+      setMessageList((prevMessages) => {
+        let updatedMessages = [...prevMessages];
+
+        if (systemMessage && !isSystemMessageShown) {
+          // 기존 시스템 메시지와, 새로운 시스템 메시지 타입이 달라서, 타입 같게 변경
+          const systemMessageAsChatMessage: ChatMessageDto = {
+            ...systemMessage,
+            createdAt: new Date().toISOString(),
+            timestamp: new Date().getTime(),
+          };
+          updatedMessages.push(systemMessageAsChatMessage);
+        }
+
+        // 새로운 메시지 추가
+        updatedMessages.push(newMessage);
+
+        return updatedMessages;
+      });
+
+      if (!isSystemMessageShown) {
+        setIsSystemMessageShown(true);
+      }
     }
-  }, [newMessage]);
+  }, [newMessage, systemMessage]);
 
   const handleMannerTypeClose = () => {
     dispatch(setCloseMannerStatusModal());

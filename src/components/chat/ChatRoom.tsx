@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import MoreBox from "../common/MoreBox";
 import Button from "../common/Button";
-import { Chat } from "@/interface/chat";
+import { Chat, DesignedSystemMessage } from "@/interface/chat";
 import { getProfileBgColor } from "@/utils/profile";
 import { cancelFriendReq, deleteFriend, reqFriend } from "@/api/friends";
 import { enterUsingBoardId, enterUsingMemberId, enterUsingUuid } from "@/api/chat";
@@ -37,16 +37,6 @@ interface ChatRoomProps {
 interface System {
     flag: number;
     boardId: number;
-}
-
-interface SystemMessage {
-    senderId: number;
-    senderName: string;
-    senderProfileImg: number;
-    message: string;
-    createdAt: null;
-    timestamp: null;
-    boardId: number
 }
 
 const ChatRoom = (props: ChatRoomProps) => {
@@ -75,7 +65,7 @@ const ChatRoom = (props: ChatRoomProps) => {
     const [chatEnterData, setChatEnterData] = useState<Chat>();
     const [isSystemMsg, setIsSystemMsg] = useState<System>();
     const [isSystemMsgSent, setIsSystemMsgSent] = useState(false); // 첫번째 메시지 이후 systemMsg 보내지 않기 위한 상태변경
-    const [systemMsgArray, setSystemMsgArray] = useState<Array<SystemMessage>>([]);
+    const [systemMessage, setSystemMessage] = useState<DesignedSystemMessage | null>(null);
 
     const isEvaluationModalOpen = useSelector((state: RootState) => state.modal.evaluationModal);
     const isMannerModalStatus = useSelector((state: RootState) => state.mannerStatus.mannerStatus);
@@ -108,7 +98,8 @@ const ChatRoom = (props: ChatRoomProps) => {
                     onMemberId(data.result.memberId);
                     dispatch(setCurrentChatUuid(data.result.uuid));
                     setIsSystemMsg(data.result.system);
-                    let systemMessage: SystemMessage;
+
+                    let systemMessage: DesignedSystemMessage;
                     if (data.result.system.flag === 1) {
                         systemMessage = {
                             senderId: 0,
@@ -131,12 +122,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                         };
                     }
 
-                    setSystemMsgArray((prevMessages) => [...prevMessages, systemMessage]);
-
-                    setChatEnterData({
-                        ...data.result,
-                        messages: [...data.result.chatMessageList.chatMessageDtoList, systemMessage]
-                    });
+                    setSystemMessage(systemMessage);
                 }
             } catch (error) {
                 console.error(error);
@@ -214,6 +200,7 @@ const ChatRoom = (props: ChatRoomProps) => {
             e.stopPropagation();
         }
 
+        console.log('Changing modal type to:', modalType); // 상태 변경을 확인
         if (memberId !== undefined) {
             onMemberId(memberId);
         }
@@ -390,7 +377,8 @@ const ChatRoom = (props: ChatRoomProps) => {
                                 {chatEnterData &&
                                     <MessageContainer
                                         chatEnterData={chatEnterData}
-                                        chatRef={chatRef} />
+                                        chatRef={chatRef}
+                                        systemMessage={systemMessage} />
                                 }
                             </ChatMain>
                         </ChatBorder>
