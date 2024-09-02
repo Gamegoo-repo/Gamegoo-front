@@ -232,13 +232,13 @@ const ChatWindow = () => {
     };
 
     /* 기존 매너, 비매너 평가 내역 가져오기 */
-    useEffect(() => {
-        if (isModalType === 'manner' && isMannerStatus?.isExist && isMannerStatus.mannerRatingKeywordList) {
-            setCheckedMannerItems(isMannerStatus.mannerRatingKeywordList);
-        } else if (isModalType === 'badManner' && isBadMannerStatus?.isExist && isBadMannerStatus.mannerRatingKeywordList) {
-            setCheckedBadMannerItems(isBadMannerStatus.mannerRatingKeywordList);
-        }
-    }, [isModalType, isMannerStatus, isBadMannerStatus, isMoreBoxOpen]);
+    // useEffect(() => {
+    //     if (isModalType === 'manner' && isMannerStatus?.isExist && isMannerStatus.mannerRatingKeywordList) {
+    //         setCheckedMannerItems(isMannerStatus.mannerRatingKeywordList);
+    //     } else if (isModalType === 'badManner' && isBadMannerStatus?.isExist && isBadMannerStatus.mannerRatingKeywordList) {
+    //         setCheckedBadMannerItems(isBadMannerStatus.mannerRatingKeywordList);
+    //     }
+    // }, [isModalType, isMannerStatus, isBadMannerStatus, isMoreBoxOpen]);
 
     /* 매너, 비매너 평가 수정 */
     const handleMannerEdit = async (type: string) => {
