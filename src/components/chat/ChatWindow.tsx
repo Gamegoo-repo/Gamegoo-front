@@ -136,7 +136,7 @@ const ChatWindow = () => {
 
     /* 차단하기 */
     const handleChatBlock = async () => {
-        if (!isMemberId) return;
+        if (!isMemberId || !isUuid) return;
         dispatch(closeChatRoom());
         handleModalClose();
         try {

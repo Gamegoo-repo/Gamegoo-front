@@ -19,8 +19,9 @@ import { cancelFriendReq, deleteFriend, reqFriend } from "@/api/friends";
 import { enterUsingBoardId, enterUsingMemberId, enterUsingUuid } from "@/api/chat";
 import { getBadMannerValues, getMannerValues } from "@/api/manner";
 import { Mannerstatus } from "@/interface/manner";
-import { closeChatRoom, setCurrentChatUuid } from "@/redux/slices/chatSlice";
+import { closeChatRoom, setCurrentChatUuid, setErrorMessage } from "@/redux/slices/chatSlice";
 import { socket } from "@/socket";
+import { AxiosError } from "axios";
 
 interface ChatRoomProps {
     api: "uuid" | "member" | "board";
@@ -36,6 +37,12 @@ interface ChatRoomProps {
 interface System {
     flag: number;
     boardId: number;
+}
+
+interface RiotErrorResponse {
+    isSuccess: boolean;
+    code: string;
+    message: string;
 }
 
 const ChatRoom = (props: ChatRoomProps) => {
@@ -123,8 +130,14 @@ const ChatRoom = (props: ChatRoomProps) => {
 
                     setSystemMessage(systemMessage);
                 }
-            } catch (error) {
-                console.error(error);
+            } catch (err) {
+                const error = err as AxiosError<RiotErrorResponse>;
+                console.log(error.message);
+                if (error) {
+                    dispatch(setErrorMessage(error.message));
+                } else {
+                    dispatch(setErrorMessage("알 수 없는 오류가 발생했습니다."));
+                }
             }
         };
 

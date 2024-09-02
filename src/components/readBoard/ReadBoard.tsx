@@ -33,16 +33,10 @@ import { cancelFriendReq, deleteFriend, reqFriend } from "@/api/friends";
 import Alert from "../common/Alert";
 import { AlertProps } from "@/interface/modal";
 import { useRouter } from "next/navigation";
-import { openChatRoom } from "@/redux/slices/chatSlice";
+import { openChatRoom, setErrorMessage } from "@/redux/slices/chatSlice";
 
 interface ReadBoardProps {
   postId: number;
-}
-
-interface ChatErrorResponse {
-  isSuccess: boolean;
-  code: string;
-  message: string;
 }
 
 const ReadBoard = (props: ReadBoardProps) => {
@@ -75,6 +69,7 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   const isModalType = useSelector((state: RootState) => state.modal.modalType);
   const isUser = useSelector((state: RootState) => state.user);
+  const isErrorMessage = useSelector((state: RootState) => state.chat.errorMessage);
 
   /* 게시글 api */
   useEffect(() => {
@@ -156,6 +151,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       await reportMember(params);
       await handleModalClose();
     } catch (error) {
+      console.error(error);
     }
   };
 
@@ -172,6 +168,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       await handleMoreBoxClose();
       await setIsBlockedStatus(true);
     } catch (error) {
+      console.error(error);
     }
   };
 
@@ -210,6 +207,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       await handleMoreBoxClose();
       setIsFriendStatus(true);
     } catch (error) {
+      console.error(error);
     }
 
     handleMoreBoxClose();
@@ -228,6 +226,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       await handleMoreBoxClose();
       setIsFriendStatus(false);
     } catch (error) {
+      console.error(error);
     }
 
     handleMoreBoxClose();
@@ -248,6 +247,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       await handleMoreBoxClose();
       setIsFriendStatus(false);
     } catch (error) {
+      console.error(error);
     }
 
     handleMoreBoxClose();
@@ -297,6 +297,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       await dispatch(setCloseReadingModal());
       // 게시글 업로드 해야하나?
     } catch (error) {
+      console.error(error);
     }
   };
 
@@ -390,16 +391,21 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 채팅방 연결 */
   const handleChatStart = async () => {
-    // if (!isUser.id) {
-    //   return showAlertWithContent(loginRequiredMessage, () => setShowAlert(false), "확인");
-    // }
-
-    try {
-      dispatch(setCloseReadingModal());
-      dispatch(openChatRoom());
-    } catch (error) {
-      console.error(error);
-    }
+    if (!isUser.id) {
+      return showAlertWithContent(loginRequiredMessage, () => setShowAlert(false), "확인");
+   }
+   // TODO : 수정 필
+    if (isErrorMessage) {
+      alert(isErrorMessage);
+      dispatch(setErrorMessage(null));
+  } else {
+      try {
+          dispatch(setCloseReadingModal());
+          dispatch(openChatRoom());
+      } catch (error) {
+          console.error(error);
+      }
+  }
   };
 
 
@@ -490,6 +496,7 @@ const ReadBoard = (props: ReadBoardProps) => {
           </>
         )}
       </CRModal>
+
       {isModalType === 'report' &&
         <FormModal
           type="checkbox"

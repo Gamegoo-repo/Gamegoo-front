@@ -8,6 +8,7 @@ interface ChatState {
     onlineFriends: number[];
     unreadUuids: string[];
     currentChatUuid: string | null;
+    errorMessage: string | null;
 }
 
 const initialState: ChatState = {
@@ -18,6 +19,7 @@ const initialState: ChatState = {
     onlineFriends: [],
     currentChatUuid: null,
     unreadUuids: [],
+    errorMessage: null,
 };
 
 const chatSlice = createSlice({
@@ -42,10 +44,10 @@ const chatSlice = createSlice({
         setChatRoomUuid(state, action: PayloadAction<string | number>) {
             state.isChatRoomUuid = action.payload;
         },
-        setMemberId: (state, action: PayloadAction<number>) => {
+        setMemberId(state, action: PayloadAction<number>) {
             state.memberId = action.payload;
         },
-        setFriendOnline: (state, action: PayloadAction<number | number[]>) => {
+        setFriendOnline(state, action: PayloadAction<number | number[]>) {
             if (Array.isArray(action.payload)) {
                 // 배열인 경우 전체를 업데이트
                 state.onlineFriends = action.payload;
@@ -56,7 +58,7 @@ const chatSlice = createSlice({
                 }
             }
         },
-        setFriendOffline: (state, action: PayloadAction<number>) => {
+        setFriendOffline(state, action: PayloadAction<number>) {
             // id를 배열에서 제거
             state.onlineFriends = state.onlineFriends.filter(id => id !== action.payload);
         },
@@ -65,6 +67,9 @@ const chatSlice = createSlice({
         },
         setUnreadUuid(state, action: PayloadAction<string[]>) {
             state.unreadUuids = action.payload;
+        },
+        setErrorMessage(state, action: PayloadAction<string | null>) {
+            state.errorMessage = action.payload;
         },
     },
 });
@@ -81,5 +86,6 @@ export const {
     setFriendOffline,
     setUnreadUuid,
     setCurrentChatUuid,
+    setErrorMessage
 } = chatSlice.actions;
 export default chatSlice.reducer;
