@@ -80,7 +80,6 @@ const ChatWindow = () => {
     /* 채팅방 입장 */
     const handleGoToChatRoom = (id: string | number) => {
         setChatId(id);
-        // setIsChatRoomVisible(true);
         dispatch(openChatRoom());
         // TODO
         // if (typeof id === 'string') {
