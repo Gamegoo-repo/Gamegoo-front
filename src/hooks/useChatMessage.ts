@@ -50,10 +50,6 @@ const useChatMessage = () => {
             setNewMessage(newMessage);
         };
 
-        const handleJoinedNewChatroom = () => {
-
-        };
-
         const handleSystemMessage = (res: any) => {
             const systemMessage = res.data;
             setSystemMessage(systemMessage);
@@ -61,13 +57,11 @@ const useChatMessage = () => {
 
         socket.on("chat-message", handleChatMessage);
         socket.on("my-message-broadcast-success", handleMyMessage);
-        socket.on("joined-new-chatroom", handleJoinedNewChatroom);
         socket.on("chat-system-message", handleSystemMessage);
 
         return () => {
             socket.off("chat-message", handleChatMessage);
             socket.off("my-message-broadcast-success", handleMyMessage);
-            socket.off("joined-new-chatroom", handleJoinedNewChatroom);
             socket.off("chat-system-message", handleSystemMessage);
         };
     }, [currentChatUuid, unreadChatUuids, dispatch]);

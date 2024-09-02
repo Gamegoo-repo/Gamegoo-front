@@ -20,7 +20,7 @@ import { getChatrooms, leaveChatroom } from "@/api/chat";
 import { ChatroomList } from "@/interface/chat";
 import { blockMember, reportMember } from "@/api/member";
 import { Mannerstatus } from "@/interface/manner";
-import { closeChat, closeChatRoom, openChatRoom, setChatRoomUuid } from "@/redux/slices/chatSlice";
+import { closeChat, closeChatRoom, openChatRoom } from "@/redux/slices/chatSlice";
 import useChatList from "@/hooks/useChatList";
 import { socket } from "@/socket";
 
@@ -84,7 +84,7 @@ const ChatWindow = () => {
         dispatch(openChatRoom());
         // TODO
         // if (typeof id === 'string') {
-            // setChatRoomUuid(id);
+        // setChatRoomUuid(id);
         // }
     };
 
@@ -120,7 +120,6 @@ const ChatWindow = () => {
 
     /* 채팅방 나가기 */
     const handleChatLeave = async () => {
-        console.log('나가기')
         try {
             const response = await leaveChatroom(isUuid);
             if (response.isSuccess) {
@@ -138,11 +137,13 @@ const ChatWindow = () => {
     /* 차단하기 */
     const handleChatBlock = async () => {
         if (!isMemberId) return;
-
         dispatch(closeChatRoom());
         handleModalClose();
         try {
-            await blockMember(isMemberId);
+            const response = await blockMember(isMemberId);
+            if (response.isSuccess) {
+                socket.emit('exit-chatroom', { uuid: isUuid });
+            }
             await dispatch(setCloseModal());
         } catch (error) {
             console.error(error);

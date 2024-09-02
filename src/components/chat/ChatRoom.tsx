@@ -21,7 +21,6 @@ import { getBadMannerValues, getMannerValues } from "@/api/manner";
 import { Mannerstatus } from "@/interface/manner";
 import { closeChatRoom, setCurrentChatUuid } from "@/redux/slices/chatSlice";
 import { socket } from "@/socket";
-import useChatMessage from "@/hooks/useChatMessage";
 
 interface ChatRoomProps {
     api: "uuid" | "member" | "board";
@@ -65,12 +64,11 @@ const ChatRoom = (props: ChatRoomProps) => {
     const [chatEnterData, setChatEnterData] = useState<Chat>();
     const [isSystemMsg, setIsSystemMsg] = useState<System>();
     const [isSystemMsgSent, setIsSystemMsgSent] = useState(false); // 첫번째 메시지 이후 systemMsg 보내지 않기 위한 상태변경
-    const [systemMessage, setSystemMessage] = useState<DesignedSystemMessage | null>(null);
+    const [systemMessage, setSystemMessage] = useState<DesignedSystemMessage>();
 
     const isEvaluationModalOpen = useSelector((state: RootState) => state.modal.evaluationModal);
     const isMannerModalStatus = useSelector((state: RootState) => state.mannerStatus.mannerStatus);
     const onlineFriends = useSelector((state: RootState) => state.chat.onlineFriends);
-
 
     /* 채팅방 입장 */
     useEffect(() => {
@@ -99,6 +97,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                     dispatch(setCurrentChatUuid(data.result.uuid));
                     setIsSystemMsg(data.result.system);
 
+                    // 실시간으로 시스템 메시지 보여주기 위함
                     let systemMessage: DesignedSystemMessage;
                     if (data.result.system.flag === 1) {
                         systemMessage = {
@@ -200,7 +199,6 @@ const ChatRoom = (props: ChatRoomProps) => {
             e.stopPropagation();
         }
 
-        console.log('Changing modal type to:', modalType); // 상태 변경을 확인
         if (memberId !== undefined) {
             onMemberId(memberId);
         }
