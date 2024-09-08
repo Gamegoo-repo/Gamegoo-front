@@ -14,15 +14,6 @@ import { connectSocket } from "@/socket";
 const HomePage = () => {
   const router = useRouter();
 
-  const isUser = (state: RootState) => state.user;
-
-  /* 로그인 이전 소켓 연결 */
-  useEffect(() => {
-    // if (!!isUser.id) return;
-
-    connectSocket();
-  }, []);
-
   return (
     <Wrapper>
       <HomeContent>
@@ -100,7 +91,7 @@ const Main = styled.main`
 
   @media (max-width: 1200px) {
     flex-direction: column;
-    justify-content: center;
+    gap: 40px;
   }
 `;
 

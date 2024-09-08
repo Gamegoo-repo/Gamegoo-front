@@ -1,11 +1,11 @@
 export const MATCH_PAGE_DATA = [
-    { id: 1, pathname: 'match', image: '/assets/images/card/matching.svg', title: '바로 매칭하기' },
-    { id: 2, pathname: 'board', image: '/assets/images/card/board.svg', title: '매칭 게시판에서 찾기' },
+    { id: 1, pathname: 'match', image: '/assets/images/card/matching.svg', title: '바로 매칭하기', width: '580px', height: '285px' },
+    { id: 2, pathname: 'board', image: '/assets/images/card/board.svg', title: '매칭 게시판에서 찾기', width: '580px', height: '285px' },
 ];
 
 export const MATCH_TYPE_PAGE_DATA = [
-    { id: 1, type:'gamgoo', pathname: 'match/game-mode', width: '600px', height: '380px', top: '100px', left: '50px', title: '겜구 매칭', sub: '간단한 조건만 맞으면 바로 매칭 완료!\n다양한 실력의 플레이어들과\n신나는 게임을 즐겨보세요!', background: "/assets/images/card/gamgoo_match.svg"  },
-    { id: 2, type:'custom', pathname: 'match/game-mode', width: '600px', height: '380px', top: '100px', left: '50px', title: '맞춤 매칭', sub: '원하는 조건에 딱 맞는 게임 친구를 찾아드려요!\n조건에 꼭 맞는 플레이어들과 함께\n승리를 향해 달려보세요.' , background: "/assets/images/card/custom_match.svg" },
+    { id: 1, type:'gamgoo', pathname: 'match/game-mode', width: '600px', height: '276px', top: '30px', left: '50px', title: '겜구 매칭', sub: '간단한 조건만 맞으면 바로 매칭 완료!\n다양한 실력의 플레이어들과\n신나는 게임을 즐겨보세요!', background: "/assets/images/card/gamgoo_match.svg"  },
+    { id: 2, type:'custom', pathname: 'match/game-mode', width: '600px', height: '276px', top: '30px', left: '50px', title: '맞춤 매칭', sub: '원하는 조건에 딱 맞는 게임 친구를 찾아드려요!\n조건에 꼭 맞는 플레이어들과 함께\n승리를 향해 달려보세요.' , background: "/assets/images/card/custom_match.svg" },
 ];
 
 export const GAME_MODE_PAGE_DATA = [
