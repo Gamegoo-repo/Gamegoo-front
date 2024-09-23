@@ -2,7 +2,13 @@
 
 import Button from "@/components/common/Button";
 import Checkbox from "@/components/common/Checkbox";
-import { TERMS } from "@/data/terms";
+import TermModal from "@/components/common/TermModal";
+import {
+  MARKETING_TERMS,
+  SERVICE_TERMS,
+  PRIVATE_TERMS,
+} from "@/constants/terms";
+import { createTerms } from "@/data/terms";
 import { updateTerms } from "@/redux/slices/signInSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
@@ -17,6 +23,11 @@ const Terms = () => {
   const [terms, setTerms] = useState<boolean[]>([false, false, false]);
 
   const termsRedux = useSelector((state: RootState) => state.signIn.terms);
+
+  const [modalData, setModalData] = useState<{
+    title: string;
+    content: string;
+  } | null>(null);
 
   /* redux 업데이트 */
   useEffect(() => {
@@ -34,15 +45,42 @@ const Terms = () => {
     router.push("/join/email");
   };
 
-  const allRequiredChecked = TERMS.every(
+  const openModal = (type: string) => {
+    switch (type) {
+      case "SERVICE":
+        setModalData(SERVICE_TERMS);
+        break;
+      case "PRIVATE":
+        setModalData(PRIVATE_TERMS);
+        break;
+      case "MARKETING":
+        setModalData(MARKETING_TERMS);
+        break;
+      default:
+        setModalData(null);
+    }
+  };
+
+  const allRequiredChecked = createTerms(openModal).every(
     (term, index) => !term.require || (term.require && terms[index])
   );
+
+  const closeModal = () => {
+    setModalData(null);
+  };
 
   return (
     <Div>
       <Label>아래 이용 약관을 확인해주세요.</Label>
+      {modalData && (
+        <TermModal
+          title={modalData.title}
+          content={modalData.content}
+          onClose={closeModal}
+        />
+      )}
       <CheckList>
-        {TERMS.map((item, index) => (
+        {createTerms(openModal).map((item, index) => (
           <Checkbox
             key={item.id}
             value="terms"
