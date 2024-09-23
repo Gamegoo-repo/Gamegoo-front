@@ -7,6 +7,8 @@ import Image from "next/image";
 import React, { useState } from "react";
 import MoreBoxButton from "../../readBoard/MoreBoxButton";
 import styled from "styled-components";
+import { Router } from "next/router";
+import { useRouter } from "next/navigation";
 
 export interface BlockedBoxProps {
   memberId: number;
@@ -21,6 +23,7 @@ const BlockedBox: React.FC<BlockedBoxProps> = ({
   email,
   name,
 }) => {
+  const router = useRouter();
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState<boolean>(false);
   const [isBlockBoxOpen, setIsBlockBoxOpen] = useState<boolean>(false);
   const [isBlockConfirmOpen, setIsBlockConfrimOpen] = useState<boolean>(false);
@@ -45,7 +48,7 @@ const BlockedBox: React.FC<BlockedBoxProps> = ({
   };
 
   return (
-    <Container>
+    <Container onClick={() => router.push(`/user/${memberId}`)}>
       <Gap>
         <ProfileImgWrapper $bgColor={getProfileBgColor(profileImg)}>
           <ProfileImg
