@@ -17,13 +17,13 @@ const Span = styled.span`
   }
 `;
 
-export const TERMS = [
+export const createTerms = (openModal: (type: string) => void) => [
   {
     id: 1,
     text: (
       <div>
         <Required>*</Required>
-        <Span>이용약관</Span>에 동의합니다.
+        <Span onClick={() => openModal("SERVICE")}>이용약관</Span>에 동의합니다.
       </div>
     ),
     require: true,
@@ -33,7 +33,8 @@ export const TERMS = [
     text: (
       <div>
         <Required>*</Required>
-        <Span>개인정보 수집 및 이용</Span>에 동의합니다.
+        <Span onClick={() => openModal("PRIVATE")}>개인정보 수집 및 이용</Span>
+        에 동의합니다.
       </div>
     ),
     require: true,
@@ -43,7 +44,10 @@ export const TERMS = [
     text: (
       <div>
         서비스 홍보 및 마케팅 목적의{` `}
-        <Span>개인정보 수집 및 이용</Span>에 동의합니다.
+        <Span onClick={() => openModal("MARKETING")}>
+          개인정보 수집 및 이용
+        </Span>
+        에 동의합니다.
       </div>
     ),
     require: false,
