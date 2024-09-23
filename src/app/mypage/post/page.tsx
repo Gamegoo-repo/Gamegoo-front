@@ -77,23 +77,27 @@ const MyPostPage = () => {
             <Center>메모</Center>
             <Center>등록일시</Center>
           </Columns>
-          <PostList>
-            {postList.map((item) => (
-              <Post
-                key={item.boardId}
-                boardId={item.boardId}
-                memberId={item.memberId}
-                profileImage={item.profileImage}
-                gameName={item.gameName}
-                tag={item.tag}
-                tier={item.tier}
-                rank={item.rank}
-                contents={item.contents}
-                createdAt={item.createdAt}
-                onDeletePost={handleDeletePost}
-              />
-            ))}
-          </PostList>
+          {postList.length > 0 ? (
+            <PostList>
+              {postList.map((item) => (
+                <Post
+                  key={item.boardId}
+                  boardId={item.boardId}
+                  memberId={item.memberId}
+                  profileImage={item.profileImage}
+                  gameName={item.gameName}
+                  tag={item.tag}
+                  tier={item.tier}
+                  rank={item.rank}
+                  contents={item.contents}
+                  createdAt={item.createdAt}
+                  onDeletePost={handleDeletePost}
+                />
+              ))}
+            </PostList>
+          ) : (
+            <NoData>내가 작성한 글이 없습니다.</NoData>
+          )}
           <Pagination
             currentPage={currentPage}
             itemsPerPage={ITEMS_PER_PAGE}
@@ -165,6 +169,17 @@ const Left = styled.div`
 
 const Center = styled.div`
   text-align: center;
+`;
+
+const NoData = styled.div`
+  width: 100%;
+  height: 100%;
+  min-height: 686px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: ${theme.colors.gray600};
+  ${theme.fonts.regular16}
 `;
 
 const Footer = styled.footer`

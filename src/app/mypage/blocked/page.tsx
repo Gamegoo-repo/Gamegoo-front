@@ -60,17 +60,22 @@ const MyBlockedPage = () => {
       <MyBlockedContent>
         <Blocked>
           <Top>차단목록</Top>
-          <BlockedList>
-            {myBlockedList.map((data) => (
-              <BlockedBox
-                key={data.memberId}
-                memberId={data.memberId}
-                profileImg={data.profileImg}
-                email={data.email}
-                name={data.name}
-              />
-            ))}
-          </BlockedList>
+          {myBlockedList.length > 0 ? (
+            <BlockedList>
+              {myBlockedList.map((data) => (
+                <BlockedBox
+                  key={data.memberId}
+                  memberId={data.memberId}
+                  profileImg={data.profileImg}
+                  email={data.email}
+                  name={data.name}
+                  isBlind={data.isBlind}
+                />
+              ))}
+            </BlockedList>
+          ) : (
+            <NoData>차단 친구가 없습니다.</NoData>
+          )}
           <Pagination
             currentPage={currentPage}
             totalItems={totalItems}
@@ -85,10 +90,10 @@ const MyBlockedPage = () => {
         </Blocked>
       </MyBlockedContent>
       <Footer>
-          <ChatBoxContent>
-            <ChatButton count={3} />
-          </ChatBoxContent>
-        </Footer>
+        <ChatBoxContent>
+          <ChatButton count={3} />
+        </ChatBoxContent>
+      </Footer>
     </Wrapper>
   );
 };
@@ -131,6 +136,17 @@ const BlockedList = styled.div`
   flex-direction: column;
   margin-bottom: 32px;
   border-top: 1px solid ${theme.colors.gray300};
+`;
+
+const NoData = styled.div`
+  width: 100%;
+  height: 100%;
+  min-height: 686px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: ${theme.colors.gray600};
+  ${theme.fonts.regular16}
 `;
 
 const Footer = styled.footer`

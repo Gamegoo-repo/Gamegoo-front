@@ -106,19 +106,23 @@ const MyAlertPage = () => {
           <Top>
             <Small>알림 페이지 ({count})</Small>
           </Top>
-          <AlertList>
-            {notiList.map((data) => (
-              <AlertBox
-                key={data.notificationId}
-                notificationId={data.notificationId}
-                pageUrl={data.pageUrl}
-                content={data.content}
-                createdAt={data.createdAt}
-                read={data.read}
-                onClick={handleClickAlert}
-              />
-            ))}
-          </AlertList>
+          {notiList.length > 0 ? (
+            <AlertList>
+              {notiList.map((data) => (
+                <AlertBox
+                  key={data.notificationId}
+                  notificationId={data.notificationId}
+                  pageUrl={data.pageUrl}
+                  content={data.content}
+                  createdAt={data.createdAt}
+                  read={data.read}
+                  onClick={handleClickAlert}
+                />
+              ))}
+            </AlertList>
+          ) : (
+            <NoData>새로운 알림이 없습니다.</NoData>
+          )}
           <Pagination
             currentPage={currentPage}
             totalItems={totalItems}
@@ -182,4 +186,15 @@ const AlertList = styled.div`
   gap: 11px;
   margin-top: 32px;
   margin-bottom: 60px;
+`;
+
+const NoData = styled.div`
+  width: 100%;
+  height: 100%;
+  min-height: 686px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: ${theme.colors.gray600};
+  ${theme.fonts.regular16}
 `;
