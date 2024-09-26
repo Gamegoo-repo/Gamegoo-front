@@ -2,11 +2,11 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import ChatWindow from "../chat/ChatWindow";
 import Alert from "./Alert";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { closeChat, toggleChat } from '@/redux/slices/chatSlice';
+import Layout from "../chat/Layout";
 
 const ChatButton = () => {
 
@@ -70,7 +70,7 @@ const ChatButton = () => {
         />
       )}
       <ChatBoxContent>
-        {isChatOpen && <ChatWindow />}
+      {isChatOpen && <Layout />}
         <MsgButton onClick={handleToggleChat}>
           <Image
             src="/assets/icons/chat_box.svg"

@@ -23,6 +23,7 @@ import ConfirmModal from "../common/ConfirmModal";
 import { BoardList } from "@/interface/board";
 import ChatRoom from "../chat/ChatRoom";
 import { editManners, postBadMannerValue, postMannerValue } from "@/api/manner";
+import ChatLayout from "../chat/ChatLayout";
 
 interface TableTitleProps {
     id: number;
@@ -72,7 +73,7 @@ const Table = (props: TableProps) => {
     /* 게시글 열기 */
     const handlePostOpen = (id: number) => {
         const exists = content.some(board => board.boardId === id);
-    
+
         if (!exists) {
             return setShowAlert(true);
         }
@@ -207,7 +208,7 @@ const Table = (props: TableProps) => {
             {isReadingModal && (
                 <ReadBoard postId={isBoardId} />
             )}
-            {isChatRoomOpen && <ChatRoom
+            {/* {isChatRoomOpen && <ChatRoom
                 api="board"
                 chatId={isBoardId}
                 onMemberId={handleMemberIdGet}
@@ -216,7 +217,11 @@ const Table = (props: TableProps) => {
                 onBadMannerCheckboxChange={handleBadMannerCheckboxChange}
                 onMannerPost={handleMannerPost}
                 onBadMannerPost={handleBadMannerPost}
-            />}
+            />} */}
+            
+            {isChatRoomOpen &&
+                <ChatLayout apiType={3} />}
+
             <TableWrapper>
                 <TableHead>
                     {title.map((data) => {

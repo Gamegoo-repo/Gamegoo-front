@@ -20,7 +20,7 @@ export interface SystemMessage {
     createdAt: string;
     timestamp: number;
     boardId: number;
-    chatroomUuid:string;
+    chatroomUuid: string;
 }
 
 export interface DesignedSystemMessage {
@@ -33,7 +33,6 @@ export interface DesignedSystemMessage {
     boardId: number;
 }
 
-
 export interface ChatMessageDto {
     senderId: number;
     senderName: string;
@@ -45,10 +44,28 @@ export interface ChatMessageDto {
 }
 
 export interface ChatMessageList {
-    chatMessageDtoList: ChatMessageDto[];
+    chatMessageDtoList: ChatMessageDto[] | [];
     list_size: number;
     has_next: boolean;
     next_cursor: number | null;
+}
+
+interface System {
+    flag: number;
+    boardId: number;
+}
+
+export interface ChatContent {
+    blind: boolean;
+    blocked: boolean;
+    chatMessageList: ChatMessageList;
+    friend: boolean;
+    friendRequestMemberId: number;
+    gameName: string;
+    memberId: number;
+    memberProfileImg: number;
+    system: System | null;
+    uuid: string;
 }
 
 export interface Chat {

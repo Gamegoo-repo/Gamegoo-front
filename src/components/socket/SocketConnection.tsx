@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux';
 import { socket } from '@/socket';
 import { setFriendOffline, setFriendOnline, setMemberId } from '@/redux/slices/chatSlice';
 import useChatMessage from '@/hooks/useChatMessage';
-import useChatList from '@/hooks/useChatList';
 
 const SocketConnection: React.FC = () => {
     const dispatch = useDispatch();

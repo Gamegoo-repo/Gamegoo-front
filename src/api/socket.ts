@@ -3,7 +3,8 @@ import { SocketAxios } from ".";
 /* 소켓 로그인 */
 export const socketLogin = async () => {
     try {
-        const jwtToken = localStorage.getItem('refreshToken');
+        let jwtToken = localStorage.getItem('accessToken');
+        jwtToken = sessionStorage.getItem('accessToken');
         const socketId = localStorage.getItem('gamegooSocketId');
 
         if (!jwtToken || !socketId) return;
