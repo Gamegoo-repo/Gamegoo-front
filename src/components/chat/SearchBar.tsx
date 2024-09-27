@@ -23,7 +23,7 @@ const SearchBar = (props: SearchBarProps) => {
                 const result = await searchFriend(value);
                 onSearch(result.result);
             } catch (error) {
-                console.error("Error searching friends:", error);
+                console.error("친구 찾기 실패:", error);
             }
         } else {
             onSearch(null);

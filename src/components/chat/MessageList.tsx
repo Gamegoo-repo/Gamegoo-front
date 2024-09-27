@@ -42,15 +42,15 @@ const MessageList = (props: MessageListProps) => {
             setMessageList((prevMessages) => {
                 let updatedMessages = [...prevMessages];
 
-                if (systemMessage && !isSystemMessageShown) {
-                    // 기존 시스템 메시지와, 새로운 시스템 메시지 타입이 달라서, 타입 같게 변경
-                    const systemMessageAsChatMessage: ChatMessageDto = {
-                        ...systemMessage,
-                        createdAt: new Date().toISOString(),
-                        timestamp: new Date().getTime(),
-                    };
-                    updatedMessages.push(systemMessageAsChatMessage);
-                }
+          if (systemMessage && !isSystemMessageShown) {
+            // systemMessage가 있을 때만 처리
+            const systemMessageAsChatMessage: ChatMessageDto = {
+                ...systemMessage,
+                createdAt: new Date().toISOString(),
+                timestamp: new Date().getTime(),
+            };
+            updatedMessages.push(systemMessageAsChatMessage);
+        }
 
                 // 새로운 메시지 추가
                 updatedMessages.push(newMessage);
@@ -89,8 +89,8 @@ const MessageList = (props: MessageListProps) => {
         setIsBoardId(id);
     };
 
-    /* 처음 채팅방 들어올 때 마지막 메시지로 스크롤 이동 */
-    useEffect(() => {
+      /* 마지막 메시지로 스크롤 */
+      useEffect(() => {
         if (chatRef.current && isInitialLoading) {
             const chatElement = chatRef.current;
             chatElement.scrollTop = chatElement.scrollHeight;
@@ -98,28 +98,30 @@ const MessageList = (props: MessageListProps) => {
         }
     }, [chatRef, messageList, isInitialLoading]);
 
-    /* 남은 메시지 보여주기 */
-    const getMoreMessages = useCallback(async () => {
-        if (!hasNext || !cursor) return; // 더 가져올 메시지가 없으면 리턴
+     /* 스크롤 시 메시지 추가로 보여주기 */
+     const getMoreMessages = useCallback(async () => {
+        if (!hasNext || !cursor || !chatEnterData?.uuid) return;
 
         setIsLoading(true);
         try {
-            const data = await getChatList(chatEnterData?.uuid, cursor);
+            const data = await getChatList(chatEnterData.uuid, cursor);
             const { chatMessageDtoList, next_cursor, has_next } = data.result;
 
+            // 메시지를 기존 목록에 추가
             setMessageList((prevMessages) => [...chatMessageDtoList, ...prevMessages]);
-            setCursor(next_cursor); // 다음 메시지 조회용 커서 업데이트
-            setHasNext(has_next); // 다음 메시지 존재 여부 업데이트
+            setCursor(next_cursor);
+            setHasNext(has_next);
         } catch (error) {
             console.error("메시지 조회 실패:", error);
         } finally {
             setIsLoading(false);
         }
-    }, [cursor, hasNext, chatEnterData]);
+    }, [cursor, hasNext, chatEnterData?.uuid]);
 
+    /* 스크롤 이벤트 처리 */
     const handleScroll = useCallback(() => {
         if (chatRef.current && chatRef.current.scrollTop === 0 && hasNext && !isLoading) {
-            getMoreMessages(); // 스크롤이 맨 위에 도달했을 때 다음 메시지 로드
+            getMoreMessages(); 
         }
     }, [chatRef, hasNext, isLoading, getMoreMessages]);
 

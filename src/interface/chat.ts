@@ -25,11 +25,12 @@ export interface SystemMessage {
 
 export interface DesignedSystemMessage {
     senderId: number;
-    senderName: string;
+    senderName: string | null;
     senderProfileImg: number;
     message: string;
     createdAt: null;
     timestamp: null;
+    systemType?: number;
     boardId: number;
 }
 
@@ -76,6 +77,7 @@ export interface Chat {
     memberProfileImg: number;
     friend: boolean;
     blocked: boolean;
+    blind: boolean;
     friendRequestMemberId: number;
     system?: SystemMessage | null;
     senderId?: number;

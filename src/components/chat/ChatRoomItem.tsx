@@ -16,7 +16,17 @@ interface ChatRoomItemProps {
 }
 
 const ChatRoomItem = (props: ChatRoomItemProps) => {
-    const { room, onChatRoom, isMoreBoxOpen, handleMoreBoxOpen, generateMenuItems } = props;
+    const {
+        room,
+        onChatRoom,
+        isMoreBoxOpen,
+        handleMoreBoxOpen,
+        generateMenuItems
+    } = props;
+
+    const handleUnreadMsgCount = (unread: number) => {
+        return unread > 99 ? '99+' : unread;
+    };
 
     return (
         <UserContent
@@ -41,7 +51,7 @@ const ChatRoomItem = (props: ChatRoomItemProps) => {
                     <Row>
                         <UserName>{room.targetMemberName}</UserName>
                         {room.notReadMsgCnt !== 0 &&
-                            <Unread>{room.notReadMsgCnt}</Unread>
+                            <Unread>{handleUnreadMsgCount(room.notReadMsgCnt)}</Unread>
                         }
                     </Row>
                     <Row>
@@ -124,6 +134,10 @@ const Row = styled.div`
 const Msg = styled.p`
     ${(props) => props.theme.fonts.regular14};
     color:${theme.colors.gray600};  
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 215px;
 `;
 
 const Date = styled.p`

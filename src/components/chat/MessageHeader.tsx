@@ -9,117 +9,29 @@ import { getProfileBgColor } from "@/utils/profile";
 import { useRouter } from "next/navigation";
 import { RootState } from "@/redux/store";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
-import { cancelFriendReq, deleteFriend, reqFriend } from "@/api/friends";
 import { useState } from "react";
-import { setOpenModal } from "@/redux/slices/modalSlice";
 
 interface MessageHeaderProps {
     isMoreBoxOpen: boolean;
     setIsMoreBoxOpen: React.Dispatch<React.SetStateAction<boolean>>;
     chatEnterData?: Chat;
+    onMoreBoxOpen: () => void;
+    menuItems: MoreBoxMenuItems[];
 }
 
 const MessageHeader = (props: MessageHeaderProps) => {
-    const { isMoreBoxOpen, setIsMoreBoxOpen, chatEnterData } = props;
+    const {
+        isMoreBoxOpen,
+        setIsMoreBoxOpen,
+        chatEnterData,
+        onMoreBoxOpen,
+        menuItems
+    } = props;
 
     const dispatch = useDispatch();
     const router = useRouter();
-
-    const [dataUpdated, setDataUpdated] = useState(false);
-
+    
     const onlineFriends = useSelector((state: RootState) => state.chat.onlineFriends);
-
-    /* 친구 추가 */
-    const handleFriendAdd = async () => {
-        if (!chatEnterData) return;
-        try {
-            await reqFriend(chatEnterData.memberId);
-            triggerDataUpdate();
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    /* 친구 요청 취소 */
-    const handleCancelFriendReq = async () => {
-        if (!chatEnterData) return;
-
-        try {
-            await cancelFriendReq(chatEnterData.memberId);
-            triggerDataUpdate();
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    /* 친구 취소 */
-    const handleFriendDelete = async () => {
-        if (!chatEnterData) return;
-
-        try {
-            await deleteFriend(chatEnterData.memberId);
-            triggerDataUpdate();
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    /* 모달 타입 변경 */
-    const handleModalChange = (e: React.MouseEvent, modalType: string, memberId?: number) => {
-        if (modalType) {
-            e.stopPropagation();
-        }
-
-        // if (memberId !== undefined) {
-        //     onMemberId(memberId);
-        // }
-
-        dispatch(setOpenModal(modalType));
-        setIsMoreBoxOpen(false);
-    };
-
-    /* 신고하기 */
-    const handleReportClick = (e: React.MouseEvent, memberId: number) => {
-        if (chatEnterData?.memberId) {
-            handleModalChange(e, 'report', memberId);
-        }
-    };
-
-    /* 매너 평가하기 */
-    const handleMannerClick = (e: React.MouseEvent, targetMemberId: number) => {
-        if (chatEnterData?.memberId) {
-            handleModalChange(e, 'manner', targetMemberId);
-        }
-    };
-
-    /* 비매너 평가하기 */
-    const handleBadMannerClick = (e: React.MouseEvent, targetMemberId: number) => {
-        if (chatEnterData?.memberId) {
-            handleModalChange(e, 'badManner', targetMemberId);
-        }
-    };
-
-    /* 더보기 버튼 */
-    const menuItems: MoreBoxMenuItems[] = [
-        { text: '채팅방 나가기', onClick: (e: React.MouseEvent) => handleModalChange(e, 'leave') },
-        // 친구 추가 조건: 친구가 아니고, 친구 요청도 하지 않은 경우
-        !chatEnterData?.friend && !chatEnterData?.friendRequestMemberId &&
-        { text: '친구 추가', onClick: handleFriendAdd },
-        // 친구 취소 조건: 친구인 경우
-        chatEnterData?.friend &&
-        { text: '친구 취소', onClick: handleFriendDelete },
-        // 친구 요청 취소 조건: 친구가 아니고, 친구 요청을 이미 한 경우
-        !chatEnterData?.friend && chatEnterData?.friendRequestMemberId &&
-        { text: '친구 요청 취소', onClick: handleCancelFriendReq },
-        { text: '차단하기', onClick: (e: React.MouseEvent) => handleModalChange(e, 'block') },
-        { text: '신고하기', onClick: (e: React.MouseEvent) => chatEnterData?.memberId && handleReportClick(e, chatEnterData.memberId) },
-        { text: '매너 평가', onClick: (e: React.MouseEvent) => chatEnterData?.memberId && handleMannerClick(e, chatEnterData.memberId) },
-        { text: '비매너 평가', onClick: (e: React.MouseEvent) => chatEnterData?.memberId && handleBadMannerClick(e, chatEnterData.memberId) },
-    ].filter(item => item) as MoreBoxMenuItems[];
-
-    const triggerDataUpdate = () => {
-        setDataUpdated((prev) => !prev);
-    };
 
     return (
         <>
@@ -173,7 +85,7 @@ const MessageHeader = (props: MessageHeaderProps) => {
                         </Div>
                     </Middle>
                     <ThreeDotsImage
-                        // onClick={handleMoreBoxOpen}
+                        onClick={onMoreBoxOpen}
                         src="/assets/icons/three_dots_button.svg"
                         width={3}
                         height={15}
