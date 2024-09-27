@@ -42,7 +42,7 @@ interface TableContentProps {
     mainPosition: number;
     subPosition: number;
     wantPosition: number;
-    championList: number[];
+    championResponseDTOList: number[];
     winRate: number;
     createdAt: string;
 }
@@ -62,6 +62,7 @@ const Table = (props: TableProps) => {
     const [targetMemberId, setTargetMemberId] = useState<number | null>(null);
     const [checkedMannerItems, setCheckedMannerItems] = useState<number[]>([]);
     const [checkedBadMannerItems, setCheckedBadMannerItems] = useState<number[]>([]);
+    const [copiedAlert, setCopiedAlert] = useState(false);
 
     const isReadingModal = useSelector((state: RootState) => state.modal.readingModal);
     const isModalType = useSelector((state: RootState) => state.modal.modalType);
@@ -101,11 +102,22 @@ const Table = (props: TableProps) => {
         const copied = `#${gameName.replace(/\s+/g, "")}`;
         try {
             await navigator.clipboard.writeText(copied);
-            await dispatch(setOpenModal("copied"));
+            await setCopiedAlert(true);
         } catch (error) {
             console.error("복사 실패", error);
         }
     };
+
+    /* 소환사명 복사 멘트 3초후 사라짐 */
+    useEffect(() => {
+        let timer: any;
+        if (copiedAlert) {
+            timer = setTimeout(() => {
+                setCopiedAlert(false);
+            }, 3000);
+        }
+        return () => clearTimeout(timer);
+    }, [copiedAlert]);
 
     /* 다른 사람 프로필 이동 */
     const handleUserProfilePage = (e: React.MouseEvent) => {
@@ -218,10 +230,15 @@ const Table = (props: TableProps) => {
                 onMannerPost={handleMannerPost}
                 onBadMannerPost={handleBadMannerPost}
             />} */}
-            
+
             {isChatRoomOpen &&
                 <ChatLayout apiType={3} />}
 
+            {copiedAlert && (
+                <Copied>
+                    소환사명이 클립보드에 복사되었습니다.
+                </Copied>
+            )}
             <TableWrapper>
                 <TableHead>
                     {title.map((data) => {
@@ -296,7 +313,7 @@ const Table = (props: TableProps) => {
                                         />
                                     </Fifth>
                                     <Sixth className="table_width">
-                                        {data.championList.map(
+                                        {data.championResponseDTOList.map(
                                             (data, index) =>
                                                 // <Image
                                                 //     key={index}
@@ -467,3 +484,17 @@ const Text = styled.div`
   ${(props) => props.theme.fonts.regular18};
   margin: 28px 0;
 `;
+
+const Copied = styled.div`
+  position: absolute;
+  top:50%;
+  left:50%;
+  transform: translate(-50%, -50%);
+  padding: 10px 28px;
+  ${(props) => props.theme.fonts.regular14};
+  background: ${theme.colors.white};
+  color: rgba(45, 45, 45, 1);
+  box-shadow: 0px 0px 25.3px 0px rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  white-space: nowrap;
+`

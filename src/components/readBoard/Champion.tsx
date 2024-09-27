@@ -11,7 +11,7 @@ const Champion = (props: ChampionProps) => {
   return (
     <Wrapper>
       <Title $size={size}>최근 선호 챔피언</Title>
-      {list.length !== 0 ? (
+      {list?.length !== 0 ? (
         <Images>
           {/* {list?.map((champion,key) => (
           <Image

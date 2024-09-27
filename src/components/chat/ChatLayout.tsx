@@ -440,7 +440,6 @@ const ChatLayout = (props: ChatLayoutProps) => {
                         <MessageList
                             chatEnterData={chatEnterData}
                             systemMessage={systemMessage}
-
                         />
                         <MessageInput
                             message={message}

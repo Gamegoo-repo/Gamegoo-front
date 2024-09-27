@@ -36,12 +36,12 @@ export interface DesignedSystemMessage {
 
 export interface ChatMessageDto {
     senderId: number;
-    senderName: string;
+    senderName: string | null;
     senderProfileImg: number;
     message: string;
     createdAt: string;
     timestamp: number;
-    systemType: number;
+    systemType?: number;
     boardId?: number;
 }
 

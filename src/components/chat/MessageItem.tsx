@@ -5,8 +5,10 @@ import dayjs from 'dayjs';
 import { Chat, ChatMessageDto } from "@/interface/chat";
 import { getProfileBgColor } from "@/utils/profile";
 import { setChatDateFormatter, setChatTimeFormatter } from "@/utils/custom";
-import { useDispatch } from "react-redux";
-import { setOpenMannerStatusModal } from "@/redux/slices/modalSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setCloseMannerStatusModal, setOpenMannerStatusModal } from "@/redux/slices/modalSlice";
+import { RootState } from "@/redux/store";
+import ConfirmModal from "../common/ConfirmModal";
 
 interface MessageItemProps {
   message: ChatMessageDto;
@@ -39,6 +41,8 @@ const MessageItem = (props: MessageItemProps) => {
 
   const dispatch = useDispatch();
 
+  const isFeedbackModalOpen = useSelector((state: RootState) => state.modal.isOpen);
+
   /* 시스템 메시지를 처리하는 컴포넌트 */
   const SystemMessage = (props: SystemMessageProps) => {
     const { message, onClick } = props;
@@ -62,59 +66,68 @@ const MessageItem = (props: MessageItemProps) => {
   };
 
   return (
-    <MsgContainer>
-      {showDate && <Timestamp>{setChatDateFormatter(message.createdAt)}</Timestamp>}
-      {message.systemType === 0 ? (
-        <SystemMessage
-          message={message.message}
-          onClick={message.boardId ? () => onPostOpen(message.boardId as number) : undefined}
-        />
-      ) : message.systemType === 1 ? (
-        <>
-          <FeedbackDiv>
-            <FeedbackContainer>
-              <Feedback>
-                <Text>매칭은 어떠셨나요?</Text>
-                <Text>상대방의 매너를 평가해주세요!</Text>
-                <SmileImage
-                  src="/assets/icons/clicked_smile.svg"
-                  width={22}
-                  height={22}
-                  alt="스마일 이모티콘" />
-                <StyledButton onClick={() => dispatch(setOpenMannerStatusModal())}>
-                  매너평가 하기
-                </StyledButton>
-              </Feedback>
-            </FeedbackContainer>
-            {/* <FeedbackTime>{setChatTimeFormatter(isFeedbackDate)}</FeedbackTime> */}
-          </FeedbackDiv>
-        </>
-      ) : message.senderId === chatEnterData?.memberId ? (
-        <YourMessageContainer>
-          {showProfileImage && (
-            <ImageWrapper $bgColor={getProfileBgColor(message.senderProfileImg)}>
-              <ProfileImage
-                src={`/assets/images/profile/profile${message.senderProfileImg}.svg`}
-                width={38}
-                height={38}
-                alt="프로필 이미지"
-              />
-            </ImageWrapper>
-          )}
-          <YourDiv $hasProfileImage={showProfileImage}>
-            <YourMessage>{message.message}</YourMessage>
-            {showTime ? <YourDate>{setChatTimeFormatter(message.createdAt)}</YourDate> : null}
-          </YourDiv>
-        </YourMessageContainer>
-      ) : (
-        <MyMessageContainer>
-          <MyDiv>
-            {showTime ? <MyDate>{setChatTimeFormatter(message.createdAt)}</MyDate> : null}
-            <MyMessage>{message.message}</MyMessage>
-          </MyDiv>
-        </MyMessageContainer>
-      )}
-    </MsgContainer>
+    <>
+      <MsgContainer>
+        {showDate && <Timestamp>{setChatDateFormatter(message.createdAt)}</Timestamp>}
+        {message.systemType === 0 ? (
+          <SystemMessage
+            message={message.message}
+            onClick={message.boardId ? () => onPostOpen(message.boardId as number) : undefined}
+          />
+        ) : message.systemType === 1 ? (
+          <>
+            <FeedbackDiv>
+              <FeedbackContainer>
+                <Feedback>
+                  <Text>매칭은 어떠셨나요?</Text>
+                  <Text>상대방의 매너를 평가해주세요!</Text>
+                  <SmileImage
+                    src="/assets/icons/clicked_smile.svg"
+                    width={22}
+                    height={22}
+                    alt="스마일 이모티콘" />
+                  <StyledButton onClick={() => dispatch(setOpenMannerStatusModal())}>
+                    매너평가 하기
+                  </StyledButton>
+                </Feedback>
+              </FeedbackContainer>
+              {/* <FeedbackTime>{setChatTimeFormatter(isFeedbackDate)}</FeedbackTime> */}
+            </FeedbackDiv>
+          </>
+        ) : message.senderId === chatEnterData?.memberId ? (
+          <YourMessageContainer>
+            {showProfileImage && (
+              <ImageWrapper $bgColor={getProfileBgColor(message.senderProfileImg)}>
+                <ProfileImage
+                  src={`/assets/images/profile/profile${message.senderProfileImg}.svg`}
+                  width={38}
+                  height={38}
+                  alt="프로필 이미지"
+                />
+              </ImageWrapper>
+            )}
+            <YourDiv $hasProfileImage={showProfileImage}>
+              <YourMessage>{message.message}</YourMessage>
+              {showTime ? <YourDate>{setChatTimeFormatter(message.createdAt)}</YourDate> : null}
+            </YourDiv>
+          </YourMessageContainer>
+        ) : (
+          <MyMessageContainer>
+            <MyDiv>
+              {showTime ? <MyDate>{setChatTimeFormatter(message.createdAt)}</MyDate> : null}
+              <MyMessage>{message.message}</MyMessage>
+            </MyDiv>
+          </MyMessageContainer>
+        )}
+      </MsgContainer>
+      {isFeedbackModalOpen &&
+        <ConfirmModal
+          type="manner"
+          width="315px"
+          primaryButtonText="확인"
+          onPrimaryClick={() => dispatch(setCloseMannerStatusModal())} />
+      }
+    </>
   );
 };
 
