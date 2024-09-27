@@ -11,7 +11,7 @@ import ChatRoomList from "./ChatRoomList";
 import { RootState } from "@/redux/store";
 import ChatLayout from "./ChatLayout";
 import { FriendListInterface } from "@/interface/friends";
-import { deleteFriend, getFriendsList, likeFriend, unLikeFriend } from "@/api/friends";
+import { getFriendsList, likeFriend, unLikeFriend } from "@/api/friends";
 
 const Layout = () => {
     const dispatch = useDispatch();

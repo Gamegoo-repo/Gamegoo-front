@@ -40,6 +40,7 @@ export interface ChatMessageDto {
     message: string;
     createdAt: string;
     timestamp: number;
+    systemType: number;
     boardId?: number;
 }
 

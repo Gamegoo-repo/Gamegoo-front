@@ -5,6 +5,8 @@ import dayjs from 'dayjs';
 import { Chat, ChatMessageDto } from "@/interface/chat";
 import { getProfileBgColor } from "@/utils/profile";
 import { setChatDateFormatter, setChatTimeFormatter } from "@/utils/custom";
+import { useDispatch } from "react-redux";
+import { setOpenMannerStatusModal } from "@/redux/slices/modalSlice";
 
 interface MessageItemProps {
   message: ChatMessageDto;
@@ -30,10 +32,12 @@ const MessageItem = (props: MessageItemProps) => {
     index,
     chatEnterData,
     onPostOpen,
-    showDate,  
-    showProfileImage,  
-    showTime, 
+    showDate,
+    showProfileImage,
+    showTime,
   } = props;
+
+  const dispatch = useDispatch();
 
   /* 시스템 메시지를 처리하는 컴포넌트 */
   const SystemMessage = (props: SystemMessageProps) => {
@@ -60,11 +64,31 @@ const MessageItem = (props: MessageItemProps) => {
   return (
     <MsgContainer>
       {showDate && <Timestamp>{setChatDateFormatter(message.createdAt)}</Timestamp>}
-      {message.senderName === "SYSTEM" ? (
+      {message.systemType === 0 ? (
         <SystemMessage
           message={message.message}
           onClick={message.boardId ? () => onPostOpen(message.boardId as number) : undefined}
         />
+      ) : message.systemType === 1 ? (
+        <>
+          <FeedbackDiv>
+            <FeedbackContainer>
+              <Feedback>
+                <Text>매칭은 어떠셨나요?</Text>
+                <Text>상대방의 매너를 평가해주세요!</Text>
+                <SmileImage
+                  src="/assets/icons/clicked_smile.svg"
+                  width={22}
+                  height={22}
+                  alt="스마일 이모티콘" />
+                <StyledButton onClick={() => dispatch(setOpenMannerStatusModal())}>
+                  매너평가 하기
+                </StyledButton>
+              </Feedback>
+            </FeedbackContainer>
+            {/* <FeedbackTime>{setChatTimeFormatter(isFeedbackDate)}</FeedbackTime> */}
+          </FeedbackDiv>
+        </>
       ) : message.senderId === chatEnterData?.memberId ? (
         <YourMessageContainer>
           {showProfileImage && (
@@ -198,4 +222,42 @@ const SystemMessageContainer = styled.div`
 
 const UnderlinedText = styled.span`
   text-decoration: underline;
+  cursor: pointer;
+`;
+
+const FeedbackDiv = styled.div`
+  margin: 35px 0;
+`;
+
+const FeedbackContainer = styled.div``;
+
+const Feedback = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 18px 15px 10px;
+  background: ${theme.colors.white}; 
+  border-radius: 13px;
+`;
+
+const SmileImage = styled(Image)`
+  margin-top: 12px;
+`;
+
+const Text = styled.p`
+  ${(props) => props.theme.fonts.regular14};
+  color: ${theme.colors.gray600}; 
+  &:first-child {
+    margin-bottom: 5px;
+    }
+`;
+
+const StyledButton = styled.button`
+  width: 100%;
+  border-radius: 53px;
+  margin-top:12px;
+  ${(props) => props.theme.fonts.semiBold12};
+  background: ${theme.colors.purple100}; 
+  color: ${theme.colors.white}; 
+  padding: 10px 0;
 `;

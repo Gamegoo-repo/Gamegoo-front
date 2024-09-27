@@ -24,7 +24,7 @@ const MessageList = (props: MessageListProps) => {
     const [messageList, setMessageList] = useState<ChatMessageDto[]>(chatEnterData?.chatMessageList.chatMessageDtoList || []);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [cursor, setCursor] = useState<number | null>(chatEnterData?.chatMessageList.has_next ? chatEnterData.chatMessageList.next_cursor : null);
-    const [hasMore, setHasMore] = useState<boolean>(chatEnterData?.chatMessageList.has_next || false);
+    const [hasNext, setHasNext] = useState<boolean>(false);
     const [isInitialLoading, setIsInitialLoading] = useState(true);
     const [isBoardId, setIsBoardId] = useState(0);
     const [isSystemMessageShown, setIsSystemMessageShown] = useState(false);
@@ -70,11 +70,11 @@ const MessageList = (props: MessageListProps) => {
             const chatMessages = chatEnterData.chatMessageList.chatMessageDtoList;
 
             if (chatMessages.length > 0) {
-                // 메시지가 있는 경우
+                // 메시지 있는 경우
                 setMessageList(chatMessages);
-                setIsLoading(false);  // 데이터가 들어오면 로딩을 멈춤
+                setIsLoading(false);
             } else {
-                // 메시지가 없는 경우, 로딩을 멈추고 빈 화면을 보여줌
+                // 메시지 없는 경우, 로딩을 멈추고 빈 화면을 보여줌
                 setIsLoading(false);
             }
         } else {
@@ -98,58 +98,42 @@ const MessageList = (props: MessageListProps) => {
         }
     }, [chatRef, messageList, isInitialLoading]);
 
-    const handleScroll = useCallback(() => {
-        if (chatRef.current && !isInitialLoading) {
-            const { scrollTop } = chatRef.current;
-            if (scrollTop === 0 && hasMore && !isLoading) {
-                getMoreMessages();
-            }
+    /* 남은 메시지 보여주기 */
+    const getMoreMessages = useCallback(async () => {
+        if (!hasNext || !cursor) return; // 더 가져올 메시지가 없으면 리턴
+
+        setIsLoading(true);
+        try {
+            const data = await getChatList(chatEnterData?.uuid, cursor);
+            const { chatMessageDtoList, next_cursor, has_next } = data.result;
+
+            setMessageList((prevMessages) => [...chatMessageDtoList, ...prevMessages]);
+            setCursor(next_cursor); // 다음 메시지 조회용 커서 업데이트
+            setHasNext(has_next); // 다음 메시지 존재 여부 업데이트
+        } catch (error) {
+            console.error("메시지 조회 실패:", error);
+        } finally {
+            setIsLoading(false);
         }
-    }, [chatRef, hasMore, isLoading, isInitialLoading]);
+    }, [cursor, hasNext, chatEnterData]);
+
+    const handleScroll = useCallback(() => {
+        if (chatRef.current && chatRef.current.scrollTop === 0 && hasNext && !isLoading) {
+            getMoreMessages(); // 스크롤이 맨 위에 도달했을 때 다음 메시지 로드
+        }
+    }, [chatRef, hasNext, isLoading, getMoreMessages]);
 
     useEffect(() => {
         const chatElement = chatRef.current;
         if (chatElement) {
-            chatElement.addEventListener('scroll', handleScroll);
+            chatElement.addEventListener("scroll", handleScroll);
         }
-
         return () => {
             if (chatElement) {
-                chatElement.removeEventListener('scroll', handleScroll);
+                chatElement.removeEventListener("scroll", handleScroll);
             }
         };
-    }, [chatRef, handleScroll]);
-
-    /* 남은 메시지 보여주기 */
-    const getMoreMessages = useCallback(async () => {
-        if (isLoading || !hasMore) return;
-
-        setIsLoading(true);
-        try {
-            const chatElement = chatRef.current;
-            if (!chatElement || !chatEnterData) return;
-
-            const previousScrollTop = chatElement.scrollTop;
-            const previousScrollHeight = chatElement.scrollHeight;
-
-            const data = await getChatList(chatEnterData.uuid, cursor);
-            const { chatMessageDtoList, next_cursor, has_next } = data.result;
-
-            setMessageList((prevMessages) => [...chatMessageDtoList, ...prevMessages]);
-            setCursor(next_cursor);
-            setHasMore(has_next);
-
-            requestAnimationFrame(() => {
-                const newScrollHeight = chatElement.scrollHeight;
-                const scrollDifference = newScrollHeight - previousScrollHeight;
-                chatElement.scrollTop = previousScrollTop + scrollDifference;
-            });
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setIsLoading(false);
-        }
-    }, [isLoading, hasMore, cursor, chatEnterData]);
+    }, [handleScroll]);
 
     /* 채팅 날짜 표시 */
     const handleDisplayDate = (messages: ChatMessageDto[], index: number): boolean => {
@@ -222,9 +206,9 @@ const MessageList = (props: MessageListProps) => {
                                 chatRef={chatRef}
                                 chatEnterData={chatEnterData}
                                 onPostOpen={handlePostOpen}
-                                showDate={handleDisplayDate(messageList, index)}  // 날짜 표시 함수 호출
-                                showProfileImage={handleDisplayProfileImage(messageList, index)}  // 프로필 이미지 표시
-                                showTime={handleDisplayTime(messageList, index)}  // 시간 표시
+                                showDate={handleDisplayDate(messageList, index)}
+                                showProfileImage={handleDisplayProfileImage(messageList, index)}
+                                showTime={handleDisplayTime(messageList, index)}
                             />
                         ))
                     )}
