@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { closeChat, openChatRoom, setChatRoomUuid } from "@/redux/slices/chatSlice";
 import Header from "./Header";
@@ -10,11 +10,16 @@ import FriendList from "./FriendList";
 import ChatRoomList from "./ChatRoomList";
 import { RootState } from "@/redux/store";
 import ChatLayout from "./ChatLayout";
+import { FriendListInterface } from "@/interface/friends";
+import { deleteFriend, getFriendsList, likeFriend, unLikeFriend } from "@/api/friends";
 
 const Layout = () => {
     const dispatch = useDispatch();
 
     const [activeTab, setActiveTab] = useState(0);
+    const [friends, setFriends] = useState<FriendListInterface[]>([]);
+    const [favoriteFriends, setFavoriteFriends] = useState<FriendListInterface[]>([]);
+    const [isSearching, setIsSearching] = useState(false);
     const tabs = ['친구 목록', '대화방'];
 
     const isChatRoomOpen = useSelector((state: RootState) => state.chat.isChatRoomOpen);
@@ -29,6 +34,90 @@ const Layout = () => {
         // if (typeof id === 'string') {
         // setChatRoomUuid(id);
         // }
+    };
+
+    /* 친구 목록 가져오기 */
+    const handleFetchFriendsList = async () => {
+        try {
+            const data = await getFriendsList();
+            const friendsList = data?.result?.friendInfoDTOList;
+
+            if (Array.isArray(friendsList)) {
+                setFriends(friendsList);
+                const likedFriends = friendsList.filter(friend => friend.isLiked);
+                setFavoriteFriends(likedFriends);
+            } else {
+                setFriends([]);
+                setFavoriteFriends([]);
+            }
+        } catch (error) {
+            console.error(error);
+            setFriends([]);
+            setFavoriteFriends([]);
+        }
+    };
+
+    useEffect(() => {
+        const likedFriends = friends.filter(friend => friend.isLiked);
+        setFavoriteFriends(likedFriends);
+    }, [friends]);
+
+    /* 검색 중이 아닐 때만 전체 목록을 가져오기. */
+    useEffect(() => {
+        if (!isSearching) {
+            handleFetchFriendsList();
+        }
+    }, [activeTab, isSearching]);
+
+    /* 친구 검색 */
+    const handleSearch = (searchResults: FriendListInterface[] | null) => {
+        if (searchResults === null) {
+            // 검색어 결과 없을 경우 전체 친구 목록 보여주기
+            setIsSearching(false);
+            handleFetchFriendsList();
+        } else {
+            // 검색 결과 업데이트
+            setIsSearching(true);
+            setFriends(searchResults);
+
+            const likedFriends = searchResults.filter(friend => friend.isLiked);
+            setFavoriteFriends(likedFriends);
+        }
+    };
+
+    /* 즐겨찾기 상태 변경 */
+    const handleFavoriteToggle = async (event: React.MouseEvent, friendId: number) => {
+        event.stopPropagation();
+
+        // friends 배열과 검색된 친구 목록에서 해당 친구 찾기
+        const friend = friends.find((f) => f.memberId === friendId);
+        if (friend) {
+            const newLikedStatus = !friend.isLiked;
+
+            // friends 상태 업데이트
+            setFriends((prevFriends) =>
+                prevFriends.map((f) =>
+                    f.memberId === friendId ? { ...f, isLiked: newLikedStatus } : f
+                )
+            );
+
+            // favoriteFriends 상태 업데이트 
+            setFavoriteFriends((prevFavorites) =>
+                newLikedStatus
+                    ? [...prevFavorites, { ...friend, isLiked: newLikedStatus }]
+                    : prevFavorites.filter((f) => f.memberId !== friendId)
+            );
+
+            try {
+                if (newLikedStatus) {
+                    await likeFriend(friendId);
+                } else {
+                    await unLikeFriend(friendId);
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
     };
 
     return (
@@ -54,13 +143,17 @@ const Layout = () => {
                             activeTab={activeTab}
                             onTabClick={setActiveTab}
                         />
-                        {activeTab === 0 && <SearchBar />}
+                        {activeTab === 0 && <SearchBar onSearch={handleSearch} />}
                         <ChatMain className={activeTab === 0 ? 'friend' : 'chat'}>
                             <Content className={activeTab === 0 ? 'friend' : 'chat'}>
                                 {activeTab === 0 ?
                                     <FriendList
                                         onChatRoom={handleGoToChatRoom}
-                                        activeTab={activeTab}
+                                        friends={friends}
+                                        favoriteFriends={favoriteFriends}
+                                        onFavoriteToggle={handleFavoriteToggle}
+                                        handleFetchFriendsList={handleFetchFriendsList} 
+                                        isSearching={isSearching}
                                     />
                                     :
                                     <ChatRoomList

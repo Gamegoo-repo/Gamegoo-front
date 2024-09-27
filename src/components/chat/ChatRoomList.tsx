@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { theme } from "@/styles/theme";
 import { useEffect, useState } from 'react';
 import { ChatroomList } from '@/interface/chat';
 import { getBadMannerValues, getMannerValues } from '@/api/manner';
@@ -211,6 +212,10 @@ const ChatRoomList = (props: ChatRoomListProps) => {
         }
     };
 
+    if (chatrooms.length === 0) {
+        return <NoData>{`생성된 대화방이 없습니다.`}</NoData>;
+    }
+
     return (
         <List>
             {chatrooms?.map(room => {
@@ -218,7 +223,7 @@ const ChatRoomList = (props: ChatRoomListProps) => {
                     <ChatRoomItem
                         key={room.uuid}
                         room={room}
-                        onChatRoom={(id) => onChatRoom(id)} 
+                        onChatRoom={(id) => onChatRoom(id)}
                         isMoreBoxOpen={isMoreBoxOpen}
                         handleMoreBoxOpen={handleMoreBoxOpen}
                         generateMenuItems={generateMenuItems} />
@@ -231,4 +236,11 @@ const ChatRoomList = (props: ChatRoomListProps) => {
 export default ChatRoomList;
 
 const List = styled.div``;
+
+const NoData = styled.p`
+  text-align: center;
+  color: ${theme.colors.gray600};
+  ${(props) => props.theme.fonts.regular16};
+  margin-top:50%;
+`;
 

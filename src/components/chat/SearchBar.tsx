@@ -1,8 +1,35 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
+import { useState } from "react";
+import { searchFriend } from "@/api/chat";
+import { FriendListInterface } from "@/interface/friends";
 
-const SearchBar = () => {
+interface SearchBarProps {
+    onSearch: (friends: FriendListInterface[] | null) => void;
+}
+
+const SearchBar = (props: SearchBarProps) => {
+    const { onSearch } = props;
+
+    const [searchQuery, setSearchQuery] = useState("");
+
+    const handleSearch = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
+        setSearchQuery(value);
+
+        if (value.trim() !== "") {
+            try {
+                const result = await searchFriend(value);
+                onSearch(result.result);
+            } catch (error) {
+                console.error("Error searching friends:", error);
+            }
+        } else {
+            onSearch(null);
+        }
+    };
+
     return (
         <SearchWrapper>
             <Search>
@@ -11,7 +38,11 @@ const SearchBar = () => {
                     width={17}
                     height={16}
                     alt="검색하기" />
-                <SearchInput type="text" placeholder="친구 검색하기" />
+                <SearchInput
+                    type="text"
+                    placeholder="친구 검색하기"
+                    value={searchQuery}
+                    onChange={handleSearch} />
             </Search>
         </SearchWrapper>
     )
