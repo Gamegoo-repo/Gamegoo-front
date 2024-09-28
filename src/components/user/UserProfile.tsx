@@ -54,7 +54,13 @@ const UserProfile = ({
   return (
     <Wrapper>
       <MatchContent>
-        <HeaderTitle title={`${profile.gameName} 님의 프로필`} size="regular" />
+        <Row>
+          <HeaderTitle
+            title={`${profile.gameName} 님의 프로필`}
+            size="regular"
+            blocked={profile.blocked}
+          />
+        </Row>
         <Main>
           <Profile
             profileType="other"
@@ -165,6 +171,11 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 140px;
+`;
+
+const Row = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 const MatchContent = styled.div`
