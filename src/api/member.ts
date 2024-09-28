@@ -45,6 +45,18 @@ export const unblockMember = async (memberId: number) => {
     }
 };
 
+/* 차단 목록 삭제 (탈퇴 회원의 경우) */
+export const deleteBlockMember = async (memberId: number) => {
+    try {
+        const response = await Axios.delete(`/v1/member/block/delete/${memberId}`);
+        console.log("차단 목록 삭제 성공:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("차단 목록 삭제 실패:", error);
+        throw error;
+    }
+};
+
 /* 신고하기 */
 export const reportMember = async (params: ReportInterface) => {
     try {
