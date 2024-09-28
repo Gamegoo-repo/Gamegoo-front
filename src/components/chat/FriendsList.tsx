@@ -6,17 +6,21 @@ import DeleteFriend from './DeleteFriend';
 import { deleteFriend, getFriendsList, likeFriend, unLikeFriend } from '@/api/friends';
 import { FriendListInterface } from '@/interface/friends';
 import { getProfileBgColor } from '@/utils/profile';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 interface FriendListProps {
     onChatRoom: (id: number) => void;
+    activeTab: string;
 }
 
-const FriendsList = ({ onChatRoom }: FriendListProps) => {
+const FriendsList = ({ onChatRoom, activeTab }: FriendListProps) => {
     const [friends, setFriends] = useState<FriendListInterface[]>([]);
-
     const [deleteMenu, setDeleteMenu] = useState<{ x: number, y: number, friendId: number | null }>({ x: 0, y: 0, friendId: null });
 
     const favoriteFriends = friends.filter(friend => friend.liked);
+
+    const onlineFriends = useSelector((state: RootState) => state.chat.onlineFriends);
 
     /* 친구 목록 가져오기 */
     useEffect(() => {
@@ -25,12 +29,13 @@ const FriendsList = ({ onChatRoom }: FriendListProps) => {
                 const data = await getFriendsList();
                 setFriends(data.result);
             } catch (error) {
-                console.error("에러:", error);
+                console.error(error);
             }
         }
 
         handleFetchFriendsList();
-    }, [])
+
+    }, [activeTab]);
 
     /* 삭제 하기 버튼 열기 */
     const handleContextMenu = (event: React.MouseEvent, friendId: number) => {
@@ -57,7 +62,7 @@ const FriendsList = ({ onChatRoom }: FriendListProps) => {
                 await handleCloseDeletetMenu();
             }
         } catch (error) {
-            console.error('친구 삭제 에러:', error);
+            console.error(error);
         }
     };
 
@@ -70,7 +75,7 @@ const FriendsList = ({ onChatRoom }: FriendListProps) => {
                 await likeFriend(friendId);
             }
         } catch (error) {
-            console.error('즐겨찾기 상태 변경 중 에러:', error);
+            console.error(error);
         }
     };
 
@@ -111,6 +116,7 @@ const FriendsList = ({ onChatRoom }: FriendListProps) => {
                             즐겨찾기
                         </FavoritesTitle>
                         {favoriteFriends.map(friend => {
+                            const isOnline = onlineFriends?.includes(friend.memberId);
                             return (
                                 <UserContent
                                     onContextMenu={(e) => handleContextMenu(e, friend.memberId)}
@@ -137,13 +143,13 @@ const FriendsList = ({ onChatRoom }: FriendListProps) => {
                                                 alt="사용자 프로필" />
                                         </ImageWrapper>
                                         <UserName>{friend.name}</UserName>
-                                        {/* {friend.online === "on" &&
-                                    <Online
-                                        src="/assets/icons/online.svg"
-                                        width={5}
-                                        height={5}
-                                        alt="온라인" />
-                                } */}
+                                        {isOnline && (
+                                            <Online
+                                                src="/assets/icons/online.svg"
+                                                width={5}
+                                                height={5}
+                                                alt="온라인" />
+                                        )}
                                     </Left>
                                     <Image
                                         onClick={(e) => handleFavoriteToggle(e, friend.memberId)}
@@ -167,6 +173,7 @@ const FriendsList = ({ onChatRoom }: FriendListProps) => {
                             친구 {friends.length}
                         </FriendsTitle>
                         {friends.map(friend => {
+                            const isOnline = onlineFriends?.includes(friend.memberId);
                             return (
                                 <UserContent
                                     onContextMenu={(event) => handleContextMenu(event, friend.memberId)}
@@ -190,13 +197,13 @@ const FriendsList = ({ onChatRoom }: FriendListProps) => {
                                                 alt="사용자 프로필" />
                                         </ImageWrapper>
                                         <UserName>{friend.name}</UserName>
-                                        {/* {friend.online === "on" &&
-                                    <Online
-                                        src="/assets/icons/online.svg"
-                                        width={5}
-                                        height={5}
-                                        alt="온라인" />
-                                } */}
+                                        {isOnline && (
+                                            <Online
+                                                src="/assets/icons/online.svg"
+                                                width={5}
+                                                height={5}
+                                                alt="온라인" />
+                                        )}
                                     </Left>
                                     <Image
                                         onClick={(e) => handleFavoriteToggle(e, friend.memberId)}

@@ -111,7 +111,7 @@ const MyPostPage = () => {
       </MyPostContent>
       <Footer>
         <ChatBoxContent>
-          <ChatButton count={3} />
+          <ChatButton />
         </ChatBoxContent>
       </Footer>
     </Wrapper>

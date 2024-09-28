@@ -6,6 +6,7 @@ import mannerStatusReducer from "./slices/mannerStatusSlice";
 import postReducer from "./slices/postSlice";
 import passwordReducer from "./slices/passwordSlice";
 import matchInfoReducer from "./slices/matchInfo";
+import chatReducer from "./slices/chatSlice";
 
 export const store = () => {
   return configureStore({
@@ -17,6 +18,7 @@ export const store = () => {
       mannerStatus: mannerStatusReducer,
       post: postReducer,
       matchInfo: matchInfoReducer,
+      chat: chatReducer,
     },
   })
 }

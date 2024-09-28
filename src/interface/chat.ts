@@ -4,7 +4,7 @@ export interface ChatroomList {
     friend: boolean;
     friendRequestMemberId: number;
     uuid: string;
-    targetMemberId:number;
+    targetMemberId: number;
     targetMemberImg: number;
     targetMemberName: string;
     lastMsg: string;
@@ -20,7 +20,19 @@ export interface SystemMessage {
     createdAt: string;
     timestamp: number;
     boardId: number;
+    chatroomUuid:string;
 }
+
+export interface DesignedSystemMessage {
+    senderId: number;
+    senderName: string;
+    senderProfileImg: number;
+    message: string;
+    createdAt: null;
+    timestamp: null;
+    boardId: number;
+}
+
 
 export interface ChatMessageDto {
     senderId: number;
@@ -36,7 +48,7 @@ export interface ChatMessageList {
     chatMessageDtoList: ChatMessageDto[];
     list_size: number;
     has_next: boolean;
-    next_cursor: string | null;
+    next_cursor: number | null;
 }
 
 export interface Chat {
@@ -62,4 +74,11 @@ export interface FriendsList {
     name: string;
     memberProfileImg: number;
     liked: boolean;
+}
+
+export interface UnreadResponse {
+    code: string;
+    isSuccess: boolean;
+    message: string;
+    result: string[];
 }

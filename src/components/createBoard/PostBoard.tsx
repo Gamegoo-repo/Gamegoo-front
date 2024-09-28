@@ -254,6 +254,7 @@ const PostBoard = (props: PostBoardProps) => {
               account={isUser.gameName}
               tag={isUser.tag}
               tier={isUser.tier}
+              rank={isUser.rank}
             />
           </UserSection>
         )}

@@ -9,6 +9,7 @@ import { Provider } from "react-redux";
 import { useEffect, useRef } from "react";
 import { AppStore, RootState, store } from "@/redux/store";
 import { usePathname } from "next/navigation";
+import SocketConnection from "@/components/socket/SocketConnection";
 import { Toaster } from "react-hot-toast";
 import { connectSocket } from "@/socket";
 
@@ -17,6 +18,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   const storeRef = useRef<AppStore>();
   if (!storeRef.current) {
     storeRef.current = store();
@@ -50,6 +52,7 @@ export default function RootLayout({
           <ThemeProvider theme={theme}>
             <Toaster />
             <Provider store={storeRef.current}>
+              <SocketConnection />
               {isHeader && <Header />}
               {children}
             </Provider>
@@ -59,3 +62,4 @@ export default function RootLayout({
     </html>
   );
 }
+

@@ -33,14 +33,14 @@ import { cancelFriendReq, deleteFriend, reqFriend } from "@/api/friends";
 import Alert from "../common/Alert";
 import { AlertProps } from "@/interface/modal";
 import { useRouter } from "next/navigation";
+import { openChatRoom, setErrorMessage } from "@/redux/slices/chatSlice";
 
 interface ReadBoardProps {
-  onClose: () => void;
   postId: number;
 }
 
 const ReadBoard = (props: ReadBoardProps) => {
-  const { onClose, postId } = props;
+  const { postId } = props;
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -56,6 +56,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   const [reportDetail, setReportDetail] = useState<string>("");
   const [type, setType] = useState<string>('canyon');
   const [showAlert, setShowAlert] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
   const [alertProps, setAlertProps] = useState<AlertProps>({
     icon: "",
     width: 0,
@@ -68,6 +69,32 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   const isModalType = useSelector((state: RootState) => state.modal.modalType);
   const isUser = useSelector((state: RootState) => state.user);
+  const isErrorMessage = useSelector((state: RootState) => state.chat.errorMessage);
+
+  /* 게시글 api */
+  useEffect(() => {
+    const getPostData = async () => {
+      setLoading(true);
+      if (!!isUser.id && postId) {
+        const memberData = await getMemberPost(postId);
+        setIsPost(memberData.result);
+        const hasPosition = await memberData.result.some((item: MemberPost) => 'mainPosition' in item);
+
+        // 글 type 설정
+        setType(hasPosition ? 'canyon' : 'wind');
+        setLoading(false);
+      }
+
+      if (!isUser.id && postId) {
+        const nonMember = await getNonMemberPost(postId);
+
+        setIsPost(nonMember.result);
+        setLoading(false);
+      }
+    };
+
+    getPostData();
+  }, [isBlockedStatus, isFriendStatus, isUser.id, postId])
 
   /* 클릭해서 매너키워드 보기 박스 닫기 */
   useEffect(() => {
@@ -124,6 +151,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       await reportMember(params);
       await handleModalClose();
     } catch (error) {
+      console.error(error);
     }
   };
 
@@ -140,6 +168,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       await handleMoreBoxClose();
       await setIsBlockedStatus(true);
     } catch (error) {
+      console.error(error);
     }
   };
 
@@ -178,6 +207,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       await handleMoreBoxClose();
       setIsFriendStatus(true);
     } catch (error) {
+      console.error(error);
     }
 
     handleMoreBoxClose();
@@ -196,6 +226,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       await handleMoreBoxClose();
       setIsFriendStatus(false);
     } catch (error) {
+      console.error(error);
     }
 
     handleMoreBoxClose();
@@ -216,6 +247,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       await handleMoreBoxClose();
       setIsFriendStatus(false);
     } catch (error) {
+      console.error(error);
     }
 
     handleMoreBoxClose();
@@ -262,9 +294,10 @@ const ReadBoard = (props: ReadBoardProps) => {
 
     try {
       await deletePost(postId);
-      await onClose();
+      await dispatch(setCloseReadingModal());
       // 게시글 업로드 해야하나?
     } catch (error) {
+      console.error(error);
     }
   };
 
@@ -340,31 +373,6 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   }
 
-  /* 게시글 api */
-  useEffect(() => {
-    const getPostData = async () => {
-      setLoading(true);
-      if (!!isUser.id) {
-        const memberData = await getMemberPost(postId);
-        setIsPost(memberData.result);
-        const hasPosition = await memberData.result.some((item: MemberPost) => 'mainPosition' in item);
-
-        // 글 type 설정
-        setType(hasPosition ? 'canyon' : 'wind');
-        setLoading(false);
-      }
-
-      if (!isUser.id) {
-        const nonMember = await getNonMemberPost(postId);
-
-        setIsPost(nonMember.result);
-        setLoading(false);
-      }
-    };
-
-    getPostData();
-  }, [isBlockedStatus, isFriendStatus, isUser.id, postId])
-
   /* 신고하기 모달 닫기 */
   const handleModalClose = () => {
     setCheckedItems([]);
@@ -382,17 +390,28 @@ const ReadBoard = (props: ReadBoardProps) => {
   }
 
   /* 채팅방 연결 */
-  const handleChatStart = () => {
+  const handleChatStart = async () => {
     if (!isUser.id) {
       return showAlertWithContent(loginRequiredMessage, () => setShowAlert(false), "확인");
-    }
-
-    onClose();
+   }
+   // TODO : 수정 필
+    if (isErrorMessage) {
+      alert(isErrorMessage);
+      dispatch(setErrorMessage(null));
+  } else {
+      try {
+          dispatch(setCloseReadingModal());
+          dispatch(openChatRoom());
+      } catch (error) {
+          console.error(error);
+      }
+  }
   };
+
 
   return (
     <>
-      <CRModal type="reading" onClose={onClose}>
+      <CRModal type="reading" onClose={() => dispatch(setCloseReadingModal())}>
         {showAlert && <Alert {...alertProps} />}
         {isPost && (
           <>
@@ -417,7 +436,8 @@ const ReadBoard = (props: ReadBoardProps) => {
                   <User
                     account={isPost.gameName}
                     tag={isPost.tag}
-                    tier={isPost.tier} />
+                    tier={isPost.tier}
+                    rank={isPost.rank} />
                   <MannerLevel
                     forNoData={isPost.tier}
                     level={isPost.mannerLevel}
@@ -476,6 +496,7 @@ const ReadBoard = (props: ReadBoardProps) => {
           </>
         )}
       </CRModal>
+
       {isModalType === 'report' &&
         <FormModal
           type="checkbox"
@@ -635,3 +656,4 @@ const ReportReasonContent = styled(ReportContent)`
 const ReportButton = styled.div`
   margin-top:21px;
 `;
+

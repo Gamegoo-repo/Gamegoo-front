@@ -4,25 +4,25 @@ import Image from "next/image";
 import { AlertProps } from "@/interface/modal";
 
 const Alert = (props: AlertProps) => {
-    const { icon, width, height, content, alt, onClose,buttonText } = props;
+  const { icon, width, height, content, alt, onClose, buttonText } = props;
 
-    return (
-        <Overlay>
-            <Wrapper>
-                <TextWrapper>
-                    <Image
-                        src={`/assets/icons/${icon}.svg`}
-                        width={width}
-                        height={height}
-                        alt={alt} />
-                    <Text>{content}</Text>
-                </TextWrapper>
-                <ButtonWrapper>
-                    <Button onClick={onClose}>{buttonText}</Button>
-                </ButtonWrapper>
-            </Wrapper>
-        </Overlay>
-    )
+  return (
+    <Overlay>
+      <Wrapper>
+        <TextWrapper>
+          <Image
+            src={`/assets/icons/${icon}.svg`}
+            width={width}
+            height={height}
+            alt={alt} />
+          <Text>{content}</Text>
+        </TextWrapper>
+        <ButtonWrapper>
+          <Button onClick={onClose}>{buttonText}</Button>
+        </ButtonWrapper>
+      </Wrapper>
+    </Overlay>
+  )
 };
 
 export default Alert;
