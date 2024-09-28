@@ -1,39 +1,211 @@
 "use client";
 
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import HeaderTitle from "@/components/common/HeaderTitle";
 import SquareProfile from "@/components/match/SquareProfile";
 import Image from "next/image";
 import { theme } from "@/styles/theme";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import ChatButton from "@/components/common/ChatButton";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-import { getProfile } from "@/api/user";
-import { setUserProfile } from "@/redux/slices/userSlice";
+import { sendMatchingQuitEvent, socket } from "@/socket";
+import { useRouter, useSearchParams } from "next/navigation";
+import { messagesWithN, messagesWithoutN } from "@/constants/messages";
+import { getSystemMsg } from "@/api/socket";
+
+interface User {
+  memberId: number;
+  gameName: string;
+  tag: string;
+  tier: string;
+  rank: number;
+  mannerLevel: number;
+  profileImg: number;
+  gameMode: number;
+  mainPosition: number;
+  subPosition: number;
+  wantPosition: number;
+  mike: boolean;
+  gameStyleList: string[];
+}
 
 const Progress = () => {
   /* 모달창 */
-  const [isFirstRetry, setIsFirstRetry] = useState<boolean>(true);
+  const [isFirstRetry, setIsFirstRetry] = useState<boolean>(false);
   const [isSecondYes, setIsSecondYes] = useState<boolean>(false);
   const [isSecondNo, setIsSecondNo] = useState<boolean>(false);
 
-  const dispatch = useDispatch();
-  const user = useSelector((state: RootState) => state.user);
+  const [timeLeft, setTimeLeft] = useState<number>(300);
+  const [isRetrying, setIsRetrying] = useState<boolean>(false); // 매칭 재시도 여부
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const retry = searchParams.get("retry");
+
+  const user: User = {
+    memberId: parseInt(searchParams.get("memberId") || "0", 10),
+    gameName: searchParams.get("gameName") || "",
+    tag: searchParams.get("tag") || "",
+    tier: searchParams.get("tier") || "",
+    rank: parseInt(searchParams.get("rank") || "1", 10),
+    mannerLevel: parseInt(searchParams.get("mannerLevel") || "0", 10),
+    profileImg: parseInt(searchParams.get("profileImg") || "0", 10),
+    gameMode: parseInt(searchParams.get("gameMode") || "1", 10),
+    mainPosition: parseInt(searchParams.get("mainPosition") || "1", 10),
+    subPosition: parseInt(searchParams.get("subPosition") || "1", 10),
+    wantPosition: parseInt(searchParams.get("wantPosition") || "1", 10),
+    mike: searchParams.get("mike") === "true",
+    gameStyleList: (searchParams.get("gameStyleList") || "").split(","),
+  };
+
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const [currentMessage, setCurrentMessage] = useState<string>("");
+  const [numberOfPlayers, setNumberOfPlayers] = useState<number | null>(null);
+  const [isVisible, setIsVisible] = useState<boolean>(true);
+  const [textVisible, setTextVisible] = useState<boolean>(true);
+
+  const fetchSystemMsg = async () => {
+    try {
+      const response = await getSystemMsg();
+      if (response && response.isSuccess) {
+        setNumberOfPlayers(response.result.number);
+      } else {
+        // 에러 발생 시, messagesWithoutN에서 랜덤으로 메시지 설정
+        const randomMessage =
+          messagesWithoutN[Math.floor(Math.random() * messagesWithoutN.length)];
+        setCurrentMessage(randomMessage);
+      }
+    } catch (error) {
+      console.error("시스템 메시지 조회 실패:", error);
+      const randomMessage =
+        messagesWithoutN[Math.floor(Math.random() * messagesWithoutN.length)];
+      setCurrentMessage(randomMessage);
+    }
+  };
+
+  const showMessage = () => {
+    setTextVisible(true); // 텍스트 보이기
+    const messages = Math.random() < 0.5 ? messagesWithN : messagesWithoutN; // 랜덤으로 메시지 선택
+    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+
+    if (messagesWithN.includes(randomMessage) && numberOfPlayers === null) {
+      // n이 필요한 메시지이고 n 값이 없는 경우 API 호출
+      fetchSystemMsg();
+    } else if (numberOfPlayers !== null) {
+      // n 값을 포함하여 메시지 설정
+      setCurrentMessage(
+        randomMessage.replace(/n/g, numberOfPlayers.toString())
+      );
+    } else {
+      setCurrentMessage(randomMessage);
+    }
+
+    setTimeout(() => {
+      setTextVisible(false);
+    }, 300);
+  };
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await getProfile();
-        dispatch(setUserProfile(response.result));
-      } catch (error) {
-        console.error(error);
-      }
+    showMessage(); // 초기 메시지 설정
+    const interval = setInterval(showMessage, 10000); // 10초 간격으로 메시지 변경
+
+    return () => clearInterval(interval); // 컴포넌트 언마운트 시 interval 정리
+  }, [numberOfPlayers]);
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      sendMatchingQuitEvent();
     };
 
-    fetchProfile();
-  }, [dispatch]);
+    const handlePopState = () => {
+      sendMatchingQuitEvent();
+      return true;
+    };
+
+    // 페이지 이탈 및 새로고침 감지
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    // 뒤로가기를 감지
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (socket) {
+      // 매칭 성공 (receiver)
+      socket.on("matching-found-receiver", (data) => {
+        console.log("매칭 상대 발견(receiver):", data);
+        clearTimers();
+        socket?.emit("matching-found-success", {
+          senderMemberId: user.memberId,
+          gameMode: user.gameMode,
+        });
+        router.push(
+          `/matching/complete?role=receiver&opponent=true&user=${encodeURIComponent(
+            JSON.stringify(data.data)
+          )}`
+        );
+      });
+
+      // 매칭 성공 (sender)
+      socket.on("matching-found-sender", (data) => {
+        console.log("매칭 상대 발견(sender):", data);
+        clearTimers();
+        router.push(
+          `/matching/complete?role=sender&opponent=true&user=${encodeURIComponent(
+            JSON.stringify(data)
+          )}`
+        );
+      });
+    }
+
+    // 2분 타이머 시작
+    startMatchingProcess();
+
+    return () => {
+      clearTimers();
+    };
+  }, []);
+
+  const startMatchingProcess = () => {
+    // 매칭 재시도 여부에 따라 타이머 설정
+    setTimeLeft(300);
+    timerRef.current = setInterval(() => {
+      setTimeLeft((prevTime) => {
+        if (prevTime === 1) {
+          // 5분 타이머가 끝나면 매칭 실패 처리
+          clearTimers(); // 타이머 정리
+          socket?.emit("matching-not-found");
+          retry ? setIsSecondYes(true) : setIsFirstRetry(true); // 매칭 실패 모달 표시
+        } else if (prevTime === 180) {
+          // 첫 2분 타이머가 끝나면 매칭 재시도
+          if (!isRetrying) {
+            socket?.emit("matching-retry", { priority: 50 });
+            setIsRetrying(true); // 재시도 상태로 변경
+            console.log("매칭 재시도 (2분 후)");
+          }
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+  };
+
+  const clearTimers = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  };
+
+  // 남은 시간을 MM:SS 형식으로 변환
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
+  };
 
   return (
     <Wrapper>
@@ -41,19 +213,19 @@ const Progress = () => {
         <Header>
           <HeaderTitle title="매칭 중" sub="나와 꼭 맞는 상대를 찾는 중..." />
           <Time>
-            <Span>2:20&nbsp;</Span>/5:00
+            <Span>{formatTime(timeLeft)}&nbsp;</Span>/5:00
           </Time>
         </Header>
         <Main>
           <SquareProfile user={user} />
-          <Waiting>
-            <Image
+          <Waiting style={{ opacity: isVisible ? 1 : 0 }}>
+            <AnimatedImage
               src="/assets/images/wait_heart.svg"
               width={225}
               height={225}
               alt="heart"
             />
-            어떤 사람이 나올까요?
+            <AnimatedText visible={textVisible}>{currentMessage}</AnimatedText>
           </Waiting>
         </Main>
         {/* 즐겜모드, 빡겜모드 매칭 실패 */}
@@ -62,7 +234,10 @@ const Progress = () => {
             width="540px"
             primaryButtonText="예"
             secondaryButtonText="아니요"
-            onPrimaryClick={() => setIsFirstRetry(true)}
+            onPrimaryClick={() => {
+              setIsFirstRetry(true);
+              router.push(`/match/profile?type=gamgoo&rank=fast&retry=true`);
+            }}
             onSecondaryClick={() => setIsFirstRetry(false)}
           >
             계속해서 매칭을 시도하겠습니까?
@@ -72,8 +247,14 @@ const Progress = () => {
         {isSecondYes && (
           <ConfirmModal
             width="540px"
-            onPrimaryClick={() => setIsSecondYes(false)}
-            onSecondaryClick={() => setIsSecondYes(false)}
+            onPrimaryClick={() => {
+              router.push("/home");
+              setIsSecondYes(false);
+            }}
+            onSecondaryClick={() => {
+              router.push("/borad");
+              setIsSecondYes(false);
+            }}
             primaryButtonText="닫기"
             secondaryButtonText="글 보러하기"
           >
@@ -98,15 +279,42 @@ const Progress = () => {
         )}
       </MatchContent>
       <Footer>
-          <ChatBoxContent>
-            <ChatButton count={3} />
-          </ChatBoxContent>
-        </Footer>
+        <ChatBoxContent>
+          <ChatButton count={3} />
+        </ChatBoxContent>
+      </Footer>
     </Wrapper>
   );
 };
 
 export default Progress;
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
+const fadeOut = keyframes`
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+`;
+
+const growShrink = keyframes`
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+`;
 
 const Wrapper = styled.div`
   width: 100%;
@@ -161,6 +369,9 @@ const Waiting = styled.div`
   gap: 42px;
   color: ${theme.colors.gray600};
   ${(props) => props.theme.fonts.regular25};
+
+  animation: ${fadeIn} 0.5s ease-in forwards;
+  transition: opacity 0.5s ease-in-out;
 `;
 
 const Footer = styled.footer`
@@ -170,4 +381,15 @@ const Footer = styled.footer`
 
 const ChatBoxContent = styled.div`
   margin-left: auto;
+`;
+
+const AnimatedImage = styled(Image)`
+  animation: ${growShrink} 1.8s ease-in-out infinite;
+`;
+
+const AnimatedText = styled.div<{ visible: boolean }>`
+  opacity: ${({ visible }) => (visible ? 1 : 0)};
+  transition: opacity 0.3s ease-in-out;
+  animation: ${({ visible }) => (visible ? fadeIn : fadeOut)} 1s ease-in-out
+    forwards;
 `;

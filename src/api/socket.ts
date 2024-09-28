@@ -28,3 +28,28 @@ export const socketLogin = async () => {
         }
     }
 };
+
+export const getSystemMsg = async () => {
+    try {
+        const jwtToken = localStorage.getItem('refreshToken');
+        const socketId = localStorage.getItem('gamegooSocketId');
+
+        if (!jwtToken || !socketId) return;
+
+        const response = await SocketAxios.get("/socket/message", {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${jwtToken}`,
+                "Socket-Id": socketId,
+            },
+        });
+        
+        return response.data; 
+    } catch (error: any) {
+        if (error.response) {
+            console.error('시스템 메세지 조회 실패:', error.response.statusText);
+        } else {
+            console.error('에러:', error.message);
+        }
+    }
+}

@@ -7,7 +7,7 @@ let socket: Socket | null = null;
 let socketId: string | null = null;
 
 export const connectSocket = (): void => {
-  const token = sessionStorage.getItem('refreshToken');
+  const token = sessionStorage.getItem('accessToken');
 
   const options = token ? { auth: { token } } : {};
 
@@ -28,7 +28,16 @@ export const connectSocket = (): void => {
   setupSocketListeners();
 };
 
+export const sendMatchingQuitEvent = (): void => {
+  if (socket) {
+    console.log("매칭 종료 이벤트 전송");
+    socket.emit("matching-quit");
+  }
+};
+
 const setupSocketListeners = () => {
   if (!socket) return;
 
 };
+
+export { socket };
