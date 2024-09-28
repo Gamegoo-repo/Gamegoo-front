@@ -45,6 +45,7 @@ const ChatRoomList = (props: ChatRoomListProps) => {
             try {
                 const data = await getChatrooms();
                 setChatrooms(data.result.chatroomViewDTOList);
+                // 채팅방 읽음처리 하지 않기 위함
                 dispatch(setCurrentChatUuid(''));
             } catch (error) {
                 console.error(error);

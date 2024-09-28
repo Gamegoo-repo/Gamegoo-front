@@ -34,7 +34,6 @@ import Alert from "../common/Alert";
 import { AlertProps } from "@/interface/modal";
 import { useRouter } from "next/navigation";
 import { openChatRoom, setChatRoomUuid, setErrorMessage } from "@/redux/slices/chatSlice";
-import ChatLayout from "../chat/ChatLayout";
 
 interface ReadBoardProps {
   postId: number;
@@ -320,9 +319,9 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 더보기 버튼 토글 */
   const handleMoreBoxToggle = () => {
-    if (!isUser.id) {
-      return showAlertWithContent(loginRequiredMessage, () => setShowAlert(false), "확인");
-    }
+    // if (!isUser.id) {
+    //   return showAlertWithContent(loginRequiredMessage, () => setShowAlert(false), "확인");
+    // }
 
     setIsMoreBoxOpen((prevState) => !prevState);
   };
@@ -335,12 +334,12 @@ const ReadBoard = (props: ReadBoardProps) => {
   /* 더보기 버튼 메뉴 */
   const MoreBoxMenuItems: MoreBoxMenuItems[] = [];
 
-  if (isUser?.id === isPost?.memberId) {
-    MoreBoxMenuItems.push(
-      { text: '수정', onClick: handleEdit },
-      { text: '삭제', onClick: handleDelete }
-    );
-  }
+  // if (isUser?.id === isPost?.memberId) {
+  MoreBoxMenuItems.push(
+    { text: '수정', onClick: handleEdit },
+    { text: '삭제', onClick: handleDelete }
+  );
+  // }
 
   //친구 삭제 - 차단되어있을 때, 친구일 때, 친구 추가 요청 중일 때
   //친구 추가(친구 요청) - 친구가 아닐 때, 차단되어있지 않을 때, 친구 추가 요청 중이 아닐 때
@@ -348,47 +347,47 @@ const ReadBoard = (props: ReadBoardProps) => {
   //차단하기 - 친구 추가 요청 중일 때, 친구 삭제된 상태일 때, 차단되어있지 않을 때
   //차단해제 - 차단되어 있을 때, 
 
-  if (isUser?.id !== isPost?.memberId) {
-    let friendText = '친구 추가';
-    let friendFunc = handleFriendAdd;
-    let blockText = '차단하기';
-    let blockFunc = handleBlock;
+  // if (isUser?.id !== isPost?.memberId) {
+  let friendText = '친구 추가';
+  let friendFunc = handleFriendAdd;
+  let blockText = '차단하기';
+  let blockFunc = handleBlock;
 
-    if (!!isPost && 'isBlocked' in isPost && 'isFriend' in isPost && 'friendRequestMemberId' in isPost) {
-      if (isPost?.isBlocked || isPost?.isFriend) {
-        friendText = '친구 삭제';
-        friendFunc = handleFriendDelete;
-      }
-      if (!isPost?.isBlocked || !isPost?.isFriend || !isPost?.friendRequestMemberId) {
-        friendText = '친구 추가';
-        friendFunc = handleFriendAdd;
-      }
-      if (isPost?.friendRequestMemberId) {
-        friendText = '친구 요청 취소';
-        friendFunc = handleCancelFriendReq;
-      }
-
-      if (isPost?.friendRequestMemberId || !isPost?.isFriend, !isPost?.isBlocked) {
-        blockText = '차단하기';
-        blockFunc = handleBlock;
-      }
-
-      if (isPost?.isBlocked) {
-        blockText = '차단 해제';
-        friendText = '';
-        blockFunc = handleUnblock;
-      }
+  if (!!isPost && 'isBlocked' in isPost && 'isFriend' in isPost && 'friendRequestMemberId' in isPost) {
+    if (isPost?.isBlocked || isPost?.isFriend) {
+      friendText = '친구 삭제';
+      friendFunc = handleFriendDelete;
+    }
+    if (!isPost?.isBlocked || !isPost?.isFriend || !isPost?.friendRequestMemberId) {
+      friendText = '친구 추가';
+      friendFunc = handleFriendAdd;
+    }
+    if (isPost?.friendRequestMemberId) {
+      friendText = '친구 요청 취소';
+      friendFunc = handleCancelFriendReq;
     }
 
-    if (friendText) {
-      MoreBoxMenuItems.push({ text: friendText, onClick: friendFunc });
+    if (isPost?.friendRequestMemberId || !isPost?.isFriend, !isPost?.isBlocked) {
+      blockText = '차단하기';
+      blockFunc = handleBlock;
     }
-    MoreBoxMenuItems.push(
-      { text: blockText, onClick: blockFunc },
-      { text: '신고하기', onClick: handleReportModal }
-    );
 
+    if (isPost?.isBlocked) {
+      blockText = '차단 해제';
+      friendText = '';
+      blockFunc = handleUnblock;
+    }
   }
+
+  if (friendText) {
+    MoreBoxMenuItems.push({ text: friendText, onClick: friendFunc });
+  }
+  MoreBoxMenuItems.push(
+    { text: blockText, onClick: blockFunc },
+    { text: '신고하기', onClick: handleReportModal }
+  );
+
+  // }
 
   /* 신고하기 모달 닫기 */
   const handleModalClose = () => {
@@ -438,7 +437,7 @@ const ReadBoard = (props: ReadBoardProps) => {
               <MoreBox
                 items={MoreBoxMenuItems}
                 top={67}
-                left={776} />
+                right={17} />
             )}
             <UpdatedDate>게시일 : {setPostingDateFormatter(isPost.createdAt)}</UpdatedDate>
             <UserSection>
@@ -509,7 +508,8 @@ const ReadBoard = (props: ReadBoardProps) => {
                 </MemoData>
               </Memo>
             </MemoSection>
-            {/* {isUser.id === isPost.memberId && */}
+            {/* TODO: 토큰 이슈 해결 후 주석 풀기 */}
+            {/* {isUser.id === isPost.memberId || !isPost.isBlocked */}
             <ButtonContent $gameType={type}>
               <Button
                 type="submit"
