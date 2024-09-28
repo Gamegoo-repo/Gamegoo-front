@@ -10,6 +10,7 @@ import { User } from "@/interface/profile";
 export interface Manner {
   memberId?: number;
   mannerLevel: number;
+  mannerRank: number;
   mannerKeywords: [
     {
       isPositive: boolean;
@@ -80,7 +81,7 @@ const UserProfile = ({
                 </Text>
                 <MannerLevelBar
                   recentLevel={manner.mannerLevel}
-                  percentage={15}
+                  mannerRank={manner.mannerRank}
                 />
               </Box>
             </div>
