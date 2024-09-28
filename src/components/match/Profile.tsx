@@ -313,12 +313,13 @@ const Profile: React.FC<Profile> = ({
     // 자기 자신 프로필
     if (user.blocked) {
       return (
-        <Button
-          buttonType="secondary"
-          width="218px"
-          text="차단된 유저"
-          disabled={true}
-        />
+        // <Button
+        //   buttonType="secondary"
+        //   width="218px"
+        //   text="차단된 유저"
+        //   disabled={true}
+        // />
+        null
       );
     }
     if (user.friend) {
@@ -417,13 +418,16 @@ const Profile: React.FC<Profile> = ({
           {/* 프로필 이미지 선택 팝업 */}
           {isProfileListOpen && (
             <ProfileListBox>
-              <Image
-                src="/assets/icons/close_white.svg"
-                width={14}
-                height={14}
-                alt="닫기"
-                onClick={() => setIsProfileListOpen(false)}
-              />
+              <ProfileListBoxTop>
+                프로필 이미지 변경
+                <Image
+                  src="/assets/icons/close_white.svg"
+                  width={14}
+                  height={14}
+                  alt="닫기"
+                  onClick={() => setIsProfileListOpen(false)}
+                />
+              </ProfileListBoxTop>
               <ProfileList>
                 {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
                   <SelectProfileImgWrapper
@@ -708,7 +712,7 @@ const ProfileListBox = styled.div`
   height: 335px;
   display: flex;
   flex-direction: column;
-  padding: 21px;
+  padding: 26px;
   gap: 10px;
   justify-content: center;
   align-items: flex-end;
@@ -720,14 +724,26 @@ const ProfileListBox = styled.div`
   z-index: 100;
 `;
 
+const ProfileListBoxTop = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: ${theme.colors.white};
+  ${theme.fonts.regular20};
+`;
+
 const ProfileList = styled.div`
   width: 100%;
   height: 100%;
-  padding: 0 14px 29px 14px;
-  row-gap: 45px;
+  row-gap: 30px;
+  column-gap: 30px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(2, 1fr);
+  justify-content: center;
+  align-items: center;
+  justify-items: center;
 `;
 
 const SelectProfileImgWrapper = styled.div<{
