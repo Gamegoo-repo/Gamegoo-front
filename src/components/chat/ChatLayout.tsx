@@ -261,9 +261,11 @@ const ChatLayout = (props: ChatLayoutProps) => {
     const handleMoreBoxOpen = () => {
         if (!chatEnterData || !chatEnterData.memberId) return;
 
+        setIsMoreBoxOpen(prevState => !prevState);
+
+        if (chatEnterData.blind) return;
         handleMannerValuesGet(chatEnterData.memberId);
         handleBadMannerValuesGet(chatEnterData.memberId);
-        setIsMoreBoxOpen(prevState => !prevState);
     };
 
     /* 메시지 보내기 */
@@ -421,22 +423,24 @@ const ChatLayout = (props: ChatLayoutProps) => {
     };
 
     /* 더보기 버튼 */
-    const menuItems: MoreBoxMenuItems[] = [
-        { text: '채팅방 나가기', onClick: (e: React.MouseEvent) => handleModalChange(e, 'leave') },
-        // 친구 추가 조건: 친구가 아니고, 친구 요청도 하지 않은 경우
-        !chatEnterData?.friend && !chatEnterData?.friendRequestMemberId &&
-        { text: '친구 추가', onClick: handleFriendAdd },
-        // 친구 취소 조건: 친구인 경우
-        chatEnterData?.friend &&
-        { text: '친구 취소', onClick: handleFriendDelete },
-        // 친구 요청 취소 조건: 친구가 아니고, 친구 요청을 이미 한 경우
-        !chatEnterData?.friend && chatEnterData?.friendRequestMemberId &&
-        { text: '친구 요청 취소', onClick: handleCancelFriendReq },
-        { text: '차단하기', onClick: (e: React.MouseEvent) => handleModalChange(e, 'block') },
-        { text: '신고하기', onClick: (e: React.MouseEvent) => chatEnterData?.memberId && handleReportClick(e, chatEnterData.memberId) },
-        { text: '매너 평가', onClick: (e: React.MouseEvent) => chatEnterData?.memberId && handleMannerClick(e, chatEnterData.memberId) },
-        { text: '비매너 평가', onClick: (e: React.MouseEvent) => chatEnterData?.memberId && handleBadMannerClick(e, chatEnterData.memberId) },
-    ].filter(item => item) as MoreBoxMenuItems[];
+    const menuItems: MoreBoxMenuItems[] = chatEnterData?.blind
+        ? [{ text: '채팅방 나가기', onClick: (e: React.MouseEvent) => handleModalChange(e, 'leave') }]
+        : [
+            { text: '채팅방 나가기', onClick: (e: React.MouseEvent) => handleModalChange(e, 'leave') },
+            // 친구 추가 조건: 친구가 아니고, 친구 요청도 하지 않은 경우
+            !chatEnterData?.friend && !chatEnterData?.friendRequestMemberId &&
+            { text: '친구 추가', onClick: handleFriendAdd },
+            // 친구 취소 조건: 친구인 경우
+            chatEnterData?.friend &&
+            { text: '친구 취소', onClick: handleFriendDelete },
+            // 친구 요청 취소 조건: 친구가 아니고, 친구 요청을 이미 한 경우
+            !chatEnterData?.friend && chatEnterData?.friendRequestMemberId &&
+            { text: '친구 요청 취소', onClick: handleCancelFriendReq },
+            { text: '차단하기', onClick: (e: React.MouseEvent) => handleModalChange(e, 'block') },
+            { text: '신고하기', onClick: (e: React.MouseEvent) => chatEnterData?.memberId && handleReportClick(e, chatEnterData.memberId) },
+            { text: '매너 평가', onClick: (e: React.MouseEvent) => chatEnterData?.memberId && handleMannerClick(e, chatEnterData.memberId) },
+            { text: '비매너 평가', onClick: (e: React.MouseEvent) => chatEnterData?.memberId && handleBadMannerClick(e, chatEnterData.memberId) },
+        ].filter(item => item) as MoreBoxMenuItems[];
 
     /* 더보기 버튼 외부 클릭 시 닫힘 */
     const handleOutsideModalClick = (event: React.MouseEvent<HTMLDivElement>) => {

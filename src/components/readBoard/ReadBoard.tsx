@@ -437,7 +437,7 @@ const ReadBoard = (props: ReadBoardProps) => {
               <MoreBox
                 items={MoreBoxMenuItems}
                 top={67}
-                right={17} />
+                left={17} />
             )}
             <UpdatedDate>게시일 : {setPostingDateFormatter(isPost.createdAt)}</UpdatedDate>
             <UserSection>

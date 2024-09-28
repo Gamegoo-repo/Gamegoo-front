@@ -3,4 +3,5 @@ export interface FriendListInterface {
     name: string;
     memberProfileImg: number;
     isLiked: boolean;
+    isBlind:boolean;
 }

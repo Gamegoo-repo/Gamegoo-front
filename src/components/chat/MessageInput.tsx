@@ -12,6 +12,15 @@ interface MessageInputProps {
 const MessageInput = (props: MessageInputProps) => {
     const { message, setMessage, sendMessage, chatEnterData } = props;
 
+    const getPlaceholderText = () => {
+        if (!!chatEnterData?.blocked) {
+            return "메시지를 보낼 수 없는 상대입니다.";
+        } else if (!!chatEnterData?.blind) {
+            return "탈퇴한 유저입니다.";
+        }
+        return "";
+    };
+
     return (
         <TextareaContainer>
             <Form
@@ -23,13 +32,13 @@ const MessageInput = (props: MessageInputProps) => {
                             value={message}
                             onChange={(event) => setMessage(event.target.value)}
                             // onKeyDown={handlePressEnterKey}
-                            disabled={!!chatEnterData.blocked}
-                            placeholder={!!chatEnterData?.blocked ? "메시지를 보낼 수 없는 상대입니다." : ""}
+                            disabled={!!chatEnterData.blocked || !!chatEnterData.blind}
+                            placeholder={getPlaceholderText()}
                         />
                         <SubmitButton
                             disabled={message === "" || !!chatEnterData.blocked}
                             type="submit"
-                            className={!!chatEnterData.blocked ? "disabled-button" : ""}
+                            className={!!chatEnterData.blocked || !!chatEnterData.blind ? "disabled-button" : ""}
                         >
                             전송
                         </SubmitButton>

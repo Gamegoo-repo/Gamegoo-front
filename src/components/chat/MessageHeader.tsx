@@ -9,7 +9,6 @@ import { getProfileBgColor } from "@/utils/profile";
 import { useRouter } from "next/navigation";
 import { RootState } from "@/redux/store";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
-import { useState } from "react";
 
 interface MessageHeaderProps {
     isMoreBoxOpen: boolean;

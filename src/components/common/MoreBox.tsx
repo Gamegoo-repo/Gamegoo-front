@@ -5,12 +5,12 @@ import { MoreBoxMenuItems } from "@/interface/moreBox";
 interface MoreBoxProps {
     items: MoreBoxMenuItems[];
     top: number;
-    right: number;
+    left: number;
 }
 
-const MoreBox = ({ items, top, right }: MoreBoxProps) => {
+const MoreBox = ({ items, top, left }: MoreBoxProps) => {
     return (
-        <MenuWrapper $top={top} $right={right}>
+        <MenuWrapper $top={top} $left={left}>
             {items.map((item, index) => (
                 <MenuItem key={index} onClick={item.onClick}>
                     {item.text}
@@ -22,11 +22,11 @@ const MoreBox = ({ items, top, right }: MoreBoxProps) => {
 
 export default MoreBox;
 
-const MenuWrapper = styled.div<{ $top: number; $right: number }>`
+const MenuWrapper = styled.div<{ $top: number; $left: number }>`
     width: 175px;
     position: absolute;
     top: ${props => props.$top}px;
-    right: ${props => props.$right}px;
+    left: ${props => props.$left}px;
     z-index: 100;
     box-shadow: 0 0 21.3px 0 #00000026;
     background: ${theme.colors.white}; 
