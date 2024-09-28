@@ -6,10 +6,6 @@ import { MATCH_PAGE_DATA } from "@/data/match";
 import Image from "next/image";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-import { useEffect } from "react";
-import { connectSocket } from "@/socket";
 
 const HomePage = () => {
   const router = useRouter();
