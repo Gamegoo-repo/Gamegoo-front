@@ -30,9 +30,10 @@ import {
 } from "@/api/friends";
 import { useParams } from "next/navigation";
 import { blockMember, reportMember, unblockMember } from "@/api/member";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { getProfileBgColor } from "@/utils/profile";
+import { setMatchInfo } from "@/redux/slices/matchInfo";
 
 type profileType = "normal" | "wind" | "other" | "me";
 
@@ -51,10 +52,11 @@ const Profile: React.FC<Profile> = ({
   user,
   updateFriendState,
 }) => {
+  const dispatch = useDispatch();
   const { id } = useParams();
   const memberId = Number(id);
-
   const myId = useSelector((state: RootState) => state.user.id);
+
   const [isMike, setIsMike] = useState<boolean>(user.mike);
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
   const [isReportBoxOpen, setIsReportBoxOpen] = useState(false);
@@ -80,10 +82,29 @@ const Profile: React.FC<Profile> = ({
     want: user.subP,
   });
 
+  const matchInfo = useSelector((state: RootState) => state.matchInfo);
+
   /* 선택된 현재 프로필 이미지 */
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(
     user.profileImg
   );
+
+  useEffect(() => {
+    const gameStyleIds = user.gameStyleResponseDTOList.map(
+      (style) => style.gameStyleId
+    );
+
+    dispatch(
+      setMatchInfo({
+        mike: isMike,
+        mainP: positionValue.main ?? null,
+        subP: positionValue.sub ?? null,
+        wantP: positionValue.want ?? null,
+        gameStyleResponseDTOList: gameStyleIds,
+      })
+    );
+    console.log("isMike:", isMike);
+  }, [isMike, positionValue, dispatch, user.gameStyleResponseDTOList]);
 
   /* 프로필 이미지 리스트 중 클릭시*/
   const handleImageClick = (index: number) => {
@@ -95,8 +116,8 @@ const Profile: React.FC<Profile> = ({
   };
 
   useEffect(() => {
-    setIsMike(user.mike);
-  }, [user.mike]);
+    setIsMike(isMike);
+  }, [isMike]);
 
   const handleMike = () => {
     setIsMike(!isMike);
@@ -168,29 +189,33 @@ const Profile: React.FC<Profile> = ({
   /* 포지션 선택창 관련 함수*/
   // 포지션 선택창 열기 (포지션 클릭시 동작)
   const handlePosition = async (index: number) => {
-    setIsPositionOpen((prev) =>
-      prev.map((isOpen, i) => (i === index ? !isOpen : false))
-    );
-    setSelectedBox(
-      index === 0
-        ? "main" ?? null
-        : index === 1
-        ? "sub" ?? null
-        : "want" ?? null
-    );
+    if (profileType !== "other") {
+      setIsPositionOpen((prev) =>
+        prev.map((isOpen, i) => (i === index ? !isOpen : false))
+      );
+      setSelectedBox(
+        index === 0
+          ? "main" ?? null
+          : index === 1
+          ? "sub" ?? null
+          : "want" ?? null
+      );
+    }
   };
 
   // 포지션 선택창 닫기
   const handlePositionClose = (index: number) => {
-    setIsPositionOpen((prev) =>
-      prev.map((isOpen, i) => (i === index ? false : isOpen))
-    );
+    if (profileType !== "other") {
+      setIsPositionOpen((prev) =>
+        prev.map((isOpen, i) => (i === index ? false : isOpen))
+      );
+    }
   };
 
   // 포지션 선택해 변경하기
   const handlePositionChange = async (newPositionValue: PositionState) => {
     // setPositionValue(newPositionValue);
-    if (newPositionValue.main && newPositionValue.sub) {
+    if (profileType === "me" && newPositionValue.main && newPositionValue.sub) {
       try {
         // 포지션 변경 API 호출
         await putPosition({
@@ -203,6 +228,15 @@ const Profile: React.FC<Profile> = ({
       } catch (error) {
         console.error("포지션 변경 실패:", error);
       }
+    } else if (profileType === "normal" || profileType === "wind") {
+      dispatch(
+        setMatchInfo({
+          ...matchInfo,
+          mainP: newPositionValue.main ?? null,
+          subP: newPositionValue.sub ?? null,
+          wantP: newPositionValue.want ?? null,
+        })
+      );
     }
   };
 

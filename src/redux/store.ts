@@ -5,6 +5,7 @@ import modalReducer from "./slices/modalSlice";
 import mannerStatusReducer from "./slices/mannerStatusSlice";
 import postReducer from "./slices/postSlice";
 import passwordReducer from "./slices/passwordSlice";
+import matchInfoReducer from "./slices/matchInfo";
 
 export const store = () => {
   return configureStore({
@@ -14,11 +15,15 @@ export const store = () => {
       user: userReducer,
       modal: modalReducer,
       mannerStatus: mannerStatusReducer,
-      post: postReducer
+      post: postReducer,
+      matchInfo: matchInfoReducer,
     },
   })
 }
 
+
 export type AppStore = ReturnType<typeof store>;
 export type RootState = ReturnType<AppStore['getState']>;
 export type AppDispatch = AppStore['dispatch'];
+
+export default store;
