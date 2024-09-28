@@ -7,15 +7,19 @@ interface TermModalProps {
   title: string;
   content: string;
   onClose: () => void;
+  children?: React.ReactNode;
 }
 const TermModal = (props: TermModalProps) => {
-  const { title, content, onClose } = props;
+  const { title, content, onClose, children } = props;
 
   return (
     <Overlay>
       <Container>
         <Top>
-          {title}
+          <Title>
+            {!title.includes("(선택)") && <Required>*</Required>}
+            <TitleText>{title}</TitleText>
+          </Title>
           <Image
             src="/assets/icons/close_modal.svg"
             width={16}
@@ -25,7 +29,10 @@ const TermModal = (props: TermModalProps) => {
             style={{ cursor: "pointer" }}
           />
         </Top>
-        <Content>{content}</Content>
+        <Content>
+          {content}
+          {children}
+        </Content>
       </Container>
     </Overlay>
   );
@@ -43,7 +50,7 @@ const Overlay = styled.div`
 `;
 
 const Container = styled.div`
-  width: 523px;
+  width: 630px;
   height: 785px;
   padding: 32px 38px;
   border-radius: 30px;
@@ -71,9 +78,48 @@ const Top = styled.div`
 const Content = styled.div`
   width: 100%;
   height: 100%;
-  padding: 28px 18px;
+  padding: 28px 18px 28px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 23px;
   border-radius: 12px;
   background: ${theme.colors.gray500};
   color: #000;
-  overflow-y: scroll;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 24px;
+    height: 100px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    /* width: 6px; */
+    border-radius: 26px;
+    background: ${theme.colors.gray200};
+    background-clip: padding-box;
+    border: 8px solid transparent;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+`;
+
+const Title = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+`;
+
+const Required = styled.span`
+  position: absolute;
+  top: -12px;
+  left: 0;
+  color: ${theme.colors.error100};
+  margin-right: 6px;
+`;
+
+const TitleText = styled.div`
+  margin-left: 10px;
 `;

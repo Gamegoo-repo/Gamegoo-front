@@ -27,11 +27,12 @@ const Terms = () => {
   const [modalData, setModalData] = useState<{
     title: string;
     content: string;
+    index: number;
   } | null>(null);
 
   /* redux 업데이트 */
   useEffect(() => {
-    setTerms(terms);
+    setTerms(termsRedux || [false, false, false]);
   }, [termsRedux]);
 
   const handleCheckboxChange = (index: number, isChecked: boolean) => {
@@ -45,30 +46,29 @@ const Terms = () => {
     router.push("/join/email");
   };
 
-  const openModal = (type: string) => {
+  const openModal = (type: string, index: number) => {
     switch (type) {
       case "SERVICE":
-        setModalData(SERVICE_TERMS);
+        setModalData({ ...SERVICE_TERMS, index });
         break;
       case "PRIVATE":
-        setModalData(PRIVATE_TERMS);
+        setModalData({ ...PRIVATE_TERMS, index });
         break;
       case "MARKETING":
-        setModalData(MARKETING_TERMS);
+        setModalData({ ...MARKETING_TERMS, index });
         break;
       default:
         setModalData(null);
     }
   };
 
-  const allRequiredChecked = createTerms(openModal).every(
-    (term, index) => !term.require || (term.require && terms[index])
-  );
+  const allRequiredChecked = createTerms((type, index) =>
+    openModal(type, index)
+  ).every((term, index) => !term.require || (term.require && terms[index]));
 
   const closeModal = () => {
     setModalData(null);
   };
-
   return (
     <Div>
       <Label>아래 이용 약관을 확인해주세요.</Label>
@@ -77,21 +77,40 @@ const Terms = () => {
           title={modalData.title}
           content={modalData.content}
           onClose={closeModal}
-        />
-      )}
-      <CheckList>
-        {createTerms(openModal).map((item, index) => (
+        >
           <Checkbox
-            key={item.id}
             value="terms"
-            isChecked={terms[index]}
-            onChange={(isChecked) => handleCheckboxChange(index, isChecked)}
+            isChecked={terms[modalData.index]}
+            onChange={(isChecked) =>
+              handleCheckboxChange(modalData.index, isChecked)
+            }
             fontSize="regular16"
             color="darkGray100"
+            gap="10px"
           >
-            {item.text}
+            {
+              createTerms((type, index) => openModal(type, index))[
+                modalData.index
+              ].text
+            }
           </Checkbox>
-        ))}
+        </TermModal>
+      )}
+      <CheckList>
+        {createTerms((type, index) => openModal(type, index)).map(
+          (item, index) => (
+            <Checkbox
+              key={item.id}
+              value="terms"
+              isChecked={terms[index]}
+              onChange={(isChecked) => handleCheckboxChange(index, isChecked)}
+              fontSize="regular16"
+              color="darkGray100"
+            >
+              {item.text}
+            </Checkbox>
+          )
+        )}
       </CheckList>
       <Button
         buttonType="primary"
@@ -118,8 +137,10 @@ const Label = styled.div`
 `;
 
 const CheckList = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 25px;
   margin-bottom: 45px;
 `;
