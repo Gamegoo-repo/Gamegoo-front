@@ -167,7 +167,7 @@ const PostBoard = (props: PostBoardProps) => {
       );
 
       console.log("updates", params);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   /* 글쓰기 */
@@ -209,7 +209,7 @@ const PostBoard = (props: PostBoardProps) => {
       try {
         await postBoard(params);
         await dispatch(setOpenModal("completedPost"));
-      } catch (error) {}
+      } catch (error) { }
     }
   };
 

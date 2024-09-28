@@ -168,9 +168,9 @@ const BoardPage = () => {
 
   /* 글쓰기 모달 오픈 */
   const handlePostingOpen = () => {
-    if (!isUser.id) {
-      return setShowAlert(true);
-    }
+    // if (!isUser.id) {
+    //   return setShowAlert(true);
+    // }
     dispatch(setOpenPostingModal());
   };
 

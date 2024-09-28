@@ -2,18 +2,16 @@ import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
 import { useEffect, useState } from "react";
-import { MannerKeywords, OthersManner } from "@/interface/manner";
+import { MannerKeywords } from "@/interface/manner";
 import { getOthersManner } from "@/api/manner";
 
 interface MannerLevelBoxProps {
   memberId: number;
   level: number;
-  top: string;
-  right: string;
 }
 
 const MannerLevelBox = (props: MannerLevelBoxProps) => {
-  const { memberId, level, top, right } = props;
+  const { memberId, level } = props;
 
   const [positiveKeywords, setPositiveKeywords] = useState<MannerKeywords[]>([]);
   const [negativeKeywords, setNegativeKeywords] = useState<MannerKeywords[]>([]);
@@ -45,7 +43,7 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
   };
 
   return (
-    <Wrapper $top={top} $right={right}>
+    <Wrapper>
       <Title>매너 레벨 {level}</Title>
       <MannerEvaluations>
         <Div>
@@ -87,10 +85,10 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
 
 export default MannerLevelBox;
 
-const Wrapper = styled.div<{ $top: string; $right: string }>`
+const Wrapper = styled.div`
   position: absolute;
-  top: ${({ $top }) => $top};
-  right: ${({ $right }) => $right};
+  top: 69%;
+  left:25%;
   padding: 16px 32px 34px;
   box-shadow: 0 0 21.3px 0 #00000026;
   backdrop-filter: blur(10px);

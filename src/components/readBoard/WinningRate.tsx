@@ -4,11 +4,11 @@ import ProgressBar from "@ramonak/react-progress-bar";
 
 interface WinningRateProps {
     completed: number;
-    history: number;
+    recentGameCount: number;
 }
 
 const WinningRate = (props: WinningRateProps) => {
-    const { completed, history } = props;
+    const { completed, recentGameCount } = props;
     return (
         <>
             <FirstRow>
@@ -19,7 +19,7 @@ const WinningRate = (props: WinningRateProps) => {
                 <Right>
                     {!!history &&
                         <History>
-                            글 작성 시점 최근 {history}게임
+                            글 작성 시점 최근 {recentGameCount === null ? 0 : recentGameCount}게임
                         </History>
                     }
                 </Right>

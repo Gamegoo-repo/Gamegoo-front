@@ -1,5 +1,10 @@
 import { MannerKeywords } from "./manner";
 
+interface ChampionResponseDTOList {
+    championId: number;
+    championName: string;
+}
+
 export interface BoardList {
     boardId: number;
     memberId: number;
@@ -12,11 +17,10 @@ export interface BoardList {
     mainPosition: number;
     subPosition: number;
     wantPosition: number;
-    championList: number[];
+    championResponseDTOList: ChampionResponseDTOList[];
     winRate: number;
     createdAt: string;
     mike: boolean;
-    rank: number;
 };
 
 export interface MemberPost {

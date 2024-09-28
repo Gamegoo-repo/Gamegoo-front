@@ -76,7 +76,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
             }
 
             // 게시글에서 채팅방 입장
-            if (apiType === 3 && typeof isChatUuid === "number") {
+            if (apiType === 2 && typeof isChatUuid === "number") {
                 const data = await enterUsingBoardId(isChatUuid);
                 setChatEnterData(data.result);
                 setIsSystemMsg(data.result.system);

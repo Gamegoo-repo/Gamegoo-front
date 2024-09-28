@@ -30,6 +30,11 @@ interface TableTitleProps {
     name: string;
 }
 
+interface ChampionResponseDTOList {
+    championId: number;
+    championName: string;
+}
+
 interface TableContentProps {
     boardId: number;
     memberId: number;
@@ -42,9 +47,10 @@ interface TableContentProps {
     mainPosition: number;
     subPosition: number;
     wantPosition: number;
-    championResponseDTOList: number[];
+    championResponseDTOList: ChampionResponseDTOList[];
     winRate: number;
     createdAt: string;
+    mike: boolean;
 }
 
 interface TableProps {
@@ -122,6 +128,8 @@ const Table = (props: TableProps) => {
     /* 다른 사람 프로필 이동 */
     const handleUserProfilePage = (e: React.MouseEvent) => {
         e.stopPropagation();
+
+        if (!targetMemberId) return;
         router.push("/user");
     };
 
@@ -322,15 +330,15 @@ const Table = (props: TableProps) => {
                                                 //     height={50}
                                                 //     alt="챔피언 이미지"
                                                 // />
-                                                data
+                                                data.championName
                                         )}
                                     </Sixth>
                                     <Seventh className="table_width">
-                                        {data.winRate && (
-                                            <P className={data.winRate >= 50 ? "emph" : "basic"}>
-                                                {data.winRate}%
-                                            </P>
-                                        )}
+
+                                        <P className={data.winRate >= 50 ? "emph" : "basic"}>
+                                            {data.winRate === null ? '0%' : `${data.winRate}%`}
+                                        </P>
+
                                     </Seventh>
                                     <Eighth className="table_width">
                                         <P>{setDateFormatter(data.createdAt)}</P>
