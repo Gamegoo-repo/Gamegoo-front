@@ -110,7 +110,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                         systemMessage = {
                             senderId: 0,
                             senderName: "SYSTEM",
-                            senderProfileImg: 0,
+                            senderProfileImg: null,
                             message: "상대방이 게시한 글을 보고 말을 걸었어요. 대화를 시작해보세요~",
                             createdAt: null,
                             timestamp: null,
@@ -120,7 +120,7 @@ const ChatRoom = (props: ChatRoomProps) => {
                         systemMessage = {
                             senderId: 0,
                             senderName: "SYSTEM",
-                            senderProfileImg: 0,
+                            senderProfileImg: null,
                             message: "상대방이 게시한 글을 보고 말을 걸었어요.",
                             createdAt: null,
                             timestamp: null,

@@ -228,19 +228,9 @@ const Table = (props: TableProps) => {
             {isReadingModal && (
                 <ReadBoard postId={isBoardId} />
             )}
-            {/* {isChatRoomOpen && <ChatRoom
-                api="board"
-                chatId={isBoardId}
-                onMemberId={handleMemberIdGet}
-                onMannerEdit={handleMannerEdit}
-                onMannerCheckboxChange={handleMannerCheckboxChange}
-                onBadMannerCheckboxChange={handleBadMannerCheckboxChange}
-                onMannerPost={handleMannerPost}
-                onBadMannerPost={handleBadMannerPost}
-            />} */}
 
             {isChatRoomOpen &&
-                <ChatLayout apiType={3} />}
+                <ChatLayout apiType={2} />}
 
             {copiedAlert && (
                 <Copied>

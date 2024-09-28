@@ -250,7 +250,7 @@ const MessageList = (props: MessageListProps) => {
                         const hasProfileImage = handleDisplayProfileImage(messageList, index);
                         const showTime = handleDisplayTime(messageList, index);
                         return (
-                            <MsgContainer>
+                            <MsgContainer key={index}>
                                 {handleDisplayDate(messageList, index) && <Timestamp>{setChatDateFormatter(message.createdAt)}</Timestamp>}
                                 {message.systemType === 0 ? (
                                     <SystemMessage
@@ -279,7 +279,7 @@ const MessageList = (props: MessageListProps) => {
                                     </>
                                 ) : message.senderId === chatEnterData?.memberId ? (
                                     <YourMessageContainer>
-                                        {handleDisplayProfileImage(messageList, index) && (
+                                        {handleDisplayProfileImage(messageList, index) && message.senderProfileImg && (
                                             <ImageWrapper $bgColor={getProfileBgColor(message.senderProfileImg)}>
                                                 <ProfileImage
                                                     src={`/assets/images/profile/profile${message.senderProfileImg}.svg`}

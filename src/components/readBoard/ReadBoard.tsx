@@ -33,7 +33,8 @@ import { cancelFriendReq, deleteFriend, reqFriend } from "@/api/friends";
 import Alert from "../common/Alert";
 import { AlertProps } from "@/interface/modal";
 import { useRouter } from "next/navigation";
-import { openChatRoom, setErrorMessage } from "@/redux/slices/chatSlice";
+import { openChatRoom, setChatRoomUuid, setErrorMessage } from "@/redux/slices/chatSlice";
+import ChatLayout from "../chat/ChatLayout";
 
 interface ReadBoardProps {
   postId: number;
@@ -71,7 +72,6 @@ const ReadBoard = (props: ReadBoardProps) => {
   const isModalType = useSelector((state: RootState) => state.modal.modalType);
   const isUser = useSelector((state: RootState) => state.user);
   const isErrorMessage = useSelector((state: RootState) => state.chat.errorMessage);
-  const isChatOpen = useSelector((state: RootState) => state.chat.isChatOpen);
 
   /* 게시글 api */
   useEffect(() => {
@@ -272,9 +272,9 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 매너레벨 박스 열기 */
   const handleMannerLevelBoxOpen = () => {
-    // if (!isUser.id) {
-    //   return showAlertWithContent(loginRequiredMessage, () => setShowAlert(false), "확인");
-    // }
+    if (!isUser.id) {
+      return showAlertWithContent(loginRequiredMessage, () => setShowAlert(false), "확인");
+    }
 
     setIsMannerLevelBoxOpen((prevState) => !prevState);
   };
@@ -411,13 +411,15 @@ const ReadBoard = (props: ReadBoardProps) => {
     //   if (!isUser.id) {
     //     return showAlertWithContent(loginRequiredMessage, () => setShowAlert(false), "확인");
     //  }
-    // TODO : 수정 필
+
     if (isErrorMessage) {
       alert(isErrorMessage);
       dispatch(setErrorMessage(null));
     } else {
       try {
         dispatch(setCloseReadingModal());
+        if (!isPost) return;
+        dispatch(setChatRoomUuid(isPost.boardId));
         dispatch(openChatRoom());
       } catch (error) {
         console.error(error);
@@ -432,7 +434,6 @@ const ReadBoard = (props: ReadBoardProps) => {
         {showAlert && <Alert {...alertProps} />}
         {isPost && (
           <>
-            {isChatOpen && <Layout />}
             {isMoreBoxOpen && (
               <MoreBox
                 items={MoreBoxMenuItems}
@@ -476,7 +477,7 @@ const ReadBoard = (props: ReadBoardProps) => {
             </UserSection>
             <ChampionNQueueSection>
               <Champion
-                list={isPost.championList}
+                list={isPost.championResponseDTOList}
                 size={14} />
               <QueueType
                 value={isPost.gameMode} />
@@ -508,6 +509,7 @@ const ReadBoard = (props: ReadBoardProps) => {
                 </MemoData>
               </Memo>
             </MemoSection>
+            {/* {isUser.id === isPost.memberId && */}
             <ButtonContent $gameType={type}>
               <Button
                 type="submit"
@@ -515,6 +517,7 @@ const ReadBoard = (props: ReadBoardProps) => {
                 text="말 걸어보기"
                 onClick={handleChatStart} />
             </ButtonContent>
+            {/* } */}
           </>
         )}
       </CRModal>

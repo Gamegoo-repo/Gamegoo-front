@@ -26,7 +26,7 @@ export interface SystemMessage {
 export interface DesignedSystemMessage {
     senderId: number;
     senderName: string | null;
-    senderProfileImg: number;
+    senderProfileImg: null;
     message: string;
     createdAt: null;
     timestamp: null;
@@ -37,7 +37,7 @@ export interface DesignedSystemMessage {
 export interface ChatMessageDto {
     senderId: number;
     senderName: string | null;
-    senderProfileImg: number;
+    senderProfileImg: number | null;
     message: string;
     createdAt: string;
     timestamp: number;

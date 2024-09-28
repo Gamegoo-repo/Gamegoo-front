@@ -23,12 +23,29 @@ const ChatButton = () => {
     setUnreadChatUuids(unreadUuid);
   }, [unreadUuid])
 
+  /* localStorage의 unreadChatUuids가 변경될 때 상태 업데이트 */
   useEffect(() => {
     const localUnreadChatUuids = localStorage.getItem('unreadChatUuids');
     if (localUnreadChatUuids) {
       setUnreadChatUuids(JSON.parse(localUnreadChatUuids));
     }
   }, [unreadUuid]);
+
+  /* localStorage가 변경되면 상태 업데이트 */
+  useEffect(() => {
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === 'unreadChatUuids') {
+        const updatedUnreadUuids = event.newValue ? JSON.parse(event.newValue) : [];
+        setUnreadChatUuids(updatedUnreadUuids);
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
 
   const chatCount = unreadChatUuids ? unreadChatUuids.length : 0;
 
@@ -70,7 +87,7 @@ const ChatButton = () => {
         />
       )}
       <ChatBoxContent>
-      {isChatOpen && <Layout />}
+        {isChatOpen && <Layout />}
         <MsgButton onClick={handleToggleChat}>
           <Image
             src="/assets/icons/chat_box.svg"

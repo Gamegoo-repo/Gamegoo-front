@@ -6,8 +6,8 @@ import MessageInput from "./MessageInput";
 import { useEffect, useState } from "react";
 import { AxiosError } from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { closeChatRoom, setErrorMessage } from "@/redux/slices/chatSlice";
-import { Chat, ChatroomList, DesignedSystemMessage } from "@/interface/chat";
+import { closeChatRoom, setCurrentChatUuid, setErrorMessage, setUnreadUuid } from "@/redux/slices/chatSlice";
+import { Chat, DesignedSystemMessage } from "@/interface/chat";
 import { enterUsingBoardId, enterUsingMemberId, enterUsingUuid, leaveChatroom } from "@/api/chat";
 import { RootState } from "@/redux/store";
 import { socket } from "@/socket";
@@ -66,28 +66,32 @@ const ChatLayout = (props: ChatLayoutProps) => {
             if (apiType === 0 && typeof isChatUuid === "number") {
                 const data = await enterUsingMemberId(isChatUuid);
                 setChatEnterData(data.result);
-                console.log('xcvxcvcx', data.result);
+                dispatch(setCurrentChatUuid(data.result.uuid));
+                removeUnreadUuid(data.result.uuid);
             }
 
             // 대화방에서 채팅방 입장
             if (apiType === 1 && typeof isChatUuid === "string") {
                 const data = await enterUsingUuid(isChatUuid);
                 setChatEnterData(data.result);
+                dispatch(setCurrentChatUuid(data.result.uuid));
+                removeUnreadUuid(data.result.uuid);
             }
 
             // 게시글에서 채팅방 입장
             if (apiType === 2 && typeof isChatUuid === "number") {
                 const data = await enterUsingBoardId(isChatUuid);
                 setChatEnterData(data.result);
+                dispatch(setCurrentChatUuid(data.result.uuid));
                 setIsSystemMsg(data.result.system);
-
+                removeUnreadUuid(data.result.uuid);
                 // 실시간으로 시스템 메시지 보여주기 위함
                 let systemMessage: DesignedSystemMessage;
                 if (data.result.system.flag === 1) {
                     systemMessage = {
                         senderId: 0,
                         senderName: null,
-                        senderProfileImg: 0,
+                        senderProfileImg: null,
                         message: "상대방이 게시한 글을 보고 말을 걸었어요. 대화를 시작해보세요~",
                         createdAt: null,
                         timestamp: null,
@@ -98,7 +102,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
                     systemMessage = {
                         senderId: 0,
                         senderName: null,
-                        senderProfileImg: 0,
+                        senderProfileImg: null,
                         message: "상대방이 게시한 글을 보고 말을 걸었어요.",
                         createdAt: null,
                         timestamp: null,
@@ -116,8 +120,25 @@ const ChatLayout = (props: ChatLayoutProps) => {
     };
 
     useEffect(() => {
-        handleChatEnter();
-    }, [isChatUuid])
+        if (isChatUuid) {
+            handleChatEnter();
+        }
+    }, [isChatUuid]);
+
+    /* 읽은 채팅 채팅 버튼에 실시간으로 반영 */
+    const removeUnreadUuid = (uuidToRemove: string) => {
+        const unreadUuids = localStorage.getItem('unreadChatUuids');
+
+        if (unreadUuids) {
+            let unreadUuidsArray: string[] = JSON.parse(unreadUuids);
+            unreadUuidsArray = unreadUuidsArray.filter(uuid => uuid !== uuidToRemove);
+
+            localStorage.setItem('unreadChatUuids', JSON.stringify(unreadUuidsArray));
+
+            // 채팅 버튼에 실시간 반영 위함
+            dispatch(setUnreadUuid(unreadUuidsArray));
+        }
+    };
 
     /* 채팅방 나가기 */
     const handleChatLeave = async () => {

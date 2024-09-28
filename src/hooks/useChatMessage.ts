@@ -18,6 +18,7 @@ const useChatMessage = () => {
         const handleChatMessage = (res: any) => {
             const chatroomUuid = res.data.chatroomUuid;
             const newChatTimestamp = res.data.timestamp;
+
             /* 현재 보고 있는 채팅방 읽음 처리 */
             if (currentChatUuid && chatroomUuid === currentChatUuid) {
                 markChatAsRead(currentChatUuid, newChatTimestamp);
@@ -60,7 +61,7 @@ const useChatMessage = () => {
         socket.on("chat-system-message", handleSystemMessage);
 
         return () => {
-            socket.off("chat-message", handleChatMessage);
+            // socket.off("chat-message", handleChatMessage);
             socket.off("my-message-broadcast-success", handleMyMessage);
             socket.off("chat-system-message", handleSystemMessage);
         };

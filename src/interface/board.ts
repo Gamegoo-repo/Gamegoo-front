@@ -1,6 +1,6 @@
 import { MannerKeywords } from "./manner";
 
-interface ChampionResponseDTOList {
+export interface ChampionResponseDTOList {
     championId: number;
     championName: string;
 }
@@ -21,7 +21,7 @@ export interface BoardList {
     winRate: number;
     createdAt: string;
     mike: boolean;
-};
+}
 
 export interface MemberPost {
     boardId: number;
@@ -37,7 +37,7 @@ export interface MemberPost {
     mannerKeywords: MannerKeywords[];
     tier: string;
     mike: boolean;
-    championList: number[];
+    championResponseDTOList: ChampionResponseDTOList[];
     gameMode: number;
     mainPosition?: number;
     subPosition?: number;
@@ -46,7 +46,7 @@ export interface MemberPost {
     winRate: number;
     gameStyles: number[];
     contents: string;
-    rank:number;
+    rank: number;
 }
 
 export interface NonMemberPost {
@@ -59,7 +59,7 @@ export interface NonMemberPost {
     mannerLevel: number;
     tier: string;
     mike: boolean;
-    championList: number[];
+    championResponseDTOList: ChampionResponseDTOList[];
     gameMode: number;
     mainPosition?: number;
     subPosition?: number;
@@ -68,7 +68,7 @@ export interface NonMemberPost {
     winRate: number;
     gameStyles: number[];
     contents: string;
-    rank:number;
+    rank: number;
 }
 
 export interface PostReq {

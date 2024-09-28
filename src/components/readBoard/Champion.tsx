@@ -1,8 +1,9 @@
 import styled from "styled-components";
 import Image from "next/image";
+import { ChampionResponseDTOList } from "@/interface/board";
 
 interface ChampionProps {
-  list: number[];
+  list: ChampionResponseDTOList[];
   size?: number;
 }
 
