@@ -7,8 +7,24 @@ import Mic from "../readBoard/Mic";
 import Box from "../common/Box";
 import MannerLevelBox from "../common/MannerLevelBox";
 import { setAbbrevTier, setPositionImg } from "@/utils/custom";
-import { User } from "@/interface/profile";
+import { getProfileBgColor } from "@/utils/profile";
 import { toLowerCaseString } from "@/utils/string";
+
+interface User {
+  memberId: number;
+  gameName: string;
+  tag: string;
+  tier: string;
+  rank: number;
+  mannerLevel: number;
+  profileImg: number;
+  gameMode: number;
+  mainPosition: number;
+  subPosition: number;
+  wantPosition: number;
+  mike: boolean;
+  gameStyleList: string[];
+}
 
 interface SquareProfileProps {
   opponent?: boolean;
@@ -33,23 +49,25 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
           <Rank>
             <Image
               src={`/assets/images/tier/${
-                toLowerCaseString(user.tier) || "ur"
+                user.tier !== "null" ? toLowerCaseString(user.tier) : "ur"
               }.svg`}
               width={43}
               height={43}
-              alt={user.tier}
+              alt="tier"
             />
             {setAbbrevTier(user.tier)}
-            {user.rank}
+            {user.rank ? user.rank : ""}
           </Rank>
         </Top>
         <ImageContainer>
-          <Image
-            src="/assets/images/profile.svg"
-            width={144}
-            height={144}
-            alt="프로필"
-          />
+          <ProfileImgWrapper $bgColor={getProfileBgColor(user.profileImg)}>
+            <ProfileImg
+              src={`/assets/images/profile/profile${user.profileImg}.svg`}
+              width={100}
+              height={100}
+              alt="profile"
+            />
+          </ProfileImgWrapper>
           {opponent && (
             <>
               <Level onClick={handleMannerLevel}>LV. 5</Level>
@@ -65,10 +83,11 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
             </>
           )}
         </ImageContainer>
-        <Mic status={false} />
+        <Mic status={user.mike} />
         <RowBox>
-          <Box shape="round" text="원챔러" />
-          <Box shape="round" text="승급 뿌셔" />
+          {user.gameStyleList.slice(0, 2).map((item, index) => (
+            <Box key={index} shape="round" text={item} />
+          ))}
         </RowBox>
         <Row>
           <Position>
@@ -76,7 +95,9 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
               <Posi key={index}>
                 {POSITIONS[index].label}
                 <Image
-                  src={setPositionImg(index === 0 ? user.mainP : user.subP)}
+                  src={setPositionImg(
+                    index === 0 ? user.mainPosition : user.subPosition
+                  )}
                   width={39}
                   height={31}
                   alt="포지션"
@@ -89,9 +110,7 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
               <Posi key={index}>
                 {POSITIONS[2].label}
                 <Image
-                  // 추후 want 값 받아서
-                  // src={setPositionImg(user.want)}
-                  src={setPositionImg(user.mainP)}
+                  src={setPositionImg(user.wantPosition)}
                   width={39}
                   height={31}
                   alt="포지션"
@@ -142,6 +161,21 @@ const ImageContainer = styled.div`
   justify-content: center;
   position: relative;
   overflow-x: visible;
+`;
+
+const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
+  position: relative;
+  width: 144px;
+  height: 144px;
+  background: ${(props) => props.$bgColor};
+  border-radius: 50%;
+`;
+
+const ProfileImg = styled(Image)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `;
 
 const Level = styled.button`
