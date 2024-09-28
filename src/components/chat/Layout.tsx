@@ -27,7 +27,6 @@ const Layout = () => {
 
     /* 채팅방 입장 */
     const handleGoToChatRoom = (id: string | number) => {
-        console.log('id:', id)
         dispatch(setChatRoomUuid(id));
         dispatch(openChatRoom());
         // TODO

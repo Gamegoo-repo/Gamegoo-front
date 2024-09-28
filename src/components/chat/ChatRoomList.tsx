@@ -11,6 +11,8 @@ import { cancelFriendReq, deleteFriend, reqFriend } from '@/api/friends';
 import { RootState } from '@/redux/store';
 import { getChatrooms } from '@/api/chat';
 import ChatRoomItem from './ChatRoomItem';
+import useChatMessage from '@/hooks/useChatMessage';
+import { setCurrentChatUuid } from '@/redux/slices/chatSlice';
 
 interface ChatRoomListProps {
     onChatRoom: (id: string) => void;
@@ -28,13 +30,41 @@ const ChatRoomList = (props: ChatRoomListProps) => {
     const [chatrooms, setChatrooms] = useState<ChatroomList[]>([]);
     const [reloadChatrooms, setReloadChatrooms] = useState(false);
     const [isMoreBoxOpen, setIsMoreBoxOpen] = useState<number | null>(null);
-
     const [isUuid, setIsUuid] = useState("");
     const [selectedChatroom, setSelectedChatroom] = useState<ChatroomList | null>(null);
     const [isMannerStatus, setIsMannerStatus] = useState<Mannerstatus | undefined>();
     const [isBadMannerStatus, setIsBadMannerStatus] = useState<Mannerstatus | undefined>();
     const [targetMemberId, setTargetMemberId] = useState<number | null>(null);
     const [isMemberId, setIsMemberId] = useState<number>();
+
+    const { newMessage } = useChatMessage();
+
+    /* 대화방 목록 가져오기  */
+    useEffect(() => {
+        const handleFetchChatrooms = async () => {
+            try {
+                const data = await getChatrooms();
+                setChatrooms(data.result.chatroomViewDTOList);
+                dispatch(setCurrentChatUuid(''));
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        handleFetchChatrooms();
+    }, [isModalType, reloadChatrooms, activeTab])
+
+    /* 상태 변경하여 useEffect 트리거 */
+    const triggerReloadChatrooms = () => {
+        setReloadChatrooms(prev => !prev);
+    };
+
+    /* 새 메시지 오면 대화방 목록 업데이트 */
+    useEffect(() => {
+        if (newMessage) {
+            triggerReloadChatrooms();
+        }
+    }, [newMessage]);
 
     /* 더보기 버튼 여닫기 */
     const handleMoreBoxOpen = (chatId: number, uuid: string, room: ChatroomList, e: React.MouseEvent) => {
@@ -151,26 +181,6 @@ const ChatRoomList = (props: ChatRoomListProps) => {
         );
 
         return items;
-    };
-
-    /* 대화방 목록 가져오기  */
-    useEffect(() => {
-        const handleFetchChatrooms = async () => {
-            try {
-                const data = await getChatrooms();
-                setChatrooms(data.result.chatroomViewDTOList);
-                console.log(data.result)
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        handleFetchChatrooms();
-    }, [isModalType, reloadChatrooms, activeTab])
-
-    /* 상태 변경하여 useEffect 트리거 */
-    const triggerReloadChatrooms = () => {
-        setReloadChatrooms(prev => !prev);
     };
 
     /* 친구 추가 */

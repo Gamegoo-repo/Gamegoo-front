@@ -61,7 +61,7 @@ const useChatMessage = () => {
         socket.on("chat-system-message", handleSystemMessage);
 
         return () => {
-            // socket.off("chat-message", handleChatMessage);
+            socket.off("chat-message", handleChatMessage);
             socket.off("my-message-broadcast-success", handleMyMessage);
             socket.off("chat-system-message", handleSystemMessage);
         };
