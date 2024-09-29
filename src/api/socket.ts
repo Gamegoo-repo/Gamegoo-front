@@ -56,7 +56,9 @@ export const socketLogout = async () => {
 
 export const getSystemMsg = async (tier?: string) => {
     try {
-        const response = await axios.get(`https://socket.gamegoo.co.kr/socket/message${tier!==null&&`?tier=${tier}`}`);
+        const url = tier ? `https://socket.gamegoo.co.kr/socket/message?tier=${tier}` : `https://socket.gamegoo.co.kr/socket/message`;
+
+         const response = await axios.get(url);
         return response.data; 
     } catch (error: any) {
         if (error.response) {

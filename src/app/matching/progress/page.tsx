@@ -60,7 +60,6 @@ const Progress = () => {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const [currentMessage, setCurrentMessage] = useState<string>("");
-  const [isVisible, setIsVisible] = useState<boolean>(true);
   const [textVisible, setTextVisible] = useState<boolean>(true);
 
   const showMessage = async () => {
@@ -68,7 +67,7 @@ const Progress = () => {
     setTextVisible(false);
 
     setTimeout(async () => {
-      const messages = Math.random() < 0.5 ? messagesWithN : messagesWithoutN;
+      const messages = Math.random() < 0.5 ? messagesWithN : messagesWithN;
       const randomMessage =
         messages[Math.floor(Math.random() * messages.length)];
       /* 나와 같은 티어의 매칭 인원이 필요할 때 */
@@ -81,7 +80,6 @@ const Progress = () => {
         /* 시스템 메세지 API로부터 n 호출 */
         const response = await getSystemMsg();
         if (response && response.isSuccess) {
-          console.log("numberOfPlayers", response.result.number);
           setCurrentMessage(
             randomMessage.replace(/n/g, response.result.number.toString())
           );
