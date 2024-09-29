@@ -99,10 +99,9 @@ const Progress = () => {
     } else {
       setCurrentMessage(randomMessage);
     }
-
     setTimeout(() => {
       setTextVisible(false);
-    }, 300);
+    }, 100);
   };
 
   useEffect(() => {

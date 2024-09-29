@@ -91,11 +91,7 @@ const MyBlockedPage = () => {
       </MyBlockedContent>
       <Footer>
         <ChatBoxContent>
-<<<<<<< HEAD
-          <ChatButton count={3} />
-=======
           <ChatButton />
->>>>>>> 390f982122858b5bf880b20041ce3d528d1a1ef3
         </ChatBoxContent>
       </Footer>
     </Wrapper>

@@ -6,21 +6,10 @@ import { MATCH_PAGE_DATA } from "@/data/match";
 import Image from "next/image";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
-<<<<<<< HEAD
-=======
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-import { useEffect } from "react";
->>>>>>> 390f982122858b5bf880b20041ce3d528d1a1ef3
 
 const HomePage = () => {
   const router = useRouter();
 
-<<<<<<< HEAD
-=======
-  const isUser = useSelector((state: RootState) => state.user);
-
->>>>>>> 390f982122858b5bf880b20041ce3d528d1a1ef3
   return (
     <Wrapper>
       <HomeContent>
@@ -56,7 +45,7 @@ const HomePage = () => {
         </Main>
         <Footer>
           <ChatBoxContent>
-            <ChatButton/>
+            <ChatButton />
           </ChatBoxContent>
         </Footer>
       </HomeContent>
