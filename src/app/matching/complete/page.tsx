@@ -34,6 +34,8 @@ const Complete = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
+  const type = searchParams.get("type");
+  const rank = searchParams.get("rank");
   const [userMe, setUserMe] = useState<User>({
     memberId: 0,
     gameName: "",
@@ -220,7 +222,7 @@ const Complete = () => {
     socket?.emit("matching-reject");
     clearAllTimers();
     console.log("매칭 나가기 클릭");
-    router.push("/");
+    router.push(`/match/profile?type=${type}&rank=${rank}`);
 
     // 소켓 연결 여부 확인
     if (!socket) {

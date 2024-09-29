@@ -39,6 +39,8 @@ const Progress = () => {
   const [isRetrying, setIsRetrying] = useState<boolean>(false); // 매칭 재시도 여부
   const router = useRouter();
   const searchParams = useSearchParams();
+  const type = searchParams.get("type");
+  const rank = searchParams.get("rank");
   const retry = searchParams.get("retry");
 
   const user: User = {
@@ -129,8 +131,8 @@ const Progress = () => {
 
   useEffect(() => {
     if (socket) {
-      // 매칭 성공 (receiver)
-      socket.on("matching-found-receiver", (data) => {
+      // 매칭 성공 핸들러
+      const handleReceiverMatch = (data: any) => {
         console.log("매칭 상대 발견(receiver):", data);
         clearTimers();
         socket?.emit("matching-found-success", {
@@ -140,29 +142,37 @@ const Progress = () => {
         router.push(
           `/matching/complete?role=receiver&opponent=true&user=${encodeURIComponent(
             JSON.stringify(data.data)
-          )}`
+          )}&type=${type}&rank=${rank}`
         );
-      });
+      };
 
-      // 매칭 성공 (sender)
-      socket.on("matching-found-sender", (data) => {
+      const handleSenderMatch = (data: any) => {
         console.log("매칭 상대 발견(sender):", data);
         clearTimers();
         router.push(
           `/matching/complete?role=sender&opponent=true&user=${encodeURIComponent(
             JSON.stringify(data)
-          )}`
+          )}&type=${type}&rank=${rank}`
         );
-      });
+      };
+
+      // 소켓 이벤트 등록
+      socket.on("matching-found-receiver", handleReceiverMatch);
+      socket.on("matching-found-sender", handleSenderMatch);
     }
 
     // 2분 타이머 시작
     startMatchingProcess();
 
+    // Clean up 함수: 타이머 및 소켓 이벤트 제거
     return () => {
       clearTimers();
+      if (socket) {
+        socket.off("matching-found-receiver");
+        socket.off("matching-found-sender");
+      }
     };
-  }, []);
+  }, [socket, user, router, type, rank]);
 
   const startMatchingProcess = () => {
     // 매칭 재시도 여부에 따라 타이머 설정

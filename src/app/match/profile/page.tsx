@@ -89,11 +89,18 @@ const ProfilePage = () => {
       /* 매칭 시작 이벤트 */
       socket.on("matching-started", (data) => {
         console.log("매칭 시작됨:", data);
-        router.push(
-          `/matching/progress?${new URLSearchParams(data.data).toString()}${
-            retry && "&retry=true"
-          }`
-        );
+
+        const urlParams = new URLSearchParams({
+          ...data.data,
+          type: params || "", // 기존 type 파라미터 추가
+          rank: rank || "", // 기존 rank 파라미터 추가
+        });
+
+        if (retry) {
+          urlParams.append("retry", "true");
+        }
+
+        router.push(`/matching/progress?${urlParams.toString()}`);
       });
     } else {
       console.error("소켓이 연결되지 않았습니다.");
