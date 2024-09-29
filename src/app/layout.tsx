@@ -6,11 +6,12 @@ import { theme } from "@/styles/theme";
 import Header from "@/components/common/Header";
 import StyledComponentsRegistry from "@/libs/registry";
 import { Provider } from "react-redux";
-import { useRef } from "react";
-import { AppStore, store } from "@/redux/store";
+import { useEffect, useRef } from "react";
+import { AppStore, RootState, store } from "@/redux/store";
 import { usePathname } from "next/navigation";
 import SocketConnection from "@/components/socket/SocketConnection";
 import { Toaster } from "react-hot-toast";
+import { connectSocket } from "@/socket";
 
 export default function RootLayout({
   children,
@@ -31,6 +32,13 @@ export default function RootLayout({
     pathname.includes("/join") ||
     pathname.includes("/password")
   );
+
+  const isUser = (state: RootState) => state.user;
+
+  /* 로그인 이전 소켓 연결 */
+  useEffect(() => {
+    connectSocket();
+  }, []);
 
   return (
     <html>

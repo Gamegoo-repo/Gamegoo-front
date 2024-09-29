@@ -1,16 +1,16 @@
 import { theme } from "@/styles/theme";
 import { formatTimeAgo } from "@/utils/custom";
-import React, { useState } from "react";
+import React from "react";
 import styled, { css } from "styled-components";
 
 interface AlertBoxProps {
   notificationId: number;
-  pageUrl: string;
+  pageUrl: string | null;
   content: string;
   createdAt: string;
   read: boolean;
   size?: "small" | "medium";
-  onClick: (notificationId: number, pageUrl: string) => void;
+  onClick: (notificationId: number, pageUrl: string | null) => void;
 }
 
 const AlertBox: React.FC<AlertBoxProps> = ({
@@ -23,7 +23,9 @@ const AlertBox: React.FC<AlertBoxProps> = ({
   onClick,
 }) => {
   const handleChangeRead = () => {
-    onClick(notificationId, pageUrl);
+    if (!read) {
+      onClick(notificationId, pageUrl);
+    }
   };
   return (
     <Container $read={read} onClick={handleChangeRead} size={size}>

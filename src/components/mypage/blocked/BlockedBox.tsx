@@ -1,4 +1,4 @@
-import { blockMember, unblockMember } from "@/api/member";
+import { blockMember, deleteBlockMember, unblockMember } from "@/api/member";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import MoreBox from "@/components/common/MoreBox";
 import { theme } from "@/styles/theme";
@@ -6,13 +6,15 @@ import { getProfileBgColor } from "@/utils/profile";
 import Image from "next/image";
 import React, { useState } from "react";
 import MoreBoxButton from "../../readBoard/MoreBoxButton";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+import { useRouter } from "next/navigation";
 
 export interface BlockedBoxProps {
   memberId: number;
   profileImg: number;
   email: string;
   name: string;
+  isBlind: boolean;
 }
 
 const BlockedBox: React.FC<BlockedBoxProps> = ({
@@ -20,7 +22,9 @@ const BlockedBox: React.FC<BlockedBoxProps> = ({
   profileImg,
   email,
   name,
+  isBlind,
 }) => {
+  const router = useRouter();
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState<boolean>(false);
   const [isBlockBoxOpen, setIsBlockBoxOpen] = useState<boolean>(false);
   const [isBlockConfirmOpen, setIsBlockConfrimOpen] = useState<boolean>(false);
@@ -44,9 +48,24 @@ const BlockedBox: React.FC<BlockedBoxProps> = ({
     setIsBlockConfrimOpen(true);
   };
 
+  const handleDelete = () => {
+    setIsBlockBoxOpen(true);
+  };
+
+  const handleRunDelete = async () => {
+    setIsBlockBoxOpen(false);
+    // 탈퇴 회원 차단목록 삭제 api
+    await deleteBlockMember(memberId);
+  };
+
+  const handleShowProfile = () => {
+    if (!isBlind) {
+      router.push(`/user/${memberId}`);
+    }
+  };
   return (
-    <Container>
-      <Gap>
+    <Container onClick={handleShowProfile} $isBlind={isBlind}>
+      <Gap $isBlind={isBlind}>
         <ProfileImgWrapper $bgColor={getProfileBgColor(profileImg)}>
           <ProfileImg
             src={`/assets/images/profile/profile${profileImg}.svg`}
@@ -67,8 +86,14 @@ const BlockedBox: React.FC<BlockedBoxProps> = ({
           <MoreBox
             items={[
               {
-                text: `${isBlocked ? "차단 해제" : "차단"}`,
-                onClick: handleBlock,
+                text: `${isBlind ? "삭제" : isBlocked ? "차단 해제" : "차단"}`,
+                onClick: () => {
+                  if (isBlind) {
+                    handleDelete();
+                  } else {
+                    handleBlock();
+                  }
+                },
               },
             ]}
             top={15}
@@ -82,12 +107,22 @@ const BlockedBox: React.FC<BlockedBoxProps> = ({
           width="540px"
           primaryButtonText="예"
           secondaryButtonText="아니요"
-          onPrimaryClick={() => handleRunBlock()}
+          onPrimaryClick={() => {
+            if (isBlind) {
+              handleRunDelete();
+            } else {
+              handleRunBlock();
+            }
+          }}
           onSecondaryClick={() => {
             setIsBlockBoxOpen(false);
           }}
         >
-          {isBlocked ? (
+          {isBlind ? (
+            <MsgConfirm>
+              {"본 탈퇴 회원을 차단목록에서 삭제하시겠습니까?"}
+            </MsgConfirm>
+          ) : isBlocked ? (
             <MsgConfirm>{"차단을 해제 하시겠습니까?"}</MsgConfirm>
           ) : (
             <Msg>
@@ -119,22 +154,34 @@ const BlockedBox: React.FC<BlockedBoxProps> = ({
 
 export default BlockedBox;
 
-const Container = styled.div`
+const Container = styled.div<{ $isBlind: boolean }>`
   width: 100%;
   height: 90px;
-  padding: 17px 13px 17px 0px;
+  padding: 17px 13px 17px 13px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   color: ${theme.colors.gray600};
   border-bottom: 1px solid ${theme.colors.gray300};
   ${(props) => props.theme.fonts.semiBold18}
+
+  ${({ $isBlind }) =>
+    $isBlind &&
+    css`
+      background: #f0f0f01c;
+    `}
 `;
 
-const Gap = styled.div`
+const Gap = styled.div<{ $isBlind: boolean }>`
   display: flex;
   align-items: center;
   gap: 21px;
+
+  ${({ $isBlind }) =>
+    $isBlind &&
+    css`
+      opacity: 0.7;
+    `}
 `;
 
 const ProfileImgWrapper = styled.div<{ $bgColor: string }>`

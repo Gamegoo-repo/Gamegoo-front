@@ -5,6 +5,7 @@ import modalReducer from "./slices/modalSlice";
 import mannerStatusReducer from "./slices/mannerStatusSlice";
 import postReducer from "./slices/postSlice";
 import passwordReducer from "./slices/passwordSlice";
+import matchInfoReducer from "./slices/matchInfo";
 import chatReducer from "./slices/chatSlice";
 
 export const store = () => {
@@ -16,11 +17,15 @@ export const store = () => {
       modal: modalReducer,
       mannerStatus: mannerStatusReducer,
       post: postReducer,
+      matchInfo: matchInfoReducer,
       chat: chatReducer,
     },
   })
 }
 
+
 export type AppStore = ReturnType<typeof store>;
 export type RootState = ReturnType<AppStore['getState']>;
 export type AppDispatch = AppStore['dispatch'];
+
+export default store;

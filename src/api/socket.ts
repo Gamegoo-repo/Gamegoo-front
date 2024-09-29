@@ -43,8 +43,7 @@ export const socketLogout = async () => {
                 "Socket-Id": socketId,
             },
         });
-
-        console.log('소켓 서버에 로그아웃 요청 보냄');
+            console.log('소켓 서버에 로그아웃 요청 보냄');
     } catch (error: any) {
         if (error.response) {
             console.error('소켓 서버에 로그아웃 요청 실패:', error.response.statusText);
@@ -53,4 +52,28 @@ export const socketLogout = async () => {
         }
     }
 };
+
+export const getSystemMsg = async () => {
+    try {
+        const jwtToken = localStorage.getItem('refreshToken');
+        const socketId = localStorage.getItem('gamegooSocketId');
+
+        if (!jwtToken || !socketId) return;
+
+        const response = await SocketAxios.get("/socket/message", {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        
+        return response.data; 
+    } catch (error: any) {
+        if (error.response) {
+            console.error('시스템 메세지 조회 실패:', error.response.statusText);
+        } else {
+            console.error('에러:', error.message);
+        }
+    }
+}
+
 
