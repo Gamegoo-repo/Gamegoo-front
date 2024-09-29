@@ -71,8 +71,9 @@ const Complete = () => {
 
     if (userString) {
       try {
-        const decodedUser = JSON.parse(decodeURIComponent(userString)) as User;
-        setUser(decodedUser);
+        const decodedUser = JSON.parse(decodeURIComponent(userString));
+        setUser(decodedUser.data as User);
+        console.log("decodedUser", decodedUser);
       } catch (error) {
         console.error("Failed to parse user data:", error);
       }
@@ -182,7 +183,7 @@ const Complete = () => {
   const handleMatchingSuccessSender = () => {
     clearInterval(timerRef.current!);
     alert("매칭 성공!");
-    router.push("/chat");
+    // router.push("/chat");
   };
 
   // 매칭 실패 이벤트 핸들러
@@ -219,14 +220,14 @@ const Complete = () => {
     socket?.emit("matching-reject");
     clearAllTimers();
     console.log("매칭 나가기 클릭");
-    router.push("/home"); // 예시: 홈으로 이동
-  };
+    router.push("/");
 
-  // 소켓 연결 여부 확인
-  if (!socket) {
-    console.error("소켓이 연결되지 않았습니다.");
-    return null;
-  }
+    // 소켓 연결 여부 확인
+    if (!socket) {
+      console.error("소켓이 연결되지 않았습니다.");
+      return null;
+    }
+  };
 
   return (
     <Wrapper>
@@ -257,7 +258,7 @@ const Complete = () => {
           primaryButtonText="닫기"
           onPrimaryClick={() => {
             setShowFailModal(false);
-            router.push("/home");
+            router.push("/");
           }}
         >
           매칭에 실패했습니다.
