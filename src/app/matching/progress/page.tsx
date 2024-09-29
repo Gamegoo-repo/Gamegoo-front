@@ -60,56 +60,53 @@ const Progress = () => {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const [currentMessage, setCurrentMessage] = useState<string>("");
-  const [numberOfPlayers, setNumberOfPlayers] = useState<number | null>(null);
   const [isVisible, setIsVisible] = useState<boolean>(true);
   const [textVisible, setTextVisible] = useState<boolean>(true);
 
-  const fetchSystemMsg = async () => {
-    try {
-      const response = await getSystemMsg();
-      if (response && response.isSuccess) {
-        setNumberOfPlayers(response.result.number);
+  const showMessage = async () => {
+    /* 메세지 전환을 위해 0.5초 간 안 보이게 하기 */
+    setTextVisible(false);
+
+    setTimeout(async () => {
+      const messages = Math.random() < 0.5 ? messagesWithN : messagesWithoutN;
+      const randomMessage =
+        messages[Math.floor(Math.random() * messages.length)];
+      /* 나와 같은 티어의 매칭 인원이 필요할 때 */
+      if (messagesWithN[1] === randomMessage) {
+        const response = await getSystemMsg(user.tier);
+        setCurrentMessage(
+          randomMessage.replace(/n/g, response.result.number.toString())
+        );
+      } else if (messagesWithN.includes(randomMessage)) {
+        /* 시스템 메세지 API로부터 n 호출 */
+        const response = await getSystemMsg();
+        if (response && response.isSuccess) {
+          console.log("numberOfPlayers", response.result.number);
+          setCurrentMessage(
+            randomMessage.replace(/n/g, response.result.number.toString())
+          );
+        } else {
+          /* 에러 발생 시, messagesWithoutN에서 랜덤으로 메시지 설정 */
+          const randomMessage =
+            messagesWithoutN[
+              Math.floor(Math.random() * messagesWithoutN.length)
+            ];
+          setCurrentMessage(randomMessage);
+        }
       } else {
-        // 에러 발생 시, messagesWithoutN에서 랜덤으로 메시지 설정
-        const randomMessage =
-          messagesWithoutN[Math.floor(Math.random() * messagesWithoutN.length)];
         setCurrentMessage(randomMessage);
       }
-    } catch (error) {
-      console.error("시스템 메시지 조회 실패:", error);
-      const randomMessage =
-        messagesWithoutN[Math.floor(Math.random() * messagesWithoutN.length)];
-      setCurrentMessage(randomMessage);
-    }
-  };
 
-  const showMessage = () => {
-    setTextVisible(true); // 텍스트 보이기
-    const messages = Math.random() < 0.5 ? messagesWithN : messagesWithoutN; // 랜덤으로 메시지 선택
-    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-
-    if (messagesWithN.includes(randomMessage) && numberOfPlayers === null) {
-      // n이 필요한 메시지이고 n 값이 없는 경우 API 호출
-      fetchSystemMsg();
-    } else if (numberOfPlayers !== null) {
-      // n 값을 포함하여 메시지 설정
-      setCurrentMessage(
-        randomMessage.replace(/n/g, numberOfPlayers.toString())
-      );
-    } else {
-      setCurrentMessage(randomMessage);
-    }
-    setTimeout(() => {
-      setTextVisible(false);
-    }, 100);
+      setTextVisible(true);
+    }, 500);
   };
 
   useEffect(() => {
-    showMessage(); // 초기 메시지 설정
+    showMessage();
     const interval = setInterval(showMessage, 10000); // 10초 간격으로 메시지 변경
 
-    return () => clearInterval(interval); // 컴포넌트 언마운트 시 interval 정리
-  }, [numberOfPlayers]);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const handleBeforeUnload = () => {
@@ -217,14 +214,14 @@ const Progress = () => {
         </Header>
         <Main>
           <SquareProfile user={user} />
-          <Waiting style={{ opacity: isVisible ? 1 : 0 }}>
+          <Waiting>
             <AnimatedImage
               src="/assets/images/wait_heart.svg"
               width={225}
               height={225}
               alt="heart"
             />
-            <AnimatedText visible={textVisible}>{currentMessage}</AnimatedText>
+            <AnimatedText $visible={textVisible}>{currentMessage}</AnimatedText>
           </Waiting>
         </Main>
         {/* 즐겜모드, 빡겜모드 매칭 실패 */}
@@ -386,9 +383,9 @@ const AnimatedImage = styled(Image)`
   animation: ${growShrink} 1.8s ease-in-out infinite;
 `;
 
-const AnimatedText = styled.div<{ visible: boolean }>`
-  opacity: ${({ visible }) => (visible ? 1 : 0)};
+const AnimatedText = styled.div<{ $visible: boolean }>`
+  opacity: ${({ $visible }) => ($visible ? 1 : 0)};
   transition: opacity 0.3s ease-in-out;
-  animation: ${({ visible }) => (visible ? fadeIn : fadeOut)} 1s ease-in-out
+  animation: ${({ $visible }) => ($visible ? fadeIn : fadeOut)} 1s ease-in-out
     forwards;
 `;
