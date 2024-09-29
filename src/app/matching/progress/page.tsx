@@ -183,7 +183,9 @@ const Progress = () => {
           // 5분 타이머가 끝나면 매칭 실패 처리
           clearTimers(); // 타이머 정리
           socket?.emit("matching-not-found");
-          retry ? setIsSecondYes(true) : setIsFirstRetry(true); // 매칭 실패 모달 표시
+          retry
+            ? type === "PRECISE" && setIsSecondYes(true) // 빡겜일 때, 게시판 모달 표시
+            : setIsFirstRetry(true); // 매칭 실패 모달 표시
         } else if (prevTime === 180) {
           // 첫 2분 타이머가 끝나면 매칭 재시도
           if (!isRetrying) {
@@ -239,10 +241,16 @@ const Progress = () => {
             primaryButtonText="예"
             secondaryButtonText="아니요"
             onPrimaryClick={() => {
-              setIsFirstRetry(true);
-              router.push(`/match/profile?type=gamgoo&rank=fast&retry=true`);
+              router.push(
+                `/match/profile?type=${type}&rank=${rank}&retry=true`
+              );
             }}
-            onSecondaryClick={() => setIsFirstRetry(false)}
+            onSecondaryClick={() => {
+              setIsFirstRetry(false);
+              setTimeout(() => {
+                router.push("/");
+              }, 3000);
+            }}
           >
             계속해서 매칭을 시도하겠습니까?
           </ConfirmModal>
@@ -252,8 +260,10 @@ const Progress = () => {
           <ConfirmModal
             width="540px"
             onPrimaryClick={() => {
-              router.push("/home");
               setIsSecondYes(false);
+              setTimeout(() => {
+                router.push("/");
+              }, 3000);
             }}
             onSecondaryClick={() => {
               router.push("/borad");
@@ -271,8 +281,16 @@ const Progress = () => {
         {isSecondNo && (
           <ConfirmModal
             width="540px"
-            onPrimaryClick={() => setIsSecondNo(false)}
-            onSecondaryClick={() => setIsSecondNo(false)}
+            onPrimaryClick={() => {
+              setIsSecondNo(false);
+              setTimeout(() => {
+                router.push("/");
+              }, 3000);
+            }}
+            onSecondaryClick={() => {
+              router.push("/borad");
+              setIsSecondNo(false);
+            }}
             primaryButtonText="닫기"
             secondaryButtonText="글 작성하기"
           >

@@ -257,13 +257,21 @@ const Complete = () => {
       {showFailModal && (
         <ConfirmModal
           width="540px"
-          primaryButtonText="닫기"
+          primaryButtonText="예"
+          secondaryButtonText="아니요"
           onPrimaryClick={() => {
+            router.push(`/match/profile?type=${type}&rank=${rank}&retry=true`);
+          }}
+          onSecondaryClick={() => {
             setShowFailModal(false);
-            router.push("/");
+            setTimeout(() => {
+              router.push("/");
+            }, 3000);
           }}
         >
-          매칭에 실패했습니다.
+          아쉽게도 상대방과 매칭이 성사되지 못했어요.
+          <br />
+          계속해서 매칭을 시도할까요?
         </ConfirmModal>
       )}
     </Wrapper>
