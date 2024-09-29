@@ -120,6 +120,7 @@ const Header = () => {
               width={102}
               height={32}
               alt="logo"
+              priority
             />
           </Link>
           <Menus>

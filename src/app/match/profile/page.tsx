@@ -20,6 +20,7 @@ import { theme } from "@/styles/theme";
 const ProfilePage = () => {
   const router = useRouter();
   const [profileType, setProfileType] = useState<profileType | undefined>();
+  const [isClient, setIsClient] = useState(false);
   const searchParams = useSearchParams();
   const params = searchParams.get("type");
   const rank = searchParams.get("rank");
@@ -55,6 +56,11 @@ const ProfilePage = () => {
       setProfileType(undefined);
     }
   }, [rank, params]);
+
+  useEffect(() => {
+    // 클라이언트 렌더링 확인
+    setIsClient(true);
+  }, []);
 
   const handleMatchStart = async () => {
     const matchingType = params === "gamgoo" ? "BASIC" : "PRECISE";
@@ -93,6 +99,8 @@ const ProfilePage = () => {
       console.error("소켓이 연결되지 않았습니다.");
     }
   };
+
+  if (!isClient) return null; // 클라이언트에서만 렌더링
 
   return (
     <Wrapper>

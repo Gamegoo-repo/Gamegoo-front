@@ -587,30 +587,28 @@ const Profile: React.FC<Profile> = ({
                   ? positions.slice(0, 2)
                   : positions
                 ).map((position, index) => (
-                  <>
-                    <Posi key={index} className={profileType}>
-                      {POSITIONS[index].label}
-                      <Image
-                        src={setPositionImg(
-                          index === 0
-                            ? positionValue.main ?? 0
-                            : index === 1
-                            ? positionValue.sub ?? 0
-                            : positionValue.want ?? 0
-                        )}
-                        width={55}
-                        height={40}
-                        alt="포지션"
-                        onClick={() => handlePosition(index)}
-                      />
-                      {isPositionOpen[index] && (
-                        <PositionCategory
-                          onClose={() => handlePositionClose(index)}
-                          onSelect={handleCategoryButtonClick}
-                        />
+                  <Posi key={index} className={profileType}>
+                    {POSITIONS[index].label}
+                    <Image
+                      src={setPositionImg(
+                        index === 0
+                          ? positionValue.main ?? 0
+                          : index === 1
+                          ? positionValue.sub ?? 0
+                          : positionValue.want ?? 0
                       )}
-                    </Posi>
-                  </>
+                      width={55}
+                      height={40}
+                      alt="포지션"
+                      onClick={() => handlePosition(index)}
+                    />
+                    {isPositionOpen[index] && (
+                      <PositionCategory
+                        onClose={() => handlePositionClose(index)}
+                        onSelect={handleCategoryButtonClick}
+                      />
+                    )}
+                  </Posi>
                 ))}
               </Position>
               {profileType === "other" && user.championResponseDTOList && (
