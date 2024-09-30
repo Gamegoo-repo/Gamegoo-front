@@ -136,8 +136,7 @@ const Progress = () => {
     }
 
     // if (socket) {
-    // 매칭 성공 (receiver)
-    // 매칭 성공 (sender)
+    // 매칭 상대 찾기 성공 (sender)
     socket.on("matching-found-sender", (data) => {
       console.log("매칭 상대 발견(sender):", data);
       clearTimers();
@@ -148,6 +147,7 @@ const Progress = () => {
       );
     });
 
+    // 매칭 상대 찾기 성공 (receiver)
     socket.on("matching-found-receiver", (data) => {
       console.log("매칭 상대 발견(receiver):", data);
       clearTimers();
