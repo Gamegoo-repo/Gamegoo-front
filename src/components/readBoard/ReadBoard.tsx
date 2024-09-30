@@ -335,10 +335,10 @@ const ReadBoard = (props: ReadBoardProps) => {
   const MoreBoxMenuItems: MoreBoxMenuItems[] = [];
 
   // if (isUser?.id === isPost?.memberId) {
-    MoreBoxMenuItems.push(
-      { text: '수정', onClick: handleEdit },
-      { text: '삭제', onClick: handleDelete }
-    );
+  MoreBoxMenuItems.push(
+    { text: '수정', onClick: handleEdit },
+    { text: '삭제', onClick: handleDelete }
+  );
   // }
 
   //친구 삭제 - 차단되어있을 때, 친구일 때, 친구 추가 요청 중일 때
@@ -348,44 +348,44 @@ const ReadBoard = (props: ReadBoardProps) => {
   //차단해제 - 차단되어 있을 때, 
 
   // if (isUser?.id !== isPost?.memberId) {
-    let friendText = '친구 추가';
-    let friendFunc = handleFriendAdd;
-    let blockText = '차단하기';
-    let blockFunc = handleBlock;
+  let friendText = '친구 추가';
+  let friendFunc = handleFriendAdd;
+  let blockText = '차단하기';
+  let blockFunc = handleBlock;
 
-    if (!!isPost && 'isBlocked' in isPost && 'isFriend' in isPost && 'friendRequestMemberId' in isPost) {
-      if (isPost?.isBlocked || isPost?.isFriend) {
-        friendText = '친구 삭제';
-        friendFunc = handleFriendDelete;
-      }
-      if (!isPost?.isBlocked || !isPost?.isFriend || !isPost?.friendRequestMemberId) {
-        friendText = '친구 추가';
-        friendFunc = handleFriendAdd;
-      }
-      if (isPost?.friendRequestMemberId) {
-        friendText = '친구 요청 취소';
-        friendFunc = handleCancelFriendReq;
-      }
-
-      if (isPost?.friendRequestMemberId || !isPost?.isFriend, !isPost?.isBlocked) {
-        blockText = '차단하기';
-        blockFunc = handleBlock;
-      }
-
-      if (isPost?.isBlocked) {
-        blockText = '차단 해제';
-        friendText = '';
-        blockFunc = handleUnblock;
-      }
+  if (!!isPost && 'isBlocked' in isPost && 'isFriend' in isPost && 'friendRequestMemberId' in isPost) {
+    if (isPost?.isBlocked || isPost?.isFriend) {
+      friendText = '친구 삭제';
+      friendFunc = handleFriendDelete;
+    }
+    if (!isPost?.isBlocked || !isPost?.isFriend || !isPost?.friendRequestMemberId) {
+      friendText = '친구 추가';
+      friendFunc = handleFriendAdd;
+    }
+    if (isPost?.friendRequestMemberId) {
+      friendText = '친구 요청 취소';
+      friendFunc = handleCancelFriendReq;
     }
 
-    if (friendText) {
-      MoreBoxMenuItems.push({ text: friendText, onClick: friendFunc });
+    if (isPost?.friendRequestMemberId || !isPost?.isFriend, !isPost?.isBlocked) {
+      blockText = '차단하기';
+      blockFunc = handleBlock;
     }
-    MoreBoxMenuItems.push(
-      { text: blockText, onClick: blockFunc },
-      { text: '신고하기', onClick: handleReportModal }
-    );
+
+    if (isPost?.isBlocked) {
+      blockText = '차단 해제';
+      friendText = '';
+      blockFunc = handleUnblock;
+    }
+  }
+
+  if (friendText) {
+    MoreBoxMenuItems.push({ text: friendText, onClick: friendFunc });
+  }
+  MoreBoxMenuItems.push(
+    { text: blockText, onClick: blockFunc },
+    { text: '신고하기', onClick: handleReportModal }
+  );
 
   // }
 
@@ -426,7 +426,6 @@ const ReadBoard = (props: ReadBoardProps) => {
     }
   };
 
-
   return (
     <>
       <CRModal type="reading" onClose={() => dispatch(setCloseReadingModal())}>
@@ -437,7 +436,8 @@ const ReadBoard = (props: ReadBoardProps) => {
               <MoreBox
                 items={MoreBoxMenuItems}
                 top={67}
-                left={544} />
+                left={544}
+                onClose={() => setIsMoreBoxOpen(false)} />
             )}
             <UpdatedDate>게시일 : {setPostingDateFormatter(isPost.createdAt)}</UpdatedDate>
             <UserSection>
