@@ -7,10 +7,11 @@ interface ToggleProps {
   onToggle: (state: boolean) => void;
   disabled?: boolean;
   type?: "board";
+  isBlind?: boolean;
 }
 
 const Toggle = (props: ToggleProps) => {
-  const { isOn, onToggle, disabled = false, type } = props;
+  const { isOn, onToggle, disabled = false, type, isBlind = false } = props;
 
   const toggleHandler = () => {
     const newState = !isOn;
@@ -20,7 +21,12 @@ const Toggle = (props: ToggleProps) => {
 
   return (
     <>
-      <ToggleContainer onClick={toggleHandler} disabled={disabled} $type={type}>
+      <ToggleContainer
+        onClick={toggleHandler}
+        disabled={disabled}
+        $type={type}
+        $isBlind={isBlind}
+      >
         <div className={`toggle-circle ${isOn ? null : "toggle--unchecked"}`} />
         <div
           className={`toggle-container ${isOn ? null : "toggle--unchecked"}`}
@@ -35,6 +41,7 @@ export default Toggle;
 const ToggleContainer = styled.div<{
   disabled: boolean;
   $type: string | undefined;
+  $isBlind: boolean;
 }>`
   position: relative;
   cursor: pointer;
@@ -60,6 +67,11 @@ const ToggleContainer = styled.div<{
       css`
         background-color: ${theme.colors.gray200};
       `} */
+    ${({ $isBlind }) =>
+      $isBlind &&
+      css`
+        background-color: ${theme.colors.gray800};
+      `}
   }
 
   > .toggle-circle {

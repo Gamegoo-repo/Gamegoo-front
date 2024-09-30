@@ -54,15 +54,17 @@ const UserProfilePage = () => {
     setFriendState(newFriendState);
   };
 
-  return otherProfile && otherManner ? (
+  return otherProfile ? (
     otherProfile.isBlind ? (
-      <BlindProfile manner={otherManner} />
+      <BlindProfile />
     ) : (
-      <UserProfile
-        profile={otherProfile}
-        manner={otherManner}
-        updateFriendState={updateFriendState}
-      />
+      otherManner && (
+        <UserProfile
+          profile={otherProfile}
+          manner={otherManner}
+          updateFriendState={updateFriendState}
+        />
+      )
     )
   ) : (
     <p>Loading...</p>
