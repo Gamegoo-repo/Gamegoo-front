@@ -70,7 +70,7 @@ const Login = () => {
         // 실시간 안읽은 채팅방 수 가져오기 위함
         dispatch(setUnreadUuid(data.result));
         // 새로고침시 채팅방 수 가져오기 위함
-        localStorage.setItem('unreadChatUuids', JSON.stringify(data.result));
+        localStorage.setItem("unreadChatUuids", JSON.stringify(data.result));
       }
 
       dispatch(setUserName(response.result.name));
@@ -155,7 +155,7 @@ const Login = () => {
           </Check>
         </Content>
         <Line />
-        <SocialIcons>
+        {/* <SocialIcons>
           <Image
             src="/assets/icons/naver.svg"
             width={58}
@@ -174,7 +174,7 @@ const Login = () => {
             height={58}
             alt="google"
           />
-        </SocialIcons>
+        </SocialIcons> */}
         <P>
           아직 GAMMGOO 회원이 아니신가요?{`   `}
           <Join href="/join/terms">회원가입</Join>
@@ -250,7 +250,8 @@ const Line = styled.div`
   width: 100%;
   height: 1px;
   background: #d4d4d4;
-  margin: 54px 0 74px 0;
+  /* margin: 54px 0 74px 0; */
+  margin: 30px 0 45px 0;
 `;
 
 const SocialIcons = styled.div`
