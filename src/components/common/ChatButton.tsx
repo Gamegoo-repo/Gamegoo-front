@@ -50,9 +50,9 @@ const ChatButton = () => {
   const chatCount = unreadChatUuids ? unreadChatUuids.length : 0;
 
   const handleToggleChat = () => {
-    // if (!isUser.id) {
-    //   return setShowAlert(true);
-    // } 
+    if (!isUser.id) {
+      return setShowAlert(true);
+    } 
     // setIsChatOpen((prevState) => !prevState);
     dispatch(toggleChat());
   };
