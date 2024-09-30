@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from 'react';
+import { Suspense } from "react";
 import styled, { keyframes } from "styled-components";
 import HeaderTitle from "@/components/common/HeaderTitle";
 import SquareProfile from "@/components/match/SquareProfile";
@@ -90,7 +90,7 @@ const Progress = () => {
           /* 에러 발생 시, messagesWithoutN에서 랜덤으로 메시지 설정 */
           const randomMessage =
             messagesWithoutN[
-            Math.floor(Math.random() * messagesWithoutN.length)
+              Math.floor(Math.random() * messagesWithoutN.length)
             ];
           setCurrentMessage(randomMessage);
         }
@@ -231,7 +231,9 @@ const Progress = () => {
                 height={225}
                 alt="heart"
               />
-              <AnimatedText $visible={textVisible}>{currentMessage}</AnimatedText>
+              <AnimatedText $visible={textVisible}>
+                {currentMessage}
+              </AnimatedText>
             </Waiting>
           </Main>
           {/* 즐겜모드, 빡겜모드 매칭 실패 */}
@@ -310,8 +312,13 @@ const Progress = () => {
   );
 };
 
-export default Progress;
-
+export default function ProgressPaging() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Progress />
+    </Suspense>
+  );
+}
 const fadeIn = keyframes`
   from {
     opacity: 0;
