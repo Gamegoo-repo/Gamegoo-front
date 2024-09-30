@@ -171,7 +171,7 @@ const Wrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  padding-top: 140px;
+  padding-top: 62px;
 `;
 
 const Row = styled.div`

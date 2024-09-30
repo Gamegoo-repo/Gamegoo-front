@@ -32,7 +32,6 @@ interface User {
 const Complete = () => {
   const [timeLeft, setTimeLeft] = useState(10);
   const [showFailModal, setShowFailModal] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const type = searchParams.get("type");
@@ -158,6 +157,7 @@ const Complete = () => {
     }
 
     socket?.on("matching-fail", handleMatchingFail);
+    socket?.on("matching-success", handleMatchingSuccess);
 
     return () => {
       clearInterval(timerRef.current!);
@@ -172,7 +172,6 @@ const Complete = () => {
 
   // 타임아웃 처리
   const handleTimeout = () => {
-    // alert("타임 아웃 처리");
     if (role === "receiver") {
       socket?.emit("matching-success-receiver");
       startSecondaryTimer();
@@ -193,15 +192,23 @@ const Complete = () => {
     setShowFailModal(true);
   };
 
-  // 5초 후 매칭 최종 성공 emit (Receiver)
+  // 최종 매칭 성공 핸들러
+  const handleMatchingSuccess = () => {
+    clearAllTimers();
+    alert("매칭에 성공하였습니다!"); // 추후 삭제
+
+    /* 채팅방 이동 시키기 */
+  };
+
+  // 5초 후 매칭 실패 emit (Receiver Final Timer)
   const startSecondaryTimer = () => {
-    secondaryTimerRef.current = setTimeout(() => {
-      socket?.emit("matching-success-final");
-      startFinalTimer();
+    finalTimerRef.current = setTimeout(() => {
+      socket?.emit("matching-fail");
+      setShowFailModal(true);
     }, 5000);
   };
 
-  // 3초 후 매칭 실패 emit (Final Timer)
+  // 3초 후 매칭 실패 emit (Sender Final Timer)
   const startFinalTimer = () => {
     finalTimerRef.current = setTimeout(() => {
       socket?.emit("matching-fail");

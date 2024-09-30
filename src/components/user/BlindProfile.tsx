@@ -4,48 +4,20 @@ import { theme } from "@/styles/theme";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
 import MannerLevelBar from "@/components/common/MannerLevelBar";
 import ChatButton from "@/components/common/ChatButton";
-import { User } from "@/interface/profile";
 import Image from "next/image";
 import Toggle from "../common/Toggle";
 
-export interface Manner {
-  memberId?: number;
-  mannerLevel: number;
-  mannerRank: number;
-  mannerKeywords: [
-    {
-      isPositive: boolean;
-      mannerKeywordId: number;
-      count: number;
-    }
-  ];
-}
-
-const BlindProfile = ({
-  manner,
-}: {
-  profile: User;
-  manner: Manner;
-  updateFriendState: (state: {
-    friend: boolean;
-    friendRequestMemberId: number | null;
-    blocked: boolean;
-  }) => void;
-}) => {
+const BlindProfile = () => {
   const goodMannerEvaluations =
-    manner.mannerKeywords
-      .filter((keyword) => keyword.isPositive)
-      .map((keyword) => ({
-        id: keyword.mannerKeywordId,
-        count: keyword.count,
-      })) || [];
+    MANNER_TYPES.map((keyword) => ({
+      id: keyword.id,
+      count: 0,
+    })) || [];
   const badMannerEvaluations =
-    manner.mannerKeywords
-      .filter((keyword) => !keyword.isPositive)
-      .map((keyword) => ({
-        id: keyword.mannerKeywordId,
-        count: keyword.count,
-      })) || [];
+    BAD_MANNER_TYPES.map((keyword) => ({
+      id: keyword.id,
+      count: 0,
+    })) || [];
 
   return (
     <Wrapper>
@@ -75,9 +47,22 @@ const BlindProfile = ({
                       </Posi>
                     ))}
                   </Position>
+                  <Champion>
+                    최근 선호 챔피언
+                    <ChampionImages>
+                      {[...Array(3)].map((_, index) => (
+                        <Round key={index} />
+                      ))}
+                    </ChampionImages>
+                  </Champion>
                   <Mike>
                     마이크
-                    <Toggle isOn={false} onToggle={() => {}} disabled={true} />
+                    <Toggle
+                      isOn={false}
+                      onToggle={() => {}}
+                      disabled={true}
+                      isBlind={true}
+                    />
                   </Mike>
                 </UnderRow>
               </StyledBox>
@@ -93,10 +78,7 @@ const BlindProfile = ({
                   최근 <Span>0</Span>명의 사용자가{` `}
                   탈퇴한 사용자{` `}님에게 긍정적 매너 평가를 남겼어요.
                 </Text>
-                <MannerLevelBar
-                  recentLevel={1}
-                  mannerRank={manner.mannerRank}
-                />
+                <MannerLevelBar isBlind={true} />
               </Box>
             </div>
             <div>
@@ -156,7 +138,7 @@ const Wrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  padding-top: 140px;
+  padding-top: 62px;
 `;
 
 const Row = styled.div`
@@ -211,7 +193,6 @@ const Text = styled.div`
 
 const Span = styled.span`
   ${(props) => props.theme.fonts.bold16};
-  color: ${theme.colors.purple100};
 `;
 
 const MannerList = styled.div`
@@ -311,7 +292,7 @@ const Top = styled.div`
   align-items: center;
   justify-content: flex-end;
   gap: 16px;
-  color: ${theme.colors.gray100};
+  color: ${theme.colors.gray600};
   font-size: ${theme.fonts.bold32};
   white-space: nowrap;
 `;
@@ -327,12 +308,28 @@ const Posi = styled.div`
   flex-direction: column;
   gap: 15px;
   align-items: center;
-  font-size: ${theme.fonts.regular14};
+  font-size: ${theme.fonts.semiBold14};
   position: relative;
+`;
 
-  &.other {
-    font-size: ${theme.fonts.semiBold14};
-  }
+const Champion = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: ${theme.fonts.semiBold14};
+`;
+
+const ChampionImages = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 9px;
+`;
+
+const Round = styled.div`
+  width: 52px;
+  height: 52px;
+  background-color: ${theme.colors.gray800};
+  border-radius: 50%;
 `;
 
 const Mike = styled.div`
