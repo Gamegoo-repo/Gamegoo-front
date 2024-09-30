@@ -13,6 +13,7 @@ import dayjs from 'dayjs';
 import { setChatDateFormatter, setChatTimeFormatter } from "@/utils/custom";
 import { getProfileBgColor } from "@/utils/profile";
 import ConfirmModal from "../common/ConfirmModal";
+import { socket } from "@/socket";
 
 interface MessageListProps {
     chatEnterData: Chat;
@@ -38,6 +39,7 @@ const MessageList = (props: MessageListProps) => {
     const [isInitialLoading, setIsInitialLoading] = useState(true);
     const [isBoardId, setIsBoardId] = useState(0);
     const [isSystemMessageShown, setIsSystemMessageShown] = useState(false);
+    const [mannerSystemMessage, setMannerSystemMessage] = useState(false);
     const [isFeedbackDateVisible, setIsFeedbackDateVisible] = useState(false);
     const [isFeedbackDate, setIsFeedbackDate] = useState<string>("");
 
@@ -46,6 +48,19 @@ const MessageList = (props: MessageListProps) => {
     const isFeedbackModalOpen = useSelector((state: RootState) => state.modal.isOpen);
 
     const { newMessage } = useChatMessage();
+
+    /* 매너 시스템 소켓 이벤트 리스닝 */
+    useEffect(() => {
+        const handleMannerSystemMessage = (res: any) => {
+            setMannerSystemMessage(true); // 소켓 이벤트 발생 시 상태 업데이트
+        };
+
+        socket.on('manner-system-message', handleMannerSystemMessage);
+
+        return () => {
+            socket.off('manner-system-message', handleMannerSystemMessage);
+        };
+    }, []);
 
     /* 게시글 열기 */
     const handlePostOpen = (id: number) => {
@@ -253,7 +268,7 @@ const MessageList = (props: MessageListProps) => {
                                         message={message.message}
                                         onClick={message.boardId ? () => handlePostOpen(message.boardId as number) : undefined}
                                     />
-                                ) : message.systemType === 1 ? (
+                                ) : message.systemType === 1 || mannerSystemMessage ? (
                                     <>
                                         <FeedbackDiv>
                                             <FeedbackContainer>

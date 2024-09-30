@@ -65,6 +65,7 @@ const Layout = () => {
 
     /* 친구 목록 가져오기 */
     const handleFetchFriendsList = async (cursor?: number) => {
+        setIsLoading(true);
         try {
             const data = await getFriendsList(cursor);
             const friendsList = data?.result?.friendInfoDTOList;
@@ -83,10 +84,12 @@ const Layout = () => {
             console.error(error);
             setFriends([]);
             setFavoriteFriends([]);
+        } finally {
+            setIsLoading(false);
         }
     };
 
-    /* 스크롤 이벤트 핸들러 - 스크롤이 끝에 도달하면 다음 페이지 로드 */
+    /* 친구 목록 페이지 - 스크롤이 끝에 도달하면 다음 페이지 가져오기 */
     const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
         if (!cursor) return;
         const bottom = e.currentTarget.scrollHeight - e.currentTarget.scrollTop === e.currentTarget.clientHeight;

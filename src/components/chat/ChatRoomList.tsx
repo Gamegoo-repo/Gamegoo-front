@@ -11,6 +11,7 @@ import { getChatrooms } from '@/api/chat';
 import ChatRoomItem from './ChatRoomItem';
 import useChatMessage from '@/hooks/useChatMessage';
 import { setCurrentChatUuid } from '@/redux/slices/chatSlice';
+import useChatList from '@/hooks/useChatList';
 
 interface ChatRoomListProps {
     onChatRoom: (id: string) => void;
@@ -36,8 +37,12 @@ const ChatRoomList = (props: ChatRoomListProps) => {
 
     const { newMessage } = useChatMessage();
 
+    /* 채팅방 목록 화면이 열려 있을 때만 joined-new-chatroom 이벤트를 리스닝 */
+    useChatList(setChatrooms);
+
     /* 대화방 목록 가져오기  */
     const handleFetchChatrooms = async (cursor?: number) => {
+        setIsLoading(true);
         try {
             const data = await getChatrooms(cursor);
             setChatrooms(data.result.chatroomViewDTOList);
@@ -47,9 +52,10 @@ const ChatRoomList = (props: ChatRoomListProps) => {
             dispatch(setCurrentChatUuid(''));
         } catch (error) {
             console.error(error);
+        } finally {
+            setIsLoading(false);
         }
     };
-
 
     useEffect(() => {
         handleFetchChatrooms();

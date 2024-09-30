@@ -21,7 +21,7 @@ export interface SystemMessage {
     message: string;
     createdAt: string;
     timestamp: number;
-    boardId: number;
+    boardId?: number;
     chatroomUuid: string;
 }
 
