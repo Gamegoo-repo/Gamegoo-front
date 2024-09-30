@@ -41,8 +41,12 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
     setMannerPopup(!mannerPopup);
   };
 
+  if (!user) {
+    return null;
+  }
+
   return (
-    <Container opponent={opponent}>
+    <Container $opponent={opponent}>
       <Column>
         <Top>
           {user.gameName}
@@ -66,6 +70,7 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
               width={100}
               height={100}
               alt="profile"
+              priority
             />
           </ProfileImgWrapper>
           {opponent && (
@@ -85,7 +90,7 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
         </ImageContainer>
         <Mic status={user.mike} />
         <RowBox>
-          {user.gameStyleList.slice(0, 2).map((item, index) => (
+          {(user.gameStyleList || []).slice(0, 2).map((item, index) => (
             <Box key={index} shape="round" text={item} />
           ))}
         </RowBox>
@@ -126,14 +131,14 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
 
 export default SquareProfile;
 
-const Container = styled.div<{ opponent: boolean }>`
+const Container = styled.div<{ $opponent: boolean }>`
   width: 100%;
   height: 580px;
   padding: 30px 40px;
   border-radius: 30px;
   border: 1px solid
-    ${({ opponent }) =>
-      opponent ? theme.colors.purple100 : theme.colors.gray400};
+    ${({ $opponent }) =>
+      $opponent ? theme.colors.purple100 : theme.colors.gray400};
   background: ${theme.colors.white};
 
   display: flex;

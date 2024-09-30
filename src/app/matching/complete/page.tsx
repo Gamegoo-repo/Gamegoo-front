@@ -34,6 +34,8 @@ const Complete = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
+  const type = searchParams.get("type");
+  const rank = searchParams.get("rank");
   const [userMe, setUserMe] = useState<User>({
     memberId: 0,
     gameName: "",
@@ -71,8 +73,9 @@ const Complete = () => {
 
     if (userString) {
       try {
-        const decodedUser = JSON.parse(decodeURIComponent(userString)) as User;
-        setUser(decodedUser);
+        const decodedUser = JSON.parse(decodeURIComponent(userString));
+        setUser(decodedUser as User);
+        console.log("decodedUser", decodedUser);
       } catch (error) {
         console.error("Failed to parse user data:", error);
       }
@@ -181,8 +184,6 @@ const Complete = () => {
   // 매칭 성공 (Sender) 이벤트 핸들러
   const handleMatchingSuccessSender = () => {
     clearInterval(timerRef.current!);
-    alert("매칭 성공!");
-    router.push("/chat");
   };
 
   // 매칭 실패 이벤트 핸들러
@@ -219,14 +220,14 @@ const Complete = () => {
     socket?.emit("matching-reject");
     clearAllTimers();
     console.log("매칭 나가기 클릭");
-    router.push("/home"); // 예시: 홈으로 이동
-  };
+    router.push(`/match/profile?type=${type}&rank=${rank}`);
 
-  // 소켓 연결 여부 확인
-  if (!socket) {
-    console.error("소켓이 연결되지 않았습니다.");
-    return null;
-  }
+    // 소켓 연결 여부 확인
+    if (!socket) {
+      console.error("소켓이 연결되지 않았습니다.");
+      return null;
+    }
+  };
 
   return (
     <Wrapper>
@@ -254,13 +255,21 @@ const Complete = () => {
       {showFailModal && (
         <ConfirmModal
           width="540px"
-          primaryButtonText="닫기"
+          primaryButtonText="예"
+          secondaryButtonText="아니요"
           onPrimaryClick={() => {
+            router.push(`/match/profile?type=${type}&rank=${rank}&retry=true`);
+          }}
+          onSecondaryClick={() => {
             setShowFailModal(false);
-            router.push("/home");
+            setTimeout(() => {
+              router.push("/");
+            }, 3000);
           }}
         >
-          매칭에 실패했습니다.
+          아쉽게도 상대방과 매칭이 성사되지 못했어요.
+          <br />
+          계속해서 매칭을 시도할까요?
         </ConfirmModal>
       )}
     </Wrapper>

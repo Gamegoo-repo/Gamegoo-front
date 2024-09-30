@@ -404,6 +404,7 @@ const Profile: React.FC<Profile> = ({
               width={136}
               height={136}
               alt="프로필"
+              priority
             />
           </ProfileImgWrapper>
           {profileType !== "other" && (
@@ -587,30 +588,28 @@ const Profile: React.FC<Profile> = ({
                   ? positions.slice(0, 2)
                   : positions
                 ).map((position, index) => (
-                  <>
-                    <Posi key={index} className={profileType}>
-                      {POSITIONS[index].label}
-                      <Image
-                        src={setPositionImg(
-                          index === 0
-                            ? positionValue.main ?? 0
-                            : index === 1
-                            ? positionValue.sub ?? 0
-                            : positionValue.want ?? 0
-                        )}
-                        width={55}
-                        height={40}
-                        alt="포지션"
-                        onClick={() => handlePosition(index)}
-                      />
-                      {isPositionOpen[index] && (
-                        <PositionCategory
-                          onClose={() => handlePositionClose(index)}
-                          onSelect={handleCategoryButtonClick}
-                        />
+                  <Posi key={index} className={profileType}>
+                    {POSITIONS[index].label}
+                    <Image
+                      src={setPositionImg(
+                        index === 0
+                          ? positionValue.main ?? 0
+                          : index === 1
+                          ? positionValue.sub ?? 0
+                          : positionValue.want ?? 0
                       )}
-                    </Posi>
-                  </>
+                      width={55}
+                      height={40}
+                      alt="포지션"
+                      onClick={() => handlePosition(index)}
+                    />
+                    {isPositionOpen[index] && (
+                      <PositionCategory
+                        onClose={() => handlePositionClose(index)}
+                        onSelect={handleCategoryButtonClick}
+                      />
+                    )}
+                  </Posi>
                 ))}
               </Position>
               {profileType === "other" && user.championResponseDTOList && (
@@ -631,7 +630,9 @@ const Profile: React.FC<Profile> = ({
           )}
         </StyledBox>
       </Row>
-      {(profileType === "normal" || profileType === "other") && (
+      {(profileType === "normal" ||
+        (profileType === "other" &&
+          user.gameStyleResponseDTOList.length > 0)) && (
         <GameStyle
           profileType={profileType === "normal" ? "none" : profileType}
           gameStyleResponseDTOList={user.gameStyleResponseDTOList}
@@ -872,7 +873,7 @@ const Position = styled.div`
 const Posi = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
   align-items: center;
   font-size: ${theme.fonts.regular14};
   position: relative;

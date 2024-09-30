@@ -39,6 +39,8 @@ const Progress = () => {
   const [isRetrying, setIsRetrying] = useState<boolean>(false); // 매칭 재시도 여부
   const router = useRouter();
   const searchParams = useSearchParams();
+  const type = searchParams.get("matchingType");
+  const rank = searchParams.get("gameRank");
   const retry = searchParams.get("retry");
 
   const user: User = {
@@ -60,56 +62,51 @@ const Progress = () => {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const [currentMessage, setCurrentMessage] = useState<string>("");
-  const [numberOfPlayers, setNumberOfPlayers] = useState<number | null>(null);
-  const [isVisible, setIsVisible] = useState<boolean>(true);
   const [textVisible, setTextVisible] = useState<boolean>(true);
 
-  const fetchSystemMsg = async () => {
-    try {
-      const response = await getSystemMsg();
-      if (response && response.isSuccess) {
-        setNumberOfPlayers(response.result.number);
+  const showMessage = async () => {
+    /* 메세지 전환을 위해 0.5초 간 안 보이게 하기 */
+    setTextVisible(false);
+
+    setTimeout(async () => {
+      const messages = Math.random() < 0.5 ? messagesWithN : messagesWithN;
+      const randomMessage =
+        messages[Math.floor(Math.random() * messages.length)];
+      /* 나와 같은 티어의 매칭 인원이 필요할 때 */
+      if (messagesWithN[1] === randomMessage) {
+        const response = await getSystemMsg(user.tier);
+        setCurrentMessage(
+          randomMessage.replace(/n/g, response.result.number.toString())
+        );
+      } else if (messagesWithN.includes(randomMessage)) {
+        /* 시스템 메세지 API로부터 n 호출 */
+        const response = await getSystemMsg();
+        if (response && response.isSuccess) {
+          setCurrentMessage(
+            randomMessage.replace(/n/g, response.result.number.toString())
+          );
+        } else {
+          /* 에러 발생 시, messagesWithoutN에서 랜덤으로 메시지 설정 */
+          const randomMessage =
+            messagesWithoutN[
+              Math.floor(Math.random() * messagesWithoutN.length)
+            ];
+          setCurrentMessage(randomMessage);
+        }
       } else {
-        // 에러 발생 시, messagesWithoutN에서 랜덤으로 메시지 설정
-        const randomMessage =
-          messagesWithoutN[Math.floor(Math.random() * messagesWithoutN.length)];
         setCurrentMessage(randomMessage);
       }
-    } catch (error) {
-      console.error("시스템 메시지 조회 실패:", error);
-      const randomMessage =
-        messagesWithoutN[Math.floor(Math.random() * messagesWithoutN.length)];
-      setCurrentMessage(randomMessage);
-    }
-  };
 
-  const showMessage = () => {
-    setTextVisible(true); // 텍스트 보이기
-    const messages = Math.random() < 0.5 ? messagesWithN : messagesWithoutN; // 랜덤으로 메시지 선택
-    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-
-    if (messagesWithN.includes(randomMessage) && numberOfPlayers === null) {
-      // n이 필요한 메시지이고 n 값이 없는 경우 API 호출
-      fetchSystemMsg();
-    } else if (numberOfPlayers !== null) {
-      // n 값을 포함하여 메시지 설정
-      setCurrentMessage(
-        randomMessage.replace(/n/g, numberOfPlayers.toString())
-      );
-    } else {
-      setCurrentMessage(randomMessage);
-    }
-    setTimeout(() => {
-      setTextVisible(false);
-    }, 100);
+      setTextVisible(true);
+    }, 500);
   };
 
   useEffect(() => {
-    showMessage(); // 초기 메시지 설정
+    showMessage();
     const interval = setInterval(showMessage, 10000); // 10초 간격으로 메시지 변경
 
-    return () => clearInterval(interval); // 컴포넌트 언마운트 시 interval 정리
-  }, [numberOfPlayers]);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const handleBeforeUnload = () => {
@@ -133,33 +130,39 @@ const Progress = () => {
   }, []);
 
   useEffect(() => {
-    if (socket) {
-      // 매칭 성공 (receiver)
-      socket.on("matching-found-receiver", (data) => {
-        console.log("매칭 상대 발견(receiver):", data);
-        clearTimers();
-        socket?.emit("matching-found-success", {
-          senderMemberId: user.memberId,
-          gameMode: user.gameMode,
-        });
-        router.push(
-          `/matching/complete?role=receiver&opponent=true&user=${encodeURIComponent(
-            JSON.stringify(data.data)
-          )}`
-        );
-      });
-
-      // 매칭 성공 (sender)
-      socket.on("matching-found-sender", (data) => {
-        console.log("매칭 상대 발견(sender):", data);
-        clearTimers();
-        router.push(
-          `/matching/complete?role=sender&opponent=true&user=${encodeURIComponent(
-            JSON.stringify(data)
-          )}`
-        );
-      });
+    if (!socket) {
+      console.error("Socket is not initialized.");
+      return;
     }
+
+    // if (socket) {
+    // 매칭 성공 (receiver)
+    // 매칭 성공 (sender)
+    socket.on("matching-found-sender", (data) => {
+      console.log("매칭 상대 발견(sender):", data);
+      clearTimers();
+      router.push(
+        `/matching/complete?role=sender&opponent=true&type=${type}&rank=${rank}&user=${encodeURIComponent(
+          JSON.stringify(data.data)
+        )}`
+      );
+    });
+
+    socket.on("matching-found-receiver", (data) => {
+      console.log("매칭 상대 발견(receiver):", data);
+      clearTimers();
+      socket?.emit("matching-found-success", {
+        senderMemberId: data.data.memberId,
+        gameMode: data.data.gameMode,
+      });
+      router.push(
+        `/matching/complete?role=receiver&opponent=true&type=${type}&rank=${rank}&user=${encodeURIComponent(
+          JSON.stringify(data.data)
+        )}`
+      );
+    });
+
+    // }
 
     // 2분 타이머 시작
     startMatchingProcess();
@@ -178,7 +181,9 @@ const Progress = () => {
           // 5분 타이머가 끝나면 매칭 실패 처리
           clearTimers(); // 타이머 정리
           socket?.emit("matching-not-found");
-          retry ? setIsSecondYes(true) : setIsFirstRetry(true); // 매칭 실패 모달 표시
+          retry
+            ? type === "PRECISE" && setIsSecondYes(true) // 빡겜일 때, 게시판 모달 표시
+            : setIsFirstRetry(true); // 매칭 실패 모달 표시
         } else if (prevTime === 180) {
           // 첫 2분 타이머가 끝나면 매칭 재시도
           if (!isRetrying) {
@@ -217,14 +222,14 @@ const Progress = () => {
         </Header>
         <Main>
           <SquareProfile user={user} />
-          <Waiting style={{ opacity: isVisible ? 1 : 0 }}>
+          <Waiting>
             <AnimatedImage
               src="/assets/images/wait_heart.svg"
               width={225}
               height={225}
               alt="heart"
             />
-            <AnimatedText visible={textVisible}>{currentMessage}</AnimatedText>
+            <AnimatedText $visible={textVisible}>{currentMessage}</AnimatedText>
           </Waiting>
         </Main>
         {/* 즐겜모드, 빡겜모드 매칭 실패 */}
@@ -234,10 +239,16 @@ const Progress = () => {
             primaryButtonText="예"
             secondaryButtonText="아니요"
             onPrimaryClick={() => {
-              setIsFirstRetry(true);
-              router.push(`/match/profile?type=gamgoo&rank=fast&retry=true`);
+              router.push(
+                `/match/profile?type=${type}&rank=${rank}&retry=true`
+              );
             }}
-            onSecondaryClick={() => setIsFirstRetry(false)}
+            onSecondaryClick={() => {
+              setIsFirstRetry(false);
+              setTimeout(() => {
+                router.push("/");
+              }, 3000);
+            }}
           >
             계속해서 매칭을 시도하겠습니까?
           </ConfirmModal>
@@ -247,8 +258,10 @@ const Progress = () => {
           <ConfirmModal
             width="540px"
             onPrimaryClick={() => {
-              router.push("/home");
               setIsSecondYes(false);
+              setTimeout(() => {
+                router.push("/");
+              }, 3000);
             }}
             onSecondaryClick={() => {
               router.push("/borad");
@@ -266,8 +279,16 @@ const Progress = () => {
         {isSecondNo && (
           <ConfirmModal
             width="540px"
-            onPrimaryClick={() => setIsSecondNo(false)}
-            onSecondaryClick={() => setIsSecondNo(false)}
+            onPrimaryClick={() => {
+              setIsSecondNo(false);
+              setTimeout(() => {
+                router.push("/");
+              }, 3000);
+            }}
+            onSecondaryClick={() => {
+              router.push("/borad");
+              setIsSecondNo(false);
+            }}
             primaryButtonText="닫기"
             secondaryButtonText="글 작성하기"
           >
@@ -386,9 +407,9 @@ const AnimatedImage = styled(Image)`
   animation: ${growShrink} 1.8s ease-in-out infinite;
 `;
 
-const AnimatedText = styled.div<{ visible: boolean }>`
-  opacity: ${({ visible }) => (visible ? 1 : 0)};
+const AnimatedText = styled.div<{ $visible: boolean }>`
+  opacity: ${({ $visible }) => ($visible ? 1 : 0)};
   transition: opacity 0.3s ease-in-out;
-  animation: ${({ visible }) => (visible ? fadeIn : fadeOut)} 1s ease-in-out
+  animation: ${({ $visible }) => ($visible ? fadeIn : fadeOut)} 1s ease-in-out
     forwards;
 `;
