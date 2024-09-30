@@ -13,7 +13,7 @@ const levelColors = [
 
 interface MannerLevelBarProps {
   recentLevel: number;
-  mannerRank: number;
+  mannerRank?: number;
 }
 
 const MannerLevelBar = (props: MannerLevelBarProps) => {
