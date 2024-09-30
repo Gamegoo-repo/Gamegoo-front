@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from 'react';
+import { Suspense } from "react";
 import styled from "styled-components";
 import HeaderTitle from "@/components/common/HeaderTitle";
 import SquareProfile from "@/components/match/SquareProfile";
@@ -260,7 +260,9 @@ const Complete = () => {
             primaryButtonText="예"
             secondaryButtonText="아니요"
             onPrimaryClick={() => {
-              router.push(`/match/profile?type=${type}&rank=${rank}&retry=true`);
+              router.push(
+                `/match/profile?type=${type}&rank=${rank}&retry=true`
+              );
             }}
             onSecondaryClick={() => {
               setShowFailModal(false);
@@ -279,7 +281,13 @@ const Complete = () => {
   );
 };
 
-export default Complete;
+export default function CompletePaging() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Complete />
+    </Suspense>
+  );
+}
 
 const Wrapper = styled.div`
   width: 100%;

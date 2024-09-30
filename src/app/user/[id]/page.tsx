@@ -56,7 +56,8 @@ const UserProfilePage = () => {
 
   return otherProfile && otherManner ? (
     otherProfile.isBlind ? (
-      <BlindProfile manner={otherManner} />
+      // <BlindProfile manner={otherManner} />
+      <div />
     ) : (
       <UserProfile
         profile={otherProfile}
