@@ -70,7 +70,7 @@ const Post: React.FC<PostProps> = ({
     // 수정하기 api
     dispatch(setUserId(memberId));
     const memberData = await getMemberPost(boardId);
-    console.log("isUser", isUser);
+
     dispatch(
       setCurrentPost({ currentPost: memberData.result, currentPostId: boardId })
     );
