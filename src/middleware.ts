@@ -12,6 +12,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
+  if ((pathname==="/match/game-mode" || pathname==="/match/profile" || pathname==="/match/progress" || pathname==="/matching/complete") && !request.nextUrl.search) {
+    return NextResponse.redirect(new URL('/match', request.url));
+  }
+
   // 로그인 상태일 경우 요청을 그대로
   return NextResponse.next();
 }
