@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
 import { useEffect, useState } from "react";
-import { MannerKeywords, OthersManner } from "@/interface/manner";
+import { MannerKeywords } from "@/interface/manner";
 import { getOthersManner } from "@/api/manner";
 
 interface MannerLevelBoxProps {

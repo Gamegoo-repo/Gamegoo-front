@@ -1,4 +1,4 @@
-import { setOpenEvaluationModal } from "@/redux/slices/modalSlice";
+import { setOpenEvaluationModal, setOpenModal } from "@/redux/slices/modalSlice";
 import { setMannerStatus } from "@/redux/slices/mannerStatusSlice";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
@@ -56,18 +56,17 @@ const ConfirmModal = (props: ConfirmModalProps) => {
   const handleMannerEvaluate = () => {
     setMannerStatusClicked((prevState) => !prevState);
     setBadMannerStatusClicked(false);
-    dispatch(setMannerStatus("manner"));
   };
 
   const handleBadMannerEvaluate = () => {
     setBadMannerStatusClicked((prevState) => !prevState);
     setMannerStatusClicked(false);
-    dispatch(setMannerStatus("badManner"));
   };
 
   const handleCheck = () => {
     dispatch(setOpenEvaluationModal());
     onPrimaryClick();
+    mannerStatusClicked ? dispatch(setOpenModal('manner')) : dispatch(setOpenModal('badManner'));
   };
 
   return (

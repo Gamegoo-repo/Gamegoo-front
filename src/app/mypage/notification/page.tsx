@@ -59,7 +59,7 @@ const MyAlertPage = () => {
     fetchNotiCount();
   }, [currentPage]);
 
-  useEffect(() => {}, [totalPages, totalItems, count]);
+  useEffect(() => { }, [totalPages, totalItems, count]);
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
@@ -116,7 +116,7 @@ const MyAlertPage = () => {
                   content={data.content}
                   createdAt={data.createdAt}
                   read={data.read}
-                  onClick={handleClickAlert}
+                  onClick={() => handleClickAlert(data.notificationId, data.pageUrl)}
                 />
               ))}
             </AlertList>

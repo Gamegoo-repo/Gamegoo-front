@@ -3,29 +3,27 @@ import { socket } from '@/socket';
 import { getChatrooms } from '@/api/chat';
 import { ChatroomList } from '@/interface/chat';
 
-const useChatList = (isChatListVisible: boolean, setChatrooms: (chatrooms: ChatroomList[]) => void) => {
+const useChatList = (setChatrooms: (chatrooms: ChatroomList[]) => void) => {
     useEffect(() => {
         const handleJoinedNewChatroom = async () => {
-            if (isChatListVisible) {
-                try {
-                    const data = await getChatrooms();
-                    setChatrooms(data.result);
-                } catch (error) {
-                    console.error("Failed to fetch chat rooms:", error);
-                }
+            try {
+                const data = await getChatrooms();
+                setChatrooms(data.result);
+            } catch (error) {
+                console.error("Failed to fetch chat rooms:", error);
             }
         };
 
-        if (isChatListVisible) {
+        if (socket) {
             socket.on('joined-new-chatroom', handleJoinedNewChatroom);
         }
 
         return () => {
-            if (isChatListVisible) {
+            if (socket) {
                 socket.off('joined-new-chatroom', handleJoinedNewChatroom);
             }
         };
-    }, [isChatListVisible, setChatrooms]);
+    }, [setChatrooms]);
 };
 
 export default useChatList;

@@ -13,6 +13,7 @@ interface CheckboxProps {
   gap?: string;
   color?: string;
   id?: string;
+  disabled?: boolean;
 }
 
 const Checkbox = (props: CheckboxProps) => {
@@ -27,6 +28,7 @@ const Checkbox = (props: CheckboxProps) => {
     color,
     gap,
     id,
+    disabled,
   } = props;
   const [checked, setChecked] = useState<boolean>(isChecked);
 
@@ -59,6 +61,7 @@ const Checkbox = (props: CheckboxProps) => {
         type="checkbox"
         checked={isChecked}
         onChange={handleChange}
+        disabled={disabled}
       />
       <div>{label || children}</div>
     </StyledCheckbox>
