@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { ChatroomList } from '@/interface/chat';
 import { MoreBoxMenuItems } from '@/interface/moreBox';
 import { useDispatch, useSelector } from 'react-redux';
-import {  setOpenModal } from '@/redux/slices/modalSlice';
+import { setOpenModal } from '@/redux/slices/modalSlice';
 import { cancelFriendReq, deleteFriend, reqFriend } from '@/api/friends';
 import { RootState } from '@/redux/store';
 import { getChatrooms } from '@/api/chat';
@@ -30,26 +30,39 @@ const ChatRoomList = (props: ChatRoomListProps) => {
 
     const [chatrooms, setChatrooms] = useState<ChatroomList[]>([]);
     const [reloadChatrooms, setReloadChatrooms] = useState(false);
-    const [targetMemberId, setTargetMemberId] = useState<number | null>(null);
-    const [isMemberId, setIsMemberId] = useState<number>();
+    const [cursor, setCursor] = useState<number | null>(null);
+    const [hasNext, setHasNext] = useState<boolean>(true);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const { newMessage } = useChatMessage();
 
     /* 대화방 목록 가져오기  */
-    useEffect(() => {
-        const handleFetchChatrooms = async () => {
-            try {
-                const data = await getChatrooms();
-                setChatrooms(data.result.chatroomViewDTOList);
-                // 채팅방 읽음처리 하지 않기 위함
-                dispatch(setCurrentChatUuid(''));
-            } catch (error) {
-                console.error(error);
-            }
-        };
+    const handleFetchChatrooms = async (cursor?: number) => {
+        try {
+            const data = await getChatrooms(cursor);
+            setChatrooms(data.result.chatroomViewDTOList);
+            setHasNext(data.result.has_next);
+            setCursor(data.result.next_cursor);
+            // 채팅방 읽음처리 하지 않기 위함
+            dispatch(setCurrentChatUuid(''));
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
+
+    useEffect(() => {
         handleFetchChatrooms();
     }, [isModalType, reloadChatrooms, activeTab])
+
+    /* 대화 목록 페이지 - 스크롤이 끝에 도달하면 다음 페이지 가져오기 */
+    const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        if (!cursor) return;
+        const bottom = e.currentTarget.scrollHeight - e.currentTarget.scrollTop === e.currentTarget.clientHeight;
+        if (hasNext && bottom && !isLoading) {
+            handleFetchChatrooms(cursor);
+        }
+    };
 
     /* 상태 변경하여 useEffect 트리거 */
     const triggerReloadChatrooms = () => {
@@ -187,7 +200,7 @@ const ChatRoomList = (props: ChatRoomListProps) => {
     }
 
     return (
-        <List>
+        <List onScroll={handleScroll}>
             {chatrooms?.map(room => {
                 return (
                     <ChatRoomItem

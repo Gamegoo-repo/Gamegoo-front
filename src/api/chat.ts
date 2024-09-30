@@ -2,9 +2,11 @@ import Axios from ".";
 import { AuthAxios } from "./auth";
 
 /* 채팅방 목록 조회 */
-export const getChatrooms = async () => {
+export const getChatrooms = async (cursor?: number) => {
+    const url = cursor ? `/v1/member/chatroom?cursor=${cursor}` : `/v1/member/chatroom`;
+
     try {
-        const response = await AuthAxios.get("/v1/member/chatroom");
+        const response = await AuthAxios.get(url);
         console.log("채팅방 목록 조회 완료:", response.data);
         return response.data;
     } catch (error) {
@@ -51,7 +53,7 @@ export const enterUsingBoardId = async (boardId: number) => {
 
 /* 채팅 내역 조회 */
 export const getChatList = async (uuid: string, cursor?: number | null) => {
-    const url = !!cursor ? `/v1/chat/${uuid}/messages?cursor=${cursor}` : `/v1/chat/${uuid}/messages`;
+    const url = cursor ? `/v1/chat/${uuid}/messages?cursor=${cursor}` : `/v1/chat/${uuid}/messages`;
     try {
         const response = await AuthAxios.get(url);
         return response.data;

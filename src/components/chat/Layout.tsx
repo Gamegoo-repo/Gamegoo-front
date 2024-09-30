@@ -45,6 +45,9 @@ const Layout = () => {
     const [isMannerValue, setIsMannerValue] = useState<Mannerstatus | undefined>();
     const [isBadMannerValue, setIsBadMannerValue] = useState<Mannerstatus | undefined>();
     const [isEditMode, setIsEditMode] = useState(false);
+    const [cursor, setCursor] = useState<number | null>(null);
+    const [hasNext, setHasNext] = useState<boolean>(true);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const isChatRoomOpen = useSelector((state: RootState) => state.chat.isChatRoomOpen);
     const isChatUuid = useSelector((state: RootState) => state.chat.isChatRoomUuid);
@@ -61,15 +64,17 @@ const Layout = () => {
     };
 
     /* 친구 목록 가져오기 */
-    const handleFetchFriendsList = async () => {
+    const handleFetchFriendsList = async (cursor?: number) => {
         try {
-            const data = await getFriendsList();
+            const data = await getFriendsList(cursor);
             const friendsList = data?.result?.friendInfoDTOList;
 
             if (Array.isArray(friendsList)) {
                 setFriends(friendsList);
                 const likedFriends = friendsList.filter(friend => friend.isLiked);
                 setFavoriteFriends(likedFriends);
+                setHasNext(data.result.has_next);
+                setCursor(data.result.next_cursor);
             } else {
                 setFriends([]);
                 setFavoriteFriends([]);
@@ -78,6 +83,15 @@ const Layout = () => {
             console.error(error);
             setFriends([]);
             setFavoriteFriends([]);
+        }
+    };
+
+    /* 스크롤 이벤트 핸들러 - 스크롤이 끝에 도달하면 다음 페이지 로드 */
+    const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        if (!cursor) return;
+        const bottom = e.currentTarget.scrollHeight - e.currentTarget.scrollTop === e.currentTarget.clientHeight;
+        if (hasNext && bottom && !isLoading) {
+            handleFetchFriendsList(cursor);
         }
     };
 
@@ -362,14 +376,16 @@ const Layout = () => {
                         <ChatMain className={activeTab === 0 ? 'friend' : 'chat'}>
                             <Content className={activeTab === 0 ? 'friend' : 'chat'}>
                                 {activeTab === 0 ?
-                                    <FriendList
-                                        onChatRoom={handleGoToChatRoom}
-                                        friends={friends}
-                                        favoriteFriends={favoriteFriends}
-                                        onFavoriteToggle={handleFavoriteToggle}
-                                        handleFetchFriendsList={handleFetchFriendsList}
-                                        isSearching={isSearching}
-                                    />
+                                    <div onScroll={handleScroll}>
+                                        <FriendList
+                                            onChatRoom={handleGoToChatRoom}
+                                            friends={friends}
+                                            favoriteFriends={favoriteFriends}
+                                            onFavoriteToggle={handleFavoriteToggle}
+                                            handleFetchFriendsList={handleFetchFriendsList}
+                                            isSearching={isSearching}
+                                        />
+                                    </div>
                                     :
                                     <ChatRoomList
                                         onChatRoom={handleGoToChatRoom}
