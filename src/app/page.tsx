@@ -49,8 +49,9 @@ const HomePage = () => {
                 onClick={() => {
                   if (!isLoggedIn && content.id === 1) {
                     setShowAlert(true);
+                  } else {
+                    router.push(content.pathname);
                   }
-                  router.push(content.pathname);
                 }}
               >
                 <Image
