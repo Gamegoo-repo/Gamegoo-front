@@ -199,6 +199,7 @@ const Header = () => {
                 <Line
                   key={data.id}
                   onClick={() => {
+                    setIsMyPage(false);
                     if (data.id !== 6) {
                       router.push(`${data.url}`);
                     } else {

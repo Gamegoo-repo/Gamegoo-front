@@ -1,8 +1,8 @@
-import { deletePost, getMemberPost, getNonMemberPost } from "@/api/board";
+import { getMemberPost } from "@/api/board";
 import MoreBox from "@/components/common/MoreBox";
 import PostBoard from "@/components/createBoard/PostBoard";
 import Report from "@/components/readBoard/MoreBoxButton";
-import { MemberPost, NonMemberPost } from "@/interface/board";
+import { MemberPost } from "@/interface/board";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import {
   setClosePostingModal,
@@ -22,7 +22,7 @@ import {
 import { getProfileBgColor } from "@/utils/profile";
 import { toLowerCaseString } from "@/utils/string";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
@@ -108,14 +108,18 @@ const Post: React.FC<PostProps> = ({
       <Content>
         <Name>
           <Number>{boardId}</Number>
-          <ProfileImgWrapper $bgColor={getProfileBgColor(profileImage)}>
-            <ProfileImg
-              src={`/assets/images/profile/profile${profileImage}.svg`}
-              width={35}
-              height={35}
-              alt="프로필"
-            />
-          </ProfileImgWrapper>
+          {profileImage ? (
+            <ProfileImgWrapper $bgColor={getProfileBgColor(profileImage)}>
+              <ProfileImg
+                src={`/assets/images/profile/profile${profileImage}.svg`}
+                width={35}
+                height={35}
+                alt="프로필"
+              />
+            </ProfileImgWrapper>
+          ) : (
+            <ProfileImgWrapper $bgColor="#E2E2E2" />
+          )}
           <Div>
             {gameName}
             <Tag>#{tag}</Tag>
@@ -128,8 +132,10 @@ const Post: React.FC<PostProps> = ({
             height={26}
             alt="tier"
           />
-          {setAbbrevTier(tier)}
-          {rank}
+          <span>
+            {setAbbrevTier(tier)}
+            {rank}
+          </span>
         </Tier>
         <Memo>{contents}</Memo>
         <Date>
@@ -225,6 +231,7 @@ const Tier = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 5px;
   ${(props) => props.theme.fonts.regular14};
 `;
 
@@ -235,6 +242,7 @@ const Memo = styled.div`
   overflow: hidden;
   word-wrap: break-word;
   display: -webkit-box;
+  text-align: center;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   ${(props) => props.theme.fonts.regular14};
