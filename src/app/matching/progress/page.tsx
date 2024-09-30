@@ -130,33 +130,39 @@ const Progress = () => {
   }, []);
 
   useEffect(() => {
-    if (socket) {
-      // 매칭 성공 (receiver)
-      socket.on("matching-found-receiver", (data) => {
-        console.log("매칭 상대 발견(receiver):", data);
-        clearTimers();
-        socket?.emit("matching-found-success", {
-          senderMemberId: data.data.memberId,
-          gameMode: data.data.gameMode,
-        });
-        router.push(
-          `/matching/complete?role=receiver&opponent=true&type=${type}&rank=${rank}&user=${encodeURIComponent(
-            JSON.stringify(data.data)
-          )}`
-        );
-      });
-
-      // 매칭 성공 (sender)
-      socket.on("matching-found-sender", (data) => {
-        console.log("매칭 상대 발견(sender):", data);
-        clearTimers();
-        router.push(
-          `/matching/complete?role=sender&opponent=true&type=${type}&rank=${rank}&user=${encodeURIComponent(
-            JSON.stringify(data)
-          )}`
-        );
-      });
+    if (!socket) {
+      console.error("Socket is not initialized.");
+      return;
     }
+
+    // if (socket) {
+    // 매칭 성공 (receiver)
+    // 매칭 성공 (sender)
+    socket.on("matching-found-sender", (data) => {
+      console.log("매칭 상대 발견(sender):", data);
+      clearTimers();
+      router.push(
+        `/matching/complete?role=sender&opponent=true&type=${type}&rank=${rank}&user=${encodeURIComponent(
+          JSON.stringify(data.data)
+        )}`
+      );
+    });
+
+    socket.on("matching-found-receiver", (data) => {
+      console.log("매칭 상대 발견(receiver):", data);
+      clearTimers();
+      socket?.emit("matching-found-success", {
+        senderMemberId: data.data.memberId,
+        gameMode: data.data.gameMode,
+      });
+      router.push(
+        `/matching/complete?role=receiver&opponent=true&type=${type}&rank=${rank}&user=${encodeURIComponent(
+          JSON.stringify(data.data)
+        )}`
+      );
+    });
+
+    // }
 
     // 2분 타이머 시작
     startMatchingProcess();

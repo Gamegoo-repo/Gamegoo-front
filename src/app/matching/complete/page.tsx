@@ -184,8 +184,6 @@ const Complete = () => {
   // 매칭 성공 (Sender) 이벤트 핸들러
   const handleMatchingSuccessSender = () => {
     clearInterval(timerRef.current!);
-    alert("매칭 성공!");
-    // router.push("/chat");
   };
 
   // 매칭 실패 이벤트 핸들러

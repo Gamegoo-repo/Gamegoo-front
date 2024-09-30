@@ -404,6 +404,7 @@ const Profile: React.FC<Profile> = ({
               width={136}
               height={136}
               alt="프로필"
+              priority
             />
           </ProfileImgWrapper>
           {profileType !== "other" && (

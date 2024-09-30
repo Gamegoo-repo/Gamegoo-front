@@ -41,6 +41,10 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
     setMannerPopup(!mannerPopup);
   };
 
+  if (!user) {
+    return null;
+  }
+
   return (
     <Container $opponent={opponent}>
       <Column>
