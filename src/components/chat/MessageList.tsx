@@ -15,7 +15,7 @@ import { getProfileBgColor } from "@/utils/profile";
 import ConfirmModal from "../common/ConfirmModal";
 
 interface MessageListProps {
-    chatEnterData: Chat | undefined;
+    chatEnterData: Chat;
     systemMessage: DesignedSystemMessage | undefined;
     onMannerValuesGet: (memberId: number) => void;
     onBadMannerValuesGet: (memberId: number) => void;
@@ -32,9 +32,9 @@ const MessageList = (props: MessageListProps) => {
     const dispatch = useDispatch();
 
     const [messageList, setMessageList] = useState<ChatMessageDto[]>(chatEnterData?.chatMessageList.chatMessageDtoList || []);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [cursor, setCursor] = useState<number | null>(chatEnterData?.chatMessageList.has_next ? chatEnterData.chatMessageList.next_cursor : null);
-    const [hasNext, setHasNext] = useState<boolean>(false);
+    const [hasMore, setHasMore] = useState<boolean>(chatEnterData?.chatMessageList.has_next);
     const [isInitialLoading, setIsInitialLoading] = useState(true);
     const [isBoardId, setIsBoardId] = useState(0);
     const [isSystemMessageShown, setIsSystemMessageShown] = useState(false);
@@ -47,6 +47,12 @@ const MessageList = (props: MessageListProps) => {
 
     const { newMessage } = useChatMessage();
 
+    /* 게시글 열기 */
+    const handlePostOpen = (id: number) => {
+        dispatch(setOpenReadingModal());
+        setIsBoardId(id);
+    };
+
     /* 새로운 메시지 전에 시스템 메시지 보여주기 */
     useEffect(() => {
         if (newMessage) {
@@ -54,7 +60,7 @@ const MessageList = (props: MessageListProps) => {
                 let updatedMessages = [...prevMessages];
 
                 if (systemMessage && !isSystemMessageShown) {
-                    // systemMessage가 있을 때만 처리
+                    // 기존 시스템 메시지와, 새로운 시스템 메시지 타입이 달라서, 타입 같게 변경
                     const systemMessageAsChatMessage: ChatMessageDto = {
                         ...systemMessage,
                         createdAt: new Date().toISOString(),
@@ -75,32 +81,7 @@ const MessageList = (props: MessageListProps) => {
         }
     }, [newMessage, systemMessage]);
 
-    /* 채팅 데이터 로딩 처리 */
-    useEffect(() => {
-        if (chatEnterData) {
-            const chatMessages = chatEnterData.chatMessageList.chatMessageDtoList;
-
-            if (chatMessages.length > 0) {
-                // 메시지 있는 경우
-                setMessageList(chatMessages);
-                setIsLoading(false);
-            } else {
-                // 메시지 없는 경우, 로딩을 멈추고 빈 화면을 보여줌
-                setIsLoading(false);
-            }
-        } else {
-            // 아직 데이터가 없을 경우 로딩 중
-            setIsLoading(true);
-        }
-    }, [chatEnterData]);
-
-    /* 게시글 열기 */
-    const handlePostOpen = (id: number) => {
-        dispatch(setOpenReadingModal());
-        setIsBoardId(id);
-    };
-
-    /* 마지막 메시지로 스크롤 */
+    /* 처음 채팅방 들어올 때 마지막 메시지로 스크롤 이동 */
     useEffect(() => {
         if (chatRef.current && isInitialLoading) {
             const chatElement = chatRef.current;
@@ -109,44 +90,69 @@ const MessageList = (props: MessageListProps) => {
         }
     }, [chatRef, messageList, isInitialLoading]);
 
-    /* 스크롤 시 메시지 추가로 보여주기 */
-    const getMoreMessages = useCallback(async () => {
-        if (!hasNext || !cursor || !chatEnterData?.uuid) return;
 
-        setIsLoading(true);
-        try {
-            const data = await getChatList(chatEnterData.uuid, cursor);
-            const { chatMessageDtoList, next_cursor, has_next } = data.result;
-
-            // 메시지를 기존 목록에 추가
-            setMessageList((prevMessages) => [...chatMessageDtoList, ...prevMessages]);
-            setCursor(next_cursor);
-            setHasNext(has_next);
-        } catch (error) {
-            console.error("메시지 조회 실패:", error);
-        } finally {
-            setIsLoading(false);
-        }
-    }, [cursor, hasNext, chatEnterData?.uuid]);
-
-    /* 스크롤 이벤트 처리 */
     const handleScroll = useCallback(() => {
-        if (chatRef.current && chatRef.current.scrollTop === 0 && hasNext && !isLoading) {
-            getMoreMessages();
+        if (chatRef.current && !isInitialLoading) {
+            const { scrollTop } = chatRef.current;
+            if (scrollTop === 0 && hasMore && !isLoading) {
+                getMoreMessages();
+            }
         }
-    }, [chatRef, hasNext, isLoading, getMoreMessages]);
+    }, [chatRef, hasMore, isLoading, isInitialLoading]);
+
 
     useEffect(() => {
         const chatElement = chatRef.current;
         if (chatElement) {
-            chatElement.addEventListener("scroll", handleScroll);
+            chatElement.addEventListener('scroll', handleScroll);
         }
+
         return () => {
             if (chatElement) {
-                chatElement.removeEventListener("scroll", handleScroll);
+                chatElement.removeEventListener('scroll', handleScroll);
             }
         };
-    }, [handleScroll]);
+    }, [chatRef, handleScroll]);
+
+    /* 남은 메시지 보여주기(페이징) */
+    const getMoreMessages = useCallback(async () => {
+        if (isLoading || !hasMore) return;
+
+        setIsLoading(true);
+        try {
+            const chatElement = chatRef.current;
+            if (!chatElement) return;
+
+            // 현재 스크롤 위치와 전체 높이 저장
+            const previousScrollTop = chatElement.scrollTop;
+            const previousScrollHeight = chatElement.scrollHeight;
+
+            const data = await getChatList(chatEnterData.uuid, cursor);
+            const { chatMessageDtoList, next_cursor, has_next } = data.result;
+
+            // 기존 메시지 목록에 새로운 메시지 추가
+            setMessageList((prevMessages) => [
+                ...chatMessageDtoList,
+                ...prevMessages
+            ]);
+
+            setCursor(next_cursor);
+            setHasMore(has_next);
+
+            requestAnimationFrame(() => {
+                // 새로운 메시지가 추가된 후의 스크롤 높이 차이 계산
+                const newScrollHeight = chatElement.scrollHeight;
+                const scrollDifference = newScrollHeight - previousScrollHeight;
+
+                // 스크롤 위치를 기존 위치에서 중간 지점으로 이동 (새로운 메시지가 들어올 때 자연스럽게 스크롤 이동하기 위해서)
+                chatElement.scrollTop = previousScrollTop + scrollDifference;
+            });
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoading(false);
+        }
+    }, [isLoading, hasMore, cursor, chatEnterData]);
 
     /* 채팅 날짜 표시 */
     const handleDisplayDate = (messages: ChatMessageDto[], index: number): boolean => {
@@ -200,6 +206,7 @@ const MessageList = (props: MessageListProps) => {
         }
     }, [messageList]);
 
+    /* 매칭 성공후 매너/비매너 평가 버튼 클릭 시, 기존 매너/비매너 평가 내역 조회하기 */
     const handleMannerEvaluate = () => {
         if (chatEnterData) {
             dispatch(setOpenMannerStatusModal());
@@ -235,27 +242,6 @@ const MessageList = (props: MessageListProps) => {
             {isReadingModal && <ReadBoard postId={isBoardId} />}
             <ChatBorder>
                 <ChatMain ref={chatRef}>
-                    {/* {isLoading ? (
-                        <LoadingContainer>
-                            <LoadingSpinner />
-                        </LoadingContainer>
-                    ) : (
-                        messageList?.map((message, index) => (
-                            <MessageItem
-                                key={index}
-                                message={message}
-                                messageList={messageList}
-                                index={index}
-                                chatRef={chatRef}
-                                chatEnterData={chatEnterData}
-                                onPostOpen={handlePostOpen}
-                                showDate={handleDisplayDate(messageList, index)}
-                                showProfileImage={handleDisplayProfileImage(messageList, index)}
-                                showTime={handleDisplayTime(messageList, index)}
-                            />
-                           
-                        ))
-                    )} */}
                     {messageList.map((message, index) => {
                         const hasProfileImage = handleDisplayProfileImage(messageList, index);
                         const showTime = handleDisplayTime(messageList, index);

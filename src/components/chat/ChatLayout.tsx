@@ -55,8 +55,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
     const isChatRoomOpen = useSelector((state: RootState) => state.chat.isChatRoomOpen);
     const isChatUuid = useSelector((state: RootState) => state.chat.isChatRoomUuid);
     const isModalType = useSelector((state: RootState) => state.modal.modalType);
-    // const mannerPopupStatus = useSelector((state: RootState) => state.mannerStatus.mannerStatus);
-   
+
     /* 채팅방 입장 */
     const handleChatEnter = async () => {
         if (!isChatUuid) return;
@@ -470,7 +469,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
     return (
         <>
             <Overlay>
-                {isChatRoomOpen && isChatUuid !== null &&
+                {isChatRoomOpen && chatEnterData && isChatUuid !== null &&
                     <Wrapper onClick={handleOutsideModalClick}>
                         <MessageHeader
                             isMoreBoxOpen={isMoreBoxOpen}
@@ -634,7 +633,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
                                 onClick={() => isMannerValue.isExist ? handleMannerEdit('manner') : handleMannerPost()}
                                 buttonType="primary"
                                 text="완료"
-                                disabled={checkedMannerItems.length === 0}
+                                disabled={!isEditMode && checkedMannerItems.length === 0}
                             // disabled={isMannerValue.isExist ? false : checkedBadMannerItems.length === 0}
                             />
                         )}
@@ -678,7 +677,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
                                 onClick={() => isBadMannerValue.isExist ? handleMannerEdit('badManner') : handleBadMannerPost()}
                                 buttonType="primary"
                                 text="완료"
-                                disabled={checkedBadMannerItems.length === 0}
+                                disabled={!isEditMode && checkedBadMannerItems.length === 0}
                             // disabled={isBadMannerValue.isExist ? false : checkedBadMannerItems.length === 0}
                             />
                         )}
