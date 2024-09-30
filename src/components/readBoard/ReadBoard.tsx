@@ -155,7 +155,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
     }
 
-    if (!isPost || isUser?.id === isPost?.memberId) return;
+    if (!isPost || isUser?.gameName === isPost?.gameName) return;
 
     const params = {
       targetMemberId: isPost.memberId,
@@ -177,7 +177,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
     }
 
-    if (!isPost || isUser?.id === isPost?.memberId) return;
+    if (!isPost || isUser?.gameName === isPost?.gameName) return;
 
     try {
       await blockMember(isPost.memberId);
@@ -194,7 +194,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
     }
 
-    if (!isPost || isUser?.id === isPost?.memberId) return;
+    if (!isPost || isUser?.gameName === isPost?.gameName) return;
 
     if ('isBlocked' in isPost && !isPost.isBlocked) return;
 
@@ -212,7 +212,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
     }
 
-    if (!isPost || isUser?.id === isPost?.memberId) return;
+    if (!isPost || isUser?.gameName === isPost?.gameName) return;
 
     if ('isFriend' in isPost && isPost?.isFriend ||
       'friendRequestMemberId' in isPost && isPost?.friendRequestMemberId
@@ -235,7 +235,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
     }
 
-    if (!isPost || isUser?.id === isPost?.memberId) return;
+    if (!isPost || isUser?.gameName === isPost?.gameName) return;
 
     try {
       await cancelFriendReq(isPost.memberId);
@@ -254,7 +254,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
     }
 
-    if (!isPost || isUser?.id === isPost?.memberId) return;
+    if (!isPost || isUser?.gameName === isPost?.gameName) return;
 
     if ('isFriend' in isPost && !isPost?.isFriend) return;
 
@@ -306,7 +306,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
     }
 
-    // if (isUser?.id !== isPost?.memberId) return;
+    if (isUser?.gameName !== isPost?.gameName) return;
 
     try {
       await deletePost(postId);
@@ -334,12 +334,12 @@ const ReadBoard = (props: ReadBoardProps) => {
   /* 더보기 버튼 메뉴 */
   const MoreBoxMenuItems: MoreBoxMenuItems[] = [];
 
-  // if (isUser?.id === isPost?.memberId) {
-  MoreBoxMenuItems.push(
-    { text: '수정', onClick: handleEdit },
-    { text: '삭제', onClick: handleDelete }
-  );
-  // }
+  if (isUser?.gameName === isPost?.gameName) {
+    MoreBoxMenuItems.push(
+      { text: '수정', onClick: handleEdit },
+      { text: '삭제', onClick: handleDelete }
+    );
+  }
 
   //친구 삭제 - 차단되어있을 때, 친구일 때, 친구 추가 요청 중일 때
   //친구 추가(친구 요청) - 친구가 아닐 때, 차단되어있지 않을 때, 친구 추가 요청 중이 아닐 때
@@ -347,53 +347,53 @@ const ReadBoard = (props: ReadBoardProps) => {
   //차단하기 - 친구 추가 요청 중일 때, 친구 삭제된 상태일 때, 차단되어있지 않을 때
   //차단해제 - 차단되어 있을 때, 
 
-  // if (isUser?.id !== isPost?.memberId) {
-  let friendText = '친구 추가';
-  let friendFunc = handleFriendAdd;
-  let blockText = '차단하기';
-  let blockFunc = handleBlock;
+  if (isUser?.gameName !== isPost?.gameName) {
+    let friendText = '친구 추가';
+    let friendFunc = handleFriendAdd;
+    let blockText = '차단하기';
+    let blockFunc = handleBlock;
 
-  if (!!isPost && 'isBlocked' in isPost && 'isFriend' in isPost && 'friendRequestMemberId' in isPost) {
-    if (isPost?.isBlocked || isPost?.isFriend) {
-      friendText = '친구 삭제';
-      friendFunc = handleFriendDelete;
-    }
-    if (!isPost?.isBlocked || !isPost?.isFriend || !isPost?.friendRequestMemberId) {
-      friendText = '친구 추가';
-      friendFunc = handleFriendAdd;
-    }
-    if (isPost?.friendRequestMemberId) {
-      friendText = '친구 요청 취소';
-      friendFunc = handleCancelFriendReq;
+    if (!!isPost && 'isBlocked' in isPost && 'isFriend' in isPost && 'friendRequestMemberId' in isPost) {
+      if (isPost?.isBlocked || isPost?.isFriend) {
+        friendText = '친구 삭제';
+        friendFunc = handleFriendDelete;
+      }
+      if (!isPost?.isBlocked || !isPost?.isFriend || !isPost?.friendRequestMemberId) {
+        friendText = '친구 추가';
+        friendFunc = handleFriendAdd;
+      }
+      if (isPost?.friendRequestMemberId) {
+        friendText = '친구 요청 취소';
+        friendFunc = handleCancelFriendReq;
+      }
+
+      if (isPost?.friendRequestMemberId || !isPost?.isFriend, !isPost?.isBlocked) {
+        blockText = '차단하기';
+        blockFunc = handleBlock;
+      }
+
+      if (isPost?.isBlocked) {
+        blockText = '차단 해제';
+        friendText = '';
+        blockFunc = handleUnblock;
+      }
     }
 
-    if (isPost?.friendRequestMemberId || !isPost?.isFriend, !isPost?.isBlocked) {
-      blockText = '차단하기';
-      blockFunc = handleBlock;
+    if (friendText) {
+      MoreBoxMenuItems.push({ text: friendText, onClick: friendFunc });
     }
 
-    if (isPost?.isBlocked) {
-      blockText = '차단 해제';
-      friendText = '';
-      blockFunc = handleUnblock;
+    /* 내가 작성한 게시글이 아닐 때만 차단/차단 해제 버튼 보이게  */
+    if (isUser?.id !== isPost?.memberId) {
+      MoreBoxMenuItems.push({ text: blockText, onClick: blockFunc });
     }
+
+    MoreBoxMenuItems.push(
+      { text: blockText, onClick: blockFunc },
+      { text: '신고하기', onClick: handleReportModal }
+    );
+
   }
-
-  if (friendText) {
-    MoreBoxMenuItems.push({ text: friendText, onClick: friendFunc });
-  }
-
-  /* 내가 작성한 게시글이 아닐 때만 차단/차단 해제 버튼 보이게  */
-  if (isUser?.id !== isPost?.memberId) {
-    MoreBoxMenuItems.push({ text: blockText, onClick: blockFunc });
-  }
-
-  MoreBoxMenuItems.push(
-    { text: blockText, onClick: blockFunc },
-    { text: '신고하기', onClick: handleReportModal }
-  );
-
-  // }
 
   /* 신고하기 모달 닫기 */
   const handleModalClose = () => {
@@ -413,7 +413,7 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 채팅방 연결 */
   const handleChatStart = async () => {
-    if (!isUser.id) {
+    if (!isUser.gameName) {
       return showAlertWithContent(loginRequiredMessage, () => setShowAlert(false), "확인");
     }
 
