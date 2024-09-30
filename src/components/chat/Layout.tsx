@@ -224,7 +224,7 @@ const Layout = () => {
 
         try {
             const response = await leaveChatroom(selectedChatroom.uuid);
-            if (response.isSuccess) {
+            if (response.isSuccess && socket) {
                 socket.emit('exit-chatroom', { uuid: selectedChatroom.uuid });
             }
             await dispatch(setCloseModal());
@@ -242,7 +242,7 @@ const Layout = () => {
 
         try {
             const response = await blockMember(selectedChatroom.targetMemberId);
-            if (response.isSuccess) {
+            if (response.isSuccess && socket) {
                 socket.emit('exit-chatroom', { uuid: selectedChatroom.uuid });
                 await dispatch(setOpenModal('doneBlock'));
             }
