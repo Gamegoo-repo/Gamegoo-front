@@ -171,7 +171,7 @@ const Complete = () => {
 
   // 타임아웃 처리
   const handleTimeout = () => {
-    alert("타임 아웃 처리");
+    // alert("타임 아웃 처리");
     if (role === "receiver") {
       socket?.emit("matching-success-receiver");
       startSecondaryTimer();
@@ -282,7 +282,7 @@ const Wrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  padding-top: 140px;
+  padding-top: 110px;
 `;
 
 const MatchContent = styled.div`
