@@ -630,7 +630,9 @@ const Profile: React.FC<Profile> = ({
           )}
         </StyledBox>
       </Row>
-      {(profileType === "normal" || profileType === "other") && (
+      {(profileType === "normal" ||
+        (profileType === "other" &&
+          user.gameStyleResponseDTOList.length > 0)) && (
         <GameStyle
           profileType={profileType === "normal" ? "none" : profileType}
           gameStyleResponseDTOList={user.gameStyleResponseDTOList}
