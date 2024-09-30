@@ -28,7 +28,9 @@ const HomePage = () => {
             return (
               <ContentWrapper
                 key={content.id}
-                onClick={() => router.push(content.pathname)}
+                onClick={() => {
+                  router.push(content.pathname);
+                }}
               >
                 <Image
                   src={content.image}
