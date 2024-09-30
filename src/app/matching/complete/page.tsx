@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import styled from "styled-components";
 import HeaderTitle from "@/components/common/HeaderTitle";
 import SquareProfile from "@/components/match/SquareProfile";
@@ -171,7 +172,7 @@ const Complete = () => {
 
   // 타임아웃 처리
   const handleTimeout = () => {
-    alert("타임 아웃 처리");
+    // alert("타임 아웃 처리");
     if (role === "receiver") {
       socket?.emit("matching-success-receiver");
       startSecondaryTimer();
@@ -230,59 +231,69 @@ const Complete = () => {
   };
 
   return (
-    <Wrapper>
-      <MatchContent>
-        <HeaderTitle title="매칭 완료" sub="듀오 상대를 찾았어요!" />
-        <Main>
-          <SquareProfile user={userMe} />
-          <Oppnent>
-            <SquareProfile opponent={true} user={user} />
-            <Button
-              buttonType="secondary"
-              text="매칭 거절하기"
-              onClick={handleReject}
-            />
-            <Text>{timeLeft}초 뒤 자동으로 대화방이 생성됩니다.</Text>
-          </Oppnent>
-        </Main>
-        <Footer>
-          <ChatBoxContent>
-            <ChatButton />
-          </ChatBoxContent>
-        </Footer>
-      </MatchContent>
-      {/* 매칭 실패 시 팝업 */}
-      {showFailModal && (
-        <ConfirmModal
-          width="540px"
-          primaryButtonText="예"
-          secondaryButtonText="아니요"
-          onPrimaryClick={() => {
-            router.push(`/match/profile?type=${type}&rank=${rank}&retry=true`);
-          }}
-          onSecondaryClick={() => {
-            setShowFailModal(false);
-            setTimeout(() => {
-              router.push("/");
-            }, 3000);
-          }}
-        >
-          아쉽게도 상대방과 매칭이 성사되지 못했어요.
-          <br />
-          계속해서 매칭을 시도할까요?
-        </ConfirmModal>
-      )}
-    </Wrapper>
+    <Suspense>
+      <Wrapper>
+        <MatchContent>
+          <HeaderTitle title="매칭 완료" sub="듀오 상대를 찾았어요!" />
+          <Main>
+            <SquareProfile user={userMe} />
+            <Oppnent>
+              <SquareProfile opponent={true} user={user} />
+              <Button
+                buttonType="secondary"
+                text="매칭 거절하기"
+                onClick={handleReject}
+              />
+              <Text>{timeLeft}초 뒤 자동으로 대화방이 생성됩니다.</Text>
+            </Oppnent>
+          </Main>
+          <Footer>
+            <ChatBoxContent>
+              <ChatButton />
+            </ChatBoxContent>
+          </Footer>
+        </MatchContent>
+        {/* 매칭 실패 시 팝업 */}
+        {showFailModal && (
+          <ConfirmModal
+            width="540px"
+            primaryButtonText="예"
+            secondaryButtonText="아니요"
+            onPrimaryClick={() => {
+              router.push(
+                `/match/profile?type=${type}&rank=${rank}&retry=true`
+              );
+            }}
+            onSecondaryClick={() => {
+              setShowFailModal(false);
+              setTimeout(() => {
+                router.push("/");
+              }, 3000);
+            }}
+          >
+            아쉽게도 상대방과 매칭이 성사되지 못했어요.
+            <br />
+            계속해서 매칭을 시도할까요?
+          </ConfirmModal>
+        )}
+      </Wrapper>
+    </Suspense>
   );
 };
 
-export default Complete;
+export default function CompletePaging() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Complete />
+    </Suspense>
+  );
+}
 
 const Wrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  padding-top: 140px;
+  padding-top: 110px;
 `;
 
 const MatchContent = styled.div`

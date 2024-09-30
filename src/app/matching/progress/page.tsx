@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import styled, { keyframes } from "styled-components";
 import HeaderTitle from "@/components/common/HeaderTitle";
 import SquareProfile from "@/components/match/SquareProfile";
@@ -212,103 +213,112 @@ const Progress = () => {
   };
 
   return (
-    <Wrapper>
-      <MatchContent>
-        <Header>
-          <HeaderTitle title="매칭 중" sub="나와 꼭 맞는 상대를 찾는 중..." />
-          <Time>
-            <Span>{formatTime(timeLeft)}&nbsp;</Span>/5:00
-          </Time>
-        </Header>
-        <Main>
-          <SquareProfile user={user} />
-          <Waiting>
-            <AnimatedImage
-              src="/assets/images/wait_heart.svg"
-              width={225}
-              height={225}
-              alt="heart"
-            />
-            <AnimatedText $visible={textVisible}>{currentMessage}</AnimatedText>
-          </Waiting>
-        </Main>
-        {/* 즐겜모드, 빡겜모드 매칭 실패 */}
-        {isFirstRetry && (
-          <ConfirmModal
-            width="540px"
-            primaryButtonText="예"
-            secondaryButtonText="아니요"
-            onPrimaryClick={() => {
-              router.push(
-                `/match/profile?type=${type}&rank=${rank}&retry=true`
-              );
-            }}
-            onSecondaryClick={() => {
-              setIsFirstRetry(false);
-              setTimeout(() => {
-                router.push("/");
-              }, 3000);
-            }}
-          >
-            계속해서 매칭을 시도하겠습니까?
-          </ConfirmModal>
-        )}
-        {/* 빡겜모드 2번째 매칭 실패 시, 같은 조건으로 글을 올린 사람이 있을 때 */}
-        {isSecondYes && (
-          <ConfirmModal
-            width="540px"
-            onPrimaryClick={() => {
-              setIsSecondYes(false);
-              setTimeout(() => {
-                router.push("/");
-              }, 3000);
-            }}
-            onSecondaryClick={() => {
-              router.push("/borad");
-              setIsSecondYes(false);
-            }}
-            primaryButtonText="닫기"
-            secondaryButtonText="글 보러하기"
-          >
-            조건에 맞는 사람이 없습니다.
-            <br />
-            같은 조건으로 글을 올린 사람이 있어요!
-          </ConfirmModal>
-        )}
-        {/* 빡겜모드 2번째 매칭 실패 시, 같은 조건으로 글을 쓴 사람이 없을 때 */}
-        {isSecondNo && (
-          <ConfirmModal
-            width="540px"
-            onPrimaryClick={() => {
-              setIsSecondNo(false);
-              setTimeout(() => {
-                router.push("/");
-              }, 3000);
-            }}
-            onSecondaryClick={() => {
-              router.push("/borad");
-              setIsSecondNo(false);
-            }}
-            primaryButtonText="닫기"
-            secondaryButtonText="글 작성하기"
-          >
-            조건에 맞는 사람이 없습니다.
-            <br />
-            게시판에 글을 작성할 수 있어요!
-          </ConfirmModal>
-        )}
-      </MatchContent>
-      <Footer>
-        <ChatBoxContent>
-          <ChatButton />
-        </ChatBoxContent>
-      </Footer>
-    </Wrapper>
+    <Suspense>
+      <Wrapper>
+        <MatchContent>
+          <Header>
+            <HeaderTitle title="매칭 중" sub="나와 꼭 맞는 상대를 찾는 중..." />
+            <Time>
+              <Span>{formatTime(timeLeft)}&nbsp;</Span>/5:00
+            </Time>
+          </Header>
+          <Main>
+            <SquareProfile user={user} />
+            <Waiting>
+              <AnimatedImage
+                src="/assets/images/wait_heart.svg"
+                width={225}
+                height={225}
+                alt="heart"
+              />
+              <AnimatedText $visible={textVisible}>
+                {currentMessage}
+              </AnimatedText>
+            </Waiting>
+          </Main>
+          {/* 즐겜모드, 빡겜모드 매칭 실패 */}
+          {isFirstRetry && (
+            <ConfirmModal
+              width="540px"
+              primaryButtonText="예"
+              secondaryButtonText="아니요"
+              onPrimaryClick={() => {
+                router.push(
+                  `/match/profile?type=${type}&rank=${rank}&retry=true`
+                );
+              }}
+              onSecondaryClick={() => {
+                setIsFirstRetry(false);
+                setTimeout(() => {
+                  router.push("/");
+                }, 3000);
+              }}
+            >
+              계속해서 매칭을 시도하겠습니까?
+            </ConfirmModal>
+          )}
+          {/* 빡겜모드 2번째 매칭 실패 시, 같은 조건으로 글을 올린 사람이 있을 때 */}
+          {isSecondYes && (
+            <ConfirmModal
+              width="540px"
+              onPrimaryClick={() => {
+                setIsSecondYes(false);
+                setTimeout(() => {
+                  router.push("/");
+                }, 3000);
+              }}
+              onSecondaryClick={() => {
+                router.push("/borad");
+                setIsSecondYes(false);
+              }}
+              primaryButtonText="닫기"
+              secondaryButtonText="글 보러하기"
+            >
+              조건에 맞는 사람이 없습니다.
+              <br />
+              같은 조건으로 글을 올린 사람이 있어요!
+            </ConfirmModal>
+          )}
+          {/* 빡겜모드 2번째 매칭 실패 시, 같은 조건으로 글을 쓴 사람이 없을 때 */}
+          {isSecondNo && (
+            <ConfirmModal
+              width="540px"
+              onPrimaryClick={() => {
+                setIsSecondNo(false);
+                setTimeout(() => {
+                  router.push("/");
+                }, 3000);
+              }}
+              onSecondaryClick={() => {
+                router.push("/borad");
+                setIsSecondNo(false);
+              }}
+              primaryButtonText="닫기"
+              secondaryButtonText="글 작성하기"
+            >
+              조건에 맞는 사람이 없습니다.
+              <br />
+              게시판에 글을 작성할 수 있어요!
+            </ConfirmModal>
+          )}
+        </MatchContent>
+        <Footer>
+          <ChatBoxContent>
+            <ChatButton />
+          </ChatBoxContent>
+        </Footer>
+      </Wrapper>
+    </Suspense>
   );
 };
 
-export default Progress;
-
+export default function ProgressPaging() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Progress />
+    </Suspense>
+  );
+}
 const fadeIn = keyframes`
   from {
     opacity: 0;
@@ -340,7 +350,7 @@ const Wrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  padding-top: 140px;
+  padding-top: 110px;
 `;
 
 const MatchContent = styled.div`

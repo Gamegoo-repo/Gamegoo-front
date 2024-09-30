@@ -8,7 +8,7 @@ export interface PostUpdate {
     gameName?: string;
     tag?: string;
     tier?: string;
-    rank?: string;
+    rank?: number;
     contents?: string;
     createdAt?: string;
 }

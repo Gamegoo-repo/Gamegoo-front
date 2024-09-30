@@ -6,12 +6,30 @@ import { MATCH_PAGE_DATA } from "@/data/match";
 import Image from "next/image";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { useState } from "react";
+import Alert from "@/components/common/Alert";
 
 const HomePage = () => {
   const router = useRouter();
 
+  const isLoggedIn = useSelector((state: RootState) => !!state.user.gameName);
+  const [showAlert, setShowAlert] = useState(false);
+
   return (
     <Wrapper>
+      {showAlert && (
+        <Alert
+          icon="exclamation"
+          width={68}
+          height={58}
+          content="로그인이 필요한 서비스입니다."
+          alt="경고"
+          onClose={() => setShowAlert(false)}
+          buttonText="확인"
+        />
+      )}
       <HomeContent>
         <Header>
           <Image
@@ -28,7 +46,12 @@ const HomePage = () => {
             return (
               <ContentWrapper
                 key={content.id}
-                onClick={() => router.push(content.pathname)}
+                onClick={() => {
+                  if (!isLoggedIn && content.id === 1) {
+                    setShowAlert(true);
+                  }
+                  router.push(content.pathname);
+                }}
               >
                 <Image
                   src={content.image}
@@ -59,7 +82,7 @@ const Wrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  padding-top: 140px;
+  padding-top: 100px;
 `;
 
 const HomeContent = styled.div`

@@ -2,6 +2,7 @@
 
 import { getOtherManner } from "@/api/manner";
 import { getOtherProfile } from "@/api/member";
+import BlindProfile from "@/components/user/BlindProfile";
 import UserProfile, { Manner } from "@/components/user/UserProfile";
 import { User } from "@/interface/profile";
 import { useParams } from "next/navigation";
@@ -54,11 +55,16 @@ const UserProfilePage = () => {
   };
 
   return otherProfile && otherManner ? (
-    <UserProfile
-      profile={otherProfile}
-      manner={otherManner}
-      updateFriendState={updateFriendState}
-    />
+    otherProfile.isBlind ? (
+      // <BlindProfile manner={otherManner} />
+      <div />
+    ) : (
+      <UserProfile
+        profile={otherProfile}
+        manner={otherManner}
+        updateFriendState={updateFriendState}
+      />
+    )
   ) : (
     <p>Loading...</p>
   );

@@ -175,7 +175,7 @@ const Wrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  padding-top: 140px;
+  padding-top: 110px;
 `;
 
 const MatchContent = styled.div`
@@ -190,6 +190,7 @@ const Main = styled.main`
   align-items: flex-end;
   width: 100%;
   gap: 14px;
+  margin-top: 40px;
   margin-bottom: 37px;
 `;
 

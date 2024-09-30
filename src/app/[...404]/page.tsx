@@ -1,6 +1,6 @@
 "use client";
 
-import { notFound, redirect, usePathname } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
 
 export default function NotFoundCatchAll() {
   const pathname = usePathname();

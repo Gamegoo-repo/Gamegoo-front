@@ -2,6 +2,8 @@ import axios, { AxiosInstance, InternalAxiosRequestConfig } from "axios";
 import { LOGIN } from "@/constants/messages";
 import Axios, { BASE_URL } from ".";
 import { getAccessToken, getRefreshToken } from "@/utils/storage";
+import { clearUserProfile } from "@/redux/slices/userSlice";
+import { useDispatch } from "react-redux";
 
 export const reissueToken = async () => {
   const endpoint = '/v1/member/refresh';
@@ -53,10 +55,12 @@ AuthAxios.interceptors.response.use(
     /* 토큰이 만료 시 */
     if (status === 401) {
       console.log("AuthAxios 401 Error Response Interceptor");
+      const dispatch = useDispatch();
       try {
         const originRequest = config;
         const response = await reissueToken();
         console.log("토큰 재발급 성공");
+
         // refreshToken 요청 성공
         const newAccessToken = response.result.accessToken;
         console.log(newAccessToken);
@@ -73,9 +77,12 @@ AuthAxios.interceptors.response.use(
       } catch (reissueError: any) {
         if (reissueError.response && reissueError.response.status === 404) {
           console.log(LOGIN.MESSAGE.EXPIRED);
+          dispatch(clearUserProfile());
           window.location.replace('/login');
         } else {
           console.log(LOGIN.MESSAGE.ETC);
+          dispatch(clearUserProfile());
+          window.location.replace('/login');
         }
         return Promise.reject(reissueError);
       }

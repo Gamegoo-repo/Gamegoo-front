@@ -48,7 +48,7 @@ const Wrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  padding-top: 140px;
+  padding-top: 110px;
 `;
 
 const MatchContent = styled.div`
@@ -63,6 +63,7 @@ const Main = styled.main`
   align-items: center;
   width: 100%;
   gap: 59px;
+  margin-top: 72px;
 
   @media screen and (max-width: 1300px) {
     flex-direction: column;

@@ -83,7 +83,7 @@ const GameStyle = (props: GameStyleProps) => {
     }
 
     setSelectedStyles(updatedStyles);
-    if (profileType === "me") {
+    if (profileType === "me" || profileType === "mini") {
       await putGameStyle(updatedStyles);
     } else if (profileType === "none") {
       dispatch(updateGameStyles(updatedStyles));

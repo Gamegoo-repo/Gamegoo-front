@@ -17,6 +17,7 @@ import {
 import { getNotiCount } from "@/api/notification";
 import { RootState } from "@/redux/store";
 import { reissueToken } from "@/api/auth";
+import Alert from "./Alert";
 
 interface HeaderProps {
   selected: boolean;
@@ -35,21 +36,10 @@ const Header = () => {
 
   const myPageRef = useRef<HTMLDivElement>(null);
 
-  const handleTokenReissueError = async () => {
-    try {
-      const response = await reissueToken();
-      return response.data;
-    } catch (error) {
-      dispatch(clearUserProfile());
-      router.push("/login");
-      throw error;
-    }
-  };
+  const isLoggedIn = useSelector((state: RootState) => !!state.user.gameName);
+  const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
-    if (getAccessToken() && getRefreshToken()) {
-      // handleTokenReissueError();
-    }
     const storedName =
       localStorage.getItem("name") || sessionStorage.getItem("name");
     const storedProfileImg =
@@ -112,6 +102,17 @@ const Header = () => {
 
   return (
     <Head>
+      {showAlert && (
+        <Alert
+          icon="exclamation"
+          width={68}
+          height={58}
+          content="로그인이 필요한 서비스입니다."
+          alt="경고"
+          onClose={() => setShowAlert(false)}
+          buttonText="확인"
+        />
+      )}
       <HeaderBar>
         <Left>
           <Link href="/">
@@ -124,11 +125,25 @@ const Header = () => {
             />
           </Link>
           <Menus>
-            <Menu href="/match" selected={pathname.includes("/match")}>
+            <Menu
+              selected={pathname.includes("/match")}
+              onClick={() => {
+                if (!isLoggedIn) {
+                  setShowAlert(true);
+                } else {
+                  router.push("/match");
+                }
+              }}
+            >
               바로 매칭
             </Menu>
             <Bar />
-            <Menu href="/board" selected={pathname === "/board"}>
+            <Menu
+              selected={pathname === "/board"}
+              onClick={() => {
+                router.push("/board");
+              }}
+            >
               매칭 게시판
             </Menu>
           </Menus>
@@ -199,6 +214,7 @@ const Header = () => {
                 <Line
                   key={data.id}
                   onClick={() => {
+                    setIsMyPage(false);
                     if (data.id !== 6) {
                       router.push(`${data.url}`);
                     } else {
@@ -236,8 +252,6 @@ const Head = styled.div`
   justify-content: center;
   box-sizing: border-box;
   ${(props) => props.theme.fonts.regular14};
-  position: absolute;
-  top: 0;
 `;
 
 const HeaderBar = styled.div`
@@ -256,7 +270,8 @@ const Menus = styled.div`
   gap: 25px;
 `;
 
-const Menu = styled(Link)<HeaderProps>`
+const Menu = styled.button<HeaderProps>`
+  ${(props) => props.theme.fonts.regular14};
   font-weight: ${({ selected }) => (selected ? "700" : "400")};
 `;
 
