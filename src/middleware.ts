@@ -7,7 +7,7 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // 로그인하지 않은 상태
-  if (!token && (pathname.startsWith('/match') || pathname.startsWith('/matching'))) {
+  if (!token && (pathname.startsWith('/match') || pathname.startsWith('/matching')) || pathname.startsWith('/mypage') || pathname.startsWith('/user')) {
     // 루트 경로로 리다이렉트
     return NextResponse.redirect(new URL('/', request.url));
   }
