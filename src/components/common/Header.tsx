@@ -252,8 +252,6 @@ const Head = styled.div`
   justify-content: center;
   box-sizing: border-box;
   ${(props) => props.theme.fonts.regular14};
-  position: absolute;
-  top: 0;
 `;
 
 const HeaderBar = styled.div`
