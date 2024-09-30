@@ -14,7 +14,7 @@ import Alert from "@/components/common/Alert";
 const HomePage = () => {
   const router = useRouter();
 
-  const isLoggedIn = useSelector((state: RootState) => !!state.user.id);
+  const isLoggedIn = useSelector((state: RootState) => !!state.user.gameName);
   const [showAlert, setShowAlert] = useState(false);
 
   return (

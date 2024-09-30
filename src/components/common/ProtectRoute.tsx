@@ -7,7 +7,7 @@ import { getAccessToken } from "@/utils/storage";
 const ProtectRoute: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const isLoggedIn = useSelector((state: RootState) => !!state.user.id); // id가 있을 때 로그인으로 간주
+  const isLoggedIn = useSelector((state: RootState) => !!state.user.gameName); // gameName이 있을 때 로그인으로 간주 (id 대신)
   const router = useRouter();
 
   useEffect(() => {

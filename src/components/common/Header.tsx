@@ -36,7 +36,7 @@ const Header = () => {
 
   const myPageRef = useRef<HTMLDivElement>(null);
 
-  const isLoggedIn = useSelector((state: RootState) => !!state.user.id);
+  const isLoggedIn = useSelector((state: RootState) => !!state.user.gameName);
   const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
