@@ -11,7 +11,7 @@ export const reqFriend = async (memberId: number) => {
     } catch (error: any) {
         if (error.response && error.response.data) {
             let errorMessage = "친구 요청이 실패했습니다.";
-            switch(error.response.data.code){
+            switch (error.response.data.code) {
                 case "MEMBER404":
                     errorMessage = "해당 사용자를 찾을 수 없습니다.";
                     break;
@@ -37,10 +37,10 @@ export const reqFriend = async (memberId: number) => {
                     break;
             }
 
-          notify({ text: errorMessage, icon: '🚫', type: 'error' });
-          console.error(errorMessage);
+            notify({ text: errorMessage, icon: '🚫', type: 'error' });
+            console.error(errorMessage);
         } else {
-          console.error("친구 요청 실패:", error);
+            console.error("친구 요청 실패:", error);
         }
         throw error;
     }
@@ -58,7 +58,7 @@ export const cancelFriendReq = async (memberId: number) => {
             if (error.response.status === 404) {
                 errorMessage = "취소/수락/거절할 친구 요청이 존재하지 않습니다.";
             } else if (error.response.data) {
-                switch(error.response.data.code){
+                switch (error.response.data.code) {
                     case "FRIEND401":
                         errorMessage = "본인에게는 친구 요청 취소를 할 수 없습니다.";
                         break;
@@ -115,9 +115,10 @@ export const deleteFriend = async (memberId: number) => {
 };
 
 /* 친구 목록 조회 */
-export const getFriendsList = async () => {
+export const getFriendsList = async (cursor?: number) => {
+    const url = cursor ? `/v1/friends?cursor=${cursor}` : `/v1/friends`
     try {
-        const response = await Axios.get(`/v1/friends`);
+        const response = await Axios.get(url);
         return response.data;
     } catch (error) {
         throw error;

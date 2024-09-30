@@ -3,7 +3,7 @@ import { theme } from "@/styles/theme";
 import CRModal from "../crBoard/CRModal";
 import Button from "../common/Button";
 import PositionBox from "../crBoard/PositionBox";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ProfileImage from "./ProfileImage";
 import User from "../crBoard/User";
 import MannerLevel from "../common/MannerLevel";
@@ -33,7 +33,7 @@ import { cancelFriendReq, deleteFriend, reqFriend } from "@/api/friends";
 import Alert from "../common/Alert";
 import { AlertProps } from "@/interface/modal";
 import { useRouter } from "next/navigation";
-import { openChatRoom, setErrorMessage } from "@/redux/slices/chatSlice";
+import { openChatRoom, setChatRoomUuid, setErrorMessage } from "@/redux/slices/chatSlice";
 
 interface ReadBoardProps {
   postId: number;
@@ -44,6 +44,7 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   const dispatch = useDispatch();
   const router = useRouter();
+  const mannerLevelBoxRef = useRef<HTMLDivElement>(null);
 
   const [isPost, setIsPost] = useState<MemberPost | NonMemberPost>();
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
@@ -103,6 +104,21 @@ const ReadBoard = (props: ReadBoardProps) => {
     }, 3000);
 
     return () => clearTimeout(timer);
+  }, []);
+
+  /* MannerLevelBox 외부 클릭 시 닫힘 */
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (mannerLevelBoxRef.current && !mannerLevelBoxRef.current.contains(event.target as Node)) {
+        setIsMannerLevelBoxOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   /* 로그아웃 시, 비회원 접근 시 알럿 props 설정 함수 */
@@ -393,19 +409,21 @@ const ReadBoard = (props: ReadBoardProps) => {
   const handleChatStart = async () => {
     if (!isUser.id) {
       return showAlertWithContent(loginRequiredMessage, () => setShowAlert(false), "확인");
-   }
-   // TODO : 수정 필
+    }
+
     if (isErrorMessage) {
       alert(isErrorMessage);
       dispatch(setErrorMessage(null));
-  } else {
+    } else {
       try {
-          dispatch(setCloseReadingModal());
-          dispatch(openChatRoom());
+        dispatch(setCloseReadingModal());
+        if (!isPost) return;
+        dispatch(setChatRoomUuid(isPost.boardId));
+        dispatch(openChatRoom());
       } catch (error) {
-          console.error(error);
+        console.error(error);
       }
-  }
+    }
   };
 
 
@@ -419,14 +437,8 @@ const ReadBoard = (props: ReadBoardProps) => {
               <MoreBox
                 items={MoreBoxMenuItems}
                 top={67}
-                left={776} />
+                left={17} />
             )}
-            {isMannerLevelBoxOpen &&
-              <MannerLevelBox
-                memberId={isPost.memberId}
-                level={isPost.mannerLevel}
-                top="14%"
-                right="22%" />}
             <UpdatedDate>게시일 : {setPostingDateFormatter(isPost.createdAt)}</UpdatedDate>
             <UserSection>
               <UserLeft>
@@ -438,12 +450,24 @@ const ReadBoard = (props: ReadBoardProps) => {
                     tag={isPost.tag}
                     tier={isPost.tier}
                     rank={isPost.rank} />
-                  <MannerLevel
-                    forNoData={isPost.tier}
-                    level={isPost.mannerLevel}
-                    onClick={handleMannerLevelBoxOpen}
-                    position="top"
-                    isBalloon={isMannerBalloonVisible} />
+                  <MannerLevelWrapper>
+                    <MannerLevel
+                      forNoData={isPost.tier}
+                      level={isPost.mannerLevel}
+                      onClick={handleMannerLevelBoxOpen}
+                      position="top"
+                      isBalloon={isMannerBalloonVisible} />
+                    {isMannerLevelBoxOpen && (
+                      <div ref={mannerLevelBoxRef}>
+                        <MannerLevelBox
+                          memberId={isPost.memberId}
+                          level={isPost.mannerLevel}
+                          top="69%"
+                          right="-25%"
+                        />
+                      </div>
+                    )}
+                  </MannerLevelWrapper>
                 </UserNManner>
               </UserLeft>
               <UserRight>
@@ -454,8 +478,11 @@ const ReadBoard = (props: ReadBoardProps) => {
             </UserSection>
             <ChampionNQueueSection>
               <Champion
-                list={isPost.championList}
-                size={14} />
+                size={14}
+                list={isPost.championResponseDTOList.map(
+                  (champion) => champion.championId
+                )}
+              />
               <QueueType
                 value={isPost.gameMode} />
             </ChampionNQueueSection>
@@ -472,7 +499,7 @@ const ReadBoard = (props: ReadBoardProps) => {
             <WinningRateSection $gameType={type}>
               <WinningRate
                 completed={isPost.winRate}
-                history={isPost.recentGameCount} />
+                recentGameCount={isPost.recentGameCount} />
             </WinningRateSection>
             <StyleSection $gameType={type}>
               <Title>게임 스타일</Title>
@@ -486,13 +513,16 @@ const ReadBoard = (props: ReadBoardProps) => {
                 </MemoData>
               </Memo>
             </MemoSection>
-            <ButtonContent $gameType={type}>
-              <Button
-                type="submit"
-                buttonType="primary"
-                text="말 걸어보기"
-                onClick={handleChatStart} />
-            </ButtonContent>
+            {(isUser.id === isPost.memberId || ('isBlocked' in isPost ? !isPost.isBlocked : true)) && (
+              <ButtonContent $gameType={type}>
+                <Button
+                  type="submit"
+                  buttonType="primary"
+                  text="말 걸어보기"
+                  onClick={handleChatStart}
+                />
+              </ButtonContent>
+            )}
           </>
         )}
       </CRModal>
@@ -585,6 +615,10 @@ const Title = styled.p`
     ${(props) => props.theme.fonts.semiBold14};
     color: #222222;
     margin-bottom:5px;
+`;
+
+const MannerLevelWrapper = styled.div`
+  position: relative;
 `;
 
 const ChampionNQueueSection = styled.div`

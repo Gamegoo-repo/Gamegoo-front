@@ -18,6 +18,7 @@ const useChatMessage = () => {
         const handleChatMessage = (res: any) => {
             const chatroomUuid = res.data.chatroomUuid;
             const newChatTimestamp = res.data.timestamp;
+
             /* 현재 보고 있는 채팅방 읽음 처리 */
             if (currentChatUuid && chatroomUuid === currentChatUuid) {
                 markChatAsRead(currentChatUuid, newChatTimestamp);
