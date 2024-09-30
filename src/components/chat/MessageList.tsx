@@ -51,8 +51,8 @@ const MessageList = (props: MessageListProps) => {
 
     /* 매너 시스템 소켓 이벤트 리스닝 */
     useEffect(() => {
-        const handleMannerSystemMessage = (res: any) => {
-            setMannerSystemMessage(true); // 소켓 이벤트 발생 시 상태 업데이트
+        const handleMannerSystemMessage = () => {
+            setMannerSystemMessage(true);
         };
 
         if (socket) {
@@ -272,7 +272,7 @@ const MessageList = (props: MessageListProps) => {
                                         message={message.message}
                                         onClick={message.boardId ? () => handlePostOpen(message.boardId as number) : undefined}
                                     />
-                                ) : message.systemType === 1 || mannerSystemMessage ? (
+                                ) : message.systemType === 1  ? (
                                     <>
                                         <FeedbackDiv>
                                             <FeedbackContainer>
