@@ -462,6 +462,8 @@ const ReadBoard = (props: ReadBoardProps) => {
                         <MannerLevelBox
                           memberId={isPost.memberId}
                           level={isPost.mannerLevel}
+                          top="69%"
+                          right="-25%"
                         />
                       </div>
                     )}
@@ -476,8 +478,11 @@ const ReadBoard = (props: ReadBoardProps) => {
             </UserSection>
             <ChampionNQueueSection>
               <Champion
-                list={isPost.championResponseDTOList}
-                size={14} />
+                size={14}
+                list={isPost.championResponseDTOList.map(
+                  (champion) => champion.championId
+                )}
+              />
               <QueueType
                 value={isPost.gameMode} />
             </ChampionNQueueSection>

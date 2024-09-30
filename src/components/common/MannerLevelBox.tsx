@@ -8,10 +8,12 @@ import { getOthersManner } from "@/api/manner";
 interface MannerLevelBoxProps {
   memberId: number;
   level: number;
+  top: string;
+  right: string;
 }
 
 const MannerLevelBox = (props: MannerLevelBoxProps) => {
-  const { memberId, level } = props;
+  const { memberId, level, top, right } = props;
 
   const [positiveKeywords, setPositiveKeywords] = useState<MannerKeywords[]>([]);
   const [negativeKeywords, setNegativeKeywords] = useState<MannerKeywords[]>([]);
@@ -43,7 +45,7 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
   };
 
   return (
-    <Wrapper>
+    <Wrapper $top={top} $right={right}>
       <Title>매너 레벨 {level}</Title>
       <MannerEvaluations>
         <Div>
@@ -85,10 +87,10 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
 
 export default MannerLevelBox;
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ $top: string; $right: string }>`
   position: absolute;
-  top: 69%;
-  left:25%;
+  top: ${({ $top }) => $top};
+  right: ${({ $right }) => $right};
   padding: 16px 32px 34px;
   box-shadow: 0 0 21.3px 0 #00000026;
   backdrop-filter: blur(10px);
