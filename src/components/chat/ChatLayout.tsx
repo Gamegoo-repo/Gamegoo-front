@@ -145,7 +145,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
 
         try {
             const response = await leaveChatroom(chatEnterData.uuid);
-            if (response.isSuccess) {
+            if (response.isSuccess && socket) {
                 socket.emit('exit-chatroom', { uuid: chatEnterData.uuid });
             }
             await dispatch(setCloseModal());
@@ -163,7 +163,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
 
         try {
             const response = await blockMember(chatEnterData.memberId);
-            if (response.isSuccess) {
+            if (response.isSuccess && socket) {
                 socket.emit('exit-chatroom', { uuid: chatEnterData.uuid });
                 await dispatch(setOpenModal('doneBlock'));
             }
@@ -295,7 +295,12 @@ const ChatLayout = (props: ChatLayoutProps) => {
                 };
             }
 
-            socket.emit("chat-message", emitData);
+            if (socket) {
+                socket.emit("chat-message", emitData);
+            } else {
+                console.error("소켓이 연결되지 않았습니다.");
+            }
+            
             setMessage("");
         }
     };
