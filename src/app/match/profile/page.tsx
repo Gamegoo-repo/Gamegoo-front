@@ -13,22 +13,32 @@ import { getProfile } from "@/api/user";
 import { setUserProfile } from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
 import ChatButton from "@/components/common/ChatButton";
+import { socket } from "@/socket";
+import ConfirmModal from "@/components/common/ConfirmModal";
+import { theme } from "@/styles/theme";
 
 const ProfilePage = () => {
   const router = useRouter();
   const [profileType, setProfileType] = useState<profileType | undefined>();
+  const [isClient, setIsClient] = useState(false);
   const searchParams = useSearchParams();
   const params = searchParams.get("type");
   const rank = searchParams.get("rank");
+  const retry = searchParams.get("retry");
+
+  /* 모달창 */
+  const [isAlready, setIsAlready] = useState<boolean>(false);
 
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user);
+  const matchInfo = useSelector((state: RootState) => state.matchInfo);
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const response = await getProfile();
-        dispatch(setUserProfile(response.result));
+        console.log("Fetched profile:", response);
+        dispatch(setUserProfile(response));
       } catch (error) {
         console.error(error);
       }
@@ -47,6 +57,73 @@ const ProfilePage = () => {
     }
   }, [rank, params]);
 
+  useEffect(() => {
+    // 클라이언트 렌더링 확인
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (socket) {
+      // 에러 이벤트 감지
+      socket.on("error", (errorData) => {
+        if (
+          errorData.event === "error" &&
+          errorData.data ===
+            "You are already in the matching room for this game mode."
+        ) {
+          setIsAlready(true);
+        }
+      });
+    }
+  }, []);
+
+  const handleMatchStart = async () => {
+    const matchingType = params === "gamgoo" ? "BASIC" : "PRECISE";
+    const gameModeMap = { personal: "1", free: "2", fast: "3", wind: "4" };
+    const gameMode = gameModeMap[rank as keyof typeof gameModeMap] || "1";
+
+    console.log("MatchInfo:", matchInfo);
+
+    const matchingData = {
+      matchingType,
+      gameMode,
+      mike: matchInfo.mike ?? false,
+      mainP: (matchInfo.mainP ?? 0).toString(),
+      subP: (matchInfo.subP ?? 0).toString(),
+      wantP: (matchInfo.wantP ?? 0).toString(),
+      gameStyle1: (matchInfo.gameStyleResponseDTOList[0] ?? "1").toString(),
+      gameStyle2: (matchInfo.gameStyleResponseDTOList[1] ?? "2").toString(),
+      gameStyle3: (matchInfo.gameStyleResponseDTOList[2] ?? "3").toString(),
+    };
+
+    if (socket) {
+      /* 매칭 요청 보내기 */
+      socket.emit("matching-request", matchingData);
+      console.log("매칭 요청 이벤트 발생:", matchingData);
+
+      /* 매칭 시작 이벤트 */
+      socket.on("matching-started", (data) => {
+        console.log("매칭 시작됨:", data);
+
+        const urlParams = new URLSearchParams({
+          ...data.data,
+          matchingType: params || "", // 기존 type 파라미터 추가
+          gameRank: rank || "", // 기존 rank 파라미터 추가
+        });
+
+        if (retry) {
+          urlParams.append("retry", "true");
+        }
+
+        router.push(`/matching/progress?${urlParams.toString()}`);
+      });
+    } else {
+      console.error("소켓이 연결되지 않았습니다.");
+    }
+  };
+
+  if (!isClient) return null; // 클라이언트에서만 렌더링
+
   return (
     <Wrapper>
       <MatchContent>
@@ -61,9 +138,7 @@ const ProfilePage = () => {
             buttonType="primary"
             width="380px"
             text="매칭 시작하기"
-            onClick={() => {
-              router.push("/matching/progress");
-            }}
+            onClick={handleMatchStart}
           />
         </Main>
         <Footer>
@@ -72,6 +147,18 @@ const ProfilePage = () => {
           </ChatBoxContent>
         </Footer>
       </MatchContent>
+      {isAlready && (
+        <ConfirmModal
+          width="540px"
+          onPrimaryClick={() => setIsAlready(false)}
+          primaryButtonText="확인"
+        >
+          <Column>
+            이미 매칭 중이에요!
+            <Warning>한 번에 하나의 매칭만 할 수 있어요</Warning>
+          </Column>
+        </ConfirmModal>
+      )}
     </Wrapper>
   );
 };
@@ -113,4 +200,16 @@ const Footer = styled.footer`
 
 const ChatBoxContent = styled.div`
   margin-left: auto;
+`;
+
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Warning = styled.div`
+  color: ${theme.colors.error100};
+  ${(props) => props.theme.fonts.regular16};
 `;

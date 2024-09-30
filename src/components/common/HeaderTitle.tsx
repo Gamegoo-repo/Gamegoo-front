@@ -10,12 +10,14 @@ interface HeaderTitleProps {
   title: string;
   sub?: string;
   size?: fontSize;
+  blocked?: boolean;
 }
 
 const HeaderTitle: React.FC<HeaderTitleProps> = ({
   title,
   sub,
   size = "bold",
+  blocked = false,
 }) => {
   const router = useRouter();
 
@@ -30,6 +32,7 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({
       />
       <Title className={size}>{title}</Title>
       {sub && <Sub>{sub}</Sub>}
+      {blocked && <Blocked>차단된 사용자입니다</Blocked>}
     </Header>
   );
 };
@@ -37,6 +40,7 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({
 export default HeaderTitle;
 
 const Header = styled.header`
+  width: 100%;
   display: flex;
   align-items: center;
   width: 100%;
@@ -64,4 +68,9 @@ const Title = styled.div`
 const Sub = styled.div`
   ${(props) => props.theme.fonts.regular28};
   color: ${theme.colors.gray600};
+`;
+
+const Blocked = styled.div`
+  color: ${theme.colors.error200};
+  ${theme.fonts.bold14};
 `;

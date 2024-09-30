@@ -110,7 +110,7 @@ const Post: React.FC<PostProps> = ({
           <Number>{boardId}</Number>
           <ProfileImgWrapper $bgColor={getProfileBgColor(profileImage)}>
             <ProfileImg
-              src={`/assets/images/profile/profile${profileImage - 1}.svg`}
+              src={`/assets/images/profile/profile${profileImage}.svg`}
               width={35}
               height={35}
               alt="프로필"

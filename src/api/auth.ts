@@ -3,8 +3,10 @@ import { LOGIN } from "@/constants/messages";
 import Axios, { BASE_URL } from ".";
 import { getAccessToken, getRefreshToken } from "@/utils/storage";
 
-const reissueToken = async () => {
+export const reissueToken = async () => {
   const endpoint = '/v1/member/refresh';
+
+  console.log("요청한 refreshToken", getRefreshToken())
   try {
     const response = await Axios.post(endpoint, { refreshToken: getRefreshToken() });
     console.log("accessToken 재발급 성공:", response);
@@ -70,10 +72,10 @@ AuthAxios.interceptors.response.use(
         return axios(originRequest);
       } catch (reissueError: any) {
         if (reissueError.response && reissueError.response.status === 404) {
-          alert(LOGIN.MESSAGE.EXPIRED);
-          window.location.replace('/');
+          console.log(LOGIN.MESSAGE.EXPIRED);
+          window.location.replace('/login');
         } else {
-          alert(LOGIN.MESSAGE.ETC);
+          console.log(LOGIN.MESSAGE.ETC);
         }
         return Promise.reject(reissueError);
       }

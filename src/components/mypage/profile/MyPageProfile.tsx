@@ -76,13 +76,16 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
         {/* 프로필 이미지 선택 팝업 */}
         {isProfileListOpen && (
           <ProfileListBox>
-            <Image
-              src="/assets/icons/close_white.svg"
-              width={14}
-              height={14}
-              alt="닫기"
-              onClick={() => setIsProfileListOpen(false)}
-            />
+            <ProfileListBoxTop>
+              프로필 이미지 변경
+              <Image
+                src="/assets/icons/close_white.svg"
+                width={14}
+                height={14}
+                alt="닫기"
+                onClick={() => setIsProfileListOpen(false)}
+              />
+            </ProfileListBoxTop>
             <ProfileList>
               {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
                 <SelectProfileImgWrapper
@@ -93,8 +96,8 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
                 >
                   <ProfileListImage
                     src={`/assets/images/profile/profile${item}.svg`}
-                    width={90}
-                    height={100}
+                    width={70}
+                    height={70}
                     alt="프로필 이미지"
                   />
                 </SelectProfileImgWrapper>
@@ -183,14 +186,36 @@ const ProfileListBox = styled.div`
   z-index: 100;
 `;
 
+const ProfileListBoxTop = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: ${theme.colors.white};
+  ${theme.fonts.regular20};
+`;
+
+// const ProfileList = styled.div`
+//   width: 100%;
+//   height: 100%;
+//   padding: 0 14px 29px 14px;
+//   row-gap: 25px;
+//   display: grid;
+//   grid-template-columns: repeat(4, 1fr);
+//   grid-template-rows: repeat(2, 1fr);
+// `;
+
 const ProfileList = styled.div`
   width: 100%;
   height: 100%;
-  padding: 0 14px 29px 14px;
-  row-gap: 25px;
+  row-gap: 30px;
+  column-gap: 30px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(2, 1fr);
+  justify-content: center;
+  align-items: center;
+  justify-items: center;
 `;
 
 const SelectProfileImgWrapper = styled.div<{
@@ -198,8 +223,8 @@ const SelectProfileImgWrapper = styled.div<{
   isSelected: boolean;
 }>`
   position: relative;
-  width: 120px;
-  height: 120px;
+  width: 96px;
+  height: 96px;
   background: ${(props) => props.$bgColor};
   border-radius: 50%;
   ${({ isSelected }) =>

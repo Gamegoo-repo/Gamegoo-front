@@ -63,7 +63,11 @@ const Main = styled.main`
   align-items: center;
   width: 100%;
   gap: 59px;
-  margin-bottom: 37px;
+
+  @media screen and (max-width: 1300px) {
+    flex-direction: column;
+    gap: 40px;
+  }
 `;
 
 const Sub = styled.div`

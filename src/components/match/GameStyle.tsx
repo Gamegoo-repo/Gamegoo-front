@@ -8,6 +8,8 @@ import SelectedStylePopup from "./SelectedStylePopup";
 import { css } from "styled-components";
 import { putGameStyle } from "@/api/user";
 import { GAME_STYLE } from "@/data/profile";
+import { useDispatch } from "react-redux";
+import { updateGameStyles, updateMatchInfo } from "@/redux/slices/matchInfo";
 
 type profileType = "me" | "other" | "none" | "mini";
 
@@ -25,6 +27,7 @@ interface GameStyleProps {
 const GameStyle = (props: GameStyleProps) => {
   const { gameStyleResponseDTOList, profileType = "none", mic } = props;
 
+  const dispatch = useDispatch();
   const [isMike, setIsMike] = useState(mic);
   const [styledPopup, setStyledPopup] = useState(false);
   const [selectedStyles, setSelectedStyles] = useState<number[]>(
@@ -40,15 +43,26 @@ const GameStyle = (props: GameStyleProps) => {
   }, [gameStyleResponseDTOList]);
 
   const handleMike = () => {
-    setIsMike(!isMike);
+    if (profileType !== "other") {
+      setIsMike((prevState) => {
+        const newMikeValue = !prevState;
+        console.log("Updating isMike to:", newMikeValue);
+        dispatch(updateMatchInfo({ mike: newMikeValue }));
+        return newMikeValue;
+      });
+    }
   };
 
   const handleStylePopup = () => {
-    setStyledPopup(!styledPopup);
+    if (profileType !== "other") {
+      setStyledPopup(!styledPopup);
+    }
   };
 
   const handleClosePopup = () => {
-    setStyledPopup(false);
+    if (profileType !== "other") {
+      setStyledPopup(false);
+    }
   };
 
   const handleSelectStyle = async (
@@ -69,7 +83,11 @@ const GameStyle = (props: GameStyleProps) => {
     }
 
     setSelectedStyles(updatedStyles);
-    await putGameStyle(updatedStyles);
+    if (profileType === "me") {
+      await putGameStyle(updatedStyles);
+    } else if (profileType === "none") {
+      dispatch(updateGameStyles(updatedStyles));
+    }
   };
 
   /* gameStyleResponseDTOList가 변경될 때 selectedStyles를 업데이트 */

@@ -56,14 +56,14 @@ const useChatMessage = () => {
             setSystemMessage(systemMessage);
         };
 
-        socket.on("chat-message", handleChatMessage);
-        socket.on("my-message-broadcast-success", handleMyMessage);
-        socket.on("chat-system-message", handleSystemMessage);
+        socket?.on("chat-message", handleChatMessage);
+        socket?.on("my-message-broadcast-success", handleMyMessage);
+        socket?.on("chat-system-message", handleSystemMessage);
 
         return () => {
-            socket.off("chat-message", handleChatMessage);
-            socket.off("my-message-broadcast-success", handleMyMessage);
-            socket.off("chat-system-message", handleSystemMessage);
+            socket?.off("chat-message", handleChatMessage);
+            socket?.off("my-message-broadcast-success", handleMyMessage);
+            socket?.off("chat-system-message", handleSystemMessage);
         };
     }, [currentChatUuid, unreadChatUuids, dispatch]);
 

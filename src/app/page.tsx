@@ -6,14 +6,9 @@ import { MATCH_PAGE_DATA } from "@/data/match";
 import Image from "next/image";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-import { useEffect } from "react";
 
 const HomePage = () => {
   const router = useRouter();
-
-  const isUser = useSelector((state: RootState) => state.user);
 
   return (
     <Wrapper>
@@ -50,7 +45,7 @@ const HomePage = () => {
         </Main>
         <Footer>
           <ChatBoxContent>
-            <ChatButton/>
+            <ChatButton />
           </ChatBoxContent>
         </Footer>
       </HomeContent>
@@ -92,7 +87,7 @@ const Main = styled.main`
 
   @media (max-width: 1200px) {
     flex-direction: column;
-    justify-content: center;
+    gap: 40px;
   }
 `;
 

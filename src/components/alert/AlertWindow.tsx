@@ -117,9 +117,14 @@ const AlertWindow = (
   }, [isAtBottom]);
 
   /* 알림 읽음으로 상태 변경 */
-  const handleClickAlert = async (notificationId: number, pageUrl: string) => {
+  const handleClickAlert = async (
+    notificationId: number,
+    pageUrl: string | null
+  ) => {
     // 관련 페이지 이동
-    router.push(pageUrl);
+    if (pageUrl !== null) {
+      router.push(pageUrl);
+    }
 
     // 읽음 상태 업데이트
     const notification = notiList.find(

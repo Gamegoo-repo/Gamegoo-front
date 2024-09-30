@@ -1,3 +1,4 @@
+import axios from "axios";
 import { SocketAxios } from ".";
 
 /* 소켓 로그인 */
@@ -44,8 +45,7 @@ export const socketLogout = async () => {
                 "Socket-Id": socketId,
             },
         });
-
-        console.log('소켓 서버에 로그아웃 요청 보냄');
+            console.log('소켓 서버에 로그아웃 요청 보냄');
     } catch (error: any) {
         if (error.response) {
             console.error('소켓 서버에 로그아웃 요청 실패:', error.response.statusText);
@@ -54,4 +54,20 @@ export const socketLogout = async () => {
         }
     }
 };
+
+export const getSystemMsg = async (tier?: string) => {
+    try {
+        const url = tier ? `https://socket.gamegoo.co.kr/socket/message?tier=${tier}` : `https://socket.gamegoo.co.kr/socket/message`;
+
+         const response = await axios.get(url);
+        return response.data; 
+    } catch (error: any) {
+        if (error.response) {
+            console.error('시스템 메세지 조회 실패:', error.response.statusText);
+        } else {
+            console.error('시스템 메세지 조회 에러:', error.message);
+        }
+    }
+}
+
 

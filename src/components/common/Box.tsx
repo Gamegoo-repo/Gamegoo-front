@@ -13,7 +13,7 @@ interface BoxProps {
 
 const Box: React.FC<BoxProps> = ({ text, shape = "round", profileType }) => {
   return (
-    <StyledBox shape={shape} profileType={profileType}>
+    <StyledBox $shape={shape} $profiletype={profileType}>
       {text}
     </StyledBox>
   );
@@ -21,7 +21,7 @@ const Box: React.FC<BoxProps> = ({ text, shape = "round", profileType }) => {
 
 export default Box;
 
-const StyledBox = styled.div<{ shape: ShapeType; profileType?: profileType }>`
+const StyledBox = styled.div<{ $shape: ShapeType; $profiletype?: profileType }>`
   display: inline-flex;
   padding: 10px 35px;
   justify-content: center;
@@ -32,19 +32,19 @@ const StyledBox = styled.div<{ shape: ShapeType; profileType?: profileType }>`
   white-space: nowrap;
 
   ${(props) =>
-    props.shape === "round" &&
+    props.$shape === "round" &&
     css`
       border-radius: 80px;
     `}
 
   ${(props) =>
-    props.shape === "square" &&
+    props.$shape === "square" &&
     css`
       border-radius: 0;
     `}
 
   ${(props) =>
-    props.profileType === "mini" &&
+    props.$profiletype === "mini" &&
     css`
       height: 25px;
       padding: 5px 17px;

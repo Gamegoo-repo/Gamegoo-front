@@ -3,7 +3,7 @@ export const HEADER_MODAL_TAB = [
     { id: 2, menu: '내가 작성한 글', icon: "my_post", url: "/mypage/post" },
     { id: 3, menu: '내 평가', icon: "my_review", url: "/mypage/review" },
     { id: 4, menu: '고객센터', icon: "customer_service", url: "/mypage/service" },
-    { id: 5, menu: '도움말', icon: "help", url: "/mypage/help" },
+    // { id: 5, menu: '도움말', icon: "help", url: "/mypage/help" },
     { id: 6, menu: '로그아웃', icon: "logout", url: "/login" },
 ];
 
@@ -14,5 +14,5 @@ export const MYPAGE_TAB = [
     { id: 4, menu: '내 평가', url: "/mypage/review" },
     { id: 5, menu: '차단목록', url: "/mypage/blocked" },
     { id: 6, menu: '고객센터', url: "/mypage/service" },
-    { id: 7, menu: '도움말', url: "/mypage/help" },
+    // { id: 7, menu: '도움말', url: "/mypage/help" },
 ];

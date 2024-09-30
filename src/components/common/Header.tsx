@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import AlertWindow from "../alert/AlertWindow";
 import { useDispatch, useSelector } from "react-redux";
-import { clearTokens } from "@/utils/storage";
+import { clearTokens, getAccessToken, getRefreshToken } from "@/utils/storage";
 import { getProfileBgColor } from "@/utils/profile";
 import {
   clearUserProfile,
@@ -16,6 +16,7 @@ import {
 } from "@/redux/slices/userSlice";
 import { getNotiCount } from "@/api/notification";
 import { RootState } from "@/redux/store";
+import { reissueToken } from "@/api/auth";
 
 interface HeaderProps {
   selected: boolean;
@@ -34,7 +35,21 @@ const Header = () => {
 
   const myPageRef = useRef<HTMLDivElement>(null);
 
+  const handleTokenReissueError = async () => {
+    try {
+      const response = await reissueToken();
+      return response.data;
+    } catch (error) {
+      dispatch(clearUserProfile());
+      router.push("/login");
+      throw error;
+    }
+  };
+
   useEffect(() => {
+    if (getAccessToken() && getRefreshToken()) {
+      // handleTokenReissueError();
+    }
     const storedName =
       localStorage.getItem("name") || sessionStorage.getItem("name");
     const storedProfileImg =
@@ -105,6 +120,7 @@ const Header = () => {
               width={102}
               height={32}
               alt="logo"
+              priority
             />
           </Link>
           <Menus>

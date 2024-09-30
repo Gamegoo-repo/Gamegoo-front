@@ -7,7 +7,6 @@ import { useState } from "react";
 import RadioCard from "@/components/common/RadioCard";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import Toggle from "@/components/common/Toggle";
-import CompleteProfile from "@/components/match/CompleteProfile";
 
 const Guide = () => {
   /* Input State */
@@ -192,8 +191,6 @@ const Guide = () => {
 
       <H2>Toggle</H2>
       <Toggle isOn={isOn} onToggle={toggleHandler} />
-      <H2>매칭완료 프로필</H2>
-      <CompleteProfile />
     </Layout>
   );
 };

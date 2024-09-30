@@ -1,23 +1,24 @@
 "use client";
 
 import GlobalStyles from "@/styles/GlobalStyles";
-import { ThemeProvider } from "styled-components";
+import styled, { ThemeProvider } from "styled-components";
 import { theme } from "@/styles/theme";
 import Header from "@/components/common/Header";
 import StyledComponentsRegistry from "@/libs/registry";
 import { Provider } from "react-redux";
-import { useRef } from "react";
-import { AppStore, store } from "@/redux/store";
+import { useEffect, useRef } from "react";
+import { AppStore, RootState, store } from "@/redux/store";
 import { usePathname } from "next/navigation";
 import SocketConnection from "@/components/socket/SocketConnection";
 import { Toaster } from "react-hot-toast";
+import { connectSocket } from "@/socket";
+import Footer from "@/components/common/Footer";
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   const storeRef = useRef<AppStore>();
   if (!storeRef.current) {
     storeRef.current = store();
@@ -32,6 +33,13 @@ export default function RootLayout({
     pathname.includes("/password")
   );
 
+  const isUser = (state: RootState) => state.user;
+
+  /* 로그인 이전 소켓 연결 */
+  useEffect(() => {
+    connectSocket();
+  }, []);
+
   return (
     <html>
       <head>
@@ -45,8 +53,13 @@ export default function RootLayout({
             <Toaster />
             <Provider store={storeRef.current}>
               <SocketConnection />
-              {isHeader && <Header />}
-              {children}
+              <Container>
+                <Main>
+                  {isHeader && <Header />}
+                  {children}
+                </Main>
+                <Footer />
+              </Container>
             </Provider>
           </ThemeProvider>
         </StyledComponentsRegistry>
@@ -55,3 +68,17 @@ export default function RootLayout({
   );
 }
 
+const Container = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const Main = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;

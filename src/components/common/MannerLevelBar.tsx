@@ -13,11 +13,11 @@ const levelColors = [
 
 interface MannerLevelBarProps {
   recentLevel: number;
-  percentage?: number;
+  mannerRank: number;
 }
 
 const MannerLevelBar = (props: MannerLevelBarProps) => {
-  const { recentLevel, percentage } = props;
+  const { recentLevel, mannerRank } = props;
 
   return (
     <Container>
@@ -30,9 +30,9 @@ const MannerLevelBar = (props: MannerLevelBarProps) => {
           <LevelBox key={level} level={level - 1}>
             {recentLevel === level && (
               <Recent>
-                {percentage && (
-                  <Percentage>{`상위 ${percentage}% 의 매너레벨`}</Percentage>
-                )}
+                <Percentage>{`상위 ${
+                  mannerRank || 0
+                }% 의 매너레벨`}</Percentage>
                 <DownIconWrapper level={level - 1}>
                   <ChevronDownIcon />
                 </DownIconWrapper>
@@ -111,16 +111,17 @@ const Recent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 3.5px;
   white-space: nowrap;
 `;
 
 const Percentage = styled.div`
   ${(props) => props.theme.fonts.bold11};
+  height: 11px;
 `;
 
 const DownIconWrapper = styled.div<{ level: number }>`
+  width: 10px;
+  height: 12px;
   path {
     fill: ${(props) => levelColors[props.level]};
     transform: scale(1.42857);
@@ -134,5 +135,5 @@ const DownIconWrapper = styled.div<{ level: number }>`
 const Level = styled.div<{ bold: boolean }>`
   ${(props) =>
     props.bold ? props.theme.fonts.bold14 : props.theme.fonts.regular14};
-  margin-bottom: 12px;
+  margin-bottom: 5px;
 `;

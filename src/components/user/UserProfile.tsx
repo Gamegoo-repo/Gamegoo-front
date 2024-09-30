@@ -10,6 +10,7 @@ import { User } from "@/interface/profile";
 export interface Manner {
   memberId?: number;
   mannerLevel: number;
+  mannerRank: number;
   mannerKeywords: [
     {
       isPositive: boolean;
@@ -54,7 +55,13 @@ const UserProfile = ({
   return (
     <Wrapper>
       <MatchContent>
-        <HeaderTitle title={`${profile.gameName} 님의 프로필`} size="regular" />
+        <Row>
+          <HeaderTitle
+            title={`${profile.gameName} 님의 프로필`}
+            size="regular"
+            blocked={profile.blocked}
+          />
+        </Row>
         <Main>
           <Profile
             profileType="other"
@@ -74,7 +81,7 @@ const UserProfile = ({
                 </Text>
                 <MannerLevelBar
                   recentLevel={manner.mannerLevel}
-                  percentage={15}
+                  mannerRank={manner.mannerRank}
                 />
               </Box>
             </div>
@@ -165,6 +172,11 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 140px;
+`;
+
+const Row = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 const MatchContent = styled.div`
