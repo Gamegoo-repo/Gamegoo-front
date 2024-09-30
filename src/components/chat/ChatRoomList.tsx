@@ -69,7 +69,6 @@ const ChatRoomList = (props: ChatRoomListProps) => {
             e.stopPropagation();
         }
 
-
         // if (targetMemberId !== undefined) {
         //     await setTargetMemberId(targetMemberId);
         //     setIsMemberId(targetMemberId);

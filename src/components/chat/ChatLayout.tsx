@@ -55,7 +55,8 @@ const ChatLayout = (props: ChatLayoutProps) => {
     const isChatRoomOpen = useSelector((state: RootState) => state.chat.isChatRoomOpen);
     const isChatUuid = useSelector((state: RootState) => state.chat.isChatRoomUuid);
     const isModalType = useSelector((state: RootState) => state.modal.modalType);
-
+    // const mannerPopupStatus = useSelector((state: RootState) => state.mannerStatus.mannerStatus);
+   
     /* 채팅방 입장 */
     const handleChatEnter = async () => {
         if (!isChatUuid) return;
@@ -251,7 +252,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
         } catch (error) {
             console.error(error);
         }
-    };
+    }
 
     /* 더보기 버튼 열기 */
     const handleMoreBoxOpen = () => {
@@ -302,7 +303,6 @@ const ChatLayout = (props: ChatLayoutProps) => {
 
     /* 모달 닫기 */
     const handleModalClose = () => {
-        console.log('들어오나??')
         setCheckedReportItems([]);
         setCheckedMannerItems([]);
         setCheckedBadMannerItems([]);
@@ -480,6 +480,8 @@ const ChatLayout = (props: ChatLayoutProps) => {
                         <MessageList
                             chatEnterData={chatEnterData}
                             systemMessage={systemMessage}
+                            onMannerValuesGet={handleMannerValuesGet}
+                            onBadMannerValuesGet={handleBadMannerValuesGet}
                         />
                         <MessageInput
                             message={message}

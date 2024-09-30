@@ -17,6 +17,8 @@ import ConfirmModal from "../common/ConfirmModal";
 interface MessageListProps {
     chatEnterData: Chat | undefined;
     systemMessage: DesignedSystemMessage | undefined;
+    onMannerValuesGet: (memberId: number) => void;
+    onBadMannerValuesGet: (memberId: number) => void;
 }
 
 interface SystemMessageProps {
@@ -25,7 +27,7 @@ interface SystemMessageProps {
 }
 
 const MessageList = (props: MessageListProps) => {
-    const { chatEnterData, systemMessage } = props;
+    const { chatEnterData, systemMessage, onMannerValuesGet, onBadMannerValuesGet } = props;
 
     const dispatch = useDispatch();
 
@@ -198,6 +200,14 @@ const MessageList = (props: MessageListProps) => {
         }
     }, [messageList]);
 
+    const handleMannerEvaluate = () => {
+        if (chatEnterData) {
+            dispatch(setOpenMannerStatusModal());
+            onMannerValuesGet(chatEnterData.memberId);
+            onBadMannerValuesGet(chatEnterData.memberId);
+        }
+    };
+
     /* 시스템 메시지를 처리하는 컴포넌트 */
     const SystemMessage = (props: SystemMessageProps) => {
         const { message, onClick } = props;
@@ -269,7 +279,7 @@ const MessageList = (props: MessageListProps) => {
                                                         width={22}
                                                         height={22}
                                                         alt="스마일 이모티콘" />
-                                                    <StyledButton onClick={() => dispatch(setOpenMannerStatusModal())}>
+                                                    <StyledButton onClick={handleMannerEvaluate}>
                                                         매너평가 하기
                                                     </StyledButton>
                                                 </Feedback>

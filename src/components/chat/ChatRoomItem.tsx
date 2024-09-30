@@ -21,7 +21,7 @@ const ChatRoomItem = (props: ChatRoomItemProps) => {
         onChatRoom,
         isMoreBoxOpen,
         handleMoreBoxOpen,
-        moreMenuItems
+        moreMenuItems,
     } = props;
 
     const handleUnreadMsgCount = (unread: number) => {
