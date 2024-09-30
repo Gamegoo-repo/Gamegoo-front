@@ -466,6 +466,9 @@ const ChatLayout = (props: ChatLayoutProps) => {
         setIsEditMode(false);
     };
 
+    const isMannerEditable = isMannerValue?.isExist && !isEditMode && isMannerValue?.mannerRatingKeywordList.length !== 0;
+    const isBadMannerEditable = isBadMannerValue?.isExist && !isEditMode && isBadMannerValue?.mannerRatingKeywordList.length !== 0;
+
     return (
         <>
             <Overlay>
@@ -601,7 +604,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
             {isModalType === 'manner' && isMannerValue && (
                 <FormModal
                     type="checkbox"
-                    title={isMannerValue.isExist && !isEditMode ? "내가 남긴 매너 평가" : "매너 평가하기"}
+                    title={isMannerEditable ? "내가 남긴 매너 평가" : "매너 평가하기"}
                     width="418px"
                     closeButtonWidth={17}
                     closeButtonHeight={17}
@@ -616,13 +619,13 @@ const ChatLayout = (props: ChatLayoutProps) => {
                                 label={data.text}
                                 fontSize="semiBold16"
                                 isChecked={checkedMannerItems?.includes(data.id)}
-                                disabled={!isEditMode && isMannerValue.isExist}
+                                disabled={isMannerEditable}
                                 onArrayChange={handleMannerCheckboxChange}
                             />
                         ))}
                     </CheckContent>
                     <ModalSubmitBtn>
-                        {isMannerValue.isExist && !isEditMode ? (
+                        {isMannerEditable ? (
                             <Button
                                 onClick={() => setIsEditMode(true)}
                                 buttonType="primary"
@@ -634,7 +637,6 @@ const ChatLayout = (props: ChatLayoutProps) => {
                                 buttonType="primary"
                                 text="완료"
                                 disabled={!isEditMode && checkedMannerItems.length === 0}
-                            // disabled={isMannerValue.isExist ? false : checkedBadMannerItems.length === 0}
                             />
                         )}
                     </ModalSubmitBtn>
@@ -645,7 +647,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
             {isModalType === 'badManner' && isBadMannerValue && (
                 <FormModal
                     type="checkbox"
-                    title={isBadMannerValue.isExist && !isEditMode ? "내가 남긴 비매너 평가" : "비매너 평가하기"}
+                    title={isBadMannerEditable ? "내가 남긴 비매너 평가" : "비매너 평가하기"}
                     width="418px"
                     closeButtonWidth={17}
                     closeButtonHeight={17}
@@ -660,13 +662,13 @@ const ChatLayout = (props: ChatLayoutProps) => {
                                 label={data.text}
                                 fontSize="semiBold16"
                                 isChecked={checkedBadMannerItems?.includes(data.id)}
-                                disabled={!isEditMode && isBadMannerValue.isExist}
+                                disabled={isBadMannerEditable}
                                 onArrayChange={handleBadMannerCheckboxChange}
                             />
                         ))}
                     </CheckContent>
                     <ModalSubmitBtn>
-                        {isBadMannerValue.isExist && !isEditMode ? (
+                        {isBadMannerEditable ? (
                             <Button
                                 onClick={() => setIsEditMode(true)}
                                 buttonType="primary"
@@ -678,7 +680,6 @@ const ChatLayout = (props: ChatLayoutProps) => {
                                 buttonType="primary"
                                 text="완료"
                                 disabled={!isEditMode && checkedBadMannerItems.length === 0}
-                            // disabled={isBadMannerValue.isExist ? false : checkedBadMannerItems.length === 0}
                             />
                         )}
                     </ModalSubmitBtn>
