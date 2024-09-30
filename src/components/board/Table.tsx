@@ -13,15 +13,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import {
     setCloseModal,
-    setCloseReadingModal,
-    setOpenModal,
     setOpenReadingModal,
 } from "@/redux/slices/modalSlice";
 import { useRouter } from "next/navigation";
 import Alert from "../common/Alert";
 import ConfirmModal from "../common/ConfirmModal";
-import { BoardList } from "@/interface/board";
-import ChatRoom from "../chat/ChatRoom";
 import { editManners, postBadMannerValue, postMannerValue } from "@/api/manner";
 import ChatLayout from "../chat/ChatLayout";
 
