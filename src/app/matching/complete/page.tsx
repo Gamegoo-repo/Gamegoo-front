@@ -74,7 +74,7 @@ const Complete = () => {
     if (userString) {
       try {
         const decodedUser = JSON.parse(decodeURIComponent(userString));
-        setUser(decodedUser.data as User);
+        setUser(decodedUser as User);
         console.log("decodedUser", decodedUser);
       } catch (error) {
         console.error("Failed to parse user data:", error);

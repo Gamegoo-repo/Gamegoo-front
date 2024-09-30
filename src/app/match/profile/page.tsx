@@ -62,6 +62,21 @@ const ProfilePage = () => {
     setIsClient(true);
   }, []);
 
+  useEffect(() => {
+    if (socket) {
+      // 에러 이벤트 감지
+      socket.on("error", (errorData) => {
+        if (
+          errorData.event === "error" &&
+          errorData.data ===
+            "You are already in the matching room for this game mode."
+        ) {
+          setIsAlready(true);
+        }
+      });
+    }
+  }, []);
+
   const handleMatchStart = async () => {
     const matchingType = params === "gamgoo" ? "BASIC" : "PRECISE";
     const gameModeMap = { personal: "1", free: "2", fast: "3", wind: "4" };
@@ -92,8 +107,8 @@ const ProfilePage = () => {
 
         const urlParams = new URLSearchParams({
           ...data.data,
-          type: params || "", // 기존 type 파라미터 추가
-          rank: rank || "", // 기존 rank 파라미터 추가
+          matchingType: params || "", // 기존 type 파라미터 추가
+          gameRank: rank || "", // 기존 rank 파라미터 추가
         });
 
         if (retry) {
@@ -138,8 +153,10 @@ const ProfilePage = () => {
           onPrimaryClick={() => setIsAlready(false)}
           primaryButtonText="확인"
         >
-          이미 매칭 중이에요!
-          <Warning>한 번에 하나의 매칭만 할 수 있어요</Warning>
+          <Column>
+            이미 매칭 중이에요!
+            <Warning>한 번에 하나의 매칭만 할 수 있어요</Warning>
+          </Column>
         </ConfirmModal>
       )}
     </Wrapper>
@@ -183,6 +200,13 @@ const Footer = styled.footer`
 
 const ChatBoxContent = styled.div`
   margin-left: auto;
+`;
+
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Warning = styled.div`
