@@ -873,7 +873,7 @@ const Position = styled.div`
 const Posi = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
   align-items: center;
   font-size: ${theme.fonts.regular14};
   position: relative;

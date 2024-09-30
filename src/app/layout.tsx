@@ -69,6 +69,7 @@ export default function RootLayout({
 }
 
 const Container = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -76,6 +77,7 @@ const Container = styled.div`
 `;
 
 const Main = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
