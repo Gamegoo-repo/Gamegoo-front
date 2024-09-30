@@ -2,11 +2,9 @@ import styled from 'styled-components';
 import { theme } from "@/styles/theme";
 import { useEffect, useState } from 'react';
 import { ChatroomList } from '@/interface/chat';
-import { getBadMannerValues, getMannerValues } from '@/api/manner';
-import { Mannerstatus } from '@/interface/manner';
 import { MoreBoxMenuItems } from '@/interface/moreBox';
 import { useDispatch, useSelector } from 'react-redux';
-import { setOpenModal } from '@/redux/slices/modalSlice';
+import {  setOpenModal } from '@/redux/slices/modalSlice';
 import { cancelFriendReq, deleteFriend, reqFriend } from '@/api/friends';
 import { RootState } from '@/redux/store';
 import { getChatrooms } from '@/api/chat';
@@ -17,10 +15,13 @@ import { setCurrentChatUuid } from '@/redux/slices/chatSlice';
 interface ChatRoomListProps {
     onChatRoom: (id: string) => void;
     activeTab: number;
+    isMoreBoxOpen: number | null;
+    setIsMoreBoxOpen: React.Dispatch<React.SetStateAction<number | null>>;
+    handleMoreBoxOpen: (chatId: number, uuid: string, room: ChatroomList, e: React.MouseEvent) => void;
 }
 
 const ChatRoomList = (props: ChatRoomListProps) => {
-    const { onChatRoom, activeTab } = props;
+    const { onChatRoom, activeTab, isMoreBoxOpen, setIsMoreBoxOpen, handleMoreBoxOpen } = props;
 
     const dispatch = useDispatch();
 
@@ -29,11 +30,6 @@ const ChatRoomList = (props: ChatRoomListProps) => {
 
     const [chatrooms, setChatrooms] = useState<ChatroomList[]>([]);
     const [reloadChatrooms, setReloadChatrooms] = useState(false);
-    const [isMoreBoxOpen, setIsMoreBoxOpen] = useState<number | null>(null);
-    const [isUuid, setIsUuid] = useState("");
-    const [selectedChatroom, setSelectedChatroom] = useState<ChatroomList | null>(null);
-    const [isMannerStatus, setIsMannerStatus] = useState<Mannerstatus | undefined>();
-    const [isBadMannerStatus, setIsBadMannerStatus] = useState<Mannerstatus | undefined>();
     const [targetMemberId, setTargetMemberId] = useState<number | null>(null);
     const [isMemberId, setIsMemberId] = useState<number>();
 
@@ -67,52 +63,17 @@ const ChatRoomList = (props: ChatRoomListProps) => {
         }
     }, [newMessage]);
 
-    /* 더보기 버튼 여닫기 */
-    const handleMoreBoxOpen = (chatId: number, uuid: string, room: ChatroomList, e: React.MouseEvent) => {
-        handleMannerValuesGet(room.targetMemberId);
-        handleBadMannerValuesGet(room.targetMemberId);
-
-        e.stopPropagation();
-        if (isMoreBoxOpen === chatId) {
-            setIsMoreBoxOpen(null);
-        } else {
-            setIsUuid(uuid);
-            setIsMoreBoxOpen(chatId);
-            setSelectedChatroom(room);
-        };
-    };
-
-    /* 매너평가 조회 */
-    const handleMannerValuesGet = async (memberId: number) => {
-        try {
-            const response = await getMannerValues(memberId);
-            await setIsMannerStatus(response.result);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    /* 비매너평가 조회 */
-    const handleBadMannerValuesGet = async (memberId: number) => {
-        try {
-            const response = await getBadMannerValues(memberId);
-            await setIsBadMannerStatus(response.result);
-            console.log(response.result)
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
     /* 모달 타입 변경 */
     const handleChangeModal = async (e: React.MouseEvent, type: string, targetMemberId?: number) => {
         if (type) {
             e.stopPropagation();
         }
 
-        if (targetMemberId !== undefined) {
-            await setTargetMemberId(targetMemberId);
-            setIsMemberId(targetMemberId);
-        }
+
+        // if (targetMemberId !== undefined) {
+        //     await setTargetMemberId(targetMemberId);
+        //     setIsMemberId(targetMemberId);
+        // }
 
         dispatch(setOpenModal(type));
         setIsMoreBoxOpen(null);
@@ -133,43 +94,42 @@ const ChatRoomList = (props: ChatRoomListProps) => {
         handleChangeModal(e, 'badManner', targetMemberId);
     };
 
-    /* 더보기 버튼 친구 관련 함수 */
+    /* 더보기 버튼 친구 관련 */
     const handleFriendAction = (e: React.MouseEvent, room: ChatroomList) => {
         setIsMoreBoxOpen(null);
 
         if (room.friend) {
             // 친구 삭제
             handleFriendDelete(e, room.targetMemberId);
-        } else if (room.friendRequestMemberId) {
+        } else if (!room.friend && room.friendRequestMemberId) {
             //친구 요청 취소
             handleCancelFriendReq(e, room.targetMemberId);
-        } else {
+        } else if (!room.friend) {
             // 친구 추가
             handleFriendAdd(e, room.targetMemberId);
         }
     };
 
     /* 더보기 버튼 상태 */
-    const generateMenuItems = (room: ChatroomList): MoreBoxMenuItems[] => {
-
-        let friendText = '';
-
-        // 친구 상태에 따른 텍스트 설정 및 버튼 표시 여부
-        if (room.friend) {
-            friendText = '친구 삭제';
-        } else if (room.friend) {
-            friendText = '친구 삭제';
-        } else if (room.friendRequestMemberId && room.friendRequestMemberId === isUser.id) {
-            friendText = '친구 요청 취소';
-        } else if (!room.friend && (!room.friendRequestMemberId || room.friendRequestMemberId !== isUser.id)) {
-            friendText = '친구 추가';
-        }
-
+    const moreMenuItems = (room: ChatroomList): MoreBoxMenuItems[] => {
         const items: MoreBoxMenuItems[] = [
             { text: `채팅방 나가기`, onClick: (e) => handleChangeModal(e, 'leave') },
         ];
 
-        // friendText가 빈 문자가 아닐 때만 버튼 추가
+        if (!!room.blind) {
+            return items;
+        }
+
+        let friendText = '';
+
+        if (room.friend) {
+            friendText = '친구 삭제';
+        } else if (!room.friend && room.friendRequestMemberId) {
+            friendText = '친구 요청 취소';
+        } else if (!room.friend && !room.friendRequestMemberId) {
+            friendText = '친구 추가';
+        }
+
         if (friendText) {
             items.push({ text: friendText, onClick: (e) => handleFriendAction(e, room) });
         }
@@ -237,7 +197,7 @@ const ChatRoomList = (props: ChatRoomListProps) => {
                         onChatRoom={(id) => onChatRoom(id)}
                         isMoreBoxOpen={isMoreBoxOpen}
                         handleMoreBoxOpen={handleMoreBoxOpen}
-                        generateMenuItems={generateMenuItems} />
+                        moreMenuItems={moreMenuItems} />
                 )
             })}
         </List>
@@ -253,5 +213,56 @@ const NoData = styled.p`
   color: ${theme.colors.gray600};
   ${(props) => props.theme.fonts.regular16};
   margin-top:50%;
+`;
+
+const CheckContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+`;
+
+const ModalSubmitBtn = styled.div`
+  margin-top:52px;
+`;
+
+const ReportLabel = styled.p`
+  color: ${theme.colors.gray600};
+  ${(props) => props.theme.fonts.semiBold18};
+  margin-bottom: 12px;
+`;
+
+const ReportContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+`;
+
+const ReportReasonContent = styled(ReportContent)`
+  margin-bottom: 38px;
+`;
+
+const ReportButton = styled.div`
+  margin-top:21px;
+`;
+
+const Text = styled.div`
+  text-align: center;
+  color: ${theme.colors.gray600};
+  ${(props) => props.theme.fonts.regular20};
+  margin: 28px 0;
+`;
+
+const SmallText = styled.div`
+  text-align: center;
+  color: ${theme.colors.gray200};
+  ${(props) => props.theme.fonts.regular14};
+  margin-top: 13px;
+`;
+
+const MsgConfirm = styled(Text)`
+  ${(props) => props.theme.fonts.regular25};
+  margin: 80px 0;
 `;
 

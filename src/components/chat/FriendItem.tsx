@@ -59,6 +59,7 @@ const FriendItem = (props: FriendItemProps) => {
                     />
                 )}
             </Left>
+            {!friend.isBlind &&
             <Image
                 onClick={(e) => onFavoriteToggle(e, friend.memberId)}
                 src={
@@ -70,6 +71,7 @@ const FriendItem = (props: FriendItemProps) => {
                 height={15}
                 alt="즐겨찾기 버튼"
             />
+        }
         </UserContent>
     )
 };

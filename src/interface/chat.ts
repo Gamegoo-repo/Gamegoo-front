@@ -1,5 +1,6 @@
 export interface ChatroomList {
     blocked: boolean;
+    blind: boolean;
     chatroomId: number;
     friend: boolean;
     friendRequestMemberId: number;
@@ -9,6 +10,7 @@ export interface ChatroomList {
     targetMemberName: string;
     lastMsg: string;
     lastMsgAt: string;
+    lastMsgTimestamp: number;
     notReadMsgCnt: number;
 }
 

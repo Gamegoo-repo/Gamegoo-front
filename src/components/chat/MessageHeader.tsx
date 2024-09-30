@@ -12,7 +12,6 @@ import { MoreBoxMenuItems } from "@/interface/moreBox";
 
 interface MessageHeaderProps {
     isMoreBoxOpen: boolean;
-    setIsMoreBoxOpen: React.Dispatch<React.SetStateAction<boolean>>;
     chatEnterData?: Chat;
     onMoreBoxOpen: () => void;
     menuItems: MoreBoxMenuItems[];
@@ -21,7 +20,6 @@ interface MessageHeaderProps {
 const MessageHeader = (props: MessageHeaderProps) => {
     const {
         isMoreBoxOpen,
-        setIsMoreBoxOpen,
         chatEnterData,
         onMoreBoxOpen,
         menuItems
@@ -29,7 +27,7 @@ const MessageHeader = (props: MessageHeaderProps) => {
 
     const dispatch = useDispatch();
     const router = useRouter();
-    
+
     const onlineFriends = useSelector((state: RootState) => state.chat.onlineFriends);
 
     return (

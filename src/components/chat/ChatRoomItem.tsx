@@ -12,7 +12,7 @@ interface ChatRoomItemProps {
     onChatRoom: (id: string) => void;
     isMoreBoxOpen: number | null;
     handleMoreBoxOpen: (chatId: number, uuid: string, room: ChatroomList, e: React.MouseEvent) => void;
-    generateMenuItems: (room: ChatroomList) => MoreBoxMenuItems[];
+    moreMenuItems: (room: ChatroomList) => MoreBoxMenuItems[];
 }
 
 const ChatRoomItem = (props: ChatRoomItemProps) => {
@@ -21,7 +21,7 @@ const ChatRoomItem = (props: ChatRoomItemProps) => {
         onChatRoom,
         isMoreBoxOpen,
         handleMoreBoxOpen,
-        generateMenuItems
+        moreMenuItems
     } = props;
 
     const handleUnreadMsgCount = (unread: number) => {
@@ -34,7 +34,7 @@ const ChatRoomItem = (props: ChatRoomItemProps) => {
             key={room.chatroomId}>
             {isMoreBoxOpen === room.chatroomId &&
                 <MoreBox
-                    items={generateMenuItems(room)}
+                    items={moreMenuItems(room)}
                     top={10}
                     left={208}
                 />

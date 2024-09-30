@@ -73,7 +73,7 @@ const MessageList = (props: MessageListProps) => {
         }
     }, [newMessage, systemMessage]);
 
-    /* 채팅 데이터를 로딩 처리 */
+    /* 채팅 데이터 로딩 처리 */
     useEffect(() => {
         if (chatEnterData) {
             const chatMessages = chatEnterData.chatMessageList.chatMessageDtoList;
