@@ -300,7 +300,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
             } else {
                 console.error("소켓이 연결되지 않았습니다.");
             }
-            
+
             setMessage("");
         }
     };

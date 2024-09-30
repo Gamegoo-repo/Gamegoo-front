@@ -3,7 +3,7 @@ import Image from "next/image";
 import { ChampionResponseDTOList } from "@/interface/board";
 
 interface ChampionProps {
-  list: ChampionResponseDTOList[];
+  list: number[];
   size?: number;
 }
 
