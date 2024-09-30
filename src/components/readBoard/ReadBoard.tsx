@@ -79,7 +79,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       if (!!isUser.id && postId) {
         const memberData = await getMemberPost(postId);
         setIsPost(memberData.result);
-        const hasPosition = await memberData.result.some((item: MemberPost) => 'mainPosition' in item);
+        const hasPosition = Array.isArray(memberData.result) && memberData.result.some((item: MemberPost) => 'mainPosition' in item);
 
         // 글 type 설정
         setType(hasPosition ? 'canyon' : 'wind');
@@ -319,9 +319,9 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 더보기 버튼 토글 */
   const handleMoreBoxToggle = () => {
-    if (!isUser.id) {
-      return showAlertWithContent(loginRequiredMessage, () => setShowAlert(false), "확인");
-    }
+    // if (!isUser.id) {
+    //   return showAlertWithContent(loginRequiredMessage, () => setShowAlert(false), "확인");
+    // }
 
     setIsMoreBoxOpen((prevState) => !prevState);
   };
@@ -334,12 +334,12 @@ const ReadBoard = (props: ReadBoardProps) => {
   /* 더보기 버튼 메뉴 */
   const MoreBoxMenuItems: MoreBoxMenuItems[] = [];
 
-  if (isUser?.id === isPost?.memberId) {
+  // if (isUser?.id === isPost?.memberId) {
     MoreBoxMenuItems.push(
       { text: '수정', onClick: handleEdit },
       { text: '삭제', onClick: handleDelete }
     );
-  }
+  // }
 
   //친구 삭제 - 차단되어있을 때, 친구일 때, 친구 추가 요청 중일 때
   //친구 추가(친구 요청) - 친구가 아닐 때, 차단되어있지 않을 때, 친구 추가 요청 중이 아닐 때
@@ -347,7 +347,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   //차단하기 - 친구 추가 요청 중일 때, 친구 삭제된 상태일 때, 차단되어있지 않을 때
   //차단해제 - 차단되어 있을 때, 
 
-  if (isUser?.id !== isPost?.memberId) {
+  // if (isUser?.id !== isPost?.memberId) {
     let friendText = '친구 추가';
     let friendFunc = handleFriendAdd;
     let blockText = '차단하기';
@@ -387,7 +387,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       { text: '신고하기', onClick: handleReportModal }
     );
 
-  }
+  // }
 
   /* 신고하기 모달 닫기 */
   const handleModalClose = () => {
@@ -437,7 +437,7 @@ const ReadBoard = (props: ReadBoardProps) => {
               <MoreBox
                 items={MoreBoxMenuItems}
                 top={67}
-                left={17} />
+                left={544} />
             )}
             <UpdatedDate>게시일 : {setPostingDateFormatter(isPost.createdAt)}</UpdatedDate>
             <UserSection>
