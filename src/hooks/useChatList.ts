@@ -14,10 +14,14 @@ const useChatList = (setChatrooms: (chatrooms: ChatroomList[]) => void) => {
             }
         };
 
-        socket.on('joined-new-chatroom', handleJoinedNewChatroom);
+        if (socket) {
+            socket.on('joined-new-chatroom', handleJoinedNewChatroom);
+        }
 
         return () => {
-            socket.off('joined-new-chatroom', handleJoinedNewChatroom);
+            if (socket) {
+                socket.off('joined-new-chatroom', handleJoinedNewChatroom);
+            }
         };
     }, [setChatrooms]);
 };

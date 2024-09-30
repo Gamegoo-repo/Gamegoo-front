@@ -55,10 +55,14 @@ const MessageList = (props: MessageListProps) => {
             setMannerSystemMessage(true); // 소켓 이벤트 발생 시 상태 업데이트
         };
 
-        socket.on('manner-system-message', handleMannerSystemMessage);
+        if (socket) {
+            socket.on('manner-system-message', handleMannerSystemMessage);
+        }
 
         return () => {
-            socket.off('manner-system-message', handleMannerSystemMessage);
+            if (socket) {
+                socket.off('manner-system-message', handleMannerSystemMessage);
+            }
         };
     }, []);
 
