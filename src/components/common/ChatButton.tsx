@@ -50,7 +50,7 @@ const ChatButton = () => {
   const chatCount = unreadChatUuids ? unreadChatUuids.length : 0;
 
   const handleToggleChat = () => {
-    if (!isUser.id) {
+    if (!isUser.gameName) {
       return setShowAlert(true);
     } 
     // setIsChatOpen((prevState) => !prevState);
