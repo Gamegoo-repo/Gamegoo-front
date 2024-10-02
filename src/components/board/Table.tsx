@@ -320,11 +320,9 @@ const Table = (props: TableProps) => {
                                         )}
                                     </Sixth>
                                     <Seventh className="table_width">
-
                                         <P className={data.winRate >= 50 ? "emph" : "basic"}>
                                             {data.winRate === null ? '0%' : `${data.winRate}%`}
                                         </P>
-
                                     </Seventh>
                                     <Eighth className="table_width">
                                         <P>{setDateFormatter(data.createdAt)}</P>

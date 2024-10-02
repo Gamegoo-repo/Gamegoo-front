@@ -171,7 +171,7 @@ const BoardPage = () => {
     if (!isUser.id) {
       return setShowAlert(true);
     }
-    
+
     dispatch(setOpenPostingModal());
   };
 
