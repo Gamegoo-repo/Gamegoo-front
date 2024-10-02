@@ -168,7 +168,7 @@ const BoardPage = () => {
 
   /* 글쓰기 모달 오픈 */
   const handlePostingOpen = () => {
-    if (!isUser.id) {
+    if (!isUser.gameName) {
       return setShowAlert(true);
     }
 

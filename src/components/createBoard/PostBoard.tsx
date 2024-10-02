@@ -98,7 +98,7 @@ const PostBoard = (props: PostBoardProps) => {
 
   /* userInfo가 업데이트된 후 상태 업데이트 */
   useEffect(() => {
-    if (!!isUser.id && !currentPost) {
+    if (!!isUser.gameName && !currentPost) {
       setPositionValue({
         main: isUser.mainP ? isUser.mainP : 0,
         sub: isUser.subP ? isUser.subP : 0,
@@ -173,7 +173,7 @@ const PostBoard = (props: PostBoardProps) => {
   /* 글쓰기 */
   const handlePost = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!isUser.id) {
+    if (!isUser.gameName) {
       return setShowAlert(true);
     }
     if (
@@ -242,7 +242,7 @@ const PostBoard = (props: PostBoardProps) => {
         </ConfirmModal>
       )}
       <Form onSubmit={handlePost}>
-        {isUser.id && (
+        {isUser.gameName && (
           <UserSection>
             <UpdateProfileImage
               selectedImageIndex={selectedImageIndex}
@@ -291,7 +291,7 @@ const PostBoard = (props: PostBoardProps) => {
         </PositionSection>
         <StyleSection>
           <Title className="gameStyleTitle">게임 스타일</Title>
-          {isUser.id && (
+          {isUser.gameName && (
             <GameStyle
               selectedIds={selectedStyleIds}
               setSelectedStyleIds={setSelectedStyleIds}
