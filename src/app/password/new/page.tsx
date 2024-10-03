@@ -29,14 +29,13 @@ const New = () => {
   const email = useSelector((state: RootState) => state.password.email);
 
   const passwordRegEx =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&#^()])[A-Za-z\d@$!%*?&#^()]{8,16}$/;
 
-  let isLengthValid = password.length >= 8;
+  let isLengthValid = password.length >= 8 && password.length <= 16;
   let isMixValid =
-    !!password.match(/[a-z]/) &&
-    !!password.match(/[A-Z]/) &&
+    !!password.match(/[a-zA-Z]/) &&
     !!password.match(/\d/) &&
-    !!password.match(/[@$!%*?&]/);
+    !!password.match(/[@$!%*?&#^()]/);
 
   const validatePassword = (password: string) => {
     const isValid = passwordRegEx.test(password);
@@ -87,7 +86,7 @@ const New = () => {
               height={5}
               alt="check"
             />
-            8자리 이상
+            8자리 이상 ~ 16자리 이하
           </Conditon>
           <Conditon isMixValid={isMixValid}>
             <Image

@@ -4,12 +4,13 @@ import { checkRiot, joinMember } from "@/api/join";
 import Button from "@/components/common/Button";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import Input from "@/components/common/Input";
+import { clearSignIn } from "@/redux/slices/signInSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 interface RiotErrorResponse {
@@ -20,6 +21,7 @@ interface RiotErrorResponse {
 
 const Summoner = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [tag, setTag] = useState("");
 
@@ -80,6 +82,7 @@ const Summoner = () => {
           gameName: name,
           tag,
         });
+        dispatch(clearSignIn());
         router.push("/login");
       } catch (err) {
         const error = err as AxiosError<RiotErrorResponse>;
