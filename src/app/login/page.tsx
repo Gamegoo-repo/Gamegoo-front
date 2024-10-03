@@ -64,7 +64,7 @@ const Login = () => {
 
       /* 로켓 로그인 */
       socketLogin();
-console.log('???????????')
+      console.log("???????????");
       const data = await getUnreadUuid();
       if (data.isSuccess) {
         // 실시간 안읽은 채팅방 수 가져오기 위함
@@ -101,12 +101,18 @@ console.log('???????????')
   return (
     <Container>
       <Box>
-        <Image
-          src="/assets/icons/logo_m.svg"
-          width={277}
-          height={88}
-          alt="logo"
-        />
+        <button
+          onClick={() => {
+            router.push("/");
+          }}
+        >
+          <Image
+            src="/assets/icons/logo_m.svg"
+            width={277}
+            height={88}
+            alt="logo"
+          />
+        </button>
         <Title>로그인</Title>
         <P>GAMGOO에 오신 것을 환영합니다.</P>
         <Content>
