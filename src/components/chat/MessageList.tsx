@@ -39,6 +39,8 @@ const MessageList = (props: MessageListProps) => {
     const [isInitialLoading, setIsInitialLoading] = useState(true);
     const [isBoardId, setIsBoardId] = useState(0);
     const [isSystemMessageShown, setIsSystemMessageShown] = useState(false);
+    const [isUnregisterAlert, setIsUnregisterAlert] = useState(false);
+    const [isBlockedAlert, setIsBlockedAlert] = useState(false);
     const [mannerSystemMessage, setMannerSystemMessage] = useState(false);
     const [isFeedbackDateVisible, setIsFeedbackDateVisible] = useState(false);
     const [isFeedbackDate, setIsFeedbackDate] = useState<string>("");
@@ -51,8 +53,8 @@ const MessageList = (props: MessageListProps) => {
 
     /* 매너 시스템 소켓 이벤트 리스닝 */
     useEffect(() => {
-        const handleMannerSystemMessage = (res: any) => {
-            setMannerSystemMessage(true); // 소켓 이벤트 발생 시 상태 업데이트
+        const handleMannerSystemMessage = () => {
+            setMannerSystemMessage(true);
         };
 
         if (socket) {
@@ -66,11 +68,28 @@ const MessageList = (props: MessageListProps) => {
         };
     }, []);
 
-    /* 게시글 열기 */
-    const handlePostOpen = (id: number) => {
-        dispatch(setOpenReadingModal());
-        setIsBoardId(id);
+    /* 시스템 메시지 클릭 시 다음 스텝 */
+    const handlePostOpen = (boardId: number) => {
+        if (chatEnterData.blind || chatEnterData.blocked) {
+            setIsUnregisterAlert(true);
+            setIsBlockedAlert(true);
+        } else {
+            dispatch(setOpenReadingModal());
+            setIsBoardId(boardId);
+        }
     };
+
+    /* 게시글 이동 클릭시 탈퇴회원, 차단회원 알럿 3초후 사라짐 */
+    useEffect(() => {
+        let timer: any;
+        if (isUnregisterAlert || isBlockedAlert) {
+            timer = setTimeout(() => {
+                setIsUnregisterAlert(false);
+                setIsBlockedAlert(false);
+            }, 3000);
+        }
+        return () => clearTimeout(timer);
+    }, [isUnregisterAlert, isBlockedAlert]);
 
     /* 새로운 메시지 전에 시스템 메시지 보여주기 */
     useEffect(() => {
@@ -259,6 +278,11 @@ const MessageList = (props: MessageListProps) => {
     return (
         <>
             {isReadingModal && <ReadBoard postId={isBoardId} />}
+            {isUnregisterAlert || isBlockedAlert && (
+                <ErrorBox>
+                    {isUnregisterAlert ? '탈퇴한 회원의 글입니다.' : '차단한 회원의 글입니다.'}
+                </ErrorBox>
+            )}
             <ChatBorder>
                 <ChatMain ref={chatRef}>
                     {messageList.map((message, index) => {
@@ -270,9 +294,9 @@ const MessageList = (props: MessageListProps) => {
                                 {message.systemType === 0 ? (
                                     <SystemMessage
                                         message={message.message}
-                                        onClick={message.boardId ? () => handlePostOpen(message.boardId as number) : undefined}
+                                        onClick={() => handlePostOpen(message.boardId as number)}
                                     />
-                                ) : message.systemType === 1 || mannerSystemMessage ? (
+                                ) : message.systemType === 1 ? (
                                     <>
                                         <FeedbackDiv>
                                             <FeedbackContainer>
@@ -523,3 +547,17 @@ const StyledButton = styled.button`
   color: ${theme.colors.white}; 
   padding: 10px 0;
 `;
+
+const ErrorBox = styled.div`
+  position: absolute;
+  top:50%;
+  left:50%;
+  transform: translate(-50%, -50%);
+  padding: 10px 28px;
+  ${(props) => props.theme.fonts.regular14};
+  background: ${theme.colors.white};
+  color: rgba(45, 45, 45, 1);
+  box-shadow: 0px 0px 25.3px 0px rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  white-space: nowrap;
+`

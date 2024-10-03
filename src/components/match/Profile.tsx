@@ -471,6 +471,7 @@ const Profile: React.FC<Profile> = ({
             {profileType === "other" && (
               <More>
                 <Admit>{renderFriendsButton()}</Admit>
+                
                 {/* 더보기 버튼 */}
                 {memberId !== myId && (
                   <MoreDiv>
@@ -480,6 +481,7 @@ const Profile: React.FC<Profile> = ({
                     )}
                   </MoreDiv>
                 )}
+
                 {/* 신고하기 팝업 */}
                 {isReportBoxOpen && (
                   <FormModal

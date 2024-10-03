@@ -12,6 +12,10 @@ import { useEffect, useRef, useState } from "react";
 import { sendMatchingQuitEvent, socket } from "@/socket";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import { getProfile } from "@/api/user";
+import ChatLayout from "@/components/chat/ChatLayout";
+import { RootState } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { openChatRoom, setChatRoomUuid } from "@/redux/slices/chatSlice";
 
 interface User {
   memberId: number;
@@ -32,8 +36,11 @@ interface User {
 const Complete = () => {
   const [timeLeft, setTimeLeft] = useState(10);
   const [showFailModal, setShowFailModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const router = useRouter();
+  const dispatch = useDispatch();
   const searchParams = useSearchParams();
+  const isChatRoomOpen = useSelector((state: RootState) => state.chat.isChatRoomOpen);
   const type = searchParams.get("type");
   const rank = searchParams.get("rank");
   const [userMe, setUserMe] = useState<User>({
@@ -139,6 +146,12 @@ const Complete = () => {
     };
   }, []);
 
+  /* 매칭 성공 후 chatUuid 가져오기 */
+  const handleChatUuidget = (res: any) => {
+    const data = res.data;
+    dispatch(setChatRoomUuid(data.chatroomUuid));
+  };
+
   useEffect(() => {
     // 10초 타이머 시작
     timerRef.current = setInterval(() => {
@@ -156,8 +169,8 @@ const Complete = () => {
       socket?.on("matching-success-sender", handleMatchingSuccessSender);
     }
 
+    socket?.on("matching-success", handleChatUuidget);
     socket?.on("matching-fail", handleMatchingFail);
-    socket?.on("matching-success", handleMatchingSuccess);
 
     return () => {
       clearInterval(timerRef.current!);
@@ -167,11 +180,13 @@ const Complete = () => {
         socket?.off("matching-success-sender", handleMatchingSuccessSender);
       }
       socket?.off("matching-fail", handleMatchingFail);
+      socket?.off("matching-success", handleChatUuidget);
     };
   }, []);
 
   // 타임아웃 처리
   const handleTimeout = () => {
+    // alert("타임 아웃 처리");
     if (role === "receiver") {
       socket?.emit("matching-success-receiver");
       startSecondaryTimer();
@@ -184,6 +199,7 @@ const Complete = () => {
   // 매칭 성공 (Sender) 이벤트 핸들러
   const handleMatchingSuccessSender = () => {
     clearInterval(timerRef.current!);
+    dispatch(openChatRoom());
   };
 
   // 매칭 실패 이벤트 핸들러
@@ -192,23 +208,15 @@ const Complete = () => {
     setShowFailModal(true);
   };
 
-  // 최종 매칭 성공 핸들러
-  const handleMatchingSuccess = () => {
-    clearAllTimers();
-    alert("매칭에 성공하였습니다!"); // 추후 삭제
-
-    /* 채팅방 이동 시키기 */
-  };
-
-  // 5초 후 매칭 실패 emit (Receiver Final Timer)
+  // 5초 후 매칭 최종 성공 emit (Receiver)
   const startSecondaryTimer = () => {
-    finalTimerRef.current = setTimeout(() => {
-      socket?.emit("matching-fail");
-      setShowFailModal(true);
+    secondaryTimerRef.current = setTimeout(() => {
+      socket?.emit("matching-success-final");
+      startFinalTimer();
     }, 5000);
   };
 
-  // 3초 후 매칭 실패 emit (Sender Final Timer)
+  // 3초 후 매칭 실패 emit (Final Timer)
   const startFinalTimer = () => {
     finalTimerRef.current = setTimeout(() => {
       socket?.emit("matching-fail");
@@ -239,6 +247,8 @@ const Complete = () => {
 
   return (
     <Suspense>
+      {isChatRoomOpen &&
+        <ChatLayout apiType={1} />}
       <Wrapper>
         <MatchContent>
           <HeaderTitle title="매칭 완료" sub="듀오 상대를 찾았어요!" />

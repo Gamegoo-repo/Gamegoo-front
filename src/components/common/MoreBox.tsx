@@ -1,16 +1,34 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
+import { useEffect, useRef } from "react";
 
 interface MoreBoxProps {
     items: MoreBoxMenuItems[];
     top: number;
     left: number;
+    onClose?: () => void;
 }
 
-const MoreBox = ({ items, top, left }: MoreBoxProps) => {
+const MoreBox = ({ items, top, left, onClose }: MoreBoxProps) => {
+
+    const moreBoxRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (onClose && moreBoxRef.current && !moreBoxRef.current.contains(event.target as Node)) {
+                onClose();
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [onClose]);
+
     return (
-        <MenuWrapper $top={top} $left={left}>
+        <MenuWrapper ref={moreBoxRef} $top={top} $left={left}>
             {items.map((item, index) => (
                 <MenuItem key={index} onClick={item.onClick}>
                     {item.text}

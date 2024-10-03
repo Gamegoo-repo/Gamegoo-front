@@ -20,14 +20,14 @@ import {
   setOpenPostingModal,
 } from "@/redux/slices/modalSlice";
 import { getBoardList } from "@/api/board";
-import { BoardList } from "@/interface/board";
+import { BoardDetail } from "@/interface/board";
 import Alert from "@/components/common/Alert";
 import { useRouter } from "next/navigation";
 
 const ITEMS_PER_PAGE = 20;
 
 const BoardPage = () => {
-  const [boardList, setBoardList] = useState<BoardList[]>([]);
+  const [boardList, setBoardList] = useState<BoardDetail[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMoreItems, setHasMoreItems] = useState(true);
   const [isPosition, setIsPosition] = useState(0);
@@ -168,10 +168,10 @@ const BoardPage = () => {
 
   /* 글쓰기 모달 오픈 */
   const handlePostingOpen = () => {
-    if (!isUser.id) {
+    if (!isUser.gameName) {
       return setShowAlert(true);
     }
-    
+
     dispatch(setOpenPostingModal());
   };
 

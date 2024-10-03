@@ -61,6 +61,7 @@ const Wrapper = styled.div`
     max-width:555px;
     width: 100%;
     min-height: 837px;
+    position: relative;
 `;
 
 const Header = styled.header<{ $type: string }>` 

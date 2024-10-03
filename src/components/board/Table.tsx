@@ -20,6 +20,7 @@ import Alert from "../common/Alert";
 import ConfirmModal from "../common/ConfirmModal";
 import { editManners, postBadMannerValue, postMannerValue } from "@/api/manner";
 import ChatLayout from "../chat/ChatLayout";
+import Champion from "../readBoard/Champion";
 
 interface TableTitleProps {
     id: number;
@@ -307,20 +308,14 @@ const Table = (props: TableProps) => {
                                         />
                                     </Fifth>
                                     <Sixth className="table_width">
-                                        {data.championResponseDTOList.map(
-                                            (data, index) =>
-                                                // <Image
-                                                //     key={index}
-                                                //     src={data}
-                                                //     width={50}
-                                                //     height={50}
-                                                //     alt="챔피언 이미지"
-                                                // />
-                                                data.championName
-                                        )}
+                                        <Champion
+                                            size={50}
+                                            list={data.championResponseDTOList.map(
+                                                (champion) => champion.championId
+                                            )}
+                                        />
                                     </Sixth>
                                     <Seventh className="table_width">
-
                                         <P className={data.winRate >= 50 ? "emph" : "basic"}>
                                             {data.winRate === null ? '0%' : `${data.winRate}%`}
                                         </P>

@@ -100,6 +100,12 @@ const Header = () => {
     console.log(count);
   }, [count]);
 
+  const deleteLocalStorageData = () => {
+    localStorage.removeItem('unreadChatUuids');
+    localStorage.removeItem('mannerId');
+    localStorage.removeItem('badMannerId');
+  };
+
   return (
     <Head>
       {showAlert && (
@@ -221,6 +227,7 @@ const Header = () => {
                       router.push("/login");
                       clearTokens();
                       dispatch(clearUserProfile());
+                      deleteLocalStorageData();
                     }
                   }}
                 >

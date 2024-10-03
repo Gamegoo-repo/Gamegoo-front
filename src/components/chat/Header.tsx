@@ -1,6 +1,5 @@
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { theme } from "@/styles/theme";
-import Image from "next/image";
 import { Dispatch } from 'react';
 
 interface HeaderProps {

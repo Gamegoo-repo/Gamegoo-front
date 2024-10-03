@@ -34,6 +34,7 @@ import Alert from "../common/Alert";
 import { AlertProps } from "@/interface/modal";
 import { useRouter } from "next/navigation";
 import { openChatRoom, setChatRoomUuid, setErrorMessage } from "@/redux/slices/chatSlice";
+import { notify } from "@/hooks/notify";
 
 interface ReadBoardProps {
   postId: number;
@@ -76,17 +77,17 @@ const ReadBoard = (props: ReadBoardProps) => {
   useEffect(() => {
     const getPostData = async () => {
       setLoading(true);
-      if (!!isUser.id && postId) {
+      if (!!isUser.gameName && postId) {
         const memberData = await getMemberPost(postId);
         setIsPost(memberData.result);
-        const hasPosition = await memberData.result.some((item: MemberPost) => 'mainPosition' in item);
+        const hasPosition = Array.isArray(memberData.result) && memberData.result.some((item: MemberPost) => 'mainPosition' in item);
 
         // 글 type 설정
         setType(hasPosition ? 'canyon' : 'wind');
         setLoading(false);
       }
 
-      if (!isUser.id && postId) {
+      if (!isUser.gameName && postId) {
         const nonMember = await getNonMemberPost(postId);
 
         setIsPost(nonMember.result);
@@ -95,7 +96,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     };
 
     getPostData();
-  }, [isBlockedStatus, isFriendStatus, isUser.id, postId])
+  }, [isBlockedStatus, isFriendStatus, isUser.gameName, postId])
 
   /* 클릭해서 매너키워드 보기 박스 닫기 */
   useEffect(() => {
@@ -141,7 +142,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   /* 신고하기 모달 오픈 */
   const handleReportModal = () => {
     // 신고하기 버튼 클릭 시점 토큰 만료
-    if (!isUser.id) {
+    if (!isUser.gameName) {
       return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
     }
 
@@ -151,11 +152,11 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 신고하기 */
   const handleReport = async () => {
-    if (!isUser.id) {
+    if (!isUser.gameName) {
       return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
     }
 
-    if (!isPost || isUser?.id === isPost?.memberId) return;
+    if (!isPost || isUser?.gameName === isPost?.gameName) return;
 
     const params = {
       targetMemberId: isPost.memberId,
@@ -173,11 +174,11 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 차단하기 */
   const handleBlock = async () => {
-    if (!isUser.id) {
+    if (!isUser.gameName) {
       return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
     }
 
-    if (!isPost || isUser?.id === isPost?.memberId) return;
+    if (!isPost || isUser?.gameName === isPost?.gameName) return;
 
     try {
       await blockMember(isPost.memberId);
@@ -190,11 +191,11 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 차단 해제 */
   const handleUnblock = async () => {
-    if (!isUser.id) {
+    if (!isUser.gameName) {
       return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
     }
 
-    if (!isPost || isUser?.id === isPost?.memberId) return;
+    if (!isPost || isUser?.gameName === isPost?.gameName) return;
 
     if ('isBlocked' in isPost && !isPost.isBlocked) return;
 
@@ -208,11 +209,11 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 친구 추가 */
   const handleFriendAdd = async () => {
-    if (!isUser.id) {
+    if (!isUser.gameName) {
       return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
     }
 
-    if (!isPost || isUser?.id === isPost?.memberId) return;
+    if (!isPost || isUser?.gameName === isPost?.gameName) return;
 
     if ('isFriend' in isPost && isPost?.isFriend ||
       'friendRequestMemberId' in isPost && isPost?.friendRequestMemberId
@@ -231,11 +232,11 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 친구 요청 취소 */
   const handleCancelFriendReq = async () => {
-    if (!isUser.id) {
+    if (!isUser.gameName) {
       return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
     }
 
-    if (!isPost || isUser?.id === isPost?.memberId) return;
+    if (!isPost || isUser?.gameName === isPost?.gameName) return;
 
     try {
       await cancelFriendReq(isPost.memberId);
@@ -250,11 +251,11 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 친구 삭제 */
   const handleFriendDelete = async () => {
-    if (!isUser.id) {
+    if (!isUser.gameName) {
       return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
     }
 
-    if (!isPost || isUser?.id === isPost?.memberId) return;
+    if (!isPost || isUser?.gameName === isPost?.gameName) return;
 
     if ('isFriend' in isPost && !isPost?.isFriend) return;
 
@@ -271,7 +272,7 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 매너레벨 박스 열기 */
   const handleMannerLevelBoxOpen = () => {
-    if (!isUser.id) {
+    if (!isUser.gameName) {
       return showAlertWithContent(loginRequiredMessage, () => setShowAlert(false), "확인");
     }
 
@@ -287,11 +288,11 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 게시글 수정 */
   const handleEdit = async () => {
-    if (!isUser.id) {
+    if (!isUser.gameName) {
       return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
     }
 
-    if (isUser?.id !== isPost?.memberId) return;
+    // if (isUser?.id !== isPost?.memberId) return;
 
     if (isPost) {
       dispatch(setCurrentPost({ currentPost: isPost, currentPostId: postId }));
@@ -302,11 +303,11 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 게시글 삭제 */
   const handleDelete = async () => {
-    if (!isUser.id) {
+    if (!isUser.gameName) {
       return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
     }
 
-    if (isUser?.id !== isPost?.memberId) return;
+    if (isUser?.gameName !== isPost?.gameName) return;
 
     try {
       await deletePost(postId);
@@ -319,7 +320,7 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 더보기 버튼 토글 */
   const handleMoreBoxToggle = () => {
-    if (!isUser.id) {
+    if (!isUser.gameName) {
       return showAlertWithContent(loginRequiredMessage, () => setShowAlert(false), "확인");
     }
 
@@ -334,7 +335,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   /* 더보기 버튼 메뉴 */
   const MoreBoxMenuItems: MoreBoxMenuItems[] = [];
 
-  if (isUser?.id === isPost?.memberId) {
+  if (isUser?.gameName === isPost?.gameName) {
     MoreBoxMenuItems.push(
       { text: '수정', onClick: handleEdit },
       { text: '삭제', onClick: handleDelete }
@@ -347,7 +348,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   //차단하기 - 친구 추가 요청 중일 때, 친구 삭제된 상태일 때, 차단되어있지 않을 때
   //차단해제 - 차단되어 있을 때, 
 
-  if (isUser?.id !== isPost?.memberId) {
+  if (isUser?.gameName !== isPost?.gameName) {
     let friendText = '친구 추가';
     let friendFunc = handleFriendAdd;
     let blockText = '차단하기';
@@ -382,6 +383,12 @@ const ReadBoard = (props: ReadBoardProps) => {
     if (friendText) {
       MoreBoxMenuItems.push({ text: friendText, onClick: friendFunc });
     }
+
+    /* 내가 작성한 게시글이 아닐 때만 차단/차단 해제 버튼 보이게  */
+    if (isUser?.id !== isPost?.memberId) {
+      MoreBoxMenuItems.push({ text: blockText, onClick: blockFunc });
+    }
+
     MoreBoxMenuItems.push(
       { text: blockText, onClick: blockFunc },
       { text: '신고하기', onClick: handleReportModal }
@@ -407,8 +414,12 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 채팅방 연결 */
   const handleChatStart = async () => {
-    if (!isUser.id) {
+    if (!isUser.gameName) {
       return showAlertWithContent(loginRequiredMessage, () => setShowAlert(false), "확인");
+    }
+
+    if (isPost && 'isBlocked' in isPost) {
+      return notify({ text: '차단한 회원과는 채팅이 불가합니다', icon: '🚫', type: 'error' });
     }
 
     if (isErrorMessage) {
@@ -426,7 +437,6 @@ const ReadBoard = (props: ReadBoardProps) => {
     }
   };
 
-
   return (
     <>
       <CRModal type="reading" onClose={() => dispatch(setCloseReadingModal())}>
@@ -437,7 +447,8 @@ const ReadBoard = (props: ReadBoardProps) => {
               <MoreBox
                 items={MoreBoxMenuItems}
                 top={67}
-                left={17} />
+                left={544}
+                onClose={() => setIsMoreBoxOpen(false)} />
             )}
             <UpdatedDate>게시일 : {setPostingDateFormatter(isPost.createdAt)}</UpdatedDate>
             <UserSection>
@@ -463,7 +474,7 @@ const ReadBoard = (props: ReadBoardProps) => {
                           memberId={isPost.memberId}
                           level={isPost.mannerLevel}
                           top="69%"
-                          right="-25%"
+                          right="-400%"
                         />
                       </div>
                     )}
@@ -513,7 +524,7 @@ const ReadBoard = (props: ReadBoardProps) => {
                 </MemoData>
               </Memo>
             </MemoSection>
-            {(isUser.id === isPost.memberId || ('isBlocked' in isPost ? !isPost.isBlocked : true)) && (
+            {(isUser.gameName === isPost.gameName || ('isBlocked' in isPost ? !isPost.isBlocked : true)) && (
               <ButtonContent $gameType={type}>
                 <Button
                   type="submit"
