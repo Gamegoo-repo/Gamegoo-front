@@ -30,7 +30,6 @@ const BUTTONS_PER_PAGE = 5;
 const BoardPage = () => {
   const [boardList, setBoardList] = useState<BoardDetail[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  // const [hasMoreItems, setHasMoreItems] = useState(true);
   const [totalPages, setTotalPages] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
   const [isPosition, setIsPosition] = useState(0);

@@ -17,7 +17,6 @@ import { editPost, postBoard } from "@/api/board";
 import {
   clearCurrentPost,
   PostUpdate,
-  setCurrentPost,
   updateCurrentPost,
 } from "@/redux/slices/postSlice";
 import { PostReq } from "@/interface/board";
