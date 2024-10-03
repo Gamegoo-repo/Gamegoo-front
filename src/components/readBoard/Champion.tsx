@@ -17,7 +17,7 @@ const Champion = (props: ChampionProps) => {
           {list?.map((champion, key) => (
             <ImageWrapper key={key}>
               <Image
-                src={`/assets/images/champion/${champion}_Trundle.png`}
+                src={`/assets/images/champion/${champion}.png`}
                 width={52}
                 height={52}
                 alt="champion"

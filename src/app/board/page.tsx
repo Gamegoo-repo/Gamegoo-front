@@ -30,6 +30,7 @@ const BoardPage = () => {
   const [boardList, setBoardList] = useState<BoardDetail[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMoreItems, setHasMoreItems] = useState(true);
+  const [totalPage, setTotalPage] = useState(1);
   const [isPosition, setIsPosition] = useState(0);
   const [isGameModeDropdownOpen, setIsGameModeDropdownOpen] = useState(false);
   const [isTierDropdownOpen, setIsTierDropdownOpen] = useState(false);
@@ -196,7 +197,8 @@ const BoardPage = () => {
       };
 
       const data = await getBoardList(params);
-      setBoardList(data.result);
+      setBoardList(data.result.boards);
+      setTotalPage(data.result.totalPage);
       setHasMoreItems(data.result.length === ITEMS_PER_PAGE);
     };
 
@@ -329,6 +331,7 @@ const BoardPage = () => {
               <Pagination
                 currentPage={currentPage}
                 hasMoreItems={hasMoreItems}
+                totalPage={totalPage}
                 onPrevPage={handlePrevPage}
                 onNextPage={handleNextPage}
                 onPageClick={handlePageClick}
