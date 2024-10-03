@@ -22,6 +22,7 @@ export interface BoardDetail {
     createdAt: string,
     mike: boolean
 }
+
 export interface BoardList {
     totalPage: number;
     totalCount: number;

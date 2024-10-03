@@ -20,16 +20,19 @@ import {
   setOpenPostingModal,
 } from "@/redux/slices/modalSlice";
 import { getBoardList } from "@/api/board";
-import { BoardDetail } from "@/interface/board";
+import { BoardDetail, BoardList } from "@/interface/board";
 import Alert from "@/components/common/Alert";
 import { useRouter } from "next/navigation";
 
 const ITEMS_PER_PAGE = 20;
+const BUTTONS_PER_PAGE = 5;
 
 const BoardPage = () => {
   const [boardList, setBoardList] = useState<BoardDetail[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [hasMoreItems, setHasMoreItems] = useState(true);
+  // const [hasMoreItems, setHasMoreItems] = useState(true);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalItems, setTotalItems] = useState(0);
   const [isPosition, setIsPosition] = useState(0);
   const [isGameModeDropdownOpen, setIsGameModeDropdownOpen] = useState(false);
   const [isTierDropdownOpen, setIsTierDropdownOpen] = useState(false);
@@ -58,6 +61,66 @@ const BoardPage = () => {
     (state: RootState) => state.modal.modalType
   );
   const isUser = useSelector((state: RootState) => state.user);
+
+  /* 게시글 목록 */
+  useEffect(() => {
+    const getList = async () => {
+      const params = {
+        pageIdx: currentPage,
+        mode:
+          selectedGameMode === "솔로 랭크"
+            ? setSelectedGameMode(null)
+            : selectedGameMode,
+        tier:
+          selectedTier === "티어 선택" ? setSelectedTier(null) : selectedTier,
+        mainPosition: isPosition,
+        mike: selectedMic === "음성 채팅" ? setSelectedMic(null) : selectedMic,
+      };
+
+      try {
+        const data = await getBoardList(params);
+        if (data.isSuccess) {
+          setBoardList(data.result.boards);
+          setTotalPages(data.result.totalPage);
+          setTotalItems(data.result.totalCount);
+        } else {
+          console.error(data.message);
+        }
+      }
+      catch (error) {
+        console.error(error);
+      }
+    };
+
+    getList();
+  }, [
+    currentPage,
+    selectedGameMode,
+    selectedTier,
+    isPosition,
+    selectedMic,
+    isCompletedPosting,
+    refresh,
+  ]);
+
+  /* 페이지네이션 이전 클릭 */
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  /* 페이지네이션 다음 클릭 */
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  /* 페이지네이션 페이지 클릭 */
+  const handlePageClick = (page: number) => {
+    setCurrentPage(page);
+  };
 
   /* 게임모드 드롭 */
   const handleGameModeDropValue = (id: number | null) => {
@@ -180,54 +243,6 @@ const BoardPage = () => {
     dispatch(setClosePostingModal());
   };
 
-  /* 게시글 목록 */
-  useEffect(() => {
-    const getList = async () => {
-      const params = {
-        pageIdx: currentPage,
-        mode:
-          selectedGameMode === "솔로 랭크"
-            ? setSelectedGameMode(null)
-            : selectedGameMode,
-        tier:
-          selectedTier === "티어 선택" ? setSelectedTier(null) : selectedTier,
-        mainPosition: isPosition,
-        mike: selectedMic === "음성 채팅" ? setSelectedMic(null) : selectedMic,
-      };
-
-      const data = await getBoardList(params);
-      setBoardList(data.result);
-      setHasMoreItems(data.result.length === ITEMS_PER_PAGE);
-    };
-
-    getList();
-  }, [
-    currentPage,
-    selectedGameMode,
-    selectedTier,
-    isPosition,
-    selectedMic,
-    isCompletedPosting,
-    refresh,
-  ]);
-
-  /* 페이지네이션 이전 클릭 */
-  const handlePrevPage = () => {
-    setCurrentPage((prev) => Math.max(prev - 1, 1));
-  };
-
-  /* 페이지네이션 다음 클릭 */
-  const handleNextPage = () => {
-    if (boardList.length === ITEMS_PER_PAGE) {
-      setCurrentPage((prev) => prev + 1);
-    }
-  };
-
-  /* 페이지네이션 페이지 클릭 */
-  const handlePageClick = (page: number) => {
-    setCurrentPage(page);
-  };
-
   const handleModalClose = () => {
     /* 글쓰기 모달 닫기 */
     handlePostingClose();
@@ -328,7 +343,11 @@ const BoardPage = () => {
             {boardList?.length > 0 && (
               <Pagination
                 currentPage={currentPage}
-                hasMoreItems={hasMoreItems}
+                totalItems={totalItems}
+                totalPage={totalPages}
+                itemsPerPage={ITEMS_PER_PAGE}
+                pageButtonCount={BUTTONS_PER_PAGE}
+                hasMoreItems={currentPage < totalPages}
                 onPrevPage={handlePrevPage}
                 onNextPage={handleNextPage}
                 onPageClick={handlePageClick}
