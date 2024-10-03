@@ -40,9 +40,6 @@ const Table = (props: TableProps) => {
     const [showAlert, setShowAlert] = useState(false);
     const [alertContent, setAlertContent] = useState("");
     const isChatRoomOpen = useSelector((state: RootState) => state.chat.isChatRoomOpen);
-    // const [targetMemberId, setTargetMemberId] = useState<number>();
-    const [checkedMannerItems, setCheckedMannerItems] = useState<number[]>([]);
-    const [checkedBadMannerItems, setCheckedBadMannerItems] = useState<number[]>([]);
     const [copiedAlert, setCopiedAlert] = useState(false);
 
     const isReadingModal = useSelector((state: RootState) => state.modal.readingModal);
@@ -117,76 +114,6 @@ const Table = (props: TableProps) => {
     const handleModalClose = () => {
         dispatch(setCloseModal());
     };
-
-    // /* 매너 평가 체크박스 */
-    // const handleMannerCheckboxChange = (checked: number) => {
-    //     setCheckedMannerItems((prev) =>
-    //         prev.includes(checked) ? prev.filter((c) => c !== checked) : [...prev, checked]
-    //     );
-    // };
-
-    // /* 비매너 평가 체크박스 */
-    // const handleBadMannerCheckboxChange = (checked: number) => {
-    //     setCheckedBadMannerItems((prev) =>
-    //         prev.includes(checked) ? prev.filter((c) => c !== checked) : [...prev, checked]
-    //     );
-    // };
-
-    // /* 매너평가 등록 */
-    // const handleMannerPost = async () => {
-    //     if (!targetMemberId) return;
-
-    //     const params = {
-    //         toMemberId: targetMemberId,
-    //         mannerRatingKeywordList: checkedMannerItems,
-    //     };
-
-    //     try {
-    //         await postMannerValue(params)
-    //         await handleModalClose();
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // };
-
-    // /* 비매너평가 등록 */
-    // const handleBadMannerPost = async () => {
-    //     if (!targetMemberId) return;
-
-    //     const params = {
-    //         toMemberId: targetMemberId,
-    //         mannerRatingKeywordList: checkedBadMannerItems,
-    //     };
-
-    //     try {
-    //         await postBadMannerValue(params)
-    //         await handleModalClose();
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // };
-
-    // /* 매너, 비매너 평가 수정 */
-    // const handleMannerEdit = async (type: string) => {
-    //     const mannerId = localStorage.getItem('mannerId');
-    //     const badMannerId = localStorage.getItem('badMannerId');
-
-    //     if (!type || !mannerId || !badMannerId) return;
-
-    //     const mannerIdNumber = parseInt(mannerId, 10);
-    //     const badMannerIdNumber = parseInt(badMannerId, 10);
-
-    //     const params = {
-    //         mannerRatingKeywordList: type === 'manner' ? checkedMannerItems : checkedBadMannerItems,
-    //     };
-
-    //     try {
-    //         await editManners(type === 'manner' ? mannerIdNumber : badMannerIdNumber, params);
-    //         await handleModalClose();
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // };
 
     return (
         <>

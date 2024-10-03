@@ -26,11 +26,13 @@ interface UpdateCurrentPostPayload {
 interface PostState {
     currentPost: MemberPost | null;
     currentPostId: number | null;
+    postStatus: string;
 }
 
 const initialState: PostState = {
     currentPost: null,
     currentPostId: null,
+    postStatus: "",
 };
 
 const postSlice = createSlice({
@@ -53,8 +55,16 @@ const postSlice = createSlice({
             state.currentPost = null;
             state.currentPostId = null;
         },
+        setPostStatus(state, action: PayloadAction<string>) {
+            state.postStatus = action.payload;
+        },
     },
 });
 
-export const { setCurrentPost, updateCurrentPost, clearCurrentPost } = postSlice.actions;
+export const {
+    setCurrentPost,
+    updateCurrentPost,
+    clearCurrentPost,
+    setPostStatus
+} = postSlice.actions;
 export default postSlice.reducer;

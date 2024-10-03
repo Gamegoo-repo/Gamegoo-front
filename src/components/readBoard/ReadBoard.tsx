@@ -28,7 +28,7 @@ import { REPORT_REASON } from "@/data/report";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { setCloseModal, setCloseReadingModal, setOpenModal, setOpenPostingModal } from "@/redux/slices/modalSlice";
-import { setCurrentPost } from "@/redux/slices/postSlice";
+import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { cancelFriendReq, deleteFriend, reqFriend } from "@/api/friends";
 import Alert from "../common/Alert";
 import { AlertProps } from "@/interface/modal";
@@ -312,8 +312,8 @@ const ReadBoard = (props: ReadBoardProps) => {
 
     try {
       await deletePost(postId);
+      await dispatch(setPostStatus('delete'));
       await dispatch(setCloseReadingModal());
-      // 게시글 업로드 해야하나?
     } catch (error) {
       console.error(error);
     }

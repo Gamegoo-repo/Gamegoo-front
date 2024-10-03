@@ -56,41 +56,39 @@ const BoardPage = () => {
   const isPostingModal = useSelector(
     (state: RootState) => state.modal.postingModal
   );
-  const isCompletedPosting = useSelector(
-    (state: RootState) => state.modal.modalType
-  );
+  const postStatus = useSelector((state: RootState) => state.post.postStatus);
   const isUser = useSelector((state: RootState) => state.user);
 
   /* 게시글 목록 */
-  useEffect(() => {
-    const getList = async () => {
-      const params = {
-        pageIdx: currentPage,
-        mode:
-          selectedGameMode === "솔로 랭크"
-            ? setSelectedGameMode(null)
-            : selectedGameMode,
-        tier:
-          selectedTier === "티어 선택" ? setSelectedTier(null) : selectedTier,
-        mainPosition: isPosition,
-        mike: selectedMic === "음성 채팅" ? setSelectedMic(null) : selectedMic,
-      };
-
-      try {
-        const data = await getBoardList(params);
-        if (data.isSuccess) {
-          setBoardList(data.result.boards);
-          setTotalPages(data.result.totalPage);
-          setTotalItems(data.result.totalCount);
-        } else {
-          console.error(data.message);
-        }
-      }
-      catch (error) {
-        console.error(error);
-      }
+  const getList = async () => {
+    const params = {
+      pageIdx: currentPage,
+      mode:
+        selectedGameMode === "솔로 랭크"
+          ? setSelectedGameMode(null)
+          : selectedGameMode,
+      tier:
+        selectedTier === "티어 선택" ? setSelectedTier(null) : selectedTier,
+      mainPosition: isPosition,
+      mike: selectedMic === "음성 채팅" ? setSelectedMic(null) : selectedMic,
     };
 
+    try {
+      const data = await getBoardList(params);
+      if (data.isSuccess) {
+        setBoardList(data.result.boards);
+        setTotalPages(data.result.totalPage);
+        setTotalItems(data.result.totalCount);
+      } else {
+        console.error(data.message);
+      }
+    }
+    catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
     getList();
   }, [
     currentPage,
@@ -98,7 +96,7 @@ const BoardPage = () => {
     selectedTier,
     isPosition,
     selectedMic,
-    isCompletedPosting,
+    postStatus,
     refresh,
   ]);
 

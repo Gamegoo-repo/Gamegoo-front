@@ -11,17 +11,18 @@ import PositionBox, { PositionState } from "../crBoard/PositionBox";
 import GameStyle from "./GameStyle";
 import ConfirmModal from "../common/ConfirmModal";
 import { useDispatch, useSelector } from "react-redux";
-import { setOpenModal } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
 import { editPost, postBoard } from "@/api/board";
 import {
   clearCurrentPost,
   PostUpdate,
+  setPostStatus,
   updateCurrentPost,
 } from "@/redux/slices/postSlice";
 import { PostReq } from "@/interface/board";
 import Alert from "../common/Alert";
 import { useRouter } from "next/navigation";
+import { setOpenModal } from "@/redux/slices/modalSlice";
 
 interface PostBoardProps {
   onClose: () => void;
@@ -41,15 +42,15 @@ const PostBoard = (props: PostBoardProps) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const isCompletedModal = useSelector(
-    (state: RootState) => state.modal.modalType
-  );
+  const postStatus = useSelector((state: RootState) => state.post.postStatus);
   const currentPost = useSelector((state: RootState) => state.post.currentPost);
   const currentPostId = useSelector(
     (state: RootState) => state.post.currentPostId
   );
   const isUser = useSelector((state: RootState) => state.user);
-
+  const isCompletedModal = useSelector(
+    (state: RootState) => state.modal.modalType
+  );
   const [isProfileListOpen, setIsProfileListOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -66,7 +67,6 @@ const PostBoard = (props: PostBoardProps) => {
       want: currentPost?.wantPosition || 0,
     }
   );
-
   const [isMicOn, setIsMicOn] = useState<boolean>(currentPost?.mike || false);
   const gameStyleIds =
     isUser?.gameStyleResponseDTOList?.map((item) => item.gameStyleId) || [];
@@ -158,15 +158,17 @@ const PostBoard = (props: PostBoardProps) => {
 
     try {
       await editPost(currentPostId, params);
-      dispatch(
+      await dispatch(setPostStatus('edit'));
+      await dispatch(
         updateCurrentPost({
           currentPostId,
           updates: params as PostUpdate,
         })
       );
 
-      console.log("updates", params);
-    } catch (error) { }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   /* 글쓰기 */
@@ -175,6 +177,7 @@ const PostBoard = (props: PostBoardProps) => {
     if (!isUser.gameName) {
       return setShowAlert(true);
     }
+
     if (
       selectedImageIndex === undefined ||
       selectedDropOption === undefined ||
@@ -182,11 +185,8 @@ const PostBoard = (props: PostBoardProps) => {
       positionValue.main === undefined ||
       positionValue.sub === undefined ||
       positionValue.want === undefined ||
-      selectedStyleIds.length === 0 ||
       textareaValue.trim() === ""
-    ) {
-      return;
-    }
+    ) return;
 
     const params = {
       boardProfileImage: selectedImageIndex,
@@ -207,8 +207,12 @@ const PostBoard = (props: PostBoardProps) => {
     if (!currentPost) {
       try {
         await postBoard(params);
-        await dispatch(setOpenModal("completedPost"));
-      } catch (error) { }
+        await dispatch(setPostStatus('complete'));
+        await dispatch(setOpenModal('isCompleted'));
+        await handleModalClose();
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -237,9 +241,10 @@ const PostBoard = (props: PostBoardProps) => {
           primaryButtonText="확인"
           onPrimaryClick={onCompletedPosting}
         >
-          글 작성이 완료되었습니다.
+          {isCompletedModal === 'isCompleted' ? '글 작성이 완료되었습니다.' : '글 수정이 완료되었습니다.'}
         </ConfirmModal>
       )}
+      
       <Form onSubmit={handlePost}>
         {isUser.gameName && (
           <UserSection>
