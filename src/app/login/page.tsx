@@ -176,7 +176,7 @@ console.log('???????????')
           />
         </SocialIcons> */}
         <P>
-          아직 GAMMGOO 회원이 아니신가요?{`   `}
+          아직 GAMEGOO 회원이 아니신가요?{`   `}
           <Join href="/join/terms">회원가입</Join>
         </P>
       </Box>

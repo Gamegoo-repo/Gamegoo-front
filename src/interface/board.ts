@@ -5,22 +5,27 @@ export interface ChampionResponseDTOList {
     championName: string;
 }
 
-export interface BoardList {
+export interface BoardDetail {
     boardId: number;
     memberId: number;
     profileImage: number;
     gameName: string;
-    mannerLevel: number;
+    mannerLevel: number
     tier: string;
     rank: number;
     gameMode: number;
     mainPosition: number;
-    subPosition: number;
-    wantPosition: number;
-    championResponseDTOList: ChampionResponseDTOList[];
-    winRate: number;
-    createdAt: string;
-    mike: boolean;
+    subPosition: number,
+    wantPosition: number,
+    championResponseDTOList: ChampionResponseDTOList[],
+    winRate: number,
+    createdAt: string,
+    mike: boolean
+}
+export interface BoardList {
+    totalPage: number;
+    totalCount: number;
+    boards: BoardDetail[];
 }
 
 export interface MemberPost {
