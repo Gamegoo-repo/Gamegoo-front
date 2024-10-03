@@ -34,6 +34,7 @@ import Alert from "../common/Alert";
 import { AlertProps } from "@/interface/modal";
 import { useRouter } from "next/navigation";
 import { openChatRoom, setChatRoomUuid, setErrorMessage } from "@/redux/slices/chatSlice";
+import { notify } from "@/hooks/notify";
 
 interface ReadBoardProps {
   postId: number;
@@ -95,7 +96,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     };
 
     getPostData();
-  }, [isBlockedStatus, isFriendStatus, isUser.id, postId])
+  }, [isBlockedStatus, isFriendStatus, isUser.gameName, postId])
 
   /* 클릭해서 매너키워드 보기 박스 닫기 */
   useEffect(() => {
@@ -417,6 +418,10 @@ const ReadBoard = (props: ReadBoardProps) => {
       return showAlertWithContent(loginRequiredMessage, () => setShowAlert(false), "확인");
     }
 
+    if (isPost && 'isBlocked' in isPost) {
+      return notify({ text: '차단한 회원과는 채팅이 불가합니다', icon: '🚫', type: 'error' });
+    }
+
     if (isErrorMessage) {
       alert(isErrorMessage);
       dispatch(setErrorMessage(null));
@@ -519,7 +524,7 @@ const ReadBoard = (props: ReadBoardProps) => {
                 </MemoData>
               </Memo>
             </MemoSection>
-            {(isUser.id === isPost.memberId || ('isBlocked' in isPost ? !isPost.isBlocked : true)) && (
+            {(isUser.gameName === isPost.gameName || ('isBlocked' in isPost ? !isPost.isBlocked : true)) && (
               <ButtonContent $gameType={type}>
                 <Button
                   type="submit"
