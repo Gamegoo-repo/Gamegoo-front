@@ -66,10 +66,11 @@ const AlertWindow = (
       const response: NotificationResponse = await getNotiModal(cursor);
       if (response.isSuccess) {
         const { notificationDTOList, next_cursor, has_next } = response.result;
-        setNotiList((prevNotiList) => [
-          ...prevNotiList,
-          ...notificationDTOList,
-        ]);
+        // setNotiList((prevNotiList) => [
+        //   ...prevNotiList,
+        //   ...notificationDTOList,
+        // ]);
+        setNotiList(notificationDTOList);
         setCursor(next_cursor);
         setHasMore(has_next);
       } else {
@@ -271,6 +272,7 @@ const Background = styled.div`
   padding: 14px 19px;
   background: ${theme.colors.gray500};
   overflow-y: auto;
+  border-radius: 0 0 20px 20px;
 
   /* 스크롤바 */
   &::-webkit-scrollbar {
