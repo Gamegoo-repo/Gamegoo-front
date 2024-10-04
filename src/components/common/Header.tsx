@@ -45,6 +45,8 @@ const Header = () => {
   const storedName = getName();
   const storedProfileImg = Number(getProfileImg());
 
+  const isFirstRender = useRef(true);
+
   useEffect(() => {
     if (storedName) {
       dispatch(setUserName(storedName));
@@ -91,10 +93,12 @@ const Header = () => {
       }
     };
 
-    if (storedName) {
+    // 첫 렌더에서만 API 호출
+    if (isFirstRender.current && storedName) {
       fetchNotiCount();
+      isFirstRender.current = false;
     }
-  }, []);
+  }, [storedName]);
 
   useEffect(() => {
     console.log(count);
