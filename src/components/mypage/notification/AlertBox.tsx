@@ -23,9 +23,7 @@ const AlertBox: React.FC<AlertBoxProps> = ({
   onClick,
 }) => {
   const handleChangeRead = () => {
-    if (!read) {
       onClick(notificationId, pageUrl);
-    }
   };
   return (
     <Container $read={read} onClick={handleChangeRead} size={size}>
