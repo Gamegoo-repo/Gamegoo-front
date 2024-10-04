@@ -66,10 +66,11 @@ const AlertWindow = (
       const response: NotificationResponse = await getNotiModal(cursor);
       if (response.isSuccess) {
         const { notificationDTOList, next_cursor, has_next } = response.result;
-        setNotiList((prevNotiList) => [
-          ...prevNotiList,
-          ...notificationDTOList,
-        ]);
+        // setNotiList((prevNotiList) => [
+        //   ...prevNotiList,
+        //   ...notificationDTOList,
+        // ]);
+        setNotiList(notificationDTOList);
         setCursor(next_cursor);
         setHasMore(has_next);
       } else {
@@ -147,7 +148,7 @@ const AlertWindow = (
   return (
     <>
       <Overlay>
-        <Wrapper>
+        <Wrapper ref={alertWindowRef}>
           <Header>
             <Top>
               <HeaderTitle>알림</HeaderTitle>
@@ -171,7 +172,7 @@ const AlertWindow = (
               <Tab>받은 알림</Tab>
             </TabContainer>
           </Header>
-          <Background ref={alertWindowRef}>
+          <Background>
             {notiList.map((data, index) => (
               <AlertBox
                 key={`${data.notificationId}-${index}`}
@@ -235,6 +236,7 @@ const AllButton = styled.button`
   gap: 2px;
   margin-bottom: 1px;
   ${(props) => props.theme.fonts.bold11};
+  cursor: pointer;
 `;
 
 const TabContainer = styled.div`
@@ -270,6 +272,7 @@ const Background = styled.div`
   padding: 14px 19px;
   background: ${theme.colors.gray500};
   overflow-y: auto;
+  border-radius: 0 0 20px 20px;
 
   /* 스크롤바 */
   &::-webkit-scrollbar {
