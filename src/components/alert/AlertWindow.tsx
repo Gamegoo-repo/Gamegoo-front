@@ -147,7 +147,7 @@ const AlertWindow = (
   return (
     <>
       <Overlay>
-        <Wrapper>
+        <Wrapper ref={alertWindowRef}>
           <Header>
             <Top>
               <HeaderTitle>알림</HeaderTitle>
@@ -171,7 +171,7 @@ const AlertWindow = (
               <Tab>받은 알림</Tab>
             </TabContainer>
           </Header>
-          <Background ref={alertWindowRef}>
+          <Background>
             {notiList.map((data, index) => (
               <AlertBox
                 key={`${data.notificationId}-${index}`}
