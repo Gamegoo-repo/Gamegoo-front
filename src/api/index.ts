@@ -1,4 +1,3 @@
-import { getAccessToken } from "@/utils/storage";
 import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosInstance } from "axios";
 
 export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL as string;
@@ -22,10 +21,6 @@ const Axios: AxiosInstance = axios.create({
 /* 요청 인터셉터 */
 Axios.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = getAccessToken();
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
-    }
     return config;
   },
   (error) => {
