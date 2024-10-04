@@ -42,7 +42,7 @@ export const enterUsingMemberId = async (memberId: number) => {
 /* 게시글에서 채팅방 입장 */
 export const enterUsingBoardId = async (boardId: number) => {
     try {
-        const response = await Axios.get(`/v1/chat/start/board/${boardId}`);
+        const response = await AuthAxios.get(`/v1/chat/start/board/${boardId}`);
         console.log("채팅방 입장 성공:", response.data);
         return response.data;
     } catch (error) {

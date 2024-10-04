@@ -16,7 +16,7 @@ import MannerLevelBox from "../common/MannerLevelBox";
 import GameStyle from "./GameStyle";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import MoreBox from "../common/MoreBox";
-import { MemberPost, NonMemberPost } from "@/interface/board";
+import { MemberPost } from "@/interface/board";
 import { deletePost, getMemberPost, getNonMemberPost } from "@/api/board";
 import LoadingSpinner from "../common/LoadingSpinner";
 import { setPostingDateFormatter } from "@/utils/custom";
@@ -28,7 +28,7 @@ import { REPORT_REASON } from "@/data/report";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { setCloseModal, setCloseReadingModal, setOpenModal, setOpenPostingModal } from "@/redux/slices/modalSlice";
-import { setCurrentPost } from "@/redux/slices/postSlice";
+import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { cancelFriendReq, deleteFriend, reqFriend } from "@/api/friends";
 import Alert from "../common/Alert";
 import { AlertProps } from "@/interface/modal";
@@ -47,7 +47,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   const router = useRouter();
   const mannerLevelBoxRef = useRef<HTMLDivElement>(null);
 
-  const [isPost, setIsPost] = useState<MemberPost | NonMemberPost>();
+  const [isPost, setIsPost] = useState<MemberPost>();
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
   const [isMannerBalloonVisible, setIsMannerBalloonVisible] = useState(true);
   const [isMannerLevelBoxOpen, setIsMannerLevelBoxOpen] = useState(false);
@@ -56,9 +56,8 @@ const ReadBoard = (props: ReadBoardProps) => {
   const [isFriendStatus, setIsFriendStatus] = useState(false);
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
   const [reportDetail, setReportDetail] = useState<string>("");
-  const [type, setType] = useState<string>('canyon');
+  const [type, setType] = useState<string>('wind');
   const [showAlert, setShowAlert] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
   const [alertProps, setAlertProps] = useState<AlertProps>({
     icon: "",
     width: 0,
@@ -74,27 +73,25 @@ const ReadBoard = (props: ReadBoardProps) => {
   const isErrorMessage = useSelector((state: RootState) => state.chat.errorMessage);
 
   /* 게시글 api */
+  const getPostData = async () => {
+    setLoading(true);
+    if (!!isUser.gameName && postId) {
+      const memberData = await getMemberPost(postId);
+      setIsPost(memberData.result);
+      const hasPosition = 'mainPosition' in memberData.result ? 'canyon' : 'wind';
+      setType(hasPosition);
+      setLoading(false);
+    }
+
+    if (!isUser.gameName && postId) {
+      const nonMember = await getNonMemberPost(postId);
+
+      setIsPost(nonMember.result);
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const getPostData = async () => {
-      setLoading(true);
-      if (!!isUser.gameName && postId) {
-        const memberData = await getMemberPost(postId);
-        setIsPost(memberData.result);
-        const hasPosition = Array.isArray(memberData.result) && memberData.result.some((item: MemberPost) => 'mainPosition' in item);
-
-        // 글 type 설정
-        setType(hasPosition ? 'canyon' : 'wind');
-        setLoading(false);
-      }
-
-      if (!isUser.gameName && postId) {
-        const nonMember = await getNonMemberPost(postId);
-
-        setIsPost(nonMember.result);
-        setLoading(false);
-      }
-    };
-
     getPostData();
   }, [isBlockedStatus, isFriendStatus, isUser.gameName, postId])
 
@@ -167,6 +164,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     try {
       await reportMember(params);
       await handleModalClose();
+      await getPostData();
     } catch (error) {
       console.error(error);
     }
@@ -183,6 +181,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     try {
       await blockMember(isPost.memberId);
       await handleMoreBoxClose();
+      await getPostData();
       await setIsBlockedStatus(true);
     } catch (error) {
       console.error(error);
@@ -197,11 +196,12 @@ const ReadBoard = (props: ReadBoardProps) => {
 
     if (!isPost || isUser?.gameName === isPost?.gameName) return;
 
-    if ('isBlocked' in isPost && !isPost.isBlocked) return;
+    if (!isPost.isBlocked) return;
 
     try {
       await unblockMember(isPost.memberId);
       await handleMoreBoxClose();
+      await getPostData();
       await setIsBlockedStatus(false);
     } catch (error) {
     }
@@ -215,13 +215,12 @@ const ReadBoard = (props: ReadBoardProps) => {
 
     if (!isPost || isUser?.gameName === isPost?.gameName) return;
 
-    if ('isFriend' in isPost && isPost?.isFriend ||
-      'friendRequestMemberId' in isPost && isPost?.friendRequestMemberId
-    ) return;
+    if (isPost?.isFriend || isPost?.friendRequestMemberId) return;
 
     try {
       await reqFriend(isPost.memberId);
       await handleMoreBoxClose();
+      await getPostData();
       setIsFriendStatus(true);
     } catch (error) {
       console.error(error);
@@ -241,6 +240,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     try {
       await cancelFriendReq(isPost.memberId);
       await handleMoreBoxClose();
+      await getPostData();
       setIsFriendStatus(false);
     } catch (error) {
       console.error(error);
@@ -257,11 +257,12 @@ const ReadBoard = (props: ReadBoardProps) => {
 
     if (!isPost || isUser?.gameName === isPost?.gameName) return;
 
-    if ('isFriend' in isPost && !isPost?.isFriend) return;
+    if (!isPost?.isFriend) return;
 
     try {
       await deleteFriend(isPost.memberId);
       await handleMoreBoxClose();
+      await getPostData();
       setIsFriendStatus(false);
     } catch (error) {
       console.error(error);
@@ -292,7 +293,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
     }
 
-    // if (isUser?.id !== isPost?.memberId) return;
+    if (isUser?.gameName !== isPost?.gameName) return;
 
     if (isPost) {
       dispatch(setCurrentPost({ currentPost: isPost, currentPostId: postId }));
@@ -311,8 +312,8 @@ const ReadBoard = (props: ReadBoardProps) => {
 
     try {
       await deletePost(postId);
+      await dispatch(setPostStatus('delete'));
       await dispatch(setCloseReadingModal());
-      // 게시글 업로드 해야하나?
     } catch (error) {
       console.error(error);
     }
@@ -354,39 +355,34 @@ const ReadBoard = (props: ReadBoardProps) => {
     let blockText = '차단하기';
     let blockFunc = handleBlock;
 
-    if (!!isPost && 'isBlocked' in isPost && 'isFriend' in isPost && 'friendRequestMemberId' in isPost) {
-      if (isPost?.isBlocked || isPost?.isFriend) {
-        friendText = '친구 삭제';
-        friendFunc = handleFriendDelete;
-      }
-      if (!isPost?.isBlocked || !isPost?.isFriend || !isPost?.friendRequestMemberId) {
-        friendText = '친구 추가';
-        friendFunc = handleFriendAdd;
-      }
-      if (isPost?.friendRequestMemberId) {
-        friendText = '친구 요청 취소';
-        friendFunc = handleCancelFriendReq;
-      }
-
-      if (isPost?.friendRequestMemberId || !isPost?.isFriend, !isPost?.isBlocked) {
-        blockText = '차단하기';
-        blockFunc = handleBlock;
-      }
-
-      if (isPost?.isBlocked) {
-        blockText = '차단 해제';
-        friendText = '';
-        blockFunc = handleUnblock;
-      }
+    // if (!!isPost?.isBlocked && !!isPost?.isFriend && !!isPost?.friendRequestMemberId) {
+    if (isPost?.isBlocked || isPost?.isFriend) {
+      friendText = '친구 삭제';
+      friendFunc = handleFriendDelete;
     }
+    if (!isPost?.isBlocked || !isPost?.isFriend || !isPost?.friendRequestMemberId) {
+      friendText = '친구 추가';
+      friendFunc = handleFriendAdd;
+    }
+    if (isPost?.friendRequestMemberId) {
+      friendText = '친구 요청 취소';
+      friendFunc = handleCancelFriendReq;
+    }
+
+    if (isPost?.friendRequestMemberId || !isPost?.isBlocked) {
+      blockText = '차단하기';
+      blockFunc = handleBlock;
+    }
+
+    if (!!isPost?.isBlocked) {
+      blockText = '차단 해제';
+      friendText = '';
+      blockFunc = handleUnblock;
+    }
+    // }
 
     if (friendText) {
       MoreBoxMenuItems.push({ text: friendText, onClick: friendFunc });
-    }
-
-    /* 내가 작성한 게시글이 아닐 때만 차단/차단 해제 버튼 보이게  */
-    if (isUser?.id !== isPost?.memberId) {
-      MoreBoxMenuItems.push({ text: blockText, onClick: blockFunc });
     }
 
     MoreBoxMenuItems.push(
@@ -418,7 +414,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       return showAlertWithContent(loginRequiredMessage, () => setShowAlert(false), "확인");
     }
 
-    if (isPost && 'isBlocked' in isPost) {
+    if (isPost?.isBlocked) {
       return notify({ text: '차단한 회원과는 채팅이 불가합니다', icon: '🚫', type: 'error' });
     }
 
@@ -524,7 +520,7 @@ const ReadBoard = (props: ReadBoardProps) => {
                 </MemoData>
               </Memo>
             </MemoSection>
-            {(isUser.gameName === isPost.gameName || ('isBlocked' in isPost ? !isPost.isBlocked : true)) && (
+            {isUser.gameName !== isPost.gameName && (
               <ButtonContent $gameType={type}>
                 <Button
                   type="submit"
@@ -609,7 +605,7 @@ const UserSection = styled.div`
     align-items: center;
     justify-content: space-between;
     white-space: nowrap;
-    gap:90px;
+    /* gap:90px; */
 `;
 
 const UserLeft = styled.div`

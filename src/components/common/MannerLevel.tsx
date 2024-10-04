@@ -12,7 +12,7 @@ interface MannerLevelProps {
 
 const MannerLevel = (props: MannerLevelProps) => {
   const { forNoData, level, onClick, position = "top", isBalloon } = props;
-  
+
   return (
     <>
       {level &&
@@ -87,14 +87,14 @@ const P = styled.p`
 `;
 
 const Level = styled.div`
-  margin-left: 23px;
   position: relative;
 `;
 
 const ClickArea = styled.div`
- &.bigMargin{
-  margin-left: 40.63px;
- }
+  &.bigMargin{
+    margin-left: 40.63px;
+  }
+  margin-left: 23px;
   width: 53px;
   height: 26px;
   background: #000000a6;
