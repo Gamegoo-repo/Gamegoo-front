@@ -114,7 +114,7 @@ const ProfilePage = () => {
         if (retry) {
           urlParams.append("retry", "true");
         }
-
+        
         router.push(`/matching/progress?${urlParams.toString()}`);
       });
     } else {

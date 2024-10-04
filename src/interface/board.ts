@@ -22,6 +22,7 @@ export interface BoardDetail {
     createdAt: string,
     mike: boolean
 }
+
 export interface BoardList {
     totalPage: number;
     totalCount: number;
@@ -31,37 +32,15 @@ export interface BoardList {
 export interface MemberPost {
     boardId: number;
     memberId: number;
-    isBlocked: boolean;
-    isFriend: boolean;
-    friendRequestMemberId: number;
+    isBlocked?: boolean;
+    isFriend?: boolean;
+    friendRequestMemberId?: number;
     createdAt: string;
     profileImage: number;
     gameName: string;
     tag: string;
     mannerLevel: number;
-    mannerKeywords: MannerKeywords[];
-    tier: string;
-    mike: boolean;
-    championResponseDTOList: ChampionResponseDTOList[];
-    gameMode: number;
-    mainPosition?: number;
-    subPosition?: number;
-    wantPosition?: number;
-    recentGameCount: number;
-    winRate: number;
-    gameStyles: number[];
-    contents: string;
-    rank: number;
-}
-
-export interface NonMemberPost {
-    boardId: number;
-    memberId: number;
-    createdAt: string;
-    profileImage: number;
-    gameName: string;
-    tag: string;
-    mannerLevel: number;
+    mannerKeywords?: MannerKeywords[];
     tier: string;
     mike: boolean;
     championResponseDTOList: ChampionResponseDTOList[];

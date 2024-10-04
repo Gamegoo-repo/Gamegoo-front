@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { MemberPost, NonMemberPost } from '@/interface/board';
+import { MemberPost } from '@/interface/board';
 
 export interface PostUpdate {
     boardId?: number;
@@ -14,23 +14,25 @@ export interface PostUpdate {
 }
 
 interface SetCurrentPostPayload {
-    currentPost: MemberPost | NonMemberPost;
+    currentPost: MemberPost;
     currentPostId: number;
 }
 
 interface UpdateCurrentPostPayload {
     currentPostId: number;
-    updates: Partial<MemberPost> | Partial<NonMemberPost>;
+    updates: Partial<MemberPost>;
 }
 
 interface PostState {
-    currentPost: MemberPost | NonMemberPost | null;
+    currentPost: MemberPost | null;
     currentPostId: number | null;
+    postStatus: string;
 }
 
 const initialState: PostState = {
     currentPost: null,
     currentPostId: null,
+    postStatus: "",
 };
 
 const postSlice = createSlice({
@@ -46,15 +48,23 @@ const postSlice = createSlice({
                 state.currentPost = {
                     ...state.currentPost,
                     ...action.payload.updates,
-                } as MemberPost | NonMemberPost;
+                } as MemberPost;
             }
         },
         clearCurrentPost(state) {
             state.currentPost = null;
             state.currentPostId = null;
         },
+        setPostStatus(state, action: PayloadAction<string>) {
+            state.postStatus = action.payload;
+        },
     },
 });
 
-export const { setCurrentPost, updateCurrentPost, clearCurrentPost } = postSlice.actions;
+export const {
+    setCurrentPost,
+    updateCurrentPost,
+    clearCurrentPost,
+    setPostStatus
+} = postSlice.actions;
 export default postSlice.reducer;

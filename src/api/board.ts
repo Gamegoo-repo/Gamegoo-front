@@ -59,7 +59,7 @@ export const getNonMemberPost = async (postId: number) => {
 /* 게시글 수정 */
 export const editPost = async (postId: number, params: PostReq) => {
     try {
-        const response = await Axios.put(`/v1/posts/${postId}`, params);
+        const response = await AuthAxios.put(`/v1/posts/${postId}`, params);
         console.log("게시글 수정 성공:", response.data);
         return response.data;
 
@@ -72,7 +72,7 @@ export const editPost = async (postId: number, params: PostReq) => {
 /* 게시글 삭제 */
 export const deletePost = async (postId: number) => {
     try {
-        const response = await Axios.delete(`/v1/posts/${postId}`);
+        const response = await AuthAxios.delete(`/v1/posts/${postId}`);
         console.log("게시글 삭제 성공:", response.data);
         return response.data;
 

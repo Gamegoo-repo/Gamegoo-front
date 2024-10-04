@@ -18,41 +18,18 @@ import {
 import { useRouter } from "next/navigation";
 import Alert from "../common/Alert";
 import ConfirmModal from "../common/ConfirmModal";
-import { editManners, postBadMannerValue, postMannerValue } from "@/api/manner";
 import ChatLayout from "../chat/ChatLayout";
 import Champion from "../readBoard/Champion";
+import { BoardDetail } from "@/interface/board";
 
 interface TableTitleProps {
     id: number;
     name: string;
 }
 
-interface ChampionResponseDTOList {
-    championId: number;
-    championName: string;
-}
-
-interface TableContentProps {
-    boardId: number;
-    memberId: number;
-    profileImage: number;
-    gameName: string;
-    mannerLevel: number;
-    tier: string;
-    rank: number;
-    gameMode: number;
-    mainPosition: number;
-    subPosition: number;
-    wantPosition: number;
-    championResponseDTOList: ChampionResponseDTOList[];
-    winRate: number;
-    createdAt: string;
-    mike: boolean;
-}
-
 interface TableProps {
     title: TableTitleProps[];
-    content: TableContentProps[];
+    content: BoardDetail[];
 }
 
 const Table = (props: TableProps) => {
@@ -60,11 +37,8 @@ const Table = (props: TableProps) => {
 
     const [isBoardId, setIsBoardId] = useState(0);
     const [showAlert, setShowAlert] = useState(false);
+    const [alertContent, setAlertContent] = useState("");
     const isChatRoomOpen = useSelector((state: RootState) => state.chat.isChatRoomOpen);
-    const [isMemberId, setIsMemberId] = useState<number>();
-    const [targetMemberId, setTargetMemberId] = useState<number | null>(null);
-    const [checkedMannerItems, setCheckedMannerItems] = useState<number[]>([]);
-    const [checkedBadMannerItems, setCheckedBadMannerItems] = useState<number[]>([]);
     const [copiedAlert, setCopiedAlert] = useState(false);
 
     const isReadingModal = useSelector((state: RootState) => state.modal.readingModal);
@@ -75,15 +49,16 @@ const Table = (props: TableProps) => {
     const router = useRouter();
 
     /* 게시글 열기 */
-    const handlePostOpen = (id: number) => {
-        const exists = content.some(board => board.boardId === id);
+    const handlePostOpen = (boardId: number) => {
+        const exists = content.some(board => board.boardId === boardId);
 
         if (!exists) {
+            setAlertContent("해당 글은 삭제된 글입니다.");
             return setShowAlert(true);
         }
 
         dispatch(setOpenReadingModal());
-        setIsBoardId(id);
+        setIsBoardId(boardId);
     };
 
 
@@ -123,11 +98,15 @@ const Table = (props: TableProps) => {
     }, [copiedAlert]);
 
     /* 다른 사람 프로필 이동 */
-    const handleUserProfilePage = (e: React.MouseEvent) => {
+    const handleUserProfilePage = (e: React.MouseEvent, memberId: number) => {
         e.stopPropagation();
 
-        if (!targetMemberId) return;
-        router.push("/user");
+        if (!isUser.gameName) {
+            setAlertContent("탈퇴한 사용자 입니다.");
+            return setShowAlert(true);
+        }
+
+        router.push(`/user/${memberId}`);
     };
 
     /* 모달 닫기 */
@@ -135,93 +114,19 @@ const Table = (props: TableProps) => {
         dispatch(setCloseModal());
     };
 
-    const handleMemberIdGet = (id: number) => {
-        setIsMemberId(id);
-        setTargetMemberId(id);
-    };
-
-    /* 매너 평가 체크박스 */
-    const handleMannerCheckboxChange = (checked: number) => {
-        setCheckedMannerItems((prev) =>
-            prev.includes(checked) ? prev.filter((c) => c !== checked) : [...prev, checked]
-        );
-    };
-
-    /* 비매너 평가 체크박스 */
-    const handleBadMannerCheckboxChange = (checked: number) => {
-        setCheckedBadMannerItems((prev) =>
-            prev.includes(checked) ? prev.filter((c) => c !== checked) : [...prev, checked]
-        );
-    };
-
-    /* 매너평가 등록 */
-    const handleMannerPost = async () => {
-        if (!targetMemberId) return;
-
-        const params = {
-            toMemberId: targetMemberId,
-            mannerRatingKeywordList: checkedMannerItems,
-        };
-
-        try {
-            await postMannerValue(params)
-            await handleModalClose();
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    /* 비매너평가 등록 */
-    const handleBadMannerPost = async () => {
-        if (!targetMemberId) return;
-
-        const params = {
-            toMemberId: targetMemberId,
-            mannerRatingKeywordList: checkedBadMannerItems,
-        };
-
-        try {
-            await postBadMannerValue(params)
-            await handleModalClose();
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    /* 매너, 비매너 평가 수정 */
-    const handleMannerEdit = async (type: string) => {
-        const mannerId = localStorage.getItem('mannerId');
-        const badMannerId = localStorage.getItem('badMannerId');
-
-        if (!type || !mannerId || !badMannerId) return;
-
-        const mannerIdNumber = parseInt(mannerId, 10);
-        const badMannerIdNumber = parseInt(badMannerId, 10);
-
-        const params = {
-            mannerRatingKeywordList: type === 'manner' ? checkedMannerItems : checkedBadMannerItems,
-        };
-
-        try {
-            await editManners(type === 'manner' ? mannerIdNumber : badMannerIdNumber, params);
-            await handleModalClose();
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
     return (
         <>
             {showAlert && (
                 <Alert
-                    icon="trash"
+                    icon={alertContent === "탈퇴한 사용자 입니다." ? "exclamation" : "trash"}
                     width={45}
                     height={50}
-                    content="해당 글은 삭제된 글입니다."
-                    alt="삭제된 글"
+                    content={alertContent}
+                    alt={alertContent}
                     onClose={() => setShowAlert(false)}
                 />
             )}
+
             {isReadingModal && (
                 <ReadBoard postId={isBoardId} />
             )}
@@ -254,7 +159,7 @@ const Table = (props: TableProps) => {
                                 >
                                     <First
                                         className="table_width"
-                                        onClick={handleUserProfilePage}
+                                        onClick={(e) => handleUserProfilePage(e, data.memberId)}
                                     >
                                         <Image
                                             src={setProfileImg(data.profileImage)}
@@ -309,7 +214,8 @@ const Table = (props: TableProps) => {
                                     </Fifth>
                                     <Sixth className="table_width">
                                         <Champion
-                                            size={50}
+                                            title={false}
+                                            size={14}
                                             list={data.championResponseDTOList.map(
                                                 (champion) => champion.championId
                                             )}
