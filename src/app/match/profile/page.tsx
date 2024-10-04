@@ -91,9 +91,9 @@ const ProfilePage = () => {
       mainP: (matchInfo.mainP ?? 0).toString(),
       subP: (matchInfo.subP ?? 0).toString(),
       wantP: (matchInfo.wantP ?? 0).toString(),
-      gameStyle1: (matchInfo.gameStyleResponseDTOList[0] ?? "1").toString(),
-      gameStyle2: (matchInfo.gameStyleResponseDTOList[1] ?? "2").toString(),
-      gameStyle3: (matchInfo.gameStyleResponseDTOList[2] ?? "3").toString(),
+      gameStyle1: matchInfo.gameStyleResponseDTOList[0] || null,
+      gameStyle2: matchInfo.gameStyleResponseDTOList[1] || null,
+      gameStyle3: matchInfo.gameStyleResponseDTOList[2] || null,
     };
 
     if (socket) {
@@ -139,6 +139,7 @@ const ProfilePage = () => {
             width="380px"
             text="매칭 시작하기"
             onClick={handleMatchStart}
+            disabled={matchInfo.gameStyleResponseDTOList.length === 0}
           />
         </Main>
         <Footer>
