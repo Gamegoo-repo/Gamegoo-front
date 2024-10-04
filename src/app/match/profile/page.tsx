@@ -13,7 +13,7 @@ import { getProfile } from "@/api/user";
 import { setUserProfile } from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
 import ChatButton from "@/components/common/ChatButton";
-import { socket } from "@/socket";
+import { sendMatchingQuitEvent, socket } from "@/socket";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import { theme } from "@/styles/theme";
 
@@ -72,6 +72,12 @@ const ProfilePage = () => {
             "You are already in the matching room for this game mode."
         ) {
           setIsAlready(true);
+        } else if (
+          errorData.event === "error" &&
+          errorData.data ===
+            "Failed POST matching API: 서버 에러, 관리자에게 문의 바랍니다."
+        ) {
+          sendMatchingQuitEvent();
         }
       });
     }
