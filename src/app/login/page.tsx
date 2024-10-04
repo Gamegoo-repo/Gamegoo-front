@@ -9,9 +9,13 @@ import Input from "@/components/common/Input";
 import { emailRegEx } from "@/constants/regEx";
 import { setUnreadUuid } from "@/redux/slices/chatSlice";
 import { clearSignIn } from "@/redux/slices/signInSlice";
-import { setUserName, setUserProfileImg } from "@/redux/slices/userSlice";
+import {
+  clearUserProfile,
+  setUserName,
+  setUserProfileImg,
+} from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
-import { clearTokens, setToken } from "@/utils/storage";
+import { clearTokens, setName, setProfileImg, setToken } from "@/utils/storage";
 import { AxiosError } from "axios";
 import Image from "next/image";
 import Link from "next/link";
@@ -34,6 +38,8 @@ const Login = () => {
 
   useEffect(() => {
     dispatch(clearSignIn());
+    dispatch(clearUserProfile());
+    clearTokens();
   }, []);
 
   const validateEmail = (email: string) => {
@@ -63,11 +69,17 @@ const Login = () => {
       const accessToken = response.result.accessToken;
       const refreshToken = response.result.refreshToken;
 
-      clearTokens();
       /* 자동 로그인 체크 여부에 따라 토큰 저장 위치 결정 */
       setToken(accessToken, refreshToken, autoLogin);
 
-      /* 로켓 로그인 */
+      dispatch(setUserName(response.result.name));
+      dispatch(setUserProfileImg(response.result.profileImage));
+      setName(response.result.name, autoLogin);
+      setProfileImg(response.result.profileImage, autoLogin);
+
+      router.push("/");
+
+      /* 소켓 로그인 */
       socketLogin();
       const data = await getUnreadUuid();
       if (data.isSuccess) {
@@ -76,13 +88,6 @@ const Login = () => {
         // 새로고침시 채팅방 수 가져오기 위함
         localStorage.setItem("unreadChatUuids", JSON.stringify(data.result));
       }
-
-      dispatch(setUserName(response.result.name));
-      dispatch(setUserProfileImg(response.result.profileImage));
-      localStorage.setItem("name", response.result.name);
-      localStorage.setItem("profileImg", response.result.profileImage);
-
-      router.push("/");
     } catch (error) {
       if (error instanceof AxiosError) {
         const status = error.response?.status;
