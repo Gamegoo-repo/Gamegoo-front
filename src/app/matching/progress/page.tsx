@@ -163,9 +163,7 @@ const Progress = () => {
       );
     });
 
-    // }
-
-    // 2분 타이머 시작
+    // 5분 타이머
     startMatchingProcess();
 
     return () => {
@@ -176,7 +174,7 @@ const Progress = () => {
   const startMatchingProcess = () => {
     // 매칭 재시도 여부에 따라 타이머 설정
     setTimeLeft(300);
-    let priority = 50; // 초기 priority 값
+    let priority = 51.5; // 초기 priority 값
     timerRef.current = setInterval(() => {
       setTimeLeft((prevTime) => {
         if (prevTime === 1) {
@@ -188,11 +186,9 @@ const Progress = () => {
             : setIsFirstRetry(true); // 매칭 실패 모달 표시
         } else if (prevTime % 30 === 0) {
           // 30초마다 priority 값을 감소시키며 매칭 재시도
-          if (!isRetrying) {
-            socket?.emit("matching-retry", { priority });
-            priority = Math.max(35, priority - 1.5);
-            console.log(`매칭 재시도 (priority: ${priority})`);
-          }
+          priority -= 1.5;
+          socket?.emit("matching-retry", { priority });
+          console.log(`매칭 재시도 (priority: ${priority})`);
         }
         return prevTime - 1;
       });
