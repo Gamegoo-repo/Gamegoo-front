@@ -20,7 +20,7 @@ import {
   setOpenPostingModal,
 } from "@/redux/slices/modalSlice";
 import { getBoardList } from "@/api/board";
-import { BoardDetail, BoardList } from "@/interface/board";
+import { BoardDetail } from "@/interface/board";
 import Alert from "@/components/common/Alert";
 import { useRouter } from "next/navigation";
 
@@ -30,8 +30,8 @@ const BUTTONS_PER_PAGE = 5;
 const BoardPage = () => {
   const [boardList, setBoardList] = useState<BoardDetail[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [hasMoreItems, setHasMoreItems] = useState(true);
-  const [totalPage, setTotalPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
+  const [totalItems, setTotalItems] = useState(0);
   const [isPosition, setIsPosition] = useState(0);
   const [isGameModeDropdownOpen, setIsGameModeDropdownOpen] = useState(false);
   const [isTierDropdownOpen, setIsTierDropdownOpen] = useState(false);
@@ -56,68 +56,8 @@ const BoardPage = () => {
   const isPostingModal = useSelector(
     (state: RootState) => state.modal.postingModal
   );
-  const postStatus = useSelector((state: RootState) => state.post.postStatus);
+  const isPostStatus = useSelector((state: RootState) => state.post.postStatus);
   const isUser = useSelector((state: RootState) => state.user);
-
-  /* 게시글 목록 */
-  const getList = async () => {
-    const params = {
-      pageIdx: currentPage,
-      mode:
-        selectedGameMode === "솔로 랭크"
-          ? setSelectedGameMode(null)
-          : selectedGameMode,
-      tier:
-        selectedTier === "티어 선택" ? setSelectedTier(null) : selectedTier,
-      mainPosition: isPosition,
-      mike: selectedMic === "음성 채팅" ? setSelectedMic(null) : selectedMic,
-    };
-
-    try {
-      const data = await getBoardList(params);
-      if (data.isSuccess) {
-        setBoardList(data.result.boards);
-        setTotalPages(data.result.totalPage);
-        setTotalItems(data.result.totalCount);
-      } else {
-        console.error(data.message);
-      }
-    }
-    catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    getList();
-  }, [
-    currentPage,
-    selectedGameMode,
-    selectedTier,
-    isPosition,
-    selectedMic,
-    postStatus,
-    refresh,
-  ]);
-
-  /* 페이지네이션 이전 클릭 */
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  /* 페이지네이션 다음 클릭 */
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  /* 페이지네이션 페이지 클릭 */
-  const handlePageClick = (page: number) => {
-    setCurrentPage(page);
-  };
 
   /* 게임모드 드롭 */
   const handleGameModeDropValue = (id: number | null) => {
@@ -241,26 +181,35 @@ const BoardPage = () => {
   };
 
   /* 게시글 목록 */
-  useEffect(() => {
-    const getList = async () => {
-      const params = {
-        pageIdx: currentPage,
-        mode:
-          selectedGameMode === "솔로 랭크"
-            ? setSelectedGameMode(null)
-            : selectedGameMode,
-        tier:
-          selectedTier === "티어 선택" ? setSelectedTier(null) : selectedTier,
-        mainPosition: isPosition,
-        mike: selectedMic === "음성 채팅" ? setSelectedMic(null) : selectedMic,
-      };
-
-      const data = await getBoardList(params);
-      setBoardList(data.result.boards);
-      setTotalPage(data.result.totalPage);
-      setHasMoreItems(data.result.length === ITEMS_PER_PAGE);
+  const getList = async () => {
+    const params = {
+      pageIdx: currentPage,
+      mode:
+        selectedGameMode === "솔로 랭크"
+          ? setSelectedGameMode(null)
+          : selectedGameMode,
+      tier:
+        selectedTier === "티어 선택" ? setSelectedTier(null) : selectedTier,
+      mainPosition: isPosition,
+      mike: selectedMic === "음성 채팅" ? setSelectedMic(null) : selectedMic,
     };
 
+    try {
+      const data = await getBoardList(params);
+      if (data.isSuccess) {
+        setBoardList(data.result.boards);
+        setTotalPage(data.result.totalPage);
+        setTotalItems(data.result.totalCount);
+      } else {
+        console.error(data.message);
+      }
+    }
+    catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
     getList();
   }, [
     currentPage,
@@ -268,7 +217,7 @@ const BoardPage = () => {
     selectedTier,
     isPosition,
     selectedMic,
-    isCompletedPosting,
+    isPostStatus,
     refresh,
   ]);
 
@@ -389,8 +338,11 @@ const BoardPage = () => {
             {boardList?.length > 0 && (
               <Pagination
                 currentPage={currentPage}
-                hasMoreItems={hasMoreItems}
+                totalItems={totalItems}
                 totalPage={totalPage}
+                itemsPerPage={ITEMS_PER_PAGE}
+                pageButtonCount={BUTTONS_PER_PAGE}
+                hasMoreItems={currentPage < totalPage}
                 onPrevPage={handlePrevPage}
                 onNextPage={handleNextPage}
                 onPageClick={handlePageClick}

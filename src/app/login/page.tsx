@@ -118,7 +118,7 @@ const Login = () => {
           />
         </button>
         <Title>로그인</Title>
-        <P>GAMGOO에 오신 것을 환영합니다.</P>
+        <P>GAMEGOO에 오신 것을 환영합니다.</P>
         <Content>
           <Div>
             <InputList>

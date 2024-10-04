@@ -2,15 +2,18 @@ import styled from "styled-components";
 import Image from "next/image";
 
 interface ChampionProps {
+  title?: boolean;
   list: number[];
   size?: number;
 }
 
 const Champion = (props: ChampionProps) => {
-  const { list, size = 18 } = props;
+  const { list, size = 18, title } = props;
   return (
     <Wrapper>
-      <Title $size={size}>최근 선호 챔피언</Title>
+      {!title &&
+        <Title $size={size}>최근 선호 챔피언</Title>
+      }
       {list?.length !== 0 ? (
         <Images>
           {list?.map((champion, key) => (
@@ -46,7 +49,7 @@ const Wrapper = styled.div`
 const Title = styled.p<{ $size: number }>`
   ${(props) =>
     props.theme.fonts[
-      `semiBold${props.$size}` as keyof typeof props.theme.fonts
+    `semiBold${props.$size}` as keyof typeof props.theme.fonts
     ]};
   color: #222222;
 `;
