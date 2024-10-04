@@ -46,9 +46,19 @@ export const signInSlice = createSlice({
       state.summonerName = action.payload;
       state.summonerTag = action.payload;
     },
+    clearSignIn(state) {
+      state.terms= [false, false, false];
+      state.email= '';
+      state.emailAuth='';
+      state.password='';
+      state.authStatus= false;
+      state.summonerName= '';
+      state.summonerTag= '';
+      state.socketId ='';
+    }
   },
 });
 
-export const { updateTerms, updateEmail, updateEmailAuth, updatePassword, updateAuthStatus } = signInSlice.actions;
+export const { updateTerms, updateEmail, updateEmailAuth, updatePassword, updateAuthStatus,clearSignIn } = signInSlice.actions;
 
 export default signInSlice.reducer;

@@ -15,6 +15,8 @@ const MyPostPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [postList, setPostList] = useState<PostProps[]>([]);
   const [hasMoreItems, setHasMoreItems] = useState(true);
+  const [totalPage, setTotalPage] = useState<number>(1);
+  const [totalCount, setTotalCount] = useState<number>(1);
   const pageButtonCount = 5;
   const ITEMS_PER_PAGE = 10;
 
@@ -23,7 +25,9 @@ const MyPostPage = () => {
   useEffect(() => {
     const fetchGetMyPost = async () => {
       const response = await getMyPost(currentPage);
-      setPostList(response.result);
+      setPostList(response.result.myBoards);
+      setTotalPage(response.result.totalPage);
+      setTotalCount(response.result.totalCount);
       setHasMoreItems(response.result.length === ITEMS_PER_PAGE);
     };
 
@@ -103,6 +107,7 @@ const MyPostPage = () => {
             itemsPerPage={ITEMS_PER_PAGE}
             hasMoreItems={hasMoreItems}
             pageButtonCount={pageButtonCount}
+            totalPage={totalPage}
             onPrevPage={handlePrevPage}
             onNextPage={handleNextPage}
             onPageClick={handlePageClick}

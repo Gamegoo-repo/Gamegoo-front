@@ -8,6 +8,7 @@ import Checkbox from "@/components/common/Checkbox";
 import Input from "@/components/common/Input";
 import { emailRegEx } from "@/constants/regEx";
 import { setUnreadUuid } from "@/redux/slices/chatSlice";
+import { clearSignIn } from "@/redux/slices/signInSlice";
 import { setUserName, setUserProfileImg } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
 import { clearTokens, setToken } from "@/utils/storage";
@@ -30,6 +31,10 @@ const Login = () => {
     undefined
   );
   const [autoLogin, setAutoLogin] = useState(false);
+
+  useEffect(() => {
+    dispatch(clearSignIn());
+  }, []);
 
   const validateEmail = (email: string) => {
     setEmailValid(emailRegEx.test(email));
@@ -64,7 +69,6 @@ const Login = () => {
 
       /* 로켓 로그인 */
       socketLogin();
-console.log('???????????')
       const data = await getUnreadUuid();
       if (data.isSuccess) {
         // 실시간 안읽은 채팅방 수 가져오기 위함
@@ -101,12 +105,18 @@ console.log('???????????')
   return (
     <Container>
       <Box>
-        <Image
-          src="/assets/icons/logo_m.svg"
-          width={277}
-          height={88}
-          alt="logo"
-        />
+        <button
+          onClick={() => {
+            router.push("/");
+          }}
+        >
+          <Image
+            src="/assets/icons/logo_m.svg"
+            width={277}
+            height={88}
+            alt="logo"
+          />
+        </button>
         <Title>로그인</Title>
         <P>GAMGOO에 오신 것을 환영합니다.</P>
         <Content>
