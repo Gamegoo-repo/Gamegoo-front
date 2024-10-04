@@ -10,7 +10,7 @@ import { deleteMember, getProfile } from "@/api/user";
 import { setUserProfile } from "@/redux/slices/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { setChatRoomDateFormatter } from "@/utils/custom";
+import { formatDate, setChatRoomDateFormatter } from "@/utils/custom";
 import Input from "@/components/common/Input";
 import { checkPassword } from "@/api/password";
 import { clearTokens } from "@/utils/storage";
@@ -84,9 +84,9 @@ const MyProfilePage = () => {
         <Private>
           <Title>
             개인정보
-            <Small>{`마지막 업데이트 : ${setChatRoomDateFormatter(
-              user.updatedAt
-            )}`}</Small>
+            {user.updatedAt && (
+              <Small>{`마지막 업데이트 : ${formatDate(user.updatedAt)}`}</Small>
+            )}
           </Title>
           <PrivateContent>
             <Box>
