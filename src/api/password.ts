@@ -51,7 +51,7 @@ export const checkPassword = async (password: string) => {
   };
 
   export const resetJwtPassword = async (password: string) => {
-    const endpoint = '/v1/member/password/reset/jwt';
+    const endpoint = '/v1/member/password/jwt/reset';
     try {
       const response = await AuthAxios.post(endpoint, {password});
       console.log('비밀번호 재설정 성공:', response.data);
