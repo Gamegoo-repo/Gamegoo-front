@@ -235,6 +235,7 @@ const AllButton = styled.button`
   gap: 2px;
   margin-bottom: 1px;
   ${(props) => props.theme.fonts.bold11};
+  cursor: pointer;
 `;
 
 const TabContainer = styled.div`
