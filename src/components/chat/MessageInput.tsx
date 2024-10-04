@@ -21,17 +21,27 @@ const MessageInput = (props: MessageInputProps) => {
         return "";
     };
 
+    const handlePressEnterKey = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (event.nativeEvent.isComposing) {
+            return;
+        }
+
+        if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault();
+            sendMessage(event as any);
+        }
+    };
+
     return (
         <TextareaContainer>
-            <Form
-                onSubmit={sendMessage}>
+            <Form onSubmit={sendMessage}>
                 {chatEnterData &&
                     <>
                         <Textarea
                             maxLength={1000}
                             value={message}
                             onChange={(event) => setMessage(event.target.value)}
-                            // onKeyDown={handlePressEnterKey}
+                            onKeyDown={handlePressEnterKey}
                             disabled={!!chatEnterData.blocked || !!chatEnterData.blind}
                             placeholder={getPlaceholderText()}
                         />

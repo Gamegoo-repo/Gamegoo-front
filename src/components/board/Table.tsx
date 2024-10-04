@@ -18,7 +18,6 @@ import {
 import { useRouter } from "next/navigation";
 import Alert from "../common/Alert";
 import ConfirmModal from "../common/ConfirmModal";
-import { editManners, postBadMannerValue, postMannerValue } from "@/api/manner";
 import ChatLayout from "../chat/ChatLayout";
 import Champion from "../readBoard/Champion";
 import { BoardDetail } from "@/interface/board";
@@ -215,8 +214,10 @@ const Table = (props: TableProps) => {
                                     </Fifth>
                                     <Sixth className="table_width">
                                         <Champion
-                                            size={50}
-                                            list={data.championResponseDTOList}
+                                            size={14}
+                                            list={data.championResponseDTOList.map(
+                                                (champion) => champion.championId
+                                            )}
                                         />
                                     </Sixth>
                                     <Seventh className="table_width">

@@ -1,15 +1,13 @@
 import styled from "styled-components";
 import Image from "next/image";
-import { ChampionResponseDTOList } from "@/interface/board";
 
 interface ChampionProps {
-  list: ChampionResponseDTOList[];
+  list: number[];
   size?: number;
 }
 
 const Champion = (props: ChampionProps) => {
   const { list, size = 18 } = props;
-
   return (
     <Wrapper>
       <Title $size={size}>최근 선호 챔피언</Title>
@@ -18,7 +16,7 @@ const Champion = (props: ChampionProps) => {
           {list?.map((champion, key) => (
             <ImageWrapper key={key}>
               <Image
-                src={`/assets/images/champion/${champion.championId}.png`}
+                src={`/assets/images/champion/${champion}.png`}
                 width={52}
                 height={52}
                 alt="champion"
