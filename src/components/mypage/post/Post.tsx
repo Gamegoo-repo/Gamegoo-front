@@ -192,6 +192,18 @@ const Name = styled.div`
   gap: 22px;
   ${(props) => props.theme.fonts.medium16};
   white-space: nowrap;
+
+  @media (max-width: 1400px) {
+    gap: 16px;
+  }
+
+  @media (max-width: 1360px) {
+    gap: 10px;
+  }
+
+  @media (max-width: 1300px) {
+    gap: 4px;
+  }
 `;
 
 const Number = styled.span`

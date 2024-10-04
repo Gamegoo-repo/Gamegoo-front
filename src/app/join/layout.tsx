@@ -12,15 +12,18 @@ const Layout = (props: any) => {
   return (
     <Container>
       <Box>
-        <Image
-          src="/assets/icons/logo_m.svg"
-          width={277}
-          height={88}
-          alt="logo"
+        <button
           onClick={() => {
             router.push("/login");
           }}
-        />
+        >
+          <Image
+            src="/assets/icons/logo_m.svg"
+            width={277}
+            height={88}
+            alt="logo"
+          />
+        </button>
         <Title>{isTerm ? "이용 약관 동의" : "회원가입"}</Title>
         <Content>{props.children}</Content>
       </Box>
