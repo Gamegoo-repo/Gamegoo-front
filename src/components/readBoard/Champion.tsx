@@ -3,11 +3,12 @@ import Image from "next/image";
 
 interface ChampionProps {
   list: number[];
+  title?: boolean;
   size?: number;
 }
 
 const Champion = (props: ChampionProps) => {
-  const { list } = props;
+  const { list, size = 18, title = false } = props;
 
   // 챔피언 이미지를 로드 실패 시 기본 이미지로
   const handleImageError = (e: any) => {
@@ -16,6 +17,7 @@ const Champion = (props: ChampionProps) => {
 
   return (
     <Wrapper>
+      {title && <Title $size={size}>최근 선호 챔피언</Title>}
       {list?.length !== 0 ? (
         <Images>
           {list?.map((champion, key) => (
@@ -46,7 +48,7 @@ export default Champion;
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 9px;
 `;
 
 const Title = styled.p<{ $size: number }>`
