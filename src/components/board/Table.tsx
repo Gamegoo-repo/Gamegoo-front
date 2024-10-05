@@ -214,7 +214,7 @@ const Table = (props: TableProps) => {
                                     </Fifth>
                                     <Sixth className="table_width">
                                         <Champion
-                                            title={false}
+                                            title="false"
                                             size={14}
                                             list={data.championResponseDTOList.map(
                                                 (champion) => champion.championId
