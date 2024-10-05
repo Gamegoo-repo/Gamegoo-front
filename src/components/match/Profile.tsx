@@ -127,15 +127,6 @@ const Profile: React.FC<Profile> = ({
     setIsMoreBoxOpen((prevState) => !prevState);
   };
 
-  /* 신고하기 체크박스 */
-  const handleReportCheckboxChange = (checked: number) => {
-    setCheckedItems((prev) =>
-      prev.includes(checked)
-        ? prev.filter((c) => c !== checked)
-        : [...prev, checked]
-    );
-  };
-
   const handleReport = () => {
     setIsReportBoxOpen(!isReportBoxOpen);
     setIsMoreBoxOpen(false);
@@ -197,8 +188,8 @@ const Profile: React.FC<Profile> = ({
         index === 0
           ? "main" ?? null
           : index === 1
-          ? "sub" ?? null
-          : "want" ?? null
+            ? "sub" ?? null
+            : "want" ?? null
       );
     }
   };
@@ -394,6 +385,12 @@ const Profile: React.FC<Profile> = ({
     );
   };
 
+  const handleReportBoxClose = () => {
+    setIsReportBoxOpen(!isReportBoxOpen);
+    setIsMoreBoxOpen(false);
+    setCheckedItems([]);
+  };
+
   return (
     <Container className={profileType}>
       <Row>
@@ -457,9 +454,8 @@ const Profile: React.FC<Profile> = ({
               <Span>{`#${user.tag}`}</Span>
               <Rank>
                 <Image
-                  src={`/assets/images/tier/${
-                    toLowerCaseString(user.tier) || "ur"
-                  }.svg`}
+                  src={`/assets/images/tier/${toLowerCaseString(user.tier) || "ur"
+                    }.svg`}
                   width={52}
                   height={52}
                   alt="tier"
@@ -471,7 +467,7 @@ const Profile: React.FC<Profile> = ({
             {profileType === "other" && (
               <More>
                 <Admit>{renderFriendsButton()}</Admit>
-                
+
                 {/* 더보기 버튼 */}
                 {memberId !== myId && (
                   <MoreDiv>
@@ -492,10 +488,7 @@ const Profile: React.FC<Profile> = ({
                     closeButtonWidth={17}
                     closeButtonHeight={17}
                     borderRadius="20px"
-                    onClose={() => {
-                      setIsReportBoxOpen(!isReportBoxOpen);
-                      setIsMoreBoxOpen(false);
-                    }}
+                    onClose={handleReportBoxClose}
                   >
                     <div>
                       <ReportLabel>신고 사유</ReportLabel>
@@ -567,9 +560,8 @@ const Profile: React.FC<Profile> = ({
                       setIsBlockConfrimOpen(false);
                     }}
                   >
-                    <MsgConfirm>{`${
-                      user.blocked ? "차단이" : "차단 해제가"
-                    } 완료되었습니다.`}</MsgConfirm>
+                    <MsgConfirm>{`${user.blocked ? "차단이" : "차단 해제가"
+                      } 완료되었습니다.`}</MsgConfirm>
                   </ConfirmModal>
                 )}
                 {/* 차단 해제하기 확인 팝업 */}
@@ -597,8 +589,8 @@ const Profile: React.FC<Profile> = ({
                         index === 0
                           ? positionValue.main ?? 0
                           : index === 1
-                          ? positionValue.sub ?? 0
-                          : positionValue.want ?? 0
+                            ? positionValue.sub ?? 0
+                            : positionValue.want ?? 0
                       )}
                       width={55}
                       height={40}
@@ -635,13 +627,13 @@ const Profile: React.FC<Profile> = ({
       {(profileType === "normal" ||
         (profileType === "other" &&
           user.gameStyleResponseDTOList.length > 0)) && (
-        <GameStyle
-          profileType={profileType === "normal" ? "none" : profileType}
-          gameStyleResponseDTOList={user.gameStyleResponseDTOList}
-          // mic={user.mic}
-          mic={false}
-        />
-      )}
+          <GameStyle
+            profileType={profileType === "normal" ? "none" : profileType}
+            gameStyleResponseDTOList={user.gameStyleResponseDTOList}
+            // mic={user.mic}
+            mic={false}
+          />
+        )}
     </Container>
   );
 };
