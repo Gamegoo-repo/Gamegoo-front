@@ -21,7 +21,7 @@ export const postBoard = async (params: PostReq) => {
 /* 게시글 목록 조회 */
 export const getBoardList = async (params: ListInterface) => {
     try {
-        const response = await Axios.get("/v1/posts/list", { params });
+        const response = await AuthAxios.get("/v1/posts/list", { params });
         console.log("게시판 목록:", response.data);
         return response.data;
     } catch (error) {
