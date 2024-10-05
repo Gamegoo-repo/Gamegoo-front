@@ -107,6 +107,7 @@ const MyPostPage = () => {
             itemsPerPage={ITEMS_PER_PAGE}
             hasMoreItems={hasMoreItems}
             pageButtonCount={pageButtonCount}
+            totalItems={totalCount}
             totalPage={totalPage}
             onPrevPage={handlePrevPage}
             onNextPage={handleNextPage}
