@@ -53,13 +53,11 @@ const HomePage = () => {
                   }
                 }}
               >
-                <Image
-                  src={content.image}
+                <object
+                  data={content.image}
                   width={0}
                   height={0}
                   style={{ width: "100%", height: "100%" }}
-                  alt={content.title}
-                  priority
                 />
                 <ContentTitle>{content.title}</ContentTitle>
               </ContentWrapper>
