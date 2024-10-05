@@ -27,6 +27,8 @@ const Email = () => {
   );
   const [isSendClick, setIsSendClick] = useState(false);
   const [isSend, setIsSend] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+
   /* 타이머 */
   const [timer, setTimer] = useState<number>(180);
   const [timerColor, setTimerColor] = useState<string>(theme.colors.purple100);
@@ -78,17 +80,22 @@ const Email = () => {
   };
 
   const handleSendEmail = async () => {
-    setIsSendClick(true);
-    try {
-      await sendJoinEmail({ email });
-      setAuthCode("");
-      setAuthCodeValid(undefined);
-      dispatch(updateEmailAuth(""));
-      dispatch(updateAuthStatus(false));
-      setIsSend(true);
-      setTimer(180);
-    } catch (error) {
-      setEmailValid(false);
+    if (!isSending) {
+      setIsSending(true); // 전송 중 상태
+      setIsSendClick(true);
+      try {
+        await sendJoinEmail({ email });
+        setAuthCode("");
+        setAuthCodeValid(undefined);
+        dispatch(updateEmailAuth(""));
+        dispatch(updateAuthStatus(false));
+        setIsSend(true);
+        setTimer(180);
+      } catch (error) {
+        setEmailValid(false);
+      } finally {
+        setIsSending(false); // 전송 완료 상태
+      }
     }
   };
 
@@ -129,12 +136,10 @@ const Email = () => {
       try {
         await sendAuth({ email, code: authCode });
 
-        console.log("여기", email, authCode);
         // Redux 상태 업데이트
         dispatch(updateEmail(email));
         dispatch(updateEmailAuth(authCode));
         dispatch(updateAuthStatus(true));
-        console.log("ㅎㅎ", authStatusRedux);
 
         setAuthCodeValid(true);
         router.push("/join/password");
@@ -193,20 +198,22 @@ const Email = () => {
       {isSend || authStatusRedux ? (
         <Button
           buttonType="primary"
-          text="인증 완료"
+          text={"인증 완료"}
           onClick={handleSendCode}
           disabled={!authCodeValid}
         />
       ) : (
         <Button
           buttonType="primary"
-          text="인증코드 전송"
+          text={isSending ? "인증코드 전송 중..." : "인증코드 전송"}
           onClick={handleSendEmail}
           disabled={!emailValid}
         />
       )}
       {isSend && (
-        <ReButton onClick={handleSendEmail}>인증 코드 재전송</ReButton>
+        <ReButton onClick={handleSendEmail} disabled={isSending}>
+          {isSending ? "인증 코드 재전송 중..." : "인증 코드 재전송"}
+        </ReButton>
       )}
     </Div>
   );

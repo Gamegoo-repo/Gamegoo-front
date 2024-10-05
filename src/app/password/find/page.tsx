@@ -20,6 +20,7 @@ const Find = () => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [emailValid, setEmailValid] = useState<boolean | undefined>(undefined);
+  const [isSending, setIsSending] = useState(false);
 
   const emailRedux = useSelector((state: RootState) => state.password.email);
 
@@ -39,15 +40,20 @@ const Find = () => {
   };
 
   const handleSendEmail = async () => {
-    try {
-      await sendEmail({ email });
-      dispatch(updateEmail(email));
-      dispatch(updateEmailAuth(""));
-      dispatch(updateAuthStatus(false));
-    } catch (error) {
-      setEmailValid(false);
+    if (!isSending) {
+      setIsSending(true); // 전송 중 상태
+      try {
+        await sendEmail({ email });
+        dispatch(updateEmail(email));
+        dispatch(updateEmailAuth(""));
+        dispatch(updateAuthStatus(false));
+      } catch (error) {
+        setEmailValid(false);
+      } finally {
+        router.push("/password/auth");
+        setIsSending(false); // 전송 완료 상태
+      }
     }
-    router.push("/password/auth");
   };
 
   return (
@@ -69,7 +75,7 @@ const Find = () => {
         />
         <Button
           buttonType="primary"
-          text="비밀번호 재설정하기"
+          text={isSending ? "인증코드 전송 중..." : "비밀번호 재설정하기"}
           onClick={handleSendEmail}
           disabled={!emailValid}
         />
