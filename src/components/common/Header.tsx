@@ -64,8 +64,12 @@ const Header = () => {
   /* 외부 영역 클릭시 팝업 닫힘 */
   const handleClickOutside = (event: MouseEvent) => {
     if (
-      myPageRef.current &&
-      !myPageRef.current.contains(event.target as Node)
+      (myPageRef.current &&
+        !myPageRef.current.contains(event.target as Node)) ||
+      !(
+        event.target instanceof HTMLElement &&
+        event.target.classList.contains("profile")
+      )
     ) {
       setIsMyPage(false);
     }
@@ -167,7 +171,12 @@ const Header = () => {
               alt="noti"
               onClick={handleAlertWindow}
             />
-            <Profile>
+            <Profile
+              className="profile"
+              onClick={() => {
+                setIsMyPage(!isMyPage);
+              }}
+            >
               <HeaderProfileImgWrapper $bgColor={getProfileBgColor(profileImg)}>
                 <HeaderProfileImg
                   src={`/assets/images/profile/profile${profileImg}.svg`}
@@ -177,14 +186,12 @@ const Header = () => {
                 />
               </HeaderProfileImgWrapper>
               {name}
-              <button onClick={() => setIsMyPage(!isMyPage)}>
-                <Image
-                  src="/assets/icons/chevron_down.svg"
-                  width={7}
-                  height={7}
-                  alt="more"
-                />
-              </button>
+              <Image
+                src="/assets/icons/chevron_down.svg"
+                width={7}
+                height={7}
+                alt="more"
+              />
             </Profile>
           </Right>
         ) : (
@@ -263,6 +270,7 @@ const Head = styled.div`
   justify-content: center;
   box-sizing: border-box;
   ${(props) => props.theme.fonts.regular14};
+  position: relative;
 `;
 
 const HeaderBar = styled.div`
@@ -308,6 +316,7 @@ const Profile = styled.div`
   display: flex;
   align-items: center;
   gap: 6px;
+  cursor: pointer;
 `;
 
 const HeaderProfileImgWrapper = styled.div<{ $bgColor: string }>`
@@ -337,8 +346,8 @@ const MyPageModal = styled.div`
   background: ${theme.colors.white};
   box-shadow: 2px 11px 44.1px 0px rgba(0, 0, 0, 0.15);
   position: absolute;
-  top: 50px;
-  right: 50px;
+  top: 60px;
+  right: 80px;
   z-index: 100;
 `;
 

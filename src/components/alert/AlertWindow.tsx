@@ -198,8 +198,8 @@ const Overlay = styled.div`
   width: 408px;
   height: 547px;
   position: absolute;
-  top: 50px;
-  right: 50px;
+  top: 60px;
+  right: 80px;
   z-index: 100;
 `;
 
