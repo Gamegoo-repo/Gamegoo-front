@@ -44,6 +44,7 @@ export default function RootLayout({
   return (
     <html>
       <head>
+        <title>롤 실시간 듀오 매칭 - GAMEGOO</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body>
