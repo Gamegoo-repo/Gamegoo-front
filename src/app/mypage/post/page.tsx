@@ -37,7 +37,8 @@ const MyPostPage = () => {
   useEffect(() => {
     const fetchGetMyPost = async () => {
       const response = await getMyPost(currentPage);
-      setPostList(response.result);
+      setPostList(response.result.myBoards);
+      console.log("확", response.result);
       console.log("수정내용 반영");
     };
 
@@ -88,7 +89,7 @@ const MyPostPage = () => {
                   key={item.boardId}
                   boardId={item.boardId}
                   memberId={item.memberId}
-                  profileImage={item.profileImage}
+                  profileImage={item.profileImage + 1}
                   gameName={item.gameName}
                   tag={item.tag}
                   tier={item.tier}

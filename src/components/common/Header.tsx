@@ -64,12 +64,8 @@ const Header = () => {
   /* 외부 영역 클릭시 팝업 닫힘 */
   const handleClickOutside = (event: MouseEvent) => {
     if (
-      (myPageRef.current &&
-        !myPageRef.current.contains(event.target as Node)) ||
-      !(
-        event.target instanceof HTMLElement &&
-        event.target.classList.contains("profile")
-      )
+      myPageRef.current &&
+      !myPageRef.current.contains(event.target as Node)
     ) {
       setIsMyPage(false);
     }
