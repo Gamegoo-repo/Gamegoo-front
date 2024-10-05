@@ -78,7 +78,8 @@ const BlockedBox: React.FC<BlockedBoxProps> = ({
       </Gap>
       <MoreDiv>
         <MoreBoxButton
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             setIsMoreBoxOpen(!isMoreBoxOpen);
           }}
         />
@@ -87,7 +88,8 @@ const BlockedBox: React.FC<BlockedBoxProps> = ({
             items={[
               {
                 text: `${isBlind ? "삭제" : isBlocked ? "차단 해제" : "차단"}`,
-                onClick: () => {
+                onClick: (e) => {
+                  e.stopPropagation();
                   if (isBlind) {
                     handleDelete();
                   } else {

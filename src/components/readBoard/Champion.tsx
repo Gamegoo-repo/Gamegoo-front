@@ -2,18 +2,22 @@ import styled from "styled-components";
 import Image from "next/image";
 
 interface ChampionProps {
-  title?: boolean;
   list: number[];
+  title?: boolean;
   size?: number;
 }
 
 const Champion = (props: ChampionProps) => {
-  const { list, size = 18, title } = props;
+  const { list, size = 18, title = false } = props;
+
+  // 챔피언 이미지를 로드 실패 시 기본 이미지로
+  const handleImageError = (e: any) => {
+    e.target.src = "/assets/images/champion/no_champion.svg";
+  };
+
   return (
     <Wrapper>
-      {!title &&
-        <Title $size={size}>최근 선호 챔피언</Title>
-      }
+      {title && <Title $size={size}>최근 선호 챔피언</Title>}
       {list?.length !== 0 ? (
         <Images>
           {list?.map((champion, key) => (
@@ -22,11 +26,12 @@ const Champion = (props: ChampionProps) => {
                 src={`/assets/images/champion/${champion}.png`}
                 width={52}
                 height={52}
-                alt="champion"
+                alt={`champion-${champion}`}
                 style={{
                   transform: "scale(1.2)", // 120% 확대
                   objectFit: "cover",
                 }}
+                onError={handleImageError}
               />
             </ImageWrapper>
           ))}
@@ -43,13 +48,13 @@ export default Champion;
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 9px;
 `;
 
 const Title = styled.p<{ $size: number }>`
   ${(props) =>
     props.theme.fonts[
-    `semiBold${props.$size}` as keyof typeof props.theme.fonts
+      `semiBold${props.$size}` as keyof typeof props.theme.fonts
     ]};
   color: #222222;
 `;

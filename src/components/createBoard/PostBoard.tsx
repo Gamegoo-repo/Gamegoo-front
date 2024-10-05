@@ -23,6 +23,8 @@ import { PostReq } from "@/interface/board";
 import Alert from "../common/Alert";
 import { useRouter } from "next/navigation";
 import { setOpenModal } from "@/redux/slices/modalSlice";
+import { getProfile } from "@/api/user";
+import { setUserProfile } from "@/redux/slices/userSlice";
 
 interface PostBoardProps {
   onClose: () => void;
@@ -43,33 +45,47 @@ const PostBoard = (props: PostBoardProps) => {
   const router = useRouter();
 
   const postStatus = useSelector((state: RootState) => state.post.postStatus);
+  const user = useSelector((state: RootState) => state.user);
   const currentPost = useSelector((state: RootState) => state.post.currentPost);
   const currentPostId = useSelector(
     (state: RootState) => state.post.currentPostId
   );
-  const isUser = useSelector((state: RootState) => state.user);
   const isCompletedModal = useSelector(
     (state: RootState) => state.modal.modalType
   );
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await getProfile();
+        dispatch(setUserProfile(response));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
   const [isProfileListOpen, setIsProfileListOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState<
     number | undefined
-  >(currentPost?.profileImage ?? isUser?.profileImg);
+  >(currentPost?.profileImage ?? user?.profileImg);
   const [selectedDropOption, setSelectedDropOption] = useState<number>(
     currentPost?.gameMode || 1
   );
   const [positionValue, setPositionValue] = useState<PositionState | undefined>(
     {
-      main: currentPost?.mainPosition || isUser?.mainP || 0,
-      sub: currentPost?.subPosition || isUser?.subP || 0,
+      main: currentPost?.mainPosition || user?.mainP || 0,
+      sub: currentPost?.subPosition || user?.subP || 0,
       want: currentPost?.wantPosition || 0,
     }
   );
   const [isMicOn, setIsMicOn] = useState<boolean>(currentPost?.mike || false);
   const gameStyleIds =
-    isUser?.gameStyleResponseDTOList?.map((item) => item.gameStyleId) || [];
+    user?.gameStyleResponseDTOList?.map((item) => item.gameStyleId) || [];
   const [selectedStyleIds, setSelectedStyleIds] = useState<number[]>(
     currentPost?.gameStyles ?? gameStyleIds
   );
@@ -97,18 +113,18 @@ const PostBoard = (props: PostBoardProps) => {
 
   /* userInfo가 업데이트된 후 상태 업데이트 */
   useEffect(() => {
-    if (!!isUser.gameName && !currentPost) {
+    if (!!user.gameName && !currentPost) {
       setPositionValue({
-        main: isUser.mainP ? isUser.mainP : 0,
-        sub: isUser.subP ? isUser.subP : 0,
+        main: user.mainP ? user.mainP : 0,
+        sub: user.subP ? user.subP : 0,
         want: 0,
       });
-      setSelectedImageIndex(isUser.profileImg);
+      setSelectedImageIndex(user.profileImg);
       const ids =
-        isUser?.gameStyleResponseDTOList?.map((item) => item.gameStyleId) || [];
+        user?.gameStyleResponseDTOList?.map((item) => item.gameStyleId) || [];
       setSelectedStyleIds(ids);
     }
-  }, [isUser, currentPost]);
+  }, [user, currentPost]);
 
   /* 프로필 이미지 리스트 중 클릭시 */
   const handleImageClick = (index: number) => {
@@ -158,14 +174,13 @@ const PostBoard = (props: PostBoardProps) => {
 
     try {
       await editPost(currentPostId, params);
-      await dispatch(setPostStatus('edit'));
+      await dispatch(setPostStatus("edit"));
       await dispatch(
         updateCurrentPost({
           currentPostId,
           updates: params as PostUpdate,
         })
       );
-
     } catch (error) {
       console.log(error);
     }
@@ -174,7 +189,7 @@ const PostBoard = (props: PostBoardProps) => {
   /* 글쓰기 */
   const handlePost = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!isUser.gameName) {
+    if (!user.gameName) {
       return setShowAlert(true);
     }
 
@@ -186,7 +201,8 @@ const PostBoard = (props: PostBoardProps) => {
       positionValue.sub === undefined ||
       positionValue.want === undefined ||
       textareaValue.trim() === ""
-    ) return;
+    )
+      return;
 
     const params = {
       boardProfileImage: selectedImageIndex,
@@ -207,8 +223,8 @@ const PostBoard = (props: PostBoardProps) => {
     if (!currentPost) {
       try {
         await postBoard(params);
-        await dispatch(setPostStatus('complete'));
-        await dispatch(setOpenModal('isCompleted'));
+        await dispatch(setPostStatus("complete"));
+        await dispatch(setOpenModal("isCompleted"));
         await handleModalClose();
       } catch (error) {
         console.error(error);
@@ -241,12 +257,14 @@ const PostBoard = (props: PostBoardProps) => {
           primaryButtonText="확인"
           onPrimaryClick={onCompletedPosting}
         >
-          {isCompletedModal === 'isCompleted' ? '글 작성이 완료되었습니다.' : '글 수정이 완료되었습니다.'}
+          {isCompletedModal === "isCompleted"
+            ? "글 작성이 완료되었습니다."
+            : "글 수정이 완료되었습니다."}
         </ConfirmModal>
       )}
-      
+
       <Form onSubmit={handlePost}>
-        {isUser.gameName && (
+        {user.gameName && (
           <UserSection>
             <UpdateProfileImage
               selectedImageIndex={selectedImageIndex}
@@ -255,10 +273,10 @@ const PostBoard = (props: PostBoardProps) => {
               onImageClick={handleImageClick}
             />
             <User
-              account={isUser.gameName}
-              tag={isUser.tag}
-              tier={isUser.tier}
-              rank={isUser.rank}
+              account={user.gameName}
+              tag={user.tag}
+              tier={user.tier}
+              rank={user.rank}
             />
           </UserSection>
         )}
@@ -295,7 +313,7 @@ const PostBoard = (props: PostBoardProps) => {
         </PositionSection>
         <StyleSection>
           <Title className="gameStyleTitle">게임 스타일</Title>
-          {isUser.gameName && (
+          {user.gameName && (
             <GameStyle
               selectedIds={selectedStyleIds}
               setSelectedStyleIds={setSelectedStyleIds}

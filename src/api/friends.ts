@@ -49,7 +49,7 @@ export const reqFriend = async (memberId: number) => {
 /* 친구 요청 취소 */
 export const cancelFriendReq = async (memberId: number) => {
     try {
-        const response = await Axios.delete(`/v1/friends/request/${memberId}`);
+        const response = await AuthAxios.delete(`/v1/friends/request/${memberId}`);
         console.log("친구 요청 취소 성공:", response.data);
         return response.data;
     } catch (error: any) {
@@ -105,7 +105,7 @@ export const rejectFreindReq = async (memberId: number) => {
 /* 친구 삭제 */
 export const deleteFriend = async (memberId: number) => {
     try {
-        const response = await Axios.delete(`/v1/friends/${memberId}`);
+        const response = await AuthAxios.delete(`/v1/friends/${memberId}`);
         console.log("친구 삭제 완료:", response.data);
         return response.data;
     } catch (error) {
@@ -118,7 +118,7 @@ export const deleteFriend = async (memberId: number) => {
 export const getFriendsList = async (cursor?: number) => {
     const url = cursor ? `/v1/friends?cursor=${cursor}` : `/v1/friends`
     try {
-        const response = await Axios.get(url);
+        const response = await AuthAxios.get(url);
         return response.data;
     } catch (error) {
         throw error;

@@ -7,6 +7,9 @@ import Pagination from "@/components/common/Pagination";
 import { useEffect, useState } from "react";
 import { getNotiCount, getNotiTotal, readNoti } from "@/api/notification";
 import { useRouter } from "next/navigation";
+import { setNotiCount } from "@/redux/slices/notiSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 export interface Notification {
   notificationId: number;
@@ -19,6 +22,7 @@ export interface Notification {
 
 const MyAlertPage = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [currentPage, setCurrentPage] = useState(1);
   const [notiList, setNotiList] = useState<Notification[]>([]);
   const [totalPages, setTotalPages] = useState(0);
@@ -26,7 +30,8 @@ const MyAlertPage = () => {
   const itemsPerPage = 10;
   const pageButtonCount = 5;
 
-  const [count, setCount] = useState<number>(0);
+  // const [count, setCount] = useState<number>(0);
+  const notiCount = useSelector((state: RootState) => state.noti.count);
 
   useEffect(() => {
     const fetchNotiList = async () => {
@@ -49,7 +54,8 @@ const MyAlertPage = () => {
     const fetchNotiCount = async () => {
       try {
         const response = await getNotiCount();
-        setCount(response.result);
+        // setCount(response.result);
+        dispatch(setNotiCount(response.result));
       } catch (error) {
         console.error(error);
       }
@@ -59,7 +65,7 @@ const MyAlertPage = () => {
     fetchNotiCount();
   }, [currentPage]);
 
-  useEffect(() => { }, [totalPages, totalItems, count]);
+  useEffect(() => {}, [totalPages, totalItems, notiCount]);
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
@@ -104,7 +110,7 @@ const MyAlertPage = () => {
       <MyAlertContent>
         <Alert>
           <Top>
-            <Small>알림 페이지 ({count})</Small>
+            <Small>알림 페이지 ({notiCount})</Small>
           </Top>
           {notiList.length > 0 ? (
             <AlertList>
@@ -116,7 +122,10 @@ const MyAlertPage = () => {
                   content={data.content}
                   createdAt={data.createdAt}
                   read={data.read}
-                  onClick={() => handleClickAlert(data.notificationId, data.pageUrl)}
+                  onClick={() => {
+                    handleClickAlert(data.notificationId, data.pageUrl);
+                    dispatch(setNotiCount(notiCount - 1));
+                  }}
                 />
               ))}
             </AlertList>
