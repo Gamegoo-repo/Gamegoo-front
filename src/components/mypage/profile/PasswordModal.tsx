@@ -82,6 +82,7 @@ const PasswordModal = (props: PasswordModalProps) => {
           }}
           placeholder="현재 비밀번호 입력"
           isValid={isPasswordValid}
+          errorMsg="비밀번호 불일치"
         />
         <Input
           inputType="password"
