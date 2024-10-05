@@ -178,8 +178,8 @@ const Header = () => {
               <HeaderProfileImgWrapper $bgColor={getProfileBgColor(profileImg)}>
                 <HeaderProfileImg
                   src={`/assets/images/profile/profile${profileImg}.svg`}
-                  width={29}
-                  height={29}
+                  width={25}
+                  height={25}
                   alt="profile"
                 />
               </HeaderProfileImgWrapper>

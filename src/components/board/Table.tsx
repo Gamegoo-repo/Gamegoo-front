@@ -18,6 +18,7 @@ import ConfirmModal from "../common/ConfirmModal";
 import ChatLayout from "../chat/ChatLayout";
 import Champion from "../readBoard/Champion";
 import { BoardDetail } from "@/interface/board";
+import { getProfileBgColor } from "@/utils/profile";
 
 interface TableTitleProps {
   id: number;
@@ -156,12 +157,17 @@ const Table = (props: TableProps) => {
                     className="table_width"
                     onClick={(e) => handleUserProfilePage(e, data.memberId)}
                   >
-                    <Image
-                      src={setProfileImg(data.profileImage)}
-                      width={50}
-                      height={50}
-                      alt="프로필 이미지"
-                    />
+                    <ProfileImgWrapper
+                      $bgColor={getProfileBgColor(data.profileImage + 1)}
+                    >
+                      <ProfileImg
+                        src={setProfileImg(data.profileImage)}
+                        width={35}
+                        height={35}
+                        alt="프로필 이미지"
+                      />
+                    </ProfileImgWrapper>
+
                     <P onClick={(e) => handleTextClick(data.gameName, e)}>
                       {data.gameName}
                     </P>
@@ -318,6 +324,21 @@ const Second = styled.div`
     color: ${theme.colors.purple100};
     ${(props) => props.theme.fonts.bold16};
   }
+`;
+
+const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
+  position: relative;
+  width: 50px;
+  height: 50px;
+  background: ${(props) => props.$bgColor};
+  border-radius: 50%;
+`;
+
+const ProfileImg = styled(Image)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `;
 
 const Third = styled.div`
