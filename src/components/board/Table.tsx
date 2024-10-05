@@ -173,11 +173,11 @@ const Table = (props: TableProps) => {
                     <Image
                       src={
                         !data.tier
-                          ? "/assets/images/tier/UNRANK.svg"
+                          ? "/assets/images/tier/ur.svg"
                           : `/assets/images/tier/${data.tier}.svg`
                       }
-                      width={26}
-                      height={13}
+                      width={28}
+                      height={26}
                       alt="티어 이미지"
                     />
                     <P>
@@ -324,7 +324,7 @@ const Third = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 2px;
+  gap: 3px;
 `;
 
 const Fourth = styled.div`
