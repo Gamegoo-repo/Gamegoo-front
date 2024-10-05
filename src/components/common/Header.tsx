@@ -7,7 +7,12 @@ import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import AlertWindow from "../alert/AlertWindow";
 import { useDispatch, useSelector } from "react-redux";
-import { clearTokens, getAccessToken, getRefreshToken } from "@/utils/storage";
+import {
+  clearTokens,
+  getAccessToken,
+  getName,
+  getProfileImg,
+} from "@/utils/storage";
 import { getProfileBgColor } from "@/utils/profile";
 import {
   clearUserProfile,
@@ -16,7 +21,6 @@ import {
 } from "@/redux/slices/userSlice";
 import { getNotiCount } from "@/api/notification";
 import { RootState } from "@/redux/store";
-import { reissueToken } from "@/api/auth";
 import Alert from "./Alert";
 
 interface HeaderProps {
@@ -30,22 +34,20 @@ const Header = () => {
   const [isAlertWindow, setIsAlertWindow] = useState<Boolean>(false);
   const [isMyPage, setIsMyPage] = useState<Boolean>(false);
 
+  const accesssToken = getAccessToken(); // 로그인 유무 결정
   const name = useSelector((state: RootState) => state.user.gameName);
   const profileImg = useSelector((state: RootState) => state.user.profileImg);
   const [count, setCount] = useState<number>(0);
 
   const myPageRef = useRef<HTMLDivElement>(null);
-
-  const isLoggedIn = useSelector((state: RootState) => !!state.user.gameName);
   const [showAlert, setShowAlert] = useState(false);
 
-  useEffect(() => {
-    const storedName =
-      localStorage.getItem("name") || sessionStorage.getItem("name");
-    const storedProfileImg =
-      Number(localStorage.getItem("profileImg")) ||
-      Number(sessionStorage.getItem("profileImg"));
+  const storedName = getName();
+  const storedProfileImg = Number(getProfileImg());
 
+  const isFirstRender = useRef(true);
+
+  useEffect(() => {
     if (storedName) {
       dispatch(setUserName(storedName));
     }
@@ -91,19 +93,21 @@ const Header = () => {
       }
     };
 
-    if (localStorage.getItem("name") || sessionStorage.getItem("name")) {
+    // 첫 렌더에서만 API 호출
+    if (isFirstRender.current && storedName) {
       fetchNotiCount();
+      isFirstRender.current = false;
     }
-  }, []);
+  }, [storedName]);
 
   useEffect(() => {
     console.log(count);
   }, [count]);
 
   const deleteLocalStorageData = () => {
-    localStorage.removeItem('unreadChatUuids');
-    localStorage.removeItem('mannerId');
-    localStorage.removeItem('badMannerId');
+    localStorage.removeItem("unreadChatUuids");
+    localStorage.removeItem("mannerId");
+    localStorage.removeItem("badMannerId");
   };
 
   return (
@@ -134,7 +138,7 @@ const Header = () => {
             <Menu
               selected={pathname.includes("/match")}
               onClick={() => {
-                if (!isLoggedIn) {
+                if (!accesssToken) {
                   setShowAlert(true);
                 } else {
                   router.push("/match");
@@ -154,7 +158,7 @@ const Header = () => {
             </Menu>
           </Menus>
         </Left>
-        {name && profileImg ? (
+        {accesssToken && name && profileImg ? (
           <Right>
             <Image
               src={`/assets/icons/noti_${count > 0 ? "on" : "off"}.svg`}

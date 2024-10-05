@@ -7,6 +7,24 @@ export const setToken = (accessToken: string, refreshToken: string, autoLogin: b
     }
 };
 
+/* 닉네임 저장 */
+export const setName = (name: string, autoLogin: boolean) => {
+    if (typeof window !== 'undefined') {
+        const storage = autoLogin ? localStorage : sessionStorage;
+        storage.setItem('name', name);
+    }
+    return null;
+};
+
+/* 프로필 이미지 저장 */
+export const setProfileImg = (profileImg: string, autoLogin: boolean) => {
+    if (typeof window !== 'undefined') {
+        const storage = autoLogin ? localStorage : sessionStorage;
+        storage.setItem('profileImg', profileImg);
+    }
+    return null;
+};
+
 /* 토큰 사용 */
 export const getAccessToken = () => {
     if (typeof window !== 'undefined') {
@@ -21,6 +39,23 @@ export const getRefreshToken = () => {
     }
     return null;
 };
+
+/* 닉네임 사용 */
+export const getName = () => {
+    if (typeof window !== 'undefined') {
+        return localStorage.getItem('name') || sessionStorage.getItem('name');
+    }
+    return null;
+};
+
+/* 프로필 이미지 사용 */
+export const getProfileImg = () => {
+    if (typeof window !== 'undefined') {
+        return localStorage.getItem('profileImg') || sessionStorage.getItem('profileImg');
+    }
+    return null;
+};
+
 
 /* 토큰 제거 */
 export const clearTokens = () => {

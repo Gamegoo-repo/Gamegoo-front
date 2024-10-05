@@ -6,15 +6,14 @@ import { MATCH_PAGE_DATA } from "@/data/match";
 import Image from "next/image";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
 import { useState } from "react";
 import Alert from "@/components/common/Alert";
+import { getAccessToken } from "@/utils/storage";
 
 const HomePage = () => {
   const router = useRouter();
 
-  const isLoggedIn = useSelector((state: RootState) => !!state.user.gameName);
+  const accesssToken = getAccessToken(); // 로그인 유무 결정
   const [showAlert, setShowAlert] = useState(false);
 
   return (
@@ -47,7 +46,7 @@ const HomePage = () => {
               <ContentWrapper
                 key={content.id}
                 onClick={() => {
-                  if (!isLoggedIn && content.id === 1) {
+                  if (!accesssToken && content.id === 1) {
                     setShowAlert(true);
                   } else {
                     router.push(content.pathname);

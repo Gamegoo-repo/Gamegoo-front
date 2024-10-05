@@ -1,11 +1,11 @@
 import axios from "axios";
 import { SocketAxios } from ".";
+import { getAccessToken } from "@/utils/storage";
 
 /* 소켓 로그인 */
 export const socketLogin = async () => {
     try {
-        let jwtToken = localStorage.getItem('accessToken');
-        jwtToken = sessionStorage.getItem('accessToken');
+        const jwtToken = getAccessToken();
         const socketId = localStorage.getItem('gamegooSocketId');
 
         if (!jwtToken || !socketId) return;

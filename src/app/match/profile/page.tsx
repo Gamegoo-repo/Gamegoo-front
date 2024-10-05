@@ -13,7 +13,7 @@ import { getProfile } from "@/api/user";
 import { setUserProfile } from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
 import ChatButton from "@/components/common/ChatButton";
-import { socket } from "@/socket";
+import { sendMatchingQuitEvent, socket } from "@/socket";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import { theme } from "@/styles/theme";
 
@@ -72,6 +72,12 @@ const ProfilePage = () => {
             "You are already in the matching room for this game mode."
         ) {
           setIsAlready(true);
+        } else if (
+          errorData.event === "error" &&
+          errorData.data ===
+            "Failed POST matching API: 서버 에러, 관리자에게 문의 바랍니다."
+        ) {
+          sendMatchingQuitEvent();
         }
       });
     }
@@ -91,9 +97,9 @@ const ProfilePage = () => {
       mainP: (matchInfo.mainP ?? 0).toString(),
       subP: (matchInfo.subP ?? 0).toString(),
       wantP: (matchInfo.wantP ?? 0).toString(),
-      gameStyle1: (matchInfo.gameStyleResponseDTOList[0] ?? "1").toString(),
-      gameStyle2: (matchInfo.gameStyleResponseDTOList[1] ?? "2").toString(),
-      gameStyle3: (matchInfo.gameStyleResponseDTOList[2] ?? "3").toString(),
+      gameStyle1: matchInfo.gameStyleResponseDTOList[0] || null,
+      gameStyle2: matchInfo.gameStyleResponseDTOList[1] || null,
+      gameStyle3: matchInfo.gameStyleResponseDTOList[2] || null,
     };
 
     if (socket) {
@@ -139,6 +145,7 @@ const ProfilePage = () => {
             width="380px"
             text="매칭 시작하기"
             onClick={handleMatchStart}
+            disabled={matchInfo.gameStyleResponseDTOList.length === 0}
           />
         </Main>
         <Footer>

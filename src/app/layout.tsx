@@ -12,6 +12,7 @@ import { usePathname } from "next/navigation";
 import SocketConnection from "@/components/socket/SocketConnection";
 import { Toaster } from "react-hot-toast";
 import { connectSocket } from "@/socket";
+import { HelmetProvider, Helmet } from "react-helmet-async";
 import Footer from "@/components/common/Footer";
 
 export default function RootLayout({
@@ -46,23 +47,31 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body>
-        <StyledComponentsRegistry>
-          <div id="modal-root"></div>
-          <GlobalStyles />
-          <ThemeProvider theme={theme}>
-            <Toaster />
-            <Provider store={storeRef.current}>
-              <SocketConnection />
-              <Container>
-                <Main>
-                  {isHeader && <Header />}
-                  {children}
-                </Main>
-                <Footer />
-              </Container>
-            </Provider>
-          </ThemeProvider>
-        </StyledComponentsRegistry>
+        <HelmetProvider>
+          <Helmet>
+            <link
+              href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-dynamic-subset.css"
+              rel="stylesheet"
+            />
+          </Helmet>
+          <StyledComponentsRegistry>
+            <div id="modal-root"></div>
+            <GlobalStyles />
+            <ThemeProvider theme={theme}>
+              <Toaster />
+              <Provider store={storeRef.current}>
+                <SocketConnection />
+                <Container>
+                  <Main>
+                    {isHeader && <Header />}
+                    {children}
+                  </Main>
+                  <Footer />
+                </Container>
+              </Provider>
+            </ThemeProvider>
+          </StyledComponentsRegistry>
+        </HelmetProvider>
       </body>
     </html>
   );

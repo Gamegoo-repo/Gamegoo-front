@@ -23,7 +23,7 @@ interface User {
   subPosition: number;
   wantPosition: number;
   mike: boolean;
-  gameStyleList: string[];
+  gameStyleList?: string[];
 }
 
 interface SquareProfileProps {
@@ -90,9 +90,14 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
         </ImageContainer>
         <Mic status={user.mike} />
         <RowBox>
-          {(user.gameStyleList || []).slice(0, 2).map((item, index) => (
-            <Box key={index} shape="round" text={item} />
-          ))}
+          {user.gameStyleList &&
+            user.gameStyleList.length > 0 &&
+            user.gameStyleList
+              .filter((item) => item.trim() !== "")
+              .slice(0, 2)
+              .map((item, index) => (
+                <Box key={index} shape="round" text={item} />
+              ))}
         </RowBox>
         <Row>
           <Position>

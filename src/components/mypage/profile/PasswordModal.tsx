@@ -22,7 +22,7 @@ const PasswordModal = (props: PasswordModalProps) => {
   const [isPasswordValid, setIsPasswordValid] = useState<boolean | undefined>();
 
   const validateNewPassword = (password: string) => {
-    const lengthValid = password.length >= 8;
+    const lengthValid = password.length >= 8 && password.length <= 16;
     const specialCharValid =
       /[a-z]/.test(password) &&
       /[A-Z]/.test(password) &&
