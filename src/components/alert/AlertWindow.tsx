@@ -20,6 +20,7 @@ interface NotificationResponse {
 }
 
 interface AlertWindowProps {
+  countFunc: () => void;
   onClose: () => void;
 }
 
@@ -28,7 +29,7 @@ const AlertWindow = (
   ref: React.Ref<HTMLDivElement>
 ) => {
   const router = useRouter();
-  const { onClose } = props;
+  const { countFunc, onClose } = props;
 
   const alertWindowRef = useRef<HTMLDivElement>(null);
 
@@ -66,10 +67,6 @@ const AlertWindow = (
       const response: NotificationResponse = await getNotiModal(cursor);
       if (response.isSuccess) {
         const { notificationDTOList, next_cursor, has_next } = response.result;
-        // setNotiList((prevNotiList) => [
-        //   ...prevNotiList,
-        //   ...notificationDTOList,
-        // ]);
         setNotiList(notificationDTOList);
         setCursor(next_cursor);
         setHasMore(has_next);
@@ -139,6 +136,7 @@ const AlertWindow = (
             n.notificationId === notificationId ? { ...n, read: true } : n
           )
         );
+        countFunc();
       } catch (error) {
         console.error(error);
       }

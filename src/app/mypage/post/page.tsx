@@ -38,8 +38,6 @@ const MyPostPage = () => {
     const fetchGetMyPost = async () => {
       const response = await getMyPost(currentPage);
       setPostList(response.result.myBoards);
-      console.log("확", response.result);
-      console.log("수정내용 반영");
     };
 
     fetchGetMyPost();

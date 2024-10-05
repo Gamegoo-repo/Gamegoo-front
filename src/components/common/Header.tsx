@@ -22,6 +22,7 @@ import {
 import { getNotiCount } from "@/api/notification";
 import { RootState } from "@/redux/store";
 import Alert from "./Alert";
+import { setNotiCount } from "@/redux/slices/notiSlice";
 
 interface HeaderProps {
   selected: boolean;
@@ -37,7 +38,7 @@ const Header = () => {
   const accesssToken = getAccessToken(); // 로그인 유무 결정
   const name = useSelector((state: RootState) => state.user.gameName);
   const profileImg = useSelector((state: RootState) => state.user.profileImg);
-  const [count, setCount] = useState<number>(0);
+  const notiCount = useSelector((state: RootState) => state.noti.count);
 
   const myPageRef = useRef<HTMLDivElement>(null);
   const [showAlert, setShowAlert] = useState(false);
@@ -83,16 +84,17 @@ const Header = () => {
     setIsMyPage(false);
   }, [pathname]);
 
-  useEffect(() => {
-    const fetchNotiCount = async () => {
-      try {
-        const response = await getNotiCount();
-        setCount(response.result);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  const fetchNotiCount = async () => {
+    try {
+      const response = await getNotiCount();
+      // setCount(response.result);
+      dispatch(setNotiCount(response.result));
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
+  useEffect(() => {
     // 첫 렌더에서만 API 호출
     if (isFirstRender.current && storedName) {
       fetchNotiCount();
@@ -101,8 +103,8 @@ const Header = () => {
   }, [storedName]);
 
   useEffect(() => {
-    console.log(count);
-  }, [count]);
+    console.log(notiCount);
+  }, [notiCount]);
 
   const deleteLocalStorageData = () => {
     localStorage.removeItem("unreadChatUuids");
@@ -161,7 +163,7 @@ const Header = () => {
         {accesssToken && name && profileImg ? (
           <Right>
             <Image
-              src={`/assets/icons/noti_${count > 0 ? "on" : "off"}.svg`}
+              src={`/assets/icons/noti_${notiCount > 0 ? "on" : "off"}.svg`}
               width={24}
               height={30}
               alt="noti"
@@ -194,7 +196,12 @@ const Header = () => {
           <Login onClick={() => router.push("/login")}>로그인</Login>
         )}
       </HeaderBar>
-      {isAlertWindow && <AlertWindow onClose={() => setIsAlertWindow(false)} />}
+      {isAlertWindow && (
+        <AlertWindow
+          countFunc={fetchNotiCount}
+          onClose={() => setIsAlertWindow(false)}
+        />
+      )}
       {isMyPage && (
         <MyPageModal ref={myPageRef}>
           <MyProfile>
@@ -210,7 +217,7 @@ const Header = () => {
             )}
             <MyName>{name}</MyName>
             <Image
-              src={`/assets/icons/noti_${count > 0 ? "on" : "off"}.svg`}
+              src={`/assets/icons/noti_${notiCount > 0 ? "on" : "off"}.svg`}
               width={24}
               height={30}
               alt="noti"
