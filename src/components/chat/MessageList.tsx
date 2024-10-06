@@ -51,6 +51,24 @@ const MessageList = (props: MessageListProps) => {
 
     const { newMessage } = useChatMessage();
 
+
+    const scrollToBottom = useCallback(() => {
+        if (chatRef.current) {
+            chatRef.current.scrollTop = chatRef.current.scrollHeight;
+        }
+    }, [chatRef]);
+
+    /* 새로운 메시지 입력 또는 새로운 메시지 입력 시 스크롤을 맨 아래로 이동시키는 함수 */
+    useEffect(() => {
+        if (newMessage) {
+            setMessageList((prevMessages) => [...prevMessages, newMessage]);
+
+            requestAnimationFrame(() => {
+                scrollToBottom();
+            });
+        }
+    }, [newMessage, scrollToBottom]);
+
     /* 매너 시스템 소켓 이벤트 리스닝 */
     useEffect(() => {
         const handleMannerSystemMessage = () => {
@@ -238,49 +256,6 @@ const MessageList = (props: MessageListProps) => {
         return true;
     };
 
-    /* 프로필 이미지 표시 (상대방만 보여주기) */
-    // const handleDisplayProfileImage = (messages: ChatMessageDto[], index: number): boolean => {
-    //     // if (index === 0) return true;
-
-    //     // return messages[index].senderId === chatEnterData?.memberId;
-    //     if (index === 0) return true; // 첫 번째 메시지에는 항상 표시
-
-    //     const currentSenderId = messages[index].senderId;
-    //     const previousSenderId = messages[index - 1].senderId;
-
-    //     const currentTime = dayjs(messages[index].createdAt).format('A hh:mm');
-    //     const previousTime = dayjs(messages[index - 1].createdAt).format('A hh:mm');
-
-    //     // 보낸 사람이 같고, 시간이 같다면 프로필 이미지를 표시하지 않음
-    //     if (currentTime === previousTime) {
-    //         return false;
-    //     }
-
-    //     return true;
-    // };
-
-    // /* 채팅 시간 */
-    // const handleDisplayTime = (messages: ChatMessageDto[], index: number): boolean => {
-    //     if (index === messages.length - 1) return true;
-
-    //     const currentTime = dayjs(messages[index].createdAt).format('A hh:mm');
-    //     const nextTime = dayjs(messages[index + 1].createdAt).format('A hh:mm');
-
-    //     const isSameTime = currentTime === nextTime;
-    //     const isSameSender = messages[index].senderId === messages[index + 1].senderId;
-
-    //     // 시간이 같고, 보낸 사람도 같으면 마지막 메시지에만 시간 표시
-    //     if (isSameTime && isSameSender) {
-    //         return false;
-    //     }
-
-    //     // 시간이 다르거나, 보낸 사람이 다르면 현재 메시지에 시간을 표시
-    //     return true;
-    // };
-
-    /* 같은 시간에 메시지가 온 경우 상대방의 프로필 이미지는 한번만 보여주기 */
-
-
     /* 마지막 채팅을 보낸 후 1시간이 지난 시점에서 피드백 요청 표시 */
     useEffect(() => {
         const lastMessage = chatEnterData?.chatMessageList.chatMessageDtoList[chatEnterData.chatMessageList.chatMessageDtoList.length - 1];
@@ -367,7 +342,6 @@ const MessageList = (props: MessageListProps) => {
                                                     </StyledButton>
                                                 </Feedback>
                                             </FeedbackContainer>
-                                            {/* <FeedbackTime>{setChatTimeFormatter(isFeedbackDate)}</FeedbackTime> */}
                                         </FeedbackDiv>
                                     </>
                                 ) : message.senderId === chatEnterData?.memberId ? (
@@ -382,40 +356,11 @@ const MessageList = (props: MessageListProps) => {
                                                 />
                                             </ImageWrapper>
                                         )}
-                                        {/* {message.senderProfileImg && (
-                                            <ImageWrapper $bgColor={getProfileBgColor(message.senderProfileImg)}>
-                                                <ProfileImage
-                                                    src={`/assets/images/profile/profile${message.senderProfileImg}.svg`}
-                                                    width={38}
-                                                    height={38}
-                                                    alt="프로필 이미지"
-                                                />
-                                            </ImageWrapper>
-                                        )} */}
                                         <YourDiv $hasProfileImage={showProfileImage}>
                                             <YourMessage>{message.message}</YourMessage>
                                             {showTime ? <YourDate>{setChatTimeFormatter(message.createdAt)}</YourDate> : null}
                                         </YourDiv>
                                     </YourMessageContainer>
-                                    //         <YourMessageContainer>
-                                    //             {handleDisplayProfileImage(messageList, index) && message.senderProfileImg && (
-                                    //                 {
-                                    //                     showProfileImg?
-                                    //                         <ImageWrapper $bgColor = { getProfileBgColor(message.senderProfileImg)}>
-                                    //             <ProfileImage
-                                    //                 src={`/assets/images/profile/profile${message.senderProfileImg}.svg`}
-                                    //                 width={38}
-                                    //                 height={38}
-                                    //                 alt="프로필 이미지"
-                                    //             />
-                                    //         </ImageWrapper>
-                                    //             : null}
-                                    //             )}
-                                    //     <YourDiv $hasProfileImage={hasProfileImage}>
-                                    //         <YourMessage>{message.message}</YourMessage>
-                                    //         {showTime ? <YourDate>{setChatTimeFormatter(message.createdAt)}</YourDate> : null}
-                                    //     </YourDiv>
-                                    // </YourMessageContainer>
                                 ) : (
                                     <MyMessageContainer>
                                         <MyDiv>
@@ -453,7 +398,7 @@ const ChatBorder = styled.div`
 
 const ChatMain = styled.main`
     border-top: 1px solid #C1B7FF;
-    padding: 10px 8px;
+    /* padding: 10px 8px; */
     height: 471px;
     overflow-y: auto;
     -ms-overflow-style: none;
