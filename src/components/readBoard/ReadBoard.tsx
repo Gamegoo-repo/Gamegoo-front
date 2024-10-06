@@ -108,13 +108,13 @@ const ReadBoard = (props: ReadBoardProps) => {
   }, [isBlockedStatus, isFriendStatus, isUser.gameName, postId]);
 
   /* 클릭해서 매너키워드 보기 박스 닫기 */
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsMannerBalloonVisible(false);
-    }, 3000);
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     setIsMannerBalloonVisible(false);
+  //   }, 3000);
 
-    return () => clearTimeout(timer);
-  }, []);
+  //   return () => clearTimeout(timer);
+  // }, []);
 
   /* MannerLevelBox 외부 클릭 시 닫힘 */
   useEffect(() => {
@@ -545,7 +545,7 @@ const ReadBoard = (props: ReadBoardProps) => {
                       level={isPost.mannerLevel}
                       onClick={handleMannerLevelBoxOpen}
                       position="top"
-                      isBalloon={isMannerBalloonVisible}
+                      // isBalloon={isMannerBalloonVisible}
                     />
                     {isMannerLevelBoxOpen && (
                       <div ref={mannerLevelBoxRef}>
