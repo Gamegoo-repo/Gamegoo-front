@@ -52,26 +52,10 @@ const ChatButton = () => {
   const handleToggleChat = () => {
     if (!isUser.gameName) {
       return setShowAlert(true);
-    } 
-    // setIsChatOpen((prevState) => !prevState);
+    }
     dispatch(toggleChat());
   };
 
-  const handleChatWindowClose = () => {
-    dispatch(closeChat());
-  };
-
-  useEffect(() => {
-    if (isChatOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, [isChatOpen]);
 
   return (
     <>

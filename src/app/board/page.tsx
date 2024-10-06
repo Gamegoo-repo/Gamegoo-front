@@ -58,19 +58,6 @@ const BoardPage = () => {
   );
   const isPostStatus = useSelector((state: RootState) => state.post.postStatus);
   const isUser = useSelector((state: RootState) => state.user);
-  const isChatOpen = useSelector((state: RootState) => state.chat.isChatRoomOpen);
-
-  useEffect(() => {
-    if (isChatOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, [isChatOpen]);
 
   /* 게임모드 드롭 */
   const handleGameModeDropValue = (id: number | null) => {
