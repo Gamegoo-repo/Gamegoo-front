@@ -283,7 +283,7 @@ const BoardPage = () => {
               <FirstBlock>
                 <Dropdown
                   type="type1"
-                  width="160px"
+                  width="170px"
                   padding="18px 21px"
                   list={GAME_MODE}
                   ref={gameModeRef}
