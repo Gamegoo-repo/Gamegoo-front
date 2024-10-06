@@ -92,7 +92,7 @@ export const markChatAsRead = async (uuid: string, timestamp = null) => {
 /* 안 읽은 채팅방 uuid 가져오기 */
 export const getUnreadUuid = async () => {
     try {
-        const response = await Axios.get('/v1/chat/unread');
+        const response = await AuthAxios.get('/v1/chat/unread');
         return response.data;
     } catch (error) {
         throw error;
@@ -102,7 +102,7 @@ export const getUnreadUuid = async () => {
 /* 친구 검색 */
 export const searchFriend = async (user: string) => {
     try {
-        const response = await Axios.get(`/v1/friends/search?query=${user}`);
+        const response = await AuthAxios.get(`/v1/friends/search?query=${user}`);
         return response.data;
     } catch (error) {
         throw error;

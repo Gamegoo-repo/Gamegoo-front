@@ -184,13 +184,7 @@ const Profile: React.FC<Profile> = ({
       setIsPositionOpen((prev) =>
         prev.map((isOpen, i) => (i === index ? !isOpen : false))
       );
-      setSelectedBox(
-        index === 0
-          ? "main" ?? null
-          : index === 1
-            ? "sub" ?? null
-            : "want" ?? null
-      );
+      setSelectedBox(index === 0 ? "main" : index === 1 ? "sub" : "want");
     }
   };
 
@@ -455,10 +449,11 @@ const Profile: React.FC<Profile> = ({
               <Span>{`#${user.tag}`}</Span>
               <Rank>
                 <Image
-                  src={`/assets/images/tier/${toLowerCaseString(user.tier) || "ur"
-                    }.svg`}
-                  width={52}
-                  height={52}
+                  src={`/assets/images/tier/${
+                    toLowerCaseString(user.tier) || "ur"
+                  }.svg`}
+                  width={42}
+                  height={42}
                   alt="tier"
                 />
                 {setAbbrevTier(user.tier)}
@@ -663,7 +658,7 @@ const Row = styled.div`
   width: 100%;
   display: flex;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
   gap: 38px;
 `;
 
@@ -801,6 +796,7 @@ const Top = styled.div`
 `;
 
 const Span = styled.span`
+  margin-right: 5px;
   color: ${theme.colors.gray300};
   font-size: ${theme.fonts.regular25};
 `;

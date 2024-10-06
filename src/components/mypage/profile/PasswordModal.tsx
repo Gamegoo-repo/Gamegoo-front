@@ -24,10 +24,9 @@ const PasswordModal = (props: PasswordModalProps) => {
   const validateNewPassword = (password: string) => {
     const lengthValid = password.length >= 8 && password.length <= 16;
     const specialCharValid =
-      /[a-z]/.test(password) &&
-      /[A-Z]/.test(password) &&
+      /[a-zA-Z]/.test(password) &&
       /[0-9]/.test(password) &&
-      /[!@#$%^&*]/.test(password);
+      /[@$!%*?&#^()]/.test(password);
     setIsLengthValid(lengthValid);
     setHasSpecialChar(specialCharValid);
   };
@@ -82,6 +81,7 @@ const PasswordModal = (props: PasswordModalProps) => {
           }}
           placeholder="현재 비밀번호 입력"
           isValid={isPasswordValid}
+          errorMsg="비밀번호 불일치"
         />
         <Input
           inputType="password"
@@ -115,7 +115,7 @@ const PasswordModal = (props: PasswordModalProps) => {
                   alt="check"
                 />
               )}
-              8자리 이상
+              8자리 이상 ~ 16자리 이하
             </Span>
             <Span $selected={hasSpecialChar}>
               {hasSpecialChar ? (
