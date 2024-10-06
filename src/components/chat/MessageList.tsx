@@ -51,24 +51,6 @@ const MessageList = (props: MessageListProps) => {
 
     const { newMessage } = useChatMessage();
 
-
-    const scrollToBottom = useCallback(() => {
-        if (chatRef.current) {
-            chatRef.current.scrollTop = chatRef.current.scrollHeight;
-        }
-    }, [chatRef]);
-
-    /* 새로운 메시지 입력 또는 새로운 메시지 입력 시 스크롤을 맨 아래로 이동시키는 함수 */
-    useEffect(() => {
-        if (newMessage) {
-            setMessageList((prevMessages) => [...prevMessages, newMessage]);
-
-            requestAnimationFrame(() => {
-                scrollToBottom();
-            });
-        }
-    }, [newMessage, scrollToBottom]);
-
     /* 매너 시스템 소켓 이벤트 리스닝 */
     useEffect(() => {
         const handleMannerSystemMessage = () => {
@@ -146,7 +128,6 @@ const MessageList = (props: MessageListProps) => {
         }
     }, [chatRef, messageList, isInitialLoading]);
 
-
     const handleScroll = useCallback(() => {
         if (chatRef.current && !isInitialLoading) {
             const { scrollTop } = chatRef.current;
@@ -169,6 +150,23 @@ const MessageList = (props: MessageListProps) => {
             }
         };
     }, [chatRef, handleScroll]);
+
+    /* 새로운 메시지 입력 또는 새로운 메시지 입력 시 스크롤을 맨 아래로 이동시키는 함수 */
+    const scrollToBottom = useCallback(() => {
+        if (chatRef.current) {
+            chatRef.current.scrollTop = chatRef.current.scrollHeight;
+        }
+    }, [chatRef]);
+
+    useEffect(() => {
+        if (newMessage) {
+            setMessageList((prevMessages) => [...prevMessages, newMessage]);
+
+            requestAnimationFrame(() => {
+                scrollToBottom();
+            });
+        }
+    }, [newMessage, scrollToBottom]);
 
     /* 남은 메시지 보여주기(페이징) */
     const getMoreMessages = useCallback(async () => {
@@ -398,7 +396,7 @@ const ChatBorder = styled.div`
 
 const ChatMain = styled.main`
     border-top: 1px solid #C1B7FF;
-    /* padding: 10px 8px; */
+    padding: 10px 8px;
     height: 471px;
     overflow-y: auto;
     -ms-overflow-style: none;

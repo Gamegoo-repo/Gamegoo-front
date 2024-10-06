@@ -609,6 +609,7 @@ const Profile: React.FC<Profile> = ({
               </Position>
               {profileType === "other" && user.championResponseDTOList && (
                 <Champion
+                  title="true"
                   size={14}
                   list={user.championResponseDTOList.map(
                     (champion) => champion.championId

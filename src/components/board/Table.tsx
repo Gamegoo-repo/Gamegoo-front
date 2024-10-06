@@ -179,11 +179,11 @@ const Table = (props: TableProps) => {
                                         <Image
                                             src={
                                                 !data.tier
-                                                    ? "/assets/images/tier/UNRANK.svg"
+                                                    ? "/assets/images/tier/ur.svg"
                                                     : `/assets/images/tier/${data.tier}.svg`
                                             }
-                                            width={26}
-                                            height={13}
+                                            width={28}
+                                            height={26}
                                             alt="티어 이미지"
                                         />
                                         <P>
