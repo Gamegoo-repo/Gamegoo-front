@@ -44,6 +44,7 @@ import {
   setErrorMessage,
 } from "@/redux/slices/chatSlice";
 import { notify } from "@/hooks/notify";
+import ConfirmModal from "../common/ConfirmModal";
 
 interface ReadBoardProps {
   postId: number;
@@ -77,6 +78,9 @@ const ReadBoard = (props: ReadBoardProps) => {
     buttonText: "",
   });
 
+  const [isBlockBoxOpen, setIsBlockBoxOpen] = useState(false);
+  const [isBlockConfirmOpen, setIsBlockConfrimOpen] = useState(false);
+
   const isModalType = useSelector((state: RootState) => state.modal.modalType);
   const isUser = useSelector((state: RootState) => state.user);
   const isErrorMessage = useSelector(
@@ -106,15 +110,6 @@ const ReadBoard = (props: ReadBoardProps) => {
   useEffect(() => {
     getPostData();
   }, [isBlockedStatus, isFriendStatus, isUser.gameName, postId]);
-
-  /* 클릭해서 매너키워드 보기 박스 닫기 */
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     setIsMannerBalloonVisible(false);
-  //   }, 3000);
-
-  //   return () => clearTimeout(timer);
-  // }, []);
 
   /* MannerLevelBox 외부 클릭 시 닫힘 */
   useEffect(() => {
@@ -198,47 +193,68 @@ const ReadBoard = (props: ReadBoardProps) => {
   };
 
   /* 차단하기 */
+  // const handleBlock = async () => {
+  //   if (!isUser.gameName) {
+  //     return showAlertWithContent(
+  //       logoutMessage,
+  //       () => router.push("/"),
+  //       "로그인하기"
+  //     );
+  //   }
+
+  //   if (!isPost || isUser?.gameName === isPost?.gameName) return;
+
+  //   try {
+  //     await blockMember(isPost.memberId);
+  //     await handleMoreBoxClose();
+  //     await getPostData();
+  //     await setIsBlockedStatus(true);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
+  // /* 차단 해제 */
+  // const handleUnblock = async () => {
+  //   if (!isUser.gameName) {
+  //     return showAlertWithContent(
+  //       logoutMessage,
+  //       () => router.push("/"),
+  //       "로그인하기"
+  //     );
+  //   }
+
+  //   if (!isPost || isUser?.gameName === isPost?.gameName) return;
+
+  //   if (!isPost.isBlocked) return;
+
+  //   try {
+  //     await unblockMember(isPost.memberId);
+  //     await handleMoreBoxClose();
+  //     await getPostData();
+  //     await setIsBlockedStatus(false);
+  //   } catch (error) {}
+  // };
+
+  /* 차단하기 및 차단 해제 */
   const handleBlock = async () => {
-    if (!isUser.gameName) {
-      return showAlertWithContent(
-        logoutMessage,
-        () => router.push("/"),
-        "로그인하기"
-      );
-    }
-
-    if (!isPost || isUser?.gameName === isPost?.gameName) return;
-
-    try {
-      await blockMember(isPost.memberId);
-      await handleMoreBoxClose();
-      await getPostData();
-      await setIsBlockedStatus(true);
-    } catch (error) {
-      console.error(error);
-    }
+    setIsBlockBoxOpen(!isBlockBoxOpen);
+    setIsMoreBoxOpen(false);
   };
 
-  /* 차단 해제 */
-  const handleUnblock = async () => {
-    if (!isUser.gameName) {
-      return showAlertWithContent(
-        logoutMessage,
-        () => router.push("/"),
-        "로그인하기"
-      );
+  const handleRunBlock = async () => {
+    // 차단하기 api
+    setIsBlockBoxOpen(false);
+    if (isPost) {
+      if (isPost.isBlocked) {
+        await unblockMember(isPost.memberId);
+        setIsBlocked(false);
+      } else {
+        await blockMember(isPost.memberId);
+        setIsBlocked(true);
+      }
     }
-
-    if (!isPost || isUser?.gameName === isPost?.gameName) return;
-
-    if (!isPost.isBlocked) return;
-
-    try {
-      await unblockMember(isPost.memberId);
-      await handleMoreBoxClose();
-      await getPostData();
-      await setIsBlockedStatus(false);
-    } catch (error) {}
+    setIsBlockConfrimOpen(true);
   };
 
   /* 친구 추가 */
@@ -384,8 +400,8 @@ const ReadBoard = (props: ReadBoardProps) => {
     if (!isUser.gameName) {
       return showAlertWithContent(
         loginRequiredMessage,
-        () => setShowAlert(false),
-        "확인"
+        () => router.push("/"),
+        "로그인하기"
       );
     }
 
@@ -400,56 +416,46 @@ const ReadBoard = (props: ReadBoardProps) => {
   /* 더보기 버튼 메뉴 */
   const MoreBoxMenuItems: MoreBoxMenuItems[] = [];
 
+  const [isBlocked, setIsBlocked] = useState(false);
+  useEffect(() => {
+    setIsBlocked(!!isPost?.isBlocked);
+  }, []);
+
   if (isUser?.gameName === isPost?.gameName) {
+    /* 내가 작성한 글 */
     MoreBoxMenuItems.push(
       { text: "수정", onClick: handleEdit },
       { text: "삭제", onClick: handleDelete }
     );
-  }
+  } else {
+    /* 남이 작성한 글 */
 
-  //친구 삭제 - 차단되어있을 때, 친구일 때, 친구 추가 요청 중일 때
-  //친구 추가(친구 요청) - 친구가 아닐 때, 차단되어있지 않을 때, 친구 추가 요청 중이 아닐 때
-  //친구 요청 취소 - 친구 추가 요청 중일 떄
-  //차단하기 - 친구 추가 요청 중일 때, 친구 삭제된 상태일 때, 차단되어있지 않을 때
-  //차단해제 - 차단되어 있을 때,
+    //친구 삭제 - 차단되어있을 때, 친구일 때, 친구 추가 요청 중일 때
+    //친구 추가(친구 요청) - 친구가 아닐 때, 차단되어있지 않을 때, 친구 추가 요청 중이 아닐 때
+    //친구 요청 취소 - 친구 추가 요청 중일 떄
+    //차단하기 - 친구 추가 요청 중일 때, 친구 삭제된 상태일 때, 차단되어있지 않을 때
+    //차단해제 - 차단되어 있을 때,
 
-  if (isUser?.gameName !== isPost?.gameName) {
+    // 친구 추가
+    // 친구 삭제 (끊기)
+    // 친구 요청 전송 (나)
+    // 친구 요청 취소 (나)
+
     let friendText = "친구 추가";
     let friendFunc = handleFriendAdd;
-    let blockText = "차단하기";
-    let blockFunc = handleBlock;
 
-    if (
-      !!isPost?.isBlocked &&
-      !!isPost?.isFriend &&
-      !!isPost?.friendRequestMemberId
-    ) {
-      if (isPost?.isBlocked || isPost?.isFriend) {
+    if (isBlocked && !!isPost?.isFriend && !!isPost?.friendRequestMemberId) {
+      if (isBlocked || isPost?.isFriend) {
         friendText = "친구 삭제";
         friendFunc = handleFriendDelete;
       }
-      if (
-        !isPost?.isBlocked ||
-        !isPost?.isFriend ||
-        !isPost?.friendRequestMemberId
-      ) {
+      if (!isBlocked || !isPost?.isFriend || !isPost?.friendRequestMemberId) {
         friendText = "친구 추가";
         friendFunc = handleFriendAdd;
       }
       if (isPost?.friendRequestMemberId) {
         friendText = "친구 요청 취소";
         friendFunc = handleCancelFriendReq;
-      }
-
-      if (isPost?.friendRequestMemberId || !isPost?.isBlocked) {
-        blockText = "차단하기";
-        blockFunc = handleBlock;
-      }
-
-      if (!!isPost?.isBlocked) {
-        blockText = "차단 해제";
-        friendText = "";
-        blockFunc = handleUnblock;
       }
     }
 
@@ -458,7 +464,10 @@ const ReadBoard = (props: ReadBoardProps) => {
     }
 
     MoreBoxMenuItems.push(
-      { text: blockText, onClick: blockFunc },
+      {
+        text: isPost?.isBlocked ? "차단 해제" : "차단하기",
+        onClick: handleBlock,
+      },
       { text: "신고하기", onClick: handleReportModal }
     );
   }
@@ -545,7 +554,6 @@ const ReadBoard = (props: ReadBoardProps) => {
                       level={isPost.mannerLevel}
                       onClick={handleMannerLevelBoxOpen}
                       position="top"
-                      // isBalloon={isMannerBalloonVisible}
                     />
                     {isMannerLevelBoxOpen && (
                       <div ref={mannerLevelBoxRef}>
@@ -670,6 +678,45 @@ const ReadBoard = (props: ReadBoardProps) => {
           </div>
         </FormModal>
       )}
+      {/* 차단하기 팝업 */}
+      {isBlockBoxOpen && (
+        <ConfirmModal
+          width="540px"
+          primaryButtonText="예"
+          secondaryButtonText="아니요"
+          onPrimaryClick={() => {
+            handleRunBlock();
+          }}
+          onSecondaryClick={() => {
+            setIsBlockBoxOpen(false);
+          }}
+        >
+          {isBlocked ? (
+            <MsgConfirm>{"차단을 해제 하시겠습니까?"}</MsgConfirm>
+          ) : (
+            <Msg>
+              {
+                "차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다.\n\n차단하시겠습니까?"
+              }
+            </Msg>
+          )}
+        </ConfirmModal>
+      )}
+      {/* 차단하기 확인 팝업 */}
+      {isBlockConfirmOpen && (
+        <ConfirmModal
+          width="540px"
+          primaryButtonText="확인"
+          onPrimaryClick={() => {
+            setIsBlockConfrimOpen(false);
+            window.location.reload();
+          }}
+        >
+          <MsgConfirm>{`${
+            isBlocked ? "차단이" : "차단 해제가"
+          } 완료되었습니다.`}</MsgConfirm>
+        </ConfirmModal>
+      )}
     </>
   );
 };
@@ -780,4 +827,16 @@ const ReportReasonContent = styled(ReportContent)`
 
 const ReportButton = styled.div`
   margin-top: 21px;
+`;
+
+const Msg = styled.div`
+  text-align: center;
+  color: ${theme.colors.gray600};
+  ${(props) => props.theme.fonts.regular20};
+  margin: 28px 0;
+`;
+
+const MsgConfirm = styled(Msg)`
+  ${(props) => props.theme.fonts.regular20};
+  margin: 80px 0;
 `;
