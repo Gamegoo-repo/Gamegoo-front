@@ -188,8 +188,7 @@ const BoardPage = () => {
         selectedGameMode === "솔로 랭크"
           ? setSelectedGameMode(null)
           : selectedGameMode,
-      tier:
-        selectedTier === "티어 선택" ? setSelectedTier(null) : selectedTier,
+      tier: selectedTier === "티어 선택" ? setSelectedTier(null) : selectedTier,
       mainPosition: isPosition,
       mike: selectedMic === "음성 채팅" ? setSelectedMic(null) : selectedMic,
     };
@@ -203,8 +202,7 @@ const BoardPage = () => {
       } else {
         console.error(data.message);
       }
-    }
-    catch (error) {
+    } catch (error) {
       console.error(error);
     }
   };
@@ -285,7 +283,7 @@ const BoardPage = () => {
               <FirstBlock>
                 <Dropdown
                   type="type1"
-                  width="138px"
+                  width="160px"
                   padding="18px 21px"
                   list={GAME_MODE}
                   ref={gameModeRef}
@@ -296,7 +294,7 @@ const BoardPage = () => {
                 />
                 <Dropdown
                   type="type1"
-                  width="138px"
+                  width="150px"
                   padding="18px 21px"
                   list={TIER}
                   ref={tierRef}

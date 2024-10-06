@@ -10,7 +10,7 @@ export const BOARD_TITLE = [
 ];
 
 export const GAME_MODE = [
-    { id: null, value: '랭크 전체' },
+    { id: null, value: '게임 모드 전체' },
     { id: 1, value: '빠른대전' },
     { id: 2, value: '솔로랭크' },
     { id: 3, value: '자유랭크' },
