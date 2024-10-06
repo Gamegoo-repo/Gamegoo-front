@@ -48,8 +48,6 @@ const UserProfile = ({
         count: keyword.count,
       })) || [];
 
-  console.log(goodMannerEvaluations);
-  console.log(badMannerEvaluations);
   const goodMannerCount = (
     goodMannerEvaluations as { id: number; count: number }[]
   ).reduce((total, item) => total + item.count, 0);
