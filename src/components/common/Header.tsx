@@ -23,6 +23,7 @@ import { getNotiCount } from "@/api/notification";
 import { RootState } from "@/redux/store";
 import Alert from "./Alert";
 import { setNotiCount } from "@/redux/slices/notiSlice";
+import { socketLogout } from "@/api/socket";
 
 interface HeaderProps {
   selected: boolean;
@@ -233,15 +234,20 @@ const Header = () => {
               <>
                 <Line
                   key={data.id}
-                  onClick={() => {
+                  onClick={async () => {
                     setIsMyPage(false);
                     if (data.id !== 6) {
                       router.push(`${data.url}`);
                     } else {
                       router.push("/login");
-                      clearTokens();
-                      dispatch(clearUserProfile());
-                      deleteLocalStorageData();
+                      try {
+                        const response = await socketLogout();
+                        clearTokens();
+                        dispatch(clearUserProfile());
+                        deleteLocalStorageData();
+                      } catch {
+                        console.log("소켓 로그아웃 오류");
+                      }
                     }
                   }}
                 >
