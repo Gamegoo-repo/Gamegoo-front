@@ -86,11 +86,23 @@ export function setAbbrevTier(tier: string) {
 
 export function setDateFormatter(date: string) {
   const now = dayjs();
-  const diff = now.diff(date, "day");
-  if (diff >= 7) {
-    return dayjs(date).format("YYYY-MM-DD");
+  const createdAt = dayjs(date);
+
+  const diffInSeconds = now.diff(createdAt, "second");
+  const diffInMinutes = now.diff(createdAt, "minute");
+  const diffInHours = now.diff(createdAt, "hour");
+  const diffInDays = now.diff(createdAt, "day");
+
+  if (diffInSeconds < 60) {
+    return `${diffInSeconds}초 전`; // 1분 이내면 초단위로 표시
+  } else if (diffInMinutes < 60) {
+    return `${diffInMinutes}분 전`; // 1시간 이내면 분단위로 표시
+  } else if (diffInHours < 24) {
+    return `${diffInHours}시간 전`; // 1일 이내면 시간단위로 표시
+  } else if (diffInDays < 30) {
+    return `${diffInDays}일 전`; // 1달 이내면 날짜단위로 표시
   } else {
-    return dayjs(date).fromNow();
+    return createdAt.format("YYYY-MM-DD"); // 1달 이후면 'YYYY-MM-DD' 형식으로 표시
   }
 }
 
