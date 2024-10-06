@@ -2,6 +2,7 @@
 
 import { io, Socket } from "socket.io-client";
 import { SOCKET_URL } from "@/api";
+import { getAccessToken } from "./utils/storage";
 
 let socket: Socket | null = null;
 let socketId: string | null = null;
@@ -14,7 +15,7 @@ export const connectSocket = (): void => {
 
   // 클라이언트 사이드에서만 실행
   if (typeof window !== "undefined") {
-    const token = sessionStorage.getItem("accessToken");
+    const token = getAccessToken();
     const options = token ? { auth: { token } } : {};
 
     socket = io(SOCKET_URL, options);
@@ -23,6 +24,7 @@ export const connectSocket = (): void => {
       console.log("서버 연결. Socket ID:", socket?.id);
       socketId = socket?.id || null;
       localStorage.setItem("gamegooSocketId", socketId || "");
+      console.log("연결된 토큰", token);
     });
 
     socket.on("disconnect", () => {
