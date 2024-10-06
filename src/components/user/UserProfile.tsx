@@ -48,6 +48,8 @@ const UserProfile = ({
         count: keyword.count,
       })) || [];
 
+  console.log(goodMannerEvaluations);
+  console.log(badMannerEvaluations);
   const goodMannerCount = (
     goodMannerEvaluations as { id: number; count: number }[]
   ).reduce((total, item) => total + item.count, 0);
@@ -100,21 +102,20 @@ const UserProfile = ({
                     ))}
                   </ValueWrapper>
                   <TypeWrapper>
-                    {MANNER_TYPES.map((type) => {
-                      return (
+                    {goodMannerEvaluations.map((evaluation) => {
+                      const matchedType = MANNER_TYPES.find(
+                        (type) => type.id === evaluation.id
+                      );
+                      return matchedType ? (
                         <Type
-                          key={type.id}
+                          key={matchedType.id}
                           className={
-                            (goodMannerEvaluations.find(
-                              (evaluation) => evaluation.id === type.id
-                            )?.count ?? 0) > 0
-                              ? "mannerEmph"
-                              : "default"
+                            evaluation.count > 0 ? "mannerEmph" : "default"
                           }
                         >
-                          {type.text}
+                          {matchedType.text}
                         </Type>
-                      );
+                      ) : null;
                     })}
                   </TypeWrapper>
                 </MannerList>
@@ -135,20 +136,21 @@ const UserProfile = ({
                     ))}
                   </ValueWrapper>
                   <TypeWrapper>
-                    {BAD_MANNER_TYPES.map((type) => (
-                      <Type
-                        key={type.id}
-                        className={
-                          (badMannerEvaluations.find(
-                            (evaluation) => evaluation.id === type.id
-                          )?.count ?? 0) > 0
-                            ? "badEmph"
-                            : "default"
-                        }
-                      >
-                        {type.text}
-                      </Type>
-                    ))}
+                    {badMannerEvaluations.map((evaluation) => {
+                      const matchedType = BAD_MANNER_TYPES.find(
+                        (type) => type.id === evaluation.id
+                      );
+                      return matchedType ? (
+                        <Type
+                          key={matchedType.id}
+                          className={
+                            evaluation.count > 0 ? "badEmph" : "default"
+                          }
+                        >
+                          {matchedType.text}
+                        </Type>
+                      ) : null;
+                    })}
                   </TypeWrapper>
                 </MannerList>
               </Box>
