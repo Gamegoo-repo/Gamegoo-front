@@ -15,14 +15,22 @@ interface MannerLevelBoxProps {
 const MannerLevelBox = (props: MannerLevelBoxProps) => {
   const { memberId, level, top, right } = props;
 
-  const [positiveKeywords, setPositiveKeywords] = useState<MannerKeywords[]>([]);
-  const [negativeKeywords, setNegativeKeywords] = useState<MannerKeywords[]>([]);
+  const [positiveKeywords, setPositiveKeywords] = useState<MannerKeywords[]>(
+    []
+  );
+  const [negativeKeywords, setNegativeKeywords] = useState<MannerKeywords[]>(
+    []
+  );
 
   useEffect(() => {
     const getManners = async () => {
       const manner = await getOthersManner(memberId);
-      const positive = manner.result.mannerKeywords.filter((keyword: MannerKeywords) => keyword.isPositive);
-      const negative = manner.result.mannerKeywords.filter((keyword: MannerKeywords) => !keyword.isPositive);
+      const positive = manner.result.mannerKeywords.filter(
+        (keyword: MannerKeywords) => keyword.isPositive
+      );
+      const negative = manner.result.mannerKeywords.filter(
+        (keyword: MannerKeywords) => !keyword.isPositive
+      );
 
       setPositiveKeywords(positive);
       setNegativeKeywords(negative);
@@ -34,14 +42,14 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
 
   /* id로 매너 텍스트 가져오기 */
   const getMannerText = (id: number) => {
-    const match = MANNER_TYPES.find(type => type.id === id);
-    return match ? match.text : '';
+    const match = MANNER_TYPES.find((type) => type.id === id);
+    return match ? match.text : "";
   };
 
   /* id로 비매너 텍스트 가져오기 */
   const getBadMannerText = (id: number) => {
-    const match = BAD_MANNER_TYPES.find(type => type.id === id);
-    return match ? match.text : '';
+    const match = BAD_MANNER_TYPES.find((type) => type.id === id);
+    return match ? match.text : "";
   };
 
   return (
@@ -54,14 +62,15 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
             return (
               <MannerListBox key={positive.mannerKeywordId}>
                 <Value
-                  className={positive.count > 0 ? "mannerEmph" : "default"}>
+                  className={positive.count > 0 ? "mannerEmph" : "default"}
+                >
                   {positive.count}
                 </Value>
                 <Type className={positive.count > 0 ? "mannerEmph" : "default"}>
                   {getMannerText(positive.mannerKeywordId)}
                 </Type>
               </MannerListBox>
-            )
+            );
           })}
         </Div>
         <Div>
@@ -69,15 +78,14 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
           {negativeKeywords.map((negative) => {
             return (
               <MannerListBox key={negative.mannerKeywordId}>
-                <Value
-                  className={negative.count > 0 ? "badEmph" : "default"}>
+                <Value className={negative.count > 0 ? "badEmph" : "default"}>
                   {negative.count}
                 </Value>
                 <Type className={negative.count > 0 ? "badEmph" : "default"}>
                   {getBadMannerText(negative.mannerKeywordId)}
                 </Type>
               </MannerListBox>
-            )
+            );
           })}
         </Div>
       </MannerEvaluations>
@@ -97,7 +105,7 @@ const Wrapper = styled.div<{ $top: string; $right: string }>`
   border-radius: 19px;
   background: #000000a3;
   width: fit-content;
-  z-index: 1;
+  z-index: 100;
   white-space: nowrap;
 `;
 
@@ -125,7 +133,7 @@ const SubTitle = styled.p`
 const MannerListBox = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom:26px;
+  margin-bottom: 26px;
   &:last-child {
     margin-bottom: unset;
   }

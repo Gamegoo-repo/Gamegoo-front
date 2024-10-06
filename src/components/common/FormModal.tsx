@@ -69,7 +69,7 @@ const Overlay = styled.div<{ $position: "manner" | undefined }>`
   justify-content: center;
   align-items: center;
   position: fixed;
-  background: #0000009C;
+  background: #0000009c;
   position: ${({ $position }) =>
     $position === "manner" ? "absolute" : "fixed"};
   top: ${({ $position }) => ($position === "manner" ? "50%" : "unset")};
@@ -92,7 +92,7 @@ const Wrapper = styled.div<{
   max-width: ${({ $width }) => $width};
   width: 100%;
   max-height: ${({ $height }) => $height};
-  height: ${({ $height }) => $height ? "100%" : "auto"};
+  height: ${({ $height }) => ($height ? "100%" : "auto")};
   border-radius: ${({ $borderRadius }) => $borderRadius};
   padding: ${({ $type }) =>
     $type === "checkbox" ? "26px 31px 22px" : "29px 37px 38px"};

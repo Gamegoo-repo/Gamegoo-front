@@ -48,6 +48,21 @@ const Overlay = styled.div`
   z-index: 100;
   background: #0000009c;
   inset: 0;
+  overflow-y: scroll;
+
+  /* 스크롤바 */
+  &::-webkit-scrollbar {
+    width: 20px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 26px;
+    background: ${theme.colors.gray300};
+    background-clip: padding-box;
+    border: 6px solid transparent;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
 `;
 
 const Wrapper = styled.div`
@@ -57,11 +72,11 @@ const Wrapper = styled.div`
   max-width: 555px;
   width: 100%;
   position: relative;
-  max-height: 95%;
+  min-height: 850px;
+  height: auto;
   height: 100%;
-  margin: auto;
-  overflow-y: scroll;
-  padding-left: 20px;
+  margin: 50px;
+  padding: 0 20px;
 
   /* 스크롤바 */
   &::-webkit-scrollbar {
@@ -95,5 +110,6 @@ const CloseImage = styled(Image)`
 const Main = styled.main``;
 
 const MainContent = styled.div`
+  height: 100%;
   padding: 0 14px;
 `;

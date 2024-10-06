@@ -173,6 +173,20 @@ const StyledTextarea = styled.textarea<{
   &::placeholder {
     color: #7c7c7c;
   }
+
+  /* 스크롤바 */
+  &::-webkit-scrollbar {
+    width: 20px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: ${theme.colors.gray300};
+    background-clip: padding-box;
+    border: 6px solid transparent;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
 `;
 
 const Box = styled.div`

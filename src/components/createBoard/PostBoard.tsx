@@ -67,6 +67,17 @@ const PostBoard = (props: PostBoardProps) => {
     fetchProfile();
   }, []);
 
+  // 모달이 열렸을 때 body 스크롤을 막기
+  useEffect(() => {
+    // 모달이 열리면 body 스크롤 비활성화
+    document.body.style.overflow = "hidden";
+
+    // 모달이 닫히면 다시 스크롤 활성화
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
+
   const [isProfileListOpen, setIsProfileListOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -323,7 +334,7 @@ const PostBoard = (props: PostBoardProps) => {
         <MemoSection>
           <Title className="memoTitle">메모</Title>
           <Input
-            height="77px"
+            height="100px"
             inputType="textarea"
             value={textareaValue}
             id="memo"
@@ -396,6 +407,6 @@ const MemoSection = styled.div`
 `;
 const ButtonContent = styled.p`
   padding: 0 0 28px;
-  margin-top: 74px;
+  margin-top: 54px;
   text-align: center;
 `;
