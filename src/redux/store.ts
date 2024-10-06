@@ -7,6 +7,7 @@ import postReducer from "./slices/postSlice";
 import passwordReducer from "./slices/passwordSlice";
 import matchInfoReducer from "./slices/matchInfo";
 import chatReducer from "./slices/chatSlice";
+import notiReducer from "./slices/notiSlice";
 
 export const store = () => {
   return configureStore({
@@ -19,6 +20,7 @@ export const store = () => {
       post: postReducer,
       matchInfo: matchInfoReducer,
       chat: chatReducer,
+      noti: notiReducer,
     },
   })
 }
