@@ -355,7 +355,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     let blockText = '차단하기';
     let blockFunc = handleBlock;
 
-    // if (!!isPost?.isBlocked && !!isPost?.isFriend && !!isPost?.friendRequestMemberId) {
+    if (!!isPost?.isBlocked && !!isPost?.isFriend && !!isPost?.friendRequestMemberId) {
     if (isPost?.isBlocked || isPost?.isFriend) {
       friendText = '친구 삭제';
       friendFunc = handleFriendDelete;
@@ -379,7 +379,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       friendText = '';
       blockFunc = handleUnblock;
     }
-    // }
+    }
 
     if (friendText) {
       MoreBoxMenuItems.push({ text: friendText, onClick: friendFunc });

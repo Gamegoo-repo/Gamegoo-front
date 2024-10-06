@@ -385,6 +385,7 @@ const Profile: React.FC<Profile> = ({
     );
   };
 
+  // 신고하기 모달 닫기
   const handleReportBoxClose = () => {
     setIsReportBoxOpen(!isReportBoxOpen);
     setIsMoreBoxOpen(false);

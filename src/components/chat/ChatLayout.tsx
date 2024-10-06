@@ -455,8 +455,8 @@ const ChatLayout = (props: ChatLayoutProps) => {
             { text: '친구 요청 취소', onClick: handleCancelFriendReq },
 
             chatEnterData?.blocked
-                ? { text: '차단 해제', onClick: handleChatUnblock } // 차단 해제 버튼
-                : { text: '차단하기', onClick: (e: React.MouseEvent) => handleModalChange(e, 'block') }, // 차단하기 버튼
+                ? { text: '차단 해제', onClick: handleChatUnblock }
+                : { text: '차단하기', onClick: (e: React.MouseEvent) => handleModalChange(e, 'block') },
             { text: '신고하기', onClick: (e: React.MouseEvent) => chatEnterData?.memberId && handleReportClick(e, chatEnterData.memberId) },
             { text: '매너 평가', onClick: (e: React.MouseEvent) => chatEnterData?.memberId && handleMannerClick(e, chatEnterData.memberId) },
             { text: '비매너 평가', onClick: (e: React.MouseEvent) => chatEnterData?.memberId && handleBadMannerClick(e, chatEnterData.memberId) },
