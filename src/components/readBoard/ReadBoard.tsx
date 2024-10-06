@@ -96,6 +96,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       const hasPosition =
         "mainPosition" in memberData.result ? "canyon" : "wind";
       setType(hasPosition);
+      setIsBlockedStatus(memberData.result.isBlocked);
       setLoading(false);
     }
 
@@ -192,50 +193,6 @@ const ReadBoard = (props: ReadBoardProps) => {
     }
   };
 
-  /* 차단하기 */
-  // const handleBlock = async () => {
-  //   if (!isUser.gameName) {
-  //     return showAlertWithContent(
-  //       logoutMessage,
-  //       () => router.push("/"),
-  //       "로그인하기"
-  //     );
-  //   }
-
-  //   if (!isPost || isUser?.gameName === isPost?.gameName) return;
-
-  //   try {
-  //     await blockMember(isPost.memberId);
-  //     await handleMoreBoxClose();
-  //     await getPostData();
-  //     await setIsBlockedStatus(true);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-
-  // /* 차단 해제 */
-  // const handleUnblock = async () => {
-  //   if (!isUser.gameName) {
-  //     return showAlertWithContent(
-  //       logoutMessage,
-  //       () => router.push("/"),
-  //       "로그인하기"
-  //     );
-  //   }
-
-  //   if (!isPost || isUser?.gameName === isPost?.gameName) return;
-
-  //   if (!isPost.isBlocked) return;
-
-  //   try {
-  //     await unblockMember(isPost.memberId);
-  //     await handleMoreBoxClose();
-  //     await getPostData();
-  //     await setIsBlockedStatus(false);
-  //   } catch (error) {}
-  // };
-
   /* 차단하기 및 차단 해제 */
   const handleBlock = async () => {
     setIsBlockBoxOpen(!isBlockBoxOpen);
@@ -248,10 +205,10 @@ const ReadBoard = (props: ReadBoardProps) => {
     if (isPost) {
       if (isPost.isBlocked) {
         await unblockMember(isPost.memberId);
-        setIsBlocked(false);
+        setIsBlockedStatus(false);
       } else {
         await blockMember(isPost.memberId);
-        setIsBlocked(true);
+        setIsBlockedStatus(true);
       }
     }
     setIsBlockConfrimOpen(true);
@@ -416,11 +373,6 @@ const ReadBoard = (props: ReadBoardProps) => {
   /* 더보기 버튼 메뉴 */
   const MoreBoxMenuItems: MoreBoxMenuItems[] = [];
 
-  const [isBlocked, setIsBlocked] = useState(false);
-  useEffect(() => {
-    setIsBlocked(!!isPost?.isBlocked);
-  }, []);
-
   if (isUser?.gameName === isPost?.gameName) {
     /* 내가 작성한 글 */
     MoreBoxMenuItems.push(
@@ -436,30 +388,25 @@ const ReadBoard = (props: ReadBoardProps) => {
     //차단하기 - 친구 추가 요청 중일 때, 친구 삭제된 상태일 때, 차단되어있지 않을 때
     //차단해제 - 차단되어 있을 때,
 
-    // 친구 추가
-    // 친구 삭제 (끊기)
-    // 친구 요청 전송 (나)
-    // 친구 요청 취소 (나)
+    let friendText = "";
+    let friendFunc = null;
 
-    let friendText = "친구 추가";
-    let friendFunc = handleFriendAdd;
-
-    if (isBlocked && !!isPost?.isFriend && !!isPost?.friendRequestMemberId) {
-      if (isBlocked || isPost?.isFriend) {
+    if (!isBlockedStatus) {
+      if (isPost?.isFriend) {
         friendText = "친구 삭제";
         friendFunc = handleFriendDelete;
-      }
-      if (!isBlocked || !isPost?.isFriend || !isPost?.friendRequestMemberId) {
-        friendText = "친구 추가";
-        friendFunc = handleFriendAdd;
-      }
-      if (isPost?.friendRequestMemberId) {
-        friendText = "친구 요청 취소";
-        friendFunc = handleCancelFriendReq;
+      } else {
+        if (!isPost?.friendRequestMemberId) {
+          friendText = "친구 추가";
+          friendFunc = handleFriendAdd;
+        } else {
+          friendText = "친구 요청 취소";
+          friendFunc = handleCancelFriendReq;
+        }
       }
     }
 
-    if (friendText) {
+    if (friendText && friendFunc) {
       MoreBoxMenuItems.push({ text: friendText, onClick: friendFunc });
     }
 
@@ -691,7 +638,7 @@ const ReadBoard = (props: ReadBoardProps) => {
             setIsBlockBoxOpen(false);
           }}
         >
-          {isBlocked ? (
+          {isBlockedStatus ? (
             <MsgConfirm>{"차단을 해제 하시겠습니까?"}</MsgConfirm>
           ) : (
             <Msg>
@@ -709,11 +656,10 @@ const ReadBoard = (props: ReadBoardProps) => {
           primaryButtonText="확인"
           onPrimaryClick={() => {
             setIsBlockConfrimOpen(false);
-            window.location.reload();
           }}
         >
           <MsgConfirm>{`${
-            isBlocked ? "차단이" : "차단 해제가"
+            isBlockedStatus ? "차단이" : "차단 해제가"
           } 완료되었습니다.`}</MsgConfirm>
         </ConfirmModal>
       )}
