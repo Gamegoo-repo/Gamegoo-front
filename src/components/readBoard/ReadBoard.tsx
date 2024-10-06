@@ -59,7 +59,6 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   const [isPost, setIsPost] = useState<MemberPost>();
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
-  const [isMannerBalloonVisible, setIsMannerBalloonVisible] = useState(true);
   const [isMannerLevelBoxOpen, setIsMannerLevelBoxOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isBlockedStatus, setIsBlockedStatus] = useState(false);
