@@ -128,7 +128,6 @@ const MessageList = (props: MessageListProps) => {
         }
     }, [chatRef, messageList, isInitialLoading]);
 
-
     const handleScroll = useCallback(() => {
         if (chatRef.current && !isInitialLoading) {
             const { scrollTop } = chatRef.current;
@@ -151,6 +150,23 @@ const MessageList = (props: MessageListProps) => {
             }
         };
     }, [chatRef, handleScroll]);
+
+    /* 새로운 메시지 입력 또는 새로운 메시지 입력 시 스크롤을 맨 아래로 이동시키는 함수 */
+    const scrollToBottom = useCallback(() => {
+        if (chatRef.current) {
+            chatRef.current.scrollTop = chatRef.current.scrollHeight;
+        }
+    }, [chatRef]);
+
+    useEffect(() => {
+        if (newMessage) {
+            setMessageList((prevMessages) => [...prevMessages, newMessage]);
+
+            requestAnimationFrame(() => {
+                scrollToBottom();
+            });
+        }
+    }, [newMessage, scrollToBottom]);
 
     /* 남은 메시지 보여주기(페이징) */
     const getMoreMessages = useCallback(async () => {
@@ -202,14 +218,25 @@ const MessageList = (props: MessageListProps) => {
         return currentDate !== previousDate;
     };
 
-    /* 프로필 이미지 표시 (상대방만 보여주기) */
+    /* 프로필 이미지 표시 (상대방만 보여주기, 같은 시간에 온 경우 첫번째 메시지만 이미지 표시F) */
     const handleDisplayProfileImage = (messages: ChatMessageDto[], index: number): boolean => {
         if (index === 0) return true;
 
-        return messages[index].senderId === chatEnterData?.memberId;
+        const currentSenderId = messages[index].senderId;
+        const previousSenderId = messages[index - 1].senderId;
+
+        const currentTime = dayjs(messages[index].createdAt).format('A hh:mm');
+        const previousTime = dayjs(messages[index - 1].createdAt).format('A hh:mm');
+
+        // 보낸 사람이 다르거나, 시간이 다르면 프로필 이미지를 표시
+        if (currentSenderId !== previousSenderId || currentTime !== previousTime) {
+            return true;
+        }
+
+        return false;
     };
 
-    /* 채팅 시간 */
+    /* 메시지 시간 표시 (마지막 메시지에만 시간 표시, 상대방 메시지 중간에 오면 다시 표시) */
     const handleDisplayTime = (messages: ChatMessageDto[], index: number): boolean => {
         if (index === messages.length - 1) return true;
 
@@ -221,10 +248,9 @@ const MessageList = (props: MessageListProps) => {
 
         // 시간이 같고, 보낸 사람도 같으면 마지막 메시지에만 시간 표시
         if (isSameTime && isSameSender) {
-            return false; // 시간을 표시하지 않음
+            return false;
         }
 
-        // 시간이 다르거나, 보낸 사람이 다르면 현재 메시지에 시간을 표시
         return true;
     };
 
@@ -286,8 +312,9 @@ const MessageList = (props: MessageListProps) => {
             <ChatBorder>
                 <ChatMain ref={chatRef}>
                     {messageList.map((message, index) => {
-                        const hasProfileImage = handleDisplayProfileImage(messageList, index);
+                        const showProfileImage = handleDisplayProfileImage(messageList, index);
                         const showTime = handleDisplayTime(messageList, index);
+
                         return (
                             <MsgContainer key={index}>
                                 {handleDisplayDate(messageList, index) && <Timestamp>{setChatDateFormatter(message.createdAt)}</Timestamp>}
@@ -313,12 +340,11 @@ const MessageList = (props: MessageListProps) => {
                                                     </StyledButton>
                                                 </Feedback>
                                             </FeedbackContainer>
-                                            {/* <FeedbackTime>{setChatTimeFormatter(isFeedbackDate)}</FeedbackTime> */}
                                         </FeedbackDiv>
                                     </>
                                 ) : message.senderId === chatEnterData?.memberId ? (
                                     <YourMessageContainer>
-                                        {handleDisplayProfileImage(messageList, index) && message.senderProfileImg && (
+                                        {showProfileImage && message.senderProfileImg && (
                                             <ImageWrapper $bgColor={getProfileBgColor(message.senderProfileImg)}>
                                                 <ProfileImage
                                                     src={`/assets/images/profile/profile${message.senderProfileImg}.svg`}
@@ -328,7 +354,7 @@ const MessageList = (props: MessageListProps) => {
                                                 />
                                             </ImageWrapper>
                                         )}
-                                        <YourDiv $hasProfileImage={hasProfileImage}>
+                                        <YourDiv $hasProfileImage={showProfileImage}>
                                             <YourMessage>{message.message}</YourMessage>
                                             {showTime ? <YourDate>{setChatTimeFormatter(message.createdAt)}</YourDate> : null}
                                         </YourDiv>
@@ -357,7 +383,7 @@ const MessageList = (props: MessageListProps) => {
                             onPrimaryClick={() => dispatch(setCloseMannerStatusModal())} />
                     }
                 </ChatMain>
-            </ChatBorder>
+            </ChatBorder >
         </>
     );
 };
@@ -421,7 +447,7 @@ const Timestamp = styled.p`
 
 const YourMessageContainer = styled.div`
   display: flex;
-  align-items: center;
+  align-items: start;
   justify-content: flex-start;
   margin-bottom: 10px;
 `;

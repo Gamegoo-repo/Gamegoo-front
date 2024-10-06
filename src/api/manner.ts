@@ -13,7 +13,7 @@ interface MannerReqInterface {
 /* 매너평가 조회 (매너평가 수정 시) */
 export const getMannerValues = async (memberId: number) => {
     try {
-        const response = await Axios.get(`/v1/manner/good/${memberId}`);
+        const response = await AuthAxios.get(`/v1/manner/good/${memberId}`);
         console.log("매너 평가 조회 완료:", response.data);
         return response.data;
     } catch (error) {
@@ -25,7 +25,7 @@ export const getMannerValues = async (memberId: number) => {
 /* 비매너평가 조회 */
 export const getBadMannerValues = async (memberId: number) => {
     try {
-        const response = await Axios.get(`/v1/manner/bad/${memberId}`);
+        const response = await AuthAxios.get(`/v1/manner/bad/${memberId}`);
         console.log("비매너 평가 조회 완료:", response.data);
         return response.data;
     } catch (error) {
@@ -49,7 +49,7 @@ export const getOthersManner = async (memberId: number) => {
 /* 매너 평가 등록 */
 export const postMannerValue = async (params: MannerInterface) => {
     try {
-        const response = await Axios.post(`/v1/manner/good`, params);
+        const response = await AuthAxios.post(`/v1/manner/good`, params);
         console.log("매너 평가 등록 성공:", response.data);
         await localStorage.setItem('mannerId', response.data.result.mannerId);
         return response.data;
@@ -62,7 +62,7 @@ export const postMannerValue = async (params: MannerInterface) => {
 /* 비매너 평가 등록 */
 export const postBadMannerValue = async (params: MannerInterface) => {
     try {
-        const response = await Axios.post(`/v1/manner/bad`, params);
+        const response = await AuthAxios.post(`/v1/manner/bad`, params);
         console.log("비매너 평가 등록 성공:", response.data);
         await localStorage.setItem('badMannerId', response.data.result.mannerId);
         return response.data;
@@ -75,7 +75,7 @@ export const postBadMannerValue = async (params: MannerInterface) => {
 /* 매너, 비매너 평가 수정 */
 export const editManners = async (mannerId: number, params: MannerReqInterface) => {
     try {
-        const response = await Axios.put(`/v1/manner/${mannerId}`, params);
+        const response = await AuthAxios.put(`/v1/manner/${mannerId}`, params);
         console.log('수정')
         return response.data;
     } catch (error) {

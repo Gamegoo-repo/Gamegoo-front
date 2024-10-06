@@ -45,7 +45,6 @@ export default CRModal;
 const Overlay = styled.div`
     display:flex;
     justify-content: center;
-    align-items: center;
     position:fixed;
     top:50%;
     left:50%;
@@ -60,8 +59,12 @@ const Wrapper = styled.div`
     box-shadow: 0 4px 96.4px 0 #00000040;
     max-width:555px;
     width: 100%;
-    min-height: 837px;
     position: relative;
+    max-height: 95%;
+    min-height: 98%;
+    height: 100%;
+    margin: auto;
+    overflow-y: auto;
 `;
 
 const Header = styled.header<{ $type: string }>` 
