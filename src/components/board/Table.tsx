@@ -102,7 +102,7 @@ const Table = (props: TableProps) => {
         e.stopPropagation();
 
         if (!isUser.gameName) {
-            setAlertContent("탈퇴한 사용자 입니다.");
+            setAlertContent("로그인이 필요한 서비스입니다.");
             return setShowAlert(true);
         }
 
@@ -118,12 +118,13 @@ const Table = (props: TableProps) => {
         <>
             {showAlert && (
                 <Alert
-                    icon={alertContent === "탈퇴한 사용자 입니다." ? "exclamation" : "trash"}
+                    icon={alertContent === "로그인이 필요한 서비스입니다." ? "exclamation" : "trash"}
                     width={45}
                     height={50}
                     content={alertContent}
                     alt={alertContent}
                     onClose={() => setShowAlert(false)}
+                    buttonText="확인"
                 />
             )}
 
