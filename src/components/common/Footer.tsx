@@ -16,7 +16,7 @@ const Footer = () => {
           />
           email: gamegoo0707@gmail.com
           <br />
-          copyright 2024. GamGoo All Rights Reserved.
+          copyright 2024. GameGoo All Rights Reserved.
         </LeftDiv>
         <RightDiv>
           <Bold>Resources</Bold>
