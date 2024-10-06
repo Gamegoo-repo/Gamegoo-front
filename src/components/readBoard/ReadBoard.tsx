@@ -567,6 +567,7 @@ const ReadBoard = (props: ReadBoardProps) => {
             </UserSection>
             <ChampionNQueueSection>
               <Champion
+                title={true}
                 size={14}
                 list={isPost.championResponseDTOList.map(
                   (champion) => champion.championId
@@ -693,6 +694,7 @@ const UserLeft = styled.div`
   display: flex;
   align-items: center;
 `;
+
 const UserNManner = styled.div`
   display: flex;
 `;
