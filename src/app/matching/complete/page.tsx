@@ -40,7 +40,9 @@ const Complete = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const searchParams = useSearchParams();
-  const isChatRoomOpen = useSelector((state: RootState) => state.chat.isChatRoomOpen);
+  const isChatRoomOpen = useSelector(
+    (state: RootState) => state.chat.isChatRoomOpen
+  );
   const type = searchParams.get("type");
   const rank = searchParams.get("rank");
   const [userMe, setUserMe] = useState<User>({
@@ -146,12 +148,6 @@ const Complete = () => {
     };
   }, []);
 
-  /* 매칭 성공 후 chatUuid 가져오기 */
-  const handleChatUuidget = (res: any) => {
-    const data = res.data;
-    dispatch(setChatRoomUuid(data.chatroomUuid));
-  };
-
   useEffect(() => {
     // 10초 타이머 시작
     timerRef.current = setInterval(() => {
@@ -169,37 +165,24 @@ const Complete = () => {
       socket?.on("matching-success-sender", handleMatchingSuccessSender);
     }
 
-    socket?.on("matching-success", handleChatUuidget);
-    socket?.on("matching-fail", handleMatchingFail);
-
     return () => {
       clearInterval(timerRef.current!);
-      clearInterval(secondaryTimerRef.current!);
-      clearInterval(finalTimerRef.current!);
-      if (role === "sender") {
-        socket?.off("matching-success-sender", handleMatchingSuccessSender);
-      }
-      socket?.off("matching-fail", handleMatchingFail);
-      socket?.off("matching-success", handleChatUuidget);
     };
   }, []);
 
   // 타임아웃 처리
   const handleTimeout = () => {
-    // alert("타임 아웃 처리");
     if (role === "receiver") {
       socket?.emit("matching-success-receiver");
       startSecondaryTimer();
-    } else if (role === "sender") {
-      socket?.emit("matching-success-final");
-      startFinalTimer();
     }
   };
 
   // 매칭 성공 (Sender) 이벤트 핸들러
   const handleMatchingSuccessSender = () => {
+    socket?.emit("matching-success-final");
     clearInterval(timerRef.current!);
-    dispatch(openChatRoom());
+    startFinalTimer();
   };
 
   // 매칭 실패 이벤트 핸들러
@@ -211,17 +194,53 @@ const Complete = () => {
   // 5초 후 매칭 최종 성공 emit (Receiver)
   const startSecondaryTimer = () => {
     secondaryTimerRef.current = setTimeout(() => {
-      socket?.emit("matching-success-final");
       startFinalTimer();
     }, 5000);
+
+    // 5초 이내 matching-success 혹은 matching-fail 수신 시 타이머 종료
+    socket?.on("matching-success", (res: any) => {
+      if (secondaryTimerRef.current) clearTimeout(secondaryTimerRef.current); // 타이머 종료
+      handleChatUuidgetWithTimerClear(res); // 매칭 성공 처리
+    });
+
+    socket?.on("matching-fail", () => {
+      if (secondaryTimerRef.current) clearTimeout(secondaryTimerRef.current); // 타이머 종료
+      handleMatchingFailWithTimerClear(); // 매칭 실패 처리
+    });
   };
 
   // 3초 후 매칭 실패 emit (Final Timer)
   const startFinalTimer = () => {
-    finalTimerRef.current = setTimeout(() => {
-      socket?.emit("matching-fail");
-      setShowFailModal(true);
-    }, 3000);
+    // 자꾸 matching-success를 받아도 얘가 보내져서 일단 주석 처리...
+    // finalTimerRef.current = setTimeout(() => {
+    //   socket?.emit("matching-fail");
+    //   setShowFailModal(true);
+    // }, 3000);
+
+    // 3초 이내 matching-success 혹은 matching-fail 수신 시 타이머 종료 및 실행
+    socket?.on("matching-success", (res: any) => {
+      if (finalTimerRef.current) clearTimeout(finalTimerRef.current); // 타이머 종료
+      handleChatUuidgetWithTimerClear(res); // 매칭 성공 처리
+    });
+
+    socket?.on("matching-fail", () => {
+      if (finalTimerRef.current) clearTimeout(finalTimerRef.current); // 타이머 종료
+      handleMatchingFailWithTimerClear(); // 매칭 실패 처리
+    });
+  };
+
+  // matching-success 수신 시 타이머 종료 및 채팅방 열기
+  const handleChatUuidgetWithTimerClear = (res: any) => {
+    clearAllTimers(); // 모든 타이머 정리
+    const data = res.data;
+    dispatch(setChatRoomUuid(data.chatroomUuid)); // 채팅방 UUID 설정
+    dispatch(openChatRoom()); // 채팅방 열기
+  };
+
+  // matching-fail 수신 시 타이머 종료 및 실패 모달 표시
+  const handleMatchingFailWithTimerClear = () => {
+    clearAllTimers(); // 모든 타이머 정리
+    setShowFailModal(true); // 매칭 실패 모달 표시
   };
 
   // 모든 타이머 정리
@@ -229,6 +248,9 @@ const Complete = () => {
     if (timerRef.current) clearInterval(timerRef.current);
     if (secondaryTimerRef.current) clearTimeout(secondaryTimerRef.current);
     if (finalTimerRef.current) clearTimeout(finalTimerRef.current);
+
+    socket?.off("matching-success", handleChatUuidgetWithTimerClear);
+    socket?.off("matching-fail", handleMatchingFailWithTimerClear);
   };
 
   // 매칭 나가기 버튼 클릭 핸들러
@@ -247,8 +269,7 @@ const Complete = () => {
 
   return (
     <Suspense>
-      {isChatRoomOpen &&
-        <ChatLayout apiType={1} />}
+      {isChatRoomOpen && <ChatLayout apiType={1} />}
       <Wrapper>
         <MatchContent>
           <HeaderTitle title="매칭 완료" sub="듀오 상대를 찾았어요!" />
