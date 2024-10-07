@@ -20,8 +20,8 @@ export interface User {
   tier: string;
   rank: number;
   manner: number;
-  mannerRank: null | number;
-  mannerRatingCount: number;
+  mannerRank?: null | number;
+  mannerRatingCount?: number;
   updatedAt: string;
   mainP: number;
   subP: number;

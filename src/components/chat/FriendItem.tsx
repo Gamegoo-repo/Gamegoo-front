@@ -43,10 +43,9 @@ const FriendItem = (props: FriendItemProps) => {
             <Left>
                 <ImageWrapper $bgColor={getProfileBgColor(friend.memberProfileImg)}>
                     <StyledImage
-                        src={`/assets/images/profile/profile${friend.memberProfileImg}.svg`}
+                        data={`/assets/images/profile/profile${friend.memberProfileImg}.svg`}
                         width={38}
                         height={38}
-                        alt="사용자 프로필"
                     />
                 </ImageWrapper>
                 <UserName>{friend.name}</UserName>
@@ -60,18 +59,18 @@ const FriendItem = (props: FriendItemProps) => {
                 )}
             </Left>
             {!friend.isBlind &&
-            <Image
-                onClick={(e) => onFavoriteToggle(e, friend.memberId)}
-                src={
-                    friend.isLiked
-                        ? "/assets/icons/favorites.svg"
-                        : "/assets/icons/nonFavorites.svg"
-                }
-                width={15}
-                height={15}
-                alt="즐겨찾기 버튼"
-            />
-        }
+                <Image
+                    onClick={(e) => onFavoriteToggle(e, friend.memberId)}
+                    src={
+                        friend.isLiked
+                            ? "/assets/icons/favorites.svg"
+                            : "/assets/icons/nonFavorites.svg"
+                    }
+                    width={15}
+                    height={15}
+                    alt="즐겨찾기 버튼"
+                />
+            }
         </UserContent>
     )
 };
@@ -105,7 +104,7 @@ const ImageWrapper = styled.div<{ $bgColor: string }>`
     border-radius: 50%;
 `;
 
-const StyledImage = styled(Image)`
+const StyledImage = styled.object`
     position: absolute;
     top:50%;
     left:50%;

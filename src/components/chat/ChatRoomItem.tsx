@@ -42,10 +42,9 @@ const ChatRoomItem = (props: ChatRoomItemProps) => {
             <Left>
                 <ImageWrapper $bgColor={getProfileBgColor(room.targetMemberImg)}>
                     <ProfileImage
-                        src={`/assets/images/profile/profile${room.targetMemberImg}.svg`}
+                        data={`/assets/images/profile/profile${room.targetMemberImg}.svg`}
                         width={38}
-                        height={38}
-                        alt="사용자 프로필" />
+                        height={38}/>
                 </ImageWrapper>
                 <Middle>
                     <Row>
@@ -100,7 +99,7 @@ const ImageWrapper = styled.div<{ $bgColor: string }>`
     border-radius: 50%;
 `;
 
-const ProfileImage = styled(Image)`
+const ProfileImage = styled.object`
     position: absolute;
     top:50%;
     left:50%;

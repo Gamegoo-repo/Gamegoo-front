@@ -24,20 +24,18 @@ const UpdateProfileImage = (props: FileInputProps) => {
       {selectedImageIndex && (
         <ImageWrapper $bgColor={getProfileBgColor(selectedImageIndex)}>
           <ProfileImage
-            src={`/assets/images/profile/profile${selectedImageIndex}.svg`}
+            data={`/assets/images/profile/profile${selectedImageIndex}.svg`}
             width={62}
             height={60}
-            alt="프로필 이미지"
           />
         </ImageWrapper>
       )}
       <Label htmlFor="profileImg">
         <CameraImgBg onClick={() => setIsProfileListOpen(!isProfileListOpen)}>
           <CameraImage
-            src="/assets/icons/camera_white.svg"
+            data="/assets/icons/camera_white.svg"
             width={13}
             height={10}
-            alt="프로필 이미지 변경"
           />
         </CameraImgBg>
       </Label>
@@ -60,10 +58,9 @@ const UpdateProfileImage = (props: FileInputProps) => {
                 <ProfileListWrapper $bgColor={getProfileBgColor(item)}>
                   <ProfileListImage
                     key={index}
-                    src={`/assets/images/profile/profile${item}.svg`}
+                    data={`/assets/images/profile/profile${item}.svg`}
                     width={45}
                     height={45}
-                    alt="프로필 이미지"
                     $isSelected={index + 1 === selectedImageIndex}
                     onClick={() => onImageClick(index)}
                   />
@@ -96,7 +93,7 @@ const ImageWrapper = styled.div<{ $bgColor: string }>`
   border-radius: 50%;
 `;
 
-const ProfileImage = styled(Image)`
+const ProfileImage = styled.object`
   position: absolute;
   top: 50%;
   left: 50%;
@@ -117,7 +114,7 @@ const CameraImgBg = styled.div`
   top: -20px;
 `;
 
-const CameraImage = styled(Image)`
+const CameraImage = styled.object`
   position: absolute;
   top: 50%;
   left: 50%;
@@ -168,7 +165,7 @@ const ProfileListWrapper = styled.div<{ $bgColor: string }>`
   border-radius: 50%;
 `;
 
-const ProfileListImage = styled(Image)<{ $isSelected: boolean }>`
+const ProfileListImage = styled.object<{ $isSelected: boolean }>`
   position: absolute;
   top: 50%;
   left: 50%;

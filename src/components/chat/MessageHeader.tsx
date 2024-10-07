@@ -59,10 +59,9 @@ const MessageHeader = (props: MessageHeaderProps) => {
                         <ImageWrapper $bgColor={getProfileBgColor(chatEnterData.memberProfileImg)}>
                             <ProfileImage
                                 onClick={() => router.push(`/user/${chatEnterData.memberId}`)}
-                                src={`/assets/images/profile/profile${chatEnterData.memberProfileImg}.svg`}
+                                data={`/assets/images/profile/profile${chatEnterData.memberProfileImg}.svg`}
                                 width={38}
-                                height={38}
-                                alt="프로필 이미지" />
+                                height={38}/>
                         </ImageWrapper>
                         <Div>
                             <UserName>{chatEnterData.gameName}</UserName>
@@ -131,7 +130,7 @@ const ImageWrapper = styled.div<{ $bgColor: string }>`
     border-radius: 50%;
 `;
 
-const ProfileImage = styled(Image)`
+const ProfileImage = styled.object`
     position: absolute;
     top:50%;
     left:50%;

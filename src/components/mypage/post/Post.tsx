@@ -21,7 +21,6 @@ import {
 } from "@/utils/custom";
 import { getProfileBgColor } from "@/utils/profile";
 import { toLowerCaseString } from "@/utils/string";
-import Image from "next/image";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
@@ -102,7 +101,7 @@ const Post: React.FC<PostProps> = ({
     handlePostingClose();
     dispatch(setOpenModal(""));
   };
-
+console.log(profileImage)
   return (
     <Container>
       <Content>
@@ -111,10 +110,9 @@ const Post: React.FC<PostProps> = ({
           {profileImage ? (
             <ProfileImgWrapper $bgColor={getProfileBgColor(profileImage)}>
               <ProfileImg
-                src={`/assets/images/profile/profile${profileImage}.svg`}
+                data={`/assets/images/profile/profile${profileImage}.svg`}
                 width={35}
                 height={35}
-                alt="프로필"
               />
             </ProfileImgWrapper>
           ) : (
@@ -126,11 +124,10 @@ const Post: React.FC<PostProps> = ({
           </Div>
         </Name>
         <Tier>
-          <Image
-            src={`/assets/images/tier/${toLowerCaseString(tier) || "ur"}.svg`}
+          <object
+            data={`/assets/images/tier/${toLowerCaseString(tier) || "ur"}.svg`}
             width={26}
             height={26}
-            alt="tier"
           />
           <span>
             {setAbbrevTier(tier)}
@@ -220,7 +217,7 @@ const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
   border-radius: 50%;
 `;
 
-const ProfileImg = styled(Image)`
+const ProfileImg = styled.object`
   position: absolute;
   top: 50%;
   left: 50%;

@@ -392,19 +392,16 @@ const Profile: React.FC<Profile> = ({
         <ImageContainer>
           <ProfileImgWrapper $bgColor={getProfileBgColor(selectedImageIndex)}>
             <PersonImage
-              src={`/assets/images/profile/profile${selectedImageIndex}.svg`}
+              data={`/assets/images/profile/profile${selectedImageIndex}.svg`}
               width={136}
               height={136}
-              alt="프로필"
-              priority
             />
           </ProfileImgWrapper>
           {profileType !== "other" && (
             <CameraImage
-              src="/assets/icons/profile_camera.svg"
+              data="/assets/icons/profile_camera.svg"
               width={54}
               height={54}
-              alt="프로필 이미지"
               onClick={() => setIsProfileListOpen(!isProfileListOpen)}
             />
           )}
@@ -431,10 +428,9 @@ const Profile: React.FC<Profile> = ({
                   >
                     <ProfileListImage
                       key={item}
-                      src={`/assets/images/profile/profile${item}.svg`}
+                      data={`/assets/images/profile/profile${item}.svg`}
                       width={70}
                       height={70}
-                      alt="프로필 이미지"
                     />
                   </SelectProfileImgWrapper>
                 ))}
@@ -448,13 +444,11 @@ const Profile: React.FC<Profile> = ({
               {user.gameName}
               <Span>{`#${user.tag}`}</Span>
               <Rank>
-                <Image
-                  src={`/assets/images/tier/${
-                    toLowerCaseString(user.tier) || "ur"
-                  }.svg`}
+                <object
+                  data={`/assets/images/tier/${toLowerCaseString(user.tier) || "ur"
+                    }.svg`}
                   width={42}
                   height={42}
-                  alt="tier"
                 />
                 {setAbbrevTier(user.tier)}
                 {user.rank}
@@ -556,9 +550,8 @@ const Profile: React.FC<Profile> = ({
                       setIsBlockConfrimOpen(false);
                     }}
                   >
-                    <MsgConfirm>{`${
-                      user.blocked ? "차단이" : "차단 해제가"
-                    } 완료되었습니다.`}</MsgConfirm>
+                    <MsgConfirm>{`${user.blocked ? "차단이" : "차단 해제가"
+                      } 완료되었습니다.`}</MsgConfirm>
                   </ConfirmModal>
                 )}
                 {/* 차단 해제하기 확인 팝업 */}
@@ -586,8 +579,8 @@ const Profile: React.FC<Profile> = ({
                         index === 0
                           ? positionValue.main ?? 0
                           : index === 1
-                          ? positionValue.sub ?? 0
-                          : positionValue.want ?? 0
+                            ? positionValue.sub ?? 0
+                            : positionValue.want ?? 0
                       )}
                       width={55}
                       height={40}
@@ -625,13 +618,13 @@ const Profile: React.FC<Profile> = ({
       {(profileType === "normal" ||
         (profileType === "other" &&
           user.gameStyleResponseDTOList.length > 0)) && (
-        <GameStyle
-          profileType={profileType === "normal" ? "none" : profileType}
-          gameStyleResponseDTOList={user.gameStyleResponseDTOList}
-          // mic={user.mic}
-          mic={false}
-        />
-      )}
+          <GameStyle
+            profileType={profileType === "normal" ? "none" : profileType}
+            gameStyleResponseDTOList={user.gameStyleResponseDTOList}
+            // mic={user.mic}
+            mic={false}
+          />
+        )}
     </Container>
   );
 };
@@ -689,12 +682,12 @@ const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
   justify-content: center;
 `;
 
-const PersonImage = styled(Image)`
+const PersonImage = styled.object`
   margin-top: 5px;
   filter: drop-shadow(-4px 10px 10px rgba(63, 53, 78, 0.582));
 `;
 
-const CameraImage = styled(Image)`
+const CameraImage = styled.object`
   position: absolute;
   bottom: 0px;
   left: 0px;
@@ -760,7 +753,7 @@ const SelectProfileImgWrapper = styled.div<{
   }
 `;
 
-const ProfileListImage = styled(Image)`
+const ProfileListImage = styled.object`
   position: absolute;
   top: 50%;
   left: 50%;

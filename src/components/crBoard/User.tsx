@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
-import Image from "next/image";
 import { setAbbrevTier } from "@/utils/custom";
 
 interface UserProps {
@@ -22,15 +21,14 @@ const User = (props: UserProps) => {
       <UserTier>
         {tier && (
           <>
-            <Image
-              src={
+            <object
+              data={
                 !tier
                   ? "/assets/images/tier/ur.svg"
                   : `/assets/images/tier/${tier}.svg`
               }
               width={32}
               height={20}
-              alt="티어 이미지"
             />
             <Tier>
               {!tier ? "UR" : setAbbrevTier(tier)}

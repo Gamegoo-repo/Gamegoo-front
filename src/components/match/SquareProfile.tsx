@@ -51,13 +51,12 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
         <Top>
           {user.gameName}
           <Rank>
-            <Image
-              src={`/assets/images/tier/${
+            <object
+              data={`/assets/images/tier/${
                 user.tier !== "null" ? toLowerCaseString(user.tier) : "ur"
               }.svg`}
               width={43}
               height={43}
-              alt="tier"
             />
             {setAbbrevTier(user.tier)}
             {user.rank ? user.rank : ""}
@@ -66,11 +65,9 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
         <ImageContainer>
           <ProfileImgWrapper $bgColor={getProfileBgColor(user.profileImg)}>
             <ProfileImg
-              src={`/assets/images/profile/profile${user.profileImg}.svg`}
+              data={`/assets/images/profile/profile${user.profileImg}.svg`}
               width={100}
               height={100}
-              alt="profile"
-              priority
             />
           </ProfileImgWrapper>
           {opponent && (
@@ -181,7 +178,7 @@ const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
   border-radius: 50%;
 `;
 
-const ProfileImg = styled(Image)`
+const ProfileImg = styled.object`
   position: absolute;
   top: 50%;
   left: 50%;

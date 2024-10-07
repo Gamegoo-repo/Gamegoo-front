@@ -178,10 +178,9 @@ const Header = () => {
             >
               <HeaderProfileImgWrapper $bgColor={getProfileBgColor(profileImg)}>
                 <HeaderProfileImg
-                  src={`/assets/images/profile/profile${profileImg}.svg`}
+                  data={`/assets/images/profile/profile${profileImg}.svg`}
                   width={25}
                   height={25}
-                  alt="profile"
                 />
               </HeaderProfileImgWrapper>
               {name}
@@ -209,10 +208,9 @@ const Header = () => {
             {profileImg && (
               <ProfileImgWrapper $bgColor={getProfileBgColor(profileImg)}>
                 <ProfileImg
-                  src={`/assets/images/profile/profile${profileImg}.svg`}
+                  data={`/assets/images/profile/profile${profileImg}.svg`}
                   width={52}
                   height={62}
-                  alt="profile"
                 />
               </ProfileImgWrapper>
             )}
@@ -336,7 +334,7 @@ const HeaderProfileImgWrapper = styled.div<{ $bgColor: string }>`
   border-radius: 50%;
 `;
 
-const HeaderProfileImg = styled(Image)`
+const HeaderProfileImg = styled.object`
   position: absolute;
   top: 50%;
   left: 50%;
@@ -376,7 +374,7 @@ const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
   border-radius: 50%;
 `;
 
-const ProfileImg = styled(Image)`
+const ProfileImg = styled.object`
   position: absolute;
   top: 50%;
   left: 50%;
