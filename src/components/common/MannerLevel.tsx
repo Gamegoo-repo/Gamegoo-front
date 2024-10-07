@@ -1,5 +1,6 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { theme } from "@/styles/theme";
+import { useEffect, useState } from "react";
 
 type positionType = "top" | "right";
 interface MannerLevelProps {
@@ -7,46 +8,89 @@ interface MannerLevelProps {
   level: number;
   onClick: (e: React.MouseEvent) => void;
   position?: positionType;
-  isBalloon: boolean;
 }
 
 const MannerLevel = (props: MannerLevelProps) => {
-  const { forNoData, level, onClick, position = "top", isBalloon } = props;
+  const { forNoData, level, onClick, position = "top" } = props;
+
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVisible(false);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {}, [isVisible]);
 
   return (
     <>
-      {level &&
+      {level && (
         <LevelWrapper>
           <Level>
             <ClickArea
               onClick={onClick}
-              className={!forNoData ? 'bigMargin' : ''}>
+              className={!forNoData ? "bigMargin" : ""}
+            >
               <Text>LV.{level}</Text>
             </ClickArea>
-            {isBalloon &&
-              <BubbleWrapper $position={position}>
-                <Bubble>
-                  <P>클릭해서 매너키워드 보기</P>
-                </Bubble>
-              </BubbleWrapper>
-            }
+            <BubbleWrapper
+              $position={position}
+              data-hide={!isVisible ? "true" : undefined}
+            >
+              <Bubble>
+                <P>클릭해서 매너키워드 보기</P>
+              </Bubble>
+            </BubbleWrapper>
           </Level>
         </LevelWrapper>
-      }
+      )}
     </>
   );
 };
 
 export default MannerLevel;
 
+const fadeInUp = keyframes`
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const fadeOutDown = keyframes`
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+`;
+
 const LevelWrapper = styled.div`
   position: relative;
 `;
 
-const BubbleWrapper = styled.div<{ $position: positionType }>`
+const BubbleWrapper = styled.div<{
+  $position: positionType;
+  "data-hide"?: string;
+}>`
   position: absolute;
   bottom: ${({ $position }) => ($position === "top" ? "45px" : "10px")};
   right: ${({ $position }) => ($position === "top" ? "-6px" : "-150px")};
+
+  animation: ${({ "data-hide": hide }) =>
+      hide === "true" ? fadeOutDown : fadeInUp}
+    0.5s ease-out;
+  animation-fill-mode: forwards;
 `;
 
 const Bubble = styled.div`
@@ -57,7 +101,7 @@ const Bubble = styled.div`
   white-space: nowrap;
 
   &:before {
-    content: '';
+    content: "";
     position: absolute;
     bottom: -11.5px;
     left: 100px;
@@ -69,7 +113,7 @@ const Bubble = styled.div`
   }
 
   &:after {
-    content: '';
+    content: "";
     position: absolute;
     bottom: -10px;
     left: 101px;
@@ -91,7 +135,7 @@ const Level = styled.div`
 `;
 
 const ClickArea = styled.div`
-  &.bigMargin{
+  &.bigMargin {
     margin-left: 40.63px;
   }
   margin-left: 23px;
@@ -111,4 +155,3 @@ const Text = styled.p`
   ${(props) => props.theme.fonts.bold14};
   color: ${theme.colors.purple300};
 `;
-

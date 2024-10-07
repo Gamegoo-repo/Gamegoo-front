@@ -1,4 +1,5 @@
 import { createGlobalStyle } from "styled-components";
+import { theme } from "./theme";
 
 const GlobalStyles = createGlobalStyle`    
 * {
@@ -13,6 +14,19 @@ body {
   min-width: 1200px;
   font-family: "Pretendard", sans-serif;
   white-space: pre-line;
+
+  &::-webkit-scrollbar {
+    width: 20px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 26px;
+    background: ${theme.colors.gray300};
+    background-clip: padding-box;
+    border: 6px solid transparent;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
 }
 
 a {

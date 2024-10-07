@@ -27,14 +27,24 @@ import Checkbox from "../common/Checkbox";
 import { REPORT_REASON } from "@/data/report";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { setCloseModal, setCloseReadingModal, setOpenModal, setOpenPostingModal } from "@/redux/slices/modalSlice";
+import {
+  setCloseModal,
+  setCloseReadingModal,
+  setOpenModal,
+  setOpenPostingModal,
+} from "@/redux/slices/modalSlice";
 import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { cancelFriendReq, deleteFriend, reqFriend } from "@/api/friends";
 import Alert from "../common/Alert";
 import { AlertProps } from "@/interface/modal";
 import { useRouter } from "next/navigation";
-import { openChatRoom, setChatRoomUuid, setErrorMessage } from "@/redux/slices/chatSlice";
+import {
+  openChatRoom,
+  setChatRoomUuid,
+  setErrorMessage,
+} from "@/redux/slices/chatSlice";
 import { notify } from "@/hooks/notify";
+import ConfirmModal from "../common/ConfirmModal";
 
 interface ReadBoardProps {
   postId: number;
@@ -49,14 +59,13 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   const [isPost, setIsPost] = useState<MemberPost>();
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
-  const [isMannerBalloonVisible, setIsMannerBalloonVisible] = useState(true);
   const [isMannerLevelBoxOpen, setIsMannerLevelBoxOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isBlockedStatus, setIsBlockedStatus] = useState(false);
   const [isFriendStatus, setIsFriendStatus] = useState(false);
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
   const [reportDetail, setReportDetail] = useState<string>("");
-  const [type, setType] = useState<string>('wind');
+  const [type, setType] = useState<string>("wind");
   const [showAlert, setShowAlert] = useState(false);
   const [alertProps, setAlertProps] = useState<AlertProps>({
     icon: "",
@@ -64,13 +73,18 @@ const ReadBoard = (props: ReadBoardProps) => {
     height: 0,
     content: "",
     alt: "",
-    onClose: () => { },
+    onClose: () => {},
     buttonText: "",
   });
 
+  const [isBlockBoxOpen, setIsBlockBoxOpen] = useState(false);
+  const [isBlockConfirmOpen, setIsBlockConfrimOpen] = useState(false);
+
   const isModalType = useSelector((state: RootState) => state.modal.modalType);
   const isUser = useSelector((state: RootState) => state.user);
-  const isErrorMessage = useSelector((state: RootState) => state.chat.errorMessage);
+  const isErrorMessage = useSelector(
+    (state: RootState) => state.chat.errorMessage
+  );
 
   /* 게시글 api */
   const getPostData = async () => {
@@ -78,8 +92,10 @@ const ReadBoard = (props: ReadBoardProps) => {
     if (!!isUser.gameName && postId) {
       const memberData = await getMemberPost(postId);
       setIsPost(memberData.result);
-      const hasPosition = 'mainPosition' in memberData.result ? 'canyon' : 'wind';
+      const hasPosition =
+        "mainPosition" in memberData.result ? "canyon" : "wind";
       setType(hasPosition);
+      setIsBlockedStatus(memberData.result.isBlocked);
       setLoading(false);
     }
 
@@ -93,21 +109,15 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   useEffect(() => {
     getPostData();
-  }, [isBlockedStatus, isFriendStatus, isUser.gameName, postId])
-
-  /* 클릭해서 매너키워드 보기 박스 닫기 */
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsMannerBalloonVisible(false);
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, []);
+  }, [isBlockedStatus, isFriendStatus, isUser.gameName, postId]);
 
   /* MannerLevelBox 외부 클릭 시 닫힘 */
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (mannerLevelBoxRef.current && !mannerLevelBoxRef.current.contains(event.target as Node)) {
+      if (
+        mannerLevelBoxRef.current &&
+        !mannerLevelBoxRef.current.contains(event.target as Node)
+      ) {
         setIsMannerLevelBoxOpen(false);
       }
     };
@@ -123,7 +133,11 @@ const ReadBoard = (props: ReadBoardProps) => {
   const logoutMessage = "로그아웃 되었습니다. 다시 로그인 해주세요.";
   const loginRequiredMessage = "로그인이 필요한 서비스입니다.";
 
-  const showAlertWithContent = (content: string, handleAlertClose: () => void, btnText: string) => {
+  const showAlertWithContent = (
+    content: string,
+    handleAlertClose: () => void,
+    btnText: string
+  ) => {
     setAlertProps({
       icon: "exclamation",
       width: 68,
@@ -131,7 +145,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       content: content,
       alt: "경고",
       onClose: handleAlertClose,
-      buttonText: btnText
+      buttonText: btnText,
     });
     setShowAlert(true);
   };
@@ -140,17 +154,25 @@ const ReadBoard = (props: ReadBoardProps) => {
   const handleReportModal = () => {
     // 신고하기 버튼 클릭 시점 토큰 만료
     if (!isUser.gameName) {
-      return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
+      return showAlertWithContent(
+        logoutMessage,
+        () => router.push("/"),
+        "로그인하기"
+      );
     }
 
-    dispatch(setOpenModal('report'));
+    dispatch(setOpenModal("report"));
     handleMoreBoxClose();
   };
 
   /* 신고하기 */
   const handleReport = async () => {
     if (!isUser.gameName) {
-      return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
+      return showAlertWithContent(
+        logoutMessage,
+        () => router.push("/"),
+        "로그인하기"
+      );
     }
 
     if (!isPost || isUser?.gameName === isPost?.gameName) return;
@@ -158,7 +180,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     const params = {
       targetMemberId: isPost.memberId,
       reportTypeIdList: checkedItems,
-      contents: reportDetail
+      contents: reportDetail,
     };
 
     try {
@@ -170,47 +192,35 @@ const ReadBoard = (props: ReadBoardProps) => {
     }
   };
 
-  /* 차단하기 */
+  /* 차단하기 및 차단 해제 */
   const handleBlock = async () => {
-    if (!isUser.gameName) {
-      return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
-    }
-
-    if (!isPost || isUser?.gameName === isPost?.gameName) return;
-
-    try {
-      await blockMember(isPost.memberId);
-      await handleMoreBoxClose();
-      await getPostData();
-      await setIsBlockedStatus(true);
-    } catch (error) {
-      console.error(error);
-    }
+    setIsBlockBoxOpen(!isBlockBoxOpen);
+    setIsMoreBoxOpen(false);
   };
 
-  /* 차단 해제 */
-  const handleUnblock = async () => {
-    if (!isUser.gameName) {
-      return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
+  const handleRunBlock = async () => {
+    // 차단하기 api
+    setIsBlockBoxOpen(false);
+    if (isPost) {
+      if (isPost.isBlocked) {
+        await unblockMember(isPost.memberId);
+        setIsBlockedStatus(false);
+      } else {
+        await blockMember(isPost.memberId);
+        setIsBlockedStatus(true);
+      }
     }
-
-    if (!isPost || isUser?.gameName === isPost?.gameName) return;
-
-    if (!isPost.isBlocked) return;
-
-    try {
-      await unblockMember(isPost.memberId);
-      await handleMoreBoxClose();
-      await getPostData();
-      await setIsBlockedStatus(false);
-    } catch (error) {
-    }
+    setIsBlockConfrimOpen(true);
   };
 
   /* 친구 추가 */
   const handleFriendAdd = async () => {
     if (!isUser.gameName) {
-      return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
+      return showAlertWithContent(
+        logoutMessage,
+        () => router.push("/"),
+        "로그인하기"
+      );
     }
 
     if (!isPost || isUser?.gameName === isPost?.gameName) return;
@@ -232,7 +242,11 @@ const ReadBoard = (props: ReadBoardProps) => {
   /* 친구 요청 취소 */
   const handleCancelFriendReq = async () => {
     if (!isUser.gameName) {
-      return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
+      return showAlertWithContent(
+        logoutMessage,
+        () => router.push("/"),
+        "로그인하기"
+      );
     }
 
     if (!isPost || isUser?.gameName === isPost?.gameName) return;
@@ -247,12 +261,16 @@ const ReadBoard = (props: ReadBoardProps) => {
     }
 
     handleMoreBoxClose();
-  }
+  };
 
   /* 친구 삭제 */
   const handleFriendDelete = async () => {
     if (!isUser.gameName) {
-      return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
+      return showAlertWithContent(
+        logoutMessage,
+        () => router.push("/"),
+        "로그인하기"
+      );
     }
 
     if (!isPost || isUser?.gameName === isPost?.gameName) return;
@@ -269,12 +287,16 @@ const ReadBoard = (props: ReadBoardProps) => {
     }
 
     handleMoreBoxClose();
-  }
+  };
 
   /* 매너레벨 박스 열기 */
   const handleMannerLevelBoxOpen = () => {
     if (!isUser.gameName) {
-      return showAlertWithContent(loginRequiredMessage, () => setShowAlert(false), "확인");
+      return showAlertWithContent(
+        loginRequiredMessage,
+        () => setShowAlert(false),
+        "확인"
+      );
     }
 
     setIsMannerLevelBoxOpen((prevState) => !prevState);
@@ -283,14 +305,20 @@ const ReadBoard = (props: ReadBoardProps) => {
   /* 신고하기 사유 */
   const handleCheckboxChange = (checked: number) => {
     setCheckedItems((prev) =>
-      prev.includes(checked) ? prev.filter((c) => c !== checked) : [...prev, checked]
+      prev.includes(checked)
+        ? prev.filter((c) => c !== checked)
+        : [...prev, checked]
     );
   };
 
   /* 게시글 수정 */
   const handleEdit = async () => {
     if (!isUser.gameName) {
-      return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
+      return showAlertWithContent(
+        logoutMessage,
+        () => router.push("/"),
+        "로그인하기"
+      );
     }
 
     if (isUser?.gameName !== isPost?.gameName) return;
@@ -305,14 +333,18 @@ const ReadBoard = (props: ReadBoardProps) => {
   /* 게시글 삭제 */
   const handleDelete = async () => {
     if (!isUser.gameName) {
-      return showAlertWithContent(logoutMessage, () => router.push('/'), "로그인하기");
+      return showAlertWithContent(
+        logoutMessage,
+        () => router.push("/"),
+        "로그인하기"
+      );
     }
 
     if (isUser?.gameName !== isPost?.gameName) return;
 
     try {
       await deletePost(postId);
-      await dispatch(setPostStatus('delete'));
+      await dispatch(setPostStatus("delete"));
       await dispatch(setCloseReadingModal());
     } catch (error) {
       console.error(error);
@@ -322,7 +354,11 @@ const ReadBoard = (props: ReadBoardProps) => {
   /* 더보기 버튼 토글 */
   const handleMoreBoxToggle = () => {
     if (!isUser.gameName) {
-      return showAlertWithContent(loginRequiredMessage, () => setShowAlert(false), "확인");
+      return showAlertWithContent(
+        loginRequiredMessage,
+        () => router.push("/"),
+        "로그인하기"
+      );
     }
 
     setIsMoreBoxOpen((prevState) => !prevState);
@@ -337,59 +373,49 @@ const ReadBoard = (props: ReadBoardProps) => {
   const MoreBoxMenuItems: MoreBoxMenuItems[] = [];
 
   if (isUser?.gameName === isPost?.gameName) {
+    /* 내가 작성한 글 */
     MoreBoxMenuItems.push(
-      { text: '수정', onClick: handleEdit },
-      { text: '삭제', onClick: handleDelete }
+      { text: "수정", onClick: handleEdit },
+      { text: "삭제", onClick: handleDelete }
     );
-  }
+  } else {
+    /* 남이 작성한 글 */
 
-  //친구 삭제 - 차단되어있을 때, 친구일 때, 친구 추가 요청 중일 때
-  //친구 추가(친구 요청) - 친구가 아닐 때, 차단되어있지 않을 때, 친구 추가 요청 중이 아닐 때
-  //친구 요청 취소 - 친구 추가 요청 중일 떄
-  //차단하기 - 친구 추가 요청 중일 때, 친구 삭제된 상태일 때, 차단되어있지 않을 때
-  //차단해제 - 차단되어 있을 때, 
+    //친구 삭제 - 차단되어있을 때, 친구일 때, 친구 추가 요청 중일 때
+    //친구 추가(친구 요청) - 친구가 아닐 때, 차단되어있지 않을 때, 친구 추가 요청 중이 아닐 때
+    //친구 요청 취소 - 친구 추가 요청 중일 떄
+    //차단하기 - 친구 추가 요청 중일 때, 친구 삭제된 상태일 때, 차단되어있지 않을 때
+    //차단해제 - 차단되어 있을 때,
 
-  if (isUser?.gameName !== isPost?.gameName) {
-    let friendText = '친구 추가';
-    let friendFunc = handleFriendAdd;
-    let blockText = '차단하기';
-    let blockFunc = handleBlock;
+    let friendText = "";
+    let friendFunc = null;
 
-    if (!!isPost?.isBlocked && !!isPost?.isFriend && !!isPost?.friendRequestMemberId) {
-    if (isPost?.isBlocked || isPost?.isFriend) {
-      friendText = '친구 삭제';
-      friendFunc = handleFriendDelete;
-    }
-    if (!isPost?.isBlocked || !isPost?.isFriend || !isPost?.friendRequestMemberId) {
-      friendText = '친구 추가';
-      friendFunc = handleFriendAdd;
-    }
-    if (isPost?.friendRequestMemberId) {
-      friendText = '친구 요청 취소';
-      friendFunc = handleCancelFriendReq;
-    }
-
-    if (isPost?.friendRequestMemberId || !isPost?.isBlocked) {
-      blockText = '차단하기';
-      blockFunc = handleBlock;
+    if (!isBlockedStatus) {
+      if (isPost?.isFriend) {
+        friendText = "친구 삭제";
+        friendFunc = handleFriendDelete;
+      } else {
+        if (!isPost?.friendRequestMemberId) {
+          friendText = "친구 추가";
+          friendFunc = handleFriendAdd;
+        } else {
+          friendText = "친구 요청 취소";
+          friendFunc = handleCancelFriendReq;
+        }
+      }
     }
 
-    if (!!isPost?.isBlocked) {
-      blockText = '차단 해제';
-      friendText = '';
-      blockFunc = handleUnblock;
-    }
-    }
-
-    if (friendText) {
+    if (friendText && friendFunc) {
       MoreBoxMenuItems.push({ text: friendText, onClick: friendFunc });
     }
 
     MoreBoxMenuItems.push(
-      { text: blockText, onClick: blockFunc },
-      { text: '신고하기', onClick: handleReportModal }
+      {
+        text: isPost?.isBlocked ? "차단 해제" : "차단하기",
+        onClick: handleBlock,
+      },
+      { text: "신고하기", onClick: handleReportModal }
     );
-
   }
 
   /* 신고하기 모달 닫기 */
@@ -411,11 +437,19 @@ const ReadBoard = (props: ReadBoardProps) => {
   /* 채팅방 연결 */
   const handleChatStart = async () => {
     if (!isUser.gameName) {
-      return showAlertWithContent(loginRequiredMessage, () => setShowAlert(false), "확인");
+      return showAlertWithContent(
+        loginRequiredMessage,
+        () => setShowAlert(false),
+        "확인"
+      );
     }
 
     if (isPost?.isBlocked) {
-      return notify({ text: '차단한 회원과는 채팅이 불가합니다', icon: '🚫', type: 'error' });
+      return notify({
+        text: "차단한 회원과는 채팅이 불가합니다",
+        icon: "🚫",
+        type: "error",
+      });
     }
 
     if (isErrorMessage) {
@@ -444,26 +478,29 @@ const ReadBoard = (props: ReadBoardProps) => {
                 items={MoreBoxMenuItems}
                 top={67}
                 left={544}
-                onClose={() => setIsMoreBoxOpen(false)} />
+                onClose={() => setIsMoreBoxOpen(false)}
+              />
             )}
-            <UpdatedDate>게시일 : {setPostingDateFormatter(isPost.createdAt)}</UpdatedDate>
+            <UpdatedDate>
+              게시일 : {setPostingDateFormatter(isPost.createdAt)}
+            </UpdatedDate>
             <UserSection>
               <UserLeft>
-                <ProfileImage
-                  image={isPost.profileImage} />
+                <ProfileImage image={isPost.profileImage} />
                 <UserNManner>
                   <User
                     account={isPost.gameName}
                     tag={isPost.tag}
                     tier={isPost.tier}
-                    rank={isPost.rank} />
+                    rank={isPost.rank}
+                  />
                   <MannerLevelWrapper>
                     <MannerLevel
                       forNoData={isPost.tier}
                       level={isPost.mannerLevel}
                       onClick={handleMannerLevelBoxOpen}
                       position="top"
-                      isBalloon={isMannerBalloonVisible} />
+                    />
                     {isMannerLevelBoxOpen && (
                       <div ref={mannerLevelBoxRef}>
                         <MannerLevelBox
@@ -478,35 +515,36 @@ const ReadBoard = (props: ReadBoardProps) => {
                 </UserNManner>
               </UserLeft>
               <UserRight>
-                <Mic
-                  status={isPost.mike} />
+                <Mic status={isPost.mike} />
                 <MoreBoxButton onClick={handleMoreBoxToggle} />
               </UserRight>
             </UserSection>
             <ChampionNQueueSection>
               <Champion
+                title={true}
                 size={14}
                 list={isPost.championResponseDTOList.map(
                   (champion) => champion.championId
                 )}
               />
-              <QueueType
-                value={isPost.gameMode} />
+              <QueueType value={isPost.gameMode} />
             </ChampionNQueueSection>
-            {type === "canyon" &&
+            {type === "canyon" && (
               <PositionSection>
                 <Title>포지션</Title>
                 <PositionBox
                   status="reading"
                   main={isPost.mainPosition}
                   sub={isPost.subPosition}
-                  want={isPost.wantPosition} />
+                  want={isPost.wantPosition}
+                />
               </PositionSection>
-            }
+            )}
             <WinningRateSection $gameType={type}>
               <WinningRate
                 completed={isPost.winRate}
-                recentGameCount={isPost.recentGameCount} />
+                recentGameCount={isPost.recentGameCount}
+              />
             </WinningRateSection>
             <StyleSection $gameType={type}>
               <Title>게임 스타일</Title>
@@ -515,9 +553,7 @@ const ReadBoard = (props: ReadBoardProps) => {
             <MemoSection $gameType={type}>
               <Title>메모</Title>
               <Memo>
-                <MemoData>
-                  {isPost.contents}
-                </MemoData>
+                <MemoData>{isPost.contents}</MemoData>
               </Memo>
             </MemoSection>
             {isUser.gameName !== isPost.gameName && (
@@ -534,7 +570,7 @@ const ReadBoard = (props: ReadBoardProps) => {
         )}
       </CRModal>
 
-      {isModalType === 'report' &&
+      {isModalType === "report" && (
         <FormModal
           type="checkbox"
           title="유저 신고하기"
@@ -587,7 +623,45 @@ const ReadBoard = (props: ReadBoardProps) => {
             </ReportButton>
           </div>
         </FormModal>
-      }
+      )}
+      {/* 차단하기 팝업 */}
+      {isBlockBoxOpen && (
+        <ConfirmModal
+          width="540px"
+          primaryButtonText="예"
+          secondaryButtonText="아니요"
+          onPrimaryClick={() => {
+            handleRunBlock();
+          }}
+          onSecondaryClick={() => {
+            setIsBlockBoxOpen(false);
+          }}
+        >
+          {isBlockedStatus ? (
+            <MsgConfirm>{"차단을 해제 하시겠습니까?"}</MsgConfirm>
+          ) : (
+            <Msg>
+              {
+                "차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다.\n\n차단하시겠습니까?"
+              }
+            </Msg>
+          )}
+        </ConfirmModal>
+      )}
+      {/* 차단하기 확인 팝업 */}
+      {isBlockConfirmOpen && (
+        <ConfirmModal
+          width="540px"
+          primaryButtonText="확인"
+          onPrimaryClick={() => {
+            setIsBlockConfrimOpen(false);
+          }}
+        >
+          <MsgConfirm>{`${
+            isBlockedStatus ? "차단이" : "차단 해제가"
+          } 완료되었습니다.`}</MsgConfirm>
+        </ConfirmModal>
+      )}
     </>
   );
 };
@@ -597,31 +671,32 @@ export default ReadBoard;
 const UpdatedDate = styled.p`
   ${(props) => props.theme.fonts.medium11};
   color: ${theme.colors.gray200};
-  margin:1px 0 12px;
+  margin: 1px 0 12px;
 `;
 
 const UserSection = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    white-space: nowrap;
-    /* gap:90px; */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  white-space: nowrap;
+  /* gap:90px; */
 `;
 
 const UserLeft = styled.div`
-    display:flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 `;
+
 const UserNManner = styled.div`
-    display:flex;
+  display: flex;
 `;
 const UserRight = styled.div`
-    display:flex;
+  display: flex;
 `;
 const Title = styled.p`
-    ${(props) => props.theme.fonts.semiBold14};
-    color: #222222;
-    margin-bottom:5px;
+  ${(props) => props.theme.fonts.semiBold14};
+  color: #222222;
+  margin-bottom: 5px;
 `;
 
 const MannerLevelWrapper = styled.div`
@@ -629,45 +704,46 @@ const MannerLevelWrapper = styled.div`
 `;
 
 const ChampionNQueueSection = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap:89px;
-    margin-top:33px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 89px;
+  margin-top: 33px;
 `;
 
 const PositionSection = styled.div`
-    margin-top:33px;    
+  margin-top: 33px;
 `;
 
 const WinningRateSection = styled.div<{ $gameType: string }>`
-    margin-top:${({ $gameType }) => ($gameType === "canyon" ? "33px" : "46px")};  
+  margin-top: ${({ $gameType }) => ($gameType === "canyon" ? "33px" : "46px")};
 `;
 
 const StyleSection = styled.div<{ $gameType: string }>`
-    margin-top:${({ $gameType }) => ($gameType === "canyon" ? "33px" : "46px")};  
+  margin-top: ${({ $gameType }) => ($gameType === "canyon" ? "33px" : "46px")};
 `;
 
 const MemoSection = styled.div<{ $gameType: string }>`
-    margin-top:${({ $gameType }) => ($gameType === "canyon" ? "33px" : "46px")};   
+  margin-top: ${({ $gameType }) => ($gameType === "canyon" ? "33px" : "46px")};
 `;
 
 const Memo = styled.div`
-    width: 100%;
-    min-height: 77px;
-    padding: 11px 20px;
-    border-radius: 15px;
-    border: 1px solid ${theme.colors.purple300};  
+  width: 100%;
+  min-height: 77px;
+  padding: 11px 20px;
+  border-radius: 15px;
+  border: 1px solid ${theme.colors.purple300};
 `;
 
 const MemoData = styled.p`
-    color: #606060;
-    ${(props) => props.theme.fonts.regular18}
+  color: #606060;
+  ${(props) => props.theme.fonts.regular18}
 `;
 
 const ButtonContent = styled.p<{ $gameType: string }>`
-    margin:${({ $gameType }) => ($gameType === "canyon" ? "30px" : "150px")} 0 28px;    
-    text-align: center;
+  margin: ${({ $gameType }) => ($gameType === "canyon" ? "30px" : "150px")} 0
+    28px;
+  text-align: center;
 `;
 
 const LoadingContainer = styled.div`
@@ -695,6 +771,17 @@ const ReportReasonContent = styled(ReportContent)`
 `;
 
 const ReportButton = styled.div`
-  margin-top:21px;
+  margin-top: 21px;
 `;
 
+const Msg = styled.div`
+  text-align: center;
+  color: ${theme.colors.gray600};
+  ${(props) => props.theme.fonts.regular20};
+  margin: 28px 0;
+`;
+
+const MsgConfirm = styled(Msg)`
+  ${(props) => props.theme.fonts.regular20};
+  margin: 80px 0;
+`;

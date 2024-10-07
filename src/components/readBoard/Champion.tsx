@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Image from "next/image";
 
 interface ChampionProps {
-  title?: string;
+  title?: boolean;
   list: number[];
   size?: number;
 }

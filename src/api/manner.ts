@@ -37,7 +37,7 @@ export const getBadMannerValues = async (memberId: number) => {
 /* 다른 사람 매너, 비매너 평가 조회 */
 export const getOthersManner = async (memberId: number) => {
     try {
-        const response = await Axios.get(`/v1/manner/${memberId}`);
+        const response = await AuthAxios.get(`/v1/manner/${memberId}`);
         console.log("평가 조회 완료:", response.data);
         return response.data;
     } catch (error) {

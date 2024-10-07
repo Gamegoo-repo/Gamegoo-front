@@ -25,7 +25,7 @@ const User = (props: UserProps) => {
             <Image
               src={
                 !tier
-                  ? "/assets/images/tier/UNRANK.svg"
+                  ? "/assets/images/tier/ur.svg"
                   : `/assets/images/tier/${tier}.svg`
               }
               width={32}

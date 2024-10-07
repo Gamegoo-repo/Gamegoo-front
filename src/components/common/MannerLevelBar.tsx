@@ -2,6 +2,7 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 import styled, { css } from "styled-components";
 import ChevronDownIcon from "../../../public/assets/icons/chevron_down.svg";
+import BlindProfile from "../user/BlindProfile";
 
 const levelColors = [
   theme.colors.purple400,
@@ -59,7 +60,7 @@ const MannerLevelBar = (props: MannerLevelBarProps) => {
                 height={isBlind ? (level > 1 ? 17 : 39) : level === 5 ? 17 : 39}
                 style={{
                   ...(isBlind === false && {
-                    marginBottom: level === 5 ? "9px" : undefined,
+                    marginBottom: level === 5 ? "0px" : undefined,
                   }),
                 }}
               />
