@@ -40,6 +40,16 @@ export const connectSocket = (): void => {
   }
 };
 
+export const disconnectSocket = (): void => {
+  if (socket) {
+    socket.disconnect();
+    console.log("소켓 연결 해제");
+    localStorage.removeItem("gamegooSocketId");
+    socket = null;
+    socketId = null;
+  }
+};
+
 export const sendMatchingQuitEvent = (): void => {
   if (socket) {
     console.log("매칭 종료 이벤트 전송");

@@ -56,6 +56,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
     const isChatUuid = useSelector((state: RootState) => state.chat.isChatRoomUuid);
     const isModalType = useSelector((state: RootState) => state.modal.modalType);
 
+    console.log('open?', isChatRoomOpen);
     /* 채팅방 입장 */
     const handleChatEnter = async () => {
         if (!isChatUuid) return;

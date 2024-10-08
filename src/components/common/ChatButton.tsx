@@ -56,7 +56,6 @@ const ChatButton = () => {
     dispatch(toggleChat());
   };
 
-
   return (
     <>
       {showAlert && (

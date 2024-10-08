@@ -53,7 +53,7 @@ const HomePage = () => {
                   }
                 }}
               >
-                <object
+                <StyledObject
                   data={content.image}
                   width={0}
                   height={0}
@@ -117,6 +117,10 @@ const ContentWrapper = styled.div`
   position: relative;
   cursor: pointer;
 `;
+
+const StyledObject = styled.object`
+    pointer-events: none;
+`
 
 const ContentTitle = styled.p`
   position: absolute;

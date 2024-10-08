@@ -99,7 +99,7 @@ const Table = (props: TableProps) => {
   }, [copiedAlert]);
 
   /* 다른 사람 프로필 이동 */
-  const handleUserProfilePage = (e: React.MouseEvent, memberId: number) => {
+  const handleMoveProfilePage = (e: React.MouseEvent, memberId: number) => {
     e.stopPropagation();
 
     if (!isUser.gameName) {
@@ -157,7 +157,7 @@ const Table = (props: TableProps) => {
                   <First className="table_width" >
                     <ProfileImgWrapper
                       $bgColor={getProfileBgColor(data.profileImage + 1)}
-                      onClick={(e) => handleUserProfilePage(e, data.memberId)}
+                      onClick={(e) => handleMoveProfilePage(e, data.memberId)}
                     >
                       <ProfileImg
                         data={setProfileImg(data.profileImage)}
@@ -335,6 +335,7 @@ const ProfileImg = styled.object`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  pointer-events: none;
 `;
 
 const Third = styled.div`

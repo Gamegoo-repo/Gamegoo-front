@@ -15,7 +15,7 @@ import { getProfileBgColor } from "@/utils/profile";
 import ConfirmModal from "../common/ConfirmModal";
 import { socket } from "@/socket";
 import { useRouter } from "next/navigation";
-import { closeChat } from "@/redux/slices/chatSlice";
+import { closeChat, closeChatRoom } from "@/redux/slices/chatSlice";
 
 interface MessageListProps {
     chatEnterData: Chat;
@@ -279,9 +279,10 @@ const MessageList = (props: MessageListProps) => {
         }
     };
 
-    const handleMoveProfile = (memberId: number) => {
-        router.push(`/user/${memberId}`);
-        // dispatch(closeChat());
+    const handleMoveProfile = async (memberId: number) => {
+        await router.push(`/user/${memberId}`);
+        await dispatch(closeChat());
+        await dispatch(closeChatRoom());
     };
 
     /* 시스템 메시지를 처리하는 컴포넌트 */
@@ -350,10 +351,10 @@ const MessageList = (props: MessageListProps) => {
                                 ) : message.senderId === chatEnterData?.memberId ? (
                                     <YourMessageContainer>
                                         {showProfileImage && message.senderProfileImg && (
-                                            <ImageWrapper $bgColor={getProfileBgColor(message.senderProfileImg)}>
+                                            <ImageWrapper $bgColor={getProfileBgColor(message.senderProfileImg)}
+                                                onClick={() => handleMoveProfile(chatEnterData.memberId)}
+                                            >
                                                 <ProfileImage
-                                                onClick={()=>router.push(`/user/${chatEnterData.memberId}`)}
-                                                    // onClick={() => handleMoveProfile(chatEnterData.memberId)}
                                                     data={`/assets/images/profile/profile${message.senderProfileImg}.svg`}
                                                     width={38}
                                                     height={38}
@@ -471,7 +472,7 @@ const ProfileImage = styled.object`
     top:50%;
     left:50%;
     transform: translate(-50%, -50%);
-    cursor: pointer;
+    pointer-events: none;
 `;
 
 const YourDiv = styled.div<{ $hasProfileImage: boolean }>`

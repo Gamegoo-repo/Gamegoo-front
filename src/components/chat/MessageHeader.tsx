@@ -30,9 +30,10 @@ const MessageHeader = (props: MessageHeaderProps) => {
 
     const onlineFriends = useSelector((state: RootState) => state.chat.onlineFriends);
 
-    const handleMoveProfile = (memberId: number) => {
-        router.push(`/user/${memberId}`);
-        // dispatch(closeChat());
+    const handleMoveProfile = async (memberId: number) => {
+        await router.push(`/user/${memberId}`);
+        await dispatch(closeChat());
+        await dispatch(closeChatRoom());
     };
 
     return (
@@ -61,9 +62,10 @@ const MessageHeader = (props: MessageHeaderProps) => {
                         height={18}
                         alt="뒤로가기" />
                     <Middle>
-                        <ImageWrapper $bgColor={getProfileBgColor(chatEnterData.memberProfileImg)}>
+                        <ImageWrapper
+                            $bgColor={getProfileBgColor(chatEnterData.memberProfileImg)}
+                            onClick={() => handleMoveProfile(chatEnterData.memberId)}>
                             <ProfileImage
-                                onClick={() => handleMoveProfile(chatEnterData.memberId)}
                                 data={`/assets/images/profile/profile${chatEnterData.memberProfileImg}.svg`}
                                 width={38}
                                 height={38} />
@@ -140,7 +142,7 @@ const ProfileImage = styled.object`
     top:50%;
     left:50%;
     transform: translate(-50%, -50%);
-    cursor: pointer;
+    pointer-events: none;
 `;
 
 const ThreeDotsImage = styled(Image)`
