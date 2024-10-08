@@ -14,6 +14,8 @@ import { setChatDateFormatter, setChatTimeFormatter } from "@/utils/custom";
 import { getProfileBgColor } from "@/utils/profile";
 import ConfirmModal from "../common/ConfirmModal";
 import { socket } from "@/socket";
+import { useRouter } from "next/navigation";
+import { closeChat } from "@/redux/slices/chatSlice";
 
 interface MessageListProps {
     chatEnterData: Chat;
@@ -48,6 +50,8 @@ const MessageList = (props: MessageListProps) => {
     const chatRef = useRef<HTMLDivElement>(null);
     const isReadingModal = useSelector((state: RootState) => state.modal.readingModal);
     const isFeedbackModalOpen = useSelector((state: RootState) => state.modal.isOpen);
+
+    const router = useRouter();
 
     const { newMessage } = useChatMessage();
 
@@ -275,6 +279,11 @@ const MessageList = (props: MessageListProps) => {
         }
     };
 
+    const handleMoveProfile = (memberId: number) => {
+        router.push(`/user/${memberId}`);
+        // dispatch(closeChat());
+    };
+
     /* 시스템 메시지를 처리하는 컴포넌트 */
     const SystemMessage = (props: SystemMessageProps) => {
         const { message, onClick } = props;
@@ -343,10 +352,11 @@ const MessageList = (props: MessageListProps) => {
                                         {showProfileImage && message.senderProfileImg && (
                                             <ImageWrapper $bgColor={getProfileBgColor(message.senderProfileImg)}>
                                                 <ProfileImage
-                                                    src={`/assets/images/profile/profile${message.senderProfileImg}.svg`}
+                                                onClick={()=>router.push(`/user/${chatEnterData.memberId}`)}
+                                                    // onClick={() => handleMoveProfile(chatEnterData.memberId)}
+                                                    data={`/assets/images/profile/profile${message.senderProfileImg}.svg`}
                                                     width={38}
                                                     height={38}
-                                                    alt="프로필 이미지"
                                                 />
                                             </ImageWrapper>
                                         )}
@@ -456,7 +466,7 @@ const ImageWrapper = styled.div<{ $bgColor: string }>`
     border-radius: 50%;
 `;
 
-const ProfileImage = styled(Image)`
+const ProfileImage = styled.object`
     position: absolute;
     top:50%;
     left:50%;

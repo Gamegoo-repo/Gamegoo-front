@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Chat } from "@/interface/chat";
 import MoreBox from "../common/MoreBox";
 import { useDispatch, useSelector } from "react-redux";
-import { closeChatRoom } from "@/redux/slices/chatSlice";
+import { closeChat, closeChatRoom } from "@/redux/slices/chatSlice";
 import { getProfileBgColor } from "@/utils/profile";
 import { useRouter } from "next/navigation";
 import { RootState } from "@/redux/store";
@@ -29,6 +29,11 @@ const MessageHeader = (props: MessageHeaderProps) => {
     const router = useRouter();
 
     const onlineFriends = useSelector((state: RootState) => state.chat.onlineFriends);
+
+    const handleMoveProfile = (memberId: number) => {
+        router.push(`/user/${memberId}`);
+        // dispatch(closeChat());
+    };
 
     return (
         <>
@@ -58,10 +63,10 @@ const MessageHeader = (props: MessageHeaderProps) => {
                     <Middle>
                         <ImageWrapper $bgColor={getProfileBgColor(chatEnterData.memberProfileImg)}>
                             <ProfileImage
-                                onClick={() => router.push(`/user/${chatEnterData.memberId}`)}
+                                onClick={() => handleMoveProfile(chatEnterData.memberId)}
                                 data={`/assets/images/profile/profile${chatEnterData.memberProfileImg}.svg`}
                                 width={38}
-                                height={38}/>
+                                height={38} />
                         </ImageWrapper>
                         <Div>
                             <UserName>{chatEnterData.gameName}</UserName>
