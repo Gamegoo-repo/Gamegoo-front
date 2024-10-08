@@ -243,6 +243,7 @@ const Header = () => {
                       try {
                         const response = await socketLogout();
                         clearTokens();
+                        localStorage.removeItem("gamegooSocketId");
                         dispatch(clearUserProfile());
                         deleteLocalStorageData();
                       } catch {
