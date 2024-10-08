@@ -278,12 +278,16 @@ const Complete = () => {
             <SquareProfile user={userMe} />
             <Oppnent>
               <SquareProfile opponent={true} user={user} />
-              <Button
-                buttonType="secondary"
-                text="매칭 거절하기"
-                onClick={handleReject}
-              />
-              <Text>{timeLeft}초 뒤 자동으로 대화방이 생성됩니다.</Text>
+              {timeLeft > 0 && (
+                <>
+                  <Button
+                    buttonType="secondary"
+                    text="매칭 거절하기"
+                    onClick={handleReject}
+                  />
+                  <Text>{timeLeft}초 뒤 자동으로 대화방이 생성됩니다.</Text>
+                </>
+              )}
             </Oppnent>
           </Main>
           <Footer>
