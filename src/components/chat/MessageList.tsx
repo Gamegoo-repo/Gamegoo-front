@@ -107,9 +107,6 @@ const MessageList = (props: MessageListProps) => {
                     updatedMessages.push(systemMessageAsChatMessage);
                 }
 
-                // 새로운 메시지 추가
-                updatedMessages.push(newMessage);
-
                 return updatedMessages;
             });
 
@@ -136,7 +133,6 @@ const MessageList = (props: MessageListProps) => {
             }
         }
     }, [chatRef, hasMore, isLoading, isInitialLoading]);
-
 
     useEffect(() => {
         const chatElement = chatRef.current;

@@ -24,7 +24,10 @@ export const connectSocket = (): void => {
       console.log("서버 연결. Socket ID:", socket?.id);
       socketId = socket?.id || null;
       localStorage.setItem("gamegooSocketId", socketId || "");
-      console.log("연결된 토큰", token);
+    });
+
+    socket.on("connect_error", (err) => {
+      console.error("소켓 연결 오류:", err);
     });
 
     socket.on("disconnect", () => {
@@ -46,7 +49,6 @@ export const sendMatchingQuitEvent = (): void => {
 
 const setupSocketListeners = () => {
   if (!socket) return;
-
 };
 
 export { socket };

@@ -229,7 +229,7 @@ const Header = () => {
           </MyProfile>
           <TabMenu>
             {HEADER_MODAL_TAB.map((data, index) => (
-              <div key={data.id}>
+              <TabItemWrapper key={data.id}>
                 <Line
                   onClick={async () => {
                     setIsMyPage(false);
@@ -257,7 +257,7 @@ const Header = () => {
                   {data.menu}
                 </Line>
                 {index === 2 && <Divider />}
-              </div>
+              </TabItemWrapper>
             ))}
           </TabMenu>
         </MyPageModal>
@@ -397,6 +397,10 @@ const TabMenu = styled.div`
   gap: 4px;
   color: ${theme.colors.black};
   ${(props) => props.theme.fonts.semiBold18};
+`;
+
+const TabItemWrapper = styled.div`
+  width: 100%;
 `;
 
 const Line = styled.div`
