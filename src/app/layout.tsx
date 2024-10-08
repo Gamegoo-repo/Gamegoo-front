@@ -11,9 +11,10 @@ import { AppStore, RootState, store } from "@/redux/store";
 import { usePathname } from "next/navigation";
 import SocketConnection from "@/components/socket/SocketConnection";
 import { Toaster } from "react-hot-toast";
-import { connectSocket } from "@/socket";
+import { connectSocket, disconnectSocket } from "@/socket";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import Footer from "@/components/common/Footer";
+import { getAccessToken } from "@/utils/storage";
 
 export default function RootLayout({
   children,
@@ -34,12 +35,16 @@ export default function RootLayout({
     pathname.includes("/password")
   );
 
-  const isUser = (state: RootState) => state.user;
+  const accesssToken = getAccessToken(); // 로그인 유무 결정
 
   /* 로그인 이전 소켓 연결 */
   useEffect(() => {
-    connectSocket();
-  }, []);
+    if (accesssToken) {
+      connectSocket();
+    } else {
+      disconnectSocket();
+    }
+  }, [accesssToken]);
 
   return (
     <html>
