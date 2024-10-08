@@ -127,6 +127,7 @@ const Table = (props: TableProps) => {
           content={alertContent}
           alt={alertContent}
           onClose={() => setShowAlert(false)}
+          buttonText="확인"
         />
       )}
 
@@ -153,12 +154,10 @@ const Table = (props: TableProps) => {
                   key={data.boardId}
                   onClick={() => handlePostOpen(data.boardId)}
                 >
-                  <First
-                    className="table_width"
-                    onClick={(e) => handleUserProfilePage(e, data.memberId)}
-                  >
+                  <First className="table_width" >
                     <ProfileImgWrapper
                       $bgColor={getProfileBgColor(data.profileImage + 1)}
+                      onClick={(e) => handleUserProfilePage(e, data.memberId)}
                     >
                       <ProfileImg
                         data={setProfileImg(data.profileImage)}
