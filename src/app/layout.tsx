@@ -5,7 +5,7 @@ import styled, { ThemeProvider } from "styled-components";
 import { theme } from "@/styles/theme";
 import Header from "@/components/common/Header";
 import StyledComponentsRegistry from "@/libs/registry";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import { useEffect, useRef } from "react";
 import { AppStore, RootState, store } from "@/redux/store";
 import { usePathname } from "next/navigation";
@@ -18,7 +18,11 @@ import {
 } from "@/socket";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import Footer from "@/components/common/Footer";
-import { getAccessToken } from "@/utils/storage";
+import {
+  getAccessToken,
+  getIsCompleted,
+  setIsCompleted,
+} from "@/utils/storage";
 import { notify } from "@/hooks/notify";
 
 export default function RootLayout({
@@ -42,6 +46,7 @@ export default function RootLayout({
   );
 
   const accesssToken = getAccessToken(); // 로그인 유무 결정
+  const isCompleted = getIsCompleted();
 
   /* 로그인 이전 소켓 연결 */
   useEffect(() => {
@@ -53,7 +58,8 @@ export default function RootLayout({
   }, [accesssToken]);
 
   useEffect(() => {
-    if (
+    if (!(isCompleted === "true") || isCompleted === null) {
+    } else if (
       !pathname.includes("/matching/complete") &&
       previousPathname.current !== pathname &&
       previousPathname.current.includes("/matching")
@@ -64,6 +70,10 @@ export default function RootLayout({
         icon: "🚫",
         type: "error",
       });
+    }
+
+    if (pathname.includes("/") || pathname.includes("/match")) {
+      setIsCompleted("false");
     }
 
     // 이전 경로 업데이트

@@ -68,3 +68,18 @@ export const clearTokens = () => {
     sessionStorage.removeItem('name');
     sessionStorage.removeItem('profileImg');
 };
+
+/* 매칭 완료 여부 */
+export const setIsCompleted = (isCompleted: string) => {
+    if (typeof window !== 'undefined') {
+        sessionStorage.setItem("isCompleted", isCompleted);
+    }
+    return null;
+};
+
+export const getIsCompleted = () => {
+    if (typeof window !== 'undefined') {
+        return sessionStorage.getItem('isCompleted');
+    }
+    return null;
+};
