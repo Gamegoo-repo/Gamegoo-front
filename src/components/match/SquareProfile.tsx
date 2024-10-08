@@ -220,6 +220,18 @@ const Bubble = styled.div`
   bottom: 140px;
   left: 65%;
 
+  animation: fadeInOut 2s infinite;
+
+  @keyframes fadeInOut {
+    0%,
+    100% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
   &:before {
     border-top: 3px solid transparent;
     border-left: 6px solid transparent;
@@ -236,13 +248,13 @@ const Bubble = styled.div`
 
   &:after {
     border-top: 0 solid transparent;
-    border-left: 5.5px solid transparent;
+    border-left: 6px solid transparent;
     border-right: 4.5px solid transparent;
     border-bottom: 9px solid #e3deff;
     content: "";
     position: absolute;
-    bottom: 1px;
-    left: -3px;
+    bottom: 2px;
+    left: -2px;
     transform: rotate(-10deg);
     z-index: 100;
   }
