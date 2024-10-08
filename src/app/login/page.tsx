@@ -77,10 +77,10 @@ const Login = () => {
       setName(response.result.name, autoLogin);
       setProfileImg(response.result.profileImage, autoLogin);
 
-      router.push("/");
+      await router.push("/");
 
       /* 소켓 로그인 */
-      socketLogin();
+      await socketLogin();
       const data = await getUnreadUuid();
       if (data.isSuccess) {
         // 실시간 안읽은 채팅방 수 가져오기 위함

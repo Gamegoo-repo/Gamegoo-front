@@ -229,9 +229,8 @@ const Header = () => {
           </MyProfile>
           <TabMenu>
             {HEADER_MODAL_TAB.map((data, index) => (
-              <>
+              <div key={data.id}>
                 <Line
-                  key={data.id}
                   onClick={async () => {
                     setIsMyPage(false);
                     if (data.id !== 6) {
@@ -258,7 +257,7 @@ const Header = () => {
                   {data.menu}
                 </Line>
                 {index === 2 && <Divider />}
-              </>
+              </div>
             ))}
           </TabMenu>
         </MyPageModal>

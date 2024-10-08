@@ -34,8 +34,6 @@ export default function RootLayout({
     pathname.includes("/password")
   );
 
-  const isUser = (state: RootState) => state.user;
-
   /* 로그인 이전 소켓 연결 */
   useEffect(() => {
     connectSocket();
