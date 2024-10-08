@@ -10,7 +10,7 @@ import { useEffect, useRef, useState } from "react";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import ChatButton from "@/components/common/ChatButton";
 import { sendMatchingQuitEvent, socket } from "@/socket";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { messagesWithN, messagesWithoutN } from "@/constants/messages";
 import { getSystemMsg } from "@/api/socket";
 
@@ -39,6 +39,7 @@ const Progress = () => {
   const [timeLeft, setTimeLeft] = useState<number>(300);
   const [isRetrying, setIsRetrying] = useState<boolean>(false); // 매칭 재시도 여부
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const type = searchParams.get("matchingType");
   const rank = searchParams.get("gameRank");
@@ -109,21 +110,14 @@ const Progress = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // 새로고침 감지 안되는 문제 (수정 필요)
   useEffect(() => {
-    const handleBeforeUnload = () => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      alert("새로고침 감지");
       sendMatchingQuitEvent();
     };
 
-    const handlePopState = () => {
-      sendMatchingQuitEvent();
-      return true;
-    };
-
-    // 페이지 이탈 및 새로고침 감지
     window.addEventListener("beforeunload", handleBeforeUnload);
-
-    // 뒤로가기를 감지
-    window.addEventListener("popstate", handlePopState);
 
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
@@ -136,7 +130,10 @@ const Progress = () => {
       return;
     }
 
-    // if (socket) {
+    // 기존 리스너 제거
+    socket.off("matching-found-sender");
+    socket.off("matching-found-receiver");
+
     // 매칭 상대 찾기 성공 (sender)
     socket.on("matching-found-sender", (data) => {
       console.log("매칭 상대 발견(sender):", data);
@@ -166,12 +163,26 @@ const Progress = () => {
     // 5분 타이머
     startMatchingProcess();
 
+    // 만약, /progress에서 매칭 성공, 실패 응답이 올 경우 (수정 필요)
+    // socket?.on("matching-success", (res: any) => {
+    //   // 매칭 성공 처리 (채팅)
+    // });
+
+    // socket?.on("matching-fail", () => {
+    //   if (secondaryTimerRef.current) clearTimeout(secondaryTimerRef.current); // 타이머 종료
+    //   // 매칭 실패 처리 (모달)
+    // });
+
     return () => {
+      socket?.off("matching-found-sender");
+      socket?.off("matching-found-receiver");
       clearTimers();
     };
   }, []);
 
   const startMatchingProcess = () => {
+    if (timerRef.current) return; // 이미 타이머가 실행 중이면 추가로 설정하지 않음
+
     // 매칭 재시도 여부에 따라 타이머 설정
     setTimeLeft(300);
     let priority = 51.5; // 초기 priority 값
@@ -184,7 +195,7 @@ const Progress = () => {
           retry
             ? type === "PRECISE" && setIsSecondYes(true) // 빡겜일 때, 게시판 모달 표시
             : setIsFirstRetry(true); // 매칭 실패 모달 표시
-        } else if (prevTime % 30 === 0) {
+        } else if (prevTime < 300 && prevTime % 30 === 0) {
           // 30초마다 priority 값을 감소시키며 매칭 재시도
           priority -= 1.5;
           socket?.emit("matching-retry", { priority });

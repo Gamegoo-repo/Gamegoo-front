@@ -16,7 +16,6 @@ import ChatButton from "@/components/common/ChatButton";
 import { sendMatchingQuitEvent, socket } from "@/socket";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import { theme } from "@/styles/theme";
-import useEventQueue from "@/hooks/useEventQueue";
 
 const ProfilePage = () => {
   const router = useRouter();
@@ -26,7 +25,6 @@ const ProfilePage = () => {
   const params = searchParams.get("type");
   const rank = searchParams.get("rank");
   const retry = searchParams.get("retry");
-  const { addEventToQueue } = useEventQueue(); // 이벤트 큐 사용
 
   /* 모달창 */
   const [isAlready, setIsAlready] = useState<boolean>(false);
@@ -112,8 +110,7 @@ const ProfilePage = () => {
       /* 매칭 시작 이벤트 */
       socket.on("matching-started", (data) => {
         console.log("매칭 시작됨:", data);
-        // 라우터 이동 중이면 이벤트를 큐에 저장
-        addEventToQueue(data);
+
         const urlParams = new URLSearchParams({
           ...data.data,
           matchingType: params || "", // 기존 type 파라미터 추가
@@ -125,6 +122,16 @@ const ProfilePage = () => {
         }
 
         router.push(`/matching/progress?${urlParams.toString()}`);
+      });
+
+      /* sender 입장에서 바로 매칭 상대 찾을 경우 처리 */
+      socket.on("matching-found-sender", (data) => {
+        console.log("/profile에서 matching-found-sender 이벤트 on");
+        router.push(
+          `/matching/complete?role=sender&opponent=true&type=${params}&rank=${rank}&user=${encodeURIComponent(
+            JSON.stringify(data.data)
+          )}`
+        );
       });
     } else {
       console.error("소켓이 연결되지 않았습니다.");

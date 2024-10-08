@@ -16,6 +16,7 @@ import ChatLayout from "@/components/chat/ChatLayout";
 import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { openChatRoom, setChatRoomUuid } from "@/redux/slices/chatSlice";
+import useEventQueue from "@/hooks/useEventQueue";
 
 interface User {
   memberId: number;
@@ -128,21 +129,17 @@ const Complete = () => {
   const secondaryTimerRef = useRef<NodeJS.Timeout | null>(null);
   const finalTimerRef = useRef<NodeJS.Timeout | null>(null);
 
+  // 매칭 상대 결정 & 매칭 완료에 따라 quit 여부 처리하기 (수정 필요)
   useEffect(() => {
     const handleBeforeUnload = () => {
       sendMatchingQuitEvent();
-    };
-
-    const handlePopState = () => {
-      sendMatchingQuitEvent();
-      return true;
     };
 
     // 페이지 이탈 및 새로고침 감지
     window.addEventListener("beforeunload", handleBeforeUnload);
 
     // 뒤로가기를 감지
-    window.addEventListener("popstate", handlePopState);
+    window.addEventListener("popstate", handleBeforeUnload);
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
