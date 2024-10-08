@@ -16,6 +16,7 @@ import ChatButton from "@/components/common/ChatButton";
 import { sendMatchingQuitEvent, socket } from "@/socket";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import { theme } from "@/styles/theme";
+import useEventQueue from "@/hooks/useEventQueue";
 
 const ProfilePage = () => {
   const router = useRouter();
@@ -25,6 +26,7 @@ const ProfilePage = () => {
   const params = searchParams.get("type");
   const rank = searchParams.get("rank");
   const retry = searchParams.get("retry");
+  const { addEventToQueue } = useEventQueue(); // 이벤트 큐 사용
 
   /* 모달창 */
   const [isAlready, setIsAlready] = useState<boolean>(false);
@@ -110,7 +112,8 @@ const ProfilePage = () => {
       /* 매칭 시작 이벤트 */
       socket.on("matching-started", (data) => {
         console.log("매칭 시작됨:", data);
-
+        // 라우터 이동 중이면 이벤트를 큐에 저장
+        addEventToQueue(data);
         const urlParams = new URLSearchParams({
           ...data.data,
           matchingType: params || "", // 기존 type 파라미터 추가
@@ -120,7 +123,7 @@ const ProfilePage = () => {
         if (retry) {
           urlParams.append("retry", "true");
         }
-        
+
         router.push(`/matching/progress?${urlParams.toString()}`);
       });
     } else {
@@ -145,7 +148,6 @@ const ProfilePage = () => {
             width="380px"
             text="매칭 시작하기"
             onClick={handleMatchStart}
-            disabled={matchInfo.gameStyleResponseDTOList.length === 0}
           />
         </Main>
         <Footer>
