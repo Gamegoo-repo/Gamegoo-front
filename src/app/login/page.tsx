@@ -14,8 +14,9 @@ import {
   setUserName,
   setUserProfileImg,
 } from "@/redux/slices/userSlice";
+import { connectSocket, socket } from "@/socket";
 import { theme } from "@/styles/theme";
-import { clearTokens, setName, setProfileImg, setToken } from "@/utils/storage";
+import { clearTokens, getAccessToken, setName, setProfileImg, setToken } from "@/utils/storage";
 import { AxiosError } from "axios";
 import Image from "next/image";
 import Link from "next/link";
@@ -76,10 +77,10 @@ const Login = () => {
       dispatch(setUserProfileImg(response.result.profileImage));
       setName(response.result.name, autoLogin);
       setProfileImg(response.result.profileImage, autoLogin);
-      
-      await socketLogin();
 
-      await router.push("/");
+      router.push("/");
+
+      socketLogin();
 
       /* 소켓 로그인 */
       const data = await getUnreadUuid();

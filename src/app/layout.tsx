@@ -11,7 +11,7 @@ import { AppStore, store } from "@/redux/store";
 import { usePathname } from "next/navigation";
 import SocketConnection from "@/components/socket/SocketConnection";
 import { Toaster } from "react-hot-toast";
-import { connectSocket, disconnectSocket } from "@/socket";
+import { connectSocket, disconnectSocket, socket } from "@/socket";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import Footer from "@/components/common/Footer";
 import { getAccessToken } from "@/utils/storage";
@@ -35,16 +35,26 @@ export default function RootLayout({
     pathname.includes("/password")
   );
 
-  const accesssToken = getAccessToken(); // 로그인 유무 결정
+  const accesssToken = getAccessToken();
 
   /* 로그인 이전 소켓 연결 */
+  // useEffect(() => {
+  //   if (accesssToken) {
+  //     if (!socket) {
+  //       connectSocket();
+  //     }
+  //   } else {
+  //     disconnectSocket();
+  //   }
+  // }, [accesssToken]);
+
   useEffect(() => {
-    if (accesssToken) {
+    if (!socket) {
+      console.log('메인페이지 소켓')
       connectSocket();
-    } else {
-      disconnectSocket();
+      sessionStorage.removeItem('logout');
     }
-  }, [accesssToken]);
+  }, [])
 
   return (
     <html>

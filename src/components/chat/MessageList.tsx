@@ -355,7 +355,7 @@ const MessageList = (props: MessageListProps) => {
                                                 onClick={() => handleMoveProfile(chatEnterData.memberId)}
                                             >
                                                 <ProfileImage
-                                                    data={`/assets/images/profile/profile${message.senderProfileImg}.svg`}
+                                                    data={chatEnterData.blind ? `/assets/images/profile/profile_default.svg` : `/assets/images/profile/profile${message.senderProfileImg}.svg`}
                                                     width={38}
                                                     height={38}
                                                 />

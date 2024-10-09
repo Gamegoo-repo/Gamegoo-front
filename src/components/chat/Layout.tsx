@@ -50,10 +50,8 @@ const Layout = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const isChatRoomOpen = useSelector((state: RootState) => state.chat.isChatRoomOpen);
-    const isChatOpen = useSelector((state: RootState) => state.chat.isChatOpen);
     const isChatUuid = useSelector((state: RootState) => state.chat.isChatRoomUuid);
     const isModalType = useSelector((state: RootState) => state.modal.modalType);
-    console.log('layout open?', isChatOpen);
  
     /* 채팅방 입장 */
     const handleGoToChatRoom = (id: string | number) => {

@@ -43,7 +43,7 @@ const FriendItem = (props: FriendItemProps) => {
             <Left>
                 <ImageWrapper $bgColor={getProfileBgColor(friend.memberProfileImg)}>
                     <StyledImage
-                        data={`/assets/images/profile/profile${friend.memberProfileImg}.svg`}
+                        data={friend.isBlind?`/assets/images/profile/profile_default.svg`:`/assets/images/profile/profile${friend.memberProfileImg}.svg`}
                         width={38}
                         height={38}
                     />

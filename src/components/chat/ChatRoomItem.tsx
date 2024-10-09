@@ -42,9 +42,9 @@ const ChatRoomItem = (props: ChatRoomItemProps) => {
             <Left>
                 <ImageWrapper $bgColor={getProfileBgColor(room.targetMemberImg)}>
                     <ProfileImage
-                        data={`/assets/images/profile/profile${room.targetMemberImg}.svg`}
+                        data={room.blind ? `/assets/images/profile/profile_default.svg` : `/assets/images/profile/profile${room.targetMemberImg}.svg`}
                         width={38}
-                        height={38}/>
+                        height={38} />
                 </ImageWrapper>
                 <Middle>
                     <Row>

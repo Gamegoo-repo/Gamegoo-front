@@ -66,7 +66,7 @@ const MessageHeader = (props: MessageHeaderProps) => {
                             $bgColor={getProfileBgColor(chatEnterData.memberProfileImg)}
                             onClick={() => handleMoveProfile(chatEnterData.memberId)}>
                             <ProfileImage
-                                data={`/assets/images/profile/profile${chatEnterData.memberProfileImg}.svg`}
+                                data={chatEnterData.blind ? `/assets/images/profile/profile_default.svg` : `/assets/images/profile/profile${chatEnterData.memberProfileImg}.svg`}
                                 width={38}
                                 height={38} />
                         </ImageWrapper>

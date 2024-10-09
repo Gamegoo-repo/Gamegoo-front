@@ -24,6 +24,7 @@ import { RootState } from "@/redux/store";
 import Alert from "./Alert";
 import { setNotiCount } from "@/redux/slices/notiSlice";
 import { socketLogout } from "@/api/socket";
+import { socket } from "@/socket";
 
 interface HeaderProps {
   selected: boolean;
@@ -236,12 +237,13 @@ const Header = () => {
                     if (data.id !== 6) {
                       router.push(`${data.url}`);
                     } else {
-                      router.push("/login");
+                      sessionStorage.setItem('logout', 'true');
                       try {
                         const response = await socketLogout();
                         clearTokens();
                         dispatch(clearUserProfile());
                         deleteLocalStorageData();
+                        router.push('/login'); 
                       } catch {
                         console.log("소켓 로그아웃 오류");
                       }
