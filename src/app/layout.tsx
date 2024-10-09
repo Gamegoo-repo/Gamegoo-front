@@ -5,16 +5,25 @@ import styled, { ThemeProvider } from "styled-components";
 import { theme } from "@/styles/theme";
 import Header from "@/components/common/Header";
 import StyledComponentsRegistry from "@/libs/registry";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import { useEffect, useRef } from "react";
 import { AppStore, RootState, store } from "@/redux/store";
 import { usePathname } from "next/navigation";
 import SocketConnection from "@/components/socket/SocketConnection";
 import { Toaster } from "react-hot-toast";
-import { connectSocket, disconnectSocket } from "@/socket";
+import {
+  connectSocket,
+  disconnectSocket,
+  sendMatchingQuitEvent,
+} from "@/socket";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import Footer from "@/components/common/Footer";
-import { getAccessToken } from "@/utils/storage";
+import {
+  getAccessToken,
+  getIsCompleted,
+  setIsCompleted,
+} from "@/utils/storage";
+import { notify } from "@/hooks/notify";
 
 export default function RootLayout({
   children,
@@ -27,6 +36,7 @@ export default function RootLayout({
   }
 
   const pathname = usePathname();
+  const previousPathname = useRef(pathname);
   const isNotFoundPage = pathname === "/404" || pathname === "/not-found";
   const isHeader = !(
     isNotFoundPage ||
@@ -36,6 +46,7 @@ export default function RootLayout({
   );
 
   const accesssToken = getAccessToken(); // 로그인 유무 결정
+  const isCompleted = getIsCompleted();
 
   /* 로그인 이전 소켓 연결 */
   useEffect(() => {
@@ -45,6 +56,29 @@ export default function RootLayout({
       disconnectSocket();
     }
   }, [accesssToken]);
+
+  useEffect(() => {
+    if (!(isCompleted === "true") || isCompleted === null) {
+    } else if (
+      !pathname.includes("/matching/complete") &&
+      previousPathname.current !== pathname &&
+      previousPathname.current.includes("/matching")
+    ) {
+      sendMatchingQuitEvent();
+      notify({
+        text: "화면 이탈로 매칭이 종료되었습니다.",
+        icon: "🚫",
+        type: "error",
+      });
+    }
+
+    if (pathname.includes("/") || pathname.includes("/match")) {
+      setIsCompleted("false");
+    }
+
+    // 이전 경로 업데이트
+    previousPathname.current = pathname;
+  }, [pathname]);
 
   return (
     <html>

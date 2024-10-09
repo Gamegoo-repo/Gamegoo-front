@@ -120,8 +120,18 @@ const ProfilePage = () => {
         if (retry) {
           urlParams.append("retry", "true");
         }
-        
+
         router.push(`/matching/progress?${urlParams.toString()}`);
+      });
+
+      /* sender 입장에서 바로 매칭 상대 찾을 경우 처리 */
+      socket.on("matching-found-sender", (data) => {
+        console.log("/profile에서 matching-found-sender 이벤트 on");
+        router.push(
+          `/matching/complete?role=sender&opponent=true&type=${params}&rank=${rank}&user=${encodeURIComponent(
+            JSON.stringify(data.data)
+          )}`
+        );
       });
     } else {
       console.error("소켓이 연결되지 않았습니다.");
@@ -145,7 +155,6 @@ const ProfilePage = () => {
             width="380px"
             text="매칭 시작하기"
             onClick={handleMatchStart}
-            disabled={matchInfo.gameStyleResponseDTOList.length === 0}
           />
         </Main>
         <Footer>

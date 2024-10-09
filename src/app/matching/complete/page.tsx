@@ -16,6 +16,8 @@ import ChatLayout from "@/components/chat/ChatLayout";
 import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { openChatRoom, setChatRoomUuid } from "@/redux/slices/chatSlice";
+import { setComplete } from "@/redux/slices/matchingSlice";
+import { setIsCompleted } from "@/utils/storage";
 
 interface User {
   memberId: number;
@@ -129,26 +131,6 @@ const Complete = () => {
   const finalTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    const handleBeforeUnload = () => {
-      sendMatchingQuitEvent();
-    };
-
-    const handlePopState = () => {
-      sendMatchingQuitEvent();
-      return true;
-    };
-
-    // 페이지 이탈 및 새로고침 감지
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    // 뒤로가기를 감지
-    window.addEventListener("popstate", handlePopState);
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, []);
-
-  useEffect(() => {
     // 10초 타이머 시작
     timerRef.current = setInterval(() => {
       setTimeLeft((prevTime) => {
@@ -167,6 +149,9 @@ const Complete = () => {
 
     return () => {
       clearInterval(timerRef.current!);
+      if (role === "sender") {
+        socket?.off("matching-success-sender", handleMatchingSuccessSender);
+      }
     };
   }, []);
 
@@ -232,6 +217,8 @@ const Complete = () => {
   // matching-success 수신 시 타이머 종료 및 채팅방 열기
   const handleChatUuidgetWithTimerClear = (res: any) => {
     clearAllTimers(); // 모든 타이머 정리
+    setIsCompleted("true");
+    // dispatch(setComplete(true));
     const data = res.data;
     dispatch(setChatRoomUuid(data.chatroomUuid)); // 채팅방 UUID 설정
     dispatch(openChatRoom()); // 채팅방 열기
@@ -240,6 +227,8 @@ const Complete = () => {
   // matching-fail 수신 시 타이머 종료 및 실패 모달 표시
   const handleMatchingFailWithTimerClear = () => {
     clearAllTimers(); // 모든 타이머 정리
+    setIsCompleted("true");
+    // dispatch(setComplete(false));
     setShowFailModal(true); // 매칭 실패 모달 표시
   };
 
@@ -272,17 +261,25 @@ const Complete = () => {
       {isChatRoomOpen && <ChatLayout apiType={1} />}
       <Wrapper>
         <MatchContent>
-          <HeaderTitle title="매칭 완료" sub="듀오 상대를 찾았어요!" />
+          <HeaderTitle
+            title="매칭 완료"
+            sub="듀오 상대를 찾았어요!"
+            isDoubleBack={true}
+          />
           <Main>
             <SquareProfile user={userMe} />
             <Oppnent>
               <SquareProfile opponent={true} user={user} />
-              <Button
-                buttonType="secondary"
-                text="매칭 거절하기"
-                onClick={handleReject}
-              />
-              <Text>{timeLeft}초 뒤 자동으로 대화방이 생성됩니다.</Text>
+              {timeLeft > 0 && (
+                <>
+                  <Button
+                    buttonType="secondary"
+                    text="매칭 거절하기"
+                    onClick={handleReject}
+                  />
+                  <Text>{timeLeft}초 뒤 자동으로 대화방이 생성됩니다.</Text>
+                </>
+              )}
             </Oppnent>
           </Main>
           <Footer>
