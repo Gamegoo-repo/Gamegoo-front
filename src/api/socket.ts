@@ -47,9 +47,10 @@ export const socketLogout = async () => {
                 "Socket-Id": socketId,
             },
         });
-        console.log('소켓 서버에 로그아웃 요청 보냄');
-        if (response.status===200 && isLogout) {
-            console.log('로그아웃 성공했니?')
+        if (response.status===200 && isLogout && !jwtToken) {
+            console.log('로그아웃 성공')
+            // 로그아웃 버튼 클릭해서 로그인 페이지 들어온 경우
+            // 소켓 연결 끊어진 이후 소켓 재연결 시키기
             connectSocket();
         } else {
             console.error('소켓 서버에 로그아웃 알림 실패:', response.statusText);

@@ -6,12 +6,12 @@ import { theme } from "@/styles/theme";
 import Header from "@/components/common/Header";
 import StyledComponentsRegistry from "@/libs/registry";
 import { Provider } from "react-redux";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AppStore, store } from "@/redux/store";
 import { usePathname } from "next/navigation";
 import SocketConnection from "@/components/socket/SocketConnection";
 import { Toaster } from "react-hot-toast";
-import { connectSocket, disconnectSocket, socket } from "@/socket";
+import { connectSocket, socket } from "@/socket";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import Footer from "@/components/common/Footer";
 import { getAccessToken } from "@/utils/storage";
@@ -22,6 +22,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const storeRef = useRef<AppStore>();
+  const [isLoggedIn, setIsLoggedIn] = useState(!!getAccessToken());
+
   if (!storeRef.current) {
     storeRef.current = store();
   }
@@ -35,26 +37,19 @@ export default function RootLayout({
     pathname.includes("/password")
   );
 
-  const accesssToken = getAccessToken();
-
-  /* 로그인 이전 소켓 연결 */
-  // useEffect(() => {
-  //   if (accesssToken) {
-  //     if (!socket) {
-  //       connectSocket();
-  //     }
-  //   } else {
-  //     disconnectSocket();
-  //   }
-  // }, [accesssToken]);
-
   useEffect(() => {
     if (!socket) {
       console.log('메인페이지 소켓')
       connectSocket();
       sessionStorage.removeItem('logout');
     }
-  }, [])
+  }, []);
+
+  /* 로그인 상태 변경 시 리렌더링 트리거 */
+  /* 로그아웃 후 재로그인 시 SocketConnection 컴포넌트가 리렌더링되지 않아서 만듦 */
+  useEffect(() => {
+    setIsLoggedIn(!!getAccessToken());
+  }, [pathname]);
 
   return (
     <html>
@@ -76,7 +71,7 @@ export default function RootLayout({
             <ThemeProvider theme={theme}>
               <Toaster />
               <Provider store={storeRef.current}>
-                <SocketConnection />
+                <SocketConnection key={isLoggedIn ? 'loggedIn' : 'loggedOut'} />
                 <Container>
                   <Main>
                     {isHeader && <Header />}

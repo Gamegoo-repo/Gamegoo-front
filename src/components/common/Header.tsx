@@ -239,11 +239,11 @@ const Header = () => {
                     } else {
                       sessionStorage.setItem('logout', 'true');
                       try {
+                        await clearTokens();
                         const response = await socketLogout();
-                        clearTokens();
                         dispatch(clearUserProfile());
                         deleteLocalStorageData();
-                        router.push('/login'); 
+                        router.push('/login');
                       } catch {
                         console.log("소켓 로그아웃 오류");
                       }

@@ -165,7 +165,6 @@ const Table = (props: TableProps) => {
                         height={35}
                       />
                     </ProfileImgWrapper>
-
                     <P onClick={(e) => handleTextClick(data.gameName, e)}>
                       {data.gameName}
                     </P>
