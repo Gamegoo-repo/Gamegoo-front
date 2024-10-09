@@ -16,7 +16,6 @@ import ChatLayout from "@/components/chat/ChatLayout";
 import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { openChatRoom, setChatRoomUuid } from "@/redux/slices/chatSlice";
-import useEventQueue from "@/hooks/useEventQueue";
 import { setComplete } from "@/redux/slices/matchingSlice";
 import { setIsCompleted } from "@/utils/storage";
 
