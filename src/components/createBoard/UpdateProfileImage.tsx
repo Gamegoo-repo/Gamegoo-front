@@ -98,6 +98,7 @@ const ProfileImage = styled.object`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  pointer-events: none;
 `;
 
 const Label = styled.label`
@@ -119,6 +120,7 @@ const CameraImage = styled.object`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  pointer-events: none;
 `;
 
 const ProfileListBox = styled.div`
@@ -170,7 +172,7 @@ const ProfileListImage = styled.object<{ $isSelected: boolean }>`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  cursor: pointer;
+  pointer-events: none;
   transition: opacity 0.3s ease-in-out;
 
   ${({ $isSelected }) =>

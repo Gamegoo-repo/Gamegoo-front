@@ -25,6 +25,7 @@ import Alert from "./Alert";
 import { setNotiCount } from "@/redux/slices/notiSlice";
 import { socketLogout } from "@/api/socket";
 import { socket } from "@/socket";
+import { closeChat } from "@/redux/slices/chatSlice";
 
 interface HeaderProps {
   selected: boolean;
@@ -243,6 +244,7 @@ const Header = () => {
                         const response = await socketLogout();
                         dispatch(clearUserProfile());
                         deleteLocalStorageData();
+                        dispatch(closeChat());
                         router.push('/login');
                       } catch {
                         console.log("소켓 로그아웃 오류");
@@ -340,6 +342,7 @@ const HeaderProfileImg = styled.object`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  pointer-events: none;
 `;
 
 const Login = styled.button`
@@ -380,6 +383,7 @@ const ProfileImg = styled.object`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  pointer-events: none;
 `;
 
 const MyName = styled.div`

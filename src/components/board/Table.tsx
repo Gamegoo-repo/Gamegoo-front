@@ -173,7 +173,7 @@ const Table = (props: TableProps) => {
                     {data.mannerLevel && <P>LV.{data.mannerLevel}</P>}
                   </Second>
                   <Third className="table_width">
-                    <object
+                    <TierImage
                       data={!data.tier
                         ? "/assets/images/tier/ur.svg"
                         : `/assets/images/tier/${data.tier}.svg`
@@ -342,6 +342,10 @@ const Third = styled.div`
   align-items: center;
   justify-content: center;
   gap: 3px;
+`;
+
+const TierImage = styled.object`
+    pointer-events: none;
 `;
 
 const Fourth = styled.div`

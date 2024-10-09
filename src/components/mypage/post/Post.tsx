@@ -101,7 +101,7 @@ const Post: React.FC<PostProps> = ({
     handlePostingClose();
     dispatch(setOpenModal(""));
   };
-console.log(profileImage)
+  console.log(profileImage)
   return (
     <Container>
       <Content>
@@ -124,8 +124,8 @@ console.log(profileImage)
           </Div>
         </Name>
         <Tier>
-          <object
-            data={`/assets/images/tier/${toLowerCaseString(tier) || "ur"}.svg`}
+          <TierImage
+            data={tier ? `/assets/images/tier/${tier}.svg` : `/assets/images/tier/ur.svg`}
             width={26}
             height={26}
           />
@@ -223,6 +223,7 @@ const ProfileImg = styled.object`
   left: 50%;
   transform: translate(-50%, -50%);
   filter: drop-shadow(-4px 10px 10px rgba(63, 53, 78, 0.582));
+  pointer-events: none;
 `;
 
 const Div = styled.div`
@@ -242,6 +243,10 @@ const Tier = styled.div`
   align-items: center;
   gap: 5px;
   ${(props) => props.theme.fonts.regular14};
+`;
+
+const TierImage = styled.object`
+  pointer-events: none;
 `;
 
 const Memo = styled.div`

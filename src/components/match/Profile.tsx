@@ -444,9 +444,12 @@ const Profile: React.FC<Profile> = ({
               {user.gameName}
               <Span>{`#${user.tag}`}</Span>
               <Rank>
-                <object
-                  data={`/assets/images/tier/${toLowerCaseString(user.tier) || "ur"
-                    }.svg`}
+                <TierImage
+                  data={
+                    !user.tier
+                      ? "/assets/images/tier/ur.svg"
+                      : `/assets/images/tier/${user.tier}.svg`
+                  }
                   width={42}
                   height={42}
                 />
@@ -685,12 +688,14 @@ const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
 const PersonImage = styled.object`
   margin-top: 5px;
   filter: drop-shadow(-4px 10px 10px rgba(63, 53, 78, 0.582));
+  pointer-events: none;
 `;
 
 const CameraImage = styled.object`
   position: absolute;
   bottom: 0px;
   left: 0px;
+  pointer-events: none;
 `;
 
 const ProfileListBox = styled.div`
@@ -758,7 +763,7 @@ const ProfileListImage = styled.object`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  cursor: pointer;
+  pointer-events: none;
 `;
 
 const StyledBox = styled.div`
@@ -802,6 +807,10 @@ const Rank = styled.div`
   font-size: ${theme.fonts.regular25};
   font-weight: 300;
   gap: 10px;
+`;
+
+const TierImage = styled.object`
+    pointer-events: none;
 `;
 
 const More = styled.div`

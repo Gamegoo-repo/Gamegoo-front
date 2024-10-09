@@ -95,6 +95,7 @@ const StyledObject = styled.object <{ size: string }>`
   position: absolute;
   top: 0;
   left: 0;
+  pointer-events: none;
 
   ${(props) =>
     props.size === "small" &&

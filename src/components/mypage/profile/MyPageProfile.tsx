@@ -105,10 +105,9 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
       </ImageContainer>
       <Div>
         <Top>
-          <object
-            data={`/assets/images/tier/${
-              toLowerCaseString(user.tier) || "ur"
-            }.svg`}
+          <TierImage
+            data={`/assets/images/tier/${toLowerCaseString(user.tier) || "ur"
+              }.svg`}
             width={43}
             height={43}
           />
@@ -157,12 +156,14 @@ const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
 const PersonImage = styled.object`
   margin-top: 5px;
   filter: drop-shadow(-4px 10px 10px rgba(63, 53, 78, 0.582));
+  pointer-events: none;
 `;
 
 const CameraImage = styled.object`
   position: absolute;
   bottom: 3px;
   left: 3px;
+  pointer-events: none;
 `;
 
 const ProfileListBox = styled.div`
@@ -240,7 +241,7 @@ const ProfileListImage = styled.object`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  cursor: pointer;
+  pointer-events: none;
   transition: opacity 0.3s ease-in-out;
 `;
 
@@ -264,4 +265,8 @@ const Top = styled.div`
   gap: 7px;
   ${(props) => props.theme.fonts.bold25};
   color: ${theme.colors.gray600};
+`;
+
+const TierImage = styled.object`
+  pointer-events: none;
 `;

@@ -51,10 +51,9 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
         <Top>
           {user.gameName}
           <Rank>
-            <object
-              data={`/assets/images/tier/${
-                user.tier !== "null" ? toLowerCaseString(user.tier) : "ur"
-              }.svg`}
+            <TierImage
+              data={`/assets/images/tier/${user.tier !== "null" ? toLowerCaseString(user.tier) : "ur"
+                }.svg`}
               width={43}
               height={43}
             />
@@ -140,7 +139,7 @@ const Container = styled.div<{ $opponent: boolean }>`
   border-radius: 30px;
   border: 1px solid
     ${({ $opponent }) =>
-      $opponent ? theme.colors.purple100 : theme.colors.gray400};
+    $opponent ? theme.colors.purple100 : theme.colors.gray400};
   background: ${theme.colors.white};
 
   display: flex;
@@ -259,6 +258,10 @@ const Rank = styled.div`
   align-items: center;
   color: ${theme.colors.gray700};
   ${(props) => props.theme.fonts.regular14};
+`;
+
+const TierImage = styled.object`
+  pointer-events: none;
 `;
 
 const Row = styled.div`

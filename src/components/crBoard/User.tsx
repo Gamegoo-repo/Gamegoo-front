@@ -21,7 +21,7 @@ const User = (props: UserProps) => {
       <UserTier>
         {tier && (
           <>
-            <object
+            <ProfileImage
               data={
                 !tier
                   ? "/assets/images/tier/ur.svg"
@@ -65,6 +65,10 @@ const UserTier = styled.div`
   display: flex;
   align-items: center;
   gap: 2px;
+`;
+
+const ProfileImage = styled.object`
+    pointer-events: none;
 `;
 
 const Tier = styled.p`
