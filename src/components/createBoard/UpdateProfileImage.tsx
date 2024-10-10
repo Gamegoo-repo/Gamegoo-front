@@ -89,8 +89,8 @@ const Wrapper = styled.div`
 
 const ImageWrapper = styled.div<{ $bgColor: string }>`
   position: relative;
-  width: 74px;
-  height: 74px;
+  width: 74.98px;
+  height: 74.98px;
   background: ${(props) => props.$bgColor};
   border-radius: 50%;
 `;

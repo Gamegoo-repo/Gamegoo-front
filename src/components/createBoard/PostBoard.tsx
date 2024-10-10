@@ -29,7 +29,7 @@ import { theme } from "@/styles/theme";
 
 interface PostBoardProps {
   onClose: () => void;
-  onCompletedPosting: () => void;
+  onCompletedPostingClose: () => void;
 }
 
 const DROP_DATA = [
@@ -40,7 +40,7 @@ const DROP_DATA = [
 ];
 
 const PostBoard = (props: PostBoardProps) => {
-  const { onClose, onCompletedPosting } = props;
+  const { onClose, onCompletedPostingClose } = props;
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -238,7 +238,6 @@ const PostBoard = (props: PostBoardProps) => {
         await postBoard(params);
         await dispatch(setPostStatus("complete"));
         await dispatch(setOpenModal("isCompleted"));
-        await handleModalClose();
       } catch (error) {
         console.error(error);
       }
@@ -269,7 +268,7 @@ const PostBoard = (props: PostBoardProps) => {
         <ConfirmModal
           width="540px"
           primaryButtonText="확인"
-          onPrimaryClick={onCompletedPosting}
+          onPrimaryClick={onCompletedPostingClose}
         >
           {isCompletedModal === "isCompleted"
             ? "글 작성이 완료되었습니다."
@@ -441,3 +440,4 @@ const ButtonContent = styled.p`
   margin-top: 54px;
   text-align: center;
 `;
+
