@@ -25,6 +25,7 @@ import { useRouter } from "next/navigation";
 import { setOpenModal } from "@/redux/slices/modalSlice";
 import { getProfile } from "@/api/user";
 import { setUserProfile } from "@/redux/slices/userSlice";
+import { theme } from "@/styles/theme";
 
 interface PostBoardProps {
   onClose: () => void;
@@ -103,6 +104,7 @@ const PostBoard = (props: PostBoardProps) => {
   const [textareaValue, setTextareaValue] = useState<string>(
     currentPost?.contents || ""
   );
+  const [isFocused, setIsFocused] = useState<boolean>(false);
   const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
@@ -334,15 +336,25 @@ const PostBoard = (props: PostBoardProps) => {
         </StyleSection>
         <MemoSection>
           <Title className="memoTitle">메모</Title>
-          <Input
-            height="100px"
-            inputType="textarea"
-            value={textareaValue}
-            id="memo"
-            onChange={(value) => {
-              setTextareaValue(value);
-            }}
-          />
+          <InputWrapper>
+            <Input
+              height="100px"
+              inputType="textarea"
+              value={textareaValue}
+              id="memo"
+              fontSize="regular16"
+              onChange={(value) => {
+                if (value.length <= 1000) {
+                  setTextareaValue(value);
+                }
+              }}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+            />
+            <TextCount $isFocused={isFocused}>
+              {textareaValue.length}/1000
+            </TextCount>
+          </InputWrapper>
         </MemoSection>
         <ButtonContent>
           <Button
@@ -406,6 +418,24 @@ const StyleSection = styled.div`
 const MemoSection = styled.div`
   margin-top: 34px;
 `;
+
+const InputWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-end;
+  gap: 3px;
+`;
+
+const TextCount = styled.div<{ $isFocused: boolean }>`
+  margin-right: 20px;
+  color: ${({ $isFocused, theme }) =>
+    $isFocused ? theme.colors.purple300 : "#b5b5b5"};
+  ${theme.fonts.regular12};
+  z-index: 1000;
+`;
+
 const ButtonContent = styled.p`
   padding: 0 0 28px;
   margin-top: 54px;

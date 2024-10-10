@@ -606,7 +606,7 @@ const ReadBoard = (props: ReadBoardProps) => {
                 }}
                 placeholder="내용을 입력하세요. (선택)"
                 borderRadius="8px"
-                fontSize="regular18"
+                fontSize="regular16"
                 height="134px"
                 id="report"
                 maxLeng={500}
@@ -729,10 +729,26 @@ const MemoSection = styled.div<{ $gameType: string }>`
 
 const Memo = styled.div`
   width: 100%;
-  min-height: 77px;
+  min-height: 100px;
+  max-height: 220px;
   padding: 11px 20px;
   border-radius: 15px;
   border: 1px solid ${theme.colors.purple300};
+  overflow-y: scroll;
+
+  /* 스크롤바 */
+  &::-webkit-scrollbar {
+    width: 16px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: ${theme.colors.gray300};
+    background-clip: padding-box;
+    border: 6px solid transparent;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
 `;
 
 const MemoData = styled.p`

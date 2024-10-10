@@ -33,6 +33,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { getProfileBgColor } from "@/utils/profile";
 import { setMatchInfo } from "@/redux/slices/matchInfo";
+import { toLowerCaseString } from "@/utils/string";
 
 type profileType = "normal" | "wind" | "other" | "me";
 
@@ -397,13 +398,13 @@ const Profile: React.FC<Profile> = ({
             />
           </ProfileImgWrapper>
           {profileType !== "other" && (
-        <CameraImgBg onClick={() => setIsProfileListOpen(!isProfileListOpen)}>
-            <CameraImage
-              data="/assets/icons/camera_white.svg"
-              width={30}
-              height={25}
-            />
-        </CameraImgBg>
+            <CameraImgBg onClick={() => setIsProfileListOpen(!isProfileListOpen)}>
+              <CameraImage
+                data="/assets/icons/camera_white.svg"
+                width={30}
+                height={25}
+              />
+            </CameraImgBg>
           )}
           {/* 프로필 이미지 선택 팝업 */}
           {isProfileListOpen && (
@@ -445,16 +446,14 @@ const Profile: React.FC<Profile> = ({
               <Span>{`#${user.tag}`}</Span>
               <Rank>
                 <TierImage
-                  data={
-                    !user.tier
-                      ? "/assets/images/tier/ur.svg"
-                      : `/assets/images/tier/${user.tier}.svg`
-                  }
+                  data={`/assets/images/tier/${toLowerCaseString(
+                    user.tier
+                  )}.svg`}
                   width={42}
                   height={42}
                 />
                 {setAbbrevTier(user.tier)}
-                {user.rank}
+                {user.tier !== "UNRANKED" && user.rank}
               </Rank>
             </Top>
             {profileType === "other" && (

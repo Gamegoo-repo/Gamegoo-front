@@ -21,13 +21,10 @@ export const connectSocket = (): void => {
     socket = io(SOCKET_URL, options);
 
     socket.on("connect", () => {
-      console.log("서버 연결. Socket ID:", socket?.id);
+      console.log("소켓 연결 성공, Socket ID:", socket?.id);
       socketId = socket?.id || null;
       localStorage.setItem("gamegooSocketId", socketId || "");
-    });
-
-    socket.on("connect_error", (err) => {
-      console.error("소켓 연결 오류:", err);
+      console.log("연결된 accessToken", token);
     });
 
     socket.on("disconnect", () => {
@@ -35,7 +32,7 @@ export const connectSocket = (): void => {
       localStorage.removeItem("gamegooSocketId");
       socketId = null;
     });
-
+    
     setupSocketListeners();
   }
 };

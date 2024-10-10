@@ -11,6 +11,7 @@ interface HeaderTitleProps {
   sub?: string;
   size?: fontSize;
   blocked?: boolean;
+  isDoubleBack?: boolean;
 }
 
 const HeaderTitle: React.FC<HeaderTitleProps> = ({
@@ -18,13 +19,22 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({
   sub,
   size = "bold",
   blocked = false,
+  isDoubleBack = false,
 }) => {
   const router = useRouter();
+
+  const handleBackClick = () => {
+    if (isDoubleBack) {
+      window.history.go(-2);
+    } else {
+      router.back();
+    }
+  };
 
   return (
     <Header>
       <StyledImage
-        onClick={() => router.back()}
+        onClick={handleBackClick}
         src="/assets/icons/left_arrow.svg"
         width={20}
         height={39}

@@ -19,6 +19,7 @@ interface InputProps {
   fontSize?: string;
   borderRadius?: string;
   tag?: boolean;
+  onFocus?: () => void;
   onBlur?: () => void;
   maxLeng?: number;
 }
@@ -40,6 +41,7 @@ const Input = (props: InputProps) => {
     fontSize,
     borderRadius,
     tag = false,
+    onFocus,
     onBlur,
     maxLeng,
   } = props;
@@ -62,6 +64,7 @@ const Input = (props: InputProps) => {
           placeholder={placeholder}
           $fontSize={fontSize || "regular20"}
           $borderRadius={borderRadius || "15px"}
+          onFocus={onFocus}
           onBlur={onBlur}
           maxLength={maxLeng}
         />
@@ -78,6 +81,7 @@ const Input = (props: InputProps) => {
             borderRadius={borderRadius || "15px"}
             height={height}
             tag={tag}
+            onFocus={onFocus}
             onBlur={onBlur}
           />
           {tag && <Tag>#</Tag>}
@@ -152,7 +156,8 @@ const StyledTextarea = styled.textarea<{
   $fontSize: string | undefined;
 }>`
   width: 100%;
-  padding: 11px 20px;
+  min-height: 100px;
+  padding: 11px 10px 11px 15px;
   border-radius: ${({ $borderRadius }) =>
     $borderRadius ? $borderRadius : "15px"};
   border: 1px solid #b5b5b5;
@@ -176,7 +181,7 @@ const StyledTextarea = styled.textarea<{
 
   /* 스크롤바 */
   &::-webkit-scrollbar {
-    width: 20px;
+    width: 16px;
   }
   &::-webkit-scrollbar-thumb {
     border-radius: 10px;

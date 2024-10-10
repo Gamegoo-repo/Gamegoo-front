@@ -73,7 +73,8 @@ const UserProfile = ({
               <Title>{`${profile.gameName}의 매너레벨`}</Title>
               <Box>
                 <Text>
-                  매너 키워드는 하나 당 1점, 비매너 키워드는 -2점으로 계산해요.
+                  매너 레벨은 겜구 사용자로부터 받은 매너평가, 비매너평가를
+                  반영한 지표예요.
                   <br />
                   최근 <Span>{profile.mannerRatingCount}</Span>명의 사용자가{` `}
                   {profile.gameName}

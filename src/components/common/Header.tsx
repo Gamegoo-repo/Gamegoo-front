@@ -24,7 +24,6 @@ import { RootState } from "@/redux/store";
 import Alert from "./Alert";
 import { setNotiCount } from "@/redux/slices/notiSlice";
 import { socketLogout } from "@/api/socket";
-import { socket } from "@/socket";
 import { closeChat } from "@/redux/slices/chatSlice";
 
 interface HeaderProps {
@@ -242,6 +241,7 @@ const Header = () => {
                       try {
                         await clearTokens();
                         const response = await socketLogout();
+                        localStorage.removeItem("gamegooSocketId");
                         dispatch(clearUserProfile());
                         deleteLocalStorageData();
                         dispatch(closeChat());

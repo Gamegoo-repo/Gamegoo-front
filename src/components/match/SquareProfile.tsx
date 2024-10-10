@@ -52,7 +52,7 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
           {user.gameName}
           <Rank>
             <TierImage
-              data={`/assets/images/tier/${user.tier !== "null" ? toLowerCaseString(user.tier) : "ur"
+              data={`/assets/images/tier/${user.tier !== "null" ? toLowerCaseString(user.tier) : "unrank"
                 }.svg`}
               width={43}
               height={43}
@@ -216,6 +216,18 @@ const Bubble = styled.div`
   bottom: 140px;
   left: 65%;
 
+  animation: fadeInOut 2s infinite;
+
+  @keyframes fadeInOut {
+    0%,
+    100% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
   &:before {
     border-top: 3px solid transparent;
     border-left: 6px solid transparent;
@@ -227,18 +239,18 @@ const Bubble = styled.div`
     left: -5px;
     transform: rotate(-11deg);
     z-index: 0;
-    border-radius: 0px 0px 0px 2px;
+    border-radius: 0 0 0 2px;
   }
 
   &:after {
     border-top: 0 solid transparent;
-    border-left: 5.5px solid transparent;
+    border-left: 6px solid transparent;
     border-right: 4.5px solid transparent;
     border-bottom: 9px solid #e3deff;
     content: "";
     position: absolute;
-    bottom: 1px;
-    left: -3px;
+    bottom: 2px;
+    left: -2px;
     transform: rotate(-10deg);
     z-index: 100;
   }

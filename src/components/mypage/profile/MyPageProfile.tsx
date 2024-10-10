@@ -106,7 +106,7 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
       <Div>
         <Top>
           <TierImage
-            data={`/assets/images/tier/${toLowerCaseString(user.tier) || "ur"
+            data={`/assets/images/tier/${toLowerCaseString(user.tier) || "unrank"
               }.svg`}
             width={43}
             height={43}

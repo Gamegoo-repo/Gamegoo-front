@@ -11,24 +11,21 @@ import { RootState } from "@/redux/store";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 
 interface MessageHeaderProps {
-    isMoreBoxOpen: boolean;
-    chatEnterData?: Chat;
-    onMoreBoxOpen: () => void;
-    menuItems: MoreBoxMenuItems[];
+  isMoreBoxOpen: boolean;
+  chatEnterData?: Chat;
+  onMoreBoxOpen: () => void;
+  menuItems: MoreBoxMenuItems[];
 }
 
 const MessageHeader = (props: MessageHeaderProps) => {
-    const {
-        isMoreBoxOpen,
-        chatEnterData,
-        onMoreBoxOpen,
-        menuItems
-    } = props;
+  const { isMoreBoxOpen, chatEnterData, onMoreBoxOpen, menuItems } = props;
 
-    const dispatch = useDispatch();
-    const router = useRouter();
+  const dispatch = useDispatch();
+  const router = useRouter();
 
-    const onlineFriends = useSelector((state: RootState) => state.chat.onlineFriends);
+  const onlineFriends = useSelector(
+    (state: RootState) => state.chat.onlineFriends
+  );
 
     const handleMoveProfile = async (memberId: number) => {
         await router.push(`/user/${memberId}`);
@@ -71,7 +68,10 @@ const MessageHeader = (props: MessageHeaderProps) => {
                                 height={38} />
                         </ImageWrapper>
                         <Div>
-                            <UserName>{chatEnterData.gameName}</UserName>
+                            <UserName
+                             onClick={() => router.push(`/user/${chatEnterData.memberId}`)}>
+                              {chatEnterData.gameName}
+                              </UserName>
                             {onlineFriends.includes(chatEnterData.memberId) ? (
                                 <>
                                     <OnlineStatus>온라인</OnlineStatus>
@@ -102,39 +102,39 @@ const MessageHeader = (props: MessageHeaderProps) => {
 export default MessageHeader;
 
 const CloseButton = styled.p`
-    display:flex;
-    margin-bottom:1px;
-    padding:12px 13px 0 0;
+  display: flex;
+  margin-bottom: 1px;
+  padding: 12px 13px 0 0;
 `;
 
 const CloseImage = styled(Image)`
-    margin-left:auto;
-    cursor: pointer;
+  margin-left: auto;
+  cursor: pointer;
 `;
 
 const ChatHeader = styled.header`
-    display: flex;
-    align-items: center;
-    padding:11px 27px 20px 12px;
+  display: flex;
+  align-items: center;
+  padding: 11px 27px 20px 12px;
 `;
 
 const PrevImage = styled(Image)`
-    margin-right:18px;
-    cursor: pointer;
+  margin-right: 18px;
+  cursor: pointer;
 `;
 
 const Middle = styled.div`
-    display: flex;
-    align-items: center;
-    width: 100%;
+  display: flex;
+  align-items: center;
+  width: 100%;
 `;
 
 const ImageWrapper = styled.div<{ $bgColor: string }>`
-    position: relative;
-    width: 47px;
-    height: 47px;
-    background: ${(props) => props.$bgColor};
-    border-radius: 50%;
+  position: relative;
+  width: 47px;
+  height: 47px;
+  background: ${(props) => props.$bgColor};
+  border-radius: 50%;
 `;
 
 const ProfileImage = styled.object`
@@ -146,26 +146,27 @@ const ProfileImage = styled.object`
 `;
 
 const ThreeDotsImage = styled(Image)`
-    cursor: pointer;
+  cursor: pointer;
 `;
 
 const Div = styled.div`
-    position: relative;
-    margin-left:9px;
+  position: relative;
+  margin-left: 9px;
 `;
 
 const UserName = styled.p`
-    ${(props) => props.theme.fonts.semiBold18};
-    color: ${theme.colors.gray600}; 
+  ${(props) => props.theme.fonts.semiBold18};
+  color: ${theme.colors.gray600};
+  cursor: pointer;
 `;
 
 const OnlineStatus = styled.p`
-   ${(props) => props.theme.fonts.medium11};
-    color: ${theme.colors.gray200}; 
+  ${(props) => props.theme.fonts.medium11};
+  color: ${theme.colors.gray200};
 `;
 
 const OnlineImage = styled(Image)`
-    position: absolute;
-    top: 1%;
-    right: -11%;
+  position: absolute;
+  top: 1%;
+  right: -11%;
 `;

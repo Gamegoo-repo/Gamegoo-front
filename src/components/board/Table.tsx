@@ -183,7 +183,7 @@ const Table = (props: TableProps) => {
                     />
                     <P>
                       {setAbbrevTier(data.tier)}
-                      {data.rank}
+                      {data.tier !== "UNRANKED" && data.rank}
                     </P>
                   </Third>
                   <Fourth className="table_width">

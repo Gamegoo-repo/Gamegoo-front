@@ -5,16 +5,25 @@ import styled, { ThemeProvider } from "styled-components";
 import { theme } from "@/styles/theme";
 import Header from "@/components/common/Header";
 import StyledComponentsRegistry from "@/libs/registry";
-import { Provider } from "react-redux";
 import { useEffect, useRef, useState } from "react";
+import { Provider } from "react-redux";
 import { AppStore, store } from "@/redux/store";
 import { usePathname } from "next/navigation";
 import SocketConnection from "@/components/socket/SocketConnection";
 import { Toaster } from "react-hot-toast";
-import { connectSocket, socket } from "@/socket";
+import {
+  connectSocket,
+  socket,
+  sendMatchingQuitEvent,
+} from "@/socket";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import Footer from "@/components/common/Footer";
-import { getAccessToken } from "@/utils/storage";
+import {
+  getAccessToken,
+  getIsCompleted,
+  setIsCompleted,
+} from "@/utils/storage";
+import { notify } from "@/hooks/notify";
 
 export default function RootLayout({
   children,
@@ -29,6 +38,7 @@ export default function RootLayout({
   }
 
   const pathname = usePathname();
+  const previousPathname = useRef(pathname);
   const isNotFoundPage = pathname === "/404" || pathname === "/not-found";
   const isHeader = !(
     isNotFoundPage ||
@@ -37,12 +47,38 @@ export default function RootLayout({
     pathname.includes("/password")
   );
 
+  const isCompleted = getIsCompleted();
+
+  /* 로그인 이전 소켓 연결 */
   useEffect(() => {
     if (!socket) {
       connectSocket();
       sessionStorage.removeItem('logout');
     }
   }, []);
+
+  useEffect(() => {
+    if (!(isCompleted === "true") || isCompleted === null) {
+    } else if (
+      !pathname.includes("/matching/complete") &&
+      previousPathname.current !== pathname &&
+      previousPathname.current.includes("/matching")
+    ) {
+      sendMatchingQuitEvent();
+      notify({
+        text: "화면 이탈로 매칭이 종료되었습니다.",
+        icon: "🚫",
+        type: "error",
+      });
+    }
+
+    if (pathname.includes("/") || pathname.includes("/match")) {
+      setIsCompleted("false");
+    }
+
+    // 이전 경로 업데이트
+    previousPathname.current = pathname;
+  }, [pathname]);
 
   /* 로그인 상태 변경 시 리렌더링 트리거 */
   /* 로그아웃 후 재로그인 시 SocketConnection 컴포넌트가 리렌더링되지 않아서 만듦 */
