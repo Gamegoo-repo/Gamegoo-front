@@ -39,7 +39,6 @@ export default function RootLayout({
 
   useEffect(() => {
     if (!socket) {
-      console.log('메인페이지 소켓')
       connectSocket();
       sessionStorage.removeItem('logout');
     }

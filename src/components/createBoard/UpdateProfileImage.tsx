@@ -55,14 +55,16 @@ const UpdateProfileImage = (props: FileInputProps) => {
           <ProfileList>
             {[1, 2, 3, 4, 5, 6, 7, 8].map((item, index) => (
               <>
-                <ProfileListWrapper $bgColor={getProfileBgColor(item)}>
+                <ProfileListWrapper
+                  key={index}
+                  $bgColor={getProfileBgColor(item)}
+                  onClick={() => onImageClick(index)}>
                   <ProfileListImage
                     key={index}
                     data={`/assets/images/profile/profile${item}.svg`}
                     width={45}
                     height={45}
                     $isSelected={index + 1 === selectedImageIndex}
-                    onClick={() => onImageClick(index)}
                   />
                 </ProfileListWrapper>
               </>
