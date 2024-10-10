@@ -449,15 +449,15 @@ const Profile: React.FC<Profile> = ({
               <Span>{`#${user.tag}`}</Span>
               <Rank>
                 <Image
-                  src={`/assets/images/tier/${
-                    toLowerCaseString(user.tier) || "ur"
-                  }.svg`}
+                  src={`/assets/images/tier/${toLowerCaseString(
+                    user.tier
+                  )}.svg`}
                   width={42}
                   height={42}
                   alt="tier"
                 />
                 {setAbbrevTier(user.tier)}
-                {user.rank}
+                {user.tier !== "UNRANKED" && user.rank}
               </Rank>
             </Top>
             {profileType === "other" && (

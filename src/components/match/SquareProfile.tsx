@@ -53,7 +53,7 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
           <Rank>
             <Image
               src={`/assets/images/tier/${
-                user.tier !== "null" ? toLowerCaseString(user.tier) : "ur"
+                user.tier !== "null" ? toLowerCaseString(user.tier) : "unrank"
               }.svg`}
               width={43}
               height={43}
