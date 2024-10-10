@@ -65,12 +65,12 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
             height={110}
           />
         </ProfileImgWrapper>
-        <CameraImage
-          data="/assets/icons/profile_camera.svg"
-          width={34}
-          height={34}
-          onClick={() => setIsProfileListOpen(!isProfileListOpen)}
-        />
+        <CameraImgBg onClick={() => setIsProfileListOpen(!isProfileListOpen)}>
+          <CameraImage
+            data="/assets/icons/camera_white.svg"
+            width={25}
+            height={23} />
+        </CameraImgBg>
         {/* 프로필 이미지 선택 팝업 */}
         {isProfileListOpen && (
           <ProfileListBox>
@@ -159,10 +159,21 @@ const PersonImage = styled.object`
   pointer-events: none;
 `;
 
+const CameraImgBg = styled.div`
+  position: relative;
+  width: 34px;
+  height: 34px;
+  background: #000000a1;
+  box-shadow: 0 0 3.06px 0 #00000040;
+  border-radius: 50%;
+  top: -36px;
+`;
+
 const CameraImage = styled.object`
   position: absolute;
-  bottom: 3px;
-  left: 3px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   pointer-events: none;
 `;
 

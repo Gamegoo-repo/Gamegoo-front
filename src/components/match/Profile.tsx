@@ -17,7 +17,6 @@ import PositionCategory from "../common/PositionCategory";
 import MoreBox from "../common/MoreBox";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import { User } from "@/interface/profile";
-import { toLowerCaseString } from "@/utils/string";
 import { PositionState } from "../crBoard/PositionBox";
 import { putPosition } from "@/api/user";
 import { setAbbrevTier, setPositionImg } from "@/utils/custom";
@@ -398,12 +397,13 @@ const Profile: React.FC<Profile> = ({
             />
           </ProfileImgWrapper>
           {profileType !== "other" && (
+        <CameraImgBg onClick={() => setIsProfileListOpen(!isProfileListOpen)}>
             <CameraImage
-              data="/assets/icons/profile_camera.svg"
-              width={54}
-              height={54}
-              onClick={() => setIsProfileListOpen(!isProfileListOpen)}
+              data="/assets/icons/camera_white.svg"
+              width={30}
+              height={25}
             />
+        </CameraImgBg>
           )}
           {/* 프로필 이미지 선택 팝업 */}
           {isProfileListOpen && (
@@ -691,10 +691,21 @@ const PersonImage = styled.object`
   pointer-events: none;
 `;
 
+const CameraImgBg = styled.div`
+  position: relative;
+  width: 54px;
+  height: 54px;
+  background: #000000a1;
+  box-shadow: 0 0 3.06px 0 #00000040;
+  border-radius: 50%;
+  top: -51px;
+`;
+
 const CameraImage = styled.object`
   position: absolute;
-  bottom: 0px;
-  left: 0px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   pointer-events: none;
 `;
 
@@ -709,9 +720,9 @@ const ProfileListBox = styled.div`
   align-items: flex-end;
   border-radius: 20px;
   background: rgba(0, 0, 0, 0.64);
-  position: fixed;
-  top: 500px;
-  left: 20px;
+  position: absolute;
+  top: 205px;
+  left: 10px;
   z-index: 100;
 `;
 
