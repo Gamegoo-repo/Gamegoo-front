@@ -19,6 +19,7 @@ import ChatLayout from "../chat/ChatLayout";
 import Champion from "../readBoard/Champion";
 import { BoardDetail } from "@/interface/board";
 import { getProfileBgColor } from "@/utils/profile";
+import { toLowerCaseString } from "@/utils/string";
 
 interface TableTitleProps {
   id: number;
@@ -175,8 +176,10 @@ const Table = (props: TableProps) => {
                   <Third className="table_width">
                     <TierImage
                       data={!data.tier
-                        ? "/assets/images/tier/ur.svg"
-                        : `/assets/images/tier/${data.tier}.svg`
+                        ? "/assets/images/tier/unranked.svg"
+                        : `/assets/images/tier/${toLowerCaseString(
+                          data.tier
+                        )}.svg`
                       }
                       width={28}
                       height={26}
