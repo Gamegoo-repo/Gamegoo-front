@@ -19,6 +19,7 @@ import ChatLayout from "../chat/ChatLayout";
 import Champion from "../readBoard/Champion";
 import { BoardDetail } from "@/interface/board";
 import { getProfileBgColor } from "@/utils/profile";
+import { toLowerCaseString } from "@/utils/string";
 
 interface TableTitleProps {
   id: number;
@@ -158,7 +159,7 @@ const Table = (props: TableProps) => {
                     onClick={(e) => handleUserProfilePage(e, data.memberId)}
                   >
                     <ProfileImgWrapper
-                      $bgColor={getProfileBgColor(data.profileImage + 1)}
+                      $bgColor={getProfileBgColor(data.profileImage)}
                     >
                       <ProfileImg
                         src={setProfileImg(data.profileImage)}
@@ -179,8 +180,10 @@ const Table = (props: TableProps) => {
                     <Image
                       src={
                         !data.tier
-                          ? "/assets/images/tier/ur.svg"
-                          : `/assets/images/tier/${data.tier}.svg`
+                          ? "/assets/images/tier/unranked.svg"
+                          : `/assets/images/tier/${toLowerCaseString(
+                              data.tier
+                            )}.svg`
                       }
                       width={28}
                       height={26}
@@ -188,7 +191,7 @@ const Table = (props: TableProps) => {
                     />
                     <P>
                       {setAbbrevTier(data.tier)}
-                      {data.rank}
+                      {data.tier !== "UNRANKED" && data.rank}
                     </P>
                   </Third>
                   <Fourth className="table_width">

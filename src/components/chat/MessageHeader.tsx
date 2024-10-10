@@ -11,155 +11,157 @@ import { RootState } from "@/redux/store";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 
 interface MessageHeaderProps {
-    isMoreBoxOpen: boolean;
-    chatEnterData?: Chat;
-    onMoreBoxOpen: () => void;
-    menuItems: MoreBoxMenuItems[];
+  isMoreBoxOpen: boolean;
+  chatEnterData?: Chat;
+  onMoreBoxOpen: () => void;
+  menuItems: MoreBoxMenuItems[];
 }
 
 const MessageHeader = (props: MessageHeaderProps) => {
-    const {
-        isMoreBoxOpen,
-        chatEnterData,
-        onMoreBoxOpen,
-        menuItems
-    } = props;
+  const { isMoreBoxOpen, chatEnterData, onMoreBoxOpen, menuItems } = props;
 
-    const dispatch = useDispatch();
-    const router = useRouter();
+  const dispatch = useDispatch();
+  const router = useRouter();
 
-    const onlineFriends = useSelector((state: RootState) => state.chat.onlineFriends);
+  const onlineFriends = useSelector(
+    (state: RootState) => state.chat.onlineFriends
+  );
 
-    return (
-        <>
-            {isMoreBoxOpen &&
-                <MoreBox
-                    items={menuItems}
-                    top={35}
-                    left={200}
-                />
-            }
-            <CloseButton>
-                <CloseImage
-                    onClick={() => dispatch(closeChatRoom())}
-                    src='/assets/icons/close.svg'
-                    width={11}
-                    height={11}
-                    alt='닫기' />
-            </CloseButton>
-            {chatEnterData &&
-                <ChatHeader>
-                    <PrevImage
-                        onClick={() => dispatch(closeChatRoom())}
-                        src="/assets/icons/left_arrow.svg"
-                        width={9}
-                        height={18}
-                        alt="뒤로가기" />
-                    <Middle>
-                        <ImageWrapper $bgColor={getProfileBgColor(chatEnterData.memberProfileImg)}>
-                            <ProfileImage
-                                onClick={() => router.push(`/user/${chatEnterData.memberId}`)}
-                                src={`/assets/images/profile/profile${chatEnterData.memberProfileImg}.svg`}
-                                width={38}
-                                height={38}
-                                alt="프로필 이미지" />
-                        </ImageWrapper>
-                        <Div>
-                            <UserName>{chatEnterData.gameName}</UserName>
-                            {onlineFriends.includes(chatEnterData.memberId) ? (
-                                <>
-                                    <OnlineStatus>온라인</OnlineStatus>
-                                    <OnlineImage
-                                        src="/assets/icons/online.svg"
-                                        width={5}
-                                        height={5}
-                                        alt="온라인"
-                                    />
-                                </>
-                            ) : (
-                                <OnlineStatus>오프라인</OnlineStatus>
-                            )}
-                        </Div>
-                    </Middle>
-                    <ThreeDotsImage
-                        onClick={onMoreBoxOpen}
-                        src="/assets/icons/three_dots_button.svg"
-                        width={3}
-                        height={15}
-                        alt="상세보기" />
-                </ChatHeader>
-            }
-        </>
-    )
+  return (
+    <>
+      {isMoreBoxOpen && <MoreBox items={menuItems} top={35} left={200} />}
+      <CloseButton>
+        <CloseImage
+          onClick={() => dispatch(closeChatRoom())}
+          src="/assets/icons/close.svg"
+          width={11}
+          height={11}
+          alt="닫기"
+        />
+      </CloseButton>
+      {chatEnterData && (
+        <ChatHeader>
+          <PrevImage
+            onClick={() => dispatch(closeChatRoom())}
+            src="/assets/icons/left_arrow.svg"
+            width={9}
+            height={18}
+            alt="뒤로가기"
+          />
+          <Middle>
+            <ImageWrapper
+              $bgColor={getProfileBgColor(chatEnterData.memberProfileImg)}
+            >
+              <ProfileImage
+                onClick={() => router.push(`/user/${chatEnterData.memberId}`)}
+                src={`/assets/images/profile/profile${chatEnterData.memberProfileImg}.svg`}
+                width={38}
+                height={38}
+                alt="프로필 이미지"
+              />
+            </ImageWrapper>
+            <Div>
+              <UserName
+                onClick={() => router.push(`/user/${chatEnterData.memberId}`)}
+              >
+                {chatEnterData.gameName}
+              </UserName>
+              {onlineFriends.includes(chatEnterData.memberId) ? (
+                <>
+                  <OnlineStatus>온라인</OnlineStatus>
+                  <OnlineImage
+                    src="/assets/icons/online.svg"
+                    width={5}
+                    height={5}
+                    alt="온라인"
+                  />
+                </>
+              ) : (
+                <OnlineStatus>오프라인</OnlineStatus>
+              )}
+            </Div>
+          </Middle>
+          <ThreeDotsImage
+            onClick={onMoreBoxOpen}
+            src="/assets/icons/three_dots_button.svg"
+            width={3}
+            height={15}
+            alt="상세보기"
+          />
+        </ChatHeader>
+      )}
+    </>
+  );
 };
 
 export default MessageHeader;
 
 const CloseButton = styled.p`
-    display:flex;
-    margin-bottom:1px;
-    padding:12px 13px 0 0;
+  display: flex;
+  margin-bottom: 1px;
+  padding: 12px 13px 0 0;
 `;
 
 const CloseImage = styled(Image)`
-    margin-left:auto;
-    cursor: pointer;
+  margin-left: auto;
+  cursor: pointer;
 `;
 
 const ChatHeader = styled.header`
-    display: flex;
-    align-items: center;
-    padding:11px 27px 20px 12px;
+  display: flex;
+  align-items: center;
+  padding: 11px 27px 20px 12px;
 `;
 
 const PrevImage = styled(Image)`
-    margin-right:18px;
-    cursor: pointer;
+  margin-right: 18px;
+  cursor: pointer;
 `;
 
 const Middle = styled.div`
-    display: flex;
-    align-items: center;
-    width: 100%;
+  display: flex;
+  align-items: center;
+  width: 100%;
 `;
 
 const ImageWrapper = styled.div<{ $bgColor: string }>`
-    position: relative;
-    width: 47px;
-    height: 47px;
-    background: ${(props) => props.$bgColor};
-    border-radius: 50%;
+  position: relative;
+  width: 47px;
+  height: 47px;
+  background: ${(props) => props.$bgColor};
+  border-radius: 50%;
 `;
 
 const ProfileImage = styled(Image)`
-    position: absolute;
-    top:50%;
-    left:50%;
-    transform: translate(-50%, -50%);
-    cursor: pointer;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
 `;
 
 const ThreeDotsImage = styled(Image)`
-    cursor: pointer;
+  cursor: pointer;
 `;
 
 const Div = styled.div`
-    position: relative;
-    margin-left:9px;
+  position: relative;
+  margin-left: 9px;
 `;
 
 const UserName = styled.p`
-    ${(props) => props.theme.fonts.semiBold18};
-    color: ${theme.colors.gray600}; 
+  ${(props) => props.theme.fonts.semiBold18};
+  color: ${theme.colors.gray600};
+  cursor: pointer;
 `;
 
 const OnlineStatus = styled.p`
-   ${(props) => props.theme.fonts.medium11};
-    color: ${theme.colors.gray200}; 
+  ${(props) => props.theme.fonts.medium11};
+  color: ${theme.colors.gray200};
 `;
 
 const OnlineImage = styled(Image)`
-    position: absolute;
-    top: 1%;
-    right: -11%;
+  position: absolute;
+  top: 1%;
+  right: -11%;
 `;

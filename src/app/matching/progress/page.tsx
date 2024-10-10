@@ -71,7 +71,7 @@ const Progress = () => {
     setTextVisible(false);
 
     setTimeout(async () => {
-      const messages = Math.random() < 0.5 ? messagesWithN : messagesWithN;
+      const messages = Math.random() < 0.5 ? messagesWithN : messagesWithoutN;
       const randomMessage =
         messages[Math.floor(Math.random() * messages.length)];
       /* 나와 같은 티어의 매칭 인원이 필요할 때 */

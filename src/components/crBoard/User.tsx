@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { setAbbrevTier } from "@/utils/custom";
+import { toLowerCaseString } from "@/utils/string";
 
 interface UserProps {
   account: string;
@@ -25,8 +26,8 @@ const User = (props: UserProps) => {
             <Image
               src={
                 !tier
-                  ? "/assets/images/tier/ur.svg"
-                  : `/assets/images/tier/${tier}.svg`
+                  ? "/assets/images/tier/unranked.svg"
+                  : `/assets/images/tier/${toLowerCaseString(tier)}.svg`
               }
               width={32}
               height={20}
@@ -34,7 +35,7 @@ const User = (props: UserProps) => {
             />
             <Tier>
               {!tier ? "UR" : setAbbrevTier(tier)}
-              {rank}
+              {tier !== "UNRANKED" && rank}
             </Tier>
           </>
         )}

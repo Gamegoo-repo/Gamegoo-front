@@ -127,7 +127,9 @@ const Post: React.FC<PostProps> = ({
         </Name>
         <Tier>
           <Image
-            src={`/assets/images/tier/${toLowerCaseString(tier) || "ur"}.svg`}
+            src={`/assets/images/tier/${
+              toLowerCaseString(tier) || "unrank"
+            }.svg`}
             width={26}
             height={26}
             alt="tier"
