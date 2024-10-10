@@ -503,6 +503,7 @@ const Timestamp = styled.p`
   padding: 4px 10px;
   ${(props) => props.theme.fonts.regular8};
   color: ${theme.colors.white};
+  white-space: nowrap;
 `;
 
 const YourMessageContainer = styled.div`
