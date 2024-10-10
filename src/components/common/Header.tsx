@@ -24,6 +24,7 @@ import { RootState } from "@/redux/store";
 import Alert from "./Alert";
 import { setNotiCount } from "@/redux/slices/notiSlice";
 import { socketLogout } from "@/api/socket";
+import { closeChat } from "@/redux/slices/chatSlice";
 
 interface HeaderProps {
   selected: boolean;
@@ -178,10 +179,9 @@ const Header = () => {
             >
               <HeaderProfileImgWrapper $bgColor={getProfileBgColor(profileImg)}>
                 <HeaderProfileImg
-                  src={`/assets/images/profile/profile${profileImg}.svg`}
+                  data={`/assets/images/profile/profile${profileImg}.svg`}
                   width={25}
                   height={25}
-                  alt="profile"
                 />
               </HeaderProfileImgWrapper>
               {name}
@@ -209,10 +209,9 @@ const Header = () => {
             {profileImg && (
               <ProfileImgWrapper $bgColor={getProfileBgColor(profileImg)}>
                 <ProfileImg
-                  src={`/assets/images/profile/profile${profileImg}.svg`}
+                  data={`/assets/images/profile/profile${profileImg}.svg`}
                   width={52}
                   height={62}
-                  alt="profile"
                 />
               </ProfileImgWrapper>
             )}
@@ -231,21 +230,22 @@ const Header = () => {
           </MyProfile>
           <TabMenu>
             {HEADER_MODAL_TAB.map((data, index) => (
-              <>
+              <TabItemWrapper key={data.id}>
                 <Line
-                  key={data.id}
                   onClick={async () => {
                     setIsMyPage(false);
                     if (data.id !== 6) {
                       router.push(`${data.url}`);
                     } else {
-                      router.push("/login");
+                      sessionStorage.setItem('logout', 'true');
                       try {
+                        await clearTokens();
                         const response = await socketLogout();
-                        clearTokens();
                         localStorage.removeItem("gamegooSocketId");
                         dispatch(clearUserProfile());
                         deleteLocalStorageData();
+                        dispatch(closeChat());
+                        router.push('/login');
                       } catch {
                         console.log("소켓 로그아웃 오류");
                       }
@@ -261,7 +261,7 @@ const Header = () => {
                   {data.menu}
                 </Line>
                 {index === 2 && <Divider />}
-              </>
+              </TabItemWrapper>
             ))}
           </TabMenu>
         </MyPageModal>
@@ -337,11 +337,12 @@ const HeaderProfileImgWrapper = styled.div<{ $bgColor: string }>`
   border-radius: 50%;
 `;
 
-const HeaderProfileImg = styled(Image)`
+const HeaderProfileImg = styled.object`
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  pointer-events: none;
 `;
 
 const Login = styled.button`
@@ -377,11 +378,12 @@ const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
   border-radius: 50%;
 `;
 
-const ProfileImg = styled(Image)`
+const ProfileImg = styled.object`
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  pointer-events: none;
 `;
 
 const MyName = styled.div`
@@ -401,6 +403,10 @@ const TabMenu = styled.div`
   gap: 4px;
   color: ${theme.colors.black};
   ${(props) => props.theme.fonts.semiBold18};
+`;
+
+const TabItemWrapper = styled.div`
+  width: 100%;
 `;
 
 const Line = styled.div`

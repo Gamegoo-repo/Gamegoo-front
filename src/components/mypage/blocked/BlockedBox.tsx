@@ -68,10 +68,9 @@ const BlockedBox: React.FC<BlockedBoxProps> = ({
       <Gap $isBlind={isBlind}>
         <ProfileImgWrapper $bgColor={getProfileBgColor(profileImg)}>
           <ProfileImg
-            src={`/assets/images/profile/profile${profileImg}.svg`}
+            data={`/assets/images/profile/profile${profileImg}.svg`}
             width={40}
             height={40}
-            alt="profile"
           />
         </ProfileImgWrapper>
         {name}
@@ -194,11 +193,12 @@ const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
   border-radius: 50%;
 `;
 
-const ProfileImg = styled(Image)`
+const ProfileImg = styled.object`
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  pointer-events: none;
 `;
 
 const MoreDiv = styled.div`

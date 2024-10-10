@@ -19,7 +19,6 @@ import ChatLayout from "../chat/ChatLayout";
 import Champion from "../readBoard/Champion";
 import { BoardDetail } from "@/interface/board";
 import { getProfileBgColor } from "@/utils/profile";
-import { toLowerCaseString } from "@/utils/string";
 
 interface TableTitleProps {
   id: number;
@@ -100,11 +99,11 @@ const Table = (props: TableProps) => {
   }, [copiedAlert]);
 
   /* 다른 사람 프로필 이동 */
-  const handleUserProfilePage = (e: React.MouseEvent, memberId: number) => {
+  const handleMoveProfilePage = (e: React.MouseEvent, memberId: number) => {
     e.stopPropagation();
 
     if (!isUser.gameName) {
-      setAlertContent("탈퇴한 사용자 입니다.");
+      setAlertContent("로그인이 필요한 서비스입니다.");
       return setShowAlert(true);
     }
 
@@ -121,13 +120,14 @@ const Table = (props: TableProps) => {
       {showAlert && (
         <Alert
           icon={
-            alertContent === "탈퇴한 사용자 입니다." ? "exclamation" : "trash"
+            alertContent === "로그인이 필요한 서비스입니다." ? "exclamation" : "trash"
           }
           width={45}
           height={50}
           content={alertContent}
           alt={alertContent}
           onClose={() => setShowAlert(false)}
+          buttonText="확인"
         />
       )}
 
@@ -154,21 +154,17 @@ const Table = (props: TableProps) => {
                   key={data.boardId}
                   onClick={() => handlePostOpen(data.boardId)}
                 >
-                  <First
-                    className="table_width"
-                    onClick={(e) => handleUserProfilePage(e, data.memberId)}
-                  >
+                  <First className="table_width" >
                     <ProfileImgWrapper
-                      $bgColor={getProfileBgColor(data.profileImage)}
+                      $bgColor={getProfileBgColor(data.profileImage + 1)}
+                      onClick={(e) => handleMoveProfilePage(e, data.memberId)}
                     >
                       <ProfileImg
-                        src={setProfileImg(data.profileImage)}
+                        data={setProfileImg(data.profileImage)}
                         width={35}
                         height={35}
-                        alt="프로필 이미지"
                       />
                     </ProfileImgWrapper>
-
                     <P onClick={(e) => handleTextClick(data.gameName, e)}>
                       {data.gameName}
                     </P>
@@ -177,17 +173,13 @@ const Table = (props: TableProps) => {
                     {data.mannerLevel && <P>LV.{data.mannerLevel}</P>}
                   </Second>
                   <Third className="table_width">
-                    <Image
-                      src={
-                        !data.tier
-                          ? "/assets/images/tier/unranked.svg"
-                          : `/assets/images/tier/${toLowerCaseString(
-                              data.tier
-                            )}.svg`
+                    <TierImage
+                      data={!data.tier
+                        ? "/assets/images/tier/ur.svg"
+                        : `/assets/images/tier/${data.tier}.svg`
                       }
                       width={28}
                       height={26}
-                      alt="티어 이미지"
                     />
                     <P>
                       {setAbbrevTier(data.tier)}
@@ -337,11 +329,12 @@ const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
   border-radius: 50%;
 `;
 
-const ProfileImg = styled(Image)`
+const ProfileImg = styled.object`
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  pointer-events: none;
 `;
 
 const Third = styled.div`
@@ -349,6 +342,10 @@ const Third = styled.div`
   align-items: center;
   justify-content: center;
   gap: 3px;
+`;
+
+const TierImage = styled.object`
+    pointer-events: none;
 `;
 
 const Fourth = styled.div`

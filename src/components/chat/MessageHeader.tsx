@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Chat } from "@/interface/chat";
 import MoreBox from "../common/MoreBox";
 import { useDispatch, useSelector } from "react-redux";
-import { closeChatRoom } from "@/redux/slices/chatSlice";
+import { closeChat, closeChatRoom } from "@/redux/slices/chatSlice";
 import { getProfileBgColor } from "@/utils/profile";
 import { useRouter } from "next/navigation";
 import { RootState } from "@/redux/store";
@@ -27,71 +27,76 @@ const MessageHeader = (props: MessageHeaderProps) => {
     (state: RootState) => state.chat.onlineFriends
   );
 
-  return (
-    <>
-      {isMoreBoxOpen && <MoreBox items={menuItems} top={35} left={200} />}
-      <CloseButton>
-        <CloseImage
-          onClick={() => dispatch(closeChatRoom())}
-          src="/assets/icons/close.svg"
-          width={11}
-          height={11}
-          alt="닫기"
-        />
-      </CloseButton>
-      {chatEnterData && (
-        <ChatHeader>
-          <PrevImage
-            onClick={() => dispatch(closeChatRoom())}
-            src="/assets/icons/left_arrow.svg"
-            width={9}
-            height={18}
-            alt="뒤로가기"
-          />
-          <Middle>
-            <ImageWrapper
-              $bgColor={getProfileBgColor(chatEnterData.memberProfileImg)}
-            >
-              <ProfileImage
-                onClick={() => router.push(`/user/${chatEnterData.memberId}`)}
-                src={`/assets/images/profile/profile${chatEnterData.memberProfileImg}.svg`}
-                width={38}
-                height={38}
-                alt="프로필 이미지"
-              />
-            </ImageWrapper>
-            <Div>
-              <UserName
-                onClick={() => router.push(`/user/${chatEnterData.memberId}`)}
-              >
-                {chatEnterData.gameName}
-              </UserName>
-              {onlineFriends.includes(chatEnterData.memberId) ? (
-                <>
-                  <OnlineStatus>온라인</OnlineStatus>
-                  <OnlineImage
-                    src="/assets/icons/online.svg"
-                    width={5}
-                    height={5}
-                    alt="온라인"
-                  />
-                </>
-              ) : (
-                <OnlineStatus>오프라인</OnlineStatus>
-              )}
-            </Div>
-          </Middle>
-          <ThreeDotsImage
-            onClick={onMoreBoxOpen}
-            src="/assets/icons/three_dots_button.svg"
-            width={3}
-            height={15}
-            alt="상세보기"
-          />
-        </ChatHeader>
-      )}
-    </>
-  );
+    const handleMoveProfile = async (memberId: number) => {
+        await router.push(`/user/${memberId}`);
+        await dispatch(closeChat());
+        await dispatch(closeChatRoom());
+    };
+
+    return (
+        <>
+            {isMoreBoxOpen &&
+                <MoreBox
+                    items={menuItems}
+                    top={35}
+                    left={200}
+                />
+            }
+            <CloseButton>
+                <CloseImage
+                    onClick={() => dispatch(closeChatRoom())}
+                    src='/assets/icons/close.svg'
+                    width={11}
+                    height={11}
+                    alt='닫기' />
+            </CloseButton>
+            {chatEnterData &&
+                <ChatHeader>
+                    <PrevImage
+                        onClick={() => dispatch(closeChatRoom())}
+                        src="/assets/icons/left_arrow.svg"
+                        width={9}
+                        height={18}
+                        alt="뒤로가기" />
+                    <Middle>
+                        <ImageWrapper
+                            $bgColor={getProfileBgColor(chatEnterData.memberProfileImg)}
+                            onClick={() => handleMoveProfile(chatEnterData.memberId)}>
+                            <ProfileImage
+                                data={chatEnterData.blind ? `/assets/images/profile/profile_default.svg` : `/assets/images/profile/profile${chatEnterData.memberProfileImg}.svg`}
+                                width={38}
+                                height={38} />
+                        </ImageWrapper>
+                        <Div>
+                            <UserName
+                             onClick={() => router.push(`/user/${chatEnterData.memberId}`)}>
+                              {chatEnterData.gameName}
+                              </UserName>
+                            {onlineFriends.includes(chatEnterData.memberId) ? (
+                                <>
+                                    <OnlineStatus>온라인</OnlineStatus>
+                                    <OnlineImage
+                                        src="/assets/icons/online.svg"
+                                        width={5}
+                                        height={5}
+                                        alt="온라인"
+                                    />
+                                </>
+                            ) : (
+                                <OnlineStatus>오프라인</OnlineStatus>
+                            )}
+                        </Div>
+                    </Middle>
+                    <ThreeDotsImage
+                        onClick={onMoreBoxOpen}
+                        src="/assets/icons/three_dots_button.svg"
+                        width={3}
+                        height={15}
+                        alt="상세보기" />
+                </ChatHeader>
+            }
+        </>
+    )
 };
 
 export default MessageHeader;
@@ -132,12 +137,12 @@ const ImageWrapper = styled.div<{ $bgColor: string }>`
   border-radius: 50%;
 `;
 
-const ProfileImage = styled(Image)`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  cursor: pointer;
+const ProfileImage = styled.object`
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
 `;
 
 const ThreeDotsImage = styled(Image)`

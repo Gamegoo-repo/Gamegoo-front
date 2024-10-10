@@ -88,8 +88,6 @@ const ProfilePage = () => {
     const gameModeMap = { personal: "1", free: "2", fast: "3", wind: "4" };
     const gameMode = gameModeMap[rank as keyof typeof gameModeMap] || "1";
 
-    console.log("MatchInfo:", matchInfo);
-
     const matchingData = {
       matchingType,
       gameMode,

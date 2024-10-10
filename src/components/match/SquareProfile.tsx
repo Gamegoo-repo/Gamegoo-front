@@ -51,13 +51,11 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
         <Top>
           {user.gameName}
           <Rank>
-            <Image
-              src={`/assets/images/tier/${
-                user.tier !== "null" ? toLowerCaseString(user.tier) : "unrank"
-              }.svg`}
+            <TierImage
+              data={`/assets/images/tier/${user.tier !== "null" ? toLowerCaseString(user.tier) : "unrank"
+                }.svg`}
               width={43}
               height={43}
-              alt="tier"
             />
             {setAbbrevTier(user.tier)}
             {user.rank ? user.rank : ""}
@@ -66,11 +64,9 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
         <ImageContainer>
           <ProfileImgWrapper $bgColor={getProfileBgColor(user.profileImg)}>
             <ProfileImg
-              src={`/assets/images/profile/profile${user.profileImg}.svg`}
+              data={`/assets/images/profile/profile${user.profileImg}.svg`}
               width={100}
               height={100}
-              alt="profile"
-              priority
             />
           </ProfileImgWrapper>
           {opponent && (
@@ -143,7 +139,7 @@ const Container = styled.div<{ $opponent: boolean }>`
   border-radius: 30px;
   border: 1px solid
     ${({ $opponent }) =>
-      $opponent ? theme.colors.purple100 : theme.colors.gray400};
+    $opponent ? theme.colors.purple100 : theme.colors.gray400};
   background: ${theme.colors.white};
 
   display: flex;
@@ -181,7 +177,7 @@ const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
   border-radius: 50%;
 `;
 
-const ProfileImg = styled(Image)`
+const ProfileImg = styled.object`
   position: absolute;
   top: 50%;
   left: 50%;
@@ -243,7 +239,7 @@ const Bubble = styled.div`
     left: -5px;
     transform: rotate(-11deg);
     z-index: 0;
-    border-radius: 0px 0px 0px 2px;
+    border-radius: 0 0 0 2px;
   }
 
   &:after {
@@ -274,6 +270,10 @@ const Rank = styled.div`
   align-items: center;
   color: ${theme.colors.gray700};
   ${(props) => props.theme.fonts.regular14};
+`;
+
+const TierImage = styled.object`
+  pointer-events: none;
 `;
 
 const Row = styled.div`
