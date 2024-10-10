@@ -58,7 +58,7 @@ export default function RootLayout({
   }, [accesssToken]);
 
   useEffect(() => {
-    if (!(isCompleted === "true") || isCompleted === null) {
+    if (isCompleted === "true") {
     } else if (
       !pathname.includes("/matching/complete") &&
       previousPathname.current !== pathname &&
