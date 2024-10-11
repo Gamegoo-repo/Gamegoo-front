@@ -155,6 +155,11 @@ const Complete = () => {
     };
   }, []);
 
+  // 언제든 matching-fail이 오면 실패 처리
+  socket?.on("matching-fail", () => {
+    handleMatchingFailWithTimerClear(); // 매칭 실패 처리
+  });
+
   // 타임아웃 처리
   const handleTimeout = () => {
     if (role === "receiver") {
