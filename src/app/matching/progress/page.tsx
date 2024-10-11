@@ -13,6 +13,9 @@ import { sendMatchingQuitEvent, socket } from "@/socket";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { messagesWithN, messagesWithoutN } from "@/constants/messages";
 import { getSystemMsg } from "@/api/socket";
+import { getBoardList } from "@/api/board";
+import { setOpenPostingModal } from "@/redux/slices/modalSlice";
+import { useDispatch } from "react-redux";
 
 interface User {
   memberId: number;
@@ -39,6 +42,7 @@ const Progress = () => {
   const [timeLeft, setTimeLeft] = useState<number>(300);
   const [isRetrying, setIsRetrying] = useState<boolean>(false); // 매칭 재시도 여부
   const router = useRouter();
+  const dispatch = useDispatch();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const type = searchParams.get("matchingType");
@@ -180,11 +184,11 @@ const Progress = () => {
     };
   }, []);
 
-  const startMatchingProcess = () => {
+  const startMatchingProcess = async () => {
     if (timerRef.current) return; // 이미 타이머가 실행 중이면 추가로 설정하지 않음
 
     // 매칭 재시도 여부에 따라 타이머 설정
-    setTimeLeft(300);
+    setTimeLeft(10);
     let priority = 51.5; // 초기 priority 값
     timerRef.current = setInterval(() => {
       setTimeLeft((prevTime) => {
@@ -192,18 +196,57 @@ const Progress = () => {
           // 5분 타이머가 끝나면 매칭 실패 처리
           clearTimers(); // 타이머 정리
           socket?.emit("matching-not-found");
-          retry
-            ? type === "PRECISE" && setIsSecondYes(true) // 빡겜일 때, 게시판 모달 표시
-            : setIsFirstRetry(true); // 매칭 실패 모달 표시
+          handleRetry(); // 매칭 실패 모달 결정 함수
         } else if (prevTime < 300 && prevTime % 30 === 0) {
           // 30초마다 priority 값을 감소시키며 매칭 재시도
           priority -= 1.5;
           socket?.emit("matching-retry", { priority });
           console.log(`매칭 재시도 (priority: ${priority})`);
         }
+
         return prevTime - 1;
       });
     }, 1000);
+  };
+
+  // 매칭 실패 모달 결정
+  const handleRetry = async () => {
+    if (type === "gamegoo" || !retry) {
+      setIsFirstRetry(true);
+    } else {
+      if (type === "custom") {
+        const gameRank = searchParams.get("gameRank");
+        const mode =
+          gameRank === "fast"
+            ? 1
+            : gameRank === "personal"
+            ? 2
+            : gameRank === "free"
+            ? 3
+            : gameRank === "wind"
+            ? 4
+            : null;
+
+        const params = {
+          pageIdx: 1,
+          mode: mode,
+          tier: user.tier,
+          mainPosition: user.mainPosition,
+          mike: user.mike,
+        };
+        try {
+          const response = await getBoardList(params);
+          if (response.result.totalCount > 0) {
+            setIsSecondYes(true);
+          } else {
+            setIsSecondNo(true);
+          }
+        } catch (error) {
+          console.error("해당 조건의 게시글 목록이 없습니다.", error);
+          setIsSecondNo(true);
+        }
+      }
+    }
   };
 
   const clearTimers = () => {
@@ -276,7 +319,7 @@ const Progress = () => {
                 }, 3000);
               }}
               onSecondaryClick={() => {
-                router.push("/borad");
+                router.push("/board");
                 setIsSecondYes(false);
               }}
               primaryButtonText="닫기"
@@ -298,8 +341,9 @@ const Progress = () => {
                 }, 3000);
               }}
               onSecondaryClick={() => {
-                router.push("/borad");
+                router.push("/board");
                 setIsSecondNo(false);
+                dispatch(setOpenPostingModal());
               }}
               primaryButtonText="닫기"
               secondaryButtonText="글 작성하기"
