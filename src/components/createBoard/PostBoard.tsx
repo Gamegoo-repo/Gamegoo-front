@@ -45,7 +45,6 @@ const PostBoard = (props: PostBoardProps) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const postStatus = useSelector((state: RootState) => state.post.postStatus);
   const user = useSelector((state: RootState) => state.user);
   const currentPost = useSelector((state: RootState) => state.post.currentPost);
   const currentPostId = useSelector(
@@ -54,30 +53,6 @@ const PostBoard = (props: PostBoardProps) => {
   const isCompletedModal = useSelector(
     (state: RootState) => state.modal.modalType
   );
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await getProfile();
-        dispatch(setUserProfile(response));
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchProfile();
-  }, []);
-
-  // 모달이 열렸을 때 body 스크롤을 막기
-  useEffect(() => {
-    // 모달이 열리면 body 스크롤 비활성화
-    document.body.style.overflow = "hidden";
-
-    // 모달이 닫히면 다시 스크롤 활성화
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, []);
 
   const [isProfileListOpen, setIsProfileListOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -106,6 +81,30 @@ const PostBoard = (props: PostBoardProps) => {
   );
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [showAlert, setShowAlert] = useState(false);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await getProfile();
+        dispatch(setUserProfile(response));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  // 모달이 열렸을 때 body 스크롤을 막기
+  useEffect(() => {
+    // 모달이 열리면 body 스크롤 비활성화
+    document.body.style.overflow = "hidden";
+
+    // 모달이 닫히면 다시 스크롤 활성화
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
 
   useEffect(() => {
     if (!!currentPost) {
@@ -250,6 +249,8 @@ const PostBoard = (props: PostBoardProps) => {
     dispatch(clearCurrentPost());
   };
 
+
+
   return (
     <CRModal type="posting" onClose={handleModalClose}>
       {showAlert && (
@@ -314,16 +315,18 @@ const PostBoard = (props: PostBoardProps) => {
             />
           </Div>
         </QueueNMicSection>
-        <PositionSection>
-          <Title className="positionTitle">포지션</Title>
-          <PositionBox
-            status="posting"
-            onPositionChange={handlePositionChange}
-            main={positionValue?.main}
-            sub={positionValue?.sub}
-            want={positionValue?.want}
-          />
-        </PositionSection>
+        {selectedDropOption !== 4 &&
+          <PositionSection>
+            <Title className="positionTitle">포지션</Title>
+            <PositionBox
+              status="posting"
+              onPositionChange={handlePositionChange}
+              main={positionValue?.main}
+              sub={positionValue?.sub}
+              want={positionValue?.want}
+            />
+          </PositionSection>
+        }
         <StyleSection>
           <Title className="gameStyleTitle">게임 스타일</Title>
           {user.gameName && (
@@ -355,7 +358,12 @@ const PostBoard = (props: PostBoardProps) => {
             </TextCount>
           </InputWrapper>
         </MemoSection>
-        <ButtonContent>
+        <ButtonContent className={`baseMargin ${selectedStyleIds.length === 0 && selectedDropOption === 4
+          ? 'margin-1'
+          : selectedStyleIds.length !== 0 && selectedDropOption === 4
+            ? 'margin-2'
+            : ''
+          }`}>
           <Button
             type="submit"
             buttonType="primary"
@@ -432,12 +440,19 @@ const TextCount = styled.div<{ $isFocused: boolean }>`
   color: ${({ $isFocused, theme }) =>
     $isFocused ? theme.colors.purple300 : "#b5b5b5"};
   ${theme.fonts.regular12};
-  z-index: 1000;
+  z-index: 100;
 `;
 
 const ButtonContent = styled.p`
   padding: 0 0 28px;
-  margin-top: 54px;
   text-align: center;
+  margin-top: 54px;
+
+  &.margin-1{
+    margin-top:258px;
+  }
+  &.margin-2 {
+    margin-top: 221px;
+  }
 `;
 

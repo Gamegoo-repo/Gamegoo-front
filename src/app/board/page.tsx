@@ -263,7 +263,7 @@ const BoardPage = () => {
       {isPostingModal && (
         <PostBoard
           onClose={handlePostingClose}
-          onCompletedPosting={handleModalClose}
+          onCompletedPostingClose={handleModalClose}
         />
       )}
       {boardList && (
@@ -365,6 +365,10 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 140px;
+
+  ::-webkit-scrollbar {
+	display: none;
+}
 `;
 
 const BoardContent = styled.div`
