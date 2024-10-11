@@ -84,7 +84,7 @@ const ProfilePage = () => {
   }, []);
 
   const handleMatchStart = async () => {
-    const matchingType = params === "gamgoo" ? "BASIC" : "PRECISE";
+    const matchingType = params === "gamegoo" ? "BASIC" : "PRECISE";
     const gameModeMap = { personal: "1", free: "2", fast: "3", wind: "4" };
     const gameMode = gameModeMap[rank as keyof typeof gameModeMap] || "1";
 
