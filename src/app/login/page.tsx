@@ -14,8 +14,9 @@ import {
   setUserName,
   setUserProfileImg,
 } from "@/redux/slices/userSlice";
+import { connectSocket, socket } from "@/socket";
 import { theme } from "@/styles/theme";
-import { clearTokens, setName, setProfileImg, setToken } from "@/utils/storage";
+import { clearTokens, getAccessToken, setName, setProfileImg, setToken } from "@/utils/storage";
 import { AxiosError } from "axios";
 import Image from "next/image";
 import Link from "next/link";
@@ -79,8 +80,9 @@ const Login = () => {
 
       router.push("/");
 
-      /* 소켓 로그인 */
       socketLogin();
+
+      /* 소켓 로그인 */
       const data = await getUnreadUuid();
       if (data.isSuccess) {
         // 실시간 안읽은 채팅방 수 가져오기 위함

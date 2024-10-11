@@ -10,7 +10,7 @@ import { deleteMember, getProfile } from "@/api/user";
 import { setUserProfile } from "@/redux/slices/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { formatDate, setChatRoomDateFormatter } from "@/utils/custom";
+import { formatDate } from "@/utils/custom";
 import Input from "@/components/common/Input";
 import { checkPassword } from "@/api/password";
 import { clearTokens } from "@/utils/storage";

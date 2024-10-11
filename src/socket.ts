@@ -8,7 +8,7 @@ let socket: Socket | null = null;
 let socketId: string | null = null;
 
 export const connectSocket = (): void => {
-  if (socket) {
+  if (!!socket?.connected) {
     console.log("이미 소켓이 연결되어 있습니다.");
     return;
   }
@@ -56,7 +56,6 @@ export const sendMatchingQuitEvent = (): void => {
 
 const setupSocketListeners = () => {
   if (!socket) return;
-
 };
 
 export { socket };

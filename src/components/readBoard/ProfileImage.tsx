@@ -13,10 +13,10 @@ const ProfileImage = (props: ProfileImageProps) => {
     return (
         <Wrapper $bgColor={getProfileBgColor(image)}>
             <StyledImage
-                src={setProfileImg(image)}
+                data={setProfileImg(image)}
                 width={51}
                 height={48}
-                alt='프로필 이미지' />
+            />
         </Wrapper>
     )
 };
@@ -31,9 +31,10 @@ const Wrapper = styled.div<{ $bgColor: string }>`
     border-radius: 50%;
     margin-right: 17px;
 `;
-const StyledImage = styled(Image)`
+const StyledImage = styled.object`
     position: absolute;
     top:50%;
     left:50%;
     transform: translate(-50%, -50%);
+    pointer-events: none;
 `;

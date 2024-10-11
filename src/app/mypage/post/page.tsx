@@ -87,7 +87,7 @@ const MyPostPage = () => {
                   key={item.boardId}
                   boardId={item.boardId}
                   memberId={item.memberId}
-                  profileImage={item.profileImage + 1}
+                  profileImage={item.profileImage}
                   gameName={item.gameName}
                   tag={item.tag}
                   tier={item.tier}

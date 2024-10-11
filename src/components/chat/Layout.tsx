@@ -52,7 +52,7 @@ const Layout = () => {
     const isChatRoomOpen = useSelector((state: RootState) => state.chat.isChatRoomOpen);
     const isChatUuid = useSelector((state: RootState) => state.chat.isChatRoomUuid);
     const isModalType = useSelector((state: RootState) => state.modal.modalType);
-
+ 
     /* 채팅방 입장 */
     const handleGoToChatRoom = (id: string | number) => {
         dispatch(setChatRoomUuid(id));

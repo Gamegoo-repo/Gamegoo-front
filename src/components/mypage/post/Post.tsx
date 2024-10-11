@@ -21,7 +21,6 @@ import {
 } from "@/utils/custom";
 import { getProfileBgColor } from "@/utils/profile";
 import { toLowerCaseString } from "@/utils/string";
-import Image from "next/image";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
@@ -102,7 +101,7 @@ const Post: React.FC<PostProps> = ({
     handlePostingClose();
     dispatch(setOpenModal(""));
   };
-
+  console.log(profileImage)
   return (
     <Container>
       <Content>
@@ -111,10 +110,9 @@ const Post: React.FC<PostProps> = ({
           {profileImage ? (
             <ProfileImgWrapper $bgColor={getProfileBgColor(profileImage)}>
               <ProfileImg
-                src={`/assets/images/profile/profile${profileImage}.svg`}
+                data={`/assets/images/profile/profile${profileImage}.svg`}
                 width={35}
                 height={35}
-                alt="프로필"
               />
             </ProfileImgWrapper>
           ) : (
@@ -126,13 +124,11 @@ const Post: React.FC<PostProps> = ({
           </Div>
         </Name>
         <Tier>
-          <Image
-            src={`/assets/images/tier/${
-              toLowerCaseString(tier) || "unrank"
-            }.svg`}
+          <TierImage
+            data={`/assets/images/tier/${toLowerCaseString(tier) || "unrank"
+              }.svg`}
             width={26}
             height={26}
-            alt="tier"
           />
           <span>
             {setAbbrevTier(tier)}
@@ -222,12 +218,13 @@ const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
   border-radius: 50%;
 `;
 
-const ProfileImg = styled(Image)`
+const ProfileImg = styled.object`
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   filter: drop-shadow(-4px 10px 10px rgba(63, 53, 78, 0.582));
+  pointer-events: none;
 `;
 
 const Div = styled.div`
@@ -247,6 +244,10 @@ const Tier = styled.div`
   align-items: center;
   gap: 5px;
   ${(props) => props.theme.fonts.regular14};
+`;
+
+const TierImage = styled.object`
+  pointer-events: none;
 `;
 
 const Memo = styled.div`

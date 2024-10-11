@@ -76,7 +76,7 @@ const UserProfile = ({
                   매너 레벨은 겜구 사용자로부터 받은 매너평가, 비매너평가를
                   반영한 지표예요.
                   <br />
-                  최근 <Span>{goodMannerCount}</Span>명의 사용자가{` `}
+                  최근 <Span>{profile.mannerRatingCount}</Span>명의 사용자가{` `}
                   {profile.gameName}
                   {` `}님에게 긍정적 매너 평가를 남겼어요.
                 </Text>

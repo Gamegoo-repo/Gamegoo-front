@@ -18,6 +18,8 @@ import { setChatDateFormatter, setChatTimeFormatter } from "@/utils/custom";
 import { getProfileBgColor } from "@/utils/profile";
 import ConfirmModal from "../common/ConfirmModal";
 import { socket } from "@/socket";
+import { useRouter } from "next/navigation";
+import { closeChat, closeChatRoom } from "@/redux/slices/chatSlice";
 
 interface MessageListProps {
   chatEnterData: Chat;
@@ -70,6 +72,8 @@ const MessageList = (props: MessageListProps) => {
     (state: RootState) => state.modal.isOpen
   );
 
+  const router = useRouter();
+
   const { newMessage } = useChatMessage();
 
   /* 매너 시스템 소켓 이벤트 리스닝 */
@@ -88,6 +92,172 @@ const MessageList = (props: MessageListProps) => {
       }
     };
   }, []);
+
+  /* 새로운 메시지 전에 시스템 메시지 보여주기 */
+  useEffect(() => {
+    if (newMessage) {
+      setMessageList((prevMessages) => {
+        let updatedMessages = [...prevMessages];
+
+        if (systemMessage && !isSystemMessageShown) {
+          // 기존 시스템 메시지와, 새로운 시스템 메시지 타입이 달라서, 타입 같게 변경
+          const systemMessageAsChatMessage: ChatMessageDto = {
+            ...systemMessage,
+            createdAt: new Date().toISOString(),
+            timestamp: new Date().getTime(),
+          };
+          updatedMessages.push(systemMessageAsChatMessage);
+        }
+
+        return updatedMessages;
+      });
+
+      if (!isSystemMessageShown) {
+        setIsSystemMessageShown(true);
+      }
+    }
+  }, [newMessage, systemMessage]);
+
+  /* 처음 채팅방 들어올 때 마지막 메시지로 스크롤 이동 */
+  useEffect(() => {
+    if (chatRef.current && isInitialLoading) {
+      const chatElement = chatRef.current;
+      chatElement.scrollTop = chatElement.scrollHeight;
+      setIsInitialLoading(false);
+    }
+  }, [chatRef, messageList, isInitialLoading]);
+
+  const handleScroll = useCallback(() => {
+    if (chatRef.current && !isInitialLoading) {
+      const { scrollTop } = chatRef.current;
+      if (scrollTop === 0 && hasMore && !isLoading) {
+        getMoreMessages();
+      }
+    }
+  }, [chatRef, hasMore, isLoading, isInitialLoading]);
+
+  useEffect(() => {
+    const chatElement = chatRef.current;
+    if (chatElement) {
+      chatElement.addEventListener('scroll', handleScroll);
+    }
+
+    return () => {
+      if (chatElement) {
+        chatElement.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, [chatRef, handleScroll]);
+
+  /* 새로운 메시지 입력 또는 새로운 메시지 입력 시 스크롤을 맨 아래로 이동시키는 함수 */
+  const scrollToBottom = useCallback(() => {
+    if (chatRef.current) {
+      chatRef.current.scrollTop = chatRef.current.scrollHeight;
+    }
+  }, [chatRef]);
+
+  useEffect(() => {
+    if (newMessage) {
+      setMessageList((prevMessages) => [...prevMessages, newMessage]);
+
+      requestAnimationFrame(() => {
+        scrollToBottom();
+      });
+    }
+  }, [newMessage, scrollToBottom]);
+
+  /* 남은 메시지 보여주기(페이징) */
+  const getMoreMessages = useCallback(async () => {
+    if (isLoading || !hasMore) return;
+
+    setIsLoading(true);
+    try {
+      const chatElement = chatRef.current;
+      if (!chatElement) return;
+
+      // 현재 스크롤 위치와 전체 높이 저장
+      const previousScrollTop = chatElement.scrollTop;
+      const previousScrollHeight = chatElement.scrollHeight;
+
+      const data = await getChatList(chatEnterData.uuid, cursor);
+      const { chatMessageDtoList, next_cursor, has_next } = data.result;
+
+      // 기존 메시지 목록에 새로운 메시지 추가
+      setMessageList((prevMessages) => [
+        ...chatMessageDtoList,
+        ...prevMessages
+      ]);
+
+      setCursor(next_cursor);
+      setHasMore(has_next);
+
+      requestAnimationFrame(() => {
+        // 새로운 메시지가 추가된 후의 스크롤 높이 차이 계산
+        const newScrollHeight = chatElement.scrollHeight;
+        const scrollDifference = newScrollHeight - previousScrollHeight;
+
+        // 스크롤 위치를 기존 위치에서 중간 지점으로 이동 (새로운 메시지가 들어올 때 자연스럽게 스크롤 이동하기 위해서)
+        chatElement.scrollTop = previousScrollTop + scrollDifference;
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [isLoading, hasMore, cursor, chatEnterData]);
+
+  /* 채팅 날짜 표시 */
+  const handleDisplayDate = (messages: ChatMessageDto[], index: number): boolean => {
+    if (index === 0) return true;
+
+    const currentDate = dayjs(messages[index].createdAt).format('YYYY-M-D');
+    const previousDate = dayjs(messages[index - 1].createdAt).format('YYYY-M-D');
+
+    return currentDate !== previousDate;
+  };
+
+  /* 메시지 시간 표시 (마지막 메시지에만 시간 표시, 상대방 메시지 중간에 오면 다시 표시) */
+  const handleDisplayTime = (
+    messages: ChatMessageDto[],
+    index: number
+  ): boolean => {
+    if (index === messages.length - 1) return true;
+
+    const currentTime = dayjs(messages[index].createdAt).format("A hh:mm");
+    const nextTime = dayjs(messages[index + 1].createdAt).format("A hh:mm");
+
+    const isSameTime = currentTime === nextTime;
+    const isSameSender =
+      messages[index].senderId === messages[index + 1].senderId;
+
+    // 시간이 같고, 보낸 사람도 같으면 마지막 메시지에만 시간 표시
+    if (isSameTime && isSameSender) {
+      return false;
+    }
+
+    return true;
+  };
+
+  /* 프로필 이미지 표시 (상대방만 보여주기, 같은 시간에 온 경우 첫번째 메시지만 이미지 표시F) */
+  const handleDisplayProfileImage = (
+    messages: ChatMessageDto[],
+    index: number
+  ): boolean => {
+    if (index === 0) return true;
+
+    const currentSenderId = messages[index].senderId;
+    const previousSenderId = messages[index - 1].senderId;
+
+    const currentTime = dayjs(messages[index].createdAt).format("A hh:mm");
+    const previousTime = dayjs(messages[index - 1].createdAt).format("A hh:mm");
+
+    // 보낸 사람이 다르거나, 시간이 다르면 프로필 이미지를 표시
+    if (currentSenderId !== previousSenderId || currentTime !== previousTime) {
+      return true;
+    }
+
+    return false;
+  };
 
   /* 시스템 메시지 클릭 시 다음 스텝 */
   const handlePostOpen = (boardId: number) => {
@@ -149,34 +319,6 @@ const MessageList = (props: MessageListProps) => {
     }
   }, [chatRef, messageList, isInitialLoading]);
 
-  const handleScroll = useCallback(() => {
-    if (chatRef.current && !isInitialLoading) {
-      const { scrollTop } = chatRef.current;
-      if (scrollTop === 0 && hasMore && !isLoading) {
-        getMoreMessages();
-      }
-    }
-  }, [chatRef, hasMore, isLoading, isInitialLoading]);
-
-  useEffect(() => {
-    const chatElement = chatRef.current;
-    if (chatElement) {
-      chatElement.addEventListener("scroll", handleScroll);
-    }
-
-    return () => {
-      if (chatElement) {
-        chatElement.removeEventListener("scroll", handleScroll);
-      }
-    };
-  }, [chatRef, handleScroll]);
-
-  /* 새로운 메시지 입력 또는 새로운 메시지 입력 시 스크롤을 맨 아래로 이동시키는 함수 */
-  const scrollToBottom = useCallback(() => {
-    if (chatRef.current) {
-      chatRef.current.scrollTop = chatRef.current.scrollHeight;
-    }
-  }, [chatRef]);
 
   useEffect(() => {
     if (newMessage) {
@@ -189,124 +331,11 @@ const MessageList = (props: MessageListProps) => {
     console.log("chatEnterData", chatEnterData);
   }, [newMessage, scrollToBottom]);
 
-  /* 남은 메시지 보여주기(페이징) */
-  const getMoreMessages = useCallback(async () => {
-    if (isLoading || !hasMore) return;
-
-    setIsLoading(true);
-    try {
-      const chatElement = chatRef.current;
-      if (!chatElement) return;
-
-      // 현재 스크롤 위치와 전체 높이 저장
-      const previousScrollTop = chatElement.scrollTop;
-      const previousScrollHeight = chatElement.scrollHeight;
-
-      const data = await getChatList(chatEnterData.uuid, cursor);
-      const { chatMessageDtoList, next_cursor, has_next } = data.result;
-
-      // 기존 메시지 목록에 새로운 메시지 추가
-      setMessageList((prevMessages) => [
-        ...chatMessageDtoList,
-        ...prevMessages,
-      ]);
-
-      setCursor(next_cursor);
-      setHasMore(has_next);
-
-      requestAnimationFrame(() => {
-        // 새로운 메시지가 추가된 후의 스크롤 높이 차이 계산
-        const newScrollHeight = chatElement.scrollHeight;
-        const scrollDifference = newScrollHeight - previousScrollHeight;
-
-        // 스크롤 위치를 기존 위치에서 중간 지점으로 이동 (새로운 메시지가 들어올 때 자연스럽게 스크롤 이동하기 위해서)
-        chatElement.scrollTop = previousScrollTop + scrollDifference;
-      });
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [isLoading, hasMore, cursor, chatEnterData]);
-
-  /* 채팅 날짜 표시 */
-  const handleDisplayDate = (
-    messages: ChatMessageDto[],
-    index: number
-  ): boolean => {
-    if (index === 0) return true;
-
-    const currentDate = dayjs(messages[index].createdAt).format("YYYY-M-D");
-    const previousDate = dayjs(messages[index - 1].createdAt).format(
-      "YYYY-M-D"
-    );
-
-    return currentDate !== previousDate;
+  const handleMoveProfile = async (memberId: number) => {
+    await router.push(`/user/${memberId}`);
+    await dispatch(closeChat());
+    await dispatch(closeChatRoom());
   };
-
-  /* 프로필 이미지 표시 (상대방만 보여주기, 같은 시간에 온 경우 첫번째 메시지만 이미지 표시F) */
-  const handleDisplayProfileImage = (
-    messages: ChatMessageDto[],
-    index: number
-  ): boolean => {
-    if (index === 0) return true;
-
-    const currentSenderId = messages[index].senderId;
-    const previousSenderId = messages[index - 1].senderId;
-
-    const currentTime = dayjs(messages[index].createdAt).format("A hh:mm");
-    const previousTime = dayjs(messages[index - 1].createdAt).format("A hh:mm");
-
-    // 보낸 사람이 다르거나, 시간이 다르면 프로필 이미지를 표시
-    if (currentSenderId !== previousSenderId || currentTime !== previousTime) {
-      return true;
-    }
-
-    return false;
-  };
-
-  /* 메시지 시간 표시 (마지막 메시지에만 시간 표시, 상대방 메시지 중간에 오면 다시 표시) */
-  const handleDisplayTime = (
-    messages: ChatMessageDto[],
-    index: number
-  ): boolean => {
-    if (index === messages.length - 1) return true;
-
-    const currentTime = dayjs(messages[index].createdAt).format("A hh:mm");
-    const nextTime = dayjs(messages[index + 1].createdAt).format("A hh:mm");
-
-    const isSameTime = currentTime === nextTime;
-    const isSameSender =
-      messages[index].senderId === messages[index + 1].senderId;
-
-    // 시간이 같고, 보낸 사람도 같으면 마지막 메시지에만 시간 표시
-    if (isSameTime && isSameSender) {
-      return false;
-    }
-
-    return true;
-  };
-
-  /* 마지막 채팅을 보낸 후 1시간이 지난 시점에서 피드백 요청 표시 */
-  useEffect(() => {
-    const lastMessage =
-      chatEnterData?.chatMessageList.chatMessageDtoList[
-        chatEnterData.chatMessageList.chatMessageDtoList.length - 1
-      ];
-    const feedbackTimestamp = dayjs(lastMessage?.createdAt).add(1, "hour");
-    const feedbackFullDate = dayjs(feedbackTimestamp).format(
-      "YYYY-MM-DDTHH:mm:ss"
-    );
-
-    const feedbackDate = dayjs(feedbackTimestamp).format("YYYY-M-D");
-    const lastMessageDate = dayjs(lastMessage?.createdAt).format("YYYY-M-D");
-
-    setIsFeedbackDate(feedbackFullDate);
-
-    if (feedbackDate !== lastMessageDate) {
-      setIsFeedbackDateVisible(true);
-    }
-  }, [messageList]);
 
   /* 매칭 성공후 매너/비매너 평가 버튼 클릭 시, 기존 매너/비매너 평가 내역 조회하기 */
   const handleMannerEvaluate = () => {
@@ -342,30 +371,20 @@ const MessageList = (props: MessageListProps) => {
   return (
     <>
       {isReadingModal && <ReadBoard postId={isBoardId} />}
-      {isUnregisterAlert ||
-        (isBlockedAlert && (
-          <ErrorBox>
-            {isUnregisterAlert
-              ? "탈퇴한 회원의 글입니다."
-              : "차단한 회원의 글입니다."}
-          </ErrorBox>
-        ))}
+      {isUnregisterAlert || isBlockedAlert && (
+        <ErrorBox>
+          {isUnregisterAlert ? '탈퇴한 회원의 글입니다.' : '차단한 회원의 글입니다.'}
+        </ErrorBox>
+      )}
       <ChatBorder>
         <ChatMain ref={chatRef}>
           {messageList.map((message, index) => {
-            const showProfileImage = handleDisplayProfileImage(
-              messageList,
-              index
-            );
+            const showProfileImage = handleDisplayProfileImage(messageList, index);
             const showTime = handleDisplayTime(messageList, index);
 
             return (
               <MsgContainer key={index}>
-                {handleDisplayDate(messageList, index) && (
-                  <Timestamp>
-                    {setChatDateFormatter(message.createdAt)}
-                  </Timestamp>
-                )}
+                {handleDisplayDate(messageList, index) && <Timestamp>{setChatDateFormatter(message.createdAt)}</Timestamp>}
                 {message.systemType === 0 ? (
                   <SystemMessage
                     message={message.message}
@@ -382,8 +401,7 @@ const MessageList = (props: MessageListProps) => {
                             src="/assets/icons/clicked_smile.svg"
                             width={22}
                             height={22}
-                            alt="스마일 이모티콘"
-                          />
+                            alt="스마일 이모티콘" />
                           <StyledButton onClick={handleMannerEvaluate}>
                             매너평가 하기
                           </StyledButton>
@@ -394,56 +412,46 @@ const MessageList = (props: MessageListProps) => {
                 ) : message.senderId === chatEnterData?.memberId ? (
                   <YourMessageContainer>
                     {showProfileImage && message.senderProfileImg && (
-                      <ImageWrapper
-                        $bgColor={getProfileBgColor(message.senderProfileImg)}
+                      <ImageWrapper $bgColor={getProfileBgColor(message.senderProfileImg)}
+                        onClick={() => handleMoveProfile(chatEnterData.memberId)}
                       >
                         <ProfileImage
-                          src={`/assets/images/profile/profile${message.senderProfileImg}.svg`}
+                          data={chatEnterData.blind ? `/assets/images/profile/profile_default.svg` : `/assets/images/profile/profile${message.senderProfileImg}.svg`}
                           width={38}
                           height={38}
-                          alt="프로필 이미지"
                         />
                       </ImageWrapper>
                     )}
                     <YourDiv $hasProfileImage={showProfileImage}>
                       <YourMessage>{message.message}</YourMessage>
-                      {showTime ? (
-                        <YourDate>
-                          {setChatTimeFormatter(message.createdAt)}
-                        </YourDate>
-                      ) : null}
+                      {showTime ? <YourDate>{setChatTimeFormatter(message.createdAt)}</YourDate> : null}
                     </YourDiv>
                   </YourMessageContainer>
                 ) : (
                   <MyMessageContainer>
                     <MyDiv>
-                      {showTime ? (
-                        <MyDate>
-                          {setChatTimeFormatter(message.createdAt)}
-                        </MyDate>
-                      ) : null}
+                      {showTime ? <MyDate>{setChatTimeFormatter(message.createdAt)}</MyDate> : null}
                       <MyMessage>{message.message}</MyMessage>
                     </MyDiv>
                   </MyMessageContainer>
                 )}
               </MsgContainer>
-            );
+            )
           })}
           {isLoading && (
             <LoadingContainer>
               <LoadingSpinner />
             </LoadingContainer>
           )}
-          {isFeedbackModalOpen && (
+          {isFeedbackModalOpen &&
             <ConfirmModal
               type="manner"
               width="315px"
               primaryButtonText="확인"
-              onPrimaryClick={() => dispatch(setCloseMannerStatusModal())}
-            />
-          )}
+              onPrimaryClick={() => dispatch(setCloseMannerStatusModal())} />
+          }
         </ChatMain>
-      </ChatBorder>
+      </ChatBorder >
     </>
   );
 };
@@ -521,12 +529,12 @@ const ImageWrapper = styled.div<{ $bgColor: string }>`
   border-radius: 50%;
 `;
 
-const ProfileImage = styled(Image)`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  cursor: pointer;
+const ProfileImage = styled.object`
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
 `;
 
 const YourDiv = styled.div<{ $hasProfileImage: boolean }>`

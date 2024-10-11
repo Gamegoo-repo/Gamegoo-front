@@ -5,15 +5,15 @@ import styled, { ThemeProvider } from "styled-components";
 import { theme } from "@/styles/theme";
 import Header from "@/components/common/Header";
 import StyledComponentsRegistry from "@/libs/registry";
-import { Provider, useSelector } from "react-redux";
-import { useEffect, useRef } from "react";
-import { AppStore, RootState, store } from "@/redux/store";
+import { useEffect, useRef, useState } from "react";
+import { Provider } from "react-redux";
+import { AppStore, store } from "@/redux/store";
 import { usePathname } from "next/navigation";
 import SocketConnection from "@/components/socket/SocketConnection";
 import { Toaster } from "react-hot-toast";
 import {
   connectSocket,
-  disconnectSocket,
+  socket,
   sendMatchingQuitEvent,
 } from "@/socket";
 import { HelmetProvider, Helmet } from "react-helmet-async";
@@ -31,6 +31,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const storeRef = useRef<AppStore>();
+  const [isLoggedIn, setIsLoggedIn] = useState(!!getAccessToken());
+
   if (!storeRef.current) {
     storeRef.current = store();
   }
@@ -45,17 +47,15 @@ export default function RootLayout({
     pathname.includes("/password")
   );
 
-  const accesssToken = getAccessToken(); // 로그인 유무 결정
   const isCompleted = getIsCompleted();
 
   /* 로그인 이전 소켓 연결 */
   useEffect(() => {
-    if (accesssToken) {
+    if (!socket) {
       connectSocket();
-    } else {
-      disconnectSocket();
+      sessionStorage.removeItem('logout');
     }
-  }, [accesssToken]);
+  }, []);
 
   useEffect(() => {
     if (isCompleted === "true") {
@@ -80,6 +80,12 @@ export default function RootLayout({
     previousPathname.current = pathname;
   }, [pathname]);
 
+  /* 로그인 상태 변경 시 리렌더링 트리거 */
+  /* 로그아웃 후 재로그인 시 SocketConnection 컴포넌트가 리렌더링되지 않아서 만듦 */
+  useEffect(() => {
+    setIsLoggedIn(!!getAccessToken());
+  }, [pathname]);
+
   return (
     <html>
       <head>
@@ -100,7 +106,7 @@ export default function RootLayout({
             <ThemeProvider theme={theme}>
               <Toaster />
               <Provider store={storeRef.current}>
-                <SocketConnection />
+                <SocketConnection key={isLoggedIn ? 'loggedIn' : 'loggedOut'} />
                 <Container>
                   <Main>
                     {isHeader && <Header />}

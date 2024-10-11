@@ -1,10 +1,12 @@
 import { theme } from "@/styles/theme";
 import { formatTimeAgo } from "@/utils/custom";
+import Image from "next/image";
 import React from "react";
 import styled, { css } from "styled-components";
 
 interface AlertBoxProps {
   notificationId: number;
+  notificationtType: number;
   pageUrl: string | null;
   content: string;
   createdAt: string;
@@ -15,6 +17,7 @@ interface AlertBoxProps {
 
 const AlertBox: React.FC<AlertBoxProps> = ({
   notificationId,
+  notificationtType,
   pageUrl,
   content,
   createdAt,
@@ -28,7 +31,12 @@ const AlertBox: React.FC<AlertBoxProps> = ({
   return (
     <Container $read={read} onClick={handleChangeRead} size={size}>
       <AlertImage size={size}>
-        <Round size={size}></Round>
+        <StyledObject
+          data={`/assets/images/notification/noti_${notificationtType}.svg`}
+          width={46}
+          height={46}
+          size={size}
+        />
         <Read $read={read} size={size}></Read>
       </AlertImage>
       <Div>
@@ -79,7 +87,7 @@ const AlertImage = styled.div<{ size: string }>`
     `}
 `;
 
-const Round = styled.div<{ size: string }>`
+const StyledObject = styled.object <{ size: string }>`
   width: 46px;
   height: 46px;
   background: ${theme.colors.gray300};
@@ -87,6 +95,7 @@ const Round = styled.div<{ size: string }>`
   position: absolute;
   top: 0;
   left: 0;
+  pointer-events: none;
 
   ${(props) =>
     props.size === "small" &&

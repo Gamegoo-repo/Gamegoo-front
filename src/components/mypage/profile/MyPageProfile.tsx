@@ -60,19 +60,17 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
       <ImageContainer>
         <ProfileImgWrapper $bgColor={getProfileBgColor(selectedImageIndex)}>
           <PersonImage
-            src={`/assets/images/profile/profile${selectedImageIndex}.svg`}
+            data={`/assets/images/profile/profile${selectedImageIndex}.svg`}
             width={110}
             height={110}
-            alt="프로필"
           />
         </ProfileImgWrapper>
-        <CameraImage
-          src="/assets/icons/profile_camera.svg"
-          width={34}
-          height={34}
-          alt="edit"
-          onClick={() => setIsProfileListOpen(!isProfileListOpen)}
-        />
+        <CameraImgBg onClick={() => setIsProfileListOpen(!isProfileListOpen)}>
+          <CameraImage
+            data="/assets/icons/camera_white.svg"
+            width={25}
+            height={23} />
+        </CameraImgBg>
         {/* 프로필 이미지 선택 팝업 */}
         {isProfileListOpen && (
           <ProfileListBox>
@@ -95,10 +93,9 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
                   onClick={() => handleImageClick(item)}
                 >
                   <ProfileListImage
-                    src={`/assets/images/profile/profile${item}.svg`}
+                    data={`/assets/images/profile/profile${item}.svg`}
                     width={70}
                     height={70}
-                    alt="프로필 이미지"
                   />
                 </SelectProfileImgWrapper>
               ))}
@@ -108,13 +105,11 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
       </ImageContainer>
       <Div>
         <Top>
-          <Image
-            src={`/assets/images/tier/${
-              toLowerCaseString(user.tier) || "unrank"
-            }.svg`}
+          <TierImage
+            data={`/assets/images/tier/${toLowerCaseString(user.tier) || "unrank"
+              }.svg`}
             width={43}
             height={43}
-            alt="tier"
           />
           {user.gameName}
           <Tag>#{user.tag}</Tag>
@@ -158,15 +153,28 @@ const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
   justify-content: center;
 `;
 
-const PersonImage = styled(Image)`
+const PersonImage = styled.object`
   margin-top: 5px;
   filter: drop-shadow(-4px 10px 10px rgba(63, 53, 78, 0.582));
+  pointer-events: none;
 `;
 
-const CameraImage = styled(Image)`
+const CameraImgBg = styled.div`
+  position: relative;
+  width: 34px;
+  height: 34px;
+  background: #000000a1;
+  box-shadow: 0 0 3.06px 0 #00000040;
+  border-radius: 50%;
+  top: -36px;
+`;
+
+const CameraImage = styled.object`
   position: absolute;
-  bottom: 3px;
-  left: 3px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
 `;
 
 const ProfileListBox = styled.div`
@@ -239,12 +247,12 @@ const SelectProfileImgWrapper = styled.div<{
   }
 `;
 
-const ProfileListImage = styled(Image)`
+const ProfileListImage = styled.object`
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  cursor: pointer;
+  pointer-events: none;
   transition: opacity 0.3s ease-in-out;
 `;
 
@@ -268,4 +276,8 @@ const Top = styled.div`
   gap: 7px;
   ${(props) => props.theme.fonts.bold25};
   color: ${theme.colors.gray600};
+`;
+
+const TierImage = styled.object`
+  pointer-events: none;
 `;

@@ -175,6 +175,7 @@ const AlertWindow = (
               <AlertBox
                 key={`${data.notificationId}-${index}`}
                 notificationId={data.notificationId}
+                notificationtType={data.notificationType}
                 pageUrl={data.pageUrl}
                 content={data.content}
                 createdAt={data.createdAt}

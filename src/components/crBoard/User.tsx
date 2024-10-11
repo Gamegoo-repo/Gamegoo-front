@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
-import Image from "next/image";
 import { setAbbrevTier } from "@/utils/custom";
 import { toLowerCaseString } from "@/utils/string";
 
@@ -23,15 +22,14 @@ const User = (props: UserProps) => {
       <UserTier>
         {tier && (
           <>
-            <Image
-              src={
+            <ProfileImage
+              data={
                 !tier
                   ? "/assets/images/tier/unranked.svg"
                   : `/assets/images/tier/${toLowerCaseString(tier)}.svg`
               }
               width={32}
               height={20}
-              alt="티어 이미지"
             />
             <Tier>
               {!tier ? "UR" : setAbbrevTier(tier)}
@@ -68,6 +66,10 @@ const UserTier = styled.div`
   display: flex;
   align-items: center;
   gap: 2px;
+`;
+
+const ProfileImage = styled.object`
+    pointer-events: none;
 `;
 
 const Tier = styled.p`

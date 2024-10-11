@@ -56,7 +56,9 @@ const useChatMessage = () => {
             setSystemMessage(systemMessage);
         };
 
+        // 다른 사람이 보낸 메시지
         socket?.on("chat-message", handleChatMessage);
+        // 내가 보낸 메시지
         socket?.on("my-message-broadcast-success", handleMyMessage);
         socket?.on("chat-system-message", handleSystemMessage);
 
