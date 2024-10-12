@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Chat } from "@/interface/chat";
 import MoreBox from "../common/MoreBox";
 import { useDispatch, useSelector } from "react-redux";
-import { closeChat, closeChatRoom } from "@/redux/slices/chatSlice";
+import { closeChat, closeChatRoom, openChat } from "@/redux/slices/chatSlice";
 import { getProfileBgColor } from "@/utils/profile";
 import { useRouter } from "next/navigation";
 import { RootState } from "@/redux/store";
@@ -33,6 +33,11 @@ const MessageHeader = (props: MessageHeaderProps) => {
         await dispatch(closeChatRoom());
     };
 
+    const handleGoToPrevious = ()=>{
+      dispatch(closeChatRoom());
+      dispatch(openChat());
+    };
+
     return (
         <>
             {isMoreBoxOpen &&
@@ -53,7 +58,7 @@ const MessageHeader = (props: MessageHeaderProps) => {
             {chatEnterData &&
                 <ChatHeader>
                     <PrevImage
-                        onClick={() => dispatch(closeChatRoom())}
+                        onClick={handleGoToPrevious}
                         src="/assets/icons/left_arrow.svg"
                         width={9}
                         height={18}
