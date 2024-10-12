@@ -44,7 +44,7 @@ export interface ChatMessageDto {
     createdAt: string;
     timestamp: number;
     systemType?: number;
-    boardId?: number;
+    boardId?: number | null;
 }
 
 export interface ChatMessageList {

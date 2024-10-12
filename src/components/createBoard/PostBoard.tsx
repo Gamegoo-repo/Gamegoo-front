@@ -22,7 +22,6 @@ import {
 import { PostReq, gameStyleResponseDTOList } from "@/interface/board";
 import Alert from "../common/Alert";
 import { useRouter } from "next/navigation";
-import { setOpenModal } from "@/redux/slices/modalSlice";
 import { getProfile } from "@/api/user";
 import { setUserProfile } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
@@ -340,6 +339,7 @@ const PostBoard = (props: PostBoardProps) => {
           <Title className="gameStyleTitle">게임 스타일</Title>
             <GameStyle
                 gameStyleResponseDTOList={user.gameStyleResponseDTOList}
+                setSelectedStyleIds={setSelectedStyleIds}
             />
         </StyleSection>
         <MemoSection>

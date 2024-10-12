@@ -76,7 +76,6 @@ const ReadBoard = (props: ReadBoardProps) => {
     onClose: () => { },
     buttonText: "",
   });
-
   const [isBlockBoxOpen, setIsBlockBoxOpen] = useState(false);
   const [isBlockConfirmOpen, setIsBlockConfrimOpen] = useState(false);
 
@@ -378,8 +377,8 @@ const ReadBoard = (props: ReadBoardProps) => {
       { text: "삭제", onClick: handleDelete }
     );
   } else {
-    /* 남이 작성한 글 */
 
+    /* 다른 사람이 작성한 글 */
     //친구 삭제 - 차단되어있을 때, 친구일 때, 친구 추가 요청 중일 때
     //친구 추가(친구 요청) - 친구가 아닐 때, 차단되어있지 않을 때, 친구 추가 요청 중이 아닐 때
     //친구 요청 취소 - 친구 추가 요청 중일 떄

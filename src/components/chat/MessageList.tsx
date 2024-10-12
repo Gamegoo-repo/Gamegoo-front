@@ -11,7 +11,7 @@ import {
 } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
 import ReadBoard from "../readBoard/ReadBoard";
-import { getChatList } from "@/api/chat";
+import { getChatList, markChatAsRead } from "@/api/chat";
 import useChatMessage from "@/hooks/useChatMessage";
 import dayjs from "dayjs";
 import { setChatDateFormatter, setChatTimeFormatter } from "@/utils/custom";
@@ -60,7 +60,6 @@ const MessageList = (props: MessageListProps) => {
   const [isSystemMessageShown, setIsSystemMessageShown] = useState(false);
   const [isUnregisterAlert, setIsUnregisterAlert] = useState(false);
   const [isBlockedAlert, setIsBlockedAlert] = useState(false);
-  const [mannerSystemMessage, setMannerSystemMessage] = useState(false);
   const [isFeedbackDateVisible, setIsFeedbackDateVisible] = useState(false);
   const [isFeedbackDate, setIsFeedbackDate] = useState<string>("");
 
@@ -71,6 +70,7 @@ const MessageList = (props: MessageListProps) => {
   const isFeedbackModalOpen = useSelector(
     (state: RootState) => state.modal.isOpen
   );
+  const currentChatUuid = useSelector((state: RootState) => state.chat.currentChatUuid);
 
   const router = useRouter();
 
@@ -78,8 +78,31 @@ const MessageList = (props: MessageListProps) => {
 
   /* 매너 시스템 소켓 이벤트 리스닝 */
   useEffect(() => {
-    const handleMannerSystemMessage = () => {
-      setMannerSystemMessage(true);
+    const handleMannerSystemMessage = (res: any) => {
+      const chatroomUuid = res.data.chatroomUuid;
+      const newChatTimestamp = res.timestamp;
+
+      setMessageList((prevMessages) => {
+        const feedbackMessage: ChatMessageDto = {
+          senderId: 0,
+          senderName: null,
+          message: '',
+          createdAt: new Date().toISOString(),
+          systemType: 1,
+          timestamp: new Date().getTime(),
+          boardId: null,
+          senderProfileImg: null,
+        };
+
+        return [...prevMessages, feedbackMessage];
+      });
+      console.log('current', currentChatUuid);
+      console.log('socket', chatroomUuid);
+
+      /* 현재 보고 있는 채팅방 읽음 처리 */
+      if (currentChatUuid && chatroomUuid === currentChatUuid) {
+        markChatAsRead(currentChatUuid, newChatTimestamp);
+      }
     };
 
     if (socket) {
@@ -282,55 +305,6 @@ const MessageList = (props: MessageListProps) => {
     return () => clearTimeout(timer);
   }, [isUnregisterAlert, isBlockedAlert]);
 
-  /* 새로운 메시지 전에 시스템 메시지 보여주기 */
-  useEffect(() => {
-    if (newMessage) {
-      setMessageList((prevMessages) => {
-        let updatedMessages = [...prevMessages];
-
-        if (systemMessage && !isSystemMessageShown) {
-          // 기존 시스템 메시지와, 새로운 시스템 메시지 타입이 달라서, 타입 같게 변경
-          const systemMessageAsChatMessage: ChatMessageDto = {
-            ...systemMessage,
-            createdAt: new Date().toISOString(),
-            timestamp: new Date().getTime(),
-          };
-          updatedMessages.push(systemMessageAsChatMessage);
-        }
-
-        // 새로운 메시지 추가
-        // updatedMessages.push(newMessage);
-
-        return updatedMessages;
-      });
-
-      if (!isSystemMessageShown) {
-        setIsSystemMessageShown(true);
-      }
-    }
-  }, [newMessage, systemMessage]);
-
-  /* 처음 채팅방 들어올 때 마지막 메시지로 스크롤 이동 */
-  useEffect(() => {
-    if (chatRef.current && isInitialLoading) {
-      const chatElement = chatRef.current;
-      chatElement.scrollTop = chatElement.scrollHeight;
-      setIsInitialLoading(false);
-    }
-  }, [chatRef, messageList, isInitialLoading]);
-
-
-  useEffect(() => {
-    if (newMessage) {
-      setMessageList((prevMessages) => [...prevMessages, newMessage]);
-
-      requestAnimationFrame(() => {
-        scrollToBottom();
-      });
-    }
-    console.log("chatEnterData", chatEnterData);
-  }, [newMessage, scrollToBottom]);
-
   const handleMoveProfile = async (memberId: number) => {
     await router.push(`/user/${memberId}`);
     await dispatch(closeChat());
@@ -365,6 +339,28 @@ const MessageList = (props: MessageListProps) => {
           message
         )}
       </SystemMessageContainer>
+    );
+  };
+
+  const MannerSystemMessage = () => {
+    return (
+      <FeedbackDiv>
+        <FeedbackContainer>
+          <Feedback>
+            <Text>매칭은 어떠셨나요?</Text>
+            <Text>상대방의 매너를 평가해주세요!</Text>
+            <SmileImage
+              src="/assets/icons/clicked_smile.svg"
+              width={22}
+              height={22}
+              alt="스마일 이모티콘"
+            />
+            <StyledButton onClick={handleMannerEvaluate}>
+              매너평가 하기
+            </StyledButton>
+          </Feedback>
+        </FeedbackContainer>
+      </FeedbackDiv>
     );
   };
 

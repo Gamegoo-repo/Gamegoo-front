@@ -75,7 +75,7 @@ export const leaveChatroom = async (uuid: string) => {
 };
 
 /* 채팅방 읽음 처리 */
-export const markChatAsRead = async (uuid: string, timestamp = null) => {
+export const markChatAsRead = async (uuid: string, timestamp: null | number) => {
     const url = timestamp
         ? `/v1/chat/${uuid}/read?timestamp=${timestamp}`
         : `/v1/chat/${uuid}/read`;

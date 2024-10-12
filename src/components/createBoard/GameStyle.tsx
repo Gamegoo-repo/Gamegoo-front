@@ -8,10 +8,11 @@ import { gameStyleResponseDTOList } from "@/interface/board";
 
 interface GameStyleProps {
   gameStyleResponseDTOList: gameStyleResponseDTOList[];
+  setSelectedStyleIds: Dispatch<React.SetStateAction<number[]|gameStyleResponseDTOList[]>>;
 }
 
 const GameStyle = (props: GameStyleProps) => {
-  const { gameStyleResponseDTOList } = props;
+  const { gameStyleResponseDTOList,setSelectedStyleIds } = props;
 
   const [styledPopup, setStyledPopup] = useState(false);
   const [selectedStyles, setSelectedStyles] = useState<number[]>(
@@ -49,6 +50,12 @@ const GameStyle = (props: GameStyleProps) => {
       );
     }
   }, [gameStyleResponseDTOList]);
+
+
+  useEffect(() => {
+    setSelectedStyleIds(selectedStyles);
+  }, [selectedStyles, setSelectedStyleIds]);
+
   return (
     <>
       <StylesWrapper>
