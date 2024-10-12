@@ -16,7 +16,7 @@ const CRModal = (props: BoardModalProps) => {
 
   return createPortal(
     <Overlay>
-      <Wrapper>
+      <Wrapper $type={type}>
         <Header $type={type}>
           <CloseButton $type={type}>
             <CloseImage
@@ -66,14 +66,14 @@ const Overlay = styled.div`
   }
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ $type: string }>`
   background: ${theme.colors.white};
   border-radius: 20px;
   box-shadow: 0 4px 96.4px 0 #00000040;
   max-width: 555px;
   width: 100%;
   position: relative;
-  min-height: 837px;
+  min-height: ${({ $type }) => ($type === "posting" ? "837px" : "880px")};
   height: auto;
   height: 100%;
   margin: 50px;

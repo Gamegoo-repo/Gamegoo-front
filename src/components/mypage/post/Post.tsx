@@ -152,7 +152,7 @@ const Post: React.FC<PostProps> = ({
       {isPostingModal && boardId === isPost?.boardId && (
         <PostBoard
           onClose={handlePostingClose}
-          onCompletedPosting={handleModalClose}
+          onCompletedPostingClose={handleModalClose}
         />
       )}
     </Container>

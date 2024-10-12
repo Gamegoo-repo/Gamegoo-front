@@ -1,9 +1,10 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import { GAME_STYLE } from "@/data/profile";
+import { gameStyleResponseDTOList } from "@/interface/board";
 
 interface GameStyleProps {
-  styles: number[];
+  styles: gameStyleResponseDTOList[];
 }
 
 const GameStyle = (props: GameStyleProps) => {
@@ -19,7 +20,7 @@ const GameStyle = (props: GameStyleProps) => {
       {styles &&
         styles.length > 0 &&
         styles.map((data, index) => (
-          <Content key={index}>{getTextById(data)}</Content>
+          <Content key={index}>{getTextById(data.gameStyleId)}</Content>
         ))}
     </Div>
   );

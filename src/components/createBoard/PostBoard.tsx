@@ -19,7 +19,7 @@ import {
   setPostStatus,
   updateCurrentPost,
 } from "@/redux/slices/postSlice";
-import { PostReq } from "@/interface/board";
+import { PostReq, gameStyleResponseDTOList } from "@/interface/board";
 import Alert from "../common/Alert";
 import { useRouter } from "next/navigation";
 import { setOpenModal } from "@/redux/slices/modalSlice";
@@ -73,7 +73,7 @@ const PostBoard = (props: PostBoardProps) => {
   const [isMicOn, setIsMicOn] = useState<boolean>(currentPost?.mike || false);
   const gameStyleIds =
     user?.gameStyleResponseDTOList?.map((item) => item.gameStyleId) || [];
-  const [selectedStyleIds, setSelectedStyleIds] = useState<number[]>(
+  const [selectedStyleIds, setSelectedStyleIds] = useState<number[]|gameStyleResponseDTOList[]>(
     currentPost?.gameStyles ?? gameStyleIds
   );
   const [textareaValue, setTextareaValue] = useState<string>(
@@ -122,6 +122,8 @@ const PostBoard = (props: PostBoardProps) => {
       setTextareaValue(currentPost.contents);
     }
   }, [currentPost]);
+
+  console.log('f',currentPost?.gameStyles)
 
   /* userInfo가 업데이트된 후 상태 업데이트 */
   useEffect(() => {
@@ -336,12 +338,9 @@ const PostBoard = (props: PostBoardProps) => {
         }
         <StyleSection>
           <Title className="gameStyleTitle">게임 스타일</Title>
-          {user.gameName && (
             <GameStyle
-              selectedIds={selectedStyleIds}
-              setSelectedStyleIds={setSelectedStyleIds}
+                gameStyleResponseDTOList={user.gameStyleResponseDTOList}
             />
-          )}
         </StyleSection>
         <MemoSection>
           <Title className="memoTitle">메모</Title>
@@ -365,11 +364,14 @@ const PostBoard = (props: PostBoardProps) => {
             </TextCount>
           </InputWrapper>
         </MemoSection>
-        <ButtonContent className={`baseMargin ${selectedStyleIds.length === 0 && selectedDropOption === 4
-          ? 'margin-1'
-          : selectedStyleIds.length !== 0 && selectedDropOption === 4
-            ? 'margin-2'
-            : ''
+        <ButtonContent className={` 
+  ${selectedStyleIds.length === 0 && selectedDropOption === 4
+            ? 'margin-1'
+            : selectedStyleIds.length !== 0 && selectedDropOption === 4
+              ? 'margin-2'
+              : selectedStyleIds.length !== 0 && selectedDropOption !== 4
+                ? 'margin-3'
+                : 'baseMargin'
           }`}>
           <Button
             type="submit"
@@ -453,13 +455,17 @@ const TextCount = styled.div<{ $isFocused: boolean }>`
 const ButtonContent = styled.p`
   padding: 0 0 28px;
   text-align: center;
-  margin-top: 54px;
-
-  &.margin-1{
-    margin-top:258px;
+  &.baseMargin{
+    margin-top: 54px;
+  }
+  &.margin-1 {
+    margin-top:213px;
   }
   &.margin-2 {
-    margin-top: 221px;
+    margin-top: 185px;
+  }
+  &.margin-3 {
+    margin-top: 23px;
   }
 `;
 
