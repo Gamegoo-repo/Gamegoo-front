@@ -312,7 +312,7 @@ const Profile: React.FC<Profile> = ({
         <Button
           buttonType="secondary"
           width="218px"
-          text="친구 끊기"
+          text="친구 삭제"
           onClick={() => handleFriendState("delete")}
         />
       );

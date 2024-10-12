@@ -543,7 +543,7 @@ const Layout = () => {
                                 onClick={() => isMannerValue.isExist ? handleMannerEdit('manner') : handleMannerPost()}
                                 buttonType="primary"
                                 text="완료"
-                                disabled={checkedMannerItems.length === 0}
+                                disabled={!isEditMode && checkedMannerItems.length === 0}
                             />
                         )}
                     </ModalSubmitBtn>
