@@ -65,7 +65,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   const [isFriendStatus, setIsFriendStatus] = useState(false);
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
   const [reportDetail, setReportDetail] = useState<string>("");
-  const [type, setType] = useState<string>("wind");
+  const [gameMode, setGameMode] = useState<number>(1);
   const [showAlert, setShowAlert] = useState(false);
   const [alertProps, setAlertProps] = useState<AlertProps>({
     icon: "",
@@ -73,7 +73,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     height: 0,
     content: "",
     alt: "",
-    onClose: () => {},
+    onClose: () => { },
     buttonText: "",
   });
 
@@ -92,9 +92,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     if (!!isUser.gameName && postId) {
       const memberData = await getMemberPost(postId);
       setIsPost(memberData.result);
-      const hasPosition =
-        "mainPosition" in memberData.result ? "canyon" : "wind";
-      setType(hasPosition);
+      setGameMode(memberData.result.gameMode);
       setIsBlockedStatus(memberData.result.isBlocked);
       setLoading(false);
     }
@@ -529,7 +527,7 @@ const ReadBoard = (props: ReadBoardProps) => {
               />
               <QueueType value={isPost.gameMode} />
             </ChampionNQueueSection>
-            {type === "canyon" && (
+            {gameMode !== 4 && (
               <PositionSection>
                 <Title>포지션</Title>
                 <PositionBox
@@ -540,24 +538,24 @@ const ReadBoard = (props: ReadBoardProps) => {
                 />
               </PositionSection>
             )}
-            <WinningRateSection $gameType={type}>
+            <WinningRateSection $gameType={gameMode}>
               <WinningRate
                 completed={isPost.winRate}
                 recentGameCount={isPost.recentGameCount}
               />
             </WinningRateSection>
-            <StyleSection $gameType={type}>
+            <StyleSection $gameType={gameMode}>
               <Title>게임 스타일</Title>
               <GameStyle styles={isPost.gameStyles} />
             </StyleSection>
-            <MemoSection $gameType={type}>
+            <MemoSection $gameType={gameMode}>
               <Title>메모</Title>
               <Memo>
                 <MemoData>{isPost.contents}</MemoData>
               </Memo>
             </MemoSection>
             {isUser.gameName !== isPost.gameName && (
-              <ButtonContent $gameType={type}>
+              <ButtonContent $gameType={gameMode}>
                 <Button
                   type="submit"
                   buttonType="primary"
@@ -657,9 +655,8 @@ const ReadBoard = (props: ReadBoardProps) => {
             setIsBlockConfrimOpen(false);
           }}
         >
-          <MsgConfirm>{`${
-            isBlockedStatus ? "차단이" : "차단 해제가"
-          } 완료되었습니다.`}</MsgConfirm>
+          <MsgConfirm>{`${isBlockedStatus ? "차단이" : "차단 해제가"
+            } 완료되었습니다.`}</MsgConfirm>
         </ConfirmModal>
       )}
     </>
@@ -715,16 +712,16 @@ const PositionSection = styled.div`
   margin-top: 33px;
 `;
 
-const WinningRateSection = styled.div<{ $gameType: string }>`
-  margin-top: ${({ $gameType }) => ($gameType === "canyon" ? "33px" : "46px")};
+const WinningRateSection = styled.div<{ $gameType: number }>`
+  margin-top: ${({ $gameType }) => ($gameType !== 4 ? "33px" : "46px")};
 `;
 
-const StyleSection = styled.div<{ $gameType: string }>`
-  margin-top: ${({ $gameType }) => ($gameType === "canyon" ? "33px" : "46px")};
+const StyleSection = styled.div<{ $gameType: number }>`
+  margin-top: ${({ $gameType }) => ($gameType !== 4 ? "33px" : "46px")};
 `;
 
-const MemoSection = styled.div<{ $gameType: string }>`
-  margin-top: ${({ $gameType }) => ($gameType === "canyon" ? "33px" : "46px")};
+const MemoSection = styled.div<{ $gameType: number }>`
+  margin-top: ${({ $gameType }) => ($gameType !== 4 ? "33px" : "46px")};
 `;
 
 const Memo = styled.div`
@@ -756,8 +753,8 @@ const MemoData = styled.p`
   ${(props) => props.theme.fonts.regular18}
 `;
 
-const ButtonContent = styled.p<{ $gameType: string }>`
-  margin: ${({ $gameType }) => ($gameType === "canyon" ? "30px" : "150px")} 0
+const ButtonContent = styled.p<{ $gameType: number }>`
+  margin: ${({ $gameType }) => ($gameType !== 4 ? "30px" : "150px")} 0
     28px;
   text-align: center;
 `;

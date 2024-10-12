@@ -81,7 +81,7 @@ const PostBoard = (props: PostBoardProps) => {
   );
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [showAlert, setShowAlert] = useState(false);
-console.log('user',user)
+  console.log('user', user)
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -222,26 +222,16 @@ console.log('user',user)
       return;
     }
 
-    let params: any = {
+    const params: any = {
       boardProfileImage: selectedImageIndex,
       gameMode: selectedDropOption,
       mike: isMicOn,
       gameStyles: selectedStyleIds,
       contents: textareaValue,
-      mainPosition: undefined,
-      subPosition: undefined,
-      wantPosition: undefined
+      mainPosition: isARAM ? null : positionValue?.main,
+      subPosition: isARAM ? null : positionValue?.sub,
+      wantPosition: isARAM ? null : positionValue?.want,
     };
-
-    // 칼바람이 아닐 때만 포지션 값 추가
-    if (!isARAM) {
-      params = {
-        ...params,
-        mainPosition: positionValue?.main,
-        subPosition: positionValue?.sub,
-        wantPosition: positionValue?.want,
-      };
-    }
 
     if (!!currentPost) {
       handleEdit(params);
