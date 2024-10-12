@@ -16,6 +16,7 @@ import ChatButton from "@/components/common/ChatButton";
 import { sendMatchingQuitEvent, socket } from "@/socket";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import { theme } from "@/styles/theme";
+import { closeChatRoom } from "@/redux/slices/chatSlice";
 
 const ProfilePage = () => {
   const router = useRouter();
@@ -45,7 +46,12 @@ const ProfilePage = () => {
     };
 
     fetchProfile();
+    dispatch(closeChatRoom()); // 매칭 성공 후 열려있을 채팅방 무조건 닫기
   }, [dispatch]);
+
+  useEffect(() => {
+    console.log("Profile updated:", user);
+  }, [user]);
 
   useEffect(() => {
     if (rank === "wind" || params === "other" || params === "me") {
@@ -84,7 +90,7 @@ const ProfilePage = () => {
   }, []);
 
   const handleMatchStart = async () => {
-    const matchingType = params === "gamgoo" ? "BASIC" : "PRECISE";
+    const matchingType = params === "gamegoo" ? "BASIC" : "PRECISE";
     const gameModeMap = { personal: "1", free: "2", fast: "3", wind: "4" };
     const gameMode = gameModeMap[rank as keyof typeof gameModeMap] || "1";
 

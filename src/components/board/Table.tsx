@@ -122,7 +122,9 @@ const Table = (props: TableProps) => {
       {showAlert && (
         <Alert
           icon={
-            alertContent === "로그인이 필요한 서비스입니다." ? "exclamation" : "trash"
+            alertContent === "로그인이 필요한 서비스입니다."
+              ? "exclamation"
+              : "trash"
           }
           width={45}
           height={50}
@@ -156,7 +158,7 @@ const Table = (props: TableProps) => {
                   key={data.boardId}
                   onClick={() => handlePostOpen(data.boardId)}
                 >
-                  <First className="table_width" >
+                  <First className="table_width">
                     <ProfileImgWrapper
                       $bgColor={getProfileBgColor(data.profileImage)}
                       onClick={(e) => handleMoveProfilePage(e, data.memberId)}
@@ -167,20 +169,26 @@ const Table = (props: TableProps) => {
                         height={35}
                       />
                     </ProfileImgWrapper>
-                    <GameName onClick={(e) => handleTextClick(data.gameName, e)}>
-                      {data.gameName}
-                    </GameName>
+                    <NameRow>
+                      <P>{data.gameName}</P>
+                      <CopyButton
+                        onClick={(e) => handleTextClick(data.gameName, e)}
+                      >
+                        복사
+                      </CopyButton>
+                    </NameRow>
                   </First>
                   <Second className="table_width">
                     {data.mannerLevel && <p>LV.{data.mannerLevel}</p>}
                   </Second>
                   <Third className="table_width">
                     <TierImage
-                      data={!data.tier
-                        ? "/assets/images/tier/unranked.svg"
-                        : `/assets/images/tier/${toLowerCaseString(
-                          data.tier
-                        )}.svg`
+                      data={
+                        !data.tier
+                          ? "/assets/images/tier/unranked.svg"
+                          : `/assets/images/tier/${toLowerCaseString(
+                              data.tier
+                            )}.svg`
                       }
                       width={28}
                       height={26}
@@ -350,7 +358,7 @@ const Third = styled.div`
 `;
 
 const TierImage = styled.object`
-    pointer-events: none;
+  pointer-events: none;
 `;
 
 const Fourth = styled.div`
@@ -375,8 +383,19 @@ const Sixth = styled.div`
 
 const Seventh = styled.div``;
 const Eighth = styled.div``;
-const P = styled.div`
- ${(props) => props.theme.fonts.medium16};
+
+const NameRow = styled.div`
+  display: flex;
+  align-items: center;
+  position: relative;
+
+  &:hover > button {
+    display: inline-flex;
+  }
+`;
+
+const P = styled.p`
+  ${(props) => props.theme.fonts.medium16};
   color: ${theme.colors.black};
   white-space: nowrap;
   &.emph {
@@ -389,10 +408,26 @@ const P = styled.div`
   }
 `;
 
-const GameName = styled.div`
-  ${(props) => props.theme.fonts.medium16};
-  color: ${theme.colors.black};
+const CopyButton = styled.button`
+  width: auto;
+  height: 20px;
+  margin-left: 10px;
+  border-radius: 2px;
+  padding: 0px 7px;
+  background: ${theme.colors.gray600};
+  color: ${theme.colors.white};
+  ${theme.fonts.medium11};
+  line-height: 11px;
   white-space: nowrap;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  display: none;
+  &:hover {
+    color: ${theme.colors.purple300};
+  }
 `;
 
 const NoData = styled.p`

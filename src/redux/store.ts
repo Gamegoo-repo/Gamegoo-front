@@ -9,6 +9,7 @@ import matchInfoReducer from "./slices/matchInfo";
 import chatReducer from "./slices/chatSlice";
 import notiReducer from "./slices/notiSlice";
 import matchingReducer from "./slices/matchingSlice";
+import boardReducer from "./slices/boardSlice";
 
 export const store = () => {
   return configureStore({
@@ -23,6 +24,7 @@ export const store = () => {
       chat: chatReducer,
       noti: notiReducer,
       matching: matchingReducer,
+      board: boardReducer,
     },
   })
 }
