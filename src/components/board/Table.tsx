@@ -115,7 +115,7 @@ const Table = (props: TableProps) => {
   const handleModalClose = () => {
     dispatch(setCloseModal());
   };
-  
+
 
   return (
     <>
@@ -167,12 +167,9 @@ const Table = (props: TableProps) => {
                         height={35}
                       />
                     </ProfileImgWrapper>
-                    <HoverContainer>
-                      <GameName onClick={(e) => handleTextClick(data.gameName, e)}>
-                        {data.gameName}
-                      </GameName>
-                      {/* <HoverImage className="hover-image" /> */}
-                    </HoverContainer>
+                    <GameName onClick={(e) => handleTextClick(data.gameName, e)}>
+                      {data.gameName}
+                    </GameName>
                   </First>
                   <Second className="table_width">
                     {data.mannerLevel && <p>LV.{data.mannerLevel}</p>}
@@ -392,28 +389,6 @@ const P = styled.div`
   }
 `;
 
-const HoverContainer = styled.div`
-  position: relative;
-  display: inline-block;
-
-  /* &:hover .hover-image {
-    position: static;
-	opacity: 1;
-    visibility: visible;
-    transition: visibility 0s, opacity 0.5s ease;
-  } */
-  &:hover .hover-image {
-    display: block;
-  }
-
-  &:hover {
-    /* HoverContainer에 마우스가 올라가면 HoverImage가 표시되도록 처리 */
-    .hover-image {
-      display: block;
-    }
-  }
-`;
-
 const GameName = styled.div`
   ${(props) => props.theme.fonts.medium16};
   color: ${theme.colors.black};
@@ -448,24 +423,3 @@ const Copied = styled.div`
   white-space: nowrap;
 `;
 
-const HoverImage = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 100%; 
-  transform: translateY(-50%);
-  /* visibility: hidden;
-	opacity: 0; */
-  display: none;
-  width: 28px; 
-  height: 17px;
-  background-image: url('/assets/icons/copy_button.svg');
-  background-size: cover;
-  background-position: center;
-  margin-left: 10px;
-    /* 이미지 위에서도 hover 상태를 유지하기 위해 추가 */
-    ${HoverContainer}:hover & {
-    display: block;
-  }
-  
-  pointer-events: auto;
-`;
