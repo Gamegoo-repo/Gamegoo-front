@@ -81,7 +81,7 @@ const PostBoard = (props: PostBoardProps) => {
   );
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [showAlert, setShowAlert] = useState(false);
-
+console.log('user',user)
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -205,27 +205,43 @@ const PostBoard = (props: PostBoardProps) => {
       return setShowAlert(true);
     }
 
-    if (
-      selectedImageIndex === undefined ||
-      selectedDropOption === undefined ||
-      !positionValue ||
+    const isARAM = selectedDropOption === 4; // 칼바람
+    const isImageIndexUndefined = selectedImageIndex === undefined;
+    const isDropOptionUndefined = selectedDropOption === undefined;
+    const isTextareaEmpty = textareaValue.trim() === "";
+    const isPositionValueInvalid = !positionValue ||
       positionValue.main === undefined ||
       positionValue.sub === undefined ||
-      positionValue.want === undefined ||
-      textareaValue.trim() === ""
-    )
-      return;
+      positionValue.want === undefined;
 
-    const params = {
+    // 칼바람일 때는 포지션 없어도 된다.
+    if (
+      (isARAM && (isImageIndexUndefined || isDropOptionUndefined || isTextareaEmpty)) ||
+      (!isARAM && (isImageIndexUndefined || isDropOptionUndefined || isPositionValueInvalid || isTextareaEmpty))
+    ) {
+      return;
+    }
+
+    let params: any = {
       boardProfileImage: selectedImageIndex,
       gameMode: selectedDropOption,
-      mainPosition: positionValue.main,
-      subPosition: positionValue.sub,
-      wantPosition: positionValue.want,
       mike: isMicOn,
       gameStyles: selectedStyleIds,
       contents: textareaValue,
+      mainPosition: undefined,
+      subPosition: undefined,
+      wantPosition: undefined
     };
+
+    // 칼바람이 아닐 때만 포지션 값 추가
+    if (!isARAM) {
+      params = {
+        ...params,
+        mainPosition: positionValue?.main,
+        subPosition: positionValue?.sub,
+        wantPosition: positionValue?.want,
+      };
+    }
 
     if (!!currentPost) {
       handleEdit(params);
@@ -248,8 +264,6 @@ const PostBoard = (props: PostBoardProps) => {
     onClose();
     dispatch(clearCurrentPost());
   };
-
-
 
   return (
     <CRModal type="posting" onClose={handleModalClose}>

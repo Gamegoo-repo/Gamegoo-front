@@ -32,16 +32,16 @@ const PositionBox = (props: PositionBoxProps) => {
   });
 
   const handleCategoryButtonClick = (positionId: number) => {
-    console.log(positionId)
-
     if (selectedBox) {
-      const newPositionValue = {
-        ...positionValue,
+      setPositionValue((prevPositionValue) => ({
+        ...prevPositionValue,
         [selectedBox]: positionId,
-      };
-      setPositionValue(newPositionValue);
+      }));
       if (onPositionChange) {
-        onPositionChange(newPositionValue);
+        onPositionChange({
+          ...positionValue,
+          [selectedBox]: positionId,
+        });
       }
     }
   };

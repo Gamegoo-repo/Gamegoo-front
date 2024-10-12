@@ -53,6 +53,7 @@ const Overlay = styled.div`
   /* 스크롤바 */
   &::-webkit-scrollbar {
     width: 20px;
+    display: none;
   }
   &::-webkit-scrollbar-thumb {
     border-radius: 26px;

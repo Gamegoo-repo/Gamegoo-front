@@ -366,15 +366,18 @@ const Wrapper = styled.div`
   justify-content: center;
   padding-top: 140px;
 
-  ::-webkit-scrollbar {
-	display: none;
-}
+  /* &::-webkit-scrollbar {
+	display: none !important;
+} */
 `;
 
 const BoardContent = styled.div`
   max-width: 1440px;
   width: 100%;
   padding: 0 80px;
+  scrollbar-gutter: stable;
+
+
 `;
 
 const FirstRow = styled.div`
