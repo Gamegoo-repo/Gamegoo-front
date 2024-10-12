@@ -21,7 +21,7 @@ import {
 } from "@/utils/custom";
 import { getProfileBgColor } from "@/utils/profile";
 import { toLowerCaseString } from "@/utils/string";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
@@ -35,6 +35,7 @@ export interface PostProps {
   rank: string;
   contents: string;
   createdAt: string;
+  boardNumber:number;
   onDeletePost?: (boardId: number) => void;
 }
 
@@ -48,9 +49,11 @@ const Post: React.FC<PostProps> = ({
   rank,
   contents,
   createdAt,
+  boardNumber,
   onDeletePost,
 }) => {
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
+
   const dispatch = useDispatch();
 
   const handleMoreBoxOpen = () => {
@@ -101,12 +104,12 @@ const Post: React.FC<PostProps> = ({
     handlePostingClose();
     dispatch(setOpenModal(""));
   };
-  console.log(profileImage)
+
   return (
     <Container>
       <Content>
         <Name>
-          <Number>{boardId}</Number>
+          <Number>{boardNumber}</Number>
           {profileImage ? (
             <ProfileImgWrapper $bgColor={getProfileBgColor(profileImage)}>
               <ProfileImg
@@ -152,7 +155,7 @@ const Post: React.FC<PostProps> = ({
       {isPostingModal && boardId === isPost?.boardId && (
         <PostBoard
           onClose={handlePostingClose}
-          onCompletedPosting={handleModalClose}
+          onCompletedPostingClose={handleModalClose}
         />
       )}
     </Container>

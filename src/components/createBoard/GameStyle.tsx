@@ -6,18 +6,17 @@ import { Dispatch, useEffect, useState } from "react";
 import { GAME_STYLE } from "@/data/profile";
 
 interface GameStyleProps {
-  selectedIds: number[] | [];
-  setSelectedStyleIds: Dispatch<React.SetStateAction<number[] | []>>;
+  selectedStyleIds: number[];
+  setSelectedStyleIds: Dispatch<React.SetStateAction<number[]>>;
 }
 
 const GameStyle = (props: GameStyleProps) => {
-  const { selectedIds, setSelectedStyleIds } = props;
+  const { selectedStyleIds, setSelectedStyleIds } = props;
 
   const [styledPopup, setStyledPopup] = useState(false);
   const [selectedStyles, setSelectedStyles] = useState<number[] | []>(
-    selectedIds
+    selectedStyleIds
   );
-
   const handleStylePopup = () => {
     setStyledPopup((prevState) => !prevState);
   };

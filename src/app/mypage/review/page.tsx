@@ -90,7 +90,7 @@ const MyReviewPage = () => {
               </MannerBox>
             </MannerKey>
             <MannerKey>
-              <Small>매너 키워드</Small>
+              <Small>비매너 키워드</Small>
               <MannerBox>
                 <MannerList>
                   <ValueWrapper>

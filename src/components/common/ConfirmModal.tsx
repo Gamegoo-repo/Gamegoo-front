@@ -1,5 +1,4 @@
 import { setOpenEvaluationModal, setOpenModal } from "@/redux/slices/modalSlice";
-import { setMannerStatus } from "@/redux/slices/mannerStatusSlice";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useState } from "react";
@@ -162,7 +161,7 @@ const Overlay = styled.div<{ $type: string | undefined }>`
   background: #0000009c;
   border-radius: ${({ $type }) => ($type ? "20px" : "unset")};
   inset: 0;
-  z-index: 100;
+  z-index: 101;
 `;
 
 const Wrapper = styled.div<{ $width: string; $type: string | undefined }>`

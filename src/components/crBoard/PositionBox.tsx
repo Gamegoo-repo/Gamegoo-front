@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PositionCategory from "../common/PositionCategory";
 
 type Status = "reading" | "posting";
@@ -31,17 +31,25 @@ const PositionBox = (props: PositionBoxProps) => {
     want: want,
   });
 
-  const handleCategoryButtonClick = (positionId: number) => {
-    console.log(positionId)
+  useEffect(() => {
+    setPositionValue({
+      main: main ?? 0,
+      sub: sub ?? 0,
+      want: want ?? 0,
+    });
+  }, [main, sub, want]);
 
+  const handleCategoryButtonClick = (positionId: number) => {
     if (selectedBox) {
-      const newPositionValue = {
-        ...positionValue,
+      setPositionValue((prevPositionValue) => ({
+        ...prevPositionValue,
         [selectedBox]: positionId,
-      };
-      setPositionValue(newPositionValue);
+      }));
       if (onPositionChange) {
-        onPositionChange(newPositionValue);
+        onPositionChange({
+          ...positionValue,
+          [selectedBox]: positionId,
+        });
       }
     }
   };

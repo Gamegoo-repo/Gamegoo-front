@@ -22,14 +22,13 @@ import {
 import { PostReq } from "@/interface/board";
 import Alert from "../common/Alert";
 import { useRouter } from "next/navigation";
-import { setOpenModal } from "@/redux/slices/modalSlice";
 import { getProfile } from "@/api/user";
 import { setUserProfile } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
 
 interface PostBoardProps {
   onClose: () => void;
-  onCompletedPosting: () => void;
+  onCompletedPostingClose: () => void;
 }
 
 const DROP_DATA = [
@@ -40,44 +39,19 @@ const DROP_DATA = [
 ];
 
 const PostBoard = (props: PostBoardProps) => {
-  const { onClose, onCompletedPosting } = props;
+  const { onClose, onCompletedPostingClose } = props;
 
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const postStatus = useSelector((state: RootState) => state.post.postStatus);
+  const postStatus = useSelector(
+    (state: RootState) => state.post.postStatus
+  );
   const user = useSelector((state: RootState) => state.user);
   const currentPost = useSelector((state: RootState) => state.post.currentPost);
   const currentPostId = useSelector(
     (state: RootState) => state.post.currentPostId
   );
-  const isCompletedModal = useSelector(
-    (state: RootState) => state.modal.modalType
-  );
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await getProfile();
-        dispatch(setUserProfile(response));
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchProfile();
-  }, []);
-
-  // 모달이 열렸을 때 body 스크롤을 막기
-  useEffect(() => {
-    // 모달이 열리면 body 스크롤 비활성화
-    document.body.style.overflow = "hidden";
-
-    // 모달이 닫히면 다시 스크롤 활성화
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, []);
 
   const [isProfileListOpen, setIsProfileListOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -107,6 +81,20 @@ const PostBoard = (props: PostBoardProps) => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [showAlert, setShowAlert] = useState(false);
 
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await getProfile();
+        dispatch(setUserProfile(response));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  /* 유저가 게시판에 올린 글에 대한 데이터 */
   useEffect(() => {
     if (!!currentPost) {
       setSelectedDropOption(currentPost.gameMode);
@@ -206,39 +194,46 @@ const PostBoard = (props: PostBoardProps) => {
       return setShowAlert(true);
     }
 
-    if (
-      selectedImageIndex === undefined ||
-      selectedDropOption === undefined ||
-      !positionValue ||
+    const isARAM = selectedDropOption === 4; // 칼바람
+    const isImageIndexUndefined = selectedImageIndex === undefined;
+    const isDropOptionUndefined = selectedDropOption === undefined;
+    const isTextareaEmpty = textareaValue.trim() === "";
+    const isPositionValueInvalid = !positionValue ||
       positionValue.main === undefined ||
       positionValue.sub === undefined ||
-      positionValue.want === undefined ||
-      textareaValue.trim() === ""
-    )
-      return;
+      positionValue.want === undefined;
 
-    const params = {
+    // 칼바람일 때는 포지션 없어도 된다.
+    if (
+      (isARAM && (isImageIndexUndefined || isDropOptionUndefined || isTextareaEmpty)) ||
+      (!isARAM && (isImageIndexUndefined || isDropOptionUndefined || isPositionValueInvalid || isTextareaEmpty))
+    ) {
+      return;
+    }
+
+    const params: any = {
       boardProfileImage: selectedImageIndex,
       gameMode: selectedDropOption,
-      mainPosition: positionValue.main,
-      subPosition: positionValue.sub,
-      wantPosition: positionValue.want,
       mike: isMicOn,
       gameStyles: selectedStyleIds,
       contents: textareaValue,
+      mainPosition: isARAM ? null : positionValue?.main,
+      subPosition: isARAM ? null : positionValue?.sub,
+      wantPosition: isARAM ? null : positionValue?.want,
     };
 
     if (!!currentPost) {
-      handleEdit(params);
-      handleModalClose();
+      try {
+        await handleEdit(params);
+      } catch (error) {
+        console.error(error);
+      }
     }
 
     if (!currentPost) {
       try {
         await postBoard(params);
         await dispatch(setPostStatus("complete"));
-        await dispatch(setOpenModal("isCompleted"));
-        await handleModalClose();
       } catch (error) {
         console.error(error);
       }
@@ -249,6 +244,7 @@ const PostBoard = (props: PostBoardProps) => {
   const handleModalClose = () => {
     onClose();
     dispatch(clearCurrentPost());
+    dispatch(setPostStatus(""));
   };
 
   return (
@@ -265,13 +261,13 @@ const PostBoard = (props: PostBoardProps) => {
         />
       )}
 
-      {isCompletedModal && (
+      {postStatus && (
         <ConfirmModal
           width="540px"
           primaryButtonText="확인"
-          onPrimaryClick={onCompletedPosting}
+          onPrimaryClick={onCompletedPostingClose}
         >
-          {isCompletedModal === "isCompleted"
+          {postStatus === "complete"
             ? "글 작성이 완료되었습니다."
             : "글 수정이 완료되었습니다."}
         </ConfirmModal>
@@ -315,24 +311,24 @@ const PostBoard = (props: PostBoardProps) => {
             />
           </Div>
         </QueueNMicSection>
-        <PositionSection>
-          <Title className="positionTitle">포지션</Title>
-          <PositionBox
-            status="posting"
-            onPositionChange={handlePositionChange}
-            main={positionValue?.main}
-            sub={positionValue?.sub}
-            want={positionValue?.want}
-          />
-        </PositionSection>
+        {selectedDropOption !== 4 &&
+          <PositionSection>
+            <Title className="positionTitle">포지션</Title>
+            <PositionBox
+              status="posting"
+              onPositionChange={handlePositionChange}
+              main={positionValue?.main}
+              sub={positionValue?.sub}
+              want={positionValue?.want}
+            />
+          </PositionSection>
+        }
         <StyleSection>
           <Title className="gameStyleTitle">게임 스타일</Title>
-          {user.gameName && (
-            <GameStyle
-              selectedIds={selectedStyleIds}
-              setSelectedStyleIds={setSelectedStyleIds}
-            />
-          )}
+          <GameStyle
+            selectedStyleIds={selectedStyleIds}
+            setSelectedStyleIds={setSelectedStyleIds}
+          />
         </StyleSection>
         <MemoSection>
           <Title className="memoTitle">메모</Title>
@@ -357,7 +353,15 @@ const PostBoard = (props: PostBoardProps) => {
             </TextCount>
           </InputWrapper>
         </MemoSection>
-        <ButtonContent>
+        <ButtonContent className={` 
+  ${selectedStyleIds.length === 0 && selectedDropOption === 4
+            ? 'margin-1'
+            : selectedStyleIds.length !== 0 && selectedDropOption === 4
+              ? 'margin-2'
+              : selectedStyleIds.length !== 0 && selectedDropOption !== 4
+                ? 'margin-3'
+                : 'baseMargin'
+          }`}>
           <Button
             type="submit"
             buttonType="primary"
@@ -434,11 +438,23 @@ const TextCount = styled.div<{ $isFocused: boolean }>`
   color: ${({ $isFocused, theme }) =>
     $isFocused ? theme.colors.purple300 : "#b5b5b5"};
   ${theme.fonts.regular12};
-  z-index: 1000;
+  z-index: 99;
 `;
 
 const ButtonContent = styled.p`
   padding: 0 0 28px;
-  margin-top: 54px;
   text-align: center;
+  &.baseMargin{
+    margin-top: 54px;
+  }
+  &.margin-1 {
+    margin-top:213px;
+  }
+  &.margin-2 {
+    margin-top: 185px;
+  }
+  &.margin-3 {
+    margin-top: 23px;
+  }
 `;
+

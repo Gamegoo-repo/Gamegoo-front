@@ -116,6 +116,7 @@ const Table = (props: TableProps) => {
     dispatch(setCloseModal());
   };
 
+
   return (
     <>
       {showAlert && (
@@ -159,7 +160,7 @@ const Table = (props: TableProps) => {
                 >
                   <First className="table_width">
                     <ProfileImgWrapper
-                      $bgColor={getProfileBgColor(data.profileImage + 1)}
+                      $bgColor={getProfileBgColor(data.profileImage)}
                       onClick={(e) => handleMoveProfilePage(e, data.memberId)}
                     >
                       <ProfileImg
@@ -178,7 +179,7 @@ const Table = (props: TableProps) => {
                     </NameRow>
                   </First>
                   <Second className="table_width">
-                    {data.mannerLevel && <P>LV.{data.mannerLevel}</P>}
+                    {data.mannerLevel && <p>LV.{data.mannerLevel}</p>}
                   </Second>
                   <Third className="table_width">
                     <TierImage
@@ -325,6 +326,7 @@ const First = styled.div`
   align-items: center;
   gap: 22px;
 `;
+
 const Second = styled.div`
   p {
     color: ${theme.colors.purple100};
@@ -365,17 +367,20 @@ const Fourth = styled.div`
   justify-content: center;
   gap: 21px;
 `;
+
 const Fifth = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
 `;
+
 const Sixth = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 5px;
 `;
+
 const Seventh = styled.div``;
 const Eighth = styled.div``;
 
@@ -448,7 +453,8 @@ const Copied = styled.div`
   ${(props) => props.theme.fonts.regular14};
   background: ${theme.colors.white};
   color: rgba(45, 45, 45, 1);
-  box-shadow: 0px 0px 25.3px 0px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 25.3px 0 rgba(0, 0, 0, 0.15);
   border-radius: 10px;
   white-space: nowrap;
 `;
+

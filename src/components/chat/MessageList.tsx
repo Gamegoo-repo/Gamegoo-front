@@ -1,7 +1,7 @@
 import styled, { keyframes } from "styled-components";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Chat, DesignedSystemMessage, ChatMessageDto } from "@/interface/chat";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -11,7 +11,7 @@ import {
 } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
 import ReadBoard from "../readBoard/ReadBoard";
-import { getChatList } from "@/api/chat";
+import { getChatList, markChatAsRead } from "@/api/chat";
 import useChatMessage from "@/hooks/useChatMessage";
 import dayjs from "dayjs";
 import { setChatDateFormatter, setChatTimeFormatter } from "@/utils/custom";
@@ -60,9 +60,6 @@ const MessageList = (props: MessageListProps) => {
   const [isSystemMessageShown, setIsSystemMessageShown] = useState(false);
   const [isUnregisterAlert, setIsUnregisterAlert] = useState(false);
   const [isBlockedAlert, setIsBlockedAlert] = useState(false);
-  const [mannerSystemMessage, setMannerSystemMessage] = useState(false);
-  const [isFeedbackDateVisible, setIsFeedbackDateVisible] = useState(false);
-  const [isFeedbackDate, setIsFeedbackDate] = useState<string>("");
 
   const chatRef = useRef<HTMLDivElement>(null);
   const isReadingModal = useSelector(
@@ -71,6 +68,7 @@ const MessageList = (props: MessageListProps) => {
   const isFeedbackModalOpen = useSelector(
     (state: RootState) => state.modal.isOpen
   );
+  const currentChatUuid = useSelector((state: RootState) => state.chat.currentChatUuid);
 
   const router = useRouter();
 
@@ -78,8 +76,31 @@ const MessageList = (props: MessageListProps) => {
 
   /* 매너 시스템 소켓 이벤트 리스닝 */
   useEffect(() => {
-    const handleMannerSystemMessage = () => {
-      setMannerSystemMessage(true);
+    const handleMannerSystemMessage = (res: any) => {
+      const chatroomUuid = res.data.chatroomUuid;
+      const newChatTimestamp = res.timestamp;
+
+      setMessageList((prevMessages) => {
+        const feedbackMessage: ChatMessageDto = {
+          senderId: 0,
+          senderName: null,
+          message: '',
+          createdAt: new Date().toISOString(),
+          systemType: 1,
+          timestamp: new Date().getTime(),
+          boardId: null,
+          senderProfileImg: null,
+        };
+
+        return [...prevMessages, feedbackMessage];
+      });
+      console.log('current', currentChatUuid);
+      console.log('socket', chatroomUuid);
+
+      /* 현재 보고 있는 채팅방 읽음 처리 */
+      if (currentChatUuid && chatroomUuid === currentChatUuid) {
+        markChatAsRead(currentChatUuid, newChatTimestamp);
+      }
     };
 
     if (socket) {
@@ -149,23 +170,6 @@ const MessageList = (props: MessageListProps) => {
     };
   }, [chatRef, handleScroll]);
 
-  /* 새로운 메시지 입력 또는 새로운 메시지 입력 시 스크롤을 맨 아래로 이동시키는 함수 */
-  const scrollToBottom = useCallback(() => {
-    if (chatRef.current) {
-      chatRef.current.scrollTop = chatRef.current.scrollHeight;
-    }
-  }, [chatRef]);
-
-  useEffect(() => {
-    if (newMessage) {
-      setMessageList((prevMessages) => [...prevMessages, newMessage]);
-
-      requestAnimationFrame(() => {
-        scrollToBottom();
-      });
-    }
-  }, [newMessage, scrollToBottom]);
-
   /* 남은 메시지 보여주기(페이징) */
   const getMoreMessages = useCallback(async () => {
     if (isLoading || !hasMore) return;
@@ -205,6 +209,24 @@ const MessageList = (props: MessageListProps) => {
       setIsLoading(false);
     }
   }, [isLoading, hasMore, cursor, chatEnterData]);
+
+  /* 새로운 메시지 입력 또는 새로운 메시지 입력 시 스크롤을 맨 아래로 이동시키는 함수 */
+  const scrollToBottom = () => {
+    if (chatRef.current) {
+      chatRef.current.scrollTop = chatRef.current.scrollHeight;
+    }
+  };
+
+  /* newMessage가 업데이트 될 때마다 DOM 렌더링 후 스크롤 이동 */
+  useLayoutEffect(() => {
+    scrollToBottom();
+  }, [messageList]);
+
+  useEffect(() => {
+    if (newMessage) {
+      setMessageList((prevMessages) => [...prevMessages, newMessage]);
+    }
+  }, [newMessage]);
 
   /* 채팅 날짜 표시 */
   const handleDisplayDate = (messages: ChatMessageDto[], index: number): boolean => {
@@ -251,7 +273,7 @@ const MessageList = (props: MessageListProps) => {
     const currentTime = dayjs(messages[index].createdAt).format("A hh:mm");
     const previousTime = dayjs(messages[index - 1].createdAt).format("A hh:mm");
 
-    // 보낸 사람이 다르거나, 시간이 다르면 프로필 이미지를 표시
+    // 보낸 사람이 다르거나, 시간이 다르면 프로필 이미지 표시
     if (currentSenderId !== previousSenderId || currentTime !== previousTime) {
       return true;
     }
@@ -281,55 +303,6 @@ const MessageList = (props: MessageListProps) => {
     }
     return () => clearTimeout(timer);
   }, [isUnregisterAlert, isBlockedAlert]);
-
-  /* 새로운 메시지 전에 시스템 메시지 보여주기 */
-  useEffect(() => {
-    if (newMessage) {
-      setMessageList((prevMessages) => {
-        let updatedMessages = [...prevMessages];
-
-        if (systemMessage && !isSystemMessageShown) {
-          // 기존 시스템 메시지와, 새로운 시스템 메시지 타입이 달라서, 타입 같게 변경
-          const systemMessageAsChatMessage: ChatMessageDto = {
-            ...systemMessage,
-            createdAt: new Date().toISOString(),
-            timestamp: new Date().getTime(),
-          };
-          updatedMessages.push(systemMessageAsChatMessage);
-        }
-
-        // 새로운 메시지 추가
-        // updatedMessages.push(newMessage);
-
-        return updatedMessages;
-      });
-
-      if (!isSystemMessageShown) {
-        setIsSystemMessageShown(true);
-      }
-    }
-  }, [newMessage, systemMessage]);
-
-  /* 처음 채팅방 들어올 때 마지막 메시지로 스크롤 이동 */
-  useEffect(() => {
-    if (chatRef.current && isInitialLoading) {
-      const chatElement = chatRef.current;
-      chatElement.scrollTop = chatElement.scrollHeight;
-      setIsInitialLoading(false);
-    }
-  }, [chatRef, messageList, isInitialLoading]);
-
-
-  useEffect(() => {
-    if (newMessage) {
-      setMessageList((prevMessages) => [...prevMessages, newMessage]);
-
-      requestAnimationFrame(() => {
-        scrollToBottom();
-      });
-    }
-    console.log("chatEnterData", chatEnterData);
-  }, [newMessage, scrollToBottom]);
 
   const handleMoveProfile = async (memberId: number) => {
     await router.push(`/user/${memberId}`);
@@ -370,7 +343,7 @@ const MessageList = (props: MessageListProps) => {
 
   return (
     <>
-      {isReadingModal && <ReadBoard postId={isBoardId} />}
+      {isReadingModal && !isBoardId && <ReadBoard postId={isBoardId} />}
       {isUnregisterAlert || isBlockedAlert && (
         <ErrorBox>
           {isUnregisterAlert ? '탈퇴한 회원의 글입니다.' : '차단한 회원의 글입니다.'}

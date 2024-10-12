@@ -34,17 +34,6 @@ const MyPostPage = () => {
     fetchGetMyPost();
   }, [currentPage, currentPost]);
 
-  useEffect(() => {
-    const fetchGetMyPost = async () => {
-      const response = await getMyPost(currentPage);
-      setPostList(response.result.myBoards);
-    };
-
-    fetchGetMyPost();
-  }, [currentPost]);
-
-  useEffect(() => {}, [postList]);
-
   const handleDeletePost = async (boardId: number) => {
     await deletePost(boardId);
     setPostList((prevPosts) =>
@@ -82,7 +71,7 @@ const MyPostPage = () => {
           </Columns>
           {postList.length > 0 ? (
             <PostList>
-              {postList.map((item) => (
+              {postList.map((item, index) => (
                 <Post
                   key={item.boardId}
                   boardId={item.boardId}
@@ -94,6 +83,7 @@ const MyPostPage = () => {
                   rank={item.rank}
                   contents={item.contents}
                   createdAt={item.createdAt}
+                  boardNumber={index + 1}
                   onDeletePost={handleDeletePost}
                 />
               ))}

@@ -23,6 +23,7 @@ import { getBoardList } from "@/api/board";
 import { BoardDetail } from "@/interface/board";
 import Alert from "@/components/common/Alert";
 import { useRouter } from "next/navigation";
+import { clearCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { mikeBooleanToId, tierStringToId } from "@/utils/custom";
 import { resetBoardFilters } from "@/redux/slices/boardSlice";
 
@@ -264,8 +265,10 @@ const BoardPage = () => {
   const handleModalClose = () => {
     /* 글쓰기 모달 닫기 */
     handlePostingClose();
-    /* 글쓰기 완료 모달 닫기 */
+    /* 글쓰기 수정/완료 모달 닫기 */
     dispatch(setOpenModal(""));
+    dispatch(setPostStatus(""));
+    dispatch(clearCurrentPost());
   };
 
   const handleRefresh = () => {
@@ -288,7 +291,7 @@ const BoardPage = () => {
       {isPostingModal && (
         <PostBoard
           onClose={handlePostingClose}
-          onCompletedPosting={handleModalClose}
+          onCompletedPostingClose={handleModalClose}
         />
       )}
       {boardList && (
@@ -402,6 +405,8 @@ const BoardContent = styled.div`
   max-width: 1440px;
   width: 100%;
   padding: 0 80px;
+
+
 `;
 
 const FirstRow = styled.div`

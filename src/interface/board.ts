@@ -5,6 +5,11 @@ export interface ChampionResponseDTOList {
     championName: string;
 }
 
+export interface gameStyleResponseDTOList {
+    gameStyleId: number;
+    gameStyleName: string;
+}
+
 export interface BoardDetail {
     boardId: number;
     memberId: number;
@@ -50,6 +55,7 @@ export interface MemberPost {
     wantPosition?: number;
     recentGameCount: number;
     winRate: number;
+    // gameStyles: gameStyleResponseDTOList[] | number[];
     gameStyles: number[];
     contents: string;
     rank: number;
