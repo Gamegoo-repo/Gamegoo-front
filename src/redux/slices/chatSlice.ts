@@ -14,7 +14,7 @@ interface ChatState {
 const initialState: ChatState = {
     isChatOpen: false,
     isChatRoomOpen: false,
-    isChatRoomUuid: "" || 0,
+    isChatRoomUuid: 0 || "",
     memberId: 0,
     onlineFriends: [],
     currentChatUuid: null,

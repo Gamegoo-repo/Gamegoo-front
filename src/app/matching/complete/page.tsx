@@ -142,6 +142,11 @@ const Complete = () => {
       });
     }, 1000);
 
+    // 언제든 10초 내 matching-fail이 오면 실패 처리
+    socket?.on("matching-fail", () => {
+      handleMatchingFailWithTimerClear(); // 매칭 실패 처리
+    });
+
     // 소켓 이벤트 설정
     if (role === "sender") {
       socket?.on("matching-success-sender", handleMatchingSuccessSender);
@@ -170,47 +175,53 @@ const Complete = () => {
     startFinalTimer();
   };
 
-  // 매칭 실패 이벤트 핸들러
-  const handleMatchingFail = () => {
-    clearAllTimers();
-    setShowFailModal(true);
-  };
-
   // 5초 후 매칭 최종 성공 emit (Receiver)
   const startSecondaryTimer = () => {
     secondaryTimerRef.current = setTimeout(() => {
-      startFinalTimer();
+      socket?.emit("matching-fail");
+      setShowFailModal(true);
     }, 5000);
 
     // 5초 이내 matching-success 혹은 matching-fail 수신 시 타이머 종료
     socket?.on("matching-success", (res: any) => {
-      if (secondaryTimerRef.current) clearTimeout(secondaryTimerRef.current); // 타이머 종료
+      // receiver 입장
+      if (secondaryTimerRef.current) {
+        clearTimeout(secondaryTimerRef.current); // 타이머 종료
+        clearAllTimers();
+      }
       handleChatUuidgetWithTimerClear(res); // 매칭 성공 처리
     });
 
     socket?.on("matching-fail", () => {
-      if (secondaryTimerRef.current) clearTimeout(secondaryTimerRef.current); // 타이머 종료
-      handleMatchingFailWithTimerClear(); // 매칭 실패 처리
+      if (secondaryTimerRef.current) {
+        clearTimeout(secondaryTimerRef.current); // 타이머 종료
+        clearAllTimers();
+      }
     });
   };
 
   // 3초 후 매칭 실패 emit (Final Timer)
   const startFinalTimer = () => {
-    // 자꾸 matching-success를 받아도 얘가 보내져서 일단 주석 처리...
-    // finalTimerRef.current = setTimeout(() => {
-    //   socket?.emit("matching-fail");
-    //   setShowFailModal(true);
-    // }, 3000);
+    finalTimerRef.current = setTimeout(() => {
+      socket?.emit("matching-fail");
+      setShowFailModal(true);
+    }, 3000);
 
     // 3초 이내 matching-success 혹은 matching-fail 수신 시 타이머 종료 및 실행
     socket?.on("matching-success", (res: any) => {
-      if (finalTimerRef.current) clearTimeout(finalTimerRef.current); // 타이머 종료
+      // sender 입장
+      if (finalTimerRef.current) {
+        clearTimeout(finalTimerRef.current); // 타이머 종료
+        clearAllTimers();
+      }
       handleChatUuidgetWithTimerClear(res); // 매칭 성공 처리
     });
 
     socket?.on("matching-fail", () => {
-      if (finalTimerRef.current) clearTimeout(finalTimerRef.current); // 타이머 종료
-      handleMatchingFailWithTimerClear(); // 매칭 실패 처리
+      if (finalTimerRef.current) {
+        clearTimeout(finalTimerRef.current); // 타이머 종료
+        clearAllTimers();
+      }
     });
   };
 

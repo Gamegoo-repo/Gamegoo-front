@@ -352,7 +352,8 @@ const PostBoard = (props: PostBoardProps) => {
               onBlur={() => setIsFocused(false)}
             />
             <TextCount $isFocused={isFocused}>
-              {textareaValue.length}/1000
+              {textareaValue.length}
+              {` `}/{` `}1000
             </TextCount>
           </InputWrapper>
         </MemoSection>
@@ -424,12 +425,12 @@ const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: flex-end;
+  align-items: flex-start;
   gap: 3px;
 `;
 
 const TextCount = styled.div<{ $isFocused: boolean }>`
-  margin-right: 20px;
+  margin-left: 15px;
   color: ${({ $isFocused, theme }) =>
     $isFocused ? theme.colors.purple300 : "#b5b5b5"};
   ${theme.fonts.regular12};

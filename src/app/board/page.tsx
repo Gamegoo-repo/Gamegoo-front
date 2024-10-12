@@ -23,6 +23,8 @@ import { getBoardList } from "@/api/board";
 import { BoardDetail } from "@/interface/board";
 import Alert from "@/components/common/Alert";
 import { useRouter } from "next/navigation";
+import { mikeBooleanToId, tierStringToId } from "@/utils/custom";
+import { resetBoardFilters } from "@/redux/slices/boardSlice";
 
 const ITEMS_PER_PAGE = 20;
 const BUTTONS_PER_PAGE = 5;
@@ -38,11 +40,9 @@ const BoardPage = () => {
   const [isMicDropdownOpen, setIsMicDropdownOpen] = useState(false);
   const [selectedGameMode, setSelectedGameMode] = useState<
     string | number | null
-  >("솔로 랭크");
-  const [selectedTier, setSelectedTier] = useState<string | null>("티어 선택");
-  const [selectedMic, setSelectedMic] = useState<boolean | string | null>(
-    "음성 채팅"
-  );
+  >(null);
+  const [selectedTier, setSelectedTier] = useState<string | null>(null);
+  const [selectedMic, setSelectedMic] = useState<boolean | string | null>(null);
   const [showAlert, setShowAlert] = useState(false);
   const [refresh, setRefresh] = useState(false);
 
@@ -59,14 +59,19 @@ const BoardPage = () => {
   const isPostStatus = useSelector((state: RootState) => state.post.postStatus);
   const isUser = useSelector((state: RootState) => state.user);
 
+  /* redux 필터 상태 가져오기 */
+  const boardFilters = useSelector((state: RootState) => state.board);
+
   /* 게임모드 드롭 */
   const handleGameModeDropValue = (id: number | null) => {
+    dispatch(resetBoardFilters());
     setSelectedGameMode(id);
     setIsGameModeDropdownOpen(false);
   };
 
   /* 티어 드롭 */
   const handleTierDropValue = (id: number | null) => {
+    dispatch(resetBoardFilters());
     switch (id) {
       case 1:
         setSelectedTier("IRON");
@@ -105,6 +110,16 @@ const BoardPage = () => {
 
     setIsTierDropdownOpen(false);
   };
+
+  // useEffect(() => {
+  //   if (boardFilters) {
+  //     console.log(boardFilters);
+  //     setSelectedGameMode(boardFilters.mode || "솔로 랭크");
+  //     setSelectedTier(boardFilters.tier || "티어 선택");
+  //     setIsPosition(boardFilters.mainPosition || 0);
+  //     setSelectedMic(boardFilters.mike || "음성 채팅");
+  //   }
+  // }, [boardFilters]);
 
   /* 게임모드 드롭박스 외부 클릭 */
   const handleGameModeDropdownClickOutside = (event: MouseEvent) => {
@@ -146,11 +161,13 @@ const BoardPage = () => {
 
   /* 포지션 필터 */
   const handlePositionFilter = (id: number) => {
+    dispatch(resetBoardFilters());
     setIsPosition(id);
   };
 
   /* 마이크 드롭 */
   const handleMicDropValue = (id: number | null) => {
+    dispatch(resetBoardFilters());
     switch (id) {
       case 1:
         setSelectedMic(true);
@@ -185,13 +202,21 @@ const BoardPage = () => {
     const params = {
       pageIdx: currentPage,
       mode:
-        selectedGameMode === "솔로 랭크"
-          ? setSelectedGameMode(null)
+        boardFilters.mode && boardFilters.mode !== null
+          ? boardFilters.mode
           : selectedGameMode,
-      tier: selectedTier === "티어 선택" ? setSelectedTier(null) : selectedTier,
-      mainPosition: isPosition,
-      mike: selectedMic === "음성 채팅" ? setSelectedMic(null) : selectedMic,
+      tier:
+        boardFilters.tier && boardFilters.tier !== null
+          ? boardFilters.tier
+          : selectedTier,
+      mainPosition: boardFilters.mainPosition || isPosition,
+      mike:
+        boardFilters.mike && boardFilters.mike !== null
+          ? boardFilters.mike
+          : selectedMic,
     };
+
+    console.log("params", params);
 
     try {
       const data = await getBoardList(params);
@@ -290,7 +315,7 @@ const BoardPage = () => {
                   open={isGameModeDropdownOpen}
                   setOpen={setIsGameModeDropdownOpen}
                   onDropValue={handleGameModeDropValue}
-                  defaultValue={selectedGameMode}
+                  defaultValue={boardFilters.mode || selectedGameMode}
                 />
                 <Dropdown
                   type="type1"
@@ -301,12 +326,15 @@ const BoardPage = () => {
                   open={isTierDropdownOpen}
                   setOpen={setIsTierDropdownOpen}
                   onDropValue={handleTierDropValue}
-                  defaultValue={selectedTier}
+                  defaultValue={
+                    tierStringToId(boardFilters.tier) || selectedTier
+                  }
                 />
                 <PositionBox>
                   <PositionFilter
                     onPositionFilter={handlePositionFilter}
-                    isPosition={isPosition}
+                    isPosition={1}
+                    // isPosition={boardFilters.mainPosition || isPosition}
                   />
                 </PositionBox>
                 <Dropdown
@@ -318,7 +346,10 @@ const BoardPage = () => {
                   open={isMicDropdownOpen}
                   setOpen={setIsMicDropdownOpen}
                   onDropValue={handleMicDropValue}
-                  defaultValue={selectedMic}
+                  // defaultValue={2}
+                  defaultValue={
+                    mikeBooleanToId(boardFilters.mike) || selectedMic
+                  }
                 />
               </FirstBlock>
               <SecondBlock>
