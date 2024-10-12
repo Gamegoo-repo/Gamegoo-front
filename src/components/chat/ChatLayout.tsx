@@ -389,21 +389,6 @@ const ChatLayout = (props: ChatLayoutProps) => {
         }
     };
 
-    /* 차단 해제 */
-    const handleChatUnblock = async () => {
-        if (!chatEnterData) return;
-
-        try {
-            const response = await unblockMember(chatEnterData.memberId);
-            if (response) {
-                console.log("차단 해제 성공");
-                await handleChatEnter();
-            }
-        } catch (error) {
-            console.error("차단 해제 실패:", error);
-        }
-    };
-
     /* 모달 타입 변경 */
     const handleModalChange = (e: React.MouseEvent, modalType: string, memberId?: number) => {
         if (modalType) {
@@ -454,9 +439,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
             !chatEnterData?.friend && chatEnterData?.friendRequestMemberId &&
             { text: '친구 요청 취소', onClick: handleCancelFriendReq },
 
-            chatEnterData?.blocked
-                ? { text: '차단 해제', onClick: handleChatUnblock }
-                : { text: '차단하기', onClick: (e: React.MouseEvent) => handleModalChange(e, 'block') },
+            { text: '차단하기', onClick: (e: React.MouseEvent) => handleModalChange(e, 'block') },
             { text: '신고하기', onClick: (e: React.MouseEvent) => chatEnterData?.memberId && handleReportClick(e, chatEnterData.memberId) },
             { text: '매너 평가', onClick: (e: React.MouseEvent) => chatEnterData?.memberId && handleMannerClick(e, chatEnterData.memberId) },
             { text: '비매너 평가', onClick: (e: React.MouseEvent) => chatEnterData?.memberId && handleBadMannerClick(e, chatEnterData.memberId) },
