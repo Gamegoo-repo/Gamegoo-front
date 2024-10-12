@@ -18,7 +18,7 @@ import MoreBox from "../common/MoreBox";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import { User } from "@/interface/profile";
 import { PositionState } from "../crBoard/PositionBox";
-import { putPosition } from "@/api/user";
+import { putPosition, putProfileImg } from "@/api/user";
 import { setAbbrevTier, setPositionImg } from "@/utils/custom";
 import {
   acceptFreindReq,
@@ -34,6 +34,7 @@ import { RootState } from "@/redux/store";
 import { getProfileBgColor } from "@/utils/profile";
 import { setMatchInfo } from "@/redux/slices/matchInfo";
 import { toLowerCaseString } from "@/utils/string";
+import { setUserProfileImg } from "@/redux/slices/userSlice";
 
 type profileType = "normal" | "wind" | "other" | "me";
 
@@ -57,7 +58,6 @@ const Profile: React.FC<Profile> = ({
   const memberId = Number(id);
   const myId = useSelector((state: RootState) => state.user.id);
 
-  const [isMike, setIsMike] = useState<boolean>(user.mike);
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
   const [isReportBoxOpen, setIsReportBoxOpen] = useState(false);
   const [isBlockBoxOpen, setIsBlockBoxOpen] = useState(false);
@@ -75,19 +75,32 @@ const Profile: React.FC<Profile> = ({
     false,
   ]);
 
+  const matchInfo = useSelector((state: RootState) => state.matchInfo);
+
   const [selectedBox, setSelectedBox] = useState("");
+
+  /* user부터 가져오는 상태들 */
+  const [isMike, setIsMike] = useState<boolean>(user.mike);
   const [positionValue, setPositionValue] = useState<PositionState>({
     main: user.mainP,
     sub: user.subP,
     want: user.subP,
   });
-
-  const matchInfo = useSelector((state: RootState) => state.matchInfo);
-
   /* 선택된 현재 프로필 이미지 */
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(
     user.profileImg
   );
+
+  // 상위 컴포넌트에서 user 변경 시 업데이트
+  useEffect(() => {
+    setIsMike(user.mike);
+    setPositionValue({
+      main: user.mainP,
+      sub: user.subP,
+      want: user.subP, // 나중에 wantP값 받아서 수정
+    });
+    setSelectedImageIndex(user.profileImg);
+  }, [user]);
 
   useEffect(() => {
     const gameStyleIds = user.gameStyleResponseDTOList.map(
@@ -104,11 +117,16 @@ const Profile: React.FC<Profile> = ({
       })
     );
     console.log("isMike:", isMike);
-  }, [isMike, positionValue, dispatch, user.gameStyleResponseDTOList]);
+  }, [isMike, positionValue, dispatch]);
 
   /* 프로필 이미지 리스트 중 클릭시*/
-  const handleImageClick = (index: number) => {
+  const handleImageClick = async (index: number) => {
     setSelectedImageIndex(index);
+
+    await putProfileImg(index);
+    // const newUserData = await getProfile();
+    dispatch(setUserProfileImg(index));
+    localStorage.setItem("profileImg", index + "");
 
     setTimeout(() => {
       setIsProfileListOpen(false);

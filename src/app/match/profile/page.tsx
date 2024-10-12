@@ -50,6 +50,10 @@ const ProfilePage = () => {
   }, [dispatch]);
 
   useEffect(() => {
+    console.log("Profile updated:", user);
+  }, [user]);
+
+  useEffect(() => {
     if (rank === "wind" || params === "other" || params === "me") {
       setProfileType(rank as profileType);
     } else if (rank === "personal" || "free" || "fast") {
