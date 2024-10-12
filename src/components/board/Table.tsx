@@ -115,6 +115,7 @@ const Table = (props: TableProps) => {
   const handleModalClose = () => {
     dispatch(setCloseModal());
   };
+  
 
   return (
     <>
@@ -166,12 +167,15 @@ const Table = (props: TableProps) => {
                         height={35}
                       />
                     </ProfileImgWrapper>
-                    <P onClick={(e) => handleTextClick(data.gameName, e)}>
-                      {data.gameName}
-                    </P>
+                    <HoverContainer>
+                      <GameName onClick={(e) => handleTextClick(data.gameName, e)}>
+                        {data.gameName}
+                      </GameName>
+                      {/* <HoverImage className="hover-image" /> */}
+                    </HoverContainer>
                   </First>
                   <Second className="table_width">
-                    {data.mannerLevel && <P>LV.{data.mannerLevel}</P>}
+                    {data.mannerLevel && <p>LV.{data.mannerLevel}</p>}
                   </Second>
                   <Third className="table_width">
                     <TierImage
@@ -317,6 +321,7 @@ const First = styled.div`
   align-items: center;
   gap: 22px;
 `;
+
 const Second = styled.div`
   p {
     color: ${theme.colors.purple100};
@@ -357,21 +362,24 @@ const Fourth = styled.div`
   justify-content: center;
   gap: 21px;
 `;
+
 const Fifth = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
 `;
+
 const Sixth = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 5px;
 `;
+
 const Seventh = styled.div``;
 const Eighth = styled.div``;
-const P = styled.p`
-  ${(props) => props.theme.fonts.medium16};
+const P = styled.div`
+ ${(props) => props.theme.fonts.medium16};
   color: ${theme.colors.black};
   white-space: nowrap;
   &.emph {
@@ -382,6 +390,34 @@ const P = styled.p`
     color: ${theme.colors.black};
     ${(props) => props.theme.fonts.medium16};
   }
+`;
+
+const HoverContainer = styled.div`
+  position: relative;
+  display: inline-block;
+
+  /* &:hover .hover-image {
+    position: static;
+	opacity: 1;
+    visibility: visible;
+    transition: visibility 0s, opacity 0.5s ease;
+  } */
+  &:hover .hover-image {
+    display: block;
+  }
+
+  &:hover {
+    /* HoverContainer에 마우스가 올라가면 HoverImage가 표시되도록 처리 */
+    .hover-image {
+      display: block;
+    }
+  }
+`;
+
+const GameName = styled.div`
+  ${(props) => props.theme.fonts.medium16};
+  color: ${theme.colors.black};
+  white-space: nowrap;
 `;
 
 const NoData = styled.p`
@@ -407,7 +443,29 @@ const Copied = styled.div`
   ${(props) => props.theme.fonts.regular14};
   background: ${theme.colors.white};
   color: rgba(45, 45, 45, 1);
-  box-shadow: 0px 0px 25.3px 0px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 25.3px 0 rgba(0, 0, 0, 0.15);
   border-radius: 10px;
   white-space: nowrap;
+`;
+
+const HoverImage = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 100%; 
+  transform: translateY(-50%);
+  /* visibility: hidden;
+	opacity: 0; */
+  display: none;
+  width: 28px; 
+  height: 17px;
+  background-image: url('/assets/icons/copy_button.svg');
+  background-size: cover;
+  background-position: center;
+  margin-left: 10px;
+    /* 이미지 위에서도 hover 상태를 유지하기 위해 추가 */
+    ${HoverContainer}:hover & {
+    display: block;
+  }
+  
+  pointer-events: auto;
 `;
