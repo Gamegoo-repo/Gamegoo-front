@@ -16,6 +16,7 @@ import ChatButton from "@/components/common/ChatButton";
 import { sendMatchingQuitEvent, socket } from "@/socket";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import { theme } from "@/styles/theme";
+import { closeChatRoom } from "@/redux/slices/chatSlice";
 
 const ProfilePage = () => {
   const router = useRouter();
@@ -45,6 +46,7 @@ const ProfilePage = () => {
     };
 
     fetchProfile();
+    dispatch(closeChatRoom()); // 매칭 성공 후 열려있을 채팅방 무조건 닫기
   }, [dispatch]);
 
   useEffect(() => {
