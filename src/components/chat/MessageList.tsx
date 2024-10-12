@@ -343,7 +343,7 @@ const MessageList = (props: MessageListProps) => {
 
   return (
     <>
-      {isReadingModal && <ReadBoard postId={isBoardId} />}
+      {isReadingModal && !isBoardId && <ReadBoard postId={isBoardId} />}
       {isUnregisterAlert || isBlockedAlert && (
         <ErrorBox>
           {isUnregisterAlert ? '탈퇴한 회원의 글입니다.' : '차단한 회원의 글입니다.'}

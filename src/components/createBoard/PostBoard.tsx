@@ -19,7 +19,7 @@ import {
   setPostStatus,
   updateCurrentPost,
 } from "@/redux/slices/postSlice";
-import { PostReq, gameStyleResponseDTOList } from "@/interface/board";
+import { PostReq } from "@/interface/board";
 import Alert from "../common/Alert";
 import { useRouter } from "next/navigation";
 import { getProfile } from "@/api/user";
@@ -72,7 +72,7 @@ const PostBoard = (props: PostBoardProps) => {
   const [isMicOn, setIsMicOn] = useState<boolean>(currentPost?.mike || false);
   const gameStyleIds =
     user?.gameStyleResponseDTOList?.map((item) => item.gameStyleId) || [];
-  const [selectedStyleIds, setSelectedStyleIds] = useState<number[]|gameStyleResponseDTOList[]>(
+  const [selectedStyleIds, setSelectedStyleIds] = useState<number[]>(
     currentPost?.gameStyles ?? gameStyleIds
   );
   const [textareaValue, setTextareaValue] = useState<string>(
@@ -94,17 +94,7 @@ const PostBoard = (props: PostBoardProps) => {
     fetchProfile();
   }, []);
 
-  // // 모달이 열렸을 때 body 스크롤을 막기
-  // useEffect(() => {
-  //   // 모달이 열리면 body 스크롤 비활성화
-  //   document.body.style.overflow = "hidden";
-
-  //   // 모달이 닫히면 다시 스크롤 활성화
-  //   return () => {
-  //     document.body.style.overflow = "auto";
-  //   };
-  // }, []);
-
+  /* 유저가 게시판에 올린 글에 대한 데이터 */
   useEffect(() => {
     if (!!currentPost) {
       setSelectedDropOption(currentPost.gameMode);
@@ -121,8 +111,6 @@ const PostBoard = (props: PostBoardProps) => {
       setTextareaValue(currentPost.contents);
     }
   }, [currentPost]);
-
-  console.log('f',currentPost?.gameStyles)
 
   /* userInfo가 업데이트된 후 상태 업데이트 */
   useEffect(() => {
@@ -337,10 +325,10 @@ const PostBoard = (props: PostBoardProps) => {
         }
         <StyleSection>
           <Title className="gameStyleTitle">게임 스타일</Title>
-            <GameStyle
-                gameStyleResponseDTOList={user.gameStyleResponseDTOList}
-                setSelectedStyleIds={setSelectedStyleIds}
-            />
+          <GameStyle
+            selectedStyleIds={selectedStyleIds}
+            setSelectedStyleIds={setSelectedStyleIds}
+          />
         </StyleSection>
         <MemoSection>
           <Title className="memoTitle">메모</Title>
@@ -449,7 +437,7 @@ const TextCount = styled.div<{ $isFocused: boolean }>`
   color: ${({ $isFocused, theme }) =>
     $isFocused ? theme.colors.purple300 : "#b5b5b5"};
   ${theme.fonts.regular12};
-  z-index: 100;
+  z-index: 99;
 `;
 
 const ButtonContent = styled.p`

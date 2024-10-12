@@ -4,21 +4,19 @@ import SelectedStylePopup from "../match/SelectedStylePopup";
 import Image from "next/image";
 import { Dispatch, useEffect, useState } from "react";
 import { GAME_STYLE } from "@/data/profile";
-import { gameStyleResponseDTOList } from "@/interface/board";
 
 interface GameStyleProps {
-  gameStyleResponseDTOList: gameStyleResponseDTOList[];
-  setSelectedStyleIds: Dispatch<React.SetStateAction<number[]|gameStyleResponseDTOList[]>>;
+  selectedStyleIds: number[];
+  setSelectedStyleIds: Dispatch<React.SetStateAction<number[]>>;
 }
 
 const GameStyle = (props: GameStyleProps) => {
-  const { gameStyleResponseDTOList,setSelectedStyleIds } = props;
+  const { selectedStyleIds, setSelectedStyleIds } = props;
 
   const [styledPopup, setStyledPopup] = useState(false);
-  const [selectedStyles, setSelectedStyles] = useState<number[]>(
-    gameStyleResponseDTOList.map((style) => style.gameStyleId)
+  const [selectedStyles, setSelectedStyles] = useState<number[] | []>(
+    selectedStyleIds
   );
-
   const handleStylePopup = () => {
     setStyledPopup((prevState) => !prevState);
   };
@@ -42,15 +40,6 @@ const GameStyle = (props: GameStyleProps) => {
       }
     });
   };
-
-  useEffect(() => {
-    if (gameStyleResponseDTOList.length > 0) {
-      setSelectedStyles(
-        gameStyleResponseDTOList.map((style) => style.gameStyleId)
-      );
-    }
-  }, [gameStyleResponseDTOList]);
-
 
   useEffect(() => {
     setSelectedStyleIds(selectedStyles);
