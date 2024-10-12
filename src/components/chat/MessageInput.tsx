@@ -53,7 +53,8 @@ const MessageInput = (props: MessageInputProps) => {
             />
             <Row>
               <TextCount $color={message.length > 0}>
-                {message.length}/1000
+                {message.length}
+                {` `}/{` `}1000
               </TextCount>
               <SubmitButton
                 disabled={message.length === 0 || !!chatEnterData.blocked}
@@ -117,11 +118,10 @@ const Textarea = styled.textarea`
 
 const Row = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: flex-end;
   gap: 20px;
-  margin-right: 20px;
-  margin-bottom: 20px;
+  margin: 0 20px 20px 20px;
 `;
 
 const TextCount = styled.div<{ $color: boolean }>`
