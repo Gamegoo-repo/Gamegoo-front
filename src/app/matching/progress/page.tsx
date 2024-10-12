@@ -16,6 +16,7 @@ import { getSystemMsg } from "@/api/socket";
 import { getBoardList } from "@/api/board";
 import { setOpenPostingModal } from "@/redux/slices/modalSlice";
 import { useDispatch } from "react-redux";
+import { setBoardFilters } from "@/redux/slices/boardSlice";
 
 interface User {
   memberId: number;
@@ -237,6 +238,7 @@ const Progress = () => {
         try {
           const response = await getBoardList(params);
           if (response.result.totalCount > 0) {
+            dispatch(setBoardFilters(params));
             setIsSecondYes(true);
           } else {
             setIsSecondNo(true);
