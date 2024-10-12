@@ -23,6 +23,7 @@ import { getBoardList } from "@/api/board";
 import { BoardDetail } from "@/interface/board";
 import Alert from "@/components/common/Alert";
 import { useRouter } from "next/navigation";
+import { clearCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 
 const ITEMS_PER_PAGE = 20;
 const BUTTONS_PER_PAGE = 5;
@@ -239,8 +240,10 @@ const BoardPage = () => {
   const handleModalClose = () => {
     /* 글쓰기 모달 닫기 */
     handlePostingClose();
-    /* 글쓰기 완료 모달 닫기 */
+    /* 글쓰기 수정/완료 모달 닫기 */
     dispatch(setOpenModal(""));
+    dispatch(setPostStatus(""));
+    dispatch(clearCurrentPost());
   };
 
   const handleRefresh = () => {

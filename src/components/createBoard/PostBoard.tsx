@@ -234,8 +234,11 @@ const PostBoard = (props: PostBoardProps) => {
     };
 
     if (!!currentPost) {
-      handleEdit(params);
-      // handleModalClose();
+      try {
+        await handleEdit(params);
+      } catch (error) {
+        console.error(error);
+      }
     }
 
     if (!currentPost) {
