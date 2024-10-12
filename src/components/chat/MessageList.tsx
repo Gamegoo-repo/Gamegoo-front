@@ -1,7 +1,7 @@
 import styled, { keyframes } from "styled-components";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Chat, DesignedSystemMessage, ChatMessageDto } from "@/interface/chat";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -60,8 +60,6 @@ const MessageList = (props: MessageListProps) => {
   const [isSystemMessageShown, setIsSystemMessageShown] = useState(false);
   const [isUnregisterAlert, setIsUnregisterAlert] = useState(false);
   const [isBlockedAlert, setIsBlockedAlert] = useState(false);
-  const [isFeedbackDateVisible, setIsFeedbackDateVisible] = useState(false);
-  const [isFeedbackDate, setIsFeedbackDate] = useState<string>("");
 
   const chatRef = useRef<HTMLDivElement>(null);
   const isReadingModal = useSelector(
@@ -172,23 +170,6 @@ const MessageList = (props: MessageListProps) => {
     };
   }, [chatRef, handleScroll]);
 
-  /* 새로운 메시지 입력 또는 새로운 메시지 입력 시 스크롤을 맨 아래로 이동시키는 함수 */
-  const scrollToBottom = useCallback(() => {
-    if (chatRef.current) {
-      chatRef.current.scrollTop = chatRef.current.scrollHeight;
-    }
-  }, [chatRef]);
-
-  useEffect(() => {
-    if (newMessage) {
-      setMessageList((prevMessages) => [...prevMessages, newMessage]);
-
-      requestAnimationFrame(() => {
-        scrollToBottom();
-      });
-    }
-  }, [newMessage, scrollToBottom]);
-
   /* 남은 메시지 보여주기(페이징) */
   const getMoreMessages = useCallback(async () => {
     if (isLoading || !hasMore) return;
@@ -228,6 +209,24 @@ const MessageList = (props: MessageListProps) => {
       setIsLoading(false);
     }
   }, [isLoading, hasMore, cursor, chatEnterData]);
+
+  /* 새로운 메시지 입력 또는 새로운 메시지 입력 시 스크롤을 맨 아래로 이동시키는 함수 */
+  const scrollToBottom = () => {
+    if (chatRef.current) {
+      chatRef.current.scrollTop = chatRef.current.scrollHeight;
+    }
+  };
+
+  /* newMessage가 업데이트 될 때마다 DOM 렌더링 후 스크롤 이동 */
+  useLayoutEffect(() => {
+    scrollToBottom();
+  }, [messageList]);
+
+  useEffect(() => {
+    if (newMessage) {
+      setMessageList((prevMessages) => [...prevMessages, newMessage]);
+    }
+  }, [newMessage]);
 
   /* 채팅 날짜 표시 */
   const handleDisplayDate = (messages: ChatMessageDto[], index: number): boolean => {
@@ -274,7 +273,7 @@ const MessageList = (props: MessageListProps) => {
     const currentTime = dayjs(messages[index].createdAt).format("A hh:mm");
     const previousTime = dayjs(messages[index - 1].createdAt).format("A hh:mm");
 
-    // 보낸 사람이 다르거나, 시간이 다르면 프로필 이미지를 표시
+    // 보낸 사람이 다르거나, 시간이 다르면 프로필 이미지 표시
     if (currentSenderId !== previousSenderId || currentTime !== previousTime) {
       return true;
     }
@@ -339,28 +338,6 @@ const MessageList = (props: MessageListProps) => {
           message
         )}
       </SystemMessageContainer>
-    );
-  };
-
-  const MannerSystemMessage = () => {
-    return (
-      <FeedbackDiv>
-        <FeedbackContainer>
-          <Feedback>
-            <Text>매칭은 어떠셨나요?</Text>
-            <Text>상대방의 매너를 평가해주세요!</Text>
-            <SmileImage
-              src="/assets/icons/clicked_smile.svg"
-              width={22}
-              height={22}
-              alt="스마일 이모티콘"
-            />
-            <StyledButton onClick={handleMannerEvaluate}>
-              매너평가 하기
-            </StyledButton>
-          </Feedback>
-        </FeedbackContainer>
-      </FeedbackDiv>
     );
   };
 
