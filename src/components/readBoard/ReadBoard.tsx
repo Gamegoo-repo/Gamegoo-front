@@ -325,6 +325,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       dispatch(setCurrentPost({ currentPost: isPost, currentPostId: postId }));
       dispatch(setOpenPostingModal());
       dispatch(setCloseReadingModal());
+      dispatch(setPostStatus(""));
     }
   };
 

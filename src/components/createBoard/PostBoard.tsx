@@ -45,13 +45,13 @@ const PostBoard = (props: PostBoardProps) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
+  const postStatus = useSelector(
+    (state: RootState) => state.post.postStatus
+  );
   const user = useSelector((state: RootState) => state.user);
   const currentPost = useSelector((state: RootState) => state.post.currentPost);
   const currentPostId = useSelector(
     (state: RootState) => state.post.currentPostId
-  );
-  const isCompletedModal = useSelector(
-    (state: RootState) => state.modal.modalType
   );
 
   const [isProfileListOpen, setIsProfileListOpen] = useState(false);
@@ -81,7 +81,7 @@ const PostBoard = (props: PostBoardProps) => {
   );
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [showAlert, setShowAlert] = useState(false);
-  console.log('user', user)
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -95,16 +95,16 @@ const PostBoard = (props: PostBoardProps) => {
     fetchProfile();
   }, []);
 
-  // 모달이 열렸을 때 body 스크롤을 막기
-  useEffect(() => {
-    // 모달이 열리면 body 스크롤 비활성화
-    document.body.style.overflow = "hidden";
+  // // 모달이 열렸을 때 body 스크롤을 막기
+  // useEffect(() => {
+  //   // 모달이 열리면 body 스크롤 비활성화
+  //   document.body.style.overflow = "hidden";
 
-    // 모달이 닫히면 다시 스크롤 활성화
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, []);
+  //   // 모달이 닫히면 다시 스크롤 활성화
+  //   return () => {
+  //     document.body.style.overflow = "auto";
+  //   };
+  // }, []);
 
   useEffect(() => {
     if (!!currentPost) {
@@ -235,14 +235,13 @@ const PostBoard = (props: PostBoardProps) => {
 
     if (!!currentPost) {
       handleEdit(params);
-      handleModalClose();
+      // handleModalClose();
     }
 
     if (!currentPost) {
       try {
         await postBoard(params);
         await dispatch(setPostStatus("complete"));
-        await dispatch(setOpenModal("isCompleted"));
       } catch (error) {
         console.error(error);
       }
@@ -253,6 +252,7 @@ const PostBoard = (props: PostBoardProps) => {
   const handleModalClose = () => {
     onClose();
     dispatch(clearCurrentPost());
+    dispatch(setPostStatus(""));
   };
 
   return (
@@ -269,13 +269,13 @@ const PostBoard = (props: PostBoardProps) => {
         />
       )}
 
-      {isCompletedModal && (
+      {postStatus && (
         <ConfirmModal
           width="540px"
           primaryButtonText="확인"
           onPrimaryClick={onCompletedPostingClose}
         >
-          {isCompletedModal === "isCompleted"
+          {postStatus === "complete"
             ? "글 작성이 완료되었습니다."
             : "글 수정이 완료되었습니다."}
         </ConfirmModal>
