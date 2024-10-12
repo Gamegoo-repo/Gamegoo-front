@@ -398,7 +398,9 @@ const Profile: React.FC<Profile> = ({
             />
           </ProfileImgWrapper>
           {profileType !== "other" && (
-            <CameraImgBg onClick={() => setIsProfileListOpen(!isProfileListOpen)}>
+            <CameraImgBg
+              onClick={() => setIsProfileListOpen(!isProfileListOpen)}
+            >
               <CameraImage
                 data="/assets/icons/camera_white.svg"
                 width={30}
@@ -552,8 +554,9 @@ const Profile: React.FC<Profile> = ({
                       setIsBlockConfrimOpen(false);
                     }}
                   >
-                    <MsgConfirm>{`${user.blocked ? "차단이" : "차단 해제가"
-                      } 완료되었습니다.`}</MsgConfirm>
+                    <MsgConfirm>{`${
+                      user.blocked ? "차단이" : "차단 해제가"
+                    } 완료되었습니다.`}</MsgConfirm>
                   </ConfirmModal>
                 )}
                 {/* 차단 해제하기 확인 팝업 */}
@@ -581,8 +584,8 @@ const Profile: React.FC<Profile> = ({
                         index === 0
                           ? positionValue.main ?? 0
                           : index === 1
-                            ? positionValue.sub ?? 0
-                            : positionValue.want ?? 0
+                          ? positionValue.sub ?? 0
+                          : positionValue.want ?? 0
                       )}
                       width={55}
                       height={40}
@@ -620,13 +623,12 @@ const Profile: React.FC<Profile> = ({
       {(profileType === "normal" ||
         (profileType === "other" &&
           user.gameStyleResponseDTOList.length > 0)) && (
-          <GameStyle
-            profileType={profileType === "normal" ? "none" : profileType}
-            gameStyleResponseDTOList={user.gameStyleResponseDTOList}
-            // mic={user.mic}
-            mic={false}
-          />
-        )}
+        <GameStyle
+          profileType={profileType === "normal" ? "none" : profileType}
+          gameStyleResponseDTOList={user.gameStyleResponseDTOList}
+          mic={isMike}
+        />
+      )}
     </Container>
   );
 };
@@ -820,7 +822,7 @@ const Rank = styled.div`
 `;
 
 const TierImage = styled.object`
-    pointer-events: none;
+  pointer-events: none;
 `;
 
 const More = styled.div`
