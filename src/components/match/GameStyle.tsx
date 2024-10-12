@@ -6,10 +6,11 @@ import Toggle from "../common/Toggle";
 import { theme } from "@/styles/theme";
 import SelectedStylePopup from "./SelectedStylePopup";
 import { css } from "styled-components";
-import { putGameStyle } from "@/api/user";
+import { putGameStyle, putMike } from "@/api/user";
 import { GAME_STYLE } from "@/data/profile";
 import { useDispatch } from "react-redux";
 import { updateGameStyles, updateMatchInfo } from "@/redux/slices/matchInfo";
+import { setUserMike } from "@/redux/slices/userSlice";
 
 type profileType = "me" | "other" | "none" | "mini";
 
@@ -42,14 +43,16 @@ const GameStyle = (props: GameStyleProps) => {
     }
   }, [gameStyleResponseDTOList]);
 
-  const handleMike = () => {
+  const handleMike = async () => {
     if (profileType !== "other") {
-      setIsMike((prevState) => {
-        const newMikeValue = !prevState;
-        console.log("Updating isMike to:", newMikeValue);
+      const newMikeValue = !isMike;
+      setIsMike(newMikeValue);
+
+      try {
+        await putMike(newMikeValue);
+        dispatch(setUserMike(newMikeValue));
         dispatch(updateMatchInfo({ mike: newMikeValue }));
-        return newMikeValue;
-      });
+      } catch {}
     }
   };
 
