@@ -168,16 +168,6 @@ const Progress = () => {
     // 5분 타이머
     startMatchingProcess();
 
-    // 만약, /progress에서 매칭 성공, 실패 응답이 올 경우 (수정 필요)
-    // socket?.on("matching-success", (res: any) => {
-    //   // 매칭 성공 처리 (채팅)
-    // });
-
-    // socket?.on("matching-fail", () => {
-    //   if (secondaryTimerRef.current) clearTimeout(secondaryTimerRef.current); // 타이머 종료
-    //   // 매칭 실패 처리 (모달)
-    // });
-
     return () => {
       socket?.off("matching-found-sender");
       socket?.off("matching-found-receiver");
@@ -189,7 +179,7 @@ const Progress = () => {
     if (timerRef.current) return; // 이미 타이머가 실행 중이면 추가로 설정하지 않음
 
     // 매칭 재시도 여부에 따라 타이머 설정
-    setTimeLeft(10);
+    setTimeLeft(300);
     let priority = 51.5; // 초기 priority 값
     timerRef.current = setInterval(() => {
       setTimeLeft((prevTime) => {
