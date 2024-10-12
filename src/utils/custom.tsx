@@ -84,6 +84,46 @@ export function setAbbrevTier(tier: string) {
   }
 }
 
+export const tierStringToId = (tier: string | null) => {
+  switch (tier) {
+    case "IRON":
+      return 1;
+    case "BRONZE":
+      return 2;
+    case "SILVER":
+      return 3;
+    case "GOLD":
+      return 4;
+    case "PLATINUM":
+      return 5;
+    case "EMERALD":
+      return 6;
+    case "DIAMOND":
+      return 7;
+    case "MASTER":
+      return 8;
+    case "GRANDMASTER":
+      return 9;
+    case "CHALLENGER":
+      return 10;
+    default:
+      return null;
+  }
+};
+
+export const mikeBooleanToId = (mike: boolean | null) => {
+  switch (mike) {
+    case null:
+      return 0;
+    case true:
+      return 1;
+    case false:
+      return 2;
+    default:
+      return null;
+  }
+};
+
 export function setDateFormatter(date: string) {
   const now = dayjs();
   const createdAt = dayjs(date);
