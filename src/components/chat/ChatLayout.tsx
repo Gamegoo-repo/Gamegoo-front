@@ -377,7 +377,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
         }
     };
 
-    /* 친구 취소 */
+    /* 친구 삭제 */
     const handleFriendDelete = async () => {
         if (!chatEnterData) return;
 
@@ -434,7 +434,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
             { text: '친구 추가', onClick: handleFriendAdd },
             // 친구 취소 조건: 친구인 경우
             chatEnterData?.friend &&
-            { text: '친구 취소', onClick: handleFriendDelete },
+            { text: '친구 삭제', onClick: handleFriendDelete },
             // 친구 요청 취소 조건: 친구가 아니고, 친구 요청을 이미 한 경우
             !chatEnterData?.friend && chatEnterData?.friendRequestMemberId &&
             { text: '친구 요청 취소', onClick: handleCancelFriendReq },
