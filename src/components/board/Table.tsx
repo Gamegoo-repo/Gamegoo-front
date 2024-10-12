@@ -157,7 +157,7 @@ const Table = (props: TableProps) => {
                 >
                   <First className="table_width" >
                     <ProfileImgWrapper
-                      $bgColor={getProfileBgColor(data.profileImage + 1)}
+                      $bgColor={getProfileBgColor(data.profileImage)}
                       onClick={(e) => handleMoveProfilePage(e, data.memberId)}
                     >
                       <ProfileImg
