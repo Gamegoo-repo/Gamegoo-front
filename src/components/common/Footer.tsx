@@ -1,11 +1,28 @@
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+import Alert from "./Alert";
 
 const Footer = () => {
+  const [showAlert, setShowAlert] = useState(false);
+  const handleShowWarning = () => {
+    setShowAlert(!showAlert);
+  };
+
   return (
     <Wrapper>
+      {showAlert && (
+        <Alert
+          icon="exclamation"
+          width={68}
+          height={58}
+          content="서비스 준비 중입니다."
+          alt="경고"
+          onClose={handleShowWarning}
+          buttonText="확인"
+        />
+      )}
       <Container>
         <LeftDiv>
           <Image
@@ -20,8 +37,8 @@ const Footer = () => {
         </LeftDiv>
         <RightDiv>
           <Bold>Resources</Bold>
-          <div>개인정보처리방침</div>
-          <div>이용약관</div>
+          <button onClick={handleShowWarning}>개인정보처리방침</button>
+          <button onClick={handleShowWarning}>이용약관</button>
         </RightDiv>
       </Container>
     </Wrapper>
