@@ -66,7 +66,7 @@ const PostBoard = (props: PostBoardProps) => {
     {
       main: currentPost?.mainPosition || user?.mainP || 0,
       sub: currentPost?.subPosition || user?.subP || 0,
-      want: currentPost?.wantPosition || 0,
+      want: currentPost?.wantPosition || user?.wantP || 0,
     }
   );
   const [isMicOn, setIsMicOn] = useState<boolean>(currentPost?.mike || false);
