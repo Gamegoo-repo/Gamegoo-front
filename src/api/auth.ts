@@ -3,6 +3,7 @@ import { LOGIN } from "@/constants/messages";
 import Axios, { BASE_URL } from ".";
 import { clearTokens, getAccessToken, getRefreshToken } from "@/utils/storage";
 import { notify } from "@/hooks/notify";
+import { connectSocket } from "@/socket";
 
 export const reissueToken = async () => {
   const endpoint = '/v1/member/refresh';
@@ -61,14 +62,14 @@ AuthAxios.interceptors.response.use(
         
         // 로컬 또는 세션에 재발급된 토큰 저장
         console.log(newAccessToken);
-      if (localStorage.getItem('accessToken')) {
-        localStorage.setItem('accessToken', newAccessToken);
-        localStorage.setItem('refreshToken', response.result.refreshToken);
-      } else {
+        if (localStorage.getItem('accessToken')) {
+          localStorage.setItem('accessToken', newAccessToken);
+          localStorage.setItem('refreshToken', response.result.refreshToken);
+        } else {
         sessionStorage.setItem('accessToken', newAccessToken);
         sessionStorage.setItem('refreshToken', response.result.refreshToken);
-        }
-      
+      }
+      connectSocket();
       originRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
       return axios(originRequest);
     } catch (reissueError:any) {
