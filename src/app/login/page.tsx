@@ -88,7 +88,7 @@ const Login = () => {
         // 실시간 안읽은 채팅방 수 가져오기 위함
         dispatch(setUnreadUuid(data.result));
         // 새로고침시 채팅방 수 가져오기 위함
-        localStorage.setItem("unreadChatUuids", JSON.stringify(data.result));
+        sessionStorage.setItem("unreadChatUuids", JSON.stringify(data.result));
       }
     } catch (error) {
       if (error instanceof AxiosError) {

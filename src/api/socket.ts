@@ -7,7 +7,7 @@ import { connectSocket } from "@/socket";
 export const socketLogin = async () => {
     try {
         const jwtToken = getAccessToken();
-        const socketId = localStorage.getItem('gamegooSocketId');
+        const socketId = sessionStorage.getItem('gamegooSocketId');
 
         if (!jwtToken || !socketId) return;
 
@@ -36,7 +36,7 @@ export const socketLogin = async () => {
 export const socketLogout = async () => {
     try {
         const jwtToken = sessionStorage.getItem('accessToken');
-        const socketId = localStorage.getItem('gamegooSocketId');
+        const socketId = sessionStorage.getItem('gamegooSocketId');
         const isLogout = sessionStorage.getItem('logout');
 
         if (!socketId) return;

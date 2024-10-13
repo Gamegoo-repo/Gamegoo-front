@@ -108,8 +108,8 @@ const Header = () => {
     console.log(notiCount);
   }, [notiCount]);
 
-  const deleteLocalStorageData = () => {
-    localStorage.removeItem("unreadChatUuids");
+  const deleteSessionStorageData = () => {
+    sessionStorage.removeItem("unreadChatUuids");
     localStorage.removeItem("mannerId");
     localStorage.removeItem("badMannerId");
   };
@@ -239,11 +239,12 @@ const Header = () => {
                     } else {
                       sessionStorage.setItem('logout', 'true');
                       try {
+                        // 토큰을 먼저 삭제해야 로그아웃 후 소켓 생성 시 토큰이 전달되지 않음.
                         await clearTokens();
                         const response = await socketLogout();
-                        localStorage.removeItem("gamegooSocketId");
+                        sessionStorage.removeItem("gamegooSocketId");
                         dispatch(clearUserProfile());
-                        deleteLocalStorageData();
+                        deleteSessionStorageData();
                         dispatch(closeChat());
                         router.push('/login');
                       } catch {

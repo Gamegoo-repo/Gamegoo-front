@@ -18,7 +18,7 @@ const SocketConnection: React.FC = () => {
     function onConnect() {
       console.log(`SOCKET ID: ${socket?.id}`);
       const socketId = socket?.id || "";
-      localStorage.setItem("gamegooSocketId", socketId);
+      sessionStorage.setItem("gamegooSocketId", socketId);
     }
 
     function onDisconnect() {

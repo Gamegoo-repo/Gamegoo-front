@@ -23,13 +23,13 @@ export const connectSocket = (): void => {
     socket.on("connect", () => {
       console.log("소켓 연결 성공, Socket ID:", socket?.id);
       socketId = socket?.id || null;
-      localStorage.setItem("gamegooSocketId", socketId || "");
+      sessionStorage.setItem("gamegooSocketId", socketId || "");
       console.log("연결된 accessToken", token);
     });
 
     socket.on("disconnect", () => {
       console.log("서버 연결 끊김");
-      localStorage.removeItem("gamegooSocketId");
+      sessionStorage.removeItem("gamegooSocketId");
       socketId = null;
     });
     
@@ -41,7 +41,7 @@ export const disconnectSocket = (): void => {
   if (socket) {
     socket.disconnect();
     console.log("소켓 연결 해제");
-    localStorage.removeItem("gamegooSocketId");
+    sessionStorage.removeItem("gamegooSocketId");
     socket = null;
     socketId = null;
   }

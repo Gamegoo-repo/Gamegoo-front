@@ -39,7 +39,7 @@ const useChatMessage = () => {
 
                     //TODO: 로그아웃할 때 unreadChatUuids값 지우기.
                     // 새로고침시 채팅방 수 가져오기 위함
-                    localStorage.setItem('unreadChatUuids', JSON.stringify(updatedUnreadUuids));
+                    sessionStorage.setItem('unreadChatUuids', JSON.stringify(updatedUnreadUuids));
                 }
             }
             setNewMessage(res.data);

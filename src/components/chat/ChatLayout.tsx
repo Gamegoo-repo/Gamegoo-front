@@ -126,13 +126,13 @@ const ChatLayout = (props: ChatLayoutProps) => {
 
     /* 읽은 채팅 채팅 버튼에 실시간으로 반영 */
     const removeUnreadUuid = (uuidToRemove: string) => {
-        const unreadUuids = localStorage.getItem('unreadChatUuids');
+        const unreadUuids = sessionStorage.getItem('unreadChatUuids');
 
         if (unreadUuids) {
             let unreadUuidsArray: string[] = JSON.parse(unreadUuids);
             unreadUuidsArray = unreadUuidsArray.filter(uuid => uuid !== uuidToRemove);
 
-            localStorage.setItem('unreadChatUuids', JSON.stringify(unreadUuidsArray));
+            sessionStorage.setItem('unreadChatUuids', JSON.stringify(unreadUuidsArray));
 
             // 채팅 버튼에 실시간 반영 위함
             dispatch(setUnreadUuid(unreadUuidsArray));

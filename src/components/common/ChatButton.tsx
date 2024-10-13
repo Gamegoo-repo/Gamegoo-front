@@ -23,15 +23,15 @@ const ChatButton = () => {
     setUnreadChatUuids(unreadUuid);
   }, [unreadUuid])
 
-  /* localStorage의 unreadChatUuids가 변경될 때 상태 업데이트 */
+  /* sessionStorage의 unreadChatUuids가 변경될 때 상태 업데이트 */
   useEffect(() => {
-    const localUnreadChatUuids = localStorage.getItem('unreadChatUuids');
+    const localUnreadChatUuids = sessionStorage.getItem('unreadChatUuids');
     if (localUnreadChatUuids) {
       setUnreadChatUuids(JSON.parse(localUnreadChatUuids));
     }
   }, [unreadUuid]);
 
-  /* localStorage가 변경되면 상태 업데이트 */
+  /* sessionStorage가 변경되면 상태 업데이트 */
   useEffect(() => {
     const handleStorageChange = (event: StorageEvent) => {
       if (event.key === 'unreadChatUuids') {
