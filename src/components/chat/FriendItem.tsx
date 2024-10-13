@@ -8,7 +8,7 @@ import { getProfileBgColor } from '@/utils/profile';
 interface FriendItemProps {
     friend: FriendListInterface;
     onChatRoom: (id: number) => void;
-    isOnline: boolean;
+    onlineFriends: number[];
     onContextMenu: (event: React.MouseEvent, friendId: number) => void;
     onFavoriteToggle: (event: React.MouseEvent, friendId: number) => void;
     deleteMenu: { x: number, y: number, friendId: number | null };
@@ -20,14 +20,14 @@ const FriendItem = (props: FriendItemProps) => {
     const {
         friend,
         onChatRoom,
-        isOnline,
+        onlineFriends,
         onContextMenu,
         onFavoriteToggle,
         deleteMenu,
         handleCloseDeleteMenu,
         handleDeleteFriend
     } = props;
-
+    console.log('online', onlineFriends)
     return (
         <UserContent
             onContextMenu={(event) => onContextMenu(event, friend.memberId)}
@@ -44,13 +44,13 @@ const FriendItem = (props: FriendItemProps) => {
             <Left>
                 <ImageWrapper $bgColor={getProfileBgColor(friend.memberProfileImg)}>
                     <StyledImage
-                        data={friend.isBlind?`/assets/images/profile/profile_default.svg`:`/assets/images/profile/profile${friend.memberProfileImg}.svg`}
+                        data={friend.isBlind ? `/assets/images/profile/profile_default.svg` : `/assets/images/profile/profile${friend.memberProfileImg}.svg`}
                         width={38}
                         height={38}
                     />
                 </ImageWrapper>
                 <UserName>{friend.name}</UserName>
-                {isOnline && (
+                {onlineFriends.includes(friend.memberId) && (
                     <Online
                         src="/assets/icons/online.svg"
                         width={5}

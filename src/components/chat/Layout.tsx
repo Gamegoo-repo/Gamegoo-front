@@ -26,7 +26,6 @@ import Checkbox from "../common/Checkbox";
 import Input from "../common/Input";
 import { REPORT_REASON } from "@/data/report";
 import { blockMember, reportMember } from "@/api/member";
-// import useChatFriend from "@/hooks/useChatFriend";
 
 const Layout = () => {
     const dispatch = useDispatch();
@@ -53,8 +52,6 @@ const Layout = () => {
     const isChatRoomOpen = useSelector((state: RootState) => state.chat.isChatRoomOpen);
     const isChatUuid = useSelector((state: RootState) => state.chat.isChatRoomUuid);
     const isModalType = useSelector((state: RootState) => state.modal.modalType);
-
-    // const { isInitOnlineFriend, isOnlineFriend } = useChatFriend();
 
     /* 채팅방 입장 */
     const handleGoToChatRoom = (id: string | number) => {
