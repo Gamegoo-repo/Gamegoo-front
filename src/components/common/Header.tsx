@@ -105,15 +105,7 @@ const Header = () => {
     }
   }, [storedName]);
 
-  useEffect(() => {
-    console.log(notiCount);
-  }, [notiCount]);
-
-  const deleteLocalStorageData = () => {
-    localStorage.removeItem("unreadChatUuids");
-    localStorage.removeItem("mannerId");
-    localStorage.removeItem("badMannerId");
-  };
+  useEffect(() => {}, [notiCount]);
 
   return (
     <Head>
@@ -245,11 +237,11 @@ const Header = () => {
                         await socketLogout();
                         localStorage.removeItem("gamegooSocketId");
                         dispatch(clearUserProfile());
-                        deleteLocalStorageData();
+                        sessionStorage.removeItem("unreadChatUuids");
                         dispatch(closeChat());
                         router.push("/login");
                       } catch {
-                        console.log("소켓 로그아웃 오류");
+                        console.error("소켓 로그아웃 오류");
                       }
                     }
                   }}

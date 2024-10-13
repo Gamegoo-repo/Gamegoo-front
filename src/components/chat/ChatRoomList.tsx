@@ -35,7 +35,7 @@ const ChatRoomList = (props: ChatRoomListProps) => {
     const [hasNext, setHasNext] = useState<boolean>(true);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const { newMessage } = useChatMessage();
+    const { newMessage, mannerSystemMessage } = useChatMessage();
 
     /* 채팅방 목록 화면이 열려 있을 때만 joined-new-chatroom 이벤트를 리스닝 */
     useChatList(setChatrooms);
@@ -59,7 +59,7 @@ const ChatRoomList = (props: ChatRoomListProps) => {
 
     useEffect(() => {
         handleFetchChatrooms();
-    }, [isModalType, reloadChatrooms, activeTab])
+    }, [isModalType, reloadChatrooms, activeTab, mannerSystemMessage])
 
     /* 대화 목록 페이지 - 스크롤이 끝에 도달하면 다음 페이지 가져오기 */
     const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -83,33 +83,28 @@ const ChatRoomList = (props: ChatRoomListProps) => {
     }, [newMessage]);
 
     /* 모달 타입 변경 */
-    const handleChangeModal = async (e: React.MouseEvent, type: string, targetMemberId?: number) => {
+    const handleChangeModal = async (e: React.MouseEvent, type: string) => {
         if (type) {
             e.stopPropagation();
         }
-
-        // if (targetMemberId !== undefined) {
-        //     await setTargetMemberId(targetMemberId);
-        //     setIsMemberId(targetMemberId);
-        // }
 
         dispatch(setOpenModal(type));
         setIsMoreBoxOpen(null);
     };
 
     /* 신고하기 */
-    const handleReportClick = (e: React.MouseEvent, targetMemberId: number) => {
-        handleChangeModal(e, 'report', targetMemberId);
+    const handleReportClick = (e: React.MouseEvent) => {
+        handleChangeModal(e, 'report');
     };
 
     /* 매너 평가하기 */
-    const handleMannerClick = (e: React.MouseEvent, targetMemberId: number) => {
-        handleChangeModal(e, 'manner', targetMemberId);
+    const handleMannerClick = (e: React.MouseEvent) => {
+        handleChangeModal(e, 'manner');
     };
 
     /* 비매너 평가하기 */
-    const handleBadMannerClick = (e: React.MouseEvent, targetMemberId: number) => {
-        handleChangeModal(e, 'badManner', targetMemberId);
+    const handleBadMannerClick = (e: React.MouseEvent) => {
+        handleChangeModal(e, 'badManner');
     };
 
     /* 더보기 버튼 친구 관련 */
@@ -154,9 +149,9 @@ const ChatRoomList = (props: ChatRoomListProps) => {
 
         items.push(
             { text: `차단하기`, onClick: (e) => handleChangeModal(e, 'block') },
-            { text: `신고하기`, onClick: (e) => handleReportClick(e, room.targetMemberId) },
-            { text: `매너 평가`, onClick: (e) => handleMannerClick(e, room.targetMemberId) },
-            { text: `비매너 평가`, onClick: (e) => handleBadMannerClick(e, room.targetMemberId) }
+            { text: `신고하기`, onClick: handleReportClick },
+            { text: `매너 평가`, onClick: handleMannerClick },
+            { text: `비매너 평가`, onClick: handleBadMannerClick }
         );
 
         return items;

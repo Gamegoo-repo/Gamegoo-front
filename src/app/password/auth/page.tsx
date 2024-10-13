@@ -104,7 +104,6 @@ const Auth = () => {
             onChange={(value) => {
               setAuth(value);
               validateAuth(value);
-              console.log();
             }}
             placeholder="인증코드 입력"
             disabled={authStatusRedux}

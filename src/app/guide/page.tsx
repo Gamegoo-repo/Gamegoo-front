@@ -32,7 +32,6 @@ const Guide = () => {
 
   const handleOptionChange = (value: string) => {
     setIsSelected(value);
-    console.log(value);
   };
 
   /* Modal (confirmModal) */

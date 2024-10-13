@@ -66,7 +66,7 @@ const PostBoard = (props: PostBoardProps) => {
     {
       main: currentPost?.mainPosition || user?.mainP || 0,
       sub: currentPost?.subPosition || user?.subP || 0,
-      want: currentPost?.wantPosition || 0,
+      want: currentPost?.wantPosition || user?.wantP || 0,
     }
   );
   const [isMicOn, setIsMicOn] = useState<boolean>(currentPost?.mike || false);
@@ -118,7 +118,7 @@ const PostBoard = (props: PostBoardProps) => {
       setPositionValue({
         main: user.mainP ? user.mainP : 0,
         sub: user.subP ? user.subP : 0,
-        want: 0,
+        want: user.wantP ? user.wantP : 0,
       });
       setSelectedImageIndex(user.profileImg);
       const ids =
@@ -183,7 +183,7 @@ const PostBoard = (props: PostBoardProps) => {
         })
       );
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 

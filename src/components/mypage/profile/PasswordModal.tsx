@@ -44,11 +44,11 @@ const PasswordModal = (props: PasswordModalProps) => {
         await resetJwtPassword(newPassword);
         onClose();
       } else {
-        console.log("신규 비밀번호 확인 실패");
+        console.error("신규 비밀번호 확인 실패");
       }
     } catch (error) {
       setIsPasswordValid(false);
-      console.log("현재 비밀번호가 일치하지 않습니다.");
+      console.error("현재 비밀번호가 일치하지 않습니다.");
     }
   };
 

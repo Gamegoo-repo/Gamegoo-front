@@ -18,8 +18,6 @@ const MyReviewPage = () => {
       setMyManner(response.result);
     };
 
-    console.log("badMannerEvaluations", badMannerEvaluations);
-
     fetchGetMyManner();
   }, []);
 

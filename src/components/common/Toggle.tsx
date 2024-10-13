@@ -16,7 +16,6 @@ const Toggle = (props: ToggleProps) => {
   const toggleHandler = () => {
     const newState = !isOn;
     onToggle(newState);
-    console.log("New state:", newState);
   };
 
   return (

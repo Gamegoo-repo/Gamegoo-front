@@ -10,6 +10,7 @@ const useChatMessage = () => {
     const dispatch = useDispatch();
     const [newMessage, setNewMessage] = useState<ChatMessageDto | null>(null);
     const [systemMessage, setSystemMessage] = useState<SystemMessage | null>(null);
+    const [mannerSystemMessage, setMannerSystemMessage] = useState<SystemMessage | null>(null);
 
     const currentChatUuid = useSelector((state: RootState) => state.chat.currentChatUuid);
     const unreadChatUuids = useSelector((state: RootState) => state.chat.unreadUuids);
@@ -23,11 +24,10 @@ const useChatMessage = () => {
             if (currentChatUuid && chatroomUuid === currentChatUuid) {
                 markChatAsRead(currentChatUuid, newChatTimestamp);
             }
-
             /* 안 읽은 채팅방 처리 */
             if (
                 // 현재 채팅방과 새로 메시지가 온 채팅방이 다를 경우 (=== 새로온 메시지가 온 채팅방을 보고 있지 않은 경우)
-                currentChatUuid !== chatroomUuid ||
+                currentChatUuid !== chatroomUuid &&
                 // 안읽은 uuid 목록에 새로 메시지가 온 채팅방이 없을 경우
                 !unreadChatUuids.includes(chatroomUuid)
             ) {
@@ -36,10 +36,8 @@ const useChatMessage = () => {
                     const updatedUnreadUuids = [...unreadChatUuids, chatroomUuid];
                     // 실시간 안읽은 채팅방 수 가져오기 위함
                     dispatch(setUnreadUuid(updatedUnreadUuids));
-
-                    //TODO: 로그아웃할 때 unreadChatUuids값 지우기.
                     // 새로고침시 채팅방 수 가져오기 위함
-                    localStorage.setItem('unreadChatUuids', JSON.stringify(updatedUnreadUuids));
+                    sessionStorage.setItem('unreadChatUuids', JSON.stringify(updatedUnreadUuids));
                 }
             }
             setNewMessage(res.data);
@@ -56,20 +54,26 @@ const useChatMessage = () => {
             setSystemMessage(systemMessage);
         };
 
+        const handleMannerSystemMessage = (res: any) => {
+            const mannerSystemMessage = res.data;
+            setMannerSystemMessage(mannerSystemMessage);
+        };
+
         // 다른 사람이 보낸 메시지
         socket?.on("chat-message", handleChatMessage);
         // 내가 보낸 메시지
         socket?.on("my-message-broadcast-success", handleMyMessage);
         socket?.on("chat-system-message", handleSystemMessage);
-
+        socket?.on("manner-system-message", handleMannerSystemMessage);
         return () => {
             socket?.off("chat-message", handleChatMessage);
             socket?.off("my-message-broadcast-success", handleMyMessage);
             socket?.off("chat-system-message", handleSystemMessage);
+            socket?.off("manner-system-message", handleMannerSystemMessage);
         };
     }, [currentChatUuid, unreadChatUuids, dispatch]);
 
-    return { newMessage, systemMessage };
+    return { newMessage, systemMessage, mannerSystemMessage };
 };
 
 export default useChatMessage;

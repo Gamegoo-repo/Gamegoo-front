@@ -1,4 +1,3 @@
-import Axios from ".";
 import { AuthAxios } from "./auth";
 
 /* 채팅방 목록 조회 */
@@ -7,10 +6,8 @@ export const getChatrooms = async (cursor?: number) => {
 
     try {
         const response = await AuthAxios.get(url);
-        console.log("채팅방 목록 조회 완료:", response.data);
         return response.data;
     } catch (error) {
-        console.error("채팅방 목록 조회 실패:", error);
         throw error;
     }
 };
@@ -19,10 +16,8 @@ export const getChatrooms = async (cursor?: number) => {
 export const enterUsingUuid = async (uuid: string) => {
     try {
         const response = await AuthAxios.get(`/v1/chat/${uuid}/enter`);
-        console.log("채팅방 입장 성공:", response.data);
         return response.data;
     } catch (error) {
-        console.error("채팅방 입장 실패:", error);
         throw error;
     }
 };
@@ -31,10 +26,8 @@ export const enterUsingUuid = async (uuid: string) => {
 export const enterUsingMemberId = async (memberId: number) => {
     try {
         const response = await AuthAxios.get(`/v1/chat/start/member/${memberId}`);
-        console.log("채팅방 입장 성공:", response.data);
         return response.data;
     } catch (error) {
-        console.error("채팅방 입장 실패:", error);
         throw error;
     }
 };
@@ -43,10 +36,8 @@ export const enterUsingMemberId = async (memberId: number) => {
 export const enterUsingBoardId = async (boardId: number) => {
     try {
         const response = await AuthAxios.get(`/v1/chat/start/board/${boardId}`);
-        console.log("채팅방 입장 성공:", response.data);
         return response.data;
     } catch (error) {
-        console.error("채팅방 입장 실패:", error);
         throw error;
     }
 };
@@ -66,10 +57,8 @@ export const getChatList = async (uuid: string, cursor?: number | null) => {
 export const leaveChatroom = async (uuid: string) => {
     try {
         const response = await AuthAxios.patch(`/v1/chat/${uuid}/exit `);
-        console.log("채팅방 나가기 성공:", response.data);
         return response.data;
     } catch (error) {
-        console.error("채팅방 나가기 실패:", error);
         throw error;
     }
 };
@@ -81,10 +70,8 @@ export const markChatAsRead = async (uuid: string, timestamp: null | number) => 
         : `/v1/chat/${uuid}/read`;
     try {
         const response = await AuthAxios.patch(url);
-        console.log("채팅 메시지 읽음 처리 성공:", response.data);
         return response.data;
     } catch (error) {
-        console.error("채팅 메시지 읽음 처리 실패:", error);
         throw error;
     }
 };
