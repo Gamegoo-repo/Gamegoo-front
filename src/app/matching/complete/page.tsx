@@ -275,7 +275,7 @@ const Complete = () => {
           <HeaderTitle
             title="매칭 완료"
             sub="듀오 상대를 찾았어요!"
-            isDoubleBack={true}
+            isDoubleBack={role === "receiver"}
           />
           <Main>
             <SquareProfile user={userMe} />
