@@ -73,6 +73,18 @@ export const deleteMember = async () => {
     }
   };
 
+  export const postLogout = async () => {
+    const endpoint = '/v1/member/logout';
+    try {
+      const response = await AuthAxios.post(endpoint);
+      console.log('로그아웃 성공:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('로그아웃 실패:', error);
+      throw error;
+    }
+  };
+
   export const getMyPost= async (pageIdx:number) => {
     const endpoint = `/v1/posts/my?pageIdx=${pageIdx}`;
     try {

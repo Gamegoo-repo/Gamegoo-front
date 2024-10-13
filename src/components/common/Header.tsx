@@ -25,6 +25,7 @@ import Alert from "./Alert";
 import { setNotiCount } from "@/redux/slices/notiSlice";
 import { socketLogout } from "@/api/socket";
 import { closeChat } from "@/redux/slices/chatSlice";
+import { postLogout } from "@/api/user";
 
 interface HeaderProps {
   selected: boolean;
@@ -237,15 +238,16 @@ const Header = () => {
                     if (data.id !== 6) {
                       router.push(`${data.url}`);
                     } else {
-                      sessionStorage.setItem('logout', 'true');
+                      sessionStorage.setItem("logout", "true");
                       try {
+                        await postLogout();
                         await clearTokens();
-                        const response = await socketLogout();
+                        await socketLogout();
                         localStorage.removeItem("gamegooSocketId");
                         dispatch(clearUserProfile());
                         deleteLocalStorageData();
                         dispatch(closeChat());
-                        router.push('/login');
+                        router.push("/login");
                       } catch {
                         console.log("소켓 로그아웃 오류");
                       }
