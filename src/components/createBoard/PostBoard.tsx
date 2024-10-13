@@ -111,14 +111,14 @@ const PostBoard = (props: PostBoardProps) => {
       setTextareaValue(currentPost.contents);
     }
   }, [currentPost]);
-  
+
   /* userInfo가 업데이트된 후 상태 업데이트 */
   useEffect(() => {
     if (!!user.gameName && !currentPost) {
       setPositionValue({
         main: user.mainP ? user.mainP : 0,
         sub: user.subP ? user.subP : 0,
-        want: 0,
+        want: user.wantP ? user.wantP : 0,
       });
       setSelectedImageIndex(user.profileImg);
       const ids =
