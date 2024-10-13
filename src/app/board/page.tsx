@@ -217,8 +217,6 @@ const BoardPage = () => {
           : selectedMic,
     };
 
-    console.log("params", params);
-
     try {
       const data = await getBoardList(params);
       if (data.isSuccess) {
@@ -336,8 +334,8 @@ const BoardPage = () => {
                 <PositionBox>
                   <PositionFilter
                     onPositionFilter={handlePositionFilter}
-                    isPosition={1}
-                    // isPosition={boardFilters.mainPosition || isPosition}
+                    isPosition={isPosition}
+                  // isPosition={boardFilters.mainPosition || isPosition}
                   />
                 </PositionBox>
                 <Dropdown
@@ -405,8 +403,6 @@ const BoardContent = styled.div`
   max-width: 1440px;
   width: 100%;
   padding: 0 80px;
-
-
 `;
 
 const FirstRow = styled.div`

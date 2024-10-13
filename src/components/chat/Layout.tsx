@@ -52,15 +52,18 @@ const Layout = () => {
     const isChatRoomOpen = useSelector((state: RootState) => state.chat.isChatRoomOpen);
     const isChatUuid = useSelector((state: RootState) => state.chat.isChatRoomUuid);
     const isModalType = useSelector((state: RootState) => state.modal.modalType);
- 
+
+    /* 채팅창이 닫힐 때 store에서 채팅창 닫힘 처리 */
+    useEffect(() => {
+        return () => {
+            dispatch(closeChat());
+        }
+    }, [])
+
     /* 채팅방 입장 */
     const handleGoToChatRoom = (id: string | number) => {
         dispatch(setChatRoomUuid(id));
         dispatch(openChatRoom());
-        // TODO
-        // if (typeof id === 'string') {
-        // setChatRoomUuid(id);
-        // }
     };
 
     /* 친구 목록 가져오기 */
@@ -278,7 +281,8 @@ const Layout = () => {
 
     /* 매너평가 등록 */
     const handleMannerPost = async () => {
-        if (!selectedChatroom) return;
+        const mannerId = isMannerValue?.mannerId;
+        if (!selectedChatroom || mannerId !== null) return;
 
         const params = {
             toMemberId: selectedChatroom.targetMemberId,
@@ -296,7 +300,8 @@ const Layout = () => {
 
     /* 비매너평가 등록 */
     const handleBadMannerPost = async () => {
-        if (!selectedChatroom) return;
+        const badMannerId = isBadMannerValue?.mannerId;
+        if (!selectedChatroom || badMannerId !== null) return;
 
         const params = {
             toMemberId: selectedChatroom.targetMemberId,
@@ -328,20 +333,16 @@ const Layout = () => {
 
     /* 매너, 비매너 평가 수정 */
     const handleMannerEdit = async (type: string) => {
-        const mannerId = localStorage.getItem('mannerId');
-        const badMannerId = localStorage.getItem('badMannerId');
-
-        if (!type || !mannerId || !badMannerId) return;
-
-        const mannerIdNumber = parseInt(mannerId, 10);
-        const badMannerIdNumber = parseInt(badMannerId, 10);
-
         const params = {
             mannerRatingKeywordList: type === 'manner' ? checkedMannerItems : checkedBadMannerItems,
         };
 
         try {
-            await editManners(type === 'manner' ? mannerIdNumber : badMannerIdNumber, params);
+            if (type === 'manner' && isMannerValue && isMannerValue.mannerId !== null) {
+                await editManners(isMannerValue.mannerId, params);
+            } else if (type === 'badManner' && isBadMannerValue && isBadMannerValue.mannerId !== null) {
+                await editManners(isBadMannerValue.mannerId, params);
+            }
             await handleModalClose();
             setIsEditMode(false);
         } catch (error) {

@@ -1,12 +1,10 @@
 import { AuthAxios } from "./auth";
-import Axios from ".";
 import { notify } from "@/hooks/notify";
 
 /* 친구 요청 */
 export const reqFriend = async (memberId: number) => {
     try {
         const response = await AuthAxios.post(`/v1/friends/request/${memberId}`);
-        console.log("친구 요청 완료:", response.data);
         return response.data;
     } catch (error: any) {
         if (error.response && error.response.data) {
@@ -38,7 +36,6 @@ export const reqFriend = async (memberId: number) => {
             }
 
             notify({ text: errorMessage, icon: '🚫', type: 'error' });
-            console.error(errorMessage);
         } else {
             console.error("친구 요청 실패:", error);
         }
@@ -50,7 +47,6 @@ export const reqFriend = async (memberId: number) => {
 export const cancelFriendReq = async (memberId: number) => {
     try {
         const response = await AuthAxios.delete(`/v1/friends/request/${memberId}`);
-        console.log("친구 요청 취소 성공:", response.data);
         return response.data;
     } catch (error: any) {
         let errorMessage = "친구 요청 취소에 실패했습니다.";
@@ -69,7 +65,6 @@ export const cancelFriendReq = async (memberId: number) => {
                         break;
                 }
             }
-            console.error(errorMessage);
         } else {
             console.error("친구 요청 취소 실패:", error);
         }
@@ -82,10 +77,8 @@ export const cancelFriendReq = async (memberId: number) => {
 export const acceptFreindReq = async (memberId: number) => {
     try {
         const response = await AuthAxios.patch(`/v1/friends/request/${memberId}/accept`);
-        console.log("친구 요청 수락 성공:", response.data);
         return response.data;
     } catch (error) {
-        console.log("친구 요청 수락 실패:", error);
         throw error;
     }
 };
@@ -94,10 +87,8 @@ export const acceptFreindReq = async (memberId: number) => {
 export const rejectFreindReq = async (memberId: number) => {
     try {
         const response = await AuthAxios.patch(`/v1/friends/request/${memberId}/reject`);
-        console.log("친구 요청 거절 성공:", response.data);
         return response.data;
     } catch (error) {
-        console.log("친구 요청 거절 실패:", error);
         throw error;
     }
 };
@@ -106,10 +97,8 @@ export const rejectFreindReq = async (memberId: number) => {
 export const deleteFriend = async (memberId: number) => {
     try {
         const response = await AuthAxios.delete(`/v1/friends/${memberId}`);
-        console.log("친구 삭제 완료:", response.data);
         return response.data;
     } catch (error) {
-        console.error("친구 삭제 실패:", error);
         throw error;
     }
 };

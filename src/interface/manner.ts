@@ -17,6 +17,7 @@ export interface OthersManner {
 }
 
 export interface Mannerstatus {
+    mannerId: number | null;
     isPositive: boolean;
     isExist: boolean;
     mannerRatingKeywordList: number[];

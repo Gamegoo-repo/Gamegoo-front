@@ -57,7 +57,7 @@ const Summoner = () => {
       setErrorMsg("");
     } catch (err) {
       const error = err as AxiosError<RiotErrorResponse>;
-      console.log(error);
+      console.error(error);
       if (error) {
         setErrorMsg(error.message);
       } else {
@@ -67,7 +67,6 @@ const Summoner = () => {
   };
 
   const handleSendJoin = async () => {
-    console.log(email, password);
     if (!email || !password) {
       setErrorMsg("이메일과 비밀번호를 다시 입력해주세요.");
       return;
@@ -86,7 +85,7 @@ const Summoner = () => {
         router.push("/login");
       } catch (err) {
         const error = err as AxiosError<RiotErrorResponse>;
-        console.log(error);
+        console.error(error);
         if (error) {
           setErrorMsg(error.message);
         } else {

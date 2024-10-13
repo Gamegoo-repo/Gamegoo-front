@@ -87,13 +87,12 @@ const FriendList = (props: FriendListProps) => {
                         즐겨찾기
                     </FavoritesTitle>
                     {favoriteFriends.map(friend => {
-                        const isOnline = onlineFriends?.includes(friend.memberId);
                         return (
                             <FriendItem
                                 key={friend.memberId}
                                 friend={friend}
                                 onChatRoom={onChatRoom}
-                                isOnline={isOnline}
+                                onlineFriends={onlineFriends}
                                 onContextMenu={handleContextMenu}
                                 onFavoriteToggle={onFavoriteToggle}
                                 deleteMenu={deleteMenu}
@@ -110,13 +109,12 @@ const FriendList = (props: FriendListProps) => {
                         친구 {friends.length}
                     </FriendsTitle>
                     {friends.map(friend => {
-                        const isOnline = onlineFriends?.includes(friend.memberId);
                         return (
                             <FriendItem
                                 key={friend.memberId}
                                 friend={friend}
                                 onChatRoom={onChatRoom}
-                                isOnline={isOnline}
+                                onlineFriends={onlineFriends}
                                 onContextMenu={handleContextMenu}
                                 onFavoriteToggle={onFavoriteToggle}
                                 deleteMenu={deleteMenu}

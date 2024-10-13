@@ -17,7 +17,6 @@ import dayjs from "dayjs";
 import { setChatDateFormatter, setChatTimeFormatter } from "@/utils/custom";
 import { getProfileBgColor } from "@/utils/profile";
 import ConfirmModal from "../common/ConfirmModal";
-import { socket } from "@/socket";
 import { useRouter } from "next/navigation";
 import { closeChat, closeChatRoom } from "@/redux/slices/chatSlice";
 
@@ -72,14 +71,13 @@ const MessageList = (props: MessageListProps) => {
 
   const router = useRouter();
 
-  const { newMessage } = useChatMessage();
+  const { newMessage, mannerSystemMessage } = useChatMessage();
 
   /* 매너 시스템 소켓 이벤트 리스닝 */
   useEffect(() => {
-    const handleMannerSystemMessage = (res: any) => {
-      const chatroomUuid = res.data.chatroomUuid;
-      const newChatTimestamp = res.timestamp;
-
+    if (mannerSystemMessage) {
+      const chatroomUuid = mannerSystemMessage?.chatroomUuid;
+      const newChatTimestamp = mannerSystemMessage.timestamp;
       setMessageList((prevMessages) => {
         const feedbackMessage: ChatMessageDto = {
           senderId: 0,
@@ -94,25 +92,13 @@ const MessageList = (props: MessageListProps) => {
 
         return [...prevMessages, feedbackMessage];
       });
-      console.log('current', currentChatUuid);
-      console.log('socket', chatroomUuid);
 
       /* 현재 보고 있는 채팅방 읽음 처리 */
       if (currentChatUuid && chatroomUuid === currentChatUuid) {
         markChatAsRead(currentChatUuid, newChatTimestamp);
       }
-    };
-
-    if (socket) {
-      socket.on("manner-system-message", handleMannerSystemMessage);
     }
-
-    return () => {
-      if (socket) {
-        socket.off("manner-system-message", handleMannerSystemMessage);
-      }
-    };
-  }, []);
+  }, [mannerSystemMessage])
 
   /* 새로운 메시지 전에 시스템 메시지 보여주기 */
   useEffect(() => {
@@ -343,7 +329,7 @@ const MessageList = (props: MessageListProps) => {
 
   return (
     <>
-      {isReadingModal && !isBoardId && <ReadBoard postId={isBoardId} />}
+      {isReadingModal && !!isBoardId && <ReadBoard postId={isBoardId} />}
       {isUnregisterAlert || isBlockedAlert && (
         <ErrorBox>
           {isUnregisterAlert ? '탈퇴한 회원의 글입니다.' : '차단한 회원의 글입니다.'}
@@ -489,7 +475,6 @@ const Timestamp = styled.p`
 
 const YourMessageContainer = styled.div`
   display: flex;
-  align-items: start;
   justify-content: flex-start;
   margin-bottom: 10px;
 `;

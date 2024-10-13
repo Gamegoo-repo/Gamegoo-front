@@ -7,7 +7,7 @@ import { connectSocket } from "@/socket";
 export const socketLogin = async () => {
     try {
         const jwtToken = getAccessToken();
-        const socketId = localStorage.getItem('gamegooSocketId');
+        const socketId = sessionStorage.getItem('gamegooSocketId');
 
         if (!jwtToken || !socketId) return;
 
@@ -36,7 +36,7 @@ export const socketLogin = async () => {
 export const socketLogout = async () => {
     try {
         const jwtToken = sessionStorage.getItem('accessToken');
-        const socketId = localStorage.getItem('gamegooSocketId');
+        const socketId = sessionStorage.getItem('gamegooSocketId');
         const isLogout = sessionStorage.getItem('logout');
 
         if (!socketId) return;
@@ -47,8 +47,8 @@ export const socketLogout = async () => {
                 "Socket-Id": socketId,
             },
         });
-        if (response.status===200 && isLogout && !jwtToken) {
-            console.log('로그아웃 성공')
+        if (response.status === 200 && isLogout && !jwtToken) {
+
             // 로그아웃 버튼 클릭해서 로그인 페이지 들어온 경우
             // 소켓 연결 끊어진 이후 소켓 재연결 시키기
             connectSocket();

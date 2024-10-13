@@ -34,7 +34,6 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
 
       setPositiveKeywords(positive);
       setNegativeKeywords(negative);
-      console.log("manner:", manner.result);
     };
 
     getManners();

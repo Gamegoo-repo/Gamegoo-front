@@ -52,7 +52,7 @@ const GameStyle = (props: GameStyleProps) => {
         await putMike(newMikeValue);
         dispatch(setUserMike(newMikeValue));
         dispatch(updateMatchInfo({ mike: newMikeValue }));
-      } catch {}
+      } catch { }
     }
   };
 
@@ -96,7 +96,6 @@ const GameStyle = (props: GameStyleProps) => {
   /* gameStyleResponseDTOList가 변경될 때 selectedStyles를 업데이트 */
   useEffect(() => {
     setSelectedStyles(selectedStyles);
-    console.log("useEffect");
   }, [selectedStyles]);
 
   const selectedStyleObjects = GAME_STYLE.filter((style) =>

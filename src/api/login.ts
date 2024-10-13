@@ -21,7 +21,6 @@ export const postLogin = async ({
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log('로그인 성공:', response.data);
   
       return response.data;
     } catch (error) {

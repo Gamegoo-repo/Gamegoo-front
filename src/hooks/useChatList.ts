@@ -10,7 +10,7 @@ const useChatList = (setChatrooms: (chatrooms: ChatroomList[]) => void) => {
                 const data = await getChatrooms();
                 setChatrooms(data.result);
             } catch (error) {
-                console.error("Failed to fetch chat rooms:", error);
+                console.error(error);
             }
         };
 

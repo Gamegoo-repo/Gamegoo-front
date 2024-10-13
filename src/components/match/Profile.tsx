@@ -116,7 +116,6 @@ const Profile: React.FC<Profile> = ({
         gameStyleResponseDTOList: gameStyleIds,
       })
     );
-    console.log("isMike:", isMike);
   }, [isMike, positionValue, dispatch]);
 
   /* 프로필 이미지 리스트 중 클릭시*/
@@ -249,7 +248,6 @@ const Profile: React.FC<Profile> = ({
         ...positionValue,
         [selectedBox]: positionId,
       };
-      console.log(positionId);
       setPositionValue(newPositionValue);
       handlePositionChange(newPositionValue);
     }

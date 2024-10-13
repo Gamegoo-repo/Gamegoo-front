@@ -42,7 +42,6 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
       try {
         const userData = await getProfile();
         dispatch(setUserProfile(userData));
-        console.log("userData", userData);
       } catch (error) {
         console.error("프로필 정보 불러오기 실패:", error);
       }
