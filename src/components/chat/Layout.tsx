@@ -53,6 +53,13 @@ const Layout = () => {
     const isChatUuid = useSelector((state: RootState) => state.chat.isChatRoomUuid);
     const isModalType = useSelector((state: RootState) => state.modal.modalType);
 
+    /* 채팅창이 닫힐 때 store에서 채팅창 닫힘 처리 */
+    useEffect(() => {
+        return () => {
+            dispatch(closeChat());
+        }
+    }, [])
+
     /* 채팅방 입장 */
     const handleGoToChatRoom = (id: string | number) => {
         dispatch(setChatRoomUuid(id));

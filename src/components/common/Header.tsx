@@ -41,7 +41,6 @@ const Header = () => {
   const name = useSelector((state: RootState) => state.user.gameName);
   const profileImg = useSelector((state: RootState) => state.user.profileImg);
   const notiCount = useSelector((state: RootState) => state.noti.count);
-  const chatOpenStatus = useSelector((state: RootState) => state.chat.isChatOpen);
 
   const myPageRef = useRef<HTMLDivElement>(null);
   const [showAlert, setShowAlert] = useState(false);
@@ -50,7 +49,7 @@ const Header = () => {
   const storedProfileImg = Number(getProfileImg());
 
   const isFirstRender = useRef(true);
-console.log('채팅??',chatOpenStatus)
+
   useEffect(() => {
     if (storedName) {
       dispatch(setUserName(storedName));
