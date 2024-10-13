@@ -286,9 +286,11 @@ const MessageList = (props: MessageListProps) => {
     if (chatEnterData.blind || chatEnterData.blocked) {
       setIsUnregisterAlert(true);
       setIsBlockedAlert(true);
+      console.log(1)
     } else {
       dispatch(setOpenReadingModal());
       setIsBoardId(boardId);
+      console.log('메시지',boardId)
     }
   };
 
@@ -343,7 +345,7 @@ const MessageList = (props: MessageListProps) => {
 
   return (
     <>
-      {isReadingModal && !isBoardId && <ReadBoard postId={isBoardId} />}
+      {isReadingModal && !!isBoardId && <ReadBoard postId={isBoardId} />}
       {isUnregisterAlert || isBlockedAlert && (
         <ErrorBox>
           {isUnregisterAlert ? '탈퇴한 회원의 글입니다.' : '차단한 회원의 글입니다.'}

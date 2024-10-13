@@ -116,7 +116,6 @@ const Table = (props: TableProps) => {
     dispatch(setCloseModal());
   };
 
-
   return (
     <>
       {showAlert && (
@@ -135,7 +134,7 @@ const Table = (props: TableProps) => {
         />
       )}
 
-      {isReadingModal && <ReadBoard postId={isBoardId} />}
+      {isReadingModal && !isChatRoomOpen && <ReadBoard postId={isBoardId} />}
 
       {isChatRoomOpen && <ChatLayout apiType={2} />}
 
