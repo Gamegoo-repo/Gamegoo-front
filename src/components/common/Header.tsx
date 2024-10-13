@@ -108,12 +108,6 @@ const Header = () => {
     console.log(notiCount);
   }, [notiCount]);
 
-  const deleteSessionStorageData = () => {
-    sessionStorage.removeItem("unreadChatUuids");
-    localStorage.removeItem("mannerId");
-    localStorage.removeItem("badMannerId");
-  };
-
   return (
     <Head>
       {showAlert && (
@@ -244,7 +238,7 @@ const Header = () => {
                         const response = await socketLogout();
                         sessionStorage.removeItem("gamegooSocketId");
                         dispatch(clearUserProfile());
-                        deleteSessionStorageData();
+                        sessionStorage.removeItem("unreadChatUuids");
                         dispatch(closeChat());
                         router.push('/login');
                       } catch {

@@ -51,7 +51,6 @@ export const postMannerValue = async (params: MannerInterface) => {
     try {
         const response = await AuthAxios.post(`/v1/manner/good`, params);
         console.log("매너 평가 등록 성공:", response.data);
-        await localStorage.setItem('mannerId', response.data.result.mannerId);
         return response.data;
     } catch (error) {
         console.error("매너 평가 등록 실패:", error);
@@ -64,7 +63,6 @@ export const postBadMannerValue = async (params: MannerInterface) => {
     try {
         const response = await AuthAxios.post(`/v1/manner/bad`, params);
         console.log("비매너 평가 등록 성공:", response.data);
-        await localStorage.setItem('badMannerId', response.data.result.mannerId);
         return response.data;
     } catch (error) {
         console.error("비매너 평가 등록 실패:", error);

@@ -19,7 +19,7 @@ import Input from "../common/Input";
 import Button from "../common/Button";
 import Checkbox from "../common/Checkbox";
 import { setCloseModal, setOpenModal } from "@/redux/slices/modalSlice";
-import { blockMember, reportMember, unblockMember } from "@/api/member";
+import { blockMember, reportMember } from "@/api/member";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
 import { REPORT_REASON } from "@/data/report";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
@@ -174,7 +174,8 @@ const ChatLayout = (props: ChatLayoutProps) => {
 
     /* 매너평가 등록 */
     const handleMannerPost = async () => {
-        if (!chatEnterData) return;
+        const mannerId = isMannerValue?.mannerId;
+        if (!chatEnterData || mannerId !== null) return;
 
         const params = {
             toMemberId: chatEnterData.memberId,
@@ -192,7 +193,8 @@ const ChatLayout = (props: ChatLayoutProps) => {
 
     /* 비매너평가 등록 */
     const handleBadMannerPost = async () => {
-        if (!chatEnterData) return;
+        const badMannerId = isBadMannerValue?.mannerId;
+        if (!chatEnterData || badMannerId !== null) return;
 
         const params = {
             toMemberId: chatEnterData.memberId,
@@ -210,20 +212,16 @@ const ChatLayout = (props: ChatLayoutProps) => {
 
     /* 매너, 비매너 평가 수정 */
     const handleMannerEdit = async (type: string) => {
-        const mannerId = localStorage.getItem('mannerId');
-        const badMannerId = localStorage.getItem('badMannerId');
-
-        if (!type || !mannerId || !badMannerId) return;
-
-        const mannerIdNumber = parseInt(mannerId, 10);
-        const badMannerIdNumber = parseInt(badMannerId, 10);
-
         const params = {
             mannerRatingKeywordList: type === 'manner' ? checkedMannerItems : checkedBadMannerItems,
         };
 
         try {
-            await editManners(type === 'manner' ? mannerIdNumber : badMannerIdNumber, params);
+            if (type === 'manner' && isMannerValue && isMannerValue.mannerId !== null) {
+                await editManners(isMannerValue.mannerId, params);
+            } else if (type === 'badManner' && isBadMannerValue && isBadMannerValue.mannerId !== null) {
+                await editManners(isBadMannerValue.mannerId, params);
+            }
             await handleModalClose();
             setIsEditMode(false);
         } catch (error) {
