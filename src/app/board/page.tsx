@@ -336,7 +336,7 @@ const BoardPage = () => {
                 <PositionBox>
                   <PositionFilter
                     onPositionFilter={handlePositionFilter}
-                    isPosition={1}
+                    isPosition={isPosition}
                     // isPosition={boardFilters.mainPosition || isPosition}
                   />
                 </PositionBox>
@@ -405,8 +405,6 @@ const BoardContent = styled.div`
   max-width: 1440px;
   width: 100%;
   padding: 0 80px;
-
-
 `;
 
 const FirstRow = styled.div`
