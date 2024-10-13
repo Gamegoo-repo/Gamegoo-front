@@ -202,7 +202,7 @@ const Progress = () => {
     if (timerRef.current) return; // 이미 타이머가 실행 중이면 추가로 설정하지 않음
 
     // 매칭 재시도 여부에 따라 타이머 설정
-    setTimeLeft(10);
+    setTimeLeft(300);
     let priority = 51.5; // 초기 priority 값
     timerRef.current = setInterval(() => {
       setTimeLeft((prevTime) => {
