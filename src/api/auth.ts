@@ -55,12 +55,10 @@ AuthAxios.interceptors.response.use(
       try {
       /* 토큰 재발급 요청 */
         const response = await reissueToken();
-        console.log(response);
         const newAccessToken = response.result.accessToken;
         const originRequest = config;  // 이전 요청 저장
         
         // 로컬 또는 세션에 재발급된 토큰 저장
-        console.log(newAccessToken);
       if (localStorage.getItem('accessToken')) {
         localStorage.setItem('accessToken', newAccessToken);
         localStorage.setItem('refreshToken', response.result.refreshToken);

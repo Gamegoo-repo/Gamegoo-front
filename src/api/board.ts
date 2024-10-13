@@ -10,7 +10,6 @@ interface ListInterface {
 export const postBoard = async (params: PostReq) => {
     try {
         const response = await AuthAxios.post("/v1/posts", params);
-        console.log("글쓰기 완료:", response.data);
         return response.data;
     } catch (error) {
         console.error("글쓰기 실패:", error);
@@ -22,7 +21,6 @@ export const postBoard = async (params: PostReq) => {
 export const getBoardList = async (params: ListInterface) => {
     try {
         const response = await AuthAxios.get("/v1/posts/list", { params });
-        console.log("게시판 목록:", response.data);
         return response.data;
     } catch (error) {
         console.error("게시판 목록 불러오기 실패:", error);
@@ -34,9 +32,7 @@ export const getBoardList = async (params: ListInterface) => {
 export const getMemberPost = async (postId: number) => {
     try {
         const response = await AuthAxios.get(`/v1/posts/member/list/${postId}`);
-        console.log("로그인 상태 게시글 조회 성공:", response.data);
         return response.data;
-
     } catch (error) {
         console.error("로그인 상태 게시글 조회 실패:", error);
         throw error;
@@ -47,9 +43,7 @@ export const getMemberPost = async (postId: number) => {
 export const getNonMemberPost = async (postId: number) => {
     try {
         const response = await Axios.get(`/v1/posts/list/${postId}`);
-        console.log("로그아웃 상태 게시글 조회 성공:", response.data);
         return response.data;
-
     } catch (error) {
         console.error("로그아웃 상태 게시글 조회 실패:", error);
         throw error;
@@ -60,9 +54,7 @@ export const getNonMemberPost = async (postId: number) => {
 export const editPost = async (postId: number, params: PostReq) => {
     try {
         const response = await AuthAxios.put(`/v1/posts/${postId}`, params);
-        console.log("게시글 수정 성공:", response.data);
         return response.data;
-
     } catch (error) {
         console.error("게시글 수정 실패:", error);
         throw error;
@@ -73,9 +65,7 @@ export const editPost = async (postId: number, params: PostReq) => {
 export const deletePost = async (postId: number) => {
     try {
         const response = await AuthAxios.delete(`/v1/posts/${postId}`);
-        console.log("게시글 삭제 성공:", response.data);
         return response.data;
-
     } catch (error) {
         console.error("게시글 삭제 실패:", error);
         throw error;

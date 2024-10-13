@@ -54,12 +54,10 @@ const Email = () => {
   /* 뒤로가기 이벤트 감지 */
   useEffect(() => {
     if (isSendClick && !authStatusRedux) {
-      console.log(isSendClick, authStatusRedux);
       history.pushState(null, "", window.location.href);
       window.addEventListener("popstate", handlePopState);
     }
 
-    console.log(isSendClick, authStatusRedux);
     return () => {
       window.removeEventListener("popstate", handlePopState);
     };

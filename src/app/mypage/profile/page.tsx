@@ -51,7 +51,6 @@ const MyProfilePage = () => {
       router.push("/login");
     } catch (error) {
       setIsPasswordValid(false);
-      console.log("현재 비밀번호가 일치하지 않습니다.");
     }
   };
 
@@ -71,7 +70,6 @@ const MyProfilePage = () => {
   /* user 업데이트 값 가져오기 */
   useEffect(() => {
     // 필요한 로직을 여기에 추가
-    console.log("user 업데이트:", user);
   }, [user]);
 
   return (

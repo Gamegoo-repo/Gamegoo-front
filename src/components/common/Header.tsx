@@ -105,7 +105,6 @@ const Header = () => {
   }, [storedName]);
 
   useEffect(() => {
-    console.log(notiCount);
   }, [notiCount]);
 
   return (
@@ -242,7 +241,7 @@ const Header = () => {
                         dispatch(closeChat());
                         router.push('/login');
                       } catch {
-                        console.log("소켓 로그아웃 오류");
+                        console.error("소켓 로그아웃 오류");
                       }
                     }
                   }}

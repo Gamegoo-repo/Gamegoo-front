@@ -36,7 +36,6 @@ const useChatMessage = () => {
                     const updatedUnreadUuids = [...unreadChatUuids, chatroomUuid];
                     // 실시간 안읽은 채팅방 수 가져오기 위함
                     dispatch(setUnreadUuid(updatedUnreadUuids));
-                    console.log('vv', unreadChatUuids)
                     // 새로고침시 채팅방 수 가져오기 위함
                     sessionStorage.setItem('unreadChatUuids', JSON.stringify(updatedUnreadUuids));
                 }

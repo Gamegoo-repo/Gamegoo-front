@@ -120,7 +120,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
             }
         } catch (err) {
             const error = err as AxiosError<ErrorResponse>;
-            console.log(error.message);
+            console.error(error.message);
             dispatch(setErrorMessage(error.message || "알 수 없는 오류가 발생했습니다."));
         }
     };

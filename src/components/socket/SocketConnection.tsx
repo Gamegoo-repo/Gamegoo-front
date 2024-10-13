@@ -13,13 +13,12 @@ const SocketConnection: React.FC = () => {
 
   useEffect(() => {
     function onConnect() {
-      console.log(`SOCKET ID: ${socket?.id}`);
       const socketId = socket?.id || "";
       sessionStorage.setItem("gamegooSocketId", socketId);
     }
 
     function onDisconnect() {
-      console.log("소켓 끊김");
+      console.error("소켓 끊김");
     }
 
     if (socket?.connected) {

@@ -30,7 +30,6 @@ export const postSignIn = createAsyncThunk(
       
       if (signInState.authStatus === true) {
         const response = await joinMember(joinData);
-        console.log('회원가입 성공:', response);
 
         /* 성공적으로 회원가입 완료 후, Redux 상태 초기화 */
         dispatch(updateEmail(''));

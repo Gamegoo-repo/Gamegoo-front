@@ -11,7 +11,6 @@ export const connectSocket = (): void => {
 
 
   if (!!socket?.connected) {
-    console.log("이미 소켓이 연결되어 있습니다.");
     return;
   }
 
@@ -30,14 +29,11 @@ export const connectSocket = (): void => {
     socket = io(SOCKET_URL, options);
 
     socket.on("connect", () => {
-      console.log("소켓 연결 성공, Socket ID:", socket?.id);
       socketId = socket?.id || null;
       sessionStorage.setItem("gamegooSocketId", socketId || "");
-      console.log("연결된 accessToken", token);
     });
 
     socket.on("disconnect", () => {
-      console.log("서버 연결 끊김");
       sessionStorage.removeItem("gamegooSocketId");
       socketId = null;
     });
@@ -49,7 +45,6 @@ export const connectSocket = (): void => {
 export const disconnectSocket = (): void => {
   if (socket) {
     socket.disconnect();
-    console.log("소켓 연결 해제");
     sessionStorage.removeItem("gamegooSocketId");
     socket = null;
     socketId = null;
@@ -58,7 +53,6 @@ export const disconnectSocket = (): void => {
 
 export const sendMatchingQuitEvent = (): void => {
   if (socket) {
-    console.log("매칭 종료 이벤트 전송");
     socket.emit("matching-quit");
   }
 };

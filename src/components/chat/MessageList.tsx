@@ -92,7 +92,7 @@ const MessageList = (props: MessageListProps) => {
 
         return [...prevMessages, feedbackMessage];
       });
-      
+
       /* 현재 보고 있는 채팅방 읽음 처리 */
       if (currentChatUuid && chatroomUuid === currentChatUuid) {
         markChatAsRead(currentChatUuid, newChatTimestamp);
@@ -272,11 +272,9 @@ const MessageList = (props: MessageListProps) => {
     if (chatEnterData.blind || chatEnterData.blocked) {
       setIsUnregisterAlert(true);
       setIsBlockedAlert(true);
-      console.log(1)
     } else {
       dispatch(setOpenReadingModal());
       setIsBoardId(boardId);
-      console.log('메시지', boardId)
     }
   };
 

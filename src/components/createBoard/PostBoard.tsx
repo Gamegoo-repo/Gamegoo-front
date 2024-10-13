@@ -183,7 +183,7 @@ const PostBoard = (props: PostBoardProps) => {
         })
       );
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
