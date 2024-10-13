@@ -57,10 +57,6 @@ const Layout = () => {
     const handleGoToChatRoom = (id: string | number) => {
         dispatch(setChatRoomUuid(id));
         dispatch(openChatRoom());
-        // TODO
-        // if (typeof id === 'string') {
-        // setChatRoomUuid(id);
-        // }
     };
 
     /* 친구 목록 가져오기 */

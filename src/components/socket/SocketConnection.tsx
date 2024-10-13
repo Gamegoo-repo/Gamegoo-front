@@ -41,6 +41,7 @@ const SocketConnection: React.FC = () => {
     });
 
     socket?.on("init-online-friend-list", async (res, cb) => {
+      console.log(res)
       try {
         const onlineFriendsList = res.data.onlineFriendMemberIdList;
         dispatch(setFriendOnline(onlineFriendsList));

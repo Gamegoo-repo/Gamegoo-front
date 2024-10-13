@@ -111,7 +111,7 @@ const PostBoard = (props: PostBoardProps) => {
       setTextareaValue(currentPost.contents);
     }
   }, [currentPost]);
-
+  
   /* userInfo가 업데이트된 후 상태 업데이트 */
   useEffect(() => {
     if (!!user.gameName && !currentPost) {

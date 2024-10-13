@@ -15,14 +15,15 @@ export interface ChatroomList {
 }
 
 export interface SystemMessage {
+    chatroomUuid?:string;
     senderId: number;
-    senderName: string;
-    senderProfileImg: number;
+    senderName: null;
+    senderProfileImg: null;
     message: string;
     createdAt: string;
     timestamp: number;
-    boardId?: number;
-    chatroomUuid: string;
+    systemType:number;
+    boardId?: number|null;
 }
 
 export interface DesignedSystemMessage {

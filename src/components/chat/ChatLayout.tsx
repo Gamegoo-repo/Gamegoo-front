@@ -388,37 +388,33 @@ const ChatLayout = (props: ChatLayoutProps) => {
     };
 
     /* 모달 타입 변경 */
-    const handleModalChange = (e: React.MouseEvent, modalType: string, memberId?: number) => {
+    const handleModalChange = (e: React.MouseEvent, modalType: string) => {
         if (modalType) {
             e.stopPropagation();
         }
-
-        // if (memberId !== undefined) {
-        //     onMemberId(memberId);
-        // }
 
         dispatch(setOpenModal(modalType));
         setIsMoreBoxOpen(false);
     };
 
     /* 신고하기 */
-    const handleReportClick = (e: React.MouseEvent, memberId: number) => {
+    const handleReportClick = (e: React.MouseEvent) => {
         if (chatEnterData?.memberId) {
-            handleModalChange(e, 'report', memberId);
+            handleModalChange(e, 'report');
         }
     };
 
     /* 매너 평가하기 */
-    const handleMannerClick = (e: React.MouseEvent, targetMemberId: number) => {
+    const handleMannerClick = (e: React.MouseEvent) => {
         if (chatEnterData?.memberId) {
-            handleModalChange(e, 'manner', targetMemberId);
+            handleModalChange(e, 'manner');
         }
     };
 
     /* 비매너 평가하기 */
-    const handleBadMannerClick = (e: React.MouseEvent, targetMemberId: number) => {
+    const handleBadMannerClick = (e: React.MouseEvent) => {
         if (chatEnterData?.memberId) {
-            handleModalChange(e, 'badManner', targetMemberId);
+            handleModalChange(e, 'badManner');
         }
     };
 
@@ -438,9 +434,9 @@ const ChatLayout = (props: ChatLayoutProps) => {
             { text: '친구 요청 취소', onClick: handleCancelFriendReq },
 
             { text: '차단하기', onClick: (e: React.MouseEvent) => handleModalChange(e, 'block') },
-            { text: '신고하기', onClick: (e: React.MouseEvent) => chatEnterData?.memberId && handleReportClick(e, chatEnterData.memberId) },
-            { text: '매너 평가', onClick: (e: React.MouseEvent) => chatEnterData?.memberId && handleMannerClick(e, chatEnterData.memberId) },
-            { text: '비매너 평가', onClick: (e: React.MouseEvent) => chatEnterData?.memberId && handleBadMannerClick(e, chatEnterData.memberId) },
+            { text: '신고하기', onClick: () => chatEnterData?.memberId && handleReportClick },
+            { text: '매너 평가', onClick: () => chatEnterData?.memberId && handleMannerClick },
+            { text: '비매너 평가', onClick: () => chatEnterData?.memberId && handleBadMannerClick },
         ].filter(item => item) as MoreBoxMenuItems[];
 
     /* 더보기 버튼 외부 클릭 시 닫힘 */

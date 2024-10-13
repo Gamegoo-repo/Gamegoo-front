@@ -88,7 +88,6 @@ const ReadBoard = (props: ReadBoardProps) => {
   /* 게시글 api */
   const getPostData = async () => {
     setLoading(true);
-    console.log(isUser.gameName, postId)
     if (!!isUser.gameName && postId) {
       const memberData = await getMemberPost(postId);
       setIsPost(memberData.result);

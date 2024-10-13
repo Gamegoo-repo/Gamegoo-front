@@ -29,7 +29,7 @@ const FriendList = (props: FriendListProps) => {
     const [deleteMenu, setDeleteMenu] = useState<{ x: number, y: number, friendId: number | null }>({ x: 0, y: 0, friendId: null });
 
     const onlineFriends = useSelector((state: RootState) => state.chat.onlineFriends);
-
+console.log('친구목록',onlineFriends)
     /* 삭제 하기 버튼 열기 */
     const handleContextMenu = (event: React.MouseEvent, friendId: number) => {
         event.preventDefault();
