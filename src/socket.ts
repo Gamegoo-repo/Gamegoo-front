@@ -18,11 +18,11 @@ export const connectSocket = (): void => {
   if (typeof window !== "undefined") {
     const token = getAccessToken();
 
-    if (!token) {
-      alert("로그인 세션이 만료되었습니다. 로그인 페이지로 이동합니다.")
-      window.location.href = "https://www.gamegoo.co.kr/login";
-      return;
-    }
+    // if (!token) {
+    //   alert("로그인 세션이 만료되었습니다. 로그인 페이지로 이동합니다.")
+    //   window.location.href = "https://www.gamegoo.co.kr/login";
+    //   return;
+    // }
 
     const options = token ? { auth: { token } } : {};
 
