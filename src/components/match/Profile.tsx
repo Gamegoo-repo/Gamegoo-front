@@ -84,7 +84,7 @@ const Profile: React.FC<Profile> = ({
   const [positionValue, setPositionValue] = useState<PositionState>({
     main: user.mainP,
     sub: user.subP,
-    want: user.subP,
+    want: user.wantP,
   });
   /* 선택된 현재 프로필 이미지 */
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(
@@ -97,7 +97,7 @@ const Profile: React.FC<Profile> = ({
     setPositionValue({
       main: user.mainP,
       sub: user.subP,
-      want: user.subP, // 나중에 wantP값 받아서 수정
+      want: user.wantP, // 나중에 wantP값 받아서 수정
     });
     setSelectedImageIndex(user.profileImg);
   }, [user]);

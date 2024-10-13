@@ -23,6 +23,7 @@ interface UserState {
   updatedAt: string;
   mainP: number;
   subP: number;
+  wantP: number;
   isAgree: boolean;
   isBlind: boolean;
   loginType: string;
@@ -47,6 +48,7 @@ const initialState: UserState = {
   updatedAt: '',
   mainP: 0,
   subP: 0,
+  wantP: 0,
   isAgree: false,
   isBlind: false,
   loginType: '',
@@ -90,6 +92,7 @@ export const userSlice = createSlice({
       state.updatedAt = '';
       state.mainP = 0;
       state.subP = 0;
+      state.wantP = 0;
       state.isAgree = false;
       state.isBlind = false;
       state.loginType = '';
