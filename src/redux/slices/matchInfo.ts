@@ -43,8 +43,13 @@ const matchInfoSlice = createSlice({
     updateGameStyles: (state, action: PayloadAction<number[]>) => {
       state.gameStyleResponseDTOList = action.payload;
     },
+
+     // 마이크만 업데이트
+    updateMike: (state, action: PayloadAction<boolean>) => {
+      state.mike = action.payload;
+    },
   },
 });
 
-export const { setMatchInfo, updateMatchInfo, updateGameStyles } = matchInfoSlice.actions;
+export const { setMatchInfo, updateMatchInfo, updateGameStyles, updateMike } = matchInfoSlice.actions;
 export default matchInfoSlice.reducer;

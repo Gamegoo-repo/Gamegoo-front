@@ -32,7 +32,7 @@ import { blockMember, reportMember, unblockMember } from "@/api/member";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { getProfileBgColor } from "@/utils/profile";
-import { setMatchInfo } from "@/redux/slices/matchInfo";
+import { setMatchInfo, updateMike } from "@/redux/slices/matchInfo";
 import { toLowerCaseString } from "@/utils/string";
 import { setUserProfileImg } from "@/redux/slices/userSlice";
 
@@ -139,6 +139,7 @@ const Profile: React.FC<Profile> = ({
 
   const handleMike = () => {
     setIsMike(!isMike);
+    dispatch(updateMike(isMike));
   };
 
   const handleMoreBoxOpen = () => {
@@ -240,6 +241,7 @@ const Profile: React.FC<Profile> = ({
           wantP: newPositionValue.want ?? null,
         })
       );
+      console.log("디스패치 ㅘㄴ료");
     }
   };
 
@@ -585,8 +587,8 @@ const Profile: React.FC<Profile> = ({
             <GameStyle
               profileType="none"
               gameStyleResponseDTOList={user.gameStyleResponseDTOList}
-              // mic={user.mic}
-              mic={false}
+              mike={isMike}
+              handleMike={handleMike}
             />
           ) : (
             <UnderRow>
@@ -644,7 +646,8 @@ const Profile: React.FC<Profile> = ({
         <GameStyle
           profileType={profileType === "normal" ? "none" : profileType}
           gameStyleResponseDTOList={user.gameStyleResponseDTOList}
-          mic={isMike}
+          mike={isMike}
+          handleMike={handleMike}
         />
       )}
     </Container>

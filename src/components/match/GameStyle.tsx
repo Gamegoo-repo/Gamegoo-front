@@ -9,7 +9,7 @@ import { css } from "styled-components";
 import { putGameStyle, putMike } from "@/api/user";
 import { GAME_STYLE } from "@/data/profile";
 import { useDispatch } from "react-redux";
-import { updateGameStyles, updateMatchInfo } from "@/redux/slices/matchInfo";
+import { updateGameStyles } from "@/redux/slices/matchInfo";
 import { setUserMike } from "@/redux/slices/userSlice";
 
 type profileType = "me" | "other" | "none" | "mini";
@@ -22,18 +22,24 @@ interface GameStyle {
 interface GameStyleProps {
   gameStyleResponseDTOList: GameStyle[];
   profileType: profileType;
-  mic: boolean;
+  mike: boolean;
+  handleMike?: () => void;
 }
 
 const GameStyle = (props: GameStyleProps) => {
-  const { gameStyleResponseDTOList, profileType = "none", mic } = props;
+  const {
+    gameStyleResponseDTOList,
+    profileType = "none",
+    mike,
+    handleMike,
+  } = props;
 
   const dispatch = useDispatch();
-  const [isMike, setIsMike] = useState(mic);
   const [styledPopup, setStyledPopup] = useState(false);
   const [selectedStyles, setSelectedStyles] = useState<number[]>(
     gameStyleResponseDTOList.map((style) => style.gameStyleId)
   );
+  const [isMike, setIsMike] = useState(mike);
 
   useEffect(() => {
     if (gameStyleResponseDTOList.length > 0) {
@@ -42,19 +48,6 @@ const GameStyle = (props: GameStyleProps) => {
       );
     }
   }, [gameStyleResponseDTOList]);
-
-  const handleMike = async () => {
-    if (profileType !== "other") {
-      const newMikeValue = !isMike;
-      setIsMike(newMikeValue);
-
-      try {
-        await putMike(newMikeValue);
-        dispatch(setUserMike(newMikeValue));
-        dispatch(updateMatchInfo({ mike: newMikeValue }));
-      } catch {}
-    }
-  };
 
   const handleStylePopup = () => {
     if (profileType !== "other") {
@@ -103,6 +96,16 @@ const GameStyle = (props: GameStyleProps) => {
     selectedStyles.includes(style.gameStyleId)
   );
 
+  const handleChangeMike = async () => {
+    const newMikeValue = !isMike;
+    setIsMike(newMikeValue);
+
+    try {
+      await putMike(newMikeValue);
+      dispatch(setUserMike(newMikeValue));
+    } catch {}
+  };
+
   return (
     <Style>
       <LeftLabel $profileType={profileType}>
@@ -143,10 +146,14 @@ const GameStyle = (props: GameStyleProps) => {
           )}
         </GameBox>
       </LeftLabel>
-      {profileType === "none" && (
+      {((profileType === "none" && handleMike) || profileType === "mini") && (
         <LeftLabel $profileType={profileType}>
           마이크
-          <Toggle isOn={isMike} onToggle={handleMike} />
+          <Toggle
+            isOn={mike}
+            onToggle={handleMike || handleChangeMike}
+            type={profileType}
+          />
         </LeftLabel>
       )}
     </Style>
