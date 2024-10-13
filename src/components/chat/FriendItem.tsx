@@ -27,7 +27,7 @@ const FriendItem = (props: FriendItemProps) => {
         handleCloseDeleteMenu,
         handleDeleteFriend
     } = props;
-    console.log('online', onlineFriends)
+
     return (
         <UserContent
             onContextMenu={(event) => onContextMenu(event, friend.memberId)}

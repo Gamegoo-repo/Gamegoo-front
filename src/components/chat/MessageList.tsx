@@ -92,9 +92,7 @@ const MessageList = (props: MessageListProps) => {
 
         return [...prevMessages, feedbackMessage];
       });
-
-      console.log('타임스탬프', newChatTimestamp)
-
+      
       /* 현재 보고 있는 채팅방 읽음 처리 */
       if (currentChatUuid && chatroomUuid === currentChatUuid) {
         markChatAsRead(currentChatUuid, newChatTimestamp);

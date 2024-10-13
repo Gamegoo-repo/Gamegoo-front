@@ -24,11 +24,10 @@ const useChatMessage = () => {
             if (currentChatUuid && chatroomUuid === currentChatUuid) {
                 markChatAsRead(currentChatUuid, newChatTimestamp);
             }
-
             /* 안 읽은 채팅방 처리 */
             if (
                 // 현재 채팅방과 새로 메시지가 온 채팅방이 다를 경우 (=== 새로온 메시지가 온 채팅방을 보고 있지 않은 경우)
-                currentChatUuid !== chatroomUuid ||
+                currentChatUuid !== chatroomUuid &&
                 // 안읽은 uuid 목록에 새로 메시지가 온 채팅방이 없을 경우
                 !unreadChatUuids.includes(chatroomUuid)
             ) {
@@ -37,7 +36,7 @@ const useChatMessage = () => {
                     const updatedUnreadUuids = [...unreadChatUuids, chatroomUuid];
                     // 실시간 안읽은 채팅방 수 가져오기 위함
                     dispatch(setUnreadUuid(updatedUnreadUuids));
-
+                    console.log('vv', unreadChatUuids)
                     // 새로고침시 채팅방 수 가져오기 위함
                     sessionStorage.setItem('unreadChatUuids', JSON.stringify(updatedUnreadUuids));
                 }
