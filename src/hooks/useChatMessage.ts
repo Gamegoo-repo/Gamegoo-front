@@ -38,7 +38,6 @@ const useChatMessage = () => {
                     // 실시간 안읽은 채팅방 수 가져오기 위함
                     dispatch(setUnreadUuid(updatedUnreadUuids));
 
-                    //TODO: 로그아웃할 때 unreadChatUuids값 지우기.
                     // 새로고침시 채팅방 수 가져오기 위함
                     sessionStorage.setItem('unreadChatUuids', JSON.stringify(updatedUnreadUuids));
                 }
@@ -61,7 +60,6 @@ const useChatMessage = () => {
             const mannerSystemMessage = res.data;
             setMannerSystemMessage(mannerSystemMessage);
         };
-
 
         // 다른 사람이 보낸 메시지
         socket?.on("chat-message", handleChatMessage);
