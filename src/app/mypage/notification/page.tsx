@@ -66,7 +66,7 @@ const MyAlertPage = () => {
     fetchNotiCount();
   }, [currentPage]);
 
-  useEffect(() => { }, [totalPages, totalItems, notiCount]);
+  useEffect(() => {}, [totalPages, totalItems, notiCount]);
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
@@ -110,9 +110,7 @@ const MyAlertPage = () => {
     <Wrapper>
       <MyAlertContent>
         <Alert>
-          <Top>
-            <Small>알림 페이지 ({notiCount})</Small>
-          </Top>
+          <Top>알림 페이지 ({notiCount})</Top>
           {notiList.length > 0 ? (
             <AlertList>
               {notiList.map((data) => (
@@ -183,16 +181,10 @@ const Top = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid ${theme.colors.gray400};
-`;
-
-const Small = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  ${(props) => props.theme.fonts.medium16};
   color: ${theme.colors.gray700};
-  padding-bottom: 27px;
+  ${(props) => props.theme.fonts.regular25};
+  padding-bottom: 13px;
+  border-bottom: 1px solid ${theme.colors.gray400};
 `;
 
 const AlertList = styled.div`

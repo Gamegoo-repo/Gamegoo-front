@@ -8,9 +8,9 @@ const MyServicePage = () => {
   return (
     <Wrapper>
       <MyServiceContent>
-        <Profile>
-          <Title>고객센터</Title>
-        </Profile>
+        <Blocked>
+          <Top>고객 센터</Top>
+        </Blocked>
       </MyServiceContent>
       <Footer>
         <ChatBoxContent>
@@ -36,17 +36,23 @@ const MyServiceContent = styled.div`
   padding: 0 80px;
 `;
 
-const Profile = styled.header`
+const Blocked = styled.header`
   display: flex;
   flex-direction: column;
-  align-items: start;
+  align-items: flex-start;
   width: 100%;
   margin-bottom: 32px;
 `;
 
-const Title = styled.div`
-  ${(props) => props.theme.fonts.bold25};
+const Top = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
   color: ${theme.colors.gray700};
+  ${(props) => props.theme.fonts.regular25};
+  padding-bottom: 13px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid ${theme.colors.gray400};
 `;
 
 const Footer = styled.footer`
