@@ -19,10 +19,14 @@ const useChatFriend = () => {
         const handleOnlineFriend = (res: any) => {
             const onlineFriendId = res.data.memberId;
             dispatch(setFriendOnline(onlineFriendId));
+            // alert(`온라인 이벤트 ${onlineFriendId}`);
+            console.log(`온라인 이벤트 ${onlineFriendId}`);
         };
         const handleOfflineFriend = (res: any) => {
             const offlineFriendId = res.data.memberId;
             dispatch(setFriendOffline(offlineFriendId));
+            // alert(`오프라인 이벤트 ${offlineFriendId}`);
+            console.log(`오프라인 이벤트 ${offlineFriendId}`);
         };
 
         socket?.on("member-info", handleMemberInfo);
