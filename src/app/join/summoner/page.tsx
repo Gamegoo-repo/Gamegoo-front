@@ -25,6 +25,8 @@ const Summoner = () => {
   const [name, setName] = useState("");
   const [tag, setTag] = useState("");
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const isAgree = useSelector((state: RootState) => state.signIn.terms[2]);
   const email = useSelector((state: RootState) => state.signIn.email);
   const password = useSelector((state: RootState) => state.signIn.password);
@@ -73,6 +75,7 @@ const Summoner = () => {
     }
 
     if (isCheckRiot) {
+      setIsLoading(true);
       try {
         await joinMember({
           isAgree,
@@ -91,6 +94,8 @@ const Summoner = () => {
         } else {
           setErrorMsg("회원가입에 실패했습니다. 다시 시도해주세요.");
         }
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -129,8 +134,9 @@ const Summoner = () => {
       {isCheckRiot ? (
         <Button
           buttonType="primary"
-          text="회원가입 완료"
+          text={isLoading ? "가입 중..." : "회원가입 완료"}
           onClick={handleSendJoin}
+          disabled={isLoading}
         />
       ) : (
         <Button

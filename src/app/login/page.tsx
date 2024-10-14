@@ -16,7 +16,13 @@ import {
 } from "@/redux/slices/userSlice";
 import { connectSocket, socket } from "@/socket";
 import { theme } from "@/styles/theme";
-import { clearTokens, getAccessToken, setName, setProfileImg, setToken } from "@/utils/storage";
+import {
+  clearTokens,
+  getAccessToken,
+  setName,
+  setProfileImg,
+  setToken,
+} from "@/utils/storage";
 import { AxiosError } from "axios";
 import Image from "next/image";
 import Link from "next/link";
@@ -136,6 +142,7 @@ const Login = () => {
                   setEmail(value);
                   validateEmail(value);
                 }}
+                errorMsg="정보 불일치"
                 placeholder="이메일 주소"
                 isValid={emailValid}
               />
@@ -146,6 +153,7 @@ const Login = () => {
                   setPassword(value);
                   validatePassword(value);
                 }}
+                errorMsg="정보 불일치"
                 placeholder="비밀번호"
                 isValid={passwordValid}
               />
