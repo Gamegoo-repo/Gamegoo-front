@@ -185,10 +185,14 @@ const Gray = styled.div`
 `;
 
 const Title = styled.div`
-  padding-left: 6px;
-  margin-bottom: 13px;
-  ${(props) => props.theme.fonts.regular25};
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
   color: ${theme.colors.gray700};
+  ${(props) => props.theme.fonts.regular25};
+  padding-bottom: 13px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid ${theme.colors.gray400};
 `;
 
 const Row = styled.div`

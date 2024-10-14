@@ -62,7 +62,7 @@ const MyPostPage = () => {
     <Wrapper>
       <MyPostContent>
         <PostPage>
-          <Title>내가 작성한 글</Title>
+          <Top>내가 작성한 글</Top>
           <Columns>
             <Left>소환사명</Left>
             <Center>티어</Center>
@@ -136,10 +136,15 @@ const PostPage = styled.header`
   margin-bottom: 100px;
 `;
 
-const Title = styled.div`
-  ${(props) => props.theme.fonts.bold25};
+const Top = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
   color: ${theme.colors.gray700};
-  margin-bottom: 39px;
+  ${(props) => props.theme.fonts.regular25};
+  padding-bottom: 13px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid ${theme.colors.gray400};
 `;
 
 const Columns = styled.div`

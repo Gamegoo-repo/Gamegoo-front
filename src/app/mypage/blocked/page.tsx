@@ -127,7 +127,8 @@ const Top = styled.div`
   justify-content: space-between;
   color: ${theme.colors.gray700};
   ${(props) => props.theme.fonts.regular25};
-  margin-bottom: 44px;
+  padding-bottom: 13px;
+  border-bottom: 1px solid ${theme.colors.gray400};
 `;
 
 const BlockedList = styled.div`

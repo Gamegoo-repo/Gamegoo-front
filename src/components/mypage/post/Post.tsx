@@ -35,7 +35,7 @@ export interface PostProps {
   rank: string;
   contents: string;
   createdAt: string;
-  boardNumber:number;
+  boardNumber: number;
   onDeletePost?: (boardId: number) => void;
 }
 
@@ -128,8 +128,9 @@ const Post: React.FC<PostProps> = ({
         </Name>
         <Tier>
           <TierImage
-            data={`/assets/images/tier/${toLowerCaseString(tier) || "unrank"
-              }.svg`}
+            data={`/assets/images/tier/${
+              toLowerCaseString(tier) || "unrank"
+            }.svg`}
             width={26}
             height={26}
           />
