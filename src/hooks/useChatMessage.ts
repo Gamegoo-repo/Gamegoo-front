@@ -23,6 +23,7 @@ const useChatMessage = () => {
             /* 현재 보고 있는 채팅방 읽음 처리 */
             if (currentChatUuid && chatroomUuid === currentChatUuid) {
                 markChatAsRead(currentChatUuid, newChatTimestamp);
+                setNewMessage(res.data);
             }
             /* 안 읽은 채팅방 처리 */
             if (
@@ -40,7 +41,6 @@ const useChatMessage = () => {
                     sessionStorage.setItem('unreadChatUuids', JSON.stringify(updatedUnreadUuids));
                 }
             }
-            setNewMessage(res.data);
         };
 
         const handleMyMessage = (res: any) => {
