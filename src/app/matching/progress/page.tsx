@@ -17,6 +17,8 @@ import { getBoardList } from "@/api/board";
 import { setOpenPostingModal } from "@/redux/slices/modalSlice";
 import { useDispatch } from "react-redux";
 import { setBoardFilters } from "@/redux/slices/boardSlice";
+import { setIsCompleted } from "@/utils/storage";
+import { Router } from "next/router";
 
 interface User {
   memberId: number;
@@ -71,6 +73,8 @@ const Progress = () => {
   const [currentMessage, setCurrentMessage] = useState<string>("");
   const [textVisible, setTextVisible] = useState<boolean>(true);
 
+  // const [showReloadModal, setShowReloadModal] = useState(false); // 새로고침 모달 상태
+
   const showMessage = async () => {
     /* 메세지 전환을 위해 0.5초 간 안 보이게 하기 */
     setTextVisible(false);
@@ -115,19 +119,38 @@ const Progress = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // 새로고침 감지 안되는 문제 (수정 필요)
+  /* 새로고침 및 타 사이트 이동 방지 */
+  const handleBeforeunload = (e: BeforeUnloadEvent) => {
+    // setShowReloadModal(true);
+    console.log("새로고침 이벤트 발생");
+    e.preventDefault();
+    e.returnValue = "";
+  };
+
+  const redirectToInitialPage = () => {
+    // 초기 페이지로 이동
+    window.location.href = "/match";
+  };
+
   useEffect(() => {
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      alert("새로고침 감지");
-      sendMatchingQuitEvent();
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
+    window.addEventListener("beforeunload", handleBeforeunload);
+    redirectToInitialPage();
     return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("beforeunload", handleBeforeunload);
     };
   }, []);
+
+  // // 모달에서 "매칭 종료" 클릭 시 처리
+  // const handleReloadConfirm = () => {
+  //   setShowReloadModal(false);
+  //   // 실제로 새로고침을 수행하도록 강제
+  //   // router.push("/match");
+  // };
+
+  // // 모달에서 "머무르기" 클릭 시 처리
+  // const handleStay = () => {
+  //   setShowReloadModal(false);
+  // };
 
   useEffect(() => {
     if (!socket) {
@@ -202,6 +225,7 @@ const Progress = () => {
 
   // 매칭 실패 모달 결정
   const handleRetry = async () => {
+    setIsCompleted("true");
     if (type === "gamegoo" || !retry) {
       setIsFirstRetry(true);
     } else {
@@ -257,6 +281,20 @@ const Progress = () => {
 
   return (
     <Suspense>
+      {/* 새로고침 모달 */}
+      {/* {showReloadModal && (
+        <ConfirmModal
+          width="540px"
+          primaryButtonText="머무르기"
+          secondaryButtonText="매칭 종료"
+          onPrimaryClick={handleReloadConfirm}
+          onSecondaryClick={handleStay}
+        >
+          매칭이 완료되지 않았습니다. 나가시겠습니까?
+          <br />
+          새로고침 시에는 매칭이 자동 종료되며, 매칭 초기 페이지로 이동합니다.
+        </ConfirmModal>
+      )} */}
       <Wrapper>
         <MatchContent>
           <Header>

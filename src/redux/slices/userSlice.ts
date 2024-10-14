@@ -92,6 +92,7 @@ export const userSlice = createSlice({
       state.updatedAt = '';
       state.mainP = 0;
       state.subP = 0;
+      state.wantP = 0;
       state.isAgree = false;
       state.isBlind = false;
       state.loginType = '';

@@ -6,7 +6,7 @@ interface ToggleProps {
   isOn: boolean;
   onToggle: (state: boolean) => void;
   disabled?: boolean;
-  type?: "board";
+  type?: string;
   isBlind?: boolean;
 }
 
@@ -47,8 +47,10 @@ const ToggleContainer = styled.div<{
   pointer-events: ${({ disabled }) => (disabled ? "none" : "auto")};
 
   > .toggle-container {
-    width: ${({ $type }) => ($type === "board" ? "67px" : "87px")};
-    height: ${({ $type }) => ($type === "board" ? "37px" : "46px")};
+    width: ${({ $type }) =>
+      $type === "board" ? "67px" : $type === "mini" ? "62px" : "87px"};
+    height: ${({ $type }) =>
+      $type === "board" ? "37px" : $type === "mini" ? "32px" : "46px"};
     border-radius: 49px;
     background-color: ${theme.colors.purple200};
     /* ${({ disabled }) =>
@@ -78,8 +80,10 @@ const ToggleContainer = styled.div<{
     top: 50%;
     left: 8px;
     transform: translate(0, -50%);
-    width: ${({ $type }) => ($type === "board" ? "27px" : "33px")};
-    height: ${({ $type }) => ($type === "board" ? "27px" : "33px")};
+    width: ${({ $type }) =>
+      $type === "board" ? "27px" : $type === "mini" ? "22px" : "33px"};
+    height: ${({ $type }) =>
+      $type === "board" ? "27px" : $type === "mini" ? "22px" : "33px"};
     border-radius: 50%;
     background-color: rgb(255, 254, 255);
     transition: 0.5s;
@@ -90,7 +94,8 @@ const ToggleContainer = styled.div<{
       `} */
   }
   > .toggle--unchecked {
-    left: ${({ $type }) => ($type === "board" ? "35px" : "46px")};
+    left: ${({ $type }) =>
+      $type === "board" ? "35px" : $type === "mini" ? "32px" : "46px"};
     transition: 0.5s;
   }
 `;

@@ -66,35 +66,51 @@ export const deleteMember = async () => {
   }
 };
 
-export const getMyPost = async (pageIdx: number) => {
-  const endpoint = `/v1/posts/my?pageIdx=${pageIdx}`;
-  try {
-    const response = await AuthAxios.get(endpoint);
-    return response.data;
-  } catch (error) {
-    console.error("내가 작성한 글 목록 조회 실패:", error);
-    throw error;
-  }
-};
+  export const postLogout = async () => {
+    const endpoint = '/v1/member/logout';
+    try {
+      const response = await AuthAxios.post(endpoint);
+      console.log('로그아웃 성공:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('로그아웃 실패:', error);
+      throw error;
+    }
+  };
 
-export const getMyManner = async () => {
-  const endpoint = '/v1/manner';
-  try {
-    const response = await AuthAxios.get(endpoint);
-    return response.data;
-  } catch (error) {
-    console.error("내가 받은 매너평가 조회 실패:", error);
-    throw error;
-  }
-};
-
-export const getMyBlocked = async (page: number) => {
-  const endpoint = `/v1/member/block?page=${page}`;
-  try {
-    const response = await AuthAxios.get(endpoint);
-    return response.data;
-  } catch (error) {
-    console.error("내가 차단한 회원 목록 조회 실패:", error);
-    throw error;
-  }
-};
+  export const getMyPost= async (pageIdx:number) => {
+    const endpoint = `/v1/posts/my?pageIdx=${pageIdx}`;
+    try {
+      const response = await AuthAxios.get(endpoint);
+      console.log("내가 작성한 글 목록 조회 성공:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("내가 작성한 글 목록 조회 실패:", error);
+      throw error;
+    }
+  };
+  
+  export const getMyManner= async () => {
+    const endpoint = '/v1/manner';
+    try {
+      const response = await AuthAxios.get(endpoint);
+      console.log("내가 받은 매너평가 조회 성공:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("내가 받은 매너평가 조회 실패:", error);
+      throw error;
+    }
+  };
+  
+  export const getMyBlocked= async (page: number) => {
+    const endpoint = `/v1/member/block?page=${page}`;
+    try {
+      const response = await AuthAxios.get(endpoint);
+      console.log("내가 차단한 회원 목록 조회 성공:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("내가 차단한 회원 목록 조회 실패:", error);
+      throw error;
+    }
+  };
+  

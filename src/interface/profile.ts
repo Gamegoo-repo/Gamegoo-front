@@ -25,6 +25,7 @@ export interface User {
   updatedAt: string;
   mainP: number;
   subP: number;
+  wantP: number;
   blocked: boolean;
   isAgree: boolean;
   isBlind: boolean;

@@ -1,9 +1,8 @@
 import Axios from ".";
 import { AuthAxios } from "./auth";
 
-export const sendEmail = async ({ email }: { email: string }) => {
-  const endpoint = '/v1/member/email/send';
-
+export const sendEmail= async ({ email }: { email: string }) => {
+  const endpoint = '/v1/member/email/send/user';
   try {
     const response = await Axios.post(endpoint, { email });
     return response.data;

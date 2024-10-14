@@ -1,7 +1,11 @@
-import { getProfile, putProfileImg } from "@/api/user";
+import { getProfile, putMike, putProfileImg } from "@/api/user";
 import GameStyle from "@/components/match/GameStyle";
 import { Profile } from "@/interface/profile";
-import { setUserProfile, setUserProfileImg } from "@/redux/slices/userSlice";
+import {
+  setUserMike,
+  setUserProfile,
+  setUserProfileImg,
+} from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import { getProfileBgColor } from "@/utils/profile";
@@ -68,7 +72,8 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
           <CameraImage
             data="/assets/icons/camera_white.svg"
             width={25}
-            height={23} />
+            height={23}
+          />
         </CameraImgBg>
         {/* 프로필 이미지 선택 팝업 */}
         {isProfileListOpen && (
@@ -105,8 +110,9 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
       <Div>
         <Top>
           <TierImage
-            data={`/assets/images/tier/${toLowerCaseString(user.tier) || "unrank"
-              }.svg`}
+            data={`/assets/images/tier/${
+              toLowerCaseString(user.tier) || "unrank"
+            }.svg`}
             width={43}
             height={43}
           />
@@ -116,7 +122,7 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
         <GameStyle
           gameStyleResponseDTOList={user.gameStyleResponseDTOList}
           profileType="mini"
-          mic={false}
+          mike={user.mike}
         />
       </Div>
     </Container>

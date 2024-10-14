@@ -1,4 +1,7 @@
-import { setOpenEvaluationModal, setOpenModal } from "@/redux/slices/modalSlice";
+import {
+  setOpenEvaluationModal,
+  setOpenModal,
+} from "@/redux/slices/modalSlice";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useState } from "react";
@@ -14,7 +17,9 @@ type ButtonText =
   | "아니요"
   | "닫기"
   | "글 작성하기"
-  | "글 보러하기";
+  | "글 보러하기"
+  | "머무르기"
+  | "매칭 종료";
 
 interface ConfirmModalProps {
   type?: "manner";
@@ -65,7 +70,9 @@ const ConfirmModal = (props: ConfirmModalProps) => {
   const handleCheck = () => {
     dispatch(setOpenEvaluationModal());
     onPrimaryClick();
-    mannerStatusClicked ? dispatch(setOpenModal('manner')) : dispatch(setOpenModal('badManner'));
+    mannerStatusClicked
+      ? dispatch(setOpenModal("manner"))
+      : dispatch(setOpenModal("badManner"));
   };
 
   return (

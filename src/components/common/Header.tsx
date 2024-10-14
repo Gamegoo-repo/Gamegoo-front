@@ -25,6 +25,7 @@ import Alert from "./Alert";
 import { setNotiCount } from "@/redux/slices/notiSlice";
 import { socketLogout } from "@/api/socket";
 import { closeChat } from "@/redux/slices/chatSlice";
+import { postLogout } from "@/api/user";
 
 interface HeaderProps {
   selected: boolean;
@@ -104,8 +105,7 @@ const Header = () => {
     }
   }, [storedName]);
 
-  useEffect(() => {
-  }, [notiCount]);
+  useEffect(() => {}, [notiCount]);
 
   return (
     <Head>
@@ -230,16 +230,16 @@ const Header = () => {
                     if (data.id !== 6) {
                       router.push(`${data.url}`);
                     } else {
-                      sessionStorage.setItem('logout', 'true');
+                      sessionStorage.setItem("logout", "true");
                       try {
-                        // 토큰을 먼저 삭제해야 로그아웃 후 소켓 생성 시 토큰이 전달되지 않음.
+                        await postLogout();
                         await clearTokens();
-                        const response = await socketLogout();
-                        sessionStorage.removeItem("gamegooSocketId");
+                        await socketLogout();
+                        localStorage.removeItem("gamegooSocketId");
                         dispatch(clearUserProfile());
                         sessionStorage.removeItem("unreadChatUuids");
                         dispatch(closeChat());
-                        router.push('/login');
+                        router.push("/login");
                       } catch {
                         console.error("소켓 로그아웃 오류");
                       }

@@ -79,6 +79,26 @@ const Complete = () => {
     gameStyleList: [],
   });
 
+  /* 새로고침 및 타 사이트 이동 방지 */
+  const handleBeforeunload = (e: BeforeUnloadEvent) => {
+    console.log("새로고침 이벤트 발생");
+    e.preventDefault();
+    e.returnValue = "";
+  };
+
+  const redirectToInitialPage = () => {
+    // 초기 페이지로 이동
+    window.location.href = "/match";
+  };
+
+  useEffect(() => {
+    window.addEventListener("beforeunload", handleBeforeunload);
+    redirectToInitialPage();
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeunload);
+    };
+  }, []);
+
   useEffect(() => {
     const userString = searchParams.get("user");
 
@@ -256,6 +276,7 @@ const Complete = () => {
   // 매칭 나가기 버튼 클릭 핸들러
   const handleReject = () => {
     socket?.emit("matching-reject");
+    setIsCompleted("true");
     clearAllTimers();
     console.log("매칭 나가기 클릭");
     router.push(`/match/profile?type=${type}&rank=${rank}`);
@@ -275,7 +296,7 @@ const Complete = () => {
           <HeaderTitle
             title="매칭 완료"
             sub="듀오 상대를 찾았어요!"
-            isDoubleBack={true}
+            isDoubleBack={role === "receiver"}
           />
           <Main>
             <SquareProfile user={userMe} />
