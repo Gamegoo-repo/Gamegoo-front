@@ -55,6 +55,8 @@ const ChatLayout = (props: ChatLayoutProps) => {
     const isChatRoomOpen = useSelector((state: RootState) => state.chat.isChatRoomOpen);
     const isChatUuid = useSelector((state: RootState) => state.chat.isChatRoomUuid);
     const isModalType = useSelector((state: RootState) => state.modal.modalType);
+    const isUser = useSelector((state: RootState) => state.user);
+
 
     /* 채팅창이 닫힐 때 store에서 채팅창 닫힘 처리 */
     useEffect(() => {
@@ -431,13 +433,13 @@ const ChatLayout = (props: ChatLayoutProps) => {
         : [
             { text: '채팅방 나가기', onClick: (e: React.MouseEvent) => handleModalChange(e, 'leave') },
             // 친구 추가 조건: 친구가 아니고, 친구 요청도 하지 않은 경우
-            !chatEnterData?.friend && !chatEnterData?.friendRequestMemberId &&
+            !chatEnterData?.friend && chatEnterData?.friendRequestMemberId !== isUser.id &&
             { text: '친구 추가', onClick: handleFriendAdd },
             // 친구 취소 조건: 친구인 경우
             chatEnterData?.friend &&
             { text: '친구 삭제', onClick: handleFriendDelete },
             // 친구 요청 취소 조건: 친구가 아니고, 친구 요청을 이미 한 경우
-            !chatEnterData?.friend && chatEnterData?.friendRequestMemberId &&
+            !chatEnterData?.friend && chatEnterData?.friendRequestMemberId === isUser.id &&
             { text: '친구 요청 취소', onClick: handleCancelFriendReq },
 
             { text: '차단하기', onClick: (e: React.MouseEvent) => handleModalChange(e, 'block') },

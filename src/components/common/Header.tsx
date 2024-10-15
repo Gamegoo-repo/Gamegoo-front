@@ -12,10 +12,12 @@ import {
   getAccessToken,
   getName,
   getProfileImg,
+  getUserId,
 } from "@/utils/storage";
 import { getProfileBgColor } from "@/utils/profile";
 import {
   clearUserProfile,
+  setUserId,
   setUserName,
   setUserProfileImg,
 } from "@/redux/slices/userSlice";
@@ -48,6 +50,7 @@ const Header = () => {
 
   const storedName = getName();
   const storedProfileImg = Number(getProfileImg());
+  const storedUserId = Number(getUserId());
 
   const isFirstRender = useRef(true);
 
@@ -57,6 +60,9 @@ const Header = () => {
     }
     if (storedProfileImg) {
       dispatch(setUserProfileImg(storedProfileImg));
+    }
+    if (storedUserId) {
+      dispatch(setUserId(storedUserId));
     }
   }, []);
 
@@ -105,7 +111,7 @@ const Header = () => {
     }
   }, [storedName]);
 
-  useEffect(() => {}, [notiCount]);
+  useEffect(() => { }, [notiCount]);
 
   return (
     <Head>
