@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { socket } from '@/socket';
+import { connectSocket, socket } from '@/socket';
 import { setUnreadUuid } from '@/redux/slices/chatSlice';
 import { markChatAsRead } from '@/api/chat';
 import { SystemMessage, ChatMessageDto } from '@/interface/chat';
@@ -16,6 +16,9 @@ const useChatMessage = () => {
     const unreadChatUuids = useSelector((state: RootState) => state.chat.unreadUuids);
 
     useEffect(() => {
+        // 소켓 연결되어 있지 않으면 소켓 연결
+        connectSocket();
+
         const handleChatMessage = (res: any) => {
             const chatroomUuid = res.data.chatroomUuid;
             const newChatTimestamp = res.data.timestamp;
