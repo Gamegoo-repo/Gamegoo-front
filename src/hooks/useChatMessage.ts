@@ -44,9 +44,9 @@ const useChatMessage = () => {
         };
 
         const handleMyMessage = (res: any) => {
-            if(res.data.
+            if (res.data.
                 chatroomUuid
-            ===currentChatUuid){
+                === currentChatUuid) {
                 const newMessage = res.data;
                 // 새로운 메시지 저장 (내가 쓴 메시지)
                 setNewMessage(newMessage);
