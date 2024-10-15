@@ -25,6 +25,14 @@ export const setProfileImg = (profileImg: string, autoLogin: boolean) => {
     return null;
 };
 
+export const setId = (id: number, autoLogin: boolean) => {
+    if (typeof window !== 'undefined') {
+        const storage = autoLogin ? localStorage : sessionStorage;
+        storage.setItem('userId', id.toString());
+    }
+    return null;
+};
+
 /* 토큰 사용 */
 export const getAccessToken = () => {
     if (typeof window !== 'undefined') {
@@ -56,6 +64,14 @@ export const getProfileImg = () => {
     return null;
 };
 
+/* 유저 id 사용 */
+export const getUserId = () => {
+    if (typeof window !== 'undefined') {
+        return localStorage.getItem('userId') || sessionStorage.getItem('userId');
+    }
+    return null;
+};
+
 
 /* 토큰 제거 */
 export const clearTokens = () => {
@@ -67,6 +83,8 @@ export const clearTokens = () => {
     sessionStorage.removeItem('refreshToken');
     sessionStorage.removeItem('name');
     sessionStorage.removeItem('profileImg');
+    sessionStorage.removeItem('userId');
+    sessionStorage.removeItem('userId');
 };
 
 /* 매칭 완료 여부 */

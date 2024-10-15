@@ -26,8 +26,8 @@ const ChatRoomList = (props: ChatRoomListProps) => {
 
     const dispatch = useDispatch();
 
-    const isUser = useSelector((state: RootState) => state.user);
     const isModalType = useSelector((state: RootState) => state.modal.modalType);
+    const isUser = useSelector((state: RootState) => state.user);
 
     const [chatrooms, setChatrooms] = useState<ChatroomList[]>([]);
     const [reloadChatrooms, setReloadChatrooms] = useState(false);
@@ -114,7 +114,7 @@ const ChatRoomList = (props: ChatRoomListProps) => {
         if (room.friend) {
             // 친구 삭제
             handleFriendDelete(e, room.targetMemberId);
-        } else if (!room.friend && room.friendRequestMemberId) {
+        } else if (!room.friend && room.friendRequestMemberId === isUser.id) {
             //친구 요청 취소
             handleCancelFriendReq(e, room.targetMemberId);
         } else if (!room.friend) {
@@ -137,9 +137,9 @@ const ChatRoomList = (props: ChatRoomListProps) => {
 
         if (room.friend) {
             friendText = '친구 삭제';
-        } else if (!room.friend && room.friendRequestMemberId) {
+        } else if (!room.friend && room.friendRequestMemberId === isUser.id) {
             friendText = '친구 요청 취소';
-        } else if (!room.friend && !room.friendRequestMemberId) {
+        } else if (!room.friend) {
             friendText = '친구 추가';
         }
 
@@ -228,54 +228,4 @@ const NoData = styled.p`
   margin-top:50%;
 `;
 
-const CheckContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 20px;
-`;
-
-const ModalSubmitBtn = styled.div`
-  margin-top:52px;
-`;
-
-const ReportLabel = styled.p`
-  color: ${theme.colors.gray600};
-  ${(props) => props.theme.fonts.semiBold18};
-  margin-bottom: 12px;
-`;
-
-const ReportContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 20px;
-`;
-
-const ReportReasonContent = styled(ReportContent)`
-  margin-bottom: 38px;
-`;
-
-const ReportButton = styled.div`
-  margin-top:21px;
-`;
-
-const Text = styled.div`
-  text-align: center;
-  color: ${theme.colors.gray600};
-  ${(props) => props.theme.fonts.regular20};
-  margin: 28px 0;
-`;
-
-const SmallText = styled.div`
-  text-align: center;
-  color: ${theme.colors.gray200};
-  ${(props) => props.theme.fonts.regular14};
-  margin-top: 13px;
-`;
-
-const MsgConfirm = styled(Text)`
-  ${(props) => props.theme.fonts.regular25};
-  margin: 80px 0;
-`;
 
