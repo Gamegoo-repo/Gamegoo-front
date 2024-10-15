@@ -443,9 +443,9 @@ const ChatLayout = (props: ChatLayoutProps) => {
             { text: '친구 요청 취소', onClick: handleCancelFriendReq },
 
             { text: '차단하기', onClick: (e: React.MouseEvent) => handleModalChange(e, 'block') },
-            { text: '신고하기', onClick: () => chatEnterData?.memberId && handleReportClick },
-            { text: '매너 평가', onClick: () => chatEnterData?.memberId && handleMannerClick },
-            { text: '비매너 평가', onClick: () => chatEnterData?.memberId && handleBadMannerClick },
+            { text: '신고하기', onClick: handleReportClick },
+            { text: '매너 평가', onClick: handleMannerClick },
+            { text: '비매너 평가', onClick: handleBadMannerClick },
         ].filter(item => item) as MoreBoxMenuItems[];
 
     /* 더보기 버튼 외부 클릭 시 닫힘 */
