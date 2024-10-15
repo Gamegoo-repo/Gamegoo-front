@@ -1,10 +1,14 @@
 import { useEffect } from 'react';
-import { socket } from '@/socket';
+import { connectSocket, socket } from '@/socket';
 import { getChatrooms } from '@/api/chat';
 import { ChatroomList } from '@/interface/chat';
 
 const useChatList = (setChatrooms: (chatrooms: ChatroomList[]) => void) => {
+
     useEffect(() => {
+        // 소켓 연결되어 있지 않으면 소켓 연결
+        connectSocket();
+
         const handleJoinedNewChatroom = async () => {
             try {
                 const data = await getChatrooms();

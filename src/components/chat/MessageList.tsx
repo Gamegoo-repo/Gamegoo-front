@@ -386,7 +386,7 @@ const MessageList = (props: MessageListProps) => {
                       {showTime ? <YourDate>{setChatTimeFormatter(message.createdAt)}</YourDate> : null}
                     </YourDiv>
                   </YourMessageContainer>
-                ) : (
+                ) : message.senderId !== chatEnterData?.memberId && message.senderId !== 0 && (
                   <MyMessageContainer>
                     <MyDiv>
                       {showTime ? <MyDate>{setChatTimeFormatter(message.createdAt)}</MyDate> : null}

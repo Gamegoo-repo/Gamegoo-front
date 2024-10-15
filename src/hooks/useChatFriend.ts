@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { socket } from '@/socket';
+import { connectSocket, socket } from '@/socket';
 import { setFriendOffline, setFriendOnline, setMemberId } from '@/redux/slices/chatSlice';
 
 const useChatFriend = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        // 소켓 연결되어 있지 않으면 소켓 연결
+        connectSocket();
+
         const handleMemberInfo = (res: any) => {
             const memberId = res.data.memberId;
             dispatch(setMemberId(memberId));
