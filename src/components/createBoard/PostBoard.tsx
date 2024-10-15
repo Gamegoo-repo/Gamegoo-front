@@ -25,6 +25,7 @@ import { useRouter } from "next/navigation";
 import { getProfile } from "@/api/user";
 import { setUserProfile } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
+import { setClosePostingModal } from "@/redux/slices/modalSlice";
 
 interface PostBoardProps {
   onClose: () => void;
@@ -81,17 +82,20 @@ const PostBoard = (props: PostBoardProps) => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [showAlert, setShowAlert] = useState(false);
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await getProfile();
-        dispatch(setUserProfile(response));
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  const fetchProfile = async () => {
+    try {
+      const response = await getProfile();
+      dispatch(setUserProfile(response));
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
+  useEffect(() => {
     fetchProfile();
+    return () => {
+      dispatch(setClosePostingModal());
+    }
   }, []);
 
   /* 유저가 게시판에 올린 글에 대한 데이터 */

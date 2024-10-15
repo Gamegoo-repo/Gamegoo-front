@@ -87,25 +87,30 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 게시글 api */
   const getPostData = async () => {
-    setLoading(true);
-    if (!!isUser.gameName && postId) {
-      const memberData = await getMemberPost(postId);
-      setIsPost(memberData.result);
-      setGameMode(memberData.result.gameMode);
-      setIsBlockedStatus(memberData.result.isBlocked);
-      setLoading(false);
-    }
+    try {
+      setLoading(true);
 
-    if (!isUser.gameName && postId) {
-      const nonMember = await getNonMemberPost(postId);
-
-      setIsPost(nonMember.result);
+      if (!!isUser.gameName && postId) {
+        const memberData = await getMemberPost(postId);
+        setIsPost(memberData.result);
+        setGameMode(memberData.result.gameMode);
+        setIsBlockedStatus(memberData.result.isBlocked);
+      } else if (!isUser.gameName && postId) {
+        const nonMember = await getNonMemberPost(postId);
+        setIsPost(nonMember.result);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
     getPostData();
+    return () => {
+      dispatch(setCloseReadingModal());
+    }
   }, [isBlockedStatus, isFriendStatus, isUser.gameName, postId]);
 
   /* MannerLevelBox 외부 클릭 시 닫힘 */

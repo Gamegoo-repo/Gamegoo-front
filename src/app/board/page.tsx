@@ -280,10 +280,10 @@ const BoardPage = () => {
           icon="exclamation"
           width={68}
           height={58}
-          content="로그아웃 되었습니다. 다시 로그인 해주세요."
+          content="로그인이 필요한 서비스입니다."
           alt="로그인 필요"
-          onClose={() => router.push("/login")}
-          buttonText="로그인하기"
+          onClose={() => setShowAlert(false)}
+          buttonText="확인"
         />
       )}
       {isPostingModal && (
