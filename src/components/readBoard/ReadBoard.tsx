@@ -153,7 +153,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     if (!isUser.gameName) {
       return showAlertWithContent(
         logoutMessage,
-        () => router.push("/"),
+        () => router.push("/login"),
         "로그인하기"
       );
     }
@@ -167,7 +167,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     if (!isUser.gameName) {
       return showAlertWithContent(
         logoutMessage,
-        () => router.push("/"),
+        () => router.push("/login"),
         "로그인하기"
       );
     }
@@ -215,7 +215,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     if (!isUser.gameName) {
       return showAlertWithContent(
         logoutMessage,
-        () => router.push("/"),
+        () => router.push("/login"),
         "로그인하기"
       );
     }
@@ -241,7 +241,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     if (!isUser.gameName) {
       return showAlertWithContent(
         logoutMessage,
-        () => router.push("/"),
+        () => router.push("/login"),
         "로그인하기"
       );
     }
@@ -265,7 +265,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     if (!isUser.gameName) {
       return showAlertWithContent(
         logoutMessage,
-        () => router.push("/"),
+        () => router.push("/login"),
         "로그인하기"
       );
     }
@@ -313,7 +313,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     if (!isUser.gameName) {
       return showAlertWithContent(
         logoutMessage,
-        () => router.push("/"),
+        () => router.push("/login"),
         "로그인하기"
       );
     }
@@ -333,7 +333,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     if (!isUser.gameName) {
       return showAlertWithContent(
         logoutMessage,
-        () => router.push("/"),
+        () => router.push("/login"),
         "로그인하기"
       );
     }
@@ -354,8 +354,8 @@ const ReadBoard = (props: ReadBoardProps) => {
     if (!isUser.gameName) {
       return showAlertWithContent(
         loginRequiredMessage,
-        () => router.push("/"),
-        "로그인하기"
+        () => setShowAlert(false),
+        "확인"
       );
     }
 
@@ -676,7 +676,6 @@ const UserSection = styled.div`
   align-items: center;
   justify-content: space-between;
   white-space: nowrap;
-  /* gap:90px; */
 `;
 
 const UserLeft = styled.div`
