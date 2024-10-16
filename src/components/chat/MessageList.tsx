@@ -75,6 +75,8 @@ const MessageList = (props: MessageListProps) => {
 
   /* 매너 시스템 소켓 이벤트 리스닝 */
   useEffect(() => {
+    if (chatEnterData.uuid !== currentChatUuid) return;
+
     if (mannerSystemMessage) {
       const chatroomUuid = mannerSystemMessage?.chatroomUuid;
       const newChatTimestamp = mannerSystemMessage.timestamp;
@@ -102,6 +104,8 @@ const MessageList = (props: MessageListProps) => {
 
   /* 새로운 메시지 전에 시스템 메시지 보여주기 */
   useEffect(() => {
+    if (chatEnterData.uuid !== currentChatUuid) return;
+
     if (newMessage) {
       setMessageList((prevMessages) => {
         let updatedMessages = [...prevMessages];
@@ -336,21 +340,21 @@ const MessageList = (props: MessageListProps) => {
         </ErrorBox>
       )}
       <ChatBorder>
-        <ChatMain ref={chatRef}>
-          {messageList.map((message, index) => {
-            const showProfileImage = handleDisplayProfileImage(messageList, index);
-            const showTime = handleDisplayTime(messageList, index);
+        {chatEnterData.uuid === currentChatUuid &&
+          <ChatMain ref={chatRef}>
+            {messageList.map((message, index) => {
+              const showProfileImage = handleDisplayProfileImage(messageList, index);
+              const showTime = handleDisplayTime(messageList, index);
 
-            return (
-              <MsgContainer key={index}>
-                {handleDisplayDate(messageList, index) && <Timestamp>{setChatDateFormatter(message.createdAt)}</Timestamp>}
-                {message.systemType === 0 ? (
-                  <SystemMessage
-                    message={message.message}
-                    onClick={() => handlePostOpen(message.boardId as number)}
-                  />
-                ) : message.systemType === 1 ? (
-                  <>
+              return (
+                <MsgContainer key={index}>
+                  {handleDisplayDate(messageList, index) && <Timestamp>{setChatDateFormatter(message.createdAt)}</Timestamp>}
+                  {message.systemType === 0 ? (
+                    <SystemMessage
+                      message={message.message}
+                      onClick={() => handlePostOpen(message.boardId as number)}
+                    />
+                  ) : message.systemType === 1 ? (
                     <FeedbackDiv>
                       <FeedbackContainer>
                         <Feedback>
@@ -367,49 +371,49 @@ const MessageList = (props: MessageListProps) => {
                         </Feedback>
                       </FeedbackContainer>
                     </FeedbackDiv>
-                  </>
-                ) : message.senderId === chatEnterData?.memberId ? (
-                  <YourMessageContainer>
-                    {showProfileImage && message.senderProfileImg && (
-                      <ImageWrapper $bgColor={getProfileBgColor(message.senderProfileImg)}
-                        onClick={() => handleMoveProfile(chatEnterData.memberId)}
-                      >
-                        <ProfileImage
-                          data={chatEnterData.blind ? `/assets/images/profile/profile_default.svg` : `/assets/images/profile/profile${message.senderProfileImg}.svg`}
-                          width={38}
-                          height={38}
-                        />
-                      </ImageWrapper>
-                    )}
-                    <YourDiv $hasProfileImage={showProfileImage}>
-                      <YourMessage>{message.message}</YourMessage>
-                      {showTime ? <YourDate>{setChatTimeFormatter(message.createdAt)}</YourDate> : null}
-                    </YourDiv>
-                  </YourMessageContainer>
-                ) : message.senderId !== chatEnterData?.memberId && message.senderId !== 0 && (
-                  <MyMessageContainer>
-                    <MyDiv>
-                      {showTime ? <MyDate>{setChatTimeFormatter(message.createdAt)}</MyDate> : null}
-                      <MyMessage>{message.message}</MyMessage>
-                    </MyDiv>
-                  </MyMessageContainer>
-                )}
-              </MsgContainer>
-            )
-          })}
-          {isLoading && (
-            <LoadingContainer>
-              <LoadingSpinner />
-            </LoadingContainer>
-          )}
-          {isFeedbackModalOpen &&
-            <ConfirmModal
-              type="manner"
-              width="315px"
-              primaryButtonText="확인"
-              onPrimaryClick={() => dispatch(setCloseMannerStatusModal())} />
-          }
-        </ChatMain>
+                  ) : message.senderId === chatEnterData?.memberId ? (
+                    <YourMessageContainer>
+                      {showProfileImage && message.senderProfileImg && (
+                        <ImageWrapper $bgColor={getProfileBgColor(message.senderProfileImg)}
+                          onClick={() => handleMoveProfile(chatEnterData.memberId)}
+                        >
+                          <ProfileImage
+                            data={chatEnterData.blind ? `/assets/images/profile/profile_default.svg` : `/assets/images/profile/profile${message.senderProfileImg}.svg`}
+                            width={38}
+                            height={38}
+                          />
+                        </ImageWrapper>
+                      )}
+                      <YourDiv $hasProfileImage={showProfileImage}>
+                        <YourMessage>{message.message}</YourMessage>
+                        {showTime ? <YourDate>{setChatTimeFormatter(message.createdAt)}</YourDate> : null}
+                      </YourDiv>
+                    </YourMessageContainer>
+                  ) : message.senderId !== chatEnterData?.memberId && message.senderId !== 0 && (
+                    <MyMessageContainer>
+                      <MyDiv>
+                        {showTime ? <MyDate>{setChatTimeFormatter(message.createdAt)}</MyDate> : null}
+                        <MyMessage>{message.message}</MyMessage>
+                      </MyDiv>
+                    </MyMessageContainer>
+                  )}
+                </MsgContainer>
+              )
+            })}
+            {isLoading && (
+              <LoadingContainer>
+                <LoadingSpinner />
+              </LoadingContainer>
+            )}
+            {isFeedbackModalOpen &&
+              <ConfirmModal
+                type="manner"
+                width="315px"
+                primaryButtonText="확인"
+                onPrimaryClick={() => dispatch(setCloseMannerStatusModal())} />
+            }
+          </ChatMain>
+        }
       </ChatBorder >
     </>
   );
