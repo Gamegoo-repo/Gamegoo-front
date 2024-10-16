@@ -16,44 +16,42 @@ const SocketConnection: React.FC = () => {
     const onConnect = () => {
       const socketId = socket?.id || "";
       sessionStorage.setItem("gamegooSocketId", socketId);
-    }
+    };
 
     const onDisconnect = () => {
       console.error("소켓 끊김");
-    }
+    };
 
     const handleJwtExpiredError = async (data: any) => {
       const { eventName, eventData } = data;
       try {
         const currentToken = getAccessToken();
 
-        // 현재 저장된 토큰이 만료되었는지 확인하고 재발급
+        // 토큰이 없을 경우 토큰 재발급
         if (!currentToken) {
           const response = await reissueToken();
-          socket?.emit(eventName, { ...eventData, token: response.result.accessToken; });
-        } else {
-          socket?.emit(eventName, { ...eventData, token: currentToken });
+          const newToken = response.result.accessToken;
+          socket?.emit(eventName, { ...eventData, token: newToken });
         }
       } catch (error) {
         console.error("토큰 재발급 실패:", error);
       }
-    }
+    };
 
     const handleConnectionJwtError = async () => {
       try {
         const currentToken = getAccessToken();
 
-        // 현재 저장된 토큰이 만료되었는지 확인하고 재발급
+        // 토큰이 없을 경우 토큰 재발급
         if (!currentToken) {
           const response = await reissueToken();
-          socket?.emit("connection-update-token", { token: response.result.accessToken });
-        } else {
-          socket?.emit("connection-update-token", { token: currentToken });
+          const newToken = response.result.accessToken;
+          socket?.emit("connection-update-token", { token: newToken });
         }
       } catch (error) {
         console.error("토큰 재발급 실패:", error);
       }
-    }
+    };
 
     if (socket?.connected) {
       onConnect();
