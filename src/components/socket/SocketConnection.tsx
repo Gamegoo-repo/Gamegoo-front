@@ -5,6 +5,7 @@ import useChatMessage from "@/hooks/useChatMessage";
 import useChatFriend from "@/hooks/useChatFriend";
 import { reissueToken } from "@/api/auth";
 import { getAccessToken } from "@/utils/storage";
+import { isTokenExpired } from "@/utils/auth";
 
 const SocketConnection: React.FC = () => {
   const dispatch = useDispatch();
@@ -26,12 +27,13 @@ const SocketConnection: React.FC = () => {
       const { eventName, eventData } = data;
       try {
         const currentToken = getAccessToken();
-
         // 토큰이 없을 경우 토큰 재발급
-        if (!currentToken) {
+        if (!currentToken || isTokenExpired(currentToken)) {
+          console.log('재발급 필요?1')
           const response = await reissueToken();
-          const newToken = response.result.accessToken;
-          socket?.emit(eventName, { ...eventData, token: newToken });
+          const newToken = response.result.refreshToken;
+          console.log('newToken',newToken);
+          // socket?.emit(eventName, { ...eventData, token: newToken });
         }
       } catch (error) {
         console.error("토큰 재발급 실패:", error);
@@ -43,10 +45,12 @@ const SocketConnection: React.FC = () => {
         const currentToken = getAccessToken();
 
         // 토큰이 없을 경우 토큰 재발급
-        if (!currentToken) {
+        if (!currentToken || isTokenExpired(currentToken)) {
+          console.log('재발급 필요?2')
+
           const response = await reissueToken();
-          const newToken = response.result.accessToken;
-          socket?.emit("connection-update-token", { token: newToken });
+          const newToken = response.result.refreshToken;
+          // socket?.emit("connection-update-token", { token: newToken });
         }
       } catch (error) {
         console.error("토큰 재발급 실패:", error);

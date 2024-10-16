@@ -253,7 +253,7 @@ const PostBoard = (props: PostBoardProps) => {
     dispatch(clearCurrentPost());
     dispatch(setPostStatus(""));
   };
-  console.log(user)
+  
   return (
     <CRModal type="posting" onClose={handleModalClose}>
       {showAlert && (
