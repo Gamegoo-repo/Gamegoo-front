@@ -13,6 +13,7 @@ import {
   clearUserProfile,
   setUserName,
   setUserProfileImg,
+  setUserId
 } from "@/redux/slices/userSlice";
 import { connectSocket, socket } from "@/socket";
 import { theme } from "@/styles/theme";
@@ -22,6 +23,7 @@ import {
   setName,
   setProfileImg,
   setToken,
+  setId
 } from "@/utils/storage";
 import { AxiosError } from "axios";
 import Image from "next/image";
@@ -81,8 +83,10 @@ const Login = () => {
 
       dispatch(setUserName(response.result.name));
       dispatch(setUserProfileImg(response.result.profileImage));
+      dispatch(setUserId(response.result.id));
       setName(response.result.name, autoLogin);
       setProfileImg(response.result.profileImage, autoLogin);
+      setId(response.result.id, autoLogin);
 
       router.push("/");
 
