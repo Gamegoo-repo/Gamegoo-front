@@ -8,7 +8,9 @@ const useChatFriend = () => {
 
     useEffect(() => {
         // 소켓 연결되어 있지 않으면 소켓 연결
-        connectSocket();
+        if (!socket) {
+            return connectSocket();
+        }
 
         const handleMemberInfo = (res: any) => {
             const memberId = res.data.memberId;
