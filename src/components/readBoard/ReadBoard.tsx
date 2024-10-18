@@ -358,6 +358,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       await deletePost(postId);
       await dispatch(setPostStatus("delete"));
       await dispatch(setCloseReadingModal());
+      await dispatch(setPostStatus(""));
     } catch (error) {
       console.error(error);
     }
