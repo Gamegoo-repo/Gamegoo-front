@@ -114,7 +114,7 @@ const Title = styled.p``;
 
 const DropBox = styled.div`
   position: absolute;
-  background: ${theme.colors.white};
+  /* background: ${theme.colors.white}; */
   z-index: 1;
 `;
 

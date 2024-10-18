@@ -80,19 +80,23 @@ const MessageHeader = (props: MessageHeaderProps) => {
               >
                 {chatEnterData.gameName}
               </UserName>
-              {onlineFriends.includes(chatEnterData.memberId) ? (
+              {chatEnterData?.friend &&
                 <>
-                  <OnlineStatus>온라인</OnlineStatus>
-                  <OnlineImage
-                    src="/assets/icons/online.svg"
-                    width={5}
-                    height={5}
-                    alt="온라인"
-                  />
+                  {onlineFriends.includes(chatEnterData.memberId) ? (
+                    <>
+                      <OnlineStatus>온라인</OnlineStatus>
+                      <OnlineImage
+                        src="/assets/icons/online.svg"
+                        width={5}
+                        height={5}
+                        alt="온라인"
+                      />
+                    </>
+                  ) : (
+                    <OnlineStatus>오프라인</OnlineStatus>
+                  )}
                 </>
-              ) : (
-                <OnlineStatus>오프라인</OnlineStatus>
-              )}
+              }
             </Div>
           </Middle>
           <ThreeDotsImage

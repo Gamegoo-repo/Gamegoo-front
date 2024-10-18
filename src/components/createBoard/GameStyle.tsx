@@ -44,14 +44,15 @@ const GameStyle = (props: GameStyleProps) => {
   useEffect(() => {
     setSelectedStyleIds(selectedStyles);
   }, [selectedStyles, setSelectedStyleIds]);
+  const selectedGameStyles = GAME_STYLE.filter(style => selectedStyleIds.includes(style.gameStyleId))
+    .map(style => style.gameStyleName);
 
   return (
     <>
       <StylesWrapper>
-        {selectedStyles.map((styleId) => {
-          const style = GAME_STYLE.find((item) => item.gameStyleId === styleId);
-          return <Content key={styleId}>{style?.gameStyleName}</Content>;
-        })}
+        {selectedGameStyles.map((styleName, index) => (
+          <Content key={index}>{styleName}</Content>
+        ))}
       </StylesWrapper>
       <Div>
         <AddGameStyle onClick={handleStylePopup}>

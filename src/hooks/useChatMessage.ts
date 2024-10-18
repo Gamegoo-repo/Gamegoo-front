@@ -18,7 +18,7 @@ const useChatMessage = () => {
     useEffect(() => {
         // 소켓 연결되어 있지 않으면 소켓 연결
         if (!socket) {
-            return connectSocket();
+             connectSocket();
         }
 
         const handleChatMessage = (res: any) => {

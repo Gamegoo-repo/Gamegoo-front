@@ -79,11 +79,11 @@ export const clearTokens = () => {
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('name');
     localStorage.removeItem('profileImg');
+    localStorage.removeItem('userId');
     sessionStorage.removeItem('accessToken');
     sessionStorage.removeItem('refreshToken');
     sessionStorage.removeItem('name');
     sessionStorage.removeItem('profileImg');
-    sessionStorage.removeItem('userId');
     sessionStorage.removeItem('userId');
 };
 
