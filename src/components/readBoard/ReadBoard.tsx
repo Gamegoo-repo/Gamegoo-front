@@ -471,9 +471,10 @@ const ReadBoard = (props: ReadBoardProps) => {
     } else {
       try {
         dispatch(setCloseReadingModal());
-        if (!isPost) return;
-        dispatch(setChatRoomUuid(isPost.boardId));
-        dispatch(openChatRoom());
+        if (isPost) {
+          dispatch(setChatRoomUuid(isPost.boardId));
+          dispatch(openChatRoom());
+        }
       } catch (error) {
         console.error(error);
       }
