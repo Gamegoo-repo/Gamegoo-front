@@ -7,7 +7,9 @@ const useChatList = (setChatrooms: (chatrooms: ChatroomList[]) => void) => {
 
     useEffect(() => {
         // 소켓 연결되어 있지 않으면 소켓 연결
-        connectSocket();
+        if (!socket) {
+             connectSocket();
+        }
 
         const handleJoinedNewChatroom = async () => {
             try {

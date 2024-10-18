@@ -10,7 +10,7 @@ let socketId: string | null = null;
 export const connectSocket = (): void => {
 
 
-  if (!!socket?.connected) {
+  if (socket?.connected) {
     return;
   }
 
