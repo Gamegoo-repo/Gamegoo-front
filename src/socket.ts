@@ -17,13 +17,7 @@ export const connectSocket = (): void => {
   // 클라이언트 사이드에서만 실행
   if (typeof window !== "undefined") {
     const token = getAccessToken();
-
-    // if (!token) {
-    //   alert("로그인 세션이 만료되었습니다. 로그인 페이지로 이동합니다.")
-    //   window.location.href = "https://www.gamegoo.co.kr/login";
-    //   return;
-    // }
-
+    
     const options = token ? { auth: { token } } : {};
 
     socket = io(SOCKET_URL, options);

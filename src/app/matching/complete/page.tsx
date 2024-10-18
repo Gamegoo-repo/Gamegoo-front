@@ -80,24 +80,24 @@ const Complete = () => {
   });
 
   /* 새로고침 및 타 사이트 이동 방지 */
-  const handleBeforeunload = (e: BeforeUnloadEvent) => {
-    console.log("새로고침 이벤트 발생");
-    e.preventDefault();
-    e.returnValue = "";
-  };
+  // const handleBeforeunload = (e: BeforeUnloadEvent) => {
+  //   console.log("새로고침 이벤트 발생");
+  //   e.preventDefault();
+  //   e.returnValue = "";
+  // };
 
-  const redirectToInitialPage = () => {
-    // 초기 페이지로 이동
-    window.location.href = "/match";
-  };
+  // const redirectToInitialPage = () => {
+  //   // 초기 페이지로 이동
+  //   window.location.href = "/match";
+  // };
 
-  useEffect(() => {
-    window.addEventListener("beforeunload", handleBeforeunload);
-    redirectToInitialPage();
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeunload);
-    };
-  }, []);
+  // useEffect(() => {
+  //   window.addEventListener("beforeunload", handleBeforeunload);
+  //   redirectToInitialPage();
+  //   return () => {
+  //     window.removeEventListener("beforeunload", handleBeforeunload);
+  //   };
+  // }, []);
 
   useEffect(() => {
     const userString = searchParams.get("user");
