@@ -5,7 +5,7 @@ import styled, { ThemeProvider } from "styled-components";
 import { theme } from "@/styles/theme";
 import Header from "@/components/common/Header";
 import StyledComponentsRegistry from "@/libs/registry";
-import { use, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Provider } from "react-redux";
 import { AppStore, store } from "@/redux/store";
 import { usePathname } from "next/navigation";
