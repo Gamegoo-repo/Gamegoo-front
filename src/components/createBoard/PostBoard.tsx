@@ -74,7 +74,7 @@ const PostBoard = (props: PostBoardProps) => {
   const gameStyleIds =
     user?.gameStyleResponseDTOList?.map((item) => item.gameStyleId) || [];
   const [selectedStyleIds, setSelectedStyleIds] = useState<number[]>(
-    currentPost?.gameStyles ?? gameStyleIds
+    currentPost?.gameStyles || gameStyleIds
   );
   const [textareaValue, setTextareaValue] = useState<string>(
     currentPost?.contents || ""
@@ -103,7 +103,7 @@ const PostBoard = (props: PostBoardProps) => {
 
   /* 유저가 게시판에 올린 글에 대한 데이터 */
   useEffect(() => {
-    if (!!currentPost) {
+    if (currentPost) {
       setSelectedDropOption(currentPost.gameMode);
 
       setPositionValue({
@@ -121,7 +121,7 @@ const PostBoard = (props: PostBoardProps) => {
 
   /* userInfo가 업데이트된 후 상태 업데이트 */
   useEffect(() => {
-    if (!!user.gameName && !currentPost) {
+    if (user.gameName && !currentPost) {
       setPositionValue({
         main: user.mainP ? user.mainP : 0,
         sub: user.subP ? user.subP : 0,
@@ -130,7 +130,7 @@ const PostBoard = (props: PostBoardProps) => {
       setSelectedImageIndex(user.profileImg);
       const ids =
         user?.gameStyleResponseDTOList?.map((item) => item.gameStyleId) || [];
-      setSelectedStyleIds(ids);
+      setSelectedStyleIds(ids ? ids : []);
     }
   }, [user, currentPost]);
 
@@ -229,7 +229,7 @@ const PostBoard = (props: PostBoardProps) => {
       wantPosition: isARAM ? null : positionValue?.want,
     };
 
-    if (!!currentPost) {
+    if (currentPost) {
       try {
         await handleEdit(params);
       } catch (error) {
@@ -253,7 +253,7 @@ const PostBoard = (props: PostBoardProps) => {
     dispatch(clearCurrentPost());
     dispatch(setPostStatus(""));
   };
-
+  
   return (
     <CRModal type="posting" onClose={handleModalClose}>
       {showAlert && (
