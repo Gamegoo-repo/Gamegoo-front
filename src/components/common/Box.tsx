@@ -3,7 +3,7 @@ import React from "react";
 import styled, { css } from "styled-components";
 
 type ShapeType = "round" | "square";
-type profileType = "me" | "other" | "none" | "mini";
+type profileType = "me" | "other" | "none" | "mini" | "square";
 
 interface BoxProps {
   text: string;
@@ -49,5 +49,13 @@ const StyledBox = styled.div<{ $shape: ShapeType; $profiletype?: profileType }>`
       height: 25px;
       padding: 5px 17px;
       ${(props) => props.theme.fonts.bold12}
+    `}
+
+${(props) =>
+    props.$profiletype === "square" &&
+    css`
+      height: 34px;
+      padding: 6px 20px;
+      ${(props) => props.theme.fonts.semiBold14}
     `}
 `;
