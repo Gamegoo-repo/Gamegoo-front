@@ -112,16 +112,14 @@ const GameStyle = (props: GameStyleProps) => {
       <LeftLabel $profileType={profileType}>
         게임 스타일
         <GameBox $profileType={profileType}>
-          {selectedStyleObjects
-            .filter((style) => selectedStyles.includes(style.gameStyleId))
-            .map((style) => (
-              <Box
-                key={style.gameStyleId}
-                text={style.gameStyleName}
-                shape="round"
-                profileType={profileType}
-              />
-            ))}
+          {selectedStyleObjects.map((style) => (
+            <Box
+              key={style!.gameStyleId}
+              text={style!.gameStyleName}
+              shape="round"
+              profileType={profileType}
+            />
+          ))}
           {profileType !== "other" && (
             <Div>
               <AddGameStyle
