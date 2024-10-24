@@ -77,9 +77,9 @@ const Table = (props: TableProps) => {
   }, [isReadingModal]);
 
   /* 소환사명 복사 */
-  const handleTextClick = async (gameName: string, e: React.MouseEvent) => {
+  const handleTextClick = async (gameName: string, e: React.MouseEvent, tag: string) => {
     e.stopPropagation();
-    const copied = `#${gameName.replace(/\s+/g, "")}`;
+    const copied = `${gameName.replace(/\s+/g, "")}#${tag}`;
     try {
       await navigator.clipboard.writeText(copied);
       await setCopiedAlert(true);
@@ -171,7 +171,7 @@ const Table = (props: TableProps) => {
                     <NameRow>
                       <P>{data.gameName}</P>
                       <CopyButton
-                        onClick={(e) => handleTextClick(data.gameName, e)}
+                        onClick={(e) => handleTextClick(data.gameName, e, data.tag)}
                       >
                         복사
                       </CopyButton>
@@ -186,8 +186,8 @@ const Table = (props: TableProps) => {
                         !data.tier
                           ? "/assets/images/tier/unranked.svg"
                           : `/assets/images/tier/${toLowerCaseString(
-                              data.tier
-                            )}.svg`
+                            data.tier
+                          )}.svg`
                       }
                       width={28}
                       height={26}
