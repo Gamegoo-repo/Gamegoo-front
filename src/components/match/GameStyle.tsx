@@ -91,9 +91,11 @@ const GameStyle = (props: GameStyleProps) => {
     setSelectedStyles(selectedStyles);
   }, [selectedStyles]);
 
-  const selectedStyleObjects = GAME_STYLE.filter((style) =>
-    selectedStyles.includes(style.gameStyleId)
-  );
+  const selectedStyleObjects = selectedStyles
+    .map((styleId) =>
+      GAME_STYLE.find((style) => style.gameStyleId === styleId)
+    )
+    .filter(Boolean);
 
   const handleChangeMike = async () => {
     const newMikeValue = !isMike;
@@ -102,7 +104,7 @@ const GameStyle = (props: GameStyleProps) => {
     try {
       await putMike(newMikeValue);
       dispatch(setUserMike(newMikeValue));
-    } catch {}
+    } catch { }
   };
 
   return (

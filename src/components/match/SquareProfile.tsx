@@ -89,10 +89,8 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
           {user.gameStyleList &&
             user.gameStyleList.length > 0 &&
             user.gameStyleList
-              .filter((item) => item.trim() !== "")
-              .slice(0, 2)
               .map((item, index) => (
-                <Box key={index} shape="round" text={item} />
+                <Box key={index} shape="round" text={item} profileType="matching" />
               ))}
         </RowBox>
         <Row>
@@ -279,13 +277,13 @@ const TierImage = styled.object`
 const Row = styled.div`
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   gap: 9px;
 `;
 
 const RowBox = styled(Row)`
-  gap: 18px;
+  /* gap: 18px; */
 `;
 
 const Position = styled.div`
