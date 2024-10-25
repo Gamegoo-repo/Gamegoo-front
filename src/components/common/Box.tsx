@@ -55,7 +55,7 @@ const StyledBox = styled.div<{ $shape: ShapeType; $profiletype?: profileType }>`
     props.$profiletype === "matching" &&
     css`
       width: 100%;
-      padding: 6px 0;
+      padding: 6px 21px;
       ${(props) => props.theme.fonts.semiBold14}
     `}
 `;

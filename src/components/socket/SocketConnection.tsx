@@ -23,8 +23,11 @@ const SocketConnection: React.FC = () => {
       console.error("소켓 끊김");
     };
 
-    const handleJwtExpiredError = async (data: any) => {
-      const { eventName, eventData } = data;
+    const handleJwtExpiredError = async (res: any) => {
+      console.log('res',res)
+
+      console.log('res.data',res.data);
+      const { eventName, eventData } = res.data;
       try {
         const currentToken = getAccessToken();
         // 토큰이 없을 경우 토큰 재발급
