@@ -35,7 +35,7 @@ const Layout = () => {
     const [favoriteFriends, setFavoriteFriends] = useState<FriendListInterface[]>([]);
     const [isSearching, setIsSearching] = useState(false);
     const tabs = ['친구 목록', '대화방'];
-    const [isMoreBoxOpen, setIsMoreBoxOpen] = useState<number | null>(null); // MoreBox 열림 상태
+    const [isMoreBoxOpen, setIsMoreBoxOpen] = useState<number | null>(null);
     const [isUuid, setIsUuid] = useState("");
     const [selectedChatroom, setSelectedChatroom] = useState<ChatroomList | null>(null);
     const [checkedReportItems, setCheckedReportItems] = useState<number[]>([]);

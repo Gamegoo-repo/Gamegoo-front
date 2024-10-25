@@ -45,6 +45,7 @@ const ChatRoomList = (props: ChatRoomListProps) => {
         setIsLoading(true);
         try {
             const data = await getChatrooms(cursor);
+            
             setChatrooms(data.result.chatroomViewDTOList);
             setHasNext(data.result.has_next);
             setCursor(data.result.next_cursor);
@@ -58,8 +59,9 @@ const ChatRoomList = (props: ChatRoomListProps) => {
     };
 
     useEffect(() => {
+        console.log('fff')
         handleFetchChatrooms();
-    }, [isModalType, reloadChatrooms, activeTab, mannerSystemMessage])
+    }, [isModalType, reloadChatrooms, activeTab, mannerSystemMessage, newMessage])
 
     /* 대화 목록 페이지 - 스크롤이 끝에 도달하면 다음 페이지 가져오기 */
     const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {

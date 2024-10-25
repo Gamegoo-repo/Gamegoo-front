@@ -24,10 +24,9 @@ const SocketConnection: React.FC = () => {
     };
 
     const handleJwtExpiredError = async (res: any) => {
-      console.log('res',res)
-
-      console.log('res.data',res.data);
       const { eventName, eventData } = res.data;
+      console.log('evetName',eventName);
+      console.log('eventData',eventData)
       try {
         const currentToken = getAccessToken();
         // 토큰이 없을 경우 토큰 재발급
