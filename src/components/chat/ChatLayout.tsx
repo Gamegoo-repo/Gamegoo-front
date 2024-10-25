@@ -24,6 +24,7 @@ import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
 import { REPORT_REASON } from "@/data/report";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import { cancelFriendReq, deleteFriend, reqFriend } from "@/api/friends";
+import { notify } from "@/hooks/notify";
 
 interface System {
     flag: number;
@@ -193,6 +194,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
 
         try {
             await postMannerValue(params)
+            await notify({ text: "매너 평가가 완료되었습니다", icon: '👌🏼', type: 'success' });
             await handleModalClose();
             setIsEditMode(false);
         } catch (error) {
@@ -212,6 +214,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
 
         try {
             await postBadMannerValue(params)
+            await notify({ text: "비매너 평가가 완료되었습니다", icon: '👌🏼', type: 'success' });
             await handleModalClose();
             setIsEditMode(false);
         } catch (error) {
@@ -228,8 +231,10 @@ const ChatLayout = (props: ChatLayoutProps) => {
         try {
             if (type === 'manner' && isMannerValue && isMannerValue.mannerId !== null) {
                 await editManners(isMannerValue.mannerId, params);
+                await notify({ text: "매너 평가 수정이 완료되었습니다", icon: '👌🏼', type: 'success' });
             } else if (type === 'badManner' && isBadMannerValue && isBadMannerValue.mannerId !== null) {
                 await editManners(isBadMannerValue.mannerId, params);
+                await notify({ text: "비매너 평가 수정이 완료되었습니다", icon: '👌🏼', type: 'success' });
             }
             await handleModalClose();
             setIsEditMode(false);
