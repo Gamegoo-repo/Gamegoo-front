@@ -377,11 +377,6 @@ const Profile: React.FC<Profile> = ({
     }
   };
 
-  // useEffect(() => {
-  //   alert("변경");
-  //   renderFriendsButton();
-  // }, [friendState.friend, friendState.friendRequestMemberId]);
-
   // 더보기 버튼 메뉴
   const MoreBoxMenuItems: MoreBoxMenuItems[] = [
     { text: "신고하기", onClick: handleReport },
@@ -479,13 +474,17 @@ const Profile: React.FC<Profile> = ({
             {profileType === "other" && (
               <More>
                 <Admit>{renderFriendsButton()}</Admit>
-
                 {/* 더보기 버튼 */}
                 {memberId !== myId && (
                   <MoreDiv>
                     <Report onClick={handleMoreBoxOpen} />
                     {isMoreBoxOpen && (
-                      <MoreBox items={MoreBoxMenuItems} top={15} left={45} />
+                      <MoreBox
+                        items={MoreBoxMenuItems}
+                        top={15}
+                        left={45}
+                        onClose={handleMoreBoxOpen}
+                      />
                     )}
                   </MoreDiv>
                 )}
