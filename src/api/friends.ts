@@ -74,7 +74,7 @@ export const cancelFriendReq = async (memberId: number) => {
 }
 
 /* 친구 요청 수락 */
-export const acceptFreindReq = async (memberId: number) => {
+export const acceptFriendReq = async (memberId: number) => {
     try {
         const response = await AuthAxios.patch(`/v1/friends/request/${memberId}/accept`);
         return response.data;
@@ -84,7 +84,7 @@ export const acceptFreindReq = async (memberId: number) => {
 };
 
 /* 친구 요청 거절 */
-export const rejectFreindReq = async (memberId: number) => {
+export const rejectFriendReq = async (memberId: number) => {
     try {
         const response = await AuthAxios.patch(`/v1/friends/request/${memberId}/reject`);
         return response.data;

@@ -21,10 +21,10 @@ import { PositionState } from "../crBoard/PositionBox";
 import { putPosition, putProfileImg } from "@/api/user";
 import { setAbbrevTier, setPositionImg } from "@/utils/custom";
 import {
-  acceptFreindReq,
+  acceptFriendReq,
   cancelFriendReq,
   deleteFriend,
-  rejectFreindReq,
+  rejectFriendReq,
   reqFriend,
 } from "@/api/friends";
 import { useParams } from "next/navigation";
@@ -275,7 +275,7 @@ const Profile: React.FC<Profile> = ({
           });
           break;
         case "accept":
-          await acceptFreindReq(memberId);
+          await acceptFriendReq(memberId);
           updateFriendState?.({
             friend: true,
             friendRequestMemberId: memberId,
@@ -283,7 +283,7 @@ const Profile: React.FC<Profile> = ({
           });
           break;
         case "reject":
-          await rejectFreindReq(memberId);
+          await rejectFriendReq(memberId);
           updateFriendState?.({
             friend: false,
             friendRequestMemberId: null,
