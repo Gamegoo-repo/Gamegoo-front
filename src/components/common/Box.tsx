@@ -52,7 +52,7 @@ const StyledBox = styled.div<{ $shape: ShapeType; $profiletype?: profileType }>`
     `}
 
 ${(props) =>
-    props.$profiletype === "square" &&
+    (props.$profiletype === "square" || props.$profiletype === "none") &&
     css`
       height: 34px;
       padding: 6px 20px;

@@ -406,7 +406,7 @@ const Profile: React.FC<Profile> = ({
 
   return (
     <Container className={profileType}>
-      <Row>
+      <Row $profileType={profileType}>
         <ImageContainer>
           <ProfileImgWrapper $bgColor={getProfileBgColor(selectedImageIndex)}>
             <PersonImage
@@ -671,12 +671,18 @@ const Container = styled.div`
   }
 `;
 
-const Row = styled.div`
+const Row = styled.div<{ $profileType: string }>`
   width: 100%;
+  height: 186px;
   display: flex;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: center;
   gap: 38px;
+  ${({ $profileType }) =>
+    $profileType === "other" &&
+    css`
+      margin-bottom: 20px;
+    `}
 `;
 
 const FriendRow = styled.div`
@@ -687,11 +693,16 @@ const FriendRow = styled.div`
   gap: 17px;
 `;
 
-const UnderRow = styled(Row)`
+const UnderRow = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
   gap: 54px;
 `;
 
 const ImageContainer = styled.div`
+  height: 186px;
   position: relative;
 `;
 
