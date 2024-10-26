@@ -72,7 +72,7 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
           </ProfileImgWrapper>
           {opponent && (
             <>
-              <Level onClick={handleMannerLevel}>LV. 5</Level>
+              <Level onClick={handleMannerLevel}>LV. {user.mannerLevel}</Level>
               {mannerPopup && (
                 <MannerLevelBox
                   memberId={0}
