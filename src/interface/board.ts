@@ -56,7 +56,6 @@ export interface MemberPost {
     wantPosition?: number;
     recentGameCount: number;
     winRate: number;
-    // gameStyles: gameStyleResponseDTOList[] | number[];
     gameStyles: number[];
     contents: string;
     rank: number;

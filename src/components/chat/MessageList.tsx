@@ -613,7 +613,7 @@ const ErrorBox = styled.div`
   ${(props) => props.theme.fonts.regular14};
   background: ${theme.colors.white};
   color: rgba(45, 45, 45, 1);
-  box-shadow: 0px 0px 25.3px 0px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 25.3px 0 rgba(0, 0, 0, 0.15);
   border-radius: 10px;
   white-space: nowrap;
 `;

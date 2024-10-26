@@ -27,6 +27,7 @@ import Checkbox from "../common/Checkbox";
 import { REPORT_REASON } from "@/data/report";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { AxiosError } from "axios";
 import {
   setCloseModal,
   setCloseReadingModal,
@@ -78,12 +79,36 @@ const ReadBoard = (props: ReadBoardProps) => {
   });
   const [isBlockBoxOpen, setIsBlockBoxOpen] = useState(false);
   const [isBlockConfirmOpen, setIsBlockConfrimOpen] = useState(false);
+  const [isDeletedPost, setIsDeletedPost] = useState('');
 
   const isModalType = useSelector((state: RootState) => state.modal.modalType);
   const isUser = useSelector((state: RootState) => state.user);
   const isErrorMessage = useSelector(
     (state: RootState) => state.chat.errorMessage
   );
+
+  /* 로그아웃 시, 비회원 접근 시 알럿 props 설정 함수 */
+  const logoutMessage = "로그아웃 되었습니다. 다시 로그인 해주세요.";
+  const loginRequiredMessage = "로그인이 필요한 서비스입니다.";
+  const deletedMessage = "해당 글은 삭제된 글입니다.";
+
+  const showAlertWithContent = (
+    icon: string,
+    content: string,
+    handleAlertClose: () => void,
+    btnText: string
+  ) => {
+    setAlertProps({
+      icon: icon,
+      width: 68,
+      height: 58,
+      content: content,
+      alt: "경고",
+      onClose: handleAlertClose,
+      buttonText: btnText,
+    });
+    setShowAlert(true);
+  };
 
   /* 게시글 api */
   const getPostData = async () => {
@@ -100,7 +125,20 @@ const ReadBoard = (props: ReadBoardProps) => {
         setIsPost(nonMember.result);
       }
     } catch (error) {
-      console.error(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      if (axiosError?.response?.data?.message === '해당 글은 삭제된 글입니다.') {
+        return showAlertWithContent(
+          "trash",
+          deletedMessage,
+          () => {
+            setShowAlert(false);
+            dispatch(setCloseReadingModal());
+          },
+          "확인"
+        );
+      } else {
+        console.error(error);
+      }
     } finally {
       setLoading(false);
     }
@@ -134,32 +172,12 @@ const ReadBoard = (props: ReadBoardProps) => {
     };
   }, []);
 
-  /* 로그아웃 시, 비회원 접근 시 알럿 props 설정 함수 */
-  const logoutMessage = "로그아웃 되었습니다. 다시 로그인 해주세요.";
-  const loginRequiredMessage = "로그인이 필요한 서비스입니다.";
-
-  const showAlertWithContent = (
-    content: string,
-    handleAlertClose: () => void,
-    btnText: string
-  ) => {
-    setAlertProps({
-      icon: "exclamation",
-      width: 68,
-      height: 58,
-      content: content,
-      alt: "경고",
-      onClose: handleAlertClose,
-      buttonText: btnText,
-    });
-    setShowAlert(true);
-  };
-
   /* 신고하기 모달 오픈 */
   const handleReportModal = () => {
     // 신고하기 버튼 클릭 시점 토큰 만료
     if (!isUser.gameName) {
       return showAlertWithContent(
+        "exclamation",
         logoutMessage,
         () => router.push("/login"),
         "로그인하기"
@@ -174,6 +192,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   const handleReport = async () => {
     if (!isUser.gameName) {
       return showAlertWithContent(
+        "exclamation",
         logoutMessage,
         () => router.push("/login"),
         "로그인하기"
@@ -206,6 +225,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   const handleRunBlock = async () => {
     if (!isUser.id) {
       return showAlertWithContent(
+        "exclamation",
         logoutMessage,
         () => router.push("/login"),
         "로그인하기"
@@ -232,6 +252,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   const handleFriendAdd = async () => {
     if (!isUser.id) {
       return showAlertWithContent(
+        "exclamation",
         logoutMessage,
         () => router.push("/login"),
         "로그인하기"
@@ -256,6 +277,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   const handleCancelFriendReq = async () => {
     if (!isUser.id) {
       return showAlertWithContent(
+        "exclamation",
         logoutMessage,
         () => router.push("/login"),
         "로그인하기"
@@ -280,6 +302,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   const handleFriendDelete = async () => {
     if (!isUser.id) {
       return showAlertWithContent(
+        "exclamation",
         logoutMessage,
         () => router.push("/login"),
         "로그인하기"
@@ -304,6 +327,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   const handleMannerLevelBoxOpen = () => {
     if (!isUser.id) {
       return showAlertWithContent(
+        "exclamation",
         loginRequiredMessage,
         () => setShowAlert(false),
         "확인"
@@ -326,6 +350,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   const handleEdit = async () => {
     if (!isUser.id) {
       return showAlertWithContent(
+        "exclamation",
         logoutMessage,
         () => router.push("/login"),
         "로그인하기"
@@ -346,6 +371,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   const handleDelete = async () => {
     if (!isUser.id) {
       return showAlertWithContent(
+        "exclamation",
         logoutMessage,
         () => router.push("/login"),
         "로그인하기"
@@ -368,6 +394,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   const handleMoreBoxToggle = () => {
     if (!isUser.id) {
       return showAlertWithContent(
+        "exclamation",
         loginRequiredMessage,
         () => setShowAlert(false),
         "확인"
@@ -451,6 +478,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   const handleChatStart = async () => {
     if (!isUser.id) {
       return showAlertWithContent(
+        "exclamation",
         loginRequiredMessage,
         () => setShowAlert(false),
         "확인"
@@ -483,104 +511,110 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   return (
     <>
-      <CRModal type="reading" onClose={() => dispatch(setCloseReadingModal())}>
-        {showAlert && <Alert {...alertProps} />}
-        {isPost && (
-          <>
-            {isMoreBoxOpen && (
-              <MoreBox
-                items={MoreBoxMenuItems}
-                top={67}
-                left={544}
-                onClose={() => setIsMoreBoxOpen(false)}
-              />
-            )}
-            <UpdatedDate>
-              게시일 : {setPostingDateFormatter(isPost.createdAt)}
-            </UpdatedDate>
-            <UserSection>
-              <UserLeft>
-                <ProfileImage image={isPost.profileImage} />
-                <UserNManner>
-                  <User
-                    account={isPost.gameName}
-                    tag={isPost.tag}
-                    tier={isPost.tier}
-                    rank={isPost.rank}
-                  />
-                  <MannerLevelWrapper>
-                    <MannerLevel
-                      forNoData={isPost.tier}
-                      level={isPost.mannerLevel}
-                      onClick={handleMannerLevelBoxOpen}
-                      position="top"
+      <CRModal
+        type="reading"
+        hideContent={showAlert}
+        onClose={() => dispatch(setCloseReadingModal())}>
+        {showAlert ? (
+          <Alert {...alertProps} />
+        ) : (
+          isPost && (
+            <>
+              {isMoreBoxOpen && (
+                <MoreBox
+                  items={MoreBoxMenuItems}
+                  top={67}
+                  left={544}
+                  onClose={() => setIsMoreBoxOpen(false)}
+                />
+              )}
+              <UpdatedDate>
+                게시일 : {setPostingDateFormatter(isPost.createdAt)}
+              </UpdatedDate>
+              <UserSection>
+                <UserLeft>
+                  <ProfileImage image={isPost.profileImage} />
+                  <UserNManner>
+                    <User
+                      account={isPost.gameName}
+                      tag={isPost.tag}
+                      tier={isPost.tier}
+                      rank={isPost.rank}
                     />
-                    {isMannerLevelBoxOpen && (
-                      <div ref={mannerLevelBoxRef}>
-                        <MannerLevelBox
-                          memberId={isPost.memberId}
-                          level={isPost.mannerLevel}
-                          top="69%"
-                          right="-400%"
-                        />
-                      </div>
-                    )}
-                  </MannerLevelWrapper>
-                </UserNManner>
-              </UserLeft>
-              <UserRight>
-                <Mic status={isPost.mike} />
-                <MoreBoxButton onClick={handleMoreBoxToggle} />
-              </UserRight>
-            </UserSection>
-            <ChampionNQueueSection>
-              <Champion
-                title={true}
-                size={14}
-                list={isPost.championResponseDTOList.map(
-                  (champion) => champion.championId
-                )}
-              />
-              <QueueType value={isPost.gameMode} />
-            </ChampionNQueueSection>
-            {gameMode !== 4 && (
-              <PositionSection>
-                <Title>포지션</Title>
-                <PositionBox
-                  status="reading"
-                  main={isPost.mainPosition}
-                  sub={isPost.subPosition}
-                  want={isPost.wantPosition}
+                    <MannerLevelWrapper>
+                      <MannerLevel
+                        forNoData={isPost.tier}
+                        level={isPost.mannerLevel}
+                        onClick={handleMannerLevelBoxOpen}
+                        position="top"
+                      />
+                      {isMannerLevelBoxOpen && (
+                        <div ref={mannerLevelBoxRef}>
+                          <MannerLevelBox
+                            memberId={isPost.memberId}
+                            level={isPost.mannerLevel}
+                            top="69%"
+                            right="-400%"
+                          />
+                        </div>
+                      )}
+                    </MannerLevelWrapper>
+                  </UserNManner>
+                </UserLeft>
+                <UserRight>
+                  <Mic status={isPost.mike} />
+                  <MoreBoxButton onClick={handleMoreBoxToggle} />
+                </UserRight>
+              </UserSection>
+              <ChampionNQueueSection>
+                <Champion
+                  title={true}
+                  size={14}
+                  list={isPost.championResponseDTOList.map(
+                    (champion) => champion.championId
+                  )}
                 />
-              </PositionSection>
-            )}
-            <WinningRateSection $gameType={gameMode}>
-              <WinningRate
-                completed={isPost.winRate}
-                recentGameCount={isPost.recentGameCount}
-              />
-            </WinningRateSection>
-            <StyleSection $gameType={gameMode}>
-              <Title>게임 스타일</Title>
-              <GameStyle styles={isPost.gameStyles} />
-            </StyleSection>
-            <MemoSection $gameType={gameMode}>
-              <Title>메모</Title>
-              <Memo>
-                <MemoData>{isPost.contents}</MemoData>
-              </Memo>
-            </MemoSection>
-            {isUser.gameName !== isPost.gameName && (
-              <ButtonContent $gameType={gameMode}>
-                <Button
-                  type="submit"
-                  buttonType="primary"
-                  text="말 걸어보기"
-                  onClick={handleChatStart}
+                <QueueType value={isPost.gameMode} />
+              </ChampionNQueueSection>
+              {gameMode !== 4 && (
+                <PositionSection>
+                  <Title>포지션</Title>
+                  <PositionBox
+                    status="reading"
+                    main={isPost.mainPosition}
+                    sub={isPost.subPosition}
+                    want={isPost.wantPosition}
+                  />
+                </PositionSection>
+              )}
+              <WinningRateSection $gameType={gameMode}>
+                <WinningRate
+                  completed={isPost.winRate}
+                  recentGameCount={isPost.recentGameCount}
                 />
-              </ButtonContent>
-            )}
-          </>
+              </WinningRateSection>
+              <StyleSection $gameType={gameMode}>
+                <Title>게임 스타일</Title>
+                <GameStyle styles={isPost.gameStyles} />
+              </StyleSection>
+              <MemoSection $gameType={gameMode}>
+                <Title>메모</Title>
+                <Memo>
+                  <MemoData>{isPost.contents}</MemoData>
+                </Memo>
+              </MemoSection>
+              {isUser.gameName !== isPost.gameName && (
+                <ButtonContent $gameType={gameMode}>
+                  <Button
+                    type="submit"
+                    buttonType="primary"
+                    text="말 걸어보기"
+                    onClick={handleChatStart}
+                  />
+                </ButtonContent>
+              )}
+            </>
+          )
         )}
       </CRModal>
 
