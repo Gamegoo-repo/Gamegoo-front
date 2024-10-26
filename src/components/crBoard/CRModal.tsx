@@ -73,9 +73,9 @@ const Wrapper = styled.div<{ $type: string }>`
   max-width: 555px;
   width: 100%;
   position: relative;
-  min-height: ${({ $type }) => ($type === "posting" ? "837px" : "880px")};
-  max-height:  ${({ $type }) => ($type === "posting" ? "837px" : "880px")};
-  height: 100%;
+  min-height: ${({ $type }) => ($type === "posting" ? "837px" : "1000px")};
+  max-height: ${({ $type }) => ($type === "posting" ? "837px" : "1000px")};
+  height: auto;
   margin: 50px;
   padding: 0 20px;
 
