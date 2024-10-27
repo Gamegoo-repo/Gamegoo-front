@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import styled, { css } from "styled-components";
@@ -7,7 +7,7 @@ import { POSITIONS } from "@/data/profile";
 import Champion from "../readBoard/Champion";
 import Toggle from "../common/Toggle";
 import Button from "../common/Button";
-import Report from "../readBoard/MoreBoxButton";
+import MoreBoxButton from "../readBoard/MoreBoxButton";
 import FormModal from "../common/FormModal";
 import Checkbox from "../common/Checkbox";
 import { REPORT_REASON } from "@/data/report";
@@ -57,6 +57,7 @@ const Profile: React.FC<Profile> = ({
   const { id } = useParams();
   const memberId = Number(id);
   const myId = useSelector((state: RootState) => state.user.id);
+  const moreBoxRef = useRef<HTMLDivElement | null>(null);
 
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
   const [isReportBoxOpen, setIsReportBoxOpen] = useState(false);
@@ -139,10 +140,6 @@ const Profile: React.FC<Profile> = ({
   const handleMike = () => {
     setIsMike(!isMike);
     dispatch(updateMike(isMike));
-  };
-
-  const handleMoreBoxOpen = () => {
-    setIsMoreBoxOpen((prevState) => !prevState);
   };
 
   const handleReport = () => {
@@ -399,6 +396,32 @@ const Profile: React.FC<Profile> = ({
     setCheckedItems([]);
   };
 
+  // 더보기 외부 클릭
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        moreBoxRef.current &&
+        !moreBoxRef.current.contains(event.target as Node)
+      ) {
+        setIsMoreBoxOpen(false);
+      }
+    };
+
+    if (isMoreBoxOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isMoreBoxOpen]);
+
+  const handleMoreBoxOpen = () => {
+    setIsMoreBoxOpen((prevState) => !prevState);
+  };
+
   return (
     <Container className={profileType}>
       <Row $profileType={profileType}>
@@ -476,8 +499,8 @@ const Profile: React.FC<Profile> = ({
                 <Admit>{renderFriendsButton()}</Admit>
                 {/* 더보기 버튼 */}
                 {memberId !== myId && (
-                  <MoreDiv>
-                    <Report onClick={handleMoreBoxOpen} />
+                  <MoreDiv ref={moreBoxRef}>
+                    <MoreBoxButton onClick={handleMoreBoxOpen} />
                     {isMoreBoxOpen && (
                       <MoreBox
                         items={MoreBoxMenuItems}

@@ -26,6 +26,7 @@ import Checkbox from "../common/Checkbox";
 import Input from "../common/Input";
 import { REPORT_REASON } from "@/data/report";
 import { blockMember, reportMember } from "@/api/member";
+import { notify } from "@/hooks/notify";
 
 const Layout = () => {
     const dispatch = useDispatch();
@@ -35,7 +36,7 @@ const Layout = () => {
     const [favoriteFriends, setFavoriteFriends] = useState<FriendListInterface[]>([]);
     const [isSearching, setIsSearching] = useState(false);
     const tabs = ['친구 목록', '대화방'];
-    const [isMoreBoxOpen, setIsMoreBoxOpen] = useState<number | null>(null); // MoreBox 열림 상태
+    const [isMoreBoxOpen, setIsMoreBoxOpen] = useState<number | null>(null);
     const [isUuid, setIsUuid] = useState("");
     const [selectedChatroom, setSelectedChatroom] = useState<ChatroomList | null>(null);
     const [checkedReportItems, setCheckedReportItems] = useState<number[]>([]);
@@ -291,6 +292,7 @@ const Layout = () => {
 
         try {
             await postMannerValue(params)
+            await notify({ text: "매너 평가가 완료되었습니다", icon: '👌🏼', type: 'success' });
             await handleModalClose();
             setIsEditMode(false);
         } catch (error) {
@@ -310,6 +312,7 @@ const Layout = () => {
 
         try {
             await postBadMannerValue(params)
+            await notify({ text: "비매너 평가가 완료되었습니다", icon: '👌🏼', type: 'success' });
             await handleModalClose();
             setIsEditMode(false);
         } catch (error) {
@@ -340,8 +343,10 @@ const Layout = () => {
         try {
             if (type === 'manner' && isMannerValue && isMannerValue.mannerId !== null) {
                 await editManners(isMannerValue.mannerId, params);
+                await notify({ text: "매너 평가 수정이 완료되었습니다", icon: '👌🏼', type: 'success' });
             } else if (type === 'badManner' && isBadMannerValue && isBadMannerValue.mannerId !== null) {
                 await editManners(isBadMannerValue.mannerId, params);
+                await notify({ text: "비매너 평가 수정이 완료되었습니다", icon: '👌🏼', type: 'success' });
             }
             await handleModalClose();
             setIsEditMode(false);

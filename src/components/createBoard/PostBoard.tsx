@@ -91,15 +91,14 @@ const PostBoard = (props: PostBoardProps) => {
     }
   };
 
-  useEffect(() => {
-    fetchProfile();
-  }, []);
 
-  useEffect(() => {
-    return () => {
-      dispatch(setClosePostingModal());
-    }
-  }, [])
+useEffect(() => {
+  fetchProfile();
+
+  return () => {
+    dispatch(setClosePostingModal());
+  };
+}, []);
 
   /* 유저가 게시판에 올린 글에 대한 데이터 */
   useEffect(() => {
