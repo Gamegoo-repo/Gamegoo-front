@@ -79,10 +79,10 @@ const ReadBoard = (props: ReadBoardProps) => {
   });
   const [isBlockBoxOpen, setIsBlockBoxOpen] = useState(false);
   const [isBlockConfirmOpen, setIsBlockConfrimOpen] = useState(false);
-  const [isDeletedPost, setIsDeletedPost] = useState('');
 
   const isModalType = useSelector((state: RootState) => state.modal.modalType);
   const isUser = useSelector((state: RootState) => state.user);
+  const isPostModalOpen = useSelector((state: RootState) => state.modal.postingModal);
   const isErrorMessage = useSelector(
     (state: RootState) => state.chat.errorMessage
   );
@@ -346,6 +346,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     );
   };
 
+
   /* 게시글 수정 */
   const handleEdit = async () => {
     if (!isUser.id) {
@@ -357,14 +358,15 @@ const ReadBoard = (props: ReadBoardProps) => {
       );
     }
 
-    if (isUser?.gameName !== isPost?.gameName) return;
+    if (isUser?.id !== isPost?.memberId) return;
 
     if (isPost) {
-      dispatch(setCurrentPost({ currentPost: isPost, currentPostId: postId }));
-      dispatch(setOpenPostingModal());
-      dispatch(setCloseReadingModal());
+      await dispatch(setCurrentPost({ currentPost: isPost, currentPostId: postId }));
+      await dispatch(setOpenPostingModal())
+      await dispatch(setCloseReadingModal());
       dispatch(setPostStatus(""));
     }
+    console.log("isPostModalOpen 상태:", isPostModalOpen);
   };
 
   /* 게시글 삭제 */
@@ -378,7 +380,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       );
     }
 
-    if (isUser?.gameName !== isPost?.gameName) return;
+    if (isUser?.id !== isPost?.memberId) return;
 
     try {
       await deletePost(postId);
@@ -412,7 +414,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   /* 더보기 버튼 메뉴 */
   const MoreBoxMenuItems: MoreBoxMenuItems[] = [];
 
-  if (isUser?.gameName === isPost?.gameName) {
+  if (isUser?.id === isPost?.memberId) {
     /* 내가 작성한 글 */
     MoreBoxMenuItems.push(
       { text: "수정", onClick: handleEdit },

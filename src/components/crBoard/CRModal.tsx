@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 
 interface BoardModalProps {
   type: "posting" | "reading";
-  hideContent: boolean;
+  hideContent?: boolean;
   onClose: () => void;
   children: string | React.ReactNode;
 }
@@ -40,7 +40,7 @@ const CRModal = (props: BoardModalProps) => {
 
 export default CRModal;
 
-const Overlay = styled.div<{ $hideContent: boolean }>`
+const Overlay = styled.div<{ $hideContent: boolean | undefined }>`
   display: flex;
   justify-content: center;
   position: fixed;
@@ -67,7 +67,7 @@ const Overlay = styled.div<{ $hideContent: boolean }>`
   }
 `;
 
-const Wrapper = styled.div<{ $type: string; $hideContent: boolean }>`
+const Wrapper = styled.div<{ $type: string; $hideContent: boolean | undefined }>`
   border-radius: 20px;
   max-width: 555px;
   width: 100%;

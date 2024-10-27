@@ -58,7 +58,24 @@ const useChatMessage = () => {
 
         const handleMannerSystemMessage = (res: any) => {
             const mannerSystemMessage = res.data;
+            const chatroomUuid = res.data.chatroomUuid;
+            const newChatTimestamp = res.data.timestamp;
+
             setMannerSystemMessage(mannerSystemMessage);
+
+            /* 현재 보고 있는 채팅방 읽음 처리 */
+            if (currentChatUuid && chatroomUuid === currentChatUuid) {
+                markChatAsRead(currentChatUuid, newChatTimestamp);
+            }
+
+            /* 안 읽은 채팅방 처리 */
+            if (currentChatUuid !== chatroomUuid && !unreadChatUuids.includes(chatroomUuid)) {
+                const updatedUnreadUuids = [...unreadChatUuids, chatroomUuid];
+                // 실시간 안읽은 채팅방 수 가져오기 위함
+                dispatch(setUnreadUuid(updatedUnreadUuids));
+                // 새로고침시 채팅방 수 가져오기 위함
+                sessionStorage.setItem('unreadChatUuids', JSON.stringify(updatedUnreadUuids));
+            }
         };
 
         // 다른 사람이 보낸 메시지
