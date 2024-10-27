@@ -2,7 +2,7 @@ import toast from 'react-hot-toast';
 
 export type ToastProps = {
     text: string;
-    icon: string;
+    icon?: string;
     type?: 'success' | 'error';
   };
   

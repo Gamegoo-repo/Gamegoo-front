@@ -52,8 +52,9 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
           {user.gameName}
           <Rank>
             <TierImage
-              data={`/assets/images/tier/${user.tier !== "null" ? toLowerCaseString(user.tier) : "unrank"
-                }.svg`}
+              data={`/assets/images/tier/${
+                user.tier !== "null" ? toLowerCaseString(user.tier) : "unrank"
+              }.svg`}
               width={43}
               height={43}
             />
@@ -71,7 +72,7 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
           </ProfileImgWrapper>
           {opponent && (
             <>
-              <Level onClick={handleMannerLevel}>LV. 5</Level>
+              <Level onClick={handleMannerLevel}>LV. {user.mannerLevel}</Level>
               {mannerPopup && (
                 <MannerLevelBox
                   memberId={0}
@@ -90,9 +91,13 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
             user.gameStyleList.length > 0 &&
             user.gameStyleList
               .filter((item) => item.trim() !== "")
-              .slice(0, 2)
               .map((item, index) => (
-                <Box key={index} shape="round" text={item} />
+                <Box
+                  key={index}
+                  shape="round"
+                  profileType="square"
+                  text={item}
+                />
               ))}
         </RowBox>
         <Row>
@@ -139,7 +144,7 @@ const Container = styled.div<{ $opponent: boolean }>`
   border-radius: 30px;
   border: 1px solid
     ${({ $opponent }) =>
-    $opponent ? theme.colors.purple100 : theme.colors.gray400};
+      $opponent ? theme.colors.purple100 : theme.colors.gray400};
   background: ${theme.colors.white};
 
   display: flex;

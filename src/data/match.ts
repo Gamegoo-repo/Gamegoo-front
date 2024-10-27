@@ -1,6 +1,6 @@
 export const MATCH_PAGE_DATA = [
-    { id: 1, pathname: 'match', image: '/assets/images/card/matching.svg', title: '바로 매칭하기', width: '580px', height: '285px' },
-    { id: 2, pathname: 'board', image: '/assets/images/card/board.svg', title: '매칭 게시판에서 찾기', width: '580px', height: '285px' },
+    { id: 1, pathname: 'match', image: '/assets/images/card/matching.png', title: '바로 매칭하기', width: '580px', height: '285px' },
+    { id: 2, pathname: 'board', image: '/assets/images/card/board.png', title: '매칭 게시판에서 찾기', width: '580px', height: '285px' },
 ];
 
 export const MATCH_TYPE_PAGE_DATA = [
