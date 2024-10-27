@@ -75,7 +75,7 @@ const Main = styled.main`
   width: 100%;
   gap: 27px;
   margin-top: 185px;
-  margin-bottom: 37px;
+  margin-bottom: 65px;
 `;
 
 const BoxWrapper = styled.div`

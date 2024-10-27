@@ -211,7 +211,7 @@ const Main = styled.main`
   width: 100%;
   gap: 14px;
   margin-top: 40px;
-  margin-bottom: 37px;
+  margin-bottom: 65px;
 `;
 
 const Footer = styled.footer`

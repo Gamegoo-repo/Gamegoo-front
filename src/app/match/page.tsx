@@ -64,6 +64,7 @@ const Main = styled.main`
   width: 100%;
   gap: 59px;
   margin-top: 72px;
+  margin-bottom: 150px;
 
   @media screen and (max-width: 1300px) {
     flex-direction: column;

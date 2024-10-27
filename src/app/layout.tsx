@@ -87,6 +87,11 @@ export default function RootLayout({
       <head>
         <title>롤 실시간 듀오 매칭 - GAMEGOO</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+          name="description"
+          content="리그 오브 레전드 유저를 위한 실시간 듀오 매칭 서비스입니다.
+듀오 찾기 게시판, 실시간 채팅, 친구 추가 기능을 통해 원하는 게임 친구를 바로 찾아보세요."
+        />
       </head>
       <body>
         <HelmetProvider>

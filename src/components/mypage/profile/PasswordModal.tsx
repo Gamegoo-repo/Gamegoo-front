@@ -6,6 +6,7 @@ import Input from "@/components/common/Input";
 import FormModal from "@/components/common/FormModal";
 import Button from "@/components/common/Button";
 import { checkPassword, resetJwtPassword } from "@/api/password";
+import { notify } from "@/hooks/notify";
 
 interface PasswordModalProps {
   onClose: () => void;
@@ -42,6 +43,10 @@ const PasswordModal = (props: PasswordModalProps) => {
 
       if (validation) {
         await resetJwtPassword(newPassword);
+        notify({
+          text: "비밀번호가 성공적으로 변경되었습니다.",
+          type: "success",
+        });
         onClose();
       } else {
         console.error("신규 비밀번호 확인 실패");

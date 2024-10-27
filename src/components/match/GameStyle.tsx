@@ -128,8 +128,20 @@ const GameStyle = (props: GameStyleProps) => {
               >
                 <Image
                   src="/assets/icons/plus.svg"
-                  width={profileType === "mini" ? 11 : 21}
-                  height={profileType === "mini" ? 11 : 21}
+                  width={
+                    profileType === "mini"
+                      ? 11
+                      : profileType === "none"
+                      ? 14
+                      : 21
+                  }
+                  height={
+                    profileType === "mini"
+                      ? 11
+                      : profileType === "none"
+                      ? 14
+                      : 21
+                  }
                   alt="추가"
                 />
               </AddGameStyle>
@@ -208,6 +220,14 @@ const AddGameStyle = styled.button<{ $profileType: profileType }>`
   border-radius: 25px;
   background: ${theme.colors.purple300};
   outline: none;
+
+  ${({ $profileType }) =>
+    $profileType === "none" &&
+    css`
+      width: 40px;
+      height: 34px;
+      padding: 10px 13px;
+    `}
 
   ${({ $profileType }) =>
     $profileType === "mini" &&

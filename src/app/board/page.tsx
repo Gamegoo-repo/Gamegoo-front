@@ -1,7 +1,7 @@
 "use client";
 
 import styled from "styled-components";
-import Image from "next/image";
+import Image, { ImageProps } from "next/image";
 import { theme } from "@/styles/theme";
 import { useEffect, useRef, useState } from "react";
 import { BOARD_TITLE, GAME_MODE, MIC, TIER } from "@/data/board";
@@ -26,6 +26,7 @@ import { useRouter } from "next/navigation";
 import { clearCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { mikeBooleanToId, tierStringToId } from "@/utils/custom";
 import { resetBoardFilters } from "@/redux/slices/boardSlice";
+import { rotate } from "@/styles/animation";
 
 const ITEMS_PER_PAGE = 20;
 const BUTTONS_PER_PAGE = 5;
@@ -50,6 +51,7 @@ const BoardPage = () => {
   const gameModeRef = useRef<HTMLDivElement>(null);
   const tierRef = useRef<HTMLDivElement>(null);
   const micRef = useRef<HTMLDivElement>(null);
+  const [isRotating, setIsRotating] = useState(false);
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -270,7 +272,12 @@ const BoardPage = () => {
   };
 
   const handleRefresh = () => {
+    setIsRotating(true);
     setRefresh((prevStatus) => !prevStatus);
+
+    setTimeout(() => {
+      setIsRotating(false);
+    }, 1000);
   };
 
   return (
@@ -303,6 +310,7 @@ const BoardPage = () => {
                 width={30}
                 height={27}
                 alt="새로고침"
+                isRotating={isRotating}
               />
             </FirstRow>
             <SecondRow>
@@ -335,7 +343,7 @@ const BoardPage = () => {
                   <PositionFilter
                     onPositionFilter={handlePositionFilter}
                     isPosition={isPosition}
-                  // isPosition={boardFilters.mainPosition || isPosition}
+                    // isPosition={boardFilters.mainPosition || isPosition}
                   />
                 </PositionBox>
                 <Dropdown
@@ -418,8 +426,13 @@ const Title = styled.p`
   color: #44515c;
 `;
 
-const RefreshImage = styled(Image)`
+interface RefreshImageProps extends ImageProps {
+  isRotating: boolean;
+}
+
+const RefreshImage = styled(Image)<RefreshImageProps>`
   cursor: pointer;
+  animation: ${(props) => (props.isRotating ? rotate : "none")} 1s linear;
 `;
 
 const SecondRow = styled.div`

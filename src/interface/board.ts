@@ -15,8 +15,8 @@ export interface BoardDetail {
     memberId: number;
     profileImage: number;
     gameName: string;
+    mannerLevel: number;
     tag: string;
-    mannerLevel: number
     tier: string;
     rank: number;
     gameMode: number;

@@ -473,7 +473,7 @@ const Waiting = styled.div`
   width: 100%;
   height: 580px;
   border-radius: 30px;
-  background: var(--12, #f7f7f9);
+  background: ${theme.colors.gray500};
   display: flex;
   flex-direction: column;
   align-items: center;

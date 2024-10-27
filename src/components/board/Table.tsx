@@ -77,7 +77,11 @@ const Table = (props: TableProps) => {
   }, [isReadingModal]);
 
   /* 소환사명 복사 */
-  const handleTextClick = async (gameName: string, e: React.MouseEvent, tag: string) => {
+  const handleTextClick = async (
+    gameName: string,
+    tag: string,
+    e: React.MouseEvent
+  ) => {
     e.stopPropagation();
     const copied = `${gameName.replace(/\s+/g, "")}#${tag}`;
     try {
@@ -171,7 +175,9 @@ const Table = (props: TableProps) => {
                     <NameRow>
                       <P>{data.gameName}</P>
                       <CopyButton
-                        onClick={(e) => handleTextClick(data.gameName, e, data.tag)}
+                        onClick={(e) =>
+                          handleTextClick(data.gameName, data.tag, e)
+                        }
                       >
                         복사
                       </CopyButton>
@@ -456,4 +462,3 @@ const Copied = styled.div`
   border-radius: 10px;
   white-space: nowrap;
 `;
-

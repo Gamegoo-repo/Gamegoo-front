@@ -21,10 +21,10 @@ import { PositionState } from "../crBoard/PositionBox";
 import { putPosition, putProfileImg } from "@/api/user";
 import { setAbbrevTier, setPositionImg } from "@/utils/custom";
 import {
-  acceptFreindReq,
+  acceptFriendReq,
   cancelFriendReq,
   deleteFriend,
-  rejectFreindReq,
+  rejectFriendReq,
   reqFriend,
 } from "@/api/friends";
 import { useParams } from "next/navigation";
@@ -272,7 +272,7 @@ const Profile: React.FC<Profile> = ({
           });
           break;
         case "accept":
-          await acceptFreindReq(memberId);
+          await acceptFriendReq(memberId);
           updateFriendState?.({
             friend: true,
             friendRequestMemberId: memberId,
@@ -280,7 +280,7 @@ const Profile: React.FC<Profile> = ({
           });
           break;
         case "reject":
-          await rejectFreindReq(memberId);
+          await rejectFriendReq(memberId);
           updateFriendState?.({
             friend: false,
             friendRequestMemberId: null,
@@ -374,11 +374,6 @@ const Profile: React.FC<Profile> = ({
     }
   };
 
-  // useEffect(() => {
-  //   alert("변경");
-  //   renderFriendsButton();
-  // }, [friendState.friend, friendState.friendRequestMemberId]);
-
   // 더보기 버튼 메뉴
   const MoreBoxMenuItems: MoreBoxMenuItems[] = [
     { text: "신고하기", onClick: handleReport },
@@ -429,7 +424,7 @@ const Profile: React.FC<Profile> = ({
 
   return (
     <Container className={profileType}>
-      <Row>
+      <Row $profileType={profileType}>
         <ImageContainer>
           <ProfileImgWrapper $bgColor={getProfileBgColor(selectedImageIndex)}>
             <PersonImage
@@ -502,13 +497,17 @@ const Profile: React.FC<Profile> = ({
             {profileType === "other" && (
               <More>
                 <Admit>{renderFriendsButton()}</Admit>
-
                 {/* 더보기 버튼 */}
                 {memberId !== myId && (
                   <MoreDiv ref={moreBoxRef}>
                     <MoreBoxButton onClick={handleMoreBoxOpen} />
                     {isMoreBoxOpen && (
-                      <MoreBox items={MoreBoxMenuItems} top={15} left={45} />
+                      <MoreBox
+                        items={MoreBoxMenuItems}
+                        top={15}
+                        left={45}
+                        onClose={handleMoreBoxOpen}
+                      />
                     )}
                   </MoreDiv>
                 )}
@@ -694,12 +693,18 @@ const Container = styled.div`
   }
 `;
 
-const Row = styled.div`
+const Row = styled.div<{ $profileType: string }>`
   width: 100%;
+  height: 186px;
   display: flex;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: center;
   gap: 38px;
+  ${({ $profileType }) =>
+    $profileType === "other" &&
+    css`
+      margin-bottom: 20px;
+    `}
 `;
 
 const FriendRow = styled.div`
@@ -710,11 +715,16 @@ const FriendRow = styled.div`
   gap: 17px;
 `;
 
-const UnderRow = styled(Row)`
+const UnderRow = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
   gap: 54px;
 `;
 
 const ImageContainer = styled.div`
+  height: 186px;
   position: relative;
 `;
 

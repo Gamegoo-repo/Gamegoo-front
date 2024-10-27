@@ -6,6 +6,7 @@ import Jungle from "../../../public/assets/icons/position_jungle_unclicked.svg";
 import Mid from "../../../public/assets/icons/position_mid_unclicked.svg";
 import OndDeal from "../../../public/assets/icons/position_one_deal_unclicked.svg";
 import Supporter from "../../../public/assets/icons/position_supporter_unclicked.svg";
+import React, { useEffect } from "react";
 
 interface PositionComponentProps {
   onClose: () => void;
@@ -15,15 +16,29 @@ interface PositionComponentProps {
 
 const PositionCategory = (props: PositionComponentProps) => {
   const { onClose, onSelect } = props;
+  const boxRef = React.useRef<HTMLDivElement>(null);
 
   const handlePositionCategory = (positionId: number) => {
     onSelect(positionId);
     onClose();
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (boxRef.current && !boxRef.current.contains(event.target as Node)) {
+        onClose();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [onClose]);
+
   return (
     <Wrapper>
-      <Box>
+      <Box ref={boxRef}>
         <AllButton onClick={() => handlePositionCategory(0)}>
           <All />
         </AllButton>
