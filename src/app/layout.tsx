@@ -21,6 +21,24 @@ import {
 } from "@/utils/storage";
 import { notify } from "@/hooks/notify";
 
+export const metadata = {
+  title: "롤 실시간 듀오 매칭 - GAMEGOO",
+  titleTemplate: "%s - 레터링",
+  description:
+    "리그 오브 레전드 유저를 위한 실시간 듀오 매칭 서비스입니다. 듀오 찾기 게시판, 실시간 채팅, 친구 추가 기능을 통해 원하는 게임 친구를 바로 찾아보세요.",
+  icons: {
+    icon: "/icon.png",
+  },
+  openGraph: {
+    site_name: "겜구(Gamegoo)",
+    title: "롤 실시간 듀오 매칭 - GAMEGOO",
+    description:
+      "리그 오브 레전드 유저를 위한 실시간 듀오 매칭 서비스입니다. 듀오 찾기 게시판, 실시간 채팅, 친구 추가 기능을 통해 원하는 게임 친구를 바로 찾아보세요.",
+    url: "https://www.gamegoo.co.kr",
+    type: "website",
+  },
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
