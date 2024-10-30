@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useCallback } from "react";
 import styled from "styled-components";
 import HeaderTitle from "@/components/common/HeaderTitle";
 import SquareProfile from "@/components/match/SquareProfile";
@@ -98,6 +98,61 @@ const Complete = () => {
   //     window.removeEventListener("beforeunload", handleBeforeunload);
   //   };
   // }, []);
+
+  /* 뒤로가기 이벤트 감지 */
+  // useEffect(() => {
+  //   const handleBack = () => {
+  //     alert("뒤로가기");
+  //     window.history.go(-2); // 두 단계 뒤로 이동
+  //     // if (role === "receiver") {
+  //     // } else {
+  //     //   window.history.go(-1); // 한 단계 뒤로 이동
+  //     // }
+  //   };
+
+  //   window.addEventListener("popstate", handleBack);
+
+  //   return () => {
+  //     window.removeEventListener("popstate", handleBack);
+  //   };
+  // }, [router]);
+
+  // useEffect(() => {
+  //   const handleBack = (event: any) => {
+  //     // window.history.go(-2);
+  //     event.preventDefault(); // 기본 뒤로 가기 동작 방지
+  //     router.back(); // 커스텀 동작
+  //     router.back(); // 커스텀 동작
+  //   };
+
+  //   window.addEventListener("popstate", handleBack);
+
+  //   return () => {
+  //     window.removeEventListener("popstate", handleBack);
+  //   };
+  // }, [router]);
+  const isClickedFirst = useRef(false);
+
+  const handlePopState = useCallback(() => {
+    // 1. 뒤로 가기를 클릭한 순간 16라인이 바로 제거된다.
+    history.go(-2); // 현재 경로를 다시 추가
+  }, []);
+
+  // 최초 한 번 실행
+  // useEffect(() => {
+  //   if (!isClickedFirst) {
+  //     history.pushState(null, "", ""); // 처음 렌더링될 때 추가되고 뒤로 가기 클릭 시 제거된다.
+  //     isClickedFirst.current = true;
+  //   }
+  // }, []);
+
+  // 이벤트
+  useEffect(() => {
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [handlePopState]);
 
   useEffect(() => {
     const userString = searchParams.get("user");
@@ -247,6 +302,7 @@ const Complete = () => {
 
   // matching-success 수신 시 타이머 종료 및 채팅방 열기
   const handleChatUuidgetWithTimerClear = (res: any) => {
+    setTimeLeft(0);
     clearAllTimers(); // 모든 타이머 정리
     setIsCompleted("true");
     // dispatch(setComplete(true));
