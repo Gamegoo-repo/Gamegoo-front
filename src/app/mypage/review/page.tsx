@@ -49,7 +49,10 @@ const MyReviewPage = () => {
                 매너 키워드는 하나 당 1점, 비매너 키워드는 -2점으로 계산해요.
               </Gray>
             </Top>
-            <MannerLevelBar recentLevel={myManner?.mannerLevel || 1} />
+            <MannerLevelBar
+              recentLevel={myManner?.mannerLevel || 1}
+              mannerRank={myManner?.mannerRank}
+            />
           </Box>
         </Review>
         <Private>
@@ -165,7 +168,10 @@ const Private = styled.header`
 
 const Box = styled.div`
   width: 100%;
-  height: 177px;
+  height: 195px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   padding: 29px 36px;
   border-radius: 20px;
   background: ${theme.colors.gray500};

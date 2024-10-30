@@ -27,6 +27,7 @@ const UserProfilePage = () => {
       try {
         const response = await getOtherProfile(Number(id));
         setOtherProfile(response.result);
+        console.log(response);
       } catch (error) {
         console.error(error);
       }

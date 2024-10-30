@@ -79,7 +79,7 @@ const BlindProfile = () => {
                   최근 <Span>0</Span>명의 사용자가{` `}
                   탈퇴한 사용자{` `}님에게 긍정적 매너 평가를 남겼어요.
                 </Text>
-                <MannerLevelBar isBlind={true} />
+                <MannerLevelBar recentLevel={0} isBlind={true} />
               </Box>
             </div>
             <div>
