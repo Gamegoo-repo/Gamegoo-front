@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { connectSocket, socket } from '@/socket';
 import { setFriendOffline, setFriendOnline, setMemberId } from '@/redux/slices/chatSlice';

@@ -284,13 +284,13 @@ const TierImage = styled.object`
 const Row = styled.div`
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   gap: 9px;
 `;
 
 const RowBox = styled(Row)`
-  gap: 18px;
+  /* gap: 18px; */
 `;
 
 const Position = styled.div`

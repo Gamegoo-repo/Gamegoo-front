@@ -192,8 +192,8 @@ const Table = (props: TableProps) => {
                         !data.tier
                           ? "/assets/images/tier/unranked.svg"
                           : `/assets/images/tier/${toLowerCaseString(
-                              data.tier
-                            )}.svg`
+                            data.tier
+                          )}.svg`
                       }
                       width={28}
                       height={26}
