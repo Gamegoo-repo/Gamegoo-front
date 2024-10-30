@@ -83,7 +83,7 @@ const UserProfile = ({
                 </Text>
                 <MannerLevelBar
                   recentLevel={manner.mannerLevel}
-                  mannerRank={manner.mannerRank}
+                  mannerRank={profile.mannerRank || null}
                 />
               </Box>
             </div>
