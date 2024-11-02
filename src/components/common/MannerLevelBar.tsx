@@ -31,11 +31,15 @@ const MannerLevelBar = (props: MannerLevelBarProps) => {
           <LevelBox key={level} $isColor={recentLevel === level}>
             {recentLevel === level && (
               <Recent>
-                {mannerRank && (
-                  <Percentage>{`상위 ${
-                    Math.floor(mannerRank) === 0 ? 1 : Math.floor(mannerRank)
-                  }% 의 매너레벨`}</Percentage>
-                )}
+                <Percentage>
+                  {`상위 ${
+                    mannerRank !== null &&
+                    mannerRank !== undefined &&
+                    mannerRank > 0
+                      ? Math.floor(mannerRank)
+                      : 1
+                  }% 의 매너레벨`}
+                </Percentage>
                 <DownIconWrapper level={level - 1}>
                   <ChevronDownIcon />
                 </DownIconWrapper>
