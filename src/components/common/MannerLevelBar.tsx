@@ -33,7 +33,7 @@ const MannerLevelBar = (props: MannerLevelBarProps) => {
               <Recent>
                 {mannerRank && (
                   <Percentage>{`상위 ${
-                    Math.floor(mannerRank) || 0
+                    Math.floor(mannerRank) === 0 ? 1 : Math.floor(mannerRank)
                   }% 의 매너레벨`}</Percentage>
                 )}
                 <DownIconWrapper level={level - 1}>
