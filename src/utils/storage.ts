@@ -101,3 +101,18 @@ export const getIsCompleted = () => {
     }
     return null;
 };
+
+/* 이메일 인증코드 사용 */
+export const setVerifyCode = (verifyCode: string) => {
+  if (typeof window !== "undefined") {
+    sessionStorage.setItem("verifyCode", verifyCode);
+  }
+  return null;
+};
+
+export const getVerifyCode = () => {
+  if (typeof window !== "undefined") {
+    return sessionStorage.getItem("verifyCode");
+  }
+  return null;
+};

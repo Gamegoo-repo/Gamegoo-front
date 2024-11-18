@@ -4,6 +4,8 @@ import { resetPassword } from "@/api/password";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import { RootState } from "@/redux/store";
+import { getVerifyCode, setVerifyCode } from "@/utils/storage";
+import { verify } from "crypto";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -52,8 +54,13 @@ const New = () => {
 
   const handleComplete = async () => {
     if (passwordValid && repasswordValid) {
+      const verifyCode = getVerifyCode();
       try {
-        await resetPassword({ email, password });
+        await resetPassword({
+          email,
+          newPassword: repassword,
+          verifyCode: verifyCode || "",
+        });
         router.push("/login");
       } catch {}
     }

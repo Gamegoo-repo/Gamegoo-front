@@ -21,10 +21,18 @@ export const sendAuth = async ({ email, code }: { email: string, code: string })
   }
 };
 
-export const resetPassword = async ({ email, password }: { email: string, password: string }) => {
-  const endpoint = '/v1/member/password/reset';
+export const resetPassword = async ({
+  email,
+  newPassword,
+  verifyCode,
+}: {
+  email: string;
+  newPassword: string;
+  verifyCode: string;
+}) => {
+  const endpoint = "/v1/member/password/reset";
   try {
-    const response = await Axios.post(endpoint, { email, password });
+    const response = await Axios.post(endpoint, { email, newPassword, verifyCode});
     return response.data;
   } catch (error) {
     throw error;
