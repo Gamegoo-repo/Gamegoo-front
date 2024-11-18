@@ -13,6 +13,7 @@ import {
   updateAuthStatus,
   updateEmailAuth,
 } from "@/redux/slices/passwordSlice";
+import { setVerifyCode } from "@/utils/storage";
 
 const Auth = () => {
   const router = useRouter();
@@ -84,6 +85,7 @@ const Auth = () => {
       setAuthValid(true);
       dispatch(updateEmailAuth(auth));
       dispatch(updateAuthStatus(true));
+      setVerifyCode(auth);
       router.push("/password/new");
     } catch (error) {
       setAuthValid(false);
