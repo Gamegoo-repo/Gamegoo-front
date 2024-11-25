@@ -122,7 +122,7 @@ const StyledLabel = styled.label`
 
 const StyledInput = styled.input<InputProps>`
   width: 100%;
-  min-height: ${({ height }) => (height ? height : "58px")};
+  height: ${({ height }) => (height ? height : "58px")};
   padding: ${({ tag }) => (tag ? "11px 30px" : "11px 20px")};
   border-radius: ${({ borderRadius }) =>
     borderRadius ? borderRadius : "15px"};
