@@ -3,6 +3,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import styled from "styled-components";
 import Alert from "./Alert";
+import FeedBackInput from "./FeedbackInput";
 
 const Footer = () => {
   const [showAlert, setShowAlert] = useState(false);
@@ -24,17 +25,20 @@ const Footer = () => {
         />
       )}
       <Container>
-        <LeftDiv>
-          <Image
-            src="/assets/icons/logo.svg"
-            width={285}
-            height={58}
-            alt="gamegoo"
-          />
-          email: gamegoo0707@gmail.com
-          <br />
-          copyright 2024. GameGoo All Rights Reserved.
-        </LeftDiv>
+        <LeftWrapper>
+          <LeftDiv>
+            <Image
+              src="/assets/icons/logo.svg"
+              width={285}
+              height={58}
+              alt="gamegoo"
+            />
+            email: gamegoo0707@gmail.com
+            <br />
+            copyright 2024. GameGoo All Rights Reserved.
+          </LeftDiv>
+          <FeedBackInput />
+        </LeftWrapper>
         <RightDiv>
           <Bold>Resources</Bold>
           <button onClick={handleShowWarning}>개인정보처리방침</button>
@@ -64,6 +68,12 @@ const Container = styled.div`
   align-items: flex-end;
 `;
 
+const LeftWrapper = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  gap: 50px;
+`;
+
 const LeftDiv = styled.div`
   width: 100%;
   display: flex;
@@ -71,8 +81,8 @@ const LeftDiv = styled.div`
   justify-content: flex-end;
   align-items: flex-start;
   gap: 28px;
-  color: #000;
   ${theme.fonts.regular14};
+  white-space: nowrap;
 `;
 
 const RightDiv = styled.div`
@@ -80,9 +90,8 @@ const RightDiv = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  align-items: flex-end;
+  align-items: center;
   gap: 54px;
-  color: #000;
   ${theme.fonts.regular14};
   white-space: nowrap;
 `;
