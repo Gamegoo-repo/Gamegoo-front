@@ -11,7 +11,7 @@ export const postLogin = async ({
     password,
   }: loginProps) => {
     try {
-      const formData = new FormData();
+      const formData = new URLSearchParams();
       formData.append('email', email);
       formData.append('password', password);
 
