@@ -15,10 +15,10 @@ export const postLogin = async ({
       formData.append('email', email);
       formData.append('password', password);
 
-      const response = await axios.post('/v1/member/login', formData, {
+      const response = await axios.post("/v1/member/login", formData, {
         baseURL: BASE_URL,
         headers: {
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/x-www-form-urlencoded",
         },
       });
   
