@@ -14,22 +14,58 @@ const useJwtError = () => {
             const { eventName, eventData } = res.data;
 
             try {
-                const response = await reissueToken();
-                const newToken = response.result.refreshToken;
-                socket?.emit(eventName, { ...eventData, token: newToken });
+              const response = await reissueToken();
+              const newToken = response.result.accessToken;
+                
+              // 로컬 또는 세션에 재발급된 토큰 저장
+              if (localStorage.getItem("accessToken")) {
+                localStorage.setItem("accessToken", response.result.accessToken);
+                localStorage.setItem(
+                  "refreshToken",
+                  response.result.refreshToken
+                );
+              } else {
+                sessionStorage.setItem(
+                  "accessToken",
+                  response.result.accessToken
+                );
+                sessionStorage.setItem(
+                  "refreshToken",
+                  response.result.refreshToken
+                );
+              }
+              socket?.emit(eventName, { ...eventData, token: newToken });
             } catch (error) {
                 console.error("소켓 이벤트 전송 실패:", error);
             }
         };
 
         const handleConnectionJwtError = async () => {
-            try {
-                const response = await reissueToken();
-                const newToken = response.result.refreshToken;
-                socket?.emit("connection-update-token", { token: newToken });
-            } catch (error) {
-                console.error("연결 업데이트 실패:", error);
+          try {
+            const response = await reissueToken();
+            const newToken = response.result.accessToken;
+
+            // 로컬 또는 세션에 재발급된 토큰 저장
+            if (localStorage.getItem("accessToken")) {
+              localStorage.setItem("accessToken", response.result.accessToken);
+              localStorage.setItem(
+                "refreshToken",
+                response.result.refreshToken
+              );
+            } else {
+              sessionStorage.setItem(
+                "accessToken",
+                response.result.accessToken
+              );
+              sessionStorage.setItem(
+                "refreshToken",
+                response.result.refreshToken
+              );
             }
+            socket?.emit("connection-update-token", { token: newToken });
+          } catch (error) {
+            console.error("연결 업데이트 실패:", error);
+          }
         };
 
         socket?.on("connection-jwt-error", handleConnectionJwtError);
