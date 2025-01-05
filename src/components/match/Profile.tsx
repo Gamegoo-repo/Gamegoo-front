@@ -104,7 +104,7 @@ const Profile: React.FC<Profile> = ({
   }, [user]);
 
   useEffect(() => {
-    const gameStyleIds = user.gameStyleResponseDTOList.map(
+    const gameStyleIds = user.gameStyleResponseList.map(
       (style) => style.gameStyleId
     );
 
@@ -491,7 +491,7 @@ const Profile: React.FC<Profile> = ({
                   height={42}
                 />
                 {setAbbrevTier(user.tier)}
-                {user.tier !== "UNRANKED" && user.rank}
+                {user.tier !== "UNRANKED" && user.gameRank}
               </Rank>
             </Top>
             {profileType === "other" && (
@@ -606,7 +606,7 @@ const Profile: React.FC<Profile> = ({
           {profileType === "wind" ? (
             <GameStyle
               profileType="none"
-              gameStyleResponseDTOList={user.gameStyleResponseDTOList}
+              gameStyleResponseDTOList={user.gameStyleResponseList}
               mike={isMike}
               handleMike={handleMike}
             />
@@ -641,11 +641,11 @@ const Profile: React.FC<Profile> = ({
                   </Posi>
                 ))}
               </Position>
-              {profileType === "other" && user.championResponseDTOList && (
+              {profileType === "other" && user.championResponseList && (
                 <Champion
                   title={true}
                   size={14}
-                  list={user.championResponseDTOList.map(
+                  list={user.championResponseList.map(
                     (champion) => champion.championId
                   )}
                 />
@@ -661,11 +661,10 @@ const Profile: React.FC<Profile> = ({
         </StyledBox>
       </Row>
       {(profileType === "normal" ||
-        (profileType === "other" &&
-          user.gameStyleResponseDTOList.length > 0)) && (
+        (profileType === "other" && user.gameStyleResponseList.length > 0)) && (
         <GameStyle
           profileType={profileType === "normal" ? "none" : profileType}
-          gameStyleResponseDTOList={user.gameStyleResponseDTOList}
+          gameStyleResponseDTOList={user.gameStyleResponseList}
           mike={isMike}
           handleMike={handleMike}
         />

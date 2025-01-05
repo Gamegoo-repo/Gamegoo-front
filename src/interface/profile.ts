@@ -18,8 +18,8 @@ export interface User {
   gameName: string;
   tag: string;
   tier: string;
-  rank: number;
-  manner: number;
+  gameRank: number;
+  mannerLevel: number;
   mannerRank?: null | number;
   mannerRatingCount?: number;
   updatedAt: string;
@@ -31,8 +31,8 @@ export interface User {
   isBlind: boolean;
   loginType: string;
   winrate: number;
-  gameStyleResponseDTOList: GameStyle[];
-  championResponseDTOList: Champion[];
+  gameStyleResponseList: GameStyle[];
+  championResponseList: Champion[];
   friend: boolean;
   friendRequestMemberId: number | null;
 }

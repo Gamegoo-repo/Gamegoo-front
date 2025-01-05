@@ -11,13 +11,13 @@ import ChatButton from "@/components/common/ChatButton";
 import { useEffect, useRef, useState } from "react";
 import { sendMatchingQuitEvent, socket } from "@/socket";
 import ConfirmModal from "@/components/common/ConfirmModal";
-import { getProfile } from "@/api/user";
 import ChatLayout from "@/components/chat/ChatLayout";
 import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { openChatRoom, setChatRoomUuid } from "@/redux/slices/chatSlice";
 import { setComplete } from "@/redux/slices/matchingSlice";
 import { setIsCompleted } from "@/utils/storage";
+import { getMyProfile } from "@/api/user/profile";
 
 interface User {
   memberId: number;
@@ -171,14 +171,15 @@ const Complete = () => {
   useEffect(() => {
     const fetchUserMe = async () => {
       try {
-        const profileData = await getProfile();
+        const response = await getMyProfile();
+        const profileData = response.data;
 
         const transformedUserMe: User = {
           memberId: profileData.id,
           gameName: profileData.gameName,
           tag: profileData.tag,
           tier: profileData.tier,
-          rank: profileData.rank,
+          rank: profileData.gameRank,
           mannerLevel: profileData.mannerLevel,
           profileImg: profileData.profileImg,
           gameMode: 0,
@@ -186,7 +187,7 @@ const Complete = () => {
           subPosition: profileData.subP,
           wantPosition: 0,
           mike: profileData.mike,
-          gameStyleList: profileData.gameStyleResponseDTOList.map(
+          gameStyleList: profileData.gameStyleResponseList.map(
             (style: { gameStyleName: string }) => style.gameStyleName
           ),
         };
