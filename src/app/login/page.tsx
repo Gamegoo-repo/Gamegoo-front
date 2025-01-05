@@ -1,7 +1,7 @@
 "use client";
 
 import { getUnreadUuid } from "@/api/chat";
-import { postLogin } from "@/api/login";
+import { postLogin } from "@/api/login/login";
 import { socketLogin } from "@/api/socket";
 import Button from "@/components/common/Button";
 import Checkbox from "@/components/common/Checkbox";
@@ -13,7 +13,7 @@ import {
   clearUserProfile,
   setUserName,
   setUserProfileImg,
-  setUserId
+  setUserId,
 } from "@/redux/slices/userSlice";
 import { connectSocket, socket } from "@/socket";
 import { theme } from "@/styles/theme";
@@ -23,7 +23,7 @@ import {
   setName,
   setProfileImg,
   setToken,
-  setId
+  setId,
 } from "@/utils/storage";
 import { AxiosError } from "axios";
 import Image from "next/image";

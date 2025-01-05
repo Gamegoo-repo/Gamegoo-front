@@ -27,7 +27,7 @@ import Alert from "./Alert";
 import { setNotiCount } from "@/redux/slices/notiSlice";
 import { socketLogout } from "@/api/socket";
 import { closeChat } from "@/redux/slices/chatSlice";
-import { postLogout } from "@/api/user";
+import { postLogout } from "@/api/login/logout";
 
 interface HeaderProps {
   selected: boolean;
@@ -111,7 +111,7 @@ const Header = () => {
     }
   }, [storedName]);
 
-  useEffect(() => { }, [notiCount]);
+  useEffect(() => {}, [notiCount]);
 
   return (
     <Head>
