@@ -1,5 +1,5 @@
 import { putProfileImg } from "@/api/user";
-import { getMyProfile } from "@/api/user/profile";
+import { getMyProfile } from "@/api/user/profile/get";
 import GameStyle from "@/components/match/GameStyle";
 import { Profile } from "@/interface/profile";
 import {

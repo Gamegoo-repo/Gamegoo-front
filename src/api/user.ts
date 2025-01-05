@@ -1,49 +1,5 @@
 import { AuthAxios } from "./auth";
 
-export const putProfileImg = async (profileImage: number) => {
-  const endpoint = '/v1/member/profile_image';
-  try {
-    const response = await AuthAxios.put(endpoint, { profileImage });
-    return response.data;
-  } catch (error) {
-    console.error("프로필 이미지 수정 실패:", error);
-    throw error;
-  }
-};
-
-export const putGameStyle = async (gameStyleIdList: number[]) => {
-  const endpoint = '/v1/member/gamestyle';
-  try {
-    const response = await AuthAxios.put(endpoint, { gameStyleIdList });
-    return response.data;
-  } catch (error) {
-    console.error("게임스타일 수정 실패:", error);
-    throw error;
-  }
-};
-
-export const putPosition = async ({ mainP, subP }: { mainP: number, subP: number }) => {
-  const endpoint = '/v1/member/position';
-  try {
-    const response = await AuthAxios.put(endpoint, { mainP, subP });
-    return response.data;
-  } catch (error) {
-    console.error("포지션 수정 실패:", error);
-    throw error;
-  }
-};
-
-export const putMike = async (isMike: boolean) => {
-  const endpoint = '/v1/member/mike';
-  try {
-    const response = await AuthAxios.put(endpoint, { isMike });
-    return response.data;
-  } catch (error) {
-    console.error("마이크 수정 실패:", error);
-    throw error;
-  }
-};
-
 export const deleteMember = async () => {
   const endpoint = '/v1/member';
   try {

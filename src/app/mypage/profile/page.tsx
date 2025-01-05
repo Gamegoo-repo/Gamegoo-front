@@ -16,7 +16,7 @@ import { checkPassword } from "@/api/password/password";
 import { clearTokens } from "@/utils/storage";
 import { useRouter } from "next/navigation";
 import ChatButton from "@/components/common/ChatButton";
-import { getMyProfile } from "@/api/user/profile";
+import { getMyProfile } from "@/api/user/profile/get";
 
 const passwordLength = 10;
 

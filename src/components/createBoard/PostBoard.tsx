@@ -25,7 +25,7 @@ import { useRouter } from "next/navigation";
 import { setUserProfile } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
 import { setClosePostingModal } from "@/redux/slices/modalSlice";
-import { getMyProfile } from "@/api/user/profile";
+import { getMyProfile } from "@/api/user/profile/get";
 
 interface PostBoardProps {
   onClose: () => void;

@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { openChatRoom, setChatRoomUuid } from "@/redux/slices/chatSlice";
 import { setComplete } from "@/redux/slices/matchingSlice";
 import { setIsCompleted } from "@/utils/storage";
-import { getMyProfile } from "@/api/user/profile";
+import { getMyProfile } from "@/api/user/profile/get";
 
 interface User {
   memberId: number;

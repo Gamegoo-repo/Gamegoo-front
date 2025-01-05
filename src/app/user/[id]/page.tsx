@@ -1,7 +1,7 @@
 "use client";
 
 import { getOtherManner } from "@/api/manner";
-import { getOtherProfile } from "@/api/user/profile";
+import { getOtherProfile } from "@/api/user/profile/get";
 import BlindProfile from "@/components/user/BlindProfile";
 import UserProfile, { Manner } from "@/components/user/UserProfile";
 import { User } from "@/interface/profile";

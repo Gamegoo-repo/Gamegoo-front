@@ -18,7 +18,6 @@ import MoreBox from "../common/MoreBox";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import { User } from "@/interface/profile";
 import { PositionState } from "../crBoard/PositionBox";
-import { putPosition, putProfileImg } from "@/api/user";
 import { setAbbrevTier, setPositionImg } from "@/utils/custom";
 import {
   acceptFriendReq,
@@ -35,6 +34,7 @@ import { getProfileBgColor } from "@/utils/profile";
 import { setMatchInfo, updateMike } from "@/redux/slices/matchInfo";
 import { toLowerCaseString } from "@/utils/string";
 import { setUserProfileImg } from "@/redux/slices/userSlice";
+import { putPosition, putProfileImage } from "@/api/user/profile/put";
 
 type profileType = "normal" | "wind" | "other" | "me";
 
@@ -123,7 +123,7 @@ const Profile: React.FC<Profile> = ({
   const handleImageClick = async (index: number) => {
     setSelectedImageIndex(index);
 
-    await putProfileImg(index);
+    await putProfileImage(index);
     // const newUserData = await getProfile();
     dispatch(setUserProfileImg(index));
     localStorage.setItem("profileImg", index + "");
@@ -221,6 +221,7 @@ const Profile: React.FC<Profile> = ({
         await putPosition({
           mainP: newPositionValue.main,
           subP: newPositionValue.sub,
+          wantP: newPositionValue.want || 0,
         });
 
         // 포지션 상태 업데이트

@@ -16,7 +16,7 @@ import { sendMatchingQuitEvent, socket } from "@/socket";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import { theme } from "@/styles/theme";
 import { closeChatRoom } from "@/redux/slices/chatSlice";
-import { getMyProfile } from "@/api/user/profile";
+import { getMyProfile } from "@/api/user/profile/get";
 
 const ProfilePage = () => {
   const router = useRouter();
