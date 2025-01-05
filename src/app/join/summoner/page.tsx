@@ -1,6 +1,7 @@
 "use client";
 
-import { checkRiot, joinMember } from "@/api/join";
+import { postJoin } from "@/api/join/join";
+import { verifyRiot } from "@/api/join/riot";
 import Button from "@/components/common/Button";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import Input from "@/components/common/Input";
@@ -53,7 +54,7 @@ const Summoner = () => {
   /* 소환사명 조회 */
   const handleCheckSummoner = async () => {
     try {
-      await checkRiot({ gameName: name, tag });
+      await verifyRiot({ gameName: name, tag });
       setIsCheckRiotModal(true);
       setIsCheckRiot(true);
       setErrorMsg("");
@@ -77,7 +78,7 @@ const Summoner = () => {
     if (isCheckRiot) {
       setIsLoading(true);
       try {
-        await joinMember({
+        await postJoin({
           isAgree,
           email,
           password,

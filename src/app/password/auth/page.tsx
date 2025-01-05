@@ -1,6 +1,5 @@
 "use client";
 
-import { sendAuth } from "@/api/password";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import { theme } from "@/styles/theme";
@@ -14,6 +13,7 @@ import {
   updateEmailAuth,
 } from "@/redux/slices/passwordSlice";
 import { setVerifyCode } from "@/utils/storage";
+import { verifyEmailCode } from "@/api/email/email";
 
 const Auth = () => {
   const router = useRouter();
@@ -81,7 +81,7 @@ const Auth = () => {
 
   const handleSendCode = async () => {
     try {
-      await sendAuth({ email: emailRedux, code: auth });
+      await verifyEmailCode({ email: emailRedux, code: auth });
       setAuthValid(true);
       dispatch(updateEmailAuth(auth));
       dispatch(updateAuthStatus(true));
