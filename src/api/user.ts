@@ -1,16 +1,5 @@
 import { AuthAxios } from "./auth";
 
-export const getProfile = async () => {
-  const endpoint = '/v1/member/profile';
-  try {
-    const response = await AuthAxios.get(endpoint);
-    return response.data.result;
-  } catch (error) {
-    console.error("유저 프로필 조회 실패:", error);
-    throw error;
-  }
-};
-
 export const putProfileImg = async (profileImage: number) => {
   const endpoint = '/v1/member/profile_image';
   try {
@@ -65,18 +54,6 @@ export const deleteMember = async () => {
     throw error;
   }
 };
-
-  export const postLogout = async () => {
-    const endpoint = '/v1/member/logout';
-    try {
-      const response = await AuthAxios.post(endpoint);
-      console.log('로그아웃 성공:', response.data);
-      return response.data;
-    } catch (error) {
-      console.error('로그아웃 실패:', error);
-      throw error;
-    }
-  };
 
   export const getMyPost= async (pageIdx:number) => {
     const endpoint = `/v1/posts/my?pageIdx=${pageIdx}`;

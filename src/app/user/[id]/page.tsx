@@ -1,7 +1,7 @@
 "use client";
 
 import { getOtherManner } from "@/api/manner";
-import { getOtherProfile } from "@/api/member";
+import { getOtherProfile } from "@/api/user/profile";
 import BlindProfile from "@/components/user/BlindProfile";
 import UserProfile, { Manner } from "@/components/user/UserProfile";
 import { User } from "@/interface/profile";
@@ -26,7 +26,7 @@ const UserProfilePage = () => {
     const fetchOtherProfile = async () => {
       try {
         const response = await getOtherProfile(Number(id));
-        setOtherProfile(response.result);
+        setOtherProfile(response.data);
         console.log(response);
       } catch (error) {
         console.error(error);

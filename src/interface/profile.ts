@@ -14,7 +14,7 @@ export interface User {
   id?: number;
   profileImg: number;
   mike: boolean;
-  email: string;
+  email?: string;
   gameName: string;
   tag: string;
   tier: string;

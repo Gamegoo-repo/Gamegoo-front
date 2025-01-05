@@ -1,4 +1,5 @@
-import { getProfile, putMike, putProfileImg } from "@/api/user";
+import { putProfileImg } from "@/api/user";
+import { getMyProfile } from "@/api/user/profile";
 import GameStyle from "@/components/match/GameStyle";
 import { Profile } from "@/interface/profile";
 import {
@@ -31,10 +32,10 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
     setSelectedImageIndex(index);
 
     await putProfileImg(index);
-    const newUserData = await getProfile();
+    const newUserData = await getMyProfile();
     dispatch(setUserProfileImg(index));
     localStorage.setItem("profileImg", index + "");
-    dispatch(setUserProfile(newUserData));
+    dispatch(setUserProfile(newUserData.data));
 
     setTimeout(() => {
       setIsProfileListOpen(false);
@@ -44,8 +45,8 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const userData = await getProfile();
-        dispatch(setUserProfile(userData));
+        const userData = await getMyProfile();
+        dispatch(setUserProfile(userData.data));
       } catch (error) {
         console.error("프로필 정보 불러오기 실패:", error);
       }
@@ -120,7 +121,7 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
           <Tag>#{user.tag}</Tag>
         </Top>
         <GameStyle
-          gameStyleResponseDTOList={user.gameStyleResponseDTOList}
+          gameStyleResponseDTOList={user.gameStyleResponseList}
           profileType="mini"
           mike={user.mike}
         />
