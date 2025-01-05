@@ -1,12 +1,8 @@
-import { putProfileImg } from "@/api/user";
 import { getMyProfile } from "@/api/user/profile/get";
+import { putProfileImage } from "@/api/user/profile/put";
 import GameStyle from "@/components/match/GameStyle";
 import { Profile } from "@/interface/profile";
-import {
-  setUserMike,
-  setUserProfile,
-  setUserProfileImg,
-} from "@/redux/slices/userSlice";
+import { setUserProfile, setUserProfileImg } from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import { getProfileBgColor } from "@/utils/profile";
@@ -31,7 +27,7 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
   const handleImageClick = async (index: number) => {
     setSelectedImageIndex(index);
 
-    await putProfileImg(index);
+    await putProfileImage(index);
     const newUserData = await getMyProfile();
     dispatch(setUserProfileImg(index));
     localStorage.setItem("profileImg", index + "");
