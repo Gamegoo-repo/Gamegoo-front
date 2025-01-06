@@ -45,7 +45,7 @@ const Auth = () => {
   }, [authRedux, authStatus]);
 
   const validateAuth = (auth: string) => {
-    if (auth.length === 5) {
+    if (auth.length === 8) {
       setAuthValid(true);
     } else {
       setAuthValid(false);

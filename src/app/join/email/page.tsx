@@ -173,7 +173,7 @@ const Email = () => {
             value={authCode}
             onChange={(value) => {
               setAuthCode(value);
-              if (value.length === 5) {
+              if (value.length === 8) {
                 setAuthCodeValid(true);
               } else if (value.length === 0) {
                 setAuthCodeValid(undefined);
