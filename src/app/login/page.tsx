@@ -1,5 +1,6 @@
 "use client";
 
+import Axios from "@/api";
 import { getUnreadUuid } from "@/api/chat";
 import { postLogin } from "@/api/login/login";
 import { socketLogin } from "@/api/socket";
@@ -19,13 +20,11 @@ import { connectSocket, socket } from "@/socket";
 import { theme } from "@/styles/theme";
 import {
   clearTokens,
-  getAccessToken,
   setName,
   setProfileImg,
   setToken,
   setId,
 } from "@/utils/storage";
-import { AxiosError } from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -75,18 +74,18 @@ const Login = () => {
   const handleLogin = async () => {
     try {
       const response = await postLogin({ email, password });
-      const accessToken = response.result.accessToken;
-      const refreshToken = response.result.refreshToken;
+      const accessToken = response.data.accessToken;
+      const refreshToken = response.data.refreshToken;
 
       /* 자동 로그인 체크 여부에 따라 토큰 저장 위치 결정 */
       setToken(accessToken, refreshToken, autoLogin);
 
-      dispatch(setUserName(response.result.name));
-      dispatch(setUserProfileImg(response.result.profileImage));
-      dispatch(setUserId(response.result.id));
-      setName(response.result.name, autoLogin);
-      setProfileImg(response.result.profileImage, autoLogin);
-      setId(response.result.id, autoLogin);
+      dispatch(setUserName(response.data.name));
+      dispatch(setUserProfileImg(response.data.profileImage));
+      dispatch(setUserId(response.data.id));
+      setName(response.data.name, autoLogin);
+      setProfileImg(response.data.profileImage, autoLogin);
+      setId(response.data.id, autoLogin);
 
       router.push("/");
 
@@ -100,21 +99,21 @@ const Login = () => {
         // 새로고침시 채팅방 수 가져오기 위함
         sessionStorage.setItem("unreadChatUuids", JSON.stringify(data.result));
       }
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        const status = error.response?.status;
-        if (status === 401) {
-          // 401 Unauthorized 처리
+    } catch (error: any) {
+      const data = error.response.data;
+      if (error.response) {
+        if (data.code === "MEMBER_401") {
+          // 이메일이 DB에 없을 경우
+          setEmailValid(false);
+          setPasswordValid(false);
+        } else if (data.code === "MEMBER_404") {
+          // 비밀번호가 틀렸을 경우
           setPasswordValid(false);
         } else {
           // 기타 에러 처리
           setEmailValid(false);
           setPasswordValid(false);
         }
-      } else {
-        // 예상치 못한 에러 처리
-        setEmailValid(false);
-        setPasswordValid(false);
       }
     }
   };

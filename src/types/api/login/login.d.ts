@@ -1,3 +1,5 @@
+import { ApiResponse } from "../api";
+
 export interface LoginRequest {
   email: string;
   password: string;
