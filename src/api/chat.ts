@@ -1,7 +1,7 @@
 import {
-  charRoomExitResponse,
+  chatRoomExitResponse,
   chatRoomReadRequest,
-  charRoomSearchResponse,
+  chatRoomSearchResponse,
   chatRoomExitRequest,
   chatRoomReadData,
   chatRoomMessageRequest,
@@ -94,7 +94,7 @@ export const getChatList = async ({
 /* 채팅방 나가기 */
 export const leaveChatroom = async (
   uuid: chatRoomExitRequest
-): Promise<charRoomExitResponse> => {
+): Promise<chatRoomExitResponse> => {
   try {
     const response = await AuthAxios.patch(
       `http://13.124.213.255:8080/api/v2/chat/${uuid}/exit`
@@ -111,8 +111,8 @@ export const markChatAsRead = async ({
   timestamp,
 }: chatRoomReadRequest): Promise<chatRoomReadData> => {
   const url = timestamp
-    ? `http://13.124.213.255:8080/v2/chat/${uuid}/read?timestamp=${timestamp}`
-    : `http://13.124.213.255:8080/v2/chat/${uuid}/read`;
+    ? `http://13.124.213.255:8080/api/v2/chat/${uuid}/read?timestamp=${timestamp}`
+    : `http://13.124.213.255:8080/api/v2/chat/${uuid}/read`;
   try {
     const response = await AuthAxios.patch(url);
     return response.data;
@@ -122,7 +122,7 @@ export const markChatAsRead = async ({
 };
 
 /* 안 읽은 채팅방 uuid 가져오기 */
-export const getUnreadUuid = async (): Promise<charRoomSearchResponse> => {
+export const getUnreadUuid = async (): Promise<chatRoomSearchResponse> => {
   try {
     const response = await AuthAxios.get(
       "http://13.124.213.255:8080/api/v2/chat/unread"

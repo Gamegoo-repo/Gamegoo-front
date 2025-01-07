@@ -174,9 +174,9 @@ export interface chatRoomFriendData {
 }
 
 // response
-export type charRoomExitResponse = ApiResponse<LoginData>;
-export type charRoomReadResponse = ApiResponse<chatRoomReadData>;
-export type charRoomSearchResponse = ApiResponse<chatRoomSearchUuid>;
+export type chatRoomExitResponse = ApiResponse<LoginData>;
+export type chatRoomReadResponse = ApiResponse<chatRoomReadData>;
+export type chatRoomSearchResponse = ApiResponse<chatRoomSearchUuid>;
 export type chatRoomMessageResponse = ApiResponse<chatRoomMessageData>;
 export type chatRoomEnterResponse = ApiResponse<chatRoomEnterData>;
 export type chatRoomGetResponse = ApiResponse<chatRoomGetData>;
