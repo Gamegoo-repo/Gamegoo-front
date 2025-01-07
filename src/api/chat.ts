@@ -79,7 +79,7 @@ export const markChatAsRead = async (uuid: string, timestamp: null | number) => 
 /* 안 읽은 채팅방 uuid 가져오기 */
 export const getUnreadUuid = async () => {
     try {
-        const response = await AuthAxios.get('/v1/chat/unread');
+        const response = await AuthAxios.get("/api/v2/chat/unread");
         return response.data;
     } catch (error) {
         throw error;

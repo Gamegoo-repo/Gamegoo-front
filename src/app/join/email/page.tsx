@@ -1,6 +1,6 @@
 "use client";
 
-import { sendAuth, sendJoinEmail } from "@/api/join";
+import { sendJoinEmail, verifyEmailCode } from "@/api/email/email";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import { emailRegEx } from "@/constants/regEx";
@@ -132,7 +132,7 @@ const Email = () => {
       router.push("/join/password");
     } else {
       try {
-        await sendAuth({ email, code: authCode });
+        await verifyEmailCode({ email, code: authCode });
 
         // Redux 상태 업데이트
         dispatch(updateEmail(email));
@@ -173,7 +173,7 @@ const Email = () => {
             value={authCode}
             onChange={(value) => {
               setAuthCode(value);
-              if (value.length === 5) {
+              if (value.length === 8) {
                 setAuthCodeValid(true);
               } else if (value.length === 0) {
                 setAuthCodeValid(undefined);

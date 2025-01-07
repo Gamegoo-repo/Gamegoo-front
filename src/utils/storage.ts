@@ -17,10 +17,10 @@ export const setName = (name: string, autoLogin: boolean) => {
 };
 
 /* 프로필 이미지 저장 */
-export const setProfileImg = (profileImg: string, autoLogin: boolean) => {
+export const setProfileImg = (profileImg: number, autoLogin: boolean) => {
     if (typeof window !== 'undefined') {
         const storage = autoLogin ? localStorage : sessionStorage;
-        storage.setItem('profileImg', profileImg);
+        storage.setItem('profileImg', profileImg.toString());
     }
     return null;
 };

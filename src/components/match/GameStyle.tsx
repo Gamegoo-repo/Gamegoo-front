@@ -6,11 +6,11 @@ import Toggle from "../common/Toggle";
 import { theme } from "@/styles/theme";
 import SelectedStylePopup from "./SelectedStylePopup";
 import { css } from "styled-components";
-import { putGameStyle, putMike } from "@/api/user";
 import { GAME_STYLE } from "@/data/profile";
 import { useDispatch } from "react-redux";
 import { updateGameStyles } from "@/redux/slices/matchInfo";
 import { setUserMike } from "@/redux/slices/userSlice";
+import { putGameStyle, putMike } from "@/api/user/profile/put";
 
 type profileType = "me" | "other" | "none" | "mini";
 
@@ -92,9 +92,7 @@ const GameStyle = (props: GameStyleProps) => {
   }, [selectedStyles]);
 
   const selectedStyleObjects = selectedStyles
-    .map((styleId) =>
-      GAME_STYLE.find((style) => style.gameStyleId === styleId)
-    )
+    .map((styleId) => GAME_STYLE.find((style) => style.gameStyleId === styleId))
     .filter(Boolean);
 
   const handleChangeMike = async () => {
@@ -104,7 +102,7 @@ const GameStyle = (props: GameStyleProps) => {
     try {
       await putMike(newMikeValue);
       dispatch(setUserMike(newMikeValue));
-    } catch { }
+    } catch {}
   };
 
   return (
