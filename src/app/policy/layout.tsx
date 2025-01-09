@@ -36,10 +36,14 @@ const PolicyLayout = ({ children }: { children?: React.ReactNode }) => {
   );
 };
 
-export default function PolicyLayoutPaging() {
+export default function PolicyLayoutPaging({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <Suspense fallback={<LoadingSpinner />}>
-      <PolicyLayout />
+      <PolicyLayout>{children}</PolicyLayout>
     </Suspense>
   );
 }
