@@ -4,8 +4,10 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import CategoryToggle from "@/components/common/CategoryToggle";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
+import { Suspense } from "react";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 
-const PolicyLayout = ({ children }: { children: React.ReactNode }) => {
+const PolicyLayout = ({ children }: { children?: React.ReactNode }) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -34,7 +36,13 @@ const PolicyLayout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default PolicyLayout;
+export default function PolicyLayoutPaging() {
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <PolicyLayout />
+    </Suspense>
+  );
+}
 
 const Wrapper = styled.div`
   max-width: 1440px;
