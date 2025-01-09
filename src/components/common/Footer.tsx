@@ -16,11 +16,11 @@ const Footer = () => {
   };
 
   const handleDirectPrivacy = () => {
-    router.push("/policy/privacy");
+    router.push("/policy?terms=privacy");
   };
 
   const handleDirectService = () => {
-    router.push("/policy/service");
+    router.push("/policy?terms=service");
   };
 
   return (

@@ -1,13 +1,17 @@
 "use client";
 
-import { SERVICE_TERMS } from "@/constants/terms";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import { PRIVATE_TERMS, SERVICE_TERMS } from "@/constants/terms";
 import { theme } from "@/styles/theme";
-import { useRouter } from "next/navigation";
-import React from "react";
+import { useSearchParams } from "next/navigation";
+import React, { Suspense } from "react";
 import styled from "styled-components";
 
-const PolicyServicePage = () => {
-  const { title, content } = SERVICE_TERMS;
+const PolicyPage = () => {
+  const searchParams = useSearchParams();
+  const params = searchParams.get("terms");
+  const { title, content } =
+    params === "service" ? SERVICE_TERMS : PRIVATE_TERMS;
 
   return (
     <Layout>
@@ -20,7 +24,13 @@ const PolicyServicePage = () => {
   );
 };
 
-export default PolicyServicePage;
+export default function ProgressPaging() {
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <PolicyPage />
+    </Suspense>
+  );
+}
 
 const Layout = styled.div`
   width: 100%;

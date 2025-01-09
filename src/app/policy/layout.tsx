@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import CategoryToggle from "@/components/common/CategoryToggle";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
@@ -8,14 +8,15 @@ import { theme } from "@/styles/theme";
 const PolicyLayout = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   const policy = [
-    { name: "이용 약관", path: "/policy/service" },
-    { name: "개인 정보 처리 방침", path: "/policy/privacy" },
+    { name: "이용 약관", path: "/policy?terms=service" },
+    { name: "개인 정보 처리 방침", path: "/policy?terms=privacy" },
   ];
 
   const handleCategoryClick = (itemPath: string) => {
-    if (pathname !== itemPath) {
+    if (pathname + "?" + searchParams.toString() !== itemPath) {
       router.push(itemPath);
     }
   };
@@ -26,7 +27,7 @@ const PolicyLayout = ({ children }: { children: React.ReactNode }) => {
       <CategoryToggle
         categories={policy}
         onClick={(item) => handleCategoryClick(item.path)}
-        currentPath={pathname}
+        currentPath={`${pathname}?${searchParams.toString()}`}
       />
       {children}
     </Wrapper>
