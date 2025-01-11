@@ -13,7 +13,7 @@ import {
   clearUserProfile,
   setUserName,
   setUserProfileImg,
-  setUserId
+  setUserId,
 } from "@/redux/slices/userSlice";
 import { connectSocket, socket } from "@/socket";
 import { theme } from "@/styles/theme";
@@ -23,7 +23,7 @@ import {
   setName,
   setProfileImg,
   setToken,
-  setId
+  setId,
 } from "@/utils/storage";
 import { AxiosError } from "axios";
 import Image from "next/image";
@@ -70,6 +70,12 @@ const Login = () => {
       validatePassword(password);
     }
   }, [email, password]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleLogin();
+    }
+  };
 
   /* 로그인 */
   const handleLogin = async () => {
@@ -160,6 +166,7 @@ const Login = () => {
                 errorMsg="정보 불일치"
                 placeholder="비밀번호"
                 isValid={passwordValid}
+                onKeyDown={handleKeyDown}
               />
             </InputList>
             <Button
