@@ -1,7 +1,6 @@
 "use client";
 
 import styled from "styled-components";
-import ChatButton from "@/components/common/ChatButton";
 import GraphicBox from "@/components/match/GraphicBox";
 import { MATCH_TYPE_PAGE_DATA } from "@/data/match";
 import HeaderTitle from "@/components/common/HeaderTitle";
@@ -32,11 +31,6 @@ const MatchTypePage = () => {
             );
           })}
         </Main>
-        <Footer>
-          <ChatBoxContent>
-            <ChatButton />
-          </ChatBoxContent>
-        </Footer>
       </MatchContent>
     </Wrapper>
   );
@@ -75,12 +69,4 @@ const Main = styled.main`
 const Sub = styled.div`
   ${(props) => props.theme.fonts.regular18};
   white-space: pre-wrap;
-`;
-
-const Footer = styled.footer`
-  display: flex;
-`;
-
-const ChatBoxContent = styled.div`
-  margin-left: auto;
 `;

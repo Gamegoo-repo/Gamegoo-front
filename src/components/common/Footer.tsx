@@ -5,8 +5,14 @@ import styled from "styled-components";
 import Alert from "./Alert";
 import FeedBackInput from "./FeedbackInput";
 import { useRouter } from "next/navigation";
+import ChatButton from "./ChatButton";
 
-const Footer = () => {
+interface FooterProps {
+  isShowChat: boolean;
+}
+
+const Footer = (props: FooterProps) => {
+  const { isShowChat } = props;
   const router = useRouter();
   const [showAlert, setShowAlert] = useState(false);
 
@@ -57,6 +63,11 @@ const Footer = () => {
           <button onClick={handleDirectService}>이용약관</button>
         </RightDiv>
       </Container>
+      {isShowChat && (
+        <ChatButtonWrapper>
+          <ChatButton />
+        </ChatButtonWrapper>
+      )}
     </Wrapper>
   );
 };
@@ -110,4 +121,9 @@ const RightDiv = styled.div`
 
 const Bold = styled.div`
   ${theme.fonts.bold20};
+`;
+
+const ChatButtonWrapper = styled.div`
+  margin-bottom: 78px;
+  margin-left: auto;
 `;

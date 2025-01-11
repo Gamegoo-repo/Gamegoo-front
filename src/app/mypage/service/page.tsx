@@ -2,7 +2,6 @@
 
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
-import ChatButton from "@/components/common/ChatButton";
 import Image from "next/image";
 
 const MyServicePage = () => {
@@ -50,11 +49,6 @@ const MyServicePage = () => {
           </Box>
         </Content>
       </MyServiceContent>
-      <Footer>
-        <ChatBoxContent>
-          <ChatButton />
-        </ChatBoxContent>
-      </Footer>
     </Wrapper>
   );
 };
@@ -128,13 +122,4 @@ const StyledLink = styled.a`
   &:hover {
     text-decoration: underline;
   }
-`;
-
-const Footer = styled.footer`
-  display: flex;
-  margin-bottom: 78px;
-`;
-
-const ChatBoxContent = styled.div`
-  margin-left: auto;
 `;
