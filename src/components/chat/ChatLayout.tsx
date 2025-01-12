@@ -194,6 +194,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
 
     try {
       const response = await leaveChatroom({ uuid: chatEnterData.uuid });
+
       if (response.status === 200 && socket) {
         socket.emit("exit-chatroom", { uuid: chatEnterData.uuid });
       }

@@ -92,9 +92,9 @@ export const getChatList = async ({
 };
 
 /* 채팅방 나가기 */
-export const leaveChatroom = async (
-  uuid: chatRoomExitRequest
-): Promise<chatRoomExitResponse> => {
+export const leaveChatroom = async ({
+  uuid,
+}: chatRoomExitRequest): Promise<chatRoomExitResponse> => {
   try {
     const response = await AuthAxios.patch(
       `http://13.124.213.255:8080/api/v2/chat/${uuid}/exit`
