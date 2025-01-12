@@ -33,19 +33,6 @@ export const setId = (id: number, autoLogin: boolean) => {
     return null;
 };
 
-interface Position {
-    top: string;
-    left: string;
-}
-
-/* 채팅창 위치 저장 */
-export const setChatPosition = (position: Position) => {
-  if (typeof window !== "undefined") {
-    sessionStorage.setItem("chatPosition", JSON.stringify(position));
-  }
-  return null;
-};
-
 /* 토큰 사용 */
 export const getAccessToken = () => {
     if (typeof window !== 'undefined') {
@@ -83,14 +70,6 @@ export const getUserId = () => {
         return localStorage.getItem('userId') || sessionStorage.getItem('userId');
     }
     return null;
-};
-
-/* 채팅창 위치 사용 */
-export const getChatPosition = () => {
-  if (typeof window !== "undefined") {
-    sessionStorage.getItem("chatPosition");
-  }
-  return null;
 };
 
 /* 토큰 제거 */

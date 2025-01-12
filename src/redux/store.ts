@@ -10,6 +10,7 @@ import chatReducer from "./slices/chatSlice";
 import notiReducer from "./slices/notiSlice";
 import matchingReducer from "./slices/matchingSlice";
 import boardReducer from "./slices/boardSlice";
+import chatPositionReducer from "./slices/chatPositionSlice";
 
 export const store = () => {
   return configureStore({
@@ -25,8 +26,9 @@ export const store = () => {
       noti: notiReducer,
       matching: matchingReducer,
       board: boardReducer,
+      chatPosition: chatPositionReducer,
     },
-  })
+  });
 }
 
 

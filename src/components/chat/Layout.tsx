@@ -38,15 +38,12 @@ import { REPORT_REASON } from "@/data/report";
 import { blockMember, reportMember } from "@/api/member";
 import { notify } from "@/hooks/notify";
 import Tabs from "./Tabs";
-import { getChatPosition, setChatPosition } from "@/utils/storage";
+import { resetPosition, setPosition } from "@/redux/slices/chatPositionSlice";
 
 const Layout = () => {
   const dispatch = useDispatch();
   /* 채팅창 위치 관련 상태 */
-  const [position, setPosition] = useState({
-    top: "10%",
-    left: "100% - 450px",
-  });
+  const position = useSelector((state: RootState) => state.chatPosition);
   const [isDragging, setIsDragging] = useState(false);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
 
@@ -88,15 +85,6 @@ const Layout = () => {
   const isModalType = useSelector((state: RootState) => state.modal.modalType);
 
   /* 채팅창 위치 관련 함수 */
-
-  // 새로고침 시 저장된 위치를 초기화
-  useEffect(() => {
-    const savedPosition = getChatPosition();
-    if (savedPosition) {
-      setPosition(JSON.parse(savedPosition));
-    }
-  }, []);
-
   // 드래그 시작
   const handleDragStart = (e: React.MouseEvent<HTMLDivElement>) => {
     setIsDragging(true);
@@ -119,7 +107,7 @@ const Layout = () => {
     const adjustedPosition = adjustPosition({ top, left });
     setPosition(adjustedPosition);
 
-    setChatPosition({ top, left });
+    dispatch(setPosition(adjustedPosition));
   };
 
   // 드래그 종료
@@ -532,6 +520,7 @@ const Layout = () => {
                 onClick={(e) => {
                   e.stopPropagation();
                   dispatch(closeChat());
+                  dispatch(resetPosition());
                 }}
                 onMouseDown={(e) => {
                   e.stopPropagation();

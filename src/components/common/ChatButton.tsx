@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { toggleChat } from "@/redux/slices/chatSlice";
 import Layout from "../chat/Layout";
+import { resetPosition } from "@/redux/slices/chatPositionSlice";
 
 const ChatButton = () => {
   const [showAlert, setShowAlert] = useState(false);
@@ -53,6 +54,7 @@ const ChatButton = () => {
       return setShowAlert(true);
     }
     dispatch(toggleChat());
+    dispatch(resetPosition());
   };
 
   return (
