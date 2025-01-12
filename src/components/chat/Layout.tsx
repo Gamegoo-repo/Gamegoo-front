@@ -14,7 +14,6 @@ import SearchBar from "./SearchBar";
 import ChatRoomList from "./ChatRoomList";
 import { RootState } from "@/redux/store";
 import ChatLayout from "./ChatLayout";
-import { likeFriend, unLikeFriend } from "@/api/friends";
 import { ChatroomList } from "@/interface/chat";
 import { Mannerstatus } from "@/interface/manner";
 import {
@@ -39,6 +38,7 @@ import { notify } from "@/hooks/notify";
 import { FriendList } from "@/types/friend/friendList";
 import { getFriendsList } from "@/api/friend/get";
 import ChatFriendList from "./ChatFriendList";
+import { patchFriendStar } from "@/api/friend/star";
 
 const Layout = () => {
   const dispatch = useDispatch();
@@ -168,11 +168,7 @@ const Layout = () => {
       );
 
       try {
-        if (newLikedStatus) {
-          await likeFriend(friendId);
-        } else {
-          await unLikeFriend(friendId);
-        }
+        await patchFriendStar(friendId);
       } catch (error) {
         console.error(error);
       }

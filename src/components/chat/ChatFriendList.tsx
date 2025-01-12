@@ -3,9 +3,9 @@ import { theme } from "@/styles/theme";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { deleteFriend } from "@/api/friends";
 import FriendItem from "./FriendItem";
 import { FriendList } from "@/types/friend/friendList";
+import { deleteFriend } from "@/api/friend/delete";
 
 interface FriendListProps {
   onChatRoom: (id: number) => void;
