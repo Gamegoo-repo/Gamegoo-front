@@ -85,13 +85,3 @@ export const getUnreadUuid = async () => {
         throw error;
     }
 };
-
-/* 친구 검색 */
-export const searchFriend = async (user: string) => {
-    try {
-        const response = await AuthAxios.get(`/v1/friends/search?query=${user}`);
-        return response.data;
-    } catch (error) {
-        throw error;
-    }
-}

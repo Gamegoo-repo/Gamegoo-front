@@ -103,17 +103,6 @@ export const deleteFriend = async (memberId: number) => {
     }
 };
 
-/* 친구 목록 조회 */
-export const getFriendsList = async (cursor?: number) => {
-    const url = cursor ? `/v1/friends?cursor=${cursor}` : `/v1/friends`
-    try {
-        const response = await AuthAxios.get(url);
-        return response.data;
-    } catch (error) {
-        throw error;
-    }
-};
-
 /* 친구 즐겨찾기 추가 */
 export const likeFriend = async (memberId: number) => {
     try {
