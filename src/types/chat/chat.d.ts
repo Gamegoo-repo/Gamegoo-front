@@ -1,8 +1,7 @@
 import { ApiResponse } from "../api";
+import { ChatMessageList, System } from "../../interface/chat";
 
-// data interface
-
-interface chatMessageList {
+interface chatMessage {
   senderId: number;
   senderName: string;
   senderProfileImg: number;
@@ -11,71 +10,11 @@ interface chatMessageList {
   timestamp: number;
 }
 
-interface RoomListResponseData {
-  chatMessageList: Array<chatMessageList>;
-  listSize: number;
-  hasNext: boolean;
-  nextCursor: null;
-}
-
-interface RoomEnterFriendData {
-  uuid: string;
-  memberId: number;
-  gameName: string;
-  memberProfileImg: number;
-  friend: boolean;
-  blocked: boolean;
-  blind: boolean;
-  friendRequestMemberId: null;
-  system: null;
-  chatMessageListResponse: RoomListResponseData;
-}
-
-interface RoomBoardData {
-  uuid: string;
-  memberId: number;
-  gameName: string;
-  memberProfileImg: number;
-  friend: boolean;
-  blocked: boolean;
-  blind: boolean;
-  friendRequestMemberId: null;
-  system: {
-    flag: number;
-    boardId: number;
-  };
-  chatMessageListResponse: RoomListResponseData;
-}
-
-interface RoomData {
-  chatroomResponseList: Array<{
-    chatroomId: number;
-    uuid: string;
-    targetMemberId: number;
-    targetMemberImg: number;
-    targetMemberName: string;
-    friend: boolean;
-    blocked: boolean;
-    blind: boolean;
-    friendRequestMemberId: null;
-    lastMsg: string;
-    lastMsgAt: string;
-    notReadMsgCnt: number;
-    lastMsgTimestamp: number;
-  }>;
-}
-
-interface EnterData {
-  uuid: string;
-  memberId: number;
-  gameName: string;
-  memberProfileImg: number;
-  friend: boolean;
-  blocked: boolean;
-  blind: boolean;
-  friendRequestMemberId: null;
-  system: null;
-  chatMessageListResponse: RoomListResponseData;
+interface ChatMessageList {
+  chatMessageList: Array<chatMessage>;
+  list_size: number;
+  has_next: boolean;
+  next_cursor: null;
 }
 
 interface Messages {
@@ -88,39 +27,39 @@ interface Messages {
 }
 
 interface MessageData {
-  chatMessageList: Array<Messages>;
+  chatMessageList: ChatMessageList;
 }
 
 // requset
 
 export interface chatRoomExitRequest {
-  uuid: string;
+  uuid: string | number;
 }
 
 export interface chatRoomEnterRequest {
-  uuid: string;
+  uuid: string | number;
 }
 
 export interface chatRoomReadRequest {
-  uuid: string;
+  uuid: string | number;
   timestamp: null | number;
 }
 
 export interface chatRoomMessageRequest {
-  uuid: string;
+  uuid: string | number;
   cursor?: number | null;
 }
 
 export interface ChatRoomGetRequest {
-  cursor?: number;
+  cursor?: string | number;
 }
 
 export interface ChatRoomBoardRequest {
-  boardId: number;
+  boardId: string | number;
 }
 
 export interface chatRoomEnterFriendRequest {
-  memberId: string;
+  memberId: string | number;
 }
 
 // data
@@ -152,25 +91,68 @@ export interface chatRoomMessageData {
 export interface chatRoomEnterData {
   status: number;
   message: string;
-  data: EnterData;
+  uuid: string;
+  memberId: number;
+  gameName: string;
+  memberProfileImg: number;
+  friend: boolean;
+  blocked: boolean;
+  blind: boolean;
+  friendRequestMemberId: number;
+  system: System;
+  chatMessageListResponse: ChatMessageList;
 }
 
 export interface chatRoomGetData {
   status: number;
   message: string;
-  data: RoomData;
+  has_next: boolean;
+  next_cursor: number;
+  chatroomResponseList: Array<{
+    chatroomId: number;
+    uuid: string;
+    targetMemberId: number;
+    targetMemberImg: number;
+    targetMemberName: string;
+    friend: boolean;
+    blocked: boolean;
+    blind: boolean;
+    friendRequestMemberId: number;
+    lastMsg: string;
+    lastMsgAt: string;
+    notReadMsgCnt: number;
+    lastMsgTimestamp: number;
+  }>;
 }
 
 export interface chatRoomBoardData {
   status: number;
   message: string;
-  data: RoomBoardData;
+  uuid: string;
+  memberId: number;
+  gameName: string;
+  memberProfileImg: number;
+  friend: boolean;
+  blocked: boolean;
+  blind: boolean;
+  friendRequestMemberId: number;
+  system: System;
+  chatMessageListResponse: ChatMessageList;
 }
 
 export interface chatRoomFriendData {
   status: nubmer;
   message: string;
-  data: RoomEnterFriendData;
+  uuid: string;
+  memberId: number;
+  gameName: string;
+  memberProfileImg: number;
+  friend: boolean;
+  blocked: boolean;
+  blind: boolean;
+  friendRequestMemberId: number;
+  system: System;
+  chatMessageListResponse: ChatMessageList;
 }
 
 // response

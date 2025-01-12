@@ -203,7 +203,7 @@ const BoardPage = () => {
   /* 게시글 목록 */
   const getList = async () => {
     const params = {
-      pageIdx: currentPage,
+      page: currentPage,
       mode:
         boardFilters.mode && boardFilters.mode !== null
           ? boardFilters.mode
@@ -221,10 +221,10 @@ const BoardPage = () => {
 
     try {
       const data = await getBoardList(params);
-      if (data.isSuccess) {
-        setBoardList(data.result.boards);
-        setTotalPage(data.result.totalPage);
-        setTotalItems(data.result.totalCount);
+      if (data.status === 200) {
+        setBoardList(data.data.boards);
+        setTotalPage(data.data.totalPage);
+        setTotalItems(data.data.totalCount);
       } else {
         console.error(data.message);
       }
