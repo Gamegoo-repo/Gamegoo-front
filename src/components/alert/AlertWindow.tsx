@@ -162,19 +162,23 @@ const AlertWindow = (
             </TabContainer>
           </Header>
           <Background>
-            {notiList.map((data, index) => (
-              <AlertBox
-                key={`${data.notificationId}-${index}`}
-                notificationId={data.notificationId}
-                notificationtType={data.notificationType}
-                pageUrl={data.pageUrl}
-                content={data.content}
-                createdAt={data.createdAt}
-                read={data.read}
-                size="small"
-                onClick={handleClickAlert}
-              />
-            ))}
+            {notiList.length > 0 ? (
+              notiList.map((data, index) => (
+                <AlertBox
+                  key={`${data.notificationId}-${index}`}
+                  notificationId={data.notificationId}
+                  notificationtType={data.notificationType}
+                  pageUrl={data.pageUrl}
+                  content={data.content}
+                  createdAt={data.createdAt}
+                  read={data.read}
+                  size="small"
+                  onClick={handleClickAlert}
+                />
+              ))
+            ) : (
+              <NoData>새로운 알림이 없습니다.</NoData>
+            )}
           </Background>
         </Wrapper>
       </Overlay>
@@ -276,4 +280,14 @@ const Background = styled.div`
     border-radius: 66px;
     background: transparent;
   }
+`;
+
+const NoData = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: ${theme.colors.gray600};
+  ${theme.fonts.regular16}
 `;
