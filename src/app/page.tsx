@@ -1,6 +1,5 @@
 "use client";
 
-import ChatButton from "@/components/common/ChatButton";
 import { useRouter } from "next/navigation";
 import { MATCH_PAGE_DATA } from "@/data/match";
 import Image from "next/image";
@@ -64,11 +63,6 @@ const HomePage = () => {
             );
           })}
         </Main>
-        <Footer>
-          <ChatBoxContent>
-            <ChatButton />
-          </ChatBoxContent>
-        </Footer>
       </HomeContent>
     </Wrapper>
   );
@@ -119,8 +113,8 @@ const ContentWrapper = styled.div`
 `;
 
 const StyledObject = styled.object`
-    pointer-events: none;
-`
+  pointer-events: none;
+`;
 
 const ContentTitle = styled.p`
   position: absolute;
@@ -130,13 +124,4 @@ const ContentTitle = styled.p`
   ${(props) => props.theme.fonts.bold32};
   color: ${theme.colors.white};
   white-space: nowrap;
-`;
-
-const Footer = styled.footer`
-  display: flex;
-  margin-bottom: 78px;
-`;
-
-const ChatBoxContent = styled.div`
-  margin-left: auto;
 `;

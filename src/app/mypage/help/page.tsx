@@ -2,7 +2,6 @@
 
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
-import ChatButton from "@/components/common/ChatButton";
 
 const MyHelpPage = () => {
   return (
@@ -12,11 +11,6 @@ const MyHelpPage = () => {
           <Title>도움말</Title>
         </Profile>
       </MyHelpContent>
-      <Footer>
-        <ChatBoxContent>
-          <ChatButton />
-        </ChatBoxContent>
-      </Footer>
     </Wrapper>
   );
 };
@@ -47,13 +41,4 @@ const Profile = styled.header`
 const Title = styled.div`
   ${(props) => props.theme.fonts.bold25};
   color: ${theme.colors.gray700};
-`;
-
-const Footer = styled.footer`
-  display: flex;
-  margin-bottom: 78px;
-`;
-
-const ChatBoxContent = styled.div`
-  margin-left: auto;
 `;

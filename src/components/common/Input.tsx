@@ -10,6 +10,7 @@ interface InputProps {
   label?: string;
   value: string;
   onChange: (value: string) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   placeholder?: string;
   isValid?: null | boolean;
   disabled?: boolean;
@@ -32,6 +33,7 @@ const Input = (props: InputProps) => {
     label,
     value,
     onChange,
+    onKeyDown,
     placeholder,
     isValid,
     disabled,
@@ -75,6 +77,7 @@ const Input = (props: InputProps) => {
             className={size}
             value={value}
             onChange={handleChange}
+            onKeyDown={onKeyDown}
             placeholder={placeholder}
             isValid={isValid}
             disabled={disabled}

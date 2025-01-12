@@ -4,7 +4,6 @@ import HeaderTitle from "@/components/common/HeaderTitle";
 import { theme } from "@/styles/theme";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
 import MannerLevelBar from "@/components/common/MannerLevelBar";
-import ChatButton from "@/components/common/ChatButton";
 import { User } from "@/interface/profile";
 
 export interface Manner {
@@ -158,11 +157,6 @@ const UserProfile = ({
           </Content>
         </Main>
       </MatchContent>
-      <Footer>
-        <ChatBoxContent>
-          <ChatButton />
-        </ChatBoxContent>
-      </Footer>
     </Wrapper>
   );
 };
@@ -281,13 +275,4 @@ const Type = styled.p`
   &.badEmph {
     color: ${theme.colors.error200};
   }
-`;
-
-const Footer = styled.footer`
-  display: flex;
-  margin-bottom: 78px;
-`;
-
-const ChatBoxContent = styled.div`
-  margin-left: auto;
 `;

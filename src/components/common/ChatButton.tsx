@@ -5,55 +5,56 @@ import styled from "styled-components";
 import Alert from "./Alert";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { closeChat, toggleChat } from '@/redux/slices/chatSlice';
+import { toggleChat } from "@/redux/slices/chatSlice";
 import Layout from "../chat/Layout";
+import { resetPosition } from "@/redux/slices/chatPositionSlice";
 
 const ChatButton = () => {
-
   const [showAlert, setShowAlert] = useState(false);
   const [unreadChatUuids, setUnreadChatUuids] = useState<string[]>([]);
+  const [chatCount, setChatCount] = useState<number>(0);
 
   const isUser = useSelector((state: RootState) => state.user);
-  const unreadUuid = useSelector((state: RootState) => state.chat.unreadUuids);
   const isChatOpen = useSelector((state: RootState) => state.chat.isChatOpen);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setUnreadChatUuids(unreadUuid);
-  }, [unreadUuid])
+    const localUnreadChatUuids = sessionStorage.getItem("unreadChatUuids");
+    const parsedUuids = localUnreadChatUuids
+      ? JSON.parse(localUnreadChatUuids)
+      : [];
+    setUnreadChatUuids(parsedUuids);
+  }, []);
 
-  /* sessionStorage의 unreadChatUuids가 변경될 때 상태 업데이트 */
   useEffect(() => {
-    const localUnreadChatUuids = sessionStorage.getItem('unreadChatUuids');
-    if (localUnreadChatUuids) {
-      setUnreadChatUuids(JSON.parse(localUnreadChatUuids));
-    }
-  }, [unreadUuid]);
+    setChatCount(unreadChatUuids?.length || 0);
+  }, [unreadChatUuids]);
 
   /* sessionStorage가 변경되면 상태 업데이트 */
   useEffect(() => {
     const handleStorageChange = (event: StorageEvent) => {
-      if (event.key === 'unreadChatUuids') {
-        const updatedUnreadUuids = event.newValue ? JSON.parse(event.newValue) : [];
+      if (event.key === "unreadChatUuids") {
+        const updatedUnreadUuids = event.newValue
+          ? JSON.parse(event.newValue)
+          : [];
         setUnreadChatUuids(updatedUnreadUuids);
       }
     };
 
-    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener("storage", handleStorageChange);
 
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
-
-  const chatCount = unreadChatUuids ? unreadChatUuids.length : 0;
 
   const handleToggleChat = () => {
     if (!isUser.gameName) {
       return setShowAlert(true);
     }
     dispatch(toggleChat());
+    dispatch(resetPosition());
   };
 
   return (
@@ -69,37 +70,31 @@ const ChatButton = () => {
           buttonText="확인"
         />
       )}
-      <ChatBoxContent>
-        {isChatOpen && <Layout />}
-        <MsgButton onClick={handleToggleChat}>
-          <Image
-            src="/assets/icons/chat_box.svg"
-            width={36}
-            height={34}
-            alt="채팅"
-          />
-          <MsgCount>
-            <Count>{chatCount}</Count>
-          </MsgCount>
-        </MsgButton>
-      </ChatBoxContent>
+      {isChatOpen && <Layout />}
+      <MsgButton onClick={handleToggleChat}>
+        <Image
+          src="/assets/icons/chat_box.svg"
+          width={36}
+          height={34}
+          alt="채팅"
+        />
+        <MsgCount>
+          <Count>{chatCount}</Count>
+        </MsgCount>
+      </MsgButton>
     </>
   );
 };
 
 export default ChatButton;
 
-const ChatBoxContent = styled.div`
+const MsgButton = styled.button`
   display: flex;
-`;
-
-const MsgButton = styled.div`
   position: relative;
   width: 89px;
   height: 89px;
   border-radius: 50%;
   background: ${theme.colors.purple100};
-  cursor: pointer;
   position: fixed;
   bottom: 34px;
   right: 134px;
@@ -113,20 +108,19 @@ const MsgButton = styled.div`
 `;
 
 const MsgCount = styled.div`
-  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 22px;
   height: 22px;
+  position: absolute;
   border-radius: 50%;
   border: 1px solid ${theme.colors.purple200};
   background: ${theme.colors.white};
-  left: 72%;       
+  right: 5px;
 `;
 
 const Count = styled.p`
- ${(props) => props.theme.fonts.semiBold14};
+  ${(props) => props.theme.fonts.semiBold14};
   color: ${theme.colors.purple100};
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 `;

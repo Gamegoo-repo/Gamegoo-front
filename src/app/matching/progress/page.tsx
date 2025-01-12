@@ -8,7 +8,6 @@ import Image from "next/image";
 import { theme } from "@/styles/theme";
 import { useEffect, useRef, useState } from "react";
 import ConfirmModal from "@/components/common/ConfirmModal";
-import ChatButton from "@/components/common/ChatButton";
 import { sendMatchingQuitEvent, socket } from "@/socket";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { messagesWithN, messagesWithoutN } from "@/constants/messages";
@@ -18,7 +17,6 @@ import { setOpenPostingModal } from "@/redux/slices/modalSlice";
 import { useDispatch } from "react-redux";
 import { setBoardFilters } from "@/redux/slices/boardSlice";
 import { setIsCompleted } from "@/utils/storage";
-import { Router } from "next/router";
 
 interface User {
   memberId: number;
@@ -384,11 +382,6 @@ const Progress = () => {
             </ConfirmModal>
           )}
         </MatchContent>
-        <Footer>
-          <ChatBoxContent>
-            <ChatButton />
-          </ChatBoxContent>
-        </Footer>
       </Wrapper>
     </Suspense>
   );
@@ -484,15 +477,6 @@ const Waiting = styled.div`
 
   animation: ${fadeIn} 0.5s ease-in forwards;
   transition: opacity 0.5s ease-in-out;
-`;
-
-const Footer = styled.footer`
-  display: flex;
-  margin-bottom: 78px;
-`;
-
-const ChatBoxContent = styled.div`
-  margin-left: auto;
 `;
 
 const AnimatedImage = styled(Image)`

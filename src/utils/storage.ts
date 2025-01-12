@@ -72,7 +72,6 @@ export const getUserId = () => {
     return null;
 };
 
-
 /* 토큰 제거 */
 export const clearTokens = () => {
     localStorage.removeItem('accessToken');
@@ -85,6 +84,7 @@ export const clearTokens = () => {
     sessionStorage.removeItem('name');
     sessionStorage.removeItem('profileImg');
     sessionStorage.removeItem('userId');
+    sessionStorage.removeItem("chatPosition");
 };
 
 /* 매칭 완료 여부 */
