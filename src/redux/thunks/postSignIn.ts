@@ -1,8 +1,9 @@
-import { joinMember } from '@/api/join';
+
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 import { updateEmail, updatePassword } from '../slices/signInSlice';
 import { AxiosError } from 'axios';
+import { postJoin } from '@/api/join/join';
 
 interface SignInData {
   isAgree: boolean;
@@ -20,7 +21,7 @@ export const postSignIn = createAsyncThunk(
       const signInState = (getState() as RootState).signIn;
 
        /* API 호출을 위한 요청 데이터 준비 */
-      const joinData = {
+      const joinData:SignInData = {
         isAgree: signInState.terms[2],
         email: signInState.email,
         password: signInState.password,
@@ -29,7 +30,7 @@ export const postSignIn = createAsyncThunk(
       };
       
       if (signInState.authStatus === true) {
-        const response = await joinMember(joinData);
+        const response = await postJoin(joinData);
 
         /* 성공적으로 회원가입 완료 후, Redux 상태 초기화 */
         dispatch(updateEmail(''));

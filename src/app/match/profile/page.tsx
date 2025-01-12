@@ -9,7 +9,6 @@ import { useEffect, useState } from "react";
 import { profileType } from "@/interface/profile";
 import { Suspense } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getProfile } from "@/api/user";
 import { setUserProfile } from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
 import ChatButton from "@/components/common/ChatButton";
@@ -17,6 +16,7 @@ import { sendMatchingQuitEvent, socket } from "@/socket";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import { theme } from "@/styles/theme";
 import { closeChatRoom } from "@/redux/slices/chatSlice";
+import { getMyProfile } from "@/api/user/profile/get";
 
 const ProfilePage = () => {
   const router = useRouter();
@@ -37,9 +37,9 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await getProfile();
+        const response = await getMyProfile();
         console.log("Fetched profile:", response);
-        dispatch(setUserProfile(response));
+        dispatch(setUserProfile(response.data));
       } catch (error) {
         console.error(error);
       }

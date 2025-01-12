@@ -6,18 +6,6 @@ interface ReportInterface {
     contents: string;
 }
 
-export const getOtherProfile= async (id:number) => {
-    const endpoint = '/v1/member/profile/other';
-    try {
-        const response = await AuthAxios.get(endpoint, {
-            params: { id },
-          });
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  };
-
 /* 차단하기 */
 export const blockMember = async (memberId: number) => {
     try {

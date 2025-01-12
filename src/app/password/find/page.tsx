@@ -1,6 +1,6 @@
 "use client";
 
-import { sendEmail } from "@/api/password";
+import { sendPasswordEmail } from "@/api/email/email";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import {
@@ -43,7 +43,7 @@ const Find = () => {
     if (!isSending) {
       setIsSending(true); // 전송 중 상태
       try {
-        await sendEmail({ email });
+        await sendPasswordEmail({ email });
         dispatch(updateEmail(email));
         dispatch(updateEmailAuth(""));
         dispatch(updateAuthStatus(false));
