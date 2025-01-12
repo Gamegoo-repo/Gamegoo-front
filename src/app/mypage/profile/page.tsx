@@ -6,16 +6,17 @@ import MyPageProfile from "@/components/mypage/profile/MyPageProfile";
 import PasswordModal from "@/components/mypage/profile/PasswordModal";
 import { useEffect, useState } from "react";
 import ConfirmModal from "@/components/common/ConfirmModal";
-import { deleteMember, getProfile } from "@/api/user";
+import { deleteMember } from "@/api/user";
 import { setUserMike, setUserProfile } from "@/redux/slices/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { formatDate } from "@/utils/custom";
 import Input from "@/components/common/Input";
-import { checkPassword } from "@/api/password";
+import { checkPassword } from "@/api/password/password";
 import { clearTokens } from "@/utils/storage";
 import { useRouter } from "next/navigation";
 import ChatButton from "@/components/common/ChatButton";
+import { getMyProfile } from "@/api/user/profile/get";
 
 const passwordLength = 10;
 
@@ -57,9 +58,9 @@ const MyProfilePage = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await getProfile();
-        dispatch(setUserProfile(response.result));
-        dispatch(setUserMike(response.result.mike));
+        const response = await getMyProfile();
+        dispatch(setUserProfile(response.data));
+        dispatch(setUserMike(response.data.mike));
       } catch (error) {
         console.error(error);
       }

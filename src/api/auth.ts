@@ -1,23 +1,10 @@
 import axios, { AxiosInstance, InternalAxiosRequestConfig } from "axios";
 import { LOGIN } from "@/constants/messages";
-import Axios, { BASE_URL } from ".";
+import { BASE_URL } from ".";
 import { clearTokens, getAccessToken, getRefreshToken } from "@/utils/storage";
 import { notify } from "@/hooks/notify";
 import { connectSocket } from "@/socket";
-
-export const reissueToken = async () => {
-  const endpoint = "/v1/member/refresh";
-
-  try {
-    const refreshToken = getRefreshToken();
-    const response = await Axios.post(endpoint, { refreshToken: refreshToken });
-    console.log("accessToken 재발급 성공:", response);
-    return response.data;
-  } catch (error) {
-    console.error("accessToken 재발급 실패:", error);
-    throw error;
-  }
-};
+import { reissueToken } from "./reissue";
 
 /* AuthAxios 인스턴스 생성 */
 export const AuthAxios: AxiosInstance = axios.create({
@@ -59,16 +46,16 @@ AuthAxios.interceptors.response.use(
       try {
         /* 토큰 재발급 요청 */
         const response = await reissueToken();
-        const newAccessToken = response.result.accessToken;
+        const newAccessToken = response.data.accessToken;
         const originRequest = config; // 이전 요청 저장
 
         // 로컬 또는 세션에 재발급된 토큰 저장
         if (localStorage.getItem("accessToken")) {
           localStorage.setItem("accessToken", newAccessToken);
-          localStorage.setItem("refreshToken", response.result.refreshToken);
+          localStorage.setItem("refreshToken", response.data.refreshToken);
         } else {
           sessionStorage.setItem("accessToken", newAccessToken);
-          sessionStorage.setItem("refreshToken", response.result.refreshToken);
+          sessionStorage.setItem("refreshToken", response.data.refreshToken);
         }
         connectSocket();
         originRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
