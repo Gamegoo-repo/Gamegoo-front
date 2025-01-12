@@ -21,13 +21,13 @@ import {
   setUserName,
   setUserProfileImg,
 } from "@/redux/slices/userSlice";
-import { getNotiCount } from "@/api/notification";
 import { RootState } from "@/redux/store";
 import Alert from "./Alert";
 import { setNotiCount } from "@/redux/slices/notiSlice";
 import { socketLogout } from "@/api/socket";
 import { closeChat } from "@/redux/slices/chatSlice";
 import { postLogout } from "@/api/login/logout";
+import { getUnreadNotificationCount } from "@/api/notification/notification";
 
 interface HeaderProps {
   selected: boolean;
@@ -95,9 +95,8 @@ const Header = () => {
 
   const fetchNotiCount = async () => {
     try {
-      const response = await getNotiCount();
-      // setCount(response.result);
-      dispatch(setNotiCount(response.result));
+      const response = await getUnreadNotificationCount();
+      dispatch(setNotiCount(response.data));
     } catch (error) {
       console.error(error);
     }

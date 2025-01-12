@@ -4,20 +4,11 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import AlertBox from "../mypage/notification/AlertBox";
 import { useRouter } from "next/navigation";
-import { Notification } from "@/app/mypage/notification/page";
-import { getNotiModal, readNoti } from "@/api/notification";
-
-interface NotificationResponse {
-  isSuccess: boolean;
-  code: string;
-  message: string;
-  result: {
-    notificationDTOList: Notification[];
-    list_size: number;
-    has_next: boolean;
-    next_cursor: number | null;
-  };
-}
+import {
+  getPopupNotification,
+  patchReadNotification,
+} from "@/api/notification/notification";
+import { Notification } from "@/types/notification";
 
 interface AlertWindowProps {
   countFunc: () => void;
@@ -64,12 +55,12 @@ const AlertWindow = (
 
     setLoading(true);
     try {
-      const response: NotificationResponse = await getNotiModal(cursor);
-      if (response.isSuccess) {
-        const { notificationDTOList, next_cursor, has_next } = response.result;
-        setNotiList(notificationDTOList);
-        setCursor(next_cursor);
-        setHasMore(has_next);
+      const response = await getPopupNotification(cursor);
+      if (response.data) {
+        const { notificationList, nextCursor, hasNext } = response.data;
+        setNotiList(notificationList);
+        setCursor(nextCursor);
+        setHasMore(hasNext);
       } else {
         console.error(response.message);
       }
@@ -130,7 +121,7 @@ const AlertWindow = (
     );
     if (notification && !notification.read) {
       try {
-        await readNoti(notificationId);
+        await patchReadNotification(notificationId);
         setNotiList((prevNotiList) =>
           prevNotiList.map((n) =>
             n.notificationId === notificationId ? { ...n, read: true } : n
