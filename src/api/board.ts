@@ -4,6 +4,11 @@ import Axios from ".";
 
 interface ListInterface {
   page: number;
+  pageIdx?: number;
+  mode?: number | string | null;
+  tier?: string | null;
+  mainPosition?: number;
+  mike?: boolean | string | null;
 }
 
 /* 글쓰기 */
