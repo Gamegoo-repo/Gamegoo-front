@@ -51,7 +51,7 @@ export interface chatRoomMessageRequest {
 }
 
 export interface ChatRoomGetRequest {
-  cursor?: string | number;
+  cursor?: string | number | null;
 }
 
 export interface ChatRoomBoardRequest {
