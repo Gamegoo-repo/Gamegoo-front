@@ -7,7 +7,7 @@ interface UserProps {
   account: string;
   tag: string;
   tier: string;
-  rank: number;
+  rank: number | undefined;
 }
 
 const User = (props: UserProps) => {
@@ -69,7 +69,7 @@ const UserTier = styled.div`
 `;
 
 const ProfileImage = styled.object`
-    pointer-events: none;
+  pointer-events: none;
 `;
 
 const Tier = styled.p`

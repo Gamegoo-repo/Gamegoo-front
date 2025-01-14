@@ -74,7 +74,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     height: 0,
     content: "",
     alt: "",
-    onClose: () => { },
+    onClose: () => {},
     buttonText: "",
   });
   const [isBlockBoxOpen, setIsBlockBoxOpen] = useState(false);
@@ -82,7 +82,9 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   const isModalType = useSelector((state: RootState) => state.modal.modalType);
   const isUser = useSelector((state: RootState) => state.user);
-  const isPostModalOpen = useSelector((state: RootState) => state.modal.postingModal);
+  const isPostModalOpen = useSelector(
+    (state: RootState) => state.modal.postingModal
+  );
   const isErrorMessage = useSelector(
     (state: RootState) => state.chat.errorMessage
   );
@@ -117,16 +119,18 @@ const ReadBoard = (props: ReadBoardProps) => {
 
       if (!!isUser.id && postId) {
         const memberData = await getMemberPost(postId);
-        setIsPost(memberData.result);
-        setGameMode(memberData.result.gameMode);
-        setIsBlockedStatus(memberData.result.isBlocked);
+        setIsPost(memberData.data);
+        setGameMode(memberData.data.gameMode);
+        setIsBlockedStatus(memberData.data.isBlocked);
       } else if (!isUser.id && postId) {
         const nonMember = await getNonMemberPost(postId);
-        setIsPost(nonMember.result);
+        setIsPost(nonMember.data);
       }
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
-      if (axiosError?.response?.data?.message === '해당 글은 삭제된 글입니다.') {
+      if (
+        axiosError?.response?.data?.message === "해당 글은 삭제된 글입니다."
+      ) {
         return showAlertWithContent(
           "trash",
           deletedMessage,
@@ -151,8 +155,8 @@ const ReadBoard = (props: ReadBoardProps) => {
   useEffect(() => {
     return () => {
       dispatch(setCloseReadingModal());
-    }
-  }, [])
+    };
+  }, []);
 
   /* MannerLevelBox 외부 클릭 시 닫힘 */
   useEffect(() => {
@@ -346,7 +350,6 @@ const ReadBoard = (props: ReadBoardProps) => {
     );
   };
 
-
   /* 게시글 수정 */
   const handleEdit = async () => {
     if (!isUser.id) {
@@ -361,8 +364,10 @@ const ReadBoard = (props: ReadBoardProps) => {
     if (isUser?.id !== isPost?.memberId) return;
 
     if (isPost) {
-      await dispatch(setCurrentPost({ currentPost: isPost, currentPostId: postId }));
-      await dispatch(setOpenPostingModal())
+      await dispatch(
+        setCurrentPost({ currentPost: isPost, currentPostId: postId })
+      );
+      await dispatch(setOpenPostingModal());
       await dispatch(setCloseReadingModal());
       dispatch(setPostStatus(""));
     }
@@ -421,7 +426,6 @@ const ReadBoard = (props: ReadBoardProps) => {
       { text: "삭제", onClick: handleDelete }
     );
   } else {
-
     /* 다른 사람이 작성한 글 */
     //친구 삭제 - 차단되어있을 때, 친구일 때, 친구 추가 요청 중일 때
     //친구 추가(친구 요청) - 친구가 아닐 때, 차단되어있지 않을 때, 친구 추가 요청 중이 아닐 때
@@ -440,7 +444,8 @@ const ReadBoard = (props: ReadBoardProps) => {
         if (!isPost?.isFriend && isPost?.friendRequestMemberId !== isUser.id) {
           friendText = "친구 추가";
           friendFunc = handleFriendAdd;
-        } if (!isPost?.isFriend && isPost?.friendRequestMemberId === isUser.id) {
+        }
+        if (!isPost?.isFriend && isPost?.friendRequestMemberId === isUser.id) {
           friendText = "친구 요청 취소";
           friendFunc = handleCancelFriendReq;
         }
@@ -516,7 +521,8 @@ const ReadBoard = (props: ReadBoardProps) => {
       <CRModal
         type="reading"
         hideContent={showAlert}
-        onClose={() => dispatch(setCloseReadingModal())}>
+        onClose={() => dispatch(setCloseReadingModal())}
+      >
         {showAlert ? (
           <Alert {...alertProps} />
         ) : (
@@ -572,7 +578,7 @@ const ReadBoard = (props: ReadBoardProps) => {
                 <Champion
                   title={true}
                   size={14}
-                  list={isPost.championResponseDTOList.map(
+                  list={isPost?.championResponseDTOList?.map(
                     (champion) => champion.championId
                   )}
                 />
@@ -707,8 +713,9 @@ const ReadBoard = (props: ReadBoardProps) => {
             setIsBlockConfrimOpen(false);
           }}
         >
-          <MsgConfirm>{`${isBlockedStatus ? "차단이" : "차단 해제가"
-            } 완료되었습니다.`}</MsgConfirm>
+          <MsgConfirm>{`${
+            isBlockedStatus ? "차단이" : "차단 해제가"
+          } 완료되었습니다.`}</MsgConfirm>
         </ConfirmModal>
       )}
     </>
@@ -805,8 +812,7 @@ const MemoData = styled.p`
 `;
 
 const ButtonContent = styled.p<{ $gameType: number }>`
-  margin: ${({ $gameType }) => ($gameType !== 4 ? "30px" : "150px")} 0
-    28px;
+  margin: ${({ $gameType }) => ($gameType !== 4 ? "30px" : "150px")} 0 28px;
   text-align: center;
 `;
 

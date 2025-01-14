@@ -221,10 +221,10 @@ const BoardPage = () => {
 
     try {
       const data = await getBoardList(params);
-      if (data.isSuccess) {
-        setBoardList(data.result.boards);
-        setTotalPage(data.result.totalPage);
-        setTotalItems(data.result.totalCount);
+      if (data.status === 200) {
+        setBoardList(data.data.boards);
+        setTotalPage(data.data.totalPage);
+        setTotalItems(data.data.totalCount);
       } else {
         console.error(data.message);
       }
