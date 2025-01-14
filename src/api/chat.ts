@@ -21,9 +21,7 @@ import { AuthAxios } from "./auth";
 export const getChatrooms = async ({
   cursor,
 }: ChatRoomGetRequest): Promise<chatRoomGetResponse> => {
-  const url = cursor
-    ? `http://13.124.213.255:8080/api/v2/chatroom?cursor=${cursor}`
-    : `http://13.124.213.255:8080/api/v2/chatroom`;
+  const url = cursor ? `/api/v2/chatroom?cursor=${cursor}` : `/api/v2/chatroom`;
 
   try {
     const response = await AuthAxios.get(url);
@@ -38,9 +36,7 @@ export const enterUsingUuid = async ({
   uuid,
 }: chatRoomEnterRequest): Promise<chatRoomEnterResponse> => {
   try {
-    const response = await AuthAxios.get(
-      `http://13.124.213.255:8080/api/v2/chat/${uuid}/enter`
-    );
+    const response = await AuthAxios.get(`/api/v2/chat/${uuid}/enter`);
     return response.data;
   } catch (error) {
     throw error;
@@ -53,7 +49,7 @@ export const enterUsingMemberId = async ({
 }: chatRoomEnterFriendRequest): Promise<chatRoomFriendResponse> => {
   try {
     const response = await AuthAxios.get(
-      `http://13.124.213.255:8080/api/v2/chat/start/member/${memberId}`
+      `/api/v2/chat/start/member/${memberId}`
     );
     return response.data;
   } catch (error) {
@@ -66,9 +62,7 @@ export const enterUsingBoardId = async ({
   boardId,
 }: ChatRoomBoardRequest): Promise<chatRoomBoardResponse> => {
   try {
-    const response = await AuthAxios.get(
-      `http://13.124.213.255:8080/api/v2/chat/start/board/${boardId}`
-    );
+    const response = await AuthAxios.get(`/api/v2/chat/start/board/${boardId}`);
     return response.data;
   } catch (error) {
     throw error;
@@ -81,8 +75,8 @@ export const getChatList = async ({
   cursor,
 }: chatRoomMessageRequest): Promise<chatRoomMessageData> => {
   const url = cursor
-    ? `http://13.124.213.255:8080/api/v2/chat/${uuid}/messages?cursor=${cursor}`
-    : `http://13.124.213.255:8080/api/v2/chat/${uuid}/messages`;
+    ? `/api/v2/chat/${uuid}/messages?cursor=${cursor}`
+    : `/api/v2/chat/${uuid}/messages`;
   try {
     const response = await AuthAxios.get(url);
     return response.data;
@@ -96,9 +90,7 @@ export const leaveChatroom = async ({
   uuid,
 }: chatRoomExitRequest): Promise<chatRoomExitResponse> => {
   try {
-    const response = await AuthAxios.patch(
-      `http://13.124.213.255:8080/api/v2/chat/${uuid}/exit`
-    );
+    const response = await AuthAxios.patch(`/api/v2/chat/${uuid}/exit`);
     return response.data;
   } catch (error) {
     throw error;
@@ -111,8 +103,8 @@ export const markChatAsRead = async ({
   timestamp,
 }: chatRoomReadRequest): Promise<chatRoomReadData> => {
   const url = timestamp
-    ? `http://13.124.213.255:8080/api/v2/chat/${uuid}/read?timestamp=${timestamp}`
-    : `http://13.124.213.255:8080/api/v2/chat/${uuid}/read`;
+    ? `/api/v2/chat/${uuid}/read?timestamp=${timestamp}`
+    : `/api/v2/chat/${uuid}/read`;
   try {
     const response = await AuthAxios.patch(url);
     return response.data;
@@ -124,9 +116,7 @@ export const markChatAsRead = async ({
 /* 안 읽은 채팅방 uuid 가져오기 */
 export const getUnreadUuid = async (): Promise<chatRoomSearchResponse> => {
   try {
-    const response = await AuthAxios.get(
-      "http://13.124.213.255:8080/api/v2/chat/unread"
-    );
+    const response = await AuthAxios.get("/api/v2/chat/unread");
     return response.data;
   } catch (error) {
     throw error;
