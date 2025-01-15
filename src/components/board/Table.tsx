@@ -192,8 +192,8 @@ const Table = (props: TableProps) => {
                         !data.tier
                           ? "/assets/images/tier/unranked.svg"
                           : `/assets/images/tier/${toLowerCaseString(
-                            data.tier
-                          )}.svg`
+                              data.tier
+                            )}.svg`
                       }
                       width={28}
                       height={26}
@@ -228,7 +228,7 @@ const Table = (props: TableProps) => {
                   <Sixth className="table_width">
                     <Champion
                       size={14}
-                      list={data.championResponseDTOList.map(
+                      list={data.championResponseList.map(
                         (champion) => champion.championId
                       )}
                     />
