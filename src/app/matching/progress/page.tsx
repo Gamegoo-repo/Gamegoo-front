@@ -243,6 +243,7 @@ const Progress = () => {
             : null;
 
         const params = {
+          page: 1,
           pageIdx: 1,
           mode: mode,
           tier: user.tier,

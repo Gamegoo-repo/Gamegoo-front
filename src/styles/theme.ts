@@ -113,6 +113,10 @@ const fonts = {
         weight: 500,
         size: 20,
     }),
+    medium18: FONT({
+        weight: 500,
+        size: 18,
+    }),
     medium16: FONT({
         weight: 500,
         size: 16,
