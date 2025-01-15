@@ -9,6 +9,7 @@ import { theme } from "@/styles/theme";
 import { useState } from "react";
 import Alert from "@/components/common/Alert";
 import { getAccessToken } from "@/utils/storage";
+import { AuthAxios } from "@/api/auth";
 
 const HomePage = () => {
   const router = useRouter();
@@ -119,8 +120,8 @@ const ContentWrapper = styled.div`
 `;
 
 const StyledObject = styled.object`
-    pointer-events: none;
-`
+  pointer-events: none;
+`;
 
 const ContentTitle = styled.p`
   position: absolute;

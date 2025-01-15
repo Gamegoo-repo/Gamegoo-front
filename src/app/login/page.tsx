@@ -93,11 +93,14 @@ const Login = () => {
 
       /* 소켓 로그인 */
       const data = await getUnreadUuid();
-      if (data.isSuccess) {
+      if (data.status === 200) {
         // 실시간 안읽은 채팅방 수 가져오기 위함
-        dispatch(setUnreadUuid(data.result));
+        dispatch(setUnreadUuid(data.data.data));
         // 새로고침시 채팅방 수 가져오기 위함
-        sessionStorage.setItem("unreadChatUuids", JSON.stringify(data.result));
+        sessionStorage.setItem(
+          "unreadChatUuids",
+          JSON.stringify(data.data.data)
+        );
       }
     } catch (error: any) {
       const data = error.response.data;

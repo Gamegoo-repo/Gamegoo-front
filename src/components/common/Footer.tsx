@@ -4,11 +4,23 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Alert from "./Alert";
 import FeedBackInput from "./FeedbackInput";
+import { useRouter } from "next/navigation";
 
 const Footer = () => {
+  const router = useRouter();
   const [showAlert, setShowAlert] = useState(false);
+
+  /* 서비스 준비 중 경고창 */
   const handleShowWarning = () => {
     setShowAlert(!showAlert);
+  };
+
+  const handleDirectPrivacy = () => {
+    router.push("/policy?terms=privacy");
+  };
+
+  const handleDirectService = () => {
+    router.push("/policy?terms=service");
   };
 
   return (
@@ -41,8 +53,8 @@ const Footer = () => {
         </LeftWrapper>
         <RightDiv>
           <Bold>Resources</Bold>
-          <button onClick={handleShowWarning}>개인정보처리방침</button>
-          <button onClick={handleShowWarning}>이용약관</button>
+          <button onClick={handleDirectPrivacy}>개인정보처리방침</button>
+          <button onClick={handleDirectService}>이용약관</button>
         </RightDiv>
       </Container>
     </Wrapper>

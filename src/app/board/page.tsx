@@ -203,7 +203,7 @@ const BoardPage = () => {
   /* 게시글 목록 */
   const getList = async () => {
     const params = {
-      pageIdx: currentPage,
+      page: currentPage,
       mode:
         boardFilters.mode && boardFilters.mode !== null
           ? boardFilters.mode
