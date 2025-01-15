@@ -1,137 +1,105 @@
 import { ApiResponse } from "../api";
 
-interface ChampionResponseDTOList {
+// 기본 DTO 인터페이스들
+interface ChampionResponseDTO {
   championId: number;
   championName: string;
 }
 
-export interface PostsData {
-  boardId: number;
+interface MannerKeywordDTO {
+  createdAt: string;
+  updatedAt: string;
+  id: number;
+  contents: string;
+  positive: boolean;
+}
+
+// 기본 플레이어 정보 인터페이스
+interface BasePlayerInfo {
   memberId: number;
   profileImage: number;
   gameName: string;
   tag: string;
   tier: string;
-  rank: number;
+}
+
+// 게임 관련 기본 정보 인터페이스
+interface GameInfo {
   gameMode: number;
   mainPosition: number;
   subPosition: number;
   wantPosition: number;
-  mike: true;
+  mike: boolean;
   gameStyles: Array<number>;
-  contents: string;
 }
 
-export interface GetBoardListData {
+// 게임 스탯 정보 인터페이스
+interface GameStats {
+  winRate: number;
+  recentGameCount?: number;
+  championResponseList?: ChampionResponseDTO[];
+  championResponseDTOList?: ChampionResponseDTO[];
+}
+
+// 기본 게시글 정보 인터페이스
+interface BaseBoardInfo {
+  boardId: number;
+  contents: string;
+  rank?: number;
+}
+
+// 게시글 목록의 기본 구조
+interface BoardListStructure {
   totalPage: number;
   totalCount: number;
-  boards: [
-    {
-      boardId: number;
-      memberId: number;
-      profileImage: number;
-      gameName: string;
-      tag: string;
-      mannerLevel: number;
-      tier: string;
-      rank: number;
-      gameMode: number;
-      mainPosition: number;
-      subPosition: number;
-      wantPosition: number;
-      championResponseList: [
-        {
-          championId: number;
-          championName: string;
-        }
-      ];
-      winRate: number;
-      createdAt: string;
-      mike: boolean;
-    }
-  ];
 }
 
-export interface MemberPostBoardData {
-  boardId: number;
-  memberId: number;
+// 구체적인 인터페이스들
+export interface PostsData extends BasePlayerInfo, GameInfo, BaseBoardInfo {}
+
+export interface GetBoardListData extends BoardListStructure {
+  boards: Array<BoardDetail>;
+}
+
+interface BoardDetail
+  extends BasePlayerInfo,
+    GameInfo,
+    BaseBoardInfo,
+    GameStats {
+  mannerLevel: number;
+  createdAt: string;
+}
+
+export interface MemberPostBoardData
+  extends BasePlayerInfo,
+    GameInfo,
+    BaseBoardInfo,
+    GameStats {
   isBlocked: boolean;
   isFriend: boolean;
   friendRequestMemberId: number;
   createdAt: string;
-  profileImage: number;
-  gameName: string;
-  tag: string;
   mannerLevel: number;
-  mannerKeywords: [
-    {
-      createdAt: string;
-      updatedAt: string;
-      id: number;
-      contents: string;
-      positive: boolean;
-    }
-  ];
-  tier: string;
-  rank: number | undefined;
-  mike: boolean;
-  championResponseDTOList: [
-    {
-      championId: number;
-      championName: string;
-    }
-  ];
-  gameMode: number;
-  mainPosition: number;
-  subPosition: number;
-  wantPosition: number;
-  recentGameCount: number;
-  winRate: number;
-  gameStyles: Array<number>;
-  contents: string;
+  mannerKeywords: MannerKeywordDTO[];
 }
 
-export interface NotMemberBoardData {
-  boardId: number;
-  memberId: number;
+export interface NotMemberBoardData
+  extends BasePlayerInfo,
+    GameInfo,
+    BaseBoardInfo,
+    GameStats {
   createdAt: string;
-  profileImage: number;
-  gameName: string;
-  tag: string;
   mannerLevel: number;
-  tier: string;
-  rank: number | undefined;
-  mike: boolean;
-  championResponseList: ChampionResponseDTOList[];
-  gameMode: number;
-  mainPosition: number;
-  subPosition: number;
-  wantPosition: number;
-  recentGameCount: number;
-  winRate: number;
-  gameStyles: Array<number>;
-  contents: string;
 }
 
-export interface BoardEditData {
-  boardId: number;
-  memberId: number;
-  profileImage: number;
-  gameName: string;
-  tag: string;
-  tier: string;
-  rank: number;
-  gameMode: number;
-  mainPosition: number;
-  subPosition: number;
-  wantPosition: number;
-  mike: boolean;
-  gameStyles: Array<number>;
-  contents: string;
-}
+export interface BoardEditData
+  extends BasePlayerInfo,
+    GameInfo,
+    BaseBoardInfo {}
 
 export interface BoardDeleteData {}
 
+// API 응답 타입들
 export type PostsResponse = ApiResponse<PostsData>;
 export type BoardDeleteResponse = ApiResponse<BoardDeleteData>;
 export type BoardEditResponse = ApiResponse<BoardEditData>;
