@@ -1,3 +1,4 @@
+import { MannerKeywordDTO } from "@/types/api/board/board";
 import { MannerKeywords } from "./manner";
 
 export interface ChampionResponseDTOList {
@@ -46,7 +47,7 @@ export interface MemberPost {
   gameName: string;
   tag: string;
   mannerLevel: number;
-  mannerKeywords?: MannerKeywords[];
+  mannerKeywords?: MannerKeywordDTO[];
   tier: string;
   mike: boolean;
   championResponseList?: ChampionResponseDTOList[];

@@ -6,7 +6,7 @@ interface ChampionResponseDTO {
   championName: string;
 }
 
-interface MannerKeywordDTO {
+export interface MannerKeywordDTO {
   createdAt: string;
   updatedAt: string;
   id: number;
