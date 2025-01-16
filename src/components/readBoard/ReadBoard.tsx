@@ -598,7 +598,7 @@ const ReadBoard = (props: ReadBoardProps) => {
               <WinningRateSection $gameType={gameMode}>
                 <WinningRate
                   completed={isPost.winRate}
-                  recentGameCount={isPost.recentGameCount}
+                  recentGameCount={isPost?.recentGameCount}
                 />
               </WinningRateSection>
               <StyleSection $gameType={gameMode}>

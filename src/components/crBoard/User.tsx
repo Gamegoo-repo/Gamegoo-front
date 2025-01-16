@@ -7,7 +7,7 @@ interface UserProps {
   account: string;
   tag: string;
   tier: string;
-  rank: number;
+  rank?: number;
 }
 
 const User = (props: UserProps) => {

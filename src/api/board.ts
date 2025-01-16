@@ -11,7 +11,11 @@ import {
 } from "@/types/api/board/board";
 
 interface ListInterface {
-  pageIdx: number;
+  page: number;
+  mode: string | number | null;
+  tier: string | null;
+  mainPosition: number;
+  mike: string | boolean | null;
 }
 
 /* 글쓰기 */

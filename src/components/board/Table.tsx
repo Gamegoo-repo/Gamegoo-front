@@ -228,7 +228,7 @@ const Table = (props: TableProps) => {
                   <Sixth className="table_width">
                     <Champion
                       size={14}
-                      list={data.championResponseList.map(
+                      list={data?.championResponseList?.map(
                         (champion) => champion.championId
                       )}
                     />

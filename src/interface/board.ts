@@ -18,12 +18,12 @@ export interface BoardDetail {
   mannerLevel: number;
   tag: string;
   tier: string;
-  rank: number;
+  rank?: number;
   gameMode: number;
   mainPosition: number;
   subPosition: number;
   wantPosition: number;
-  championResponseList: ChampionResponseDTOList[];
+  championResponseList?: ChampionResponseDTOList[];
   winRate: number;
   createdAt: string;
   mike: boolean;
@@ -55,7 +55,7 @@ export interface MemberPost {
   mainPosition?: number;
   subPosition?: number;
   wantPosition?: number;
-  recentGameCount: number;
+  recentGameCount?: number;
   winRate: number;
   gameStyles: number[];
   contents: string;
