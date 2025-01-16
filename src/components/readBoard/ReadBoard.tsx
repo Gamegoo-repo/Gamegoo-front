@@ -578,7 +578,7 @@ const ReadBoard = (props: ReadBoardProps) => {
                 <Champion
                   title={true}
                   size={14}
-                  list={isPost.championResponseDTOList.map(
+                  list={isPost?.championResponseDTOList?.map(
                     (champion) => champion.championId
                   )}
                 />
@@ -598,7 +598,7 @@ const ReadBoard = (props: ReadBoardProps) => {
               <WinningRateSection $gameType={gameMode}>
                 <WinningRate
                   completed={isPost.winRate}
-                  recentGameCount={isPost.recentGameCount}
+                  recentGameCount={isPost?.recentGameCount}
                 />
               </WinningRateSection>
               <StyleSection $gameType={gameMode}>

@@ -1,18 +1,25 @@
 import { PostReq } from "@/interface/board";
 import { AuthAxios } from "./auth";
 import Axios from ".";
+import {
+  BoardDeleteResponse,
+  BoardEditResponse,
+  GetBoardListResponse,
+  MemberPostBoardResponse,
+  NotMemberBoardResponse,
+  PostsResponse,
+} from "@/types/api/board/board";
 
 interface ListInterface {
   page: number;
-  pageIdx?: number;
-  mode?: number | string | null;
-  tier?: string | null;
-  mainPosition?: number;
-  mike?: boolean | string | null;
+  mode: string | number | null;
+  tier: string | null;
+  mainPosition: number;
+  mike: string | boolean | null;
 }
 
 /* 글쓰기 */
-export const postBoard = async (params: PostReq) => {
+export const postBoard = async (params: PostReq): Promise<PostsResponse> => {
   try {
     const response = await AuthAxios.post("/api/v2/posts", params);
     return response.data;
@@ -23,7 +30,9 @@ export const postBoard = async (params: PostReq) => {
 };
 
 /* 게시글 목록 조회 */
-export const getBoardList = async (params: ListInterface) => {
+export const getBoardList = async (
+  params: ListInterface
+): Promise<GetBoardListResponse> => {
   try {
     const response = await AuthAxios.get("/api/v2/posts/list", { params });
     return response.data;
@@ -34,7 +43,9 @@ export const getBoardList = async (params: ListInterface) => {
 };
 
 /* 회원 게시글 조회 */
-export const getMemberPost = async (postId: number) => {
+export const getMemberPost = async (
+  postId: number
+): Promise<MemberPostBoardResponse> => {
   try {
     const response = await AuthAxios.get(`/api/v2/posts/member/list/${postId}`);
     return response.data;
@@ -45,7 +56,9 @@ export const getMemberPost = async (postId: number) => {
 };
 
 /* 비회원 게시글 조회 */
-export const getNonMemberPost = async (postId: number) => {
+export const getNonMemberPost = async (
+  postId: number
+): Promise<NotMemberBoardResponse> => {
   try {
     const response = await Axios.get(`/api/v2/posts/list/${postId}`);
     return response.data;
@@ -56,7 +69,10 @@ export const getNonMemberPost = async (postId: number) => {
 };
 
 /* 게시글 수정 */
-export const editPost = async (postId: number, params: PostReq) => {
+export const editPost = async (
+  postId: number,
+  params: PostReq
+): Promise<BoardEditResponse> => {
   try {
     const response = await AuthAxios.put(`/api/v2/posts/${postId}`, params);
     return response.data;
@@ -67,7 +83,9 @@ export const editPost = async (postId: number, params: PostReq) => {
 };
 
 /* 게시글 삭제 */
-export const deletePost = async (postId: number) => {
+export const deletePost = async (
+  postId: number
+): Promise<BoardDeleteResponse> => {
   try {
     const response = await AuthAxios.delete(`/api/v2/posts/${postId}`);
     return response.data;

@@ -252,7 +252,7 @@ const Progress = () => {
         };
         try {
           const response = await getBoardList(params);
-          if (response.result.totalCount > 0) {
+          if (response.data.totalCount > 0) {
             dispatch(setBoardFilters(params));
             setIsSecondYes(true);
           } else {

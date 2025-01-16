@@ -1,3 +1,4 @@
+import { MannerKeywordDTO } from "@/types/api/board/board";
 import { MannerKeywords } from "./manner";
 
 export interface ChampionResponseDTOList {
@@ -18,12 +19,12 @@ export interface BoardDetail {
   mannerLevel: number;
   tag: string;
   tier: string;
-  rank: number;
+  rank?: number;
   gameMode: number;
   mainPosition: number;
   subPosition: number;
   wantPosition: number;
-  championResponseList: ChampionResponseDTOList[];
+  championResponseList?: ChampionResponseDTOList[];
   winRate: number;
   createdAt: string;
   mike: boolean;
@@ -46,19 +47,20 @@ export interface MemberPost {
   gameName: string;
   tag: string;
   mannerLevel: number;
-  mannerKeywords?: MannerKeywords[];
+  mannerKeywords?: MannerKeywordDTO[];
   tier: string;
   mike: boolean;
-  championResponseDTOList: ChampionResponseDTOList[];
+  championResponseList?: ChampionResponseDTOList[];
+  championResponseDTOList?: ChampionResponseDTOList[];
   gameMode: number;
   mainPosition?: number;
   subPosition?: number;
   wantPosition?: number;
-  recentGameCount: number;
+  recentGameCount?: number;
   winRate: number;
   gameStyles: number[];
   contents: string;
-  rank: number;
+  rank?: number;
 }
 
 export interface PostReq {
