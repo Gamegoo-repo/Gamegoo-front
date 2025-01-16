@@ -5,6 +5,8 @@ export interface MannerList {
 }
 
 export interface MannerKeywords {
+  mannerKeywordId: number;
+  count: number;
   createdAt: string;
   updatedAt: string;
   id: number;
