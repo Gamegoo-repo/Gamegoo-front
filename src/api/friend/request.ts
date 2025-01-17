@@ -15,29 +15,32 @@ export const sendFriendRequest = async (
     if (error.response && error.response.data) {
       let errorMessage = "친구 요청이 실패했습니다.";
       switch (error.response.data.code) {
-        case "MEMBER404":
+        case "MEMBER_401":
           errorMessage = "해당 사용자를 찾을 수 없습니다.";
           break;
-        case "FRIEND401":
+        case "MEMBER_402":
+          errorMessage = "탈퇴한 사용자입니다.";
+          break;
+        case "FRIEND_401":
           errorMessage = "본인에게는 친구 요청을 할 수 없습니다.";
           break;
-        case "FRIEND402":
+        case "FRIEND_402":
           errorMessage =
             "내가 차단한 회원입니다.\n친구 요청을 보낼 수 없습니다.";
           break;
-        case "FRIEND403":
+        case "FRIEND_403":
           errorMessage =
             "나를 차단한 회원입니다.\n친구 요청을 보낼 수 없습니다.";
           break;
-        case "FRIEND404":
+        case "FRIEND_404":
           errorMessage =
             "해당 회원에게 보낸 수락 대기 중인 친구 요청이 존재합니다.";
           break;
-        case "FRIEND405":
+        case "FRIEND_405":
           errorMessage =
             "해당 회원이 나에게 보낸 친구 요청이 수락 대기 중 입니다.\n해당 요청을 수락 해주세요.";
           break;
-        case "FRIEND406":
+        case "FRIEND_406":
           errorMessage =
             "두 회원은 이미 친구 관계 입니다.\n친구 요청을 보낼 수 없습니다.";
           break;
