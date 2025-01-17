@@ -34,16 +34,3 @@ export const deleteMember = async () => {
       throw error;
     }
   };
-  
-  export const getMyBlocked= async (page: number) => {
-    const endpoint = `/v1/member/block?page=${page}`;
-    try {
-      const response = await AuthAxios.get(endpoint);
-      console.log("내가 차단한 회원 목록 조회 성공:", response.data);
-      return response.data;
-    } catch (error) {
-      console.error("내가 차단한 회원 목록 조회 실패:", error);
-      throw error;
-    }
-  };
-  
