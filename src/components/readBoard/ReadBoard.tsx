@@ -20,7 +20,7 @@ import { MemberPost } from "@/interface/board";
 import { deletePost, getMemberPost, getNonMemberPost } from "@/api/board";
 import LoadingSpinner from "../common/LoadingSpinner";
 import { setPostingDateFormatter } from "@/utils/custom";
-import { reportMember } from "@/api/member";
+import { reportMember } from "@/api/report/report";
 import FormModal from "../common/FormModal";
 import Input from "../common/Input";
 import Checkbox from "../common/Checkbox";
@@ -208,9 +208,11 @@ const ReadBoard = (props: ReadBoardProps) => {
     if (!isPost || isUser.id === isPost?.memberId) return;
 
     const params = {
-      targetMemberId: isPost.memberId,
-      reportTypeIdList: checkedItems,
+      memberId: isPost.memberId,
+      reportCodeList: checkedItems,
       contents: reportDetail,
+      pathCode: 0,
+      boardId: postId,
     };
 
     try {

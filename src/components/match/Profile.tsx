@@ -20,7 +20,7 @@ import { User } from "@/interface/profile";
 import { PositionState } from "../crBoard/PositionBox";
 import { setAbbrevTier, setPositionImg } from "@/utils/custom";
 import { useParams } from "next/navigation";
-import { blockMember, reportMember, unblockMember } from "@/api/member";
+import { reportMember } from "@/api/report/report";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { getProfileBgColor } from "@/utils/profile";
@@ -35,6 +35,7 @@ import {
   sendFriendRequest,
 } from "@/api/friend/request";
 import { deleteFriend } from "@/api/friend/delete";
+import { blockMember, unblockMember } from "@/api/block/block";
 
 type profileType = "normal" | "wind" | "other" | "me";
 
@@ -152,9 +153,11 @@ const Profile: React.FC<Profile> = ({
     if (myId === memberId) return;
 
     const params = {
-      targetMemberId: memberId,
-      reportTypeIdList: checkedItems,
+      memberId: memberId,
+      reportCodeList: checkedItems,
       contents: reportDetail,
+      pathCode: 0,
+      boardId: 0,
     };
 
     setIsMoreBoxOpen(false);

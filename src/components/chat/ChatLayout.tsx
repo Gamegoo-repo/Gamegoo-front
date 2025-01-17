@@ -35,7 +35,6 @@ import Input from "../common/Input";
 import Button from "../common/Button";
 import Checkbox from "../common/Checkbox";
 import { setCloseModal, setOpenModal } from "@/redux/slices/modalSlice";
-import { reportMember } from "@/api/member";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
 import { REPORT_REASON } from "@/data/report";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
@@ -48,6 +47,7 @@ import {
   sendFriendRequest,
 } from "@/api/friend/request";
 import { blockMember } from "@/api/block/block";
+import { reportMember } from "@/api/report/report";
 
 interface System {
   flag: number;
@@ -397,9 +397,11 @@ const ChatLayout = (props: ChatLayoutProps) => {
     if (!chatEnterData) return;
 
     const params = {
-      targetMemberId: chatEnterData.memberId,
-      reportTypeIdList: checkedReportItems,
+      memberId: chatEnterData.memberId,
+      reportCodeList: checkedReportItems,
       contents: reportDetail,
+      pathCode: 0,
+      boardId: 0,
     };
 
     try {

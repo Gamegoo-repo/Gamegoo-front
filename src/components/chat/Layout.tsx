@@ -33,7 +33,7 @@ import FormModal from "../common/FormModal";
 import Checkbox from "../common/Checkbox";
 import Input from "../common/Input";
 import { REPORT_REASON } from "@/data/report";
-import { reportMember } from "@/api/member";
+import { reportMember } from "@/api/report/report";
 import { notify } from "@/hooks/notify";
 import { FriendList } from "@/types/friend/friendList";
 import { getFriendsList } from "@/api/friend/get";
@@ -276,9 +276,11 @@ const Layout = () => {
     if (!selectedChatroom) return;
 
     const params = {
-      targetMemberId: selectedChatroom.targetMemberId,
-      reportTypeIdList: checkedReportItems,
+      memberId: selectedChatroom.targetMemberId,
+      reportCodeList: checkedReportItems,
       contents: reportDetail,
+      pathCode: 0,
+      boardId: 0,
     };
 
     try {
