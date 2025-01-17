@@ -26,10 +26,10 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
     const getManners = async () => {
       const manner = await getOthersManner(memberId);
       const positive = manner.result.mannerKeywords.filter(
-        (keyword: MannerKeywords) => keyword.isPositive
+        (keyword: MannerKeywords) => keyword.positive
       );
       const negative = manner.result.mannerKeywords.filter(
-        (keyword: MannerKeywords) => !keyword.isPositive
+        (keyword: MannerKeywords) => !keyword.positive
       );
 
       setPositiveKeywords(positive);

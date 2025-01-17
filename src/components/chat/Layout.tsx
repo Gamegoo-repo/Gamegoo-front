@@ -243,8 +243,8 @@ const Layout = () => {
     if (!selectedChatroom) return;
 
     try {
-      const response = await leaveChatroom(selectedChatroom.uuid);
-      if (response.isSuccess && socket) {
+      const response = await leaveChatroom({ uuid: selectedChatroom.uuid });
+      if (response.status === 200 && socket) {
         socket.emit("exit-chatroom", { uuid: selectedChatroom.uuid });
       }
       await dispatch(setCloseModal());

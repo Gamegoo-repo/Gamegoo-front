@@ -105,30 +105,30 @@ const ChatLayout = (props: ChatLayoutProps) => {
     try {
       // 친구목록에서 채팅방 입장
       if (apiType === 0 && typeof isChatUuid === "number") {
-        const data = await enterUsingMemberId(isChatUuid);
-        setChatEnterData(data.result);
-        dispatch(setCurrentChatUuid(data.result.uuid));
-        removeUnreadUuid(data.result.uuid);
+        const data = await enterUsingMemberId({ memberId: isChatUuid });
+        setChatEnterData(data.data);
+        dispatch(setCurrentChatUuid(data.data.uuid));
+        removeUnreadUuid(data.data.uuid);
       }
 
       // 대화방에서 채팅방 입장
       if (apiType === 1 && typeof isChatUuid === "string") {
-        const data = await enterUsingUuid(isChatUuid);
-        setChatEnterData(data.result);
-        dispatch(setCurrentChatUuid(data.result.uuid));
-        removeUnreadUuid(data.result.uuid);
+        const data = await enterUsingUuid({ uuid: isChatUuid });
+        setChatEnterData(data.data);
+        dispatch(setCurrentChatUuid(data.data.uuid));
+        removeUnreadUuid(data.data.uuid);
       }
 
       // 게시글에서 채팅방 입장
       if (apiType === 2 && typeof isChatUuid === "number") {
-        const data = await enterUsingBoardId(isChatUuid);
-        setChatEnterData(data.result);
-        dispatch(setCurrentChatUuid(data.result.uuid));
-        setIsSystemMsg(data.result.system);
-        removeUnreadUuid(data.result.uuid);
+        const data = await enterUsingBoardId({ boardId: isChatUuid });
+        setChatEnterData(data.data);
+        dispatch(setCurrentChatUuid(data.data.uuid));
+        setIsSystemMsg(data.data.system);
+        removeUnreadUuid(data.data.uuid);
         // 실시간으로 시스템 메시지 보여주기 위함
         let systemMessage: DesignedSystemMessage;
-        if (data.result.system.flag === 1) {
+        if (data.data.system.flag === 1) {
           systemMessage = {
             senderId: 0,
             senderName: null,
@@ -138,7 +138,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
             createdAt: null,
             timestamp: null,
             systemType: 0,
-            boardId: data.result.system.boardId,
+            boardId: data.data.system.boardId,
           };
         } else {
           systemMessage = {
@@ -149,7 +149,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
             createdAt: null,
             timestamp: null,
             systemType: 0,
-            boardId: data.result.system.boardId,
+            boardId: data.data.system.boardId,
           };
         }
         setSystemMessage(systemMessage);
@@ -194,8 +194,9 @@ const ChatLayout = (props: ChatLayoutProps) => {
     if (!chatEnterData) return;
 
     try {
-      const response = await leaveChatroom(chatEnterData.uuid);
-      if (response.isSuccess && socket) {
+      const response = await leaveChatroom({ uuid: chatEnterData.uuid });
+
+      if (response.status === 200 && socket) {
         socket.emit("exit-chatroom", { uuid: chatEnterData.uuid });
       }
       await dispatch(setCloseModal());
@@ -312,8 +313,8 @@ const ChatLayout = (props: ChatLayoutProps) => {
   const handleMannerValuesGet = async (memberId: number) => {
     try {
       const response = await getMannerValues(memberId);
-      await setIsMannerValue(response.result);
-      await setCheckedMannerItems(response.result.mannerRatingKeywordList);
+      await setIsMannerValue(response.data);
+      await setCheckedMannerItems(response.data.mannerRatingKeywordList);
     } catch (error) {
       console.error(error);
     }
@@ -323,8 +324,8 @@ const ChatLayout = (props: ChatLayoutProps) => {
   const handleBadMannerValuesGet = async (memberId: number) => {
     try {
       const response = await getBadMannerValues(memberId);
-      await setIsBadMannerValue(response.result);
-      await setCheckedBadMannerItems(response.result.mannerRatingKeywordList);
+      await setIsBadMannerValue(response.data);
+      await setCheckedBadMannerItems(response.data.mannerRatingKeywordList);
     } catch (error) {
       console.error(error);
     }

@@ -121,12 +121,12 @@ const ReadBoard = (props: ReadBoardProps) => {
 
       if (!!isUser.id && postId) {
         const memberData = await getMemberPost(postId);
-        setIsPost(memberData.result);
-        setGameMode(memberData.result.gameMode);
-        setIsBlockedStatus(memberData.result.isBlocked);
+        setIsPost(memberData.data);
+        setGameMode(memberData.data.gameMode);
+        setIsBlockedStatus(memberData.data.isBlocked);
       } else if (!isUser.id && postId) {
         const nonMember = await getNonMemberPost(postId);
-        setIsPost(nonMember.result);
+        setIsPost(nonMember.data);
       }
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
@@ -582,7 +582,7 @@ const ReadBoard = (props: ReadBoardProps) => {
                 <Champion
                   title={true}
                   size={14}
-                  list={isPost.championResponseDTOList.map(
+                  list={isPost?.championResponseDTOList?.map(
                     (champion) => champion.championId
                   )}
                 />
@@ -602,7 +602,7 @@ const ReadBoard = (props: ReadBoardProps) => {
               <WinningRateSection $gameType={gameMode}>
                 <WinningRate
                   completed={isPost.winRate}
-                  recentGameCount={isPost.recentGameCount}
+                  recentGameCount={isPost?.recentGameCount}
                 />
               </WinningRateSection>
               <StyleSection $gameType={gameMode}>

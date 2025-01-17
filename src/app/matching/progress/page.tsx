@@ -243,6 +243,7 @@ const Progress = () => {
             : null;
 
         const params = {
+          page: 1,
           pageIdx: 1,
           mode: mode,
           tier: user.tier,
@@ -251,7 +252,7 @@ const Progress = () => {
         };
         try {
           const response = await getBoardList(params);
-          if (response.result.totalCount > 0) {
+          if (response.data.totalCount > 0) {
             dispatch(setBoardFilters(params));
             setIsSecondYes(true);
           } else {
