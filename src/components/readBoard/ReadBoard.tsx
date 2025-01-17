@@ -20,7 +20,7 @@ import { MemberPost } from "@/interface/board";
 import { deletePost, getMemberPost, getNonMemberPost } from "@/api/board";
 import LoadingSpinner from "../common/LoadingSpinner";
 import { setPostingDateFormatter } from "@/utils/custom";
-import { blockMember, reportMember, unblockMember } from "@/api/member";
+import { reportMember } from "@/api/member";
 import FormModal from "../common/FormModal";
 import Input from "../common/Input";
 import Checkbox from "../common/Checkbox";
@@ -47,6 +47,7 @@ import { notify } from "@/hooks/notify";
 import ConfirmModal from "../common/ConfirmModal";
 import { cancelFriendRequest, sendFriendRequest } from "@/api/friend/request";
 import { deleteFriend } from "@/api/friend/delete";
+import { blockMember, unblockMember } from "@/api/block/block";
 
 interface ReadBoardProps {
   postId: number;

@@ -33,12 +33,13 @@ import FormModal from "../common/FormModal";
 import Checkbox from "../common/Checkbox";
 import Input from "../common/Input";
 import { REPORT_REASON } from "@/data/report";
-import { blockMember, reportMember } from "@/api/member";
+import { reportMember } from "@/api/member";
 import { notify } from "@/hooks/notify";
 import { FriendList } from "@/types/friend/friendList";
 import { getFriendsList } from "@/api/friend/get";
 import ChatFriendList from "./ChatFriendList";
 import { patchFriendStar } from "@/api/friend/star";
+import { blockMember } from "@/api/block/block";
 
 const Layout = () => {
   const dispatch = useDispatch();
@@ -261,7 +262,7 @@ const Layout = () => {
 
     try {
       const response = await blockMember(selectedChatroom.targetMemberId);
-      if (response.isSuccess && socket) {
+      if (response.data && socket) {
         socket.emit("exit-chatroom", { uuid: selectedChatroom.uuid });
         await dispatch(setOpenModal("doneBlock"));
       }

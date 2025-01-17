@@ -35,7 +35,7 @@ import Input from "../common/Input";
 import Button from "../common/Button";
 import Checkbox from "../common/Checkbox";
 import { setCloseModal, setOpenModal } from "@/redux/slices/modalSlice";
-import { blockMember, reportMember } from "@/api/member";
+import { reportMember } from "@/api/member";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
 import { REPORT_REASON } from "@/data/report";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
@@ -47,6 +47,7 @@ import {
   rejectFriendRequest,
   sendFriendRequest,
 } from "@/api/friend/request";
+import { blockMember } from "@/api/block/block";
 
 interface System {
   flag: number;
@@ -212,7 +213,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
 
     try {
       const response = await blockMember(chatEnterData.memberId);
-      if (response.isSuccess && socket) {
+      if (response.data && socket) {
         socket.emit("exit-chatroom", { uuid: chatEnterData.uuid });
         await dispatch(setOpenModal("doneBlock"));
       }
