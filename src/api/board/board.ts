@@ -1,6 +1,6 @@
 import { PostReq } from "@/interface/board";
-import { AuthAxios } from "./auth";
-import Axios from ".";
+import { AuthAxios } from "../auth";
+import Axios from "..";
 import {
   BoardDeleteResponse,
   BoardEditResponse,

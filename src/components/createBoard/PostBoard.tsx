@@ -12,7 +12,7 @@ import GameStyle from "./GameStyle";
 import ConfirmModal from "../common/ConfirmModal";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { editPost, postBoard } from "@/api/board";
+import { editPost, postBoard } from "@/api/board/board";
 import {
   clearCurrentPost,
   PostUpdate,

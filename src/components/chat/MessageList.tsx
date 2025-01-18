@@ -17,7 +17,7 @@ import {
 } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
 import ReadBoard from "../readBoard/ReadBoard";
-import { getChatList, markChatAsRead } from "@/api/chat";
+import { getChatList, markChatAsRead } from "@/api/chat/chat";
 import useChatMessage from "@/hooks/useChatMessage";
 import dayjs from "dayjs";
 import { setChatDateFormatter, setChatTimeFormatter } from "@/utils/custom";

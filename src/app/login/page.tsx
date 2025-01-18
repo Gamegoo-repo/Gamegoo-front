@@ -1,7 +1,7 @@
 "use client";
 
 import Axios from "@/api";
-import { getUnreadUuid } from "@/api/chat";
+import { getUnreadUuid } from "@/api/chat/chat";
 import { postLogin } from "@/api/login/login";
 import { socketLogin } from "@/api/socket";
 import Button from "@/components/common/Button";

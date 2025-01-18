@@ -4,7 +4,7 @@ import { BASE_URL } from ".";
 import { clearTokens, getAccessToken, getRefreshToken } from "@/utils/storage";
 import { notify } from "@/hooks/notify";
 import { connectSocket } from "@/socket";
-import { reissueToken } from "./reissue";
+import { reissueToken } from "./reissue/reissue";
 
 /* AuthAxios 인스턴스 생성 */
 export const AuthAxios: AxiosInstance = axios.create({

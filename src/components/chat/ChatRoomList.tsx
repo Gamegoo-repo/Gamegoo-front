@@ -6,7 +6,7 @@ import { MoreBoxMenuItems } from "@/interface/moreBox";
 import { useDispatch, useSelector } from "react-redux";
 import { setOpenModal } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
-import { getChatrooms } from "@/api/chat";
+import { getChatrooms } from "@/api/chat/chat";
 import ChatRoomItem from "./ChatRoomItem";
 import useChatMessage from "@/hooks/useChatMessage";
 import { setCurrentChatUuid } from "@/redux/slices/chatSlice";

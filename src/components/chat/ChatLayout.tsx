@@ -18,7 +18,7 @@ import {
   enterUsingMemberId,
   enterUsingUuid,
   leaveChatroom,
-} from "@/api/chat";
+} from "@/api/chat/chat";
 import { RootState } from "@/redux/store";
 import { socket } from "@/socket";
 import {

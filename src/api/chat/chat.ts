@@ -15,7 +15,7 @@ import {
   chatRoomEnterFriendRequest,
   chatRoomFriendResponse,
 } from "@/types/chat/chat";
-import { AuthAxios } from "./auth";
+import { AuthAxios } from "../auth";
 
 /* 채팅방 목록 조회 */
 export const getChatrooms = async ({
