@@ -14,7 +14,7 @@ import {
   chatRoomBoardResponse,
   chatRoomEnterFriendRequest,
   chatRoomFriendResponse,
-} from "@/types/chat/chat";
+} from "@/types/api/chat/chat";
 import { AuthAxios } from "../auth";
 
 /* 채팅방 목록 조회 */

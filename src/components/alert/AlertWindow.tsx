@@ -8,7 +8,7 @@ import {
   getPopupNotification,
   patchReadNotification,
 } from "@/api/notification/notification";
-import { Notification } from "@/types/notification";
+import { Notification } from "@/types/notification/notification";
 
 interface AlertWindowProps {
   countFunc: () => void;

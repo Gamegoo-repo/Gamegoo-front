@@ -15,7 +15,7 @@ import {
   getUnreadNotificationCount,
   patchReadNotification,
 } from "@/api/notification/notification";
-import { Notification } from "@/types/notification";
+import { Notification } from "@/types/notification/notification";
 
 const MyAlertPage = () => {
   const router = useRouter();
