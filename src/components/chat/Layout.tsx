@@ -279,8 +279,7 @@ const Layout = () => {
       memberId: selectedChatroom.targetMemberId,
       reportCodeList: checkedReportItems,
       contents: reportDetail,
-      pathCode: 0,
-      boardId: 0,
+      pathCode: 2, // CHAT
     };
 
     try {

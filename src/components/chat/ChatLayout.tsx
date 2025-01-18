@@ -401,8 +401,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
       memberId: chatEnterData.memberId,
       reportCodeList: checkedReportItems,
       contents: reportDetail,
-      pathCode: 0,
-      boardId: 0,
+      pathCode: 2, // CHAT
     };
 
     try {

@@ -211,7 +211,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       memberId: isPost.memberId,
       reportCodeList: checkedItems,
       contents: reportDetail,
-      pathCode: 0,
+      pathCode: 1, // BOARD
       boardId: postId,
     };
 

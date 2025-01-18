@@ -156,8 +156,7 @@ const Profile: React.FC<Profile> = ({
       memberId: memberId,
       reportCodeList: checkedItems,
       contents: reportDetail,
-      pathCode: 0,
-      boardId: 0,
+      pathCode: 3, // PROFILE
     };
 
     setIsMoreBoxOpen(false);

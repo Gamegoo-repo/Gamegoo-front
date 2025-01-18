@@ -4,8 +4,8 @@ export interface ReportRequest {
   memberId: number;
   reportCodeList: number[];
   contents: string;
-  pathCode: number;
-  boardId: number;
+  pathCode: number; // BOARD: 1, CHAT: 2, PROFILE: 3
+  boardId?: number;
 }
 
 export interface ReportData {
