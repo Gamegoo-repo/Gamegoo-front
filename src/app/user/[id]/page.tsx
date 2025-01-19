@@ -45,9 +45,9 @@ const UserProfilePage = () => {
 
     const fetchOtherManner = async () => {
       try {
-        const response = await getOthersManner(Number(id));
-        const response2 = await getOtherManner(Number(id));
-        setOtherManner({ ...response.data, ...response2.data });
+        const response_level = await getOthersManner(Number(id));
+        const response_keywords = await getOtherManner(Number(id));
+        setOtherManner({ ...response_level.data, ...response_keywords.data });
       } catch (error) {
         console.error(error);
       }
