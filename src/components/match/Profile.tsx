@@ -19,15 +19,8 @@ import { MoreBoxMenuItems } from "@/interface/moreBox";
 import { User } from "@/interface/profile";
 import { PositionState } from "../crBoard/PositionBox";
 import { setAbbrevTier, setPositionImg } from "@/utils/custom";
-import {
-  acceptFriendReq,
-  cancelFriendReq,
-  deleteFriend,
-  rejectFriendReq,
-  reqFriend,
-} from "@/api/friends";
 import { useParams } from "next/navigation";
-import { blockMember, reportMember, unblockMember } from "@/api/member";
+import { reportMember } from "@/api/report/report";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { getProfileBgColor } from "@/utils/profile";
@@ -35,6 +28,14 @@ import { setMatchInfo, updateMike } from "@/redux/slices/matchInfo";
 import { toLowerCaseString } from "@/utils/string";
 import { setUserProfileImg } from "@/redux/slices/userSlice";
 import { putPosition, putProfileImage } from "@/api/user/profile/put";
+import {
+  acceptFriendRequest,
+  cancelFriendRequest,
+  rejectFriendRequest,
+  sendFriendRequest,
+} from "@/api/friend/request";
+import { deleteFriend } from "@/api/friend/delete";
+import { blockMember, unblockMember } from "@/api/block/block";
 
 type profileType = "normal" | "wind" | "other" | "me";
 
@@ -152,9 +153,10 @@ const Profile: React.FC<Profile> = ({
     if (myId === memberId) return;
 
     const params = {
-      targetMemberId: memberId,
-      reportTypeIdList: checkedItems,
+      memberId: memberId,
+      reportCodeList: checkedItems,
       contents: reportDetail,
+      pathCode: 3, // PROFILE
     };
 
     setIsMoreBoxOpen(false);
@@ -257,7 +259,7 @@ const Profile: React.FC<Profile> = ({
     try {
       switch (state) {
         case "add":
-          await reqFriend(memberId);
+          await sendFriendRequest(memberId);
           updateFriendState?.({
             friend: false,
             friendRequestMemberId: myId || null,
@@ -265,7 +267,7 @@ const Profile: React.FC<Profile> = ({
           });
           break;
         case "cancel":
-          await cancelFriendReq(memberId);
+          await cancelFriendRequest(memberId);
           updateFriendState?.({
             friend: false,
             friendRequestMemberId: null,
@@ -273,7 +275,7 @@ const Profile: React.FC<Profile> = ({
           });
           break;
         case "accept":
-          await acceptFriendReq(memberId);
+          await acceptFriendRequest(memberId);
           updateFriendState?.({
             friend: true,
             friendRequestMemberId: memberId,
@@ -281,7 +283,7 @@ const Profile: React.FC<Profile> = ({
           });
           break;
         case "reject":
-          await rejectFriendReq(memberId);
+          await rejectFriendRequest(memberId);
           updateFriendState?.({
             friend: false,
             friendRequestMemberId: null,

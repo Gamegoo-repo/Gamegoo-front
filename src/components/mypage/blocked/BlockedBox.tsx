@@ -1,4 +1,3 @@
-import { blockMember, deleteBlockMember, unblockMember } from "@/api/member";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import MoreBox from "@/components/common/MoreBox";
 import { theme } from "@/styles/theme";
@@ -8,21 +7,18 @@ import React, { useState } from "react";
 import MoreBoxButton from "../../readBoard/MoreBoxButton";
 import styled, { css } from "styled-components";
 import { useRouter } from "next/navigation";
+import {
+  blockMember,
+  deleteBlockMember,
+  unblockMember,
+} from "@/api/block/block";
+import { BlockList } from "@/types/friend/blockList";
 
-export interface BlockedBoxProps {
-  memberId: number;
-  profileImg: number;
-  email: string;
-  name: string;
-  isBlind: boolean;
-}
-
-const BlockedBox: React.FC<BlockedBoxProps> = ({
+const BlockedBox: React.FC<BlockList> = ({
   memberId,
   profileImg,
-  email,
   name,
-  isBlind,
+  blind,
 }) => {
   const router = useRouter();
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState<boolean>(false);
@@ -59,13 +55,13 @@ const BlockedBox: React.FC<BlockedBoxProps> = ({
   };
 
   const handleShowProfile = () => {
-    if (!isBlind) {
+    if (!blind) {
       router.push(`/user/${memberId}`);
     }
   };
   return (
-    <Container onClick={handleShowProfile} $isBlind={isBlind}>
-      <Gap $isBlind={isBlind}>
+    <Container onClick={handleShowProfile} $isBlind={blind}>
+      <Gap $isBlind={blind}>
         <ProfileImgWrapper $bgColor={getProfileBgColor(profileImg)}>
           <ProfileImg
             data={`/assets/images/profile/profile${profileImg}.svg`}
@@ -86,10 +82,10 @@ const BlockedBox: React.FC<BlockedBoxProps> = ({
           <MoreBox
             items={[
               {
-                text: `${isBlind ? "삭제" : isBlocked ? "차단 해제" : "차단"}`,
+                text: `${blind ? "삭제" : isBlocked ? "차단 해제" : "차단"}`,
                 onClick: (e) => {
                   e.stopPropagation();
-                  if (isBlind) {
+                  if (blind) {
                     handleDelete();
                   } else {
                     handleBlock();
@@ -109,7 +105,7 @@ const BlockedBox: React.FC<BlockedBoxProps> = ({
           primaryButtonText="예"
           secondaryButtonText="아니요"
           onPrimaryClick={() => {
-            if (isBlind) {
+            if (blind) {
               handleRunDelete();
             } else {
               handleRunBlock();
@@ -119,7 +115,7 @@ const BlockedBox: React.FC<BlockedBoxProps> = ({
             setIsBlockBoxOpen(false);
           }}
         >
-          {isBlind ? (
+          {blind ? (
             <MsgConfirm>
               {"본 탈퇴 회원을 차단목록에서 삭제하시겠습니까?"}
             </MsgConfirm>

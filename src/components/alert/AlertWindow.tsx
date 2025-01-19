@@ -1,33 +1,21 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { use, useCallback, useEffect, useRef, useState } from "react";
 import AlertBox from "../mypage/notification/AlertBox";
 import { useRouter } from "next/navigation";
-import { Notification } from "@/app/mypage/notification/page";
-import { getNotiModal, readNoti } from "@/api/notification";
-
-interface NotificationResponse {
-  isSuccess: boolean;
-  code: string;
-  message: string;
-  result: {
-    notificationDTOList: Notification[];
-    list_size: number;
-    has_next: boolean;
-    next_cursor: number | null;
-  };
-}
+import {
+  getPopupNotification,
+  patchReadNotification,
+} from "@/api/notification/notification";
+import { Notification } from "@/types/notification/notification";
 
 interface AlertWindowProps {
   countFunc: () => void;
   onClose: () => void;
 }
 
-const AlertWindow = (
-  props: AlertWindowProps,
-  ref: React.Ref<HTMLDivElement>
-) => {
+const AlertWindow = (props: AlertWindowProps) => {
   const router = useRouter();
   const { countFunc, onClose } = props;
 
@@ -35,9 +23,8 @@ const AlertWindow = (
 
   const [notiList, setNotiList] = useState<Notification[]>([]);
   const [cursor, setCursor] = useState<number | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [hasMore, setHasMore] = useState<boolean>(true);
-  const [isAtBottom, setIsAtBottom] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [hasNext, setHasNext] = useState<boolean>(true);
 
   const handleClickOutside = useCallback(
     (event: MouseEvent) => {
@@ -58,25 +45,43 @@ const AlertWindow = (
     };
   }, [handleClickOutside]);
 
+  /* 전체 보기 */
+  const handleShowAll = () => {
+    router.push("/mypage/notification");
+    onClose();
+  };
+
   /* 알림 목록 조회 */
   const fetchNotiList = async (cursor: number | null) => {
-    if (loading || !hasMore) return;
+    if (isLoading || !hasNext) return;
 
-    setLoading(true);
+    setIsLoading(true);
     try {
-      const response: NotificationResponse = await getNotiModal(cursor);
-      if (response.isSuccess) {
-        const { notificationDTOList, next_cursor, has_next } = response.result;
-        setNotiList(notificationDTOList);
-        setCursor(next_cursor);
-        setHasMore(has_next);
+      const response = await getPopupNotification(cursor);
+      if (response.data) {
+        const { notificationList, nextCursor, hasNext } = response.data;
+        setNotiList((prevNotiList) => [...prevNotiList, ...notificationList]);
+        setCursor(nextCursor);
+        setHasNext(hasNext);
       } else {
         console.error(response.message);
       }
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
+    }
+  };
+
+  /* 알림 팝업 - 스크롤이 끝에 도달하면 다음 페이지 가져오기 */
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    if (!cursor) return;
+
+    const bottom =
+      e.currentTarget.scrollTop + e.currentTarget.clientHeight >=
+      e.currentTarget.scrollHeight - 20;
+    if (hasNext && bottom && !isLoading) {
+      fetchNotiList(cursor);
     }
   };
 
@@ -85,52 +90,23 @@ const AlertWindow = (
     fetchNotiList(cursor);
   }, []);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (alertWindowRef.current) {
-        const { scrollTop, scrollHeight, clientHeight } =
-          alertWindowRef.current;
-        if (scrollTop + clientHeight >= scrollHeight - 20) {
-          setIsAtBottom(true);
-        } else {
-          setIsAtBottom(false);
-        }
-      }
-    };
-
-    if (alertWindowRef.current) {
-      alertWindowRef.current.addEventListener("scroll", handleScroll);
-    }
-    return () => {
-      if (alertWindowRef.current) {
-        alertWindowRef.current.removeEventListener("scroll", handleScroll);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    if (isAtBottom && hasMore) {
-      fetchNotiList(cursor);
-    }
-  }, [isAtBottom]);
-
   /* 알림 읽음으로 상태 변경 */
   const handleClickAlert = async (
     notificationId: number,
     pageUrl: string | null
   ) => {
-    // 관련 페이지 이동
+    /* 관련 페이지 이동 */
     if (pageUrl !== null) {
       router.push(pageUrl);
     }
 
-    // 읽음 상태 업데이트
+    /* 읽음 상태 업데이트 */
     const notification = notiList.find(
       (n) => n.notificationId === notificationId
     );
     if (notification && !notification.read) {
       try {
-        await readNoti(notificationId);
+        await patchReadNotification(notificationId);
         setNotiList((prevNotiList) =>
           prevNotiList.map((n) =>
             n.notificationId === notificationId ? { ...n, read: true } : n
@@ -150,15 +126,9 @@ const AlertWindow = (
           <Header>
             <Top>
               <HeaderTitle>알림</HeaderTitle>
-              <AllButton
-                onClick={() => {
-                  router.push("/mypage/notification");
-                  onClose();
-                }}
-              >
+              <AllButton onClick={handleShowAll}>
                 전체보기
                 <Image
-                  onClick={onClose}
                   src="/assets/icons/move.svg"
                   width={11}
                   height={11}
@@ -170,20 +140,24 @@ const AlertWindow = (
               <Tab>받은 알림</Tab>
             </TabContainer>
           </Header>
-          <Background>
-            {notiList.map((data, index) => (
-              <AlertBox
-                key={`${data.notificationId}-${index}`}
-                notificationId={data.notificationId}
-                notificationtType={data.notificationType}
-                pageUrl={data.pageUrl}
-                content={data.content}
-                createdAt={data.createdAt}
-                read={data.read}
-                size="small"
-                onClick={handleClickAlert}
-              />
-            ))}
+          <Background onScroll={handleScroll}>
+            {notiList.length > 0 ? (
+              notiList.map((data, index) => (
+                <AlertBox
+                  key={`${data.notificationId}-${index}`}
+                  notificationId={data.notificationId}
+                  notificationtType={data.notificationType}
+                  pageUrl={data.pageUrl}
+                  content={data.content}
+                  createdAt={data.createdAt}
+                  read={data.read}
+                  size="small"
+                  onClick={handleClickAlert}
+                />
+              ))
+            ) : (
+              <NoData>새로운 알림이 없습니다.</NoData>
+            )}
           </Background>
         </Wrapper>
       </Overlay>
@@ -203,11 +177,12 @@ const Overlay = styled.div`
 `;
 
 const Wrapper = styled.div`
+  width: 418px;
+  height: 547px;
   background: ${theme.colors.white};
   border-radius: 20px;
   display: flex;
   flex-direction: column;
-  width: 418px;
   box-shadow: 0 4px 46.7px 0 #0000001a;
 `;
 
@@ -235,7 +210,6 @@ const AllButton = styled.button`
   gap: 2px;
   margin-bottom: 1px;
   ${(props) => props.theme.fonts.bold11};
-  cursor: pointer;
 `;
 
 const TabContainer = styled.div`
@@ -285,4 +259,14 @@ const Background = styled.div`
     border-radius: 66px;
     background: transparent;
   }
+`;
+
+const NoData = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: ${theme.colors.gray600};
+  ${theme.fonts.regular16}
 `;

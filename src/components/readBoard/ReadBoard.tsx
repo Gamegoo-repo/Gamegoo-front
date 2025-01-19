@@ -17,10 +17,10 @@ import GameStyle from "./GameStyle";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import MoreBox from "../common/MoreBox";
 import { MemberPost } from "@/interface/board";
-import { deletePost, getMemberPost, getNonMemberPost } from "@/api/board";
+import { deletePost, getMemberPost, getNonMemberPost } from "@/api/board/board";
 import LoadingSpinner from "../common/LoadingSpinner";
 import { setPostingDateFormatter } from "@/utils/custom";
-import { blockMember, reportMember, unblockMember } from "@/api/member";
+import { reportMember } from "@/api/report/report";
 import FormModal from "../common/FormModal";
 import Input from "../common/Input";
 import Checkbox from "../common/Checkbox";
@@ -35,7 +35,6 @@ import {
   setOpenPostingModal,
 } from "@/redux/slices/modalSlice";
 import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
-import { cancelFriendReq, deleteFriend, reqFriend } from "@/api/friends";
 import Alert from "../common/Alert";
 import { AlertProps } from "@/interface/modal";
 import { useRouter } from "next/navigation";
@@ -46,6 +45,9 @@ import {
 } from "@/redux/slices/chatSlice";
 import { notify } from "@/hooks/notify";
 import ConfirmModal from "../common/ConfirmModal";
+import { cancelFriendRequest, sendFriendRequest } from "@/api/friend/request";
+import { deleteFriend } from "@/api/friend/delete";
+import { blockMember, unblockMember } from "@/api/block/block";
 
 interface ReadBoardProps {
   postId: number;
@@ -206,9 +208,11 @@ const ReadBoard = (props: ReadBoardProps) => {
     if (!isPost || isUser.id === isPost?.memberId) return;
 
     const params = {
-      targetMemberId: isPost.memberId,
-      reportTypeIdList: checkedItems,
+      memberId: isPost.memberId,
+      reportCodeList: checkedItems,
       contents: reportDetail,
+      pathCode: 1, // BOARD
+      boardId: postId,
     };
 
     try {
@@ -266,7 +270,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     if (!isPost || isUser.id === isPost?.memberId) return;
 
     try {
-      await reqFriend(isPost.memberId);
+      await sendFriendRequest(isPost.memberId);
       await handleMoreBoxClose();
       await getPostData();
       setIsFriendStatus(true);
@@ -291,7 +295,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     if (!isPost || isUser.id === isPost?.memberId) return;
 
     try {
-      await cancelFriendReq(isPost.memberId);
+      await cancelFriendRequest(isPost.memberId);
       await handleMoreBoxClose();
       await getPostData();
       setIsFriendStatus(false);

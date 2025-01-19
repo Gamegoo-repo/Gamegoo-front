@@ -1,4 +1,4 @@
-import { getMemberPost } from "@/api/board";
+import { getMemberPost } from "@/api/board/board";
 import MoreBox from "@/components/common/MoreBox";
 import PostBoard from "@/components/createBoard/PostBoard";
 import Report from "@/components/readBoard/MoreBoxButton";

@@ -1,5 +1,5 @@
-import { ApiResponse } from "../api";
-import { ChatMessageList, System } from "../../interface/chat";
+import { ApiResponse } from "../../api";
+import { ChatMessageList, System } from "../../../interface/chat";
 
 interface chatMessage {
   senderId: number;

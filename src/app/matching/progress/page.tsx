@@ -13,7 +13,7 @@ import { sendMatchingQuitEvent, socket } from "@/socket";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { messagesWithN, messagesWithoutN } from "@/constants/messages";
 import { getSystemMsg } from "@/api/socket";
-import { getBoardList } from "@/api/board";
+import { getBoardList } from "@/api/board/board";
 import { setOpenPostingModal } from "@/redux/slices/modalSlice";
 import { useDispatch } from "react-redux";
 import { setBoardFilters } from "@/redux/slices/boardSlice";

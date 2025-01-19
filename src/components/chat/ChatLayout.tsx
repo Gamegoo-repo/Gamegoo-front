@@ -18,7 +18,7 @@ import {
   enterUsingMemberId,
   enterUsingUuid,
   leaveChatroom,
-} from "@/api/chat";
+} from "@/api/chat/chat";
 import { RootState } from "@/redux/store";
 import { socket } from "@/socket";
 import {
@@ -35,18 +35,19 @@ import Input from "../common/Input";
 import Button from "../common/Button";
 import Checkbox from "../common/Checkbox";
 import { setCloseModal, setOpenModal } from "@/redux/slices/modalSlice";
-import { blockMember, reportMember } from "@/api/member";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
 import { REPORT_REASON } from "@/data/report";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
-import {
-  acceptFriendReq,
-  cancelFriendReq,
-  deleteFriend,
-  rejectFriendReq,
-  reqFriend,
-} from "@/api/friends";
 import { notify } from "@/hooks/notify";
+import { deleteFriend } from "@/api/friend/delete";
+import {
+  acceptFriendRequest,
+  cancelFriendRequest,
+  rejectFriendRequest,
+  sendFriendRequest,
+} from "@/api/friend/request";
+import { blockMember } from "@/api/block/block";
+import { reportMember } from "@/api/report/report";
 
 interface System {
   flag: number;
@@ -213,7 +214,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
 
     try {
       const response = await blockMember(chatEnterData.memberId);
-      if (response.isSuccess && socket) {
+      if (response.data && socket) {
         socket.emit("exit-chatroom", { uuid: chatEnterData.uuid });
         await dispatch(setOpenModal("doneBlock"));
       }
@@ -397,9 +398,10 @@ const ChatLayout = (props: ChatLayoutProps) => {
     if (!chatEnterData) return;
 
     const params = {
-      targetMemberId: chatEnterData.memberId,
-      reportTypeIdList: checkedReportItems,
+      memberId: chatEnterData.memberId,
+      reportCodeList: checkedReportItems,
       contents: reportDetail,
+      pathCode: 2, // CHAT
     };
 
     try {
@@ -441,7 +443,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
   const handleFriendAdd = async () => {
     if (!chatEnterData) return;
     try {
-      await reqFriend(chatEnterData.memberId);
+      await sendFriendRequest(chatEnterData.memberId);
       await handleChatEnter();
     } catch (error) {
       console.error(error);
@@ -453,7 +455,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
     if (!chatEnterData) return;
 
     try {
-      await cancelFriendReq(chatEnterData.memberId);
+      await cancelFriendRequest(chatEnterData.memberId);
       await handleChatEnter();
     } catch (error) {
       console.error(error);
@@ -465,7 +467,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
     if (!chatEnterData) return;
 
     try {
-      await acceptFriendReq(chatEnterData.memberId);
+      await acceptFriendRequest(chatEnterData.memberId);
       await handleChatEnter();
     } catch (error) {
       console.error(error);
@@ -477,7 +479,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
     if (!chatEnterData) return;
 
     try {
-      await rejectFriendReq(chatEnterData.memberId);
+      await rejectFriendRequest(chatEnterData.memberId);
       await handleChatEnter();
     } catch (error) {
       console.error(error);

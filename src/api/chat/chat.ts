@@ -14,8 +14,8 @@ import {
   chatRoomBoardResponse,
   chatRoomEnterFriendRequest,
   chatRoomFriendResponse,
-} from "@/types/chat/chat";
-import { AuthAxios } from "./auth";
+} from "@/types/api/chat/chat";
+import { AuthAxios } from "../auth";
 
 /* 채팅방 목록 조회 */
 export const getChatrooms = async ({
@@ -117,16 +117,6 @@ export const markChatAsRead = async ({
 export const getUnreadUuid = async (): Promise<chatRoomSearchResponse> => {
   try {
     const response = await AuthAxios.get("/api/v2/chat/unread");
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-/* 친구 검색 */
-export const searchFriend = async (user: string) => {
-  try {
-    const response = await AuthAxios.get(`/v1/friends/search?query=${user}`);
     return response.data;
   } catch (error) {
     throw error;

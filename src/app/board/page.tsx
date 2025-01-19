@@ -19,7 +19,7 @@ import {
   setOpenModal,
   setOpenPostingModal,
 } from "@/redux/slices/modalSlice";
-import { getBoardList } from "@/api/board";
+import { getBoardList } from "@/api/board/board";
 import { BoardDetail } from "@/interface/board";
 import Alert from "@/components/common/Alert";
 import { useRouter } from "next/navigation";

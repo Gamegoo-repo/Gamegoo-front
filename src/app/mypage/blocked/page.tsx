@@ -5,14 +5,13 @@ import { theme } from "@/styles/theme";
 import Pagination from "@/components/common/Pagination";
 import { useEffect, useState } from "react";
 import ChatButton from "@/components/common/ChatButton";
-import BlockedBox, {
-  BlockedBoxProps,
-} from "@/components/mypage/blocked/BlockedBox";
-import { getMyBlocked } from "@/api/user";
+import { getBlockList } from "@/api/block/get";
+import { BlockList } from "@/types/friend/blockList";
+import BlockedBox from "@/components/mypage/blocked/BlockedBox";
 
 const MyBlockedPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [myBlockedList, setMyBlockedList] = useState<BlockedBoxProps[]>([]);
+  const [myBlockedList, setMyBlockedList] = useState<BlockList[]>([]);
   const [totalPages, setTotalPages] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
   const itemsPerPage = 10;
@@ -21,11 +20,10 @@ const MyBlockedPage = () => {
   useEffect(() => {
     const fetchGetMyBlocked = async () => {
       try {
-        const response = await getMyBlocked(currentPage);
-        if (response.isSuccess) {
-          const { blockedMemberDTOList, totalPage, totalElements } =
-            response.result;
-          setMyBlockedList(blockedMemberDTOList);
+        const response = await getBlockList(currentPage);
+        if (response.data) {
+          const { blockedMemberList, totalPage, totalElements } = response.data;
+          setMyBlockedList(blockedMemberList);
           setTotalPages(totalPage);
           setTotalItems(totalElements);
         } else {
@@ -67,9 +65,8 @@ const MyBlockedPage = () => {
                   key={data.memberId}
                   memberId={data.memberId}
                   profileImg={data.profileImg}
-                  email={data.email}
                   name={data.name}
-                  isBlind={data.isBlind}
+                  blind={data.blind}
                 />
               ))}
             </BlockedList>

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { connectSocket, socket } from "@/socket";
 import { setUnreadUuid } from "@/redux/slices/chatSlice";
-import { markChatAsRead } from "@/api/chat";
+import { markChatAsRead } from "@/api/chat/chat";
 import { SystemMessage, ChatMessageDto } from "@/interface/chat";
 
 const useChatMessage = () => {

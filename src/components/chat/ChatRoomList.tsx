@@ -5,19 +5,19 @@ import { ChatroomList } from "@/interface/chat";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import { useDispatch, useSelector } from "react-redux";
 import { setOpenModal } from "@/redux/slices/modalSlice";
-import {
-  acceptFriendReq,
-  cancelFriendReq,
-  deleteFriend,
-  rejectFriendReq,
-  reqFriend,
-} from "@/api/friends";
 import { RootState } from "@/redux/store";
-import { getChatrooms } from "@/api/chat";
+import { getChatrooms } from "@/api/chat/chat";
 import ChatRoomItem from "./ChatRoomItem";
 import useChatMessage from "@/hooks/useChatMessage";
 import { setCurrentChatUuid } from "@/redux/slices/chatSlice";
 import useChatList from "@/hooks/useChatList";
+import {
+  acceptFriendRequest,
+  cancelFriendRequest,
+  rejectFriendRequest,
+  sendFriendRequest,
+} from "@/api/friend/request";
+import { deleteFriend } from "@/api/friend/delete";
 
 interface ChatRoomListProps {
   onChatRoom: (id: string) => void;
@@ -206,7 +206,7 @@ const ChatRoomList = (props: ChatRoomListProps) => {
   const handleFriendAdd = async (e: React.MouseEvent, memberId: number) => {
     e.stopPropagation();
     try {
-      await reqFriend(memberId);
+      await sendFriendRequest(memberId);
       triggerReloadChatrooms();
     } catch (error) {
       console.error(error);
@@ -237,7 +237,7 @@ const ChatRoomList = (props: ChatRoomListProps) => {
     e.stopPropagation();
 
     try {
-      await cancelFriendReq(memberId);
+      await cancelFriendRequest(memberId);
       triggerReloadChatrooms();
     } catch (error) {
       console.error(error);
@@ -252,7 +252,7 @@ const ChatRoomList = (props: ChatRoomListProps) => {
     e.stopPropagation();
 
     try {
-      await acceptFriendReq(memberId);
+      await acceptFriendRequest(memberId);
       triggerReloadChatrooms();
     } catch (error) {
       console.error(error);
@@ -267,7 +267,7 @@ const ChatRoomList = (props: ChatRoomListProps) => {
     e.stopPropagation();
 
     try {
-      await rejectFriendReq(memberId);
+      await rejectFriendRequest(memberId);
       triggerReloadChatrooms();
     } catch (error) {
       console.error(error);
