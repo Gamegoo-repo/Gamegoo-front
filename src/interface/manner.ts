@@ -1,3 +1,5 @@
+import { MannerId } from "@/types/api/manner/manner";
+
 export interface MannerList {
   isPositive: boolean;
   isExist: boolean;
@@ -21,8 +23,6 @@ export interface OthersManner {
 }
 
 export interface Mannerstatus {
-  mannerId: number | null;
-  isPositive: boolean;
-  isExist: boolean;
-  mannerRatingKeywordList: number[];
+  mannerRatingId: MannerId;
+  mannerKeywordIdList: MannerId[];
 }
