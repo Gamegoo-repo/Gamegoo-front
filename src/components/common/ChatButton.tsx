@@ -5,11 +5,10 @@ import styled from "styled-components";
 import Alert from "./Alert";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { closeChat, toggleChat } from '@/redux/slices/chatSlice';
+import { closeChat, toggleChat } from "@/redux/slices/chatSlice";
 import Layout from "../chat/Layout";
 
 const ChatButton = () => {
-
   const [showAlert, setShowAlert] = useState(false);
   const [unreadChatUuids, setUnreadChatUuids] = useState<string[]>([]);
 
@@ -21,12 +20,12 @@ const ChatButton = () => {
 
   useEffect(() => {
     setUnreadChatUuids(unreadUuid);
-  }, [unreadUuid])
+  }, [unreadUuid]);
 
   /* sessionStorage의 unreadChatUuids가 변경될 때 상태 업데이트 */
   useEffect(() => {
-    const localUnreadChatUuids = sessionStorage.getItem('unreadChatUuids');
-    if (localUnreadChatUuids) {
+    const localUnreadChatUuids = sessionStorage.getItem("unreadChatUuids");
+    if (localUnreadChatUuids && localUnreadChatUuids !== "undefined") {
       setUnreadChatUuids(JSON.parse(localUnreadChatUuids));
     }
   }, [unreadUuid]);
@@ -34,16 +33,18 @@ const ChatButton = () => {
   /* sessionStorage가 변경되면 상태 업데이트 */
   useEffect(() => {
     const handleStorageChange = (event: StorageEvent) => {
-      if (event.key === 'unreadChatUuids') {
-        const updatedUnreadUuids = event.newValue ? JSON.parse(event.newValue) : [];
+      if (event.key === "unreadChatUuids") {
+        const updatedUnreadUuids = event.newValue
+          ? JSON.parse(event.newValue)
+          : [];
         setUnreadChatUuids(updatedUnreadUuids);
       }
     };
 
-    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener("storage", handleStorageChange);
 
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
 
@@ -119,11 +120,11 @@ const MsgCount = styled.div`
   border-radius: 50%;
   border: 1px solid ${theme.colors.purple200};
   background: ${theme.colors.white};
-  left: 72%;       
+  left: 72%;
 `;
 
 const Count = styled.p`
- ${(props) => props.theme.fonts.semiBold14};
+  ${(props) => props.theme.fonts.semiBold14};
   color: ${theme.colors.purple100};
   position: absolute;
   top: 50%;

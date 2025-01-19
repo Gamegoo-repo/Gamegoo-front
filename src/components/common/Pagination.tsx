@@ -67,11 +67,11 @@ const Pagination = (props: PaginationProps) => {
         <Button
           onClick={onNextPage}
           disabled={currentPage === totalPage}
-          $isDisabled={currentPage === totalPage}
+          $isDisabled={currentPage === totalPage || totalPage === 0}
         >
           <Image
             src={
-              currentPage === totalPage
+              currentPage === totalPage || totalPage === 0
                 ? "/assets/icons/paging_disabled_right_arrow.svg"
                 : "/assets/icons/paging_right_arrow.svg"
             }
