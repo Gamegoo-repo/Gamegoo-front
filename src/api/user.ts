@@ -1,6 +1,4 @@
-import { useSelector } from "react-redux";
 import { AuthAxios } from "./auth";
-import { RootState } from "@/redux/store";
 
 export const deleteMember = async () => {
   const endpoint = "/v1/member";
