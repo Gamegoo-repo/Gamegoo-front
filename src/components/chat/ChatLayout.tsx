@@ -225,12 +225,12 @@ const ChatLayout = (props: ChatLayoutProps) => {
 
   /* 매너평가 등록 */
   const handleMannerPost = async () => {
-    const mannerId = isMannerValue?.mannerId;
+    const mannerId = isMannerValue?.mannerRatingId;
     if (!chatEnterData || mannerId !== null) return;
 
     const params = {
-      toMemberId: chatEnterData.memberId,
-      mannerRatingKeywordList: checkedMannerItems,
+      memberId: chatEnterData.memberId,
+      mannerKeywordIdList: checkedMannerItems,
     };
 
     try {
@@ -249,12 +249,12 @@ const ChatLayout = (props: ChatLayoutProps) => {
 
   /* 비매너평가 등록 */
   const handleBadMannerPost = async () => {
-    const badMannerId = isBadMannerValue?.mannerId;
+    const badMannerId = isBadMannerValue?.mannerRatingId;
     if (!chatEnterData || badMannerId !== null) return;
 
     const params = {
-      toMemberId: chatEnterData.memberId,
-      mannerRatingKeywordList: checkedBadMannerItems,
+      memberId: chatEnterData.memberId,
+      mannerKeywordIdList: checkedBadMannerItems,
     };
 
     try {
@@ -274,7 +274,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
   /* 매너, 비매너 평가 수정 */
   const handleMannerEdit = async (type: string) => {
     const params = {
-      mannerRatingKeywordList:
+      mannerKeywordIdList:
         type === "manner" ? checkedMannerItems : checkedBadMannerItems,
     };
 
@@ -282,9 +282,12 @@ const ChatLayout = (props: ChatLayoutProps) => {
       if (
         type === "manner" &&
         isMannerValue &&
-        isMannerValue.mannerId !== null
+        isMannerValue.mannerRatingId !== null
       ) {
-        await editManners(isMannerValue.mannerId, params);
+        await editManners({
+          mannerId: isMannerValue.mannerRatingId,
+          mannerKeywordIdList: params.mannerKeywordIdList,
+        });
         await notify({
           text: "매너 평가 수정이 완료되었습니다",
           icon: "👌🏼",
@@ -293,9 +296,12 @@ const ChatLayout = (props: ChatLayoutProps) => {
       } else if (
         type === "badManner" &&
         isBadMannerValue &&
-        isBadMannerValue.mannerId !== null
+        isBadMannerValue.mannerRatingId !== null
       ) {
-        await editManners(isBadMannerValue.mannerId, params);
+        await editManners({
+          mannerId: isBadMannerValue.mannerRatingId,
+          mannerKeywordIdList: params.mannerKeywordIdList,
+        });
         await notify({
           text: "비매너 평가 수정이 완료되었습니다",
           icon: "👌🏼",
@@ -314,7 +320,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
     try {
       const response = await getMannerValues(memberId);
       await setIsMannerValue(response.data);
-      await setCheckedMannerItems(response.data.mannerRatingKeywordList);
+      await setCheckedMannerItems(response.data.mannerKeywordIdList);
     } catch (error) {
       console.error(error);
     }
@@ -325,7 +331,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
     try {
       const response = await getBadMannerValues(memberId);
       await setIsBadMannerValue(response.data);
-      await setCheckedBadMannerItems(response.data.mannerRatingKeywordList);
+      await setCheckedBadMannerItems(response.data.mannerKeywordIdList);
     } catch (error) {
       console.error(error);
     }
@@ -592,13 +598,13 @@ const ChatLayout = (props: ChatLayoutProps) => {
   };
 
   const isMannerEditable =
-    isMannerValue?.isExist &&
+    (isMannerValue?.mannerKeywordIdList.length as number) > 0 &&
     !isEditMode &&
-    isMannerValue?.mannerRatingKeywordList.length !== 0;
+    isMannerValue?.mannerKeywordIdList.length !== 0;
   const isBadMannerEditable =
-    isBadMannerValue?.isExist &&
+    (isBadMannerValue?.mannerKeywordIdList.length as number) > 0 &&
     !isEditMode &&
-    isBadMannerValue?.mannerRatingKeywordList.length !== 0;
+    isBadMannerValue?.mannerKeywordIdList.length !== 0;
 
   return (
     <>
@@ -761,7 +767,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
             ) : (
               <Button
                 onClick={() =>
-                  isMannerValue.isExist
+                  isMannerValue.mannerKeywordIdList.length > 0
                     ? handleMannerEdit("manner")
                     : handleMannerPost()
                 }
@@ -810,7 +816,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
             ) : (
               <Button
                 onClick={() =>
-                  isBadMannerValue.isExist
+                  isBadMannerValue.mannerKeywordIdList.length > 0
                     ? handleMannerEdit("badManner")
                     : handleBadMannerPost()
                 }

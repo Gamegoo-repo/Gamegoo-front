@@ -8,13 +8,16 @@ import ChatButton from "@/components/common/ChatButton";
 import { useEffect, useState } from "react";
 import { getMyManner } from "@/api/user";
 import { Manner } from "@/components/user/UserProfile";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 const MyReviewPage = () => {
+  const myId = useSelector((state: RootState) => state.user.id);
   const [myManner, setMyManner] = useState<Manner>();
 
   useEffect(() => {
     const fetchGetMyManner = async () => {
-      const response = await getMyManner();
+      const response = await getMyManner(myId || 0);
       setMyManner(response.result);
     };
 
@@ -23,7 +26,9 @@ const MyReviewPage = () => {
 
   const goodMannerEvaluations =
     myManner?.mannerKeywords
-      .filter((keyword) => keyword.isPositive)
+      .filter(
+        (keyword) => keyword.mannerKeywordId > 1 && keyword.mannerKeywordId <= 6
+      )
       .map((keyword) => ({
         id: keyword.mannerKeywordId,
         count: keyword.count,
@@ -31,7 +36,7 @@ const MyReviewPage = () => {
 
   const badMannerEvaluations =
     myManner?.mannerKeywords
-      .filter((keyword) => !keyword.isPositive)
+      .filter((keyword) => keyword.mannerKeywordId >= 7)
       .map((keyword) => ({
         id: keyword.mannerKeywordId,
         count: keyword.count,

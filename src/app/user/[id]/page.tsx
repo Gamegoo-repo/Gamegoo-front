@@ -1,6 +1,9 @@
 "use client";
 
-import { getOtherManner } from "@/api/manner";
+import {
+  getOtherMemberMannerKeyword,
+  getOtherMemberMannerLevel,
+} from "@/api/manner";
 import { getOtherProfile } from "@/api/user/profile/get";
 import BlindProfile from "@/components/user/BlindProfile";
 import UserProfile, { Manner } from "@/components/user/UserProfile";
@@ -11,7 +14,17 @@ import { useEffect, useState } from "react";
 const UserProfilePage = () => {
   const { id } = useParams();
   const [otherProfile, setOtherProfile] = useState<User>();
-  const [otherManner, setOtherManner] = useState<Manner>();
+  const [otherManner, setOtherManner] = useState<Manner>({
+    memberId: 0,
+    mannerLevel: 0,
+    mannerRank: 0,
+    mannerKeywords: [
+      {
+        mannerKeywordId: 0,
+        count: 0,
+      },
+    ],
+  });
   const [friendState, setFriendState] = useState<{
     friend: boolean;
     friendRequestMemberId: number | null;
@@ -35,8 +48,9 @@ const UserProfilePage = () => {
 
     const fetchOtherManner = async () => {
       try {
-        const response = await getOtherManner(Number(id));
-        setOtherManner(response.result);
+        const response_level = await getOtherMemberMannerLevel(Number(id));
+        const response_keywords = await getOtherMemberMannerKeyword(Number(id));
+        setOtherManner({ ...response_level.data, ...response_keywords.data });
       } catch (error) {
         console.error(error);
       }
