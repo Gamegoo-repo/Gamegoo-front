@@ -98,7 +98,7 @@ export const editManners = async ({
   }
 };
 
-/* 다른 유저 매너평가 조회 */
+/* 다른 유저 매너평가 키워드 조회 */
 export const getOtherManner = async (
   memberId: number
 ): Promise<OtherKeywordsMannerResponse> => {

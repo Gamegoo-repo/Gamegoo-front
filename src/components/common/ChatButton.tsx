@@ -26,7 +26,7 @@ const ChatButton = () => {
   useEffect(() => {
     const localUnreadChatUuids = sessionStorage.getItem("unreadChatUuids");
     if (localUnreadChatUuids && localUnreadChatUuids !== "undefined") {
-      setUnreadChatUuids(JSON.parse(localUnreadChatUuids));
+      setUnreadChatUuids(JSON?.parse(localUnreadChatUuids));
     }
   }, [unreadUuid]);
 
