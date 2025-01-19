@@ -56,7 +56,7 @@ export const getBadMannerValues = async (
  * @param memberId - 매너 통계를 조회할 회원의 ID
  * @returns 매너 레벨, 순위, 평가 횟수를 포함한 Promise 객체
  */
-export const getOthersManner = async (
+export const getOtherMemberMannerLevel = async (
   memberId: number
 ): Promise<UserMannerResponse> => {
   try {
@@ -131,7 +131,7 @@ export const editManners = async ({
  * @param memberId - 매너 키워드를 조회할 회원의 ID
  * @returns 매너 키워드 배열과 각각의 사용 횟수를 포함한 Promise 객체
  */
-export const getOtherManner = async (
+export const getOtherMemberMannerKeyword = async (
   memberId: number
 ): Promise<OtherKeywordsMannerResponse> => {
   try {

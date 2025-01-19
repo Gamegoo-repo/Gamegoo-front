@@ -3,7 +3,10 @@ import { theme } from "@/styles/theme";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
 import { useEffect, useState } from "react";
 import { MannerKeywords } from "@/interface/manner";
-import { getOtherManner, getOthersManner } from "@/api/manner";
+import {
+  getOtherMemberMannerKeyword,
+  getOtherMemberMannerLevel,
+} from "@/api/manner";
 
 interface MannerLevelBoxProps {
   memberId: number;
@@ -24,7 +27,7 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
 
   useEffect(() => {
     const getManners = async () => {
-      const manner = await getOtherManner(memberId);
+      const manner = await getOtherMemberMannerKeyword(memberId);
       const positive = manner.data.mannerKeywords.filter(
         (keyword: MannerKeywords) =>
           keyword.mannerKeywordId >= 1 && keyword.mannerKeywordId <= 6

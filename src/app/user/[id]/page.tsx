@@ -1,6 +1,9 @@
 "use client";
 
-import { getOtherManner, getOthersManner } from "@/api/manner";
+import {
+  getOtherMemberMannerKeyword,
+  getOtherMemberMannerLevel,
+} from "@/api/manner";
 import { getOtherProfile } from "@/api/user/profile/get";
 import BlindProfile from "@/components/user/BlindProfile";
 import UserProfile, { Manner } from "@/components/user/UserProfile";
@@ -45,8 +48,8 @@ const UserProfilePage = () => {
 
     const fetchOtherManner = async () => {
       try {
-        const response_level = await getOthersManner(Number(id));
-        const response_keywords = await getOtherManner(Number(id));
+        const response_level = await getOtherMemberMannerLevel(Number(id));
+        const response_keywords = await getOtherMemberMannerKeyword(Number(id));
         setOtherManner({ ...response_level.data, ...response_keywords.data });
       } catch (error) {
         console.error(error);
