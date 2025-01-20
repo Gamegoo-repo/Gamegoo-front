@@ -1,3 +1,5 @@
+import { Position } from "@/types/position/position";
+
 export type profileType = "normal" | "wind" | "other" | "me";
 
 export interface Champion {
@@ -23,9 +25,9 @@ export interface User {
   mannerRank?: null | number;
   mannerRatingCount?: number;
   updatedAt: string;
-  mainP: number;
-  subP: number;
-  wantP: number;
+  mainP: Position;
+  subP: Position;
+  wantP: Position;
   blocked: boolean;
   isAgree: boolean;
   isBlind: boolean;
@@ -56,8 +58,8 @@ export interface UserInfo {
   id: number;
   isAgree: boolean;
   isBlind: boolean;
-  mainP: number;
-  subP: number;
+  mainP: Position;
+  subP: Position;
   winRate: number;
   profileImg: number;
   email: string;
@@ -65,7 +67,7 @@ export interface UserInfo {
   tag: string;
   tier: string;
   rank: string;
-  updatedAt: string,
+  updatedAt: string;
   gameStyleResponseDTOList: GameStyleList[];
   championResponseDTOList: ChampionList[];
   loginType: string;

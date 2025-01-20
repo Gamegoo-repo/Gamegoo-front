@@ -1,4 +1,5 @@
 import { ChampionList, GameStyleList } from '@/interface/profile';
+import { Position } from '@/types/position/position';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface UserState {
@@ -13,9 +14,9 @@ interface UserState {
   mannerRank: number;
   mannerLevel: number;
   updatedAt: string;
-  mainP: number;
-  subP: number;
-  wantP: number;
+  mainP: Position;
+  subP: Position;
+  wantP: Position;
   isAgree: boolean;
   isBlind: boolean;
   loginType: string;
@@ -31,20 +32,20 @@ const initialState: UserState = {
   id: 0,
   profileImg: 1,
   mike: false,
-  email: '',
-  gameName: '',
-  tag: '',
-  tier: '',
+  email: "",
+  gameName: "",
+  tag: "",
+  tier: "",
   gameRank: 0,
   mannerRank: 0,
   mannerLevel: 0,
-  updatedAt: '',
-  mainP: 0,
-  subP: 0,
-  wantP: 0,
+  updatedAt: "",
+  mainP: "ANY",
+  subP: "ANY",
+  wantP: "ANY",
   isAgree: false,
   isBlind: false,
-  loginType: '',
+  loginType: "",
   winrate: 0,
   gameStyleResponseList: [],
   championResponseList: [],
@@ -84,9 +85,9 @@ export const userSlice = createSlice({
       state.mannerRank = 0;
       state.mannerLevel = 0;
       state.updatedAt = '';
-      state.mainP = 0;
-      state.subP = 0;
-      state.wantP = 0;
+      state.mainP = "ANY";
+      state.subP = "ANY";
+      state.wantP = "ANY";
       state.isAgree = false;
       state.isBlind = false;
       state.loginType = '';

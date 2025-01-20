@@ -63,9 +63,9 @@ const PostBoard = (props: PostBoardProps) => {
   );
   const [positionValue, setPositionValue] = useState<PositionState | undefined>(
     {
-      main: currentPost?.mainPosition || user?.mainP || 0,
-      sub: currentPost?.subPosition || user?.subP || 0,
-      want: currentPost?.wantPosition || user?.wantP || 0,
+      main: currentPost?.mainPosition || user?.mainP || "ANY",
+      sub: currentPost?.subPosition || user?.subP || "ANY",
+      want: currentPost?.wantPosition || user?.wantP || "ANY",
     }
   );
   const [isMicOn, setIsMicOn] = useState<boolean>(currentPost?.mike || false);
@@ -119,9 +119,9 @@ const PostBoard = (props: PostBoardProps) => {
   useEffect(() => {
     if (user.gameName && !currentPost) {
       setPositionValue({
-        main: user.mainP ? user.mainP : 0,
-        sub: user.subP ? user.subP : 0,
-        want: user.wantP ? user.wantP : 0,
+        main: user.mainP ? user.mainP : "ANY",
+        sub: user.subP ? user.subP : "ANY",
+        want: user.wantP ? user.wantP : "ANY",
       });
       setSelectedImageIndex(user.profileImg);
       const ids =

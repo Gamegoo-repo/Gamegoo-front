@@ -12,9 +12,9 @@ interface BaseProfileData {
   mannerRank: number;
   mannerLevel: number;
   updatedAt: string;
-  mainP: number;
-  subP: number;
-  wantP: number;
+  mainP: Position;
+  subP: Position;
+  wantP: Position;
   isAgree: boolean;
   isBlind: boolean;
   loginType: string;

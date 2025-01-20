@@ -1,5 +1,5 @@
 import { MannerKeywordDTO } from "@/types/api/board/board";
-import { MannerKeywords } from "./manner";
+import { Position } from "@/types/position/position";
 
 export interface ChampionResponseDTOList {
   championId: number;
@@ -21,9 +21,9 @@ export interface BoardDetail {
   tier: string;
   rank?: number;
   gameMode: number;
-  mainPosition: number;
-  subPosition: number;
-  wantPosition: number;
+  mainPosition: Position;
+  subPosition: Position;
+  wantPosition: Position;
   championResponseList?: ChampionResponseDTOList[];
   winRate: number;
   createdAt: string;
@@ -53,9 +53,9 @@ export interface MemberPost {
   championResponseList?: ChampionResponseDTOList[];
   championResponseDTOList?: ChampionResponseDTOList[];
   gameMode: number;
-  mainPosition?: number;
-  subPosition?: number;
-  wantPosition?: number;
+  mainPosition?: Position;
+  subPosition?: Position;
+  wantPosition?: Position;
   recentGameCount?: number;
   winRate: number;
   gameStyles: number[];
@@ -66,9 +66,9 @@ export interface MemberPost {
 export interface PostReq {
   boardProfileImage: number;
   gameMode: number;
-  mainPosition: number;
-  subPosition: number;
-  wantPosition: number;
+  mainPosition: Position;
+  subPosition: Position;
+  wantPosition: Position;
   mike: boolean;
   gameStyles: number[];
   contents: string;

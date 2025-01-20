@@ -9,12 +9,13 @@ import {
   NotMemberBoardResponse,
   PostsResponse,
 } from "@/types/api/board/board";
+import { Position } from "@/types/position/position";
 
 interface ListInterface {
   page: number;
   mode: string | number | null;
   tier: string | null;
-  mainPosition: number;
+  mainPosition: Position
   mike: string | boolean | null;
 }
 

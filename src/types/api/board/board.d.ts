@@ -1,3 +1,4 @@
+import { Position } from "@/types/position/position";
 import { ApiResponse } from "../api";
 
 // 기본 DTO 인터페이스들
@@ -26,9 +27,9 @@ interface BasePlayerInfo {
 // 게임 관련 기본 정보 인터페이스
 interface GameInfo {
   gameMode: number;
-  mainPosition: number;
-  subPosition: number;
-  wantPosition: number;
+  mainPosition: Position;
+  subPosition: Position;
+  wantPosition: Position;
   mike: boolean;
   gameStyles: Array<number>;
 }

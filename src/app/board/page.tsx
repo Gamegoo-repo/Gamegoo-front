@@ -26,6 +26,7 @@ import { clearCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { mikeBooleanToId, tierStringToId } from "@/utils/custom";
 import { resetBoardFilters } from "@/redux/slices/boardSlice";
 import { rotate } from "@/styles/animation";
+import { Position } from "@/types/position/position";
 
 const ITEMS_PER_PAGE = 20;
 const BUTTONS_PER_PAGE = 5;
@@ -35,7 +36,7 @@ const BoardPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
-  const [isPosition, setIsPosition] = useState(0);
+  const [isPosition, setIsPosition] = useState<Position>("ANY");
   const [isGameModeDropdownOpen, setIsGameModeDropdownOpen] = useState(false);
   const [isTierDropdownOpen, setIsTierDropdownOpen] = useState(false);
   const [isMicDropdownOpen, setIsMicDropdownOpen] = useState(false);
@@ -162,7 +163,7 @@ const BoardPage = () => {
   }, []);
 
   /* 포지션 필터 */
-  const handlePositionFilter = (id: number) => {
+  const handlePositionFilter = (id: Position) => {
     dispatch(resetBoardFilters());
     setIsPosition(id);
   };

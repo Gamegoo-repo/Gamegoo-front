@@ -112,9 +112,9 @@ const Profile: React.FC<Profile> = ({
     dispatch(
       setMatchInfo({
         mike: isMike,
-        mainP: positionValue.main ?? null,
-        subP: positionValue.sub ?? null,
-        wantP: positionValue.want ?? null,
+        mainP: positionValue.main ?? "ANY",
+        subP: positionValue.sub ?? "ANY",
+        wantP: positionValue.want ?? "ANY",
         gameStyleResponseDTOList: gameStyleIds,
       })
     );
@@ -223,7 +223,7 @@ const Profile: React.FC<Profile> = ({
         await putPosition({
           mainP: newPositionValue.main,
           subP: newPositionValue.sub,
-          wantP: newPositionValue.want || 0,
+          wantP: newPositionValue.want || "ANY",
         });
 
         // 포지션 상태 업데이트
@@ -235,12 +235,11 @@ const Profile: React.FC<Profile> = ({
       dispatch(
         setMatchInfo({
           ...matchInfo,
-          mainP: newPositionValue.main ?? null,
-          subP: newPositionValue.sub ?? null,
-          wantP: newPositionValue.want ?? null,
+          mainP: newPositionValue.main ?? "ANY",
+          subP: newPositionValue.sub ?? "ANY",
+          wantP: newPositionValue.want ?? "ANY",
         })
       );
-      console.log("디스패치 ㅘㄴ료");
     }
   };
 
@@ -625,10 +624,10 @@ const Profile: React.FC<Profile> = ({
                     <Image
                       src={setPositionImg(
                         index === 0
-                          ? positionValue.main ?? 0
+                          ? positionValue.main ?? "ANY"
                           : index === 1
-                          ? positionValue.sub ?? 0
-                          : positionValue.want ?? 0
+                          ? positionValue.sub ?? "ANY"
+                          : positionValue.want ?? "ANY"
                       )}
                       width={55}
                       height={40}
