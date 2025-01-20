@@ -41,13 +41,14 @@ import { patchFriendStar } from "@/api/friend/star";
 import { blockMember } from "@/api/block/block";
 import Tabs from "./Tabs";
 import { resetPosition, setPosition } from "@/redux/slices/chatPositionSlice";
+import useDrag from "@/hooks/useDrag";
 
 const Layout = () => {
   const dispatch = useDispatch();
   /* 채팅창 위치 관련 상태 */
   const position = useSelector((state: RootState) => state.chatPosition);
-  const [isDragging, setIsDragging] = useState(false);
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  // const [isDragging, setIsDragging] = useState(false);
+  // const [offset, setOffset] = useState({ x: 0, y: 0 });
 
   const [activeTab, setActiveTab] = useState(0);
   const [friends, setFriends] = useState<FriendList[]>([]);
@@ -80,36 +81,6 @@ const Layout = () => {
   const isModalType = useSelector((state: RootState) => state.modal.modalType);
 
   /* 채팅창 위치 관련 함수 */
-  // 드래그 시작
-  const handleDragStart = (e: React.MouseEvent<HTMLDivElement>) => {
-    setIsDragging(true);
-    const overlay = e.currentTarget.parentElement;
-    if (overlay) {
-      const rect = overlay.getBoundingClientRect();
-      setOffset({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-      });
-    }
-  };
-
-  // 드래그 이동
-  const handleDrag = (e: MouseEvent) => {
-    if (!isDragging) return;
-
-    const left = `${e.clientX - offset.x}px`;
-    const top = `${e.clientY - offset.y}px`;
-    const adjustedPosition = adjustPosition({ top, left });
-    setPosition(adjustedPosition);
-
-    dispatch(setPosition(adjustedPosition));
-  };
-
-  // 드래그 종료
-  const handleDragEnd = () => {
-    setIsDragging(false);
-  };
-
   // 경계 제한 로직
   const adjustPosition = ({ top, left }: { top: string; left: string }) => {
     const overlayWidth = 420;
@@ -131,20 +102,8 @@ const Layout = () => {
     return { top: `${topValue}px`, left: `${leftValue}px` };
   };
 
-  // 마우스 이동 이벤트 등록 및 해제
-  useEffect(() => {
-    if (isDragging) {
-      window.addEventListener("mousemove", handleDrag);
-      window.addEventListener("mouseup", handleDragEnd);
-    } else {
-      window.removeEventListener("mousemove", handleDrag);
-      window.removeEventListener("mouseup", handleDragEnd);
-    }
-    return () => {
-      window.removeEventListener("mousemove", handleDrag);
-      window.removeEventListener("mouseup", handleDragEnd);
-    };
-  }, [isDragging]);
+  /* useDrag 커스텀 훅 */
+  const { handleDragStart } = useDrag(position, adjustPosition);
 
   useEffect(() => {
     console.log(position.left, position.top);
