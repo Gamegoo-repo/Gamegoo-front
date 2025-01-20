@@ -1,8 +1,8 @@
 import {
   MannerResponse,
+  MemberMannerKeywordsResponse,
+  MemberMannerLevelResponse,
   MemberPositiveNegativeMannerResponse,
-  OtherKeywordsMannerResponse,
-  UserMannerResponse,
 } from "@/types/api/manner/manner";
 import { AuthAxios } from "./auth";
 
@@ -16,12 +16,7 @@ interface MannerReqInterface {
   mannerKeywordIdList: number[];
 }
 
-/**
- * 특정 회원의 긍정적인 매너 평가 내역을 조회합니다.
- * 매너 평가 수정을 위한 평가 ID와 관련 키워드 ID 목록을 반환합니다.
- * @param memberId - 매너 평가를 조회할 회원의 ID
- * @returns 매너 평가 ID와 매너 키워드 ID 목록을 포함한 Promise 객체
- */
+/* 특정 회원에 대한 나의 매너 평가 조회 */
 export const getMannerValues = async (
   memberId: number
 ): Promise<MannerResponse> => {
@@ -33,12 +28,7 @@ export const getMannerValues = async (
   }
 };
 
-/**
- * 특정 회원의 부정적인 매너 평가 내역을 조회합니다.
- * 매너 평가 수정을 위한 평가 ID와 관련 키워드 ID 목록을 반환합니다.
- * @param memberId - 매너 평가를 조회할 회원의 ID
- * @returns 매너 평가 ID와 매너 키워드 ID 목록을 포함한 Promise 객체
- */
+/* 특정 회원에 대한 나의 비매너 평가 조회 */
 export const getBadMannerValues = async (
   memberId: number
 ): Promise<MannerResponse> => {
@@ -50,15 +40,10 @@ export const getBadMannerValues = async (
   }
 };
 
-/**
- * 특정 회원의 전체적인 매너 평가 통계를 조회합니다.
- * 매너 레벨, 순위, 전체 평가 횟수 정보를 반환합니다.
- * @param memberId - 매너 통계를 조회할 회원의 ID
- * @returns 매너 레벨, 순위, 평가 횟수를 포함한 Promise 객체
- */
-export const getOtherMemberMannerLevel = async (
+/* 매너 레벨 정보 조회 */
+export const getMemberMannerLevel = async (
   memberId: number
-): Promise<UserMannerResponse> => {
+): Promise<MemberMannerLevelResponse> => {
   try {
     const response = await AuthAxios.get(`/api/v2/manner/level/${memberId}`);
     return response.data;
@@ -67,11 +52,19 @@ export const getOtherMemberMannerLevel = async (
   }
 };
 
-/**
- * 특정 회원에 대한 새로운 긍정적 매너 평가를 등록합니다.
- * @param params - 평가 대상 회원 ID와 매너 키워드 ID 배열을 포함한 객체
- * @returns 생성된 매너 평가 상세 정보와 대상 회원 ID를 포함한 Promise 객체
- */
+/* 매너 키워드 정보 조회 */
+export const getMemberMannerKeyword = async (
+  memberId: number
+): Promise<MemberMannerKeywordsResponse> => {
+  try {
+    const response = await AuthAxios.get(`/api/v2/manner/keyword/${memberId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+/* 매너 평가 등록 */
 export const postMannerValue = async (
   params: MannerInterface
 ): Promise<MemberPositiveNegativeMannerResponse> => {
@@ -86,11 +79,7 @@ export const postMannerValue = async (
   }
 };
 
-/**
- * 특정 회원에 대한 새로운 부정적 매너 평가를 등록합니다.
- * @param params - 평가 대상 회원 ID와 매너 키워드 ID 배열을 포함한 객체
- * @returns 생성된 매너 평가 상세 정보와 대상 회원 ID를 포함한 Promise 객체
- */
+/* 비매너 평가 등록 */
 export const postBadMannerValue = async (
   params: MannerInterface
 ): Promise<MemberPositiveNegativeMannerResponse> => {
@@ -105,11 +94,7 @@ export const postBadMannerValue = async (
   }
 };
 
-/**
- * 기존의 매너 평가를 수정합니다 (긍정/부정 모두 적용).
- * @param params - 매너 평가 ID와 새로운 매너 키워드 ID 배열을 포함한 객체
- * @returns 업데이트된 매너 평가 상세 정보와 대상 회원 ID를 포함한 Promise 객체
- */
+/* 매너/비매너 평가 수정 */
 export const editManners = async ({
   mannerId,
   mannerKeywordIdList,
@@ -119,23 +104,6 @@ export const editManners = async ({
       `/api/v2/manner/${mannerId}`,
       mannerKeywordIdList
     );
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-/**
- * 특정 회원의 매너 키워드와 각 키워드의 사용 횟수를 조회합니다.
- * 각 매너 키워드의 ID와 사용된 횟수 정보를 반환합니다.
- * @param memberId - 매너 키워드를 조회할 회원의 ID
- * @returns 매너 키워드 배열과 각각의 사용 횟수를 포함한 Promise 객체
- */
-export const getOtherMemberMannerKeyword = async (
-  memberId: number
-): Promise<OtherKeywordsMannerResponse> => {
-  try {
-    const response = await AuthAxios.get(`/api/v2/manner/keyword/${memberId}`);
     return response.data;
   } catch (error) {
     throw error;

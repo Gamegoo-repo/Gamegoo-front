@@ -16,15 +16,15 @@ interface BaseMannerData {
   mannerKeywordIdList: MannerId[];
 }
 
-// 사용자 매너 데이터
-interface UserMannerData {
+// 사용자 매너 레벨 데이터
+interface MemberMannerLevelData {
   mannerLevel: number;
   mannerRank: number;
   mannerRatingCount: MemberCount;
 }
 
-// 다른 키워드 매너 데이터
-interface OtherKeywordsMannerData {
+// 사용자 매너 키워드 데이터
+interface MemberMannerKeywordsData {
   mannerKeywords: MannerKeyWord[];
 }
 
@@ -35,7 +35,7 @@ interface MemberPositiveNegativeMannerData extends BaseMannerData {
 
 // Response 타입 정의
 export type MannerResponse = ApiResponse<BaseMannerData>;
-export type UserMannerResponse = ApiResponse<UserMannerData>;
-export type OtherKeywordsMannerResponse = ApiResponse<OtherKeywordsMannerData>;
+export type MemberMannerLevelResponse = ApiResponse<MemberMannerLevelData>;
+export type MemberMannerKeywordsResponse = ApiResponse<MemberMannerKeywordsData>;
 export type MemberPositiveNegativeMannerResponse =
   ApiResponse<MemberPositiveNegativeMannerData>;
