@@ -11,7 +11,6 @@ import Table from "@/components/board/Table";
 import Pagination from "@/components/common/Pagination";
 import PositionFilter from "@/components/board/PositionFilter";
 import PostBoard from "@/components/createBoard/PostBoard";
-import ChatButton from "@/components/common/ChatButton";
 import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -386,11 +385,6 @@ const BoardPage = () => {
                 onPageClick={handlePageClick}
               />
             )}
-            <Footer>
-              <ChatBoxContent>
-                <ChatButton />
-              </ChatBoxContent>
-            </Footer>
           </BoardContent>
         </Wrapper>
       )}
@@ -453,30 +447,9 @@ const PositionBox = styled.div`
   border-radius: 10px;
 `;
 
-const MicButton = styled.button`
-  padding: 13px 17px;
-  border-radius: 10px;
-  &.clicked {
-    background: ${theme.colors.purple100};
-  }
-  &.unClicked {
-    background: ${theme.colors.gray300};
-  }
-`;
-
 const SecondBlock = styled.div``;
 
 const Main = styled.main`
   width: 100%;
   margin-bottom: 64px;
-`;
-
-const Footer = styled.footer`
-  right: 80px;
-  bottom: 78px;
-  display: flex;
-`;
-
-const ChatBoxContent = styled.div`
-  margin-left: auto;
 `;

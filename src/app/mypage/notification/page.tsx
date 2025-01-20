@@ -9,7 +9,6 @@ import { useRouter } from "next/navigation";
 import { setNotiCount } from "@/redux/slices/notiSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import ChatButton from "@/components/common/ChatButton";
 import {
   getTotalNotification,
   getUnreadNotificationCount,
@@ -138,11 +137,6 @@ const MyAlertPage = () => {
           />
         </Alert>
       </MyAlertContent>
-      <Footer>
-        <ChatBoxContent>
-          <ChatButton />
-        </ChatBoxContent>
-      </Footer>
     </Wrapper>
   );
 };
@@ -198,13 +192,4 @@ const NoData = styled.div`
   align-items: center;
   color: ${theme.colors.gray600};
   ${theme.fonts.regular16}
-`;
-
-const Footer = styled.footer`
-  display: flex;
-  margin-bottom: 78px;
-`;
-
-const ChatBoxContent = styled.div`
-  margin-left: auto;
 `;

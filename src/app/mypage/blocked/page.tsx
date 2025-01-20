@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Pagination from "@/components/common/Pagination";
 import { useEffect, useState } from "react";
-import ChatButton from "@/components/common/ChatButton";
 import { getBlockList } from "@/api/block/get";
 import { BlockList } from "@/types/friend/blockList";
 import BlockedBox from "@/components/mypage/blocked/BlockedBox";
@@ -86,11 +85,6 @@ const MyBlockedPage = () => {
           />
         </Blocked>
       </MyBlockedContent>
-      <Footer>
-        <ChatBoxContent>
-          <ChatButton />
-        </ChatBoxContent>
-      </Footer>
     </Wrapper>
   );
 };
@@ -145,13 +139,4 @@ const NoData = styled.div`
   align-items: center;
   color: ${theme.colors.gray600};
   ${theme.fonts.regular16}
-`;
-
-const Footer = styled.footer`
-  display: flex;
-  margin-bottom: 78px;
-`;
-
-const ChatBoxContent = styled.div`
-  margin-left: auto;
 `;

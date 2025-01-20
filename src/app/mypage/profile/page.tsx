@@ -15,7 +15,6 @@ import Input from "@/components/common/Input";
 import { checkPassword } from "@/api/password/password";
 import { clearTokens } from "@/utils/storage";
 import { useRouter } from "next/navigation";
-import ChatButton from "@/components/common/ChatButton";
 import { getMyProfile } from "@/api/user/profile/get";
 
 const passwordLength = 10;
@@ -152,11 +151,6 @@ const MyProfilePage = () => {
           </ConfirmModal>
         )}
       </MyProfileContent>
-      <Footer>
-        <ChatBoxContent>
-          <ChatButton />
-        </ChatBoxContent>
-      </Footer>
     </Wrapper>
   );
 };
@@ -271,13 +265,4 @@ const ModalContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-`;
-
-const Footer = styled.footer`
-  display: flex;
-  margin-bottom: 78px;
-`;
-
-const ChatBoxContent = styled.div`
-  margin-left: auto;
 `;

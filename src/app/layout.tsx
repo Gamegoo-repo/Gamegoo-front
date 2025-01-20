@@ -114,7 +114,7 @@ export default function RootLayout({
                     {isHeader && <Header />}
                     {children}
                   </Main>
-                  <Footer />
+                  <Footer isShowChat={isHeader} />
                 </Container>
               </Provider>
             </ThemeProvider>

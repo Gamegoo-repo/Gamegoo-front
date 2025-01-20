@@ -11,7 +11,6 @@ import { Suspense } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserProfile } from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
-import ChatButton from "@/components/common/ChatButton";
 import { sendMatchingQuitEvent, socket } from "@/socket";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import { theme } from "@/styles/theme";
@@ -161,11 +160,6 @@ const ProfilePage = () => {
             onClick={handleMatchStart}
           />
         </Main>
-        <Footer>
-          <ChatBoxContent>
-            <ChatButton />
-          </ChatBoxContent>
-        </Footer>
       </MatchContent>
       {isAlready && (
         <ConfirmModal
@@ -212,15 +206,6 @@ const Main = styled.main`
   gap: 14px;
   margin-top: 40px;
   margin-bottom: 65px;
-`;
-
-const Footer = styled.footer`
-  display: flex;
-  margin-bottom: 78px;
-`;
-
-const ChatBoxContent = styled.div`
-  margin-left: auto;
 `;
 
 const Column = styled.div`

@@ -7,7 +7,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { GAME_MODE_PAGE_DATA } from "@/data/match";
 import HeaderTitle from "@/components/common/HeaderTitle";
 import { Suspense } from "react";
-import ChatButton from "@/components/common/ChatButton";
 
 const GameModePage = () => {
   const router = useRouter();
@@ -38,11 +37,6 @@ const GameModePage = () => {
             );
           })}
         </Main>
-        <Footer>
-          <ChatBoxContent>
-            <ChatButton />
-          </ChatBoxContent>
-        </Footer>
       </MatchContent>
     </Wrapper>
   );
@@ -80,13 +74,4 @@ const Main = styled.main`
 
 const BoxWrapper = styled.div`
   display: contents;
-`;
-
-const Footer = styled.footer`
-  display: flex;
-  margin-bottom: 78px;
-`;
-
-const ChatBoxContent = styled.div`
-  margin-left: auto;
 `;

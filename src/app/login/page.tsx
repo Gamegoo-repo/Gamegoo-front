@@ -70,6 +70,12 @@ const Login = () => {
     }
   }, [email, password]);
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleLogin();
+    }
+  };
+
   /* 로그인 */
   const handleLogin = async () => {
     try {
@@ -162,6 +168,7 @@ const Login = () => {
                 errorMsg="정보 불일치"
                 placeholder="비밀번호"
                 isValid={passwordValid}
+                onKeyDown={handleKeyDown}
               />
             </InputList>
             <Button

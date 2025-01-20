@@ -35,18 +35,15 @@ import Input from "../common/Input";
 import { REPORT_REASON } from "@/data/report";
 import { reportMember } from "@/api/report/report";
 import { notify } from "@/hooks/notify";
-import { FriendList } from "@/types/friend/friendList";
-import { getFriendsList } from "@/api/friend/get";
-import ChatFriendList from "./ChatFriendList";
-import { patchFriendStar } from "@/api/friend/star";
-import { blockMember } from "@/api/block/block";
 
 const Layout = () => {
   const dispatch = useDispatch();
 
   const [activeTab, setActiveTab] = useState(0);
-  const [friends, setFriends] = useState<FriendList[]>([]);
-  const [favoriteFriends, setFavoriteFriends] = useState<FriendList[]>([]);
+  const [friends, setFriends] = useState<FriendListInterface[]>([]);
+  const [favoriteFriends, setFavoriteFriends] = useState<FriendListInterface[]>(
+    []
+  );
   const [isSearching, setIsSearching] = useState(false);
   const tabs = ["친구 목록", "대화방"];
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState<number | null>(null);
@@ -60,9 +57,15 @@ const Layout = () => {
     []
   );
   const [reportDetail, setReportDetail] = useState<string>("");
-  const [isMannerValue, setIsMannerValue] = useState<Mannerstatus>();
-  const [isBadMannerValue, setIsBadMannerValue] = useState<Mannerstatus>();
+  const [isMannerValue, setIsMannerValue] = useState<
+    Mannerstatus | undefined
+  >();
+  const [isBadMannerValue, setIsBadMannerValue] = useState<
+    Mannerstatus | undefined
+  >();
   const [isEditMode, setIsEditMode] = useState(false);
+  const [cursor, setCursor] = useState<number | null>(null);
+  const [hasNext, setHasNext] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const isChatRoomOpen = useSelector(
@@ -90,13 +93,15 @@ const Layout = () => {
   const handleFetchFriendsList = async (cursor?: number) => {
     setIsLoading(true);
     try {
-      const response = await getFriendsList();
-      const friendsList = response.data.friendInfoList;
+      const data = await getFriendsList(cursor);
+      const friendsList = data?.result?.friendInfoDTOList;
 
       if (Array.isArray(friendsList)) {
         setFriends(friendsList);
-        const likedFriends = friendsList.filter((friend) => friend.liked);
+        const likedFriends = friendsList.filter((friend) => friend.isLiked);
         setFavoriteFriends(likedFriends);
+        setHasNext(data.result.has_next);
+        setCursor(data.result.next_cursor);
       } else {
         setFriends([]);
         setFavoriteFriends([]);
@@ -110,8 +115,19 @@ const Layout = () => {
     }
   };
 
+  /* 친구 목록 페이지 - 스크롤이 끝에 도달하면 다음 페이지 가져오기 */
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    if (!cursor) return;
+    const bottom =
+      e.currentTarget.scrollHeight - e.currentTarget.scrollTop ===
+      e.currentTarget.clientHeight;
+    if (hasNext && bottom && !isLoading) {
+      handleFetchFriendsList(cursor);
+    }
+  };
+
   useEffect(() => {
-    const likedFriends = friends.filter((friend) => friend.liked);
+    const likedFriends = friends.filter((friend) => friend.isLiked);
     setFavoriteFriends(likedFriends);
   }, [friends]);
 
@@ -123,7 +139,7 @@ const Layout = () => {
   }, [activeTab, isSearching]);
 
   /* 친구 검색 */
-  const handleSearch = (searchResults: FriendList[] | null) => {
+  const handleSearch = (searchResults: FriendListInterface[] | null) => {
     if (searchResults === null) {
       // 검색어 결과 없을 경우 전체 친구 목록 보여주기
       setIsSearching(false);
@@ -133,7 +149,7 @@ const Layout = () => {
       setIsSearching(true);
       setFriends(searchResults);
 
-      const likedFriends = searchResults.filter((friend) => friend.liked);
+      const likedFriends = searchResults.filter((friend) => friend.isLiked);
       setFavoriteFriends(likedFriends);
     }
   };
@@ -148,7 +164,7 @@ const Layout = () => {
     // friends 배열과 검색된 친구 목록에서 해당 친구 찾기
     const friend = friends.find((f) => f.memberId === friendId);
     if (friend) {
-      const newLikedStatus = !friend.liked;
+      const newLikedStatus = !friend.isLiked;
 
       // friends 상태 업데이트
       setFriends((prevFriends) =>
@@ -165,7 +181,11 @@ const Layout = () => {
       );
 
       try {
-        await patchFriendStar(friendId);
+        if (newLikedStatus) {
+          await likeFriend(friendId);
+        } else {
+          await unLikeFriend(friendId);
+        }
       } catch (error) {
         console.error(error);
       }
@@ -176,8 +196,8 @@ const Layout = () => {
   const handleMannerValuesGet = async (memberId: number) => {
     try {
       const response = await getMannerValues(memberId);
-      await setIsMannerValue(response.data);
-      await setCheckedMannerItems(response.data.mannerKeywordIdList);
+      await setIsMannerValue(response.result);
+      await setCheckedMannerItems(response.result.mannerRatingKeywordList);
     } catch (error) {
       console.error(error);
     }
@@ -187,8 +207,8 @@ const Layout = () => {
   const handleBadMannerValuesGet = async (memberId: number) => {
     try {
       const response = await getBadMannerValues(memberId);
-      await setIsBadMannerValue(response.data);
-      await setCheckedBadMannerItems(response.data.mannerKeywordIdList);
+      await setIsBadMannerValue(response.result);
+      await setCheckedBadMannerItems(response.result.mannerRatingKeywordList);
     } catch (error) {
       console.error(error);
     }
@@ -239,8 +259,8 @@ const Layout = () => {
     if (!selectedChatroom) return;
 
     try {
-      const response = await leaveChatroom({ uuid: selectedChatroom.uuid });
-      if (response.status === 200 && socket) {
+      const response = await leaveChatroom(selectedChatroom.uuid);
+      if (response.isSuccess && socket) {
         socket.emit("exit-chatroom", { uuid: selectedChatroom.uuid });
       }
       await dispatch(setCloseModal());
@@ -258,7 +278,7 @@ const Layout = () => {
 
     try {
       const response = await blockMember(selectedChatroom.targetMemberId);
-      if (response.data && socket) {
+      if (response.isSuccess && socket) {
         socket.emit("exit-chatroom", { uuid: selectedChatroom.uuid });
         await dispatch(setOpenModal("doneBlock"));
       }
@@ -272,10 +292,9 @@ const Layout = () => {
     if (!selectedChatroom) return;
 
     const params = {
-      memberId: selectedChatroom.targetMemberId,
-      reportCodeList: checkedReportItems,
+      targetMemberId: selectedChatroom.targetMemberId,
+      reportTypeIdList: checkedReportItems,
       contents: reportDetail,
-      pathCode: 2, // CHAT
     };
 
     try {
@@ -297,12 +316,12 @@ const Layout = () => {
 
   /* 매너평가 등록 */
   const handleMannerPost = async () => {
-    const mannerId = isMannerValue?.mannerRatingId;
+    const mannerId = isMannerValue?.mannerId;
     if (!selectedChatroom || mannerId !== null) return;
 
     const params = {
-      memberId: selectedChatroom.targetMemberId,
-      mannerKeywordIdList: checkedMannerItems,
+      toMemberId: selectedChatroom.targetMemberId,
+      mannerRatingKeywordList: checkedMannerItems,
     };
 
     try {
@@ -321,12 +340,12 @@ const Layout = () => {
 
   /* 비매너평가 등록 */
   const handleBadMannerPost = async () => {
-    const badMannerId = isBadMannerValue?.mannerRatingId;
+    const badMannerId = isBadMannerValue?.mannerId;
     if (!selectedChatroom || badMannerId !== null) return;
 
     const params = {
-      memberId: selectedChatroom.targetMemberId,
-      mannerKeywordIdList: checkedBadMannerItems,
+      toMemberId: selectedChatroom.targetMemberId,
+      mannerRatingKeywordList: checkedBadMannerItems,
     };
 
     try {
@@ -364,7 +383,7 @@ const Layout = () => {
   /* 매너, 비매너 평가 수정 */
   const handleMannerEdit = async (type: string) => {
     const params = {
-      mannerKeywordIdList:
+      mannerRatingKeywordList:
         type === "manner" ? checkedMannerItems : checkedBadMannerItems,
     };
 
@@ -372,12 +391,9 @@ const Layout = () => {
       if (
         type === "manner" &&
         isMannerValue &&
-        isMannerValue.mannerRatingId !== null
+        isMannerValue.mannerId !== null
       ) {
-        await editManners({
-          mannerId: isMannerValue.mannerRatingId,
-          mannerKeywordIdList: params.mannerKeywordIdList,
-        });
+        await editManners(isMannerValue.mannerId, params);
         await notify({
           text: "매너 평가 수정이 완료되었습니다",
           icon: "👌🏼",
@@ -386,12 +402,9 @@ const Layout = () => {
       } else if (
         type === "badManner" &&
         isBadMannerValue &&
-        isBadMannerValue.mannerRatingId !== null
+        isBadMannerValue.mannerId !== null
       ) {
-        await editManners({
-          mannerId: isBadMannerValue.mannerRatingId,
-          mannerKeywordIdList: params.mannerKeywordIdList,
-        });
+        await editManners(isBadMannerValue.mannerId, params);
         await notify({
           text: "비매너 평가 수정이 완료되었습니다",
           icon: "👌🏼",
@@ -406,13 +419,13 @@ const Layout = () => {
   };
 
   const isMannerEditable =
-    (isMannerValue?.mannerKeywordIdList?.length as number) > 0 &&
+    isMannerValue?.isExist &&
     !isEditMode &&
-    isMannerValue?.mannerKeywordIdList.length !== 0;
+    isMannerValue?.mannerRatingKeywordList.length !== 0;
   const isBadMannerEditable =
-    (isBadMannerValue?.mannerKeywordIdList?.length as number) > 0 &&
+    isBadMannerValue?.isExist &&
     !isEditMode &&
-    isBadMannerValue?.mannerKeywordIdList.length !== 0;
+    isBadMannerValue?.mannerRatingKeywordList.length !== 0;
 
   return (
     <>
@@ -440,8 +453,8 @@ const Layout = () => {
             <ChatMain className={activeTab === 0 ? "friend" : "chat"}>
               <Content className={activeTab === 0 ? "friend" : "chat"}>
                 {activeTab === 0 ? (
-                  <div>
-                    <ChatFriendList
+                  <div onScroll={handleScroll}>
+                    <FriendList
                       onChatRoom={handleGoToChatRoom}
                       friends={friends}
                       favoriteFriends={favoriteFriends}
@@ -599,7 +612,7 @@ const Layout = () => {
             ) : (
               <Button
                 onClick={() =>
-                  isMannerValue.mannerKeywordIdList.length > 0
+                  isMannerValue.isExist
                     ? handleMannerEdit("manner")
                     : handleMannerPost()
                 }
@@ -648,7 +661,7 @@ const Layout = () => {
             ) : (
               <Button
                 onClick={() =>
-                  isBadMannerValue.mannerKeywordIdList.length > 0
+                  isBadMannerValue.isExist
                     ? handleMannerEdit("badManner")
                     : handleBadMannerPost()
                 }

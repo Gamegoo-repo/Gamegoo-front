@@ -3,7 +3,6 @@ import HeaderTitle from "@/components/common/HeaderTitle";
 import { theme } from "@/styles/theme";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
 import MannerLevelBar from "@/components/common/MannerLevelBar";
-import ChatButton from "@/components/common/ChatButton";
 import Image from "next/image";
 import Toggle from "../common/Toggle";
 
@@ -124,11 +123,6 @@ const BlindProfile = () => {
           </Content>
         </Main>
       </MatchContent>
-      <Footer>
-        <ChatBoxContent>
-          <ChatButton />
-        </ChatBoxContent>
-      </Footer>
     </Wrapper>
   );
 };
@@ -224,15 +218,6 @@ const TypeWrapper = styled.div`
 const Type = styled.p`
   ${(props) => props.theme.fonts.medium16};
   color: ${theme.colors.gray700};
-`;
-
-const Footer = styled.footer`
-  display: flex;
-  margin-bottom: 78px;
-`;
-
-const ChatBoxContent = styled.div`
-  margin-left: auto;
 `;
 
 /* 프로필 부분 */

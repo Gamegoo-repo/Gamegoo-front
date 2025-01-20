@@ -7,7 +7,6 @@ import SquareProfile from "@/components/match/SquareProfile";
 import Button from "@/components/common/Button";
 import { theme } from "@/styles/theme";
 import { useRouter, useSearchParams } from "next/navigation";
-import ChatButton from "@/components/common/ChatButton";
 import { useEffect, useRef, useState } from "react";
 import { sendMatchingQuitEvent, socket } from "@/socket";
 import ConfirmModal from "@/components/common/ConfirmModal";
@@ -371,11 +370,6 @@ const Complete = () => {
               )}
             </Oppnent>
           </Main>
-          <Footer>
-            <ChatBoxContent>
-              <ChatButton />
-            </ChatBoxContent>
-          </Footer>
         </MatchContent>
         {/* 매칭 실패 시 팝업 */}
         {showFailModal && (
@@ -445,13 +439,4 @@ const Oppnent = styled.div`
 const Text = styled.div`
   color: ${theme.colors.purple100};
   ${(props) => props.theme.fonts.regular18};
-`;
-
-const Footer = styled.footer`
-  display: flex;
-  margin-bottom: 78px;
-`;
-
-const ChatBoxContent = styled.div`
-  margin-left: auto;
 `;
