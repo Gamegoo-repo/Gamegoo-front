@@ -1,4 +1,5 @@
 import dayjs from "@/libs/dayjs";
+import { Position } from "@/types/position/position";
 
 export function setQueueType(gameMode: number) {
   switch (gameMode) {
@@ -38,7 +39,7 @@ export function setProfileImg(profile: number) {
   }
 }
 
-export function setPositionImg(position: string) {
+export function setPositionImg(position: Position) {
   switch (position) {
     case "ANY":
       return "/assets/icons/position_all_purple.svg";

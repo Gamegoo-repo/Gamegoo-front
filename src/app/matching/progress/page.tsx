@@ -8,7 +8,7 @@ import Image from "next/image";
 import { theme } from "@/styles/theme";
 import { useEffect, useRef, useState } from "react";
 import ConfirmModal from "@/components/common/ConfirmModal";
-import { sendMatchingQuitEvent, socket } from "@/socket";
+import { socket } from "@/socket";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { messagesWithN, messagesWithoutN } from "@/constants/messages";
 import { getSystemMsg } from "@/api/socket";
@@ -17,6 +17,7 @@ import { setOpenPostingModal } from "@/redux/slices/modalSlice";
 import { useDispatch } from "react-redux";
 import { setBoardFilters } from "@/redux/slices/boardSlice";
 import { setIsCompleted } from "@/utils/storage";
+import { Position } from "@/types/position/position";
 
 interface User {
   memberId: number;
@@ -27,9 +28,9 @@ interface User {
   mannerLevel: number;
   profileImg: number;
   gameMode: number;
-  mainPosition: number;
-  subPosition: number;
-  wantPosition: number;
+  mainPosition: Position;
+  subPosition: Position;
+  wantPosition: Position;
   mike: boolean;
   gameStyleList: string[];
 }
@@ -59,9 +60,9 @@ const Progress = () => {
     mannerLevel: parseInt(searchParams.get("mannerLevel") || "0", 10),
     profileImg: parseInt(searchParams.get("profileImg") || "0", 10),
     gameMode: parseInt(searchParams.get("gameMode") || "1", 10),
-    mainPosition: parseInt(searchParams.get("mainPosition") || "1", 10),
-    subPosition: parseInt(searchParams.get("subPosition") || "1", 10),
-    wantPosition: parseInt(searchParams.get("wantPosition") || "1", 10),
+    mainPosition: (searchParams.get("mainPosition") as Position) || "ANY",
+    subPosition: (searchParams.get("subPosition") as Position) || "ANY",
+    wantPosition: (searchParams.get("wantPosition") as Position) || "ANY",
     mike: searchParams.get("mike") === "true",
     gameStyleList: (searchParams.get("gameStyleList") || "").split(","),
   };

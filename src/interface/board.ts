@@ -21,9 +21,9 @@ export interface BoardDetail {
   tier: string;
   rank?: number;
   gameMode: number;
-  mainPosition: number;
-  subPosition: number;
-  wantPosition: number;
+  mainPosition: Position;
+  subPosition: Position;
+  wantPosition: Position;
   championResponseList?: ChampionResponseDTOList[];
   winRate: number;
   createdAt: string;
@@ -66,9 +66,9 @@ export interface MemberPost {
 export interface PostReq {
   boardProfileImage: number;
   gameMode: number;
-  mainPosition: number;
-  subPosition: number;
-  wantPosition: number;
+  mainPosition: Position;
+  subPosition: Position;
+  wantPosition: Position;
   mike: boolean;
   gameStyles: number[];
   contents: string;

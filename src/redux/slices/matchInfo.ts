@@ -1,11 +1,12 @@
+import { Position } from '@/types/position/position';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface MatchInfoState {
-  mike: boolean | null;                         // 마이크 사용 여부
-  mainP: string | null;                         // 주 포지션
-  subP: string | null;                          // 부 포지션
-  wantP: string | null;                         // 원하는 포지션
-  gameStyleResponseDTOList: number[];        // 게임 스타일 목록
+  mike: boolean | null;                        // 마이크 사용 여부
+  mainP: Position;                             // 주 포지션
+  subP: Position;                              // 부 포지션
+  wantP: Position;                             // 원하는 포지션
+  gameStyleResponseDTOList: number[];          // 게임 스타일 목록
 }
 
 const initialState: MatchInfoState = {

@@ -112,9 +112,9 @@ const Profile: React.FC<Profile> = ({
     dispatch(
       setMatchInfo({
         mike: isMike,
-        mainP: positionValue.main ?? null,
-        subP: positionValue.sub ?? null,
-        wantP: positionValue.want ?? null,
+        mainP: positionValue.main ?? "ANY",
+        subP: positionValue.sub ?? "ANY",
+        wantP: positionValue.want ?? "ANY",
         gameStyleResponseDTOList: gameStyleIds,
       })
     );

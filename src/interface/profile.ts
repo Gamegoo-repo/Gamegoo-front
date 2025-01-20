@@ -58,8 +58,8 @@ export interface UserInfo {
   id: number;
   isAgree: boolean;
   isBlind: boolean;
-  mainP: number;
-  subP: number;
+  mainP: Position;
+  subP: Position;
   winRate: number;
   profileImg: number;
   email: string;
@@ -67,7 +67,7 @@ export interface UserInfo {
   tag: string;
   tier: string;
   rank: string;
-  updatedAt: string,
+  updatedAt: string;
   gameStyleResponseDTOList: GameStyleList[];
   championResponseDTOList: ChampionList[];
   loginType: string;
