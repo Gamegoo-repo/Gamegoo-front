@@ -1,5 +1,5 @@
 import { MannerKeywordDTO } from "@/types/api/board/board";
-import { MannerKeywords } from "./manner";
+import { Position } from "@/types/position/position";
 
 export interface ChampionResponseDTOList {
   championId: number;
@@ -53,9 +53,9 @@ export interface MemberPost {
   championResponseList?: ChampionResponseDTOList[];
   championResponseDTOList?: ChampionResponseDTOList[];
   gameMode: number;
-  mainPosition?: number;
-  subPosition?: number;
-  wantPosition?: number;
+  mainPosition?: Position;
+  subPosition?: Position;
+  wantPosition?: Position;
   recentGameCount?: number;
   winRate: number;
   gameStyles: number[];

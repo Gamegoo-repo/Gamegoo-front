@@ -9,6 +9,7 @@ import MannerLevelBox from "../common/MannerLevelBox";
 import { setAbbrevTier, setPositionImg } from "@/utils/custom";
 import { getProfileBgColor } from "@/utils/profile";
 import { toLowerCaseString } from "@/utils/string";
+import { Position as PositionType } from "@/types/position/position";
 
 interface User {
   memberId: number;
@@ -19,9 +20,9 @@ interface User {
   mannerLevel: number;
   profileImg: number;
   gameMode: number;
-  mainPosition: number;
-  subPosition: number;
-  wantPosition: number;
+  mainPosition: PositionType;
+  subPosition: PositionType;
+  wantPosition: PositionType;
   mike: boolean;
   gameStyleList?: string[];
 }

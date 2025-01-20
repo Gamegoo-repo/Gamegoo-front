@@ -17,6 +17,7 @@ import { openChatRoom, setChatRoomUuid } from "@/redux/slices/chatSlice";
 import { setComplete } from "@/redux/slices/matchingSlice";
 import { setIsCompleted } from "@/utils/storage";
 import { getMyProfile } from "@/api/user/profile/get";
+import { Position } from "@/types/position/position";
 
 interface User {
   memberId: number;
@@ -27,9 +28,9 @@ interface User {
   mannerLevel: number;
   profileImg: number;
   gameMode: number;
-  mainPosition: number;
-  subPosition: number;
-  wantPosition: number;
+  mainPosition: Position;
+  subPosition: Position;
+  wantPosition: Position;
   mike: boolean;
   gameStyleList: string[];
 }
@@ -55,9 +56,9 @@ const Complete = () => {
     mannerLevel: 0,
     profileImg: 0,
     gameMode: 0,
-    mainPosition: 0,
-    subPosition: 0,
-    wantPosition: 0,
+    mainPosition: "ANY",
+    subPosition: "ANY",
+    wantPosition: "ANY",
     mike: false,
     gameStyleList: [],
   });
@@ -71,9 +72,9 @@ const Complete = () => {
     mannerLevel: 0,
     profileImg: 0,
     gameMode: 0,
-    mainPosition: 0,
-    subPosition: 0,
-    wantPosition: 0,
+    mainPosition: "ANY",
+    subPosition: "ANY",
+    wantPosition: "ANY",
     mike: false,
     gameStyleList: [],
   });
@@ -184,7 +185,7 @@ const Complete = () => {
           gameMode: 0,
           mainPosition: profileData.mainP,
           subPosition: profileData.subP,
-          wantPosition: 0,
+          wantPosition: "ANY",
           mike: profileData.mike,
           gameStyleList: profileData.gameStyleResponseList.map(
             (style: { gameStyleName: string }) => style.gameStyleName

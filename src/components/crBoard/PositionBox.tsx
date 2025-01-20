@@ -2,23 +2,24 @@ import styled from "styled-components";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import PositionCategory from "../common/PositionCategory";
+import { Position as PositionType } from "@/types/position/position";
 
 type Status = "reading" | "posting";
 
 interface PositionBoxProps {
   status?: Status;
   onPositionChange?: (newPositionValue: PositionState) => void;
-  main: number | undefined;
-  sub: number | undefined;
-  want: number | undefined;
+  main: PositionType | undefined;
+  sub: PositionType | undefined;
+  want: PositionType | undefined;
 }
 
 type Position = "main" | "sub" | "want";
 
 export interface PositionState {
-  main: number | undefined;
-  sub: number | undefined;
-  want: number | undefined;
+  main: PositionType | undefined;
+  sub: PositionType | undefined;
+  want: PositionType | undefined;
 }
 
 const PositionBox = (props: PositionBoxProps) => {
@@ -33,9 +34,9 @@ const PositionBox = (props: PositionBoxProps) => {
 
   useEffect(() => {
     setPositionValue({
-      main: main ?? 0,
-      sub: sub ?? 0,
-      want: want ?? 0,
+      main: main ?? "ANY",
+      sub: sub ?? "ANY",
+      want: want ?? "ANY",
     });
   }, [main, sub, want]);
 
@@ -54,19 +55,19 @@ const PositionBox = (props: PositionBoxProps) => {
     }
   };
 
-  const handlePositionImgSet = (positionId: number | undefined) => {
+  const handlePositionImgSet = (positionId: string | undefined) => {
     switch (positionId) {
-      case 0:
+      case "ANY":
         return "/assets/icons/position_all_purple.svg";
-      case 1:
+      case "TOP":
         return "/assets/icons/position_top_purple.svg";
-      case 2:
+      case "JUNGLE":
         return "/assets/icons/position_jungle_purple.svg";
-      case 3:
+      case "MID":
         return "/assets/icons/position_mid_purple.svg";
-      case 4:
+      case "ADC":
         return "/assets/icons/position_one_deal_purple.svg";
-      case 5:
+      case "SUP":
         return "/assets/icons/position_supporter_purple.svg";
       default:
         return "/assets/icons/position_all_purple.svg";

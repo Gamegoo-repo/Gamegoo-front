@@ -38,19 +38,19 @@ export function setProfileImg(profile: number) {
   }
 }
 
-export function setPositionImg(position: number) {
+export function setPositionImg(position: string) {
   switch (position) {
-    case 0:
+    case "ANY":
       return "/assets/icons/position_all_purple.svg";
-    case 1:
+    case "TOP":
       return "/assets/icons/position_top_purple.svg";
-    case 2:
+    case "JUNGLE":
       return "/assets/icons/position_jungle_purple.svg";
-    case 3:
+    case "MID":
       return "/assets/icons/position_mid_purple.svg";
-    case 4:
+    case "ADC":
       return "/assets/icons/position_one_deal_purple.svg";
-    case 5:
+    case "SUP":
       return "/assets/icons/position_supporter_purple.svg";
     default:
       return "/assets/icons/position_all_purple.svg";

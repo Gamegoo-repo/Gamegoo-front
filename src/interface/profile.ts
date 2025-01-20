@@ -1,3 +1,5 @@
+import { Position } from "@/types/position/position";
+
 export type profileType = "normal" | "wind" | "other" | "me";
 
 export interface Champion {
@@ -23,9 +25,9 @@ export interface User {
   mannerRank?: null | number;
   mannerRatingCount?: number;
   updatedAt: string;
-  mainP: number;
-  subP: number;
-  wantP: number;
+  mainP: Position;
+  subP: Position;
+  wantP: Position;
   blocked: boolean;
   isAgree: boolean;
   isBlind: boolean;

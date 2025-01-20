@@ -2,17 +2,17 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface MatchInfoState {
   mike: boolean | null;                         // 마이크 사용 여부
-  mainP: number | null;                         // 주 포지션
-  subP: number | null;                          // 부 포지션
-  wantP: number | null;                         // 원하는 포지션
+  mainP: string | null;                         // 주 포지션
+  subP: string | null;                          // 부 포지션
+  wantP: string | null;                         // 원하는 포지션
   gameStyleResponseDTOList: number[];        // 게임 스타일 목록
 }
 
 const initialState: MatchInfoState = {
   mike: false,
-  mainP: null,
-  subP: null,
-  wantP: null,
+  mainP: "ANY",
+  subP: "ANY",
+  wantP: "ANY",
   gameStyleResponseDTOList: [],
 };
 
