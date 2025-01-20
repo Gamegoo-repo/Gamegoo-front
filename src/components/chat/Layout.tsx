@@ -43,6 +43,7 @@ import Tabs from "./Tabs";
 import { resetPosition, setPosition } from "@/redux/slices/chatPositionSlice";
 import useDrag from "@/hooks/useDrag";
 import { getAccessToken } from "@/utils/storage";
+import useDrag from "@/hooks/useDrag";
 
 const Layout = () => {
   const dispatch = useDispatch();
