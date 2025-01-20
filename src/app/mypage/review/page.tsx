@@ -5,16 +5,20 @@ import { theme } from "@/styles/theme";
 import MannerLevelBar from "@/components/common/MannerLevelBar";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
 import { useEffect, useState } from "react";
-import { getMyManner } from "@/api/user";
 import { Manner } from "@/components/user/UserProfile";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { getMemberMannerKeyword, getMemberMannerLevel } from "@/api/manner";
 
 const MyReviewPage = () => {
+  const myId = useSelector((state: RootState) => state.user.id);
   const [myManner, setMyManner] = useState<Manner>();
 
   useEffect(() => {
     const fetchGetMyManner = async () => {
-      const response = await getMyManner();
-      setMyManner(response.result);
+      const response_level = await getMemberMannerLevel(myId || 0);
+      const response_keywords = await getMemberMannerKeyword(myId || 0);
+      setMyManner({ ...response_level.data, ...response_keywords.data });
     };
 
     fetchGetMyManner();
@@ -22,7 +26,9 @@ const MyReviewPage = () => {
 
   const goodMannerEvaluations =
     myManner?.mannerKeywords
-      .filter((keyword) => keyword.isPositive)
+      .filter(
+        (keyword) => keyword.mannerKeywordId > 1 && keyword.mannerKeywordId <= 6
+      )
       .map((keyword) => ({
         id: keyword.mannerKeywordId,
         count: keyword.count,
@@ -30,7 +36,7 @@ const MyReviewPage = () => {
 
   const badMannerEvaluations =
     myManner?.mannerKeywords
-      .filter((keyword) => !keyword.isPositive)
+      .filter((keyword) => keyword.mannerKeywordId >= 7)
       .map((keyword) => ({
         id: keyword.mannerKeywordId,
         count: keyword.count,

@@ -1,7 +1,13 @@
 import styled, { keyframes } from "styled-components";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { Chat, DesignedSystemMessage, ChatMessageDto } from "@/interface/chat";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -11,7 +17,7 @@ import {
 } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
 import ReadBoard from "../readBoard/ReadBoard";
-import { getChatList, markChatAsRead } from "@/api/chat";
+import { getChatList, markChatAsRead } from "@/api/chat/chat";
 import useChatMessage from "@/hooks/useChatMessage";
 import dayjs from "dayjs";
 import { setChatDateFormatter, setChatTimeFormatter } from "@/utils/custom";
@@ -43,16 +49,16 @@ const MessageList = (props: MessageListProps) => {
   const dispatch = useDispatch();
 
   const [messageList, setMessageList] = useState<ChatMessageDto[]>(
-    chatEnterData?.chatMessageList.chatMessageDtoList || []
+    chatEnterData?.chatMessageListResponse.chatMessageDtoList || []
   );
   const [isLoading, setIsLoading] = useState(false);
   const [cursor, setCursor] = useState<number | null>(
-    chatEnterData?.chatMessageList.has_next
-      ? chatEnterData.chatMessageList.next_cursor
+    chatEnterData?.chatMessageListResponse.has_next
+      ? chatEnterData.chatMessageListResponse.next_cursor
       : null
   );
   const [hasMore, setHasMore] = useState<boolean>(
-    chatEnterData?.chatMessageList.has_next
+    chatEnterData?.chatMessageListResponse.has_next
   );
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [isBoardId, setIsBoardId] = useState(0);
@@ -67,7 +73,9 @@ const MessageList = (props: MessageListProps) => {
   const isFeedbackModalOpen = useSelector(
     (state: RootState) => state.modal.isOpen
   );
-  const currentChatUuid = useSelector((state: RootState) => state.chat.currentChatUuid);
+  const currentChatUuid = useSelector(
+    (state: RootState) => state.chat.currentChatUuid
+  );
 
   const router = useRouter();
 
@@ -84,7 +92,7 @@ const MessageList = (props: MessageListProps) => {
         const feedbackMessage: ChatMessageDto = {
           senderId: 0,
           senderName: null,
-          message: '',
+          message: "",
           createdAt: new Date().toISOString(),
           systemType: 1,
           timestamp: new Date().getTime(),
@@ -97,10 +105,10 @@ const MessageList = (props: MessageListProps) => {
 
       /* 현재 보고 있는 채팅방 읽음 처리 */
       if (currentChatUuid && chatroomUuid === currentChatUuid) {
-        markChatAsRead(currentChatUuid, newChatTimestamp);
+        markChatAsRead({ uuid: currentChatUuid, timestamp: newChatTimestamp });
       }
     }
-  }, [mannerSystemMessage])
+  }, [mannerSystemMessage]);
 
   /* 새로운 메시지 전에 시스템 메시지 보여주기 */
   useEffect(() => {
@@ -150,12 +158,12 @@ const MessageList = (props: MessageListProps) => {
   useEffect(() => {
     const chatElement = chatRef.current;
     if (chatElement) {
-      chatElement.addEventListener('scroll', handleScroll);
+      chatElement.addEventListener("scroll", handleScroll);
     }
 
     return () => {
       if (chatElement) {
-        chatElement.removeEventListener('scroll', handleScroll);
+        chatElement.removeEventListener("scroll", handleScroll);
       }
     };
   }, [chatRef, handleScroll]);
@@ -173,13 +181,14 @@ const MessageList = (props: MessageListProps) => {
       const previousScrollTop = chatElement.scrollTop;
       const previousScrollHeight = chatElement.scrollHeight;
 
-      const data = await getChatList(chatEnterData.uuid, cursor);
-      const { chatMessageDtoList, next_cursor, has_next } = data.result;
+      const data = await getChatList({ uuid: chatEnterData.uuid, cursor });
+      const { chatMessageDtoList, next_cursor, has_next } =
+        data.data.chatMessageList;
 
       // 기존 메시지 목록에 새로운 메시지 추가
       setMessageList((prevMessages) => [
         ...chatMessageDtoList,
-        ...prevMessages
+        ...prevMessages,
       ]);
 
       setCursor(next_cursor);
@@ -219,11 +228,16 @@ const MessageList = (props: MessageListProps) => {
   }, [newMessage]);
 
   /* 채팅 날짜 표시 */
-  const handleDisplayDate = (messages: ChatMessageDto[], index: number): boolean => {
+  const handleDisplayDate = (
+    messages: ChatMessageDto[],
+    index: number
+  ): boolean => {
     if (index === 0) return true;
 
-    const currentDate = dayjs(messages[index].createdAt).format('YYYY-M-D');
-    const previousDate = dayjs(messages[index - 1].createdAt).format('YYYY-M-D');
+    const currentDate = dayjs(messages[index].createdAt).format("YYYY-M-D");
+    const previousDate = dayjs(messages[index - 1].createdAt).format(
+      "YYYY-M-D"
+    );
 
     return currentDate !== previousDate;
   };
@@ -334,21 +348,31 @@ const MessageList = (props: MessageListProps) => {
   return (
     <>
       {isReadingModal && !!isBoardId && <ReadBoard postId={isBoardId} />}
-      {isUnregisterAlert || isBlockedAlert && (
-        <ErrorBox>
-          {isUnregisterAlert ? '탈퇴한 회원의 글입니다.' : '차단한 회원의 글입니다.'}
-        </ErrorBox>
-      )}
+      {isUnregisterAlert ||
+        (isBlockedAlert && (
+          <ErrorBox>
+            {isUnregisterAlert
+              ? "탈퇴한 회원의 글입니다."
+              : "차단한 회원의 글입니다."}
+          </ErrorBox>
+        ))}
       <ChatBorder>
-        {chatEnterData.uuid === currentChatUuid &&
+        {chatEnterData.uuid === currentChatUuid && (
           <ChatMain ref={chatRef}>
             {messageList.map((message, index) => {
-              const showProfileImage = handleDisplayProfileImage(messageList, index);
+              const showProfileImage = handleDisplayProfileImage(
+                messageList,
+                index
+              );
               const showTime = handleDisplayTime(messageList, index);
 
               return (
                 <MsgContainer key={index}>
-                  {handleDisplayDate(messageList, index) && <Timestamp>{setChatDateFormatter(message.createdAt)}</Timestamp>}
+                  {handleDisplayDate(messageList, index) && (
+                    <Timestamp>
+                      {setChatDateFormatter(message.createdAt)}
+                    </Timestamp>
+                  )}
                   {message.systemType === 0 ? (
                     <SystemMessage
                       message={message.message}
@@ -364,7 +388,8 @@ const MessageList = (props: MessageListProps) => {
                             src="/assets/icons/clicked_smile.svg"
                             width={22}
                             height={22}
-                            alt="스마일 이모티콘" />
+                            alt="스마일 이모티콘"
+                          />
                           <StyledButton onClick={handleMannerEvaluate}>
                             매너평가 하기
                           </StyledButton>
@@ -374,11 +399,18 @@ const MessageList = (props: MessageListProps) => {
                   ) : message.senderId === chatEnterData?.memberId ? (
                     <YourMessageContainer>
                       {showProfileImage && message.senderProfileImg && (
-                        <ImageWrapper $bgColor={getProfileBgColor(message.senderProfileImg)}
-                          onClick={() => handleMoveProfile(chatEnterData.memberId)}
+                        <ImageWrapper
+                          $bgColor={getProfileBgColor(message.senderProfileImg)}
+                          onClick={() =>
+                            handleMoveProfile(chatEnterData.memberId)
+                          }
                         >
                           <ProfileImage
-                            data={chatEnterData.blind ? `/assets/images/profile/profile_default.svg` : `/assets/images/profile/profile${message.senderProfileImg}.svg`}
+                            data={
+                              chatEnterData.blind
+                                ? `/assets/images/profile/profile_default.svg`
+                                : `/assets/images/profile/profile${message.senderProfileImg}.svg`
+                            }
                             width={38}
                             height={38}
                           />
@@ -386,35 +418,47 @@ const MessageList = (props: MessageListProps) => {
                       )}
                       <YourDiv $hasProfileImage={showProfileImage}>
                         <YourMessage>{message.message}</YourMessage>
-                        {showTime ? <YourDate>{setChatTimeFormatter(message.createdAt)}</YourDate> : null}
+                        {showTime ? (
+                          <YourDate>
+                            {setChatTimeFormatter(message.createdAt)}
+                          </YourDate>
+                        ) : null}
                       </YourDiv>
                     </YourMessageContainer>
-                  ) : message.senderId !== chatEnterData?.memberId && message.senderId !== 0 && (
-                    <MyMessageContainer>
-                      <MyDiv>
-                        {showTime ? <MyDate>{setChatTimeFormatter(message.createdAt)}</MyDate> : null}
-                        <MyMessage>{message.message}</MyMessage>
-                      </MyDiv>
-                    </MyMessageContainer>
+                  ) : (
+                    message.senderId !== chatEnterData?.memberId &&
+                    message.senderId !== 0 && (
+                      <MyMessageContainer>
+                        <MyDiv>
+                          {showTime ? (
+                            <MyDate>
+                              {setChatTimeFormatter(message.createdAt)}
+                            </MyDate>
+                          ) : null}
+                          <MyMessage>{message.message}</MyMessage>
+                        </MyDiv>
+                      </MyMessageContainer>
+                    )
                   )}
                 </MsgContainer>
-              )
+              );
             })}
             {isLoading && (
               <LoadingContainer>
                 <LoadingSpinner />
               </LoadingContainer>
             )}
-            {isFeedbackModalOpen &&
+            {isFeedbackModalOpen && (
               <ConfirmModal
                 type="manner"
                 width="315px"
                 primaryButtonText="확인"
-                onPrimaryClick={() => dispatch(setCloseMannerStatusModal())} />
-            }
+                onPrimaryClick={() => dispatch(setCloseMannerStatusModal())}
+              />
+            )}
           </ChatMain>
-        }
-      </ChatBorder >
+        )}
+      </ChatBorder>
     </>
   );
 };
@@ -492,11 +536,11 @@ const ImageWrapper = styled.div<{ $bgColor: string }>`
 `;
 
 const ProfileImage = styled.object`
-    position: absolute;
-    top:50%;
-    left:50%;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
 `;
 
 const YourDiv = styled.div<{ $hasProfileImage: boolean }>`

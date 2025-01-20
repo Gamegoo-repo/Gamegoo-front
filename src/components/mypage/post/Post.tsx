@@ -1,4 +1,4 @@
-import { getMemberPost } from "@/api/board";
+import { getMemberPost } from "@/api/board/board";
 import MoreBox from "@/components/common/MoreBox";
 import PostBoard from "@/components/createBoard/PostBoard";
 import Report from "@/components/readBoard/MoreBoxButton";
@@ -74,9 +74,9 @@ const Post: React.FC<PostProps> = ({
     const memberData = await getMemberPost(boardId);
 
     dispatch(
-      setCurrentPost({ currentPost: memberData.result, currentPostId: boardId })
+      setCurrentPost({ currentPost: memberData.data, currentPostId: boardId })
     );
-    setIsPost(memberData.result);
+    setIsPost(memberData.data);
     dispatch(setOpenPostingModal());
     dispatch(setCloseReadingModal());
     setIsMoreBoxOpen(false);

@@ -6,7 +6,7 @@ import Post, { PostProps } from "@/components/mypage/post/Post";
 import { useEffect, useState } from "react";
 import { getMyPost } from "@/api/user";
 import Pagination from "@/components/common/Pagination";
-import { deletePost } from "@/api/board";
+import { deletePost } from "@/api/board/board";
 import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
 

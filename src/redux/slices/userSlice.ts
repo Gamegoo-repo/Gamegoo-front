@@ -1,14 +1,5 @@
+import { ChampionList, GameStyleList } from '@/interface/profile';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-interface GameStyle {
-  gameStyleId: number;
-  gameStyleName: string;
-}
-
-interface Champion {
-  championId: number;
-  championName: string;
-}
 
 interface UserState {
   id?: number | undefined;
@@ -18,8 +9,9 @@ interface UserState {
   gameName: string;
   tag: string;
   tier: string;
-  rank: number;
-  manner: number;
+  gameRank: number;
+  mannerRank: number;
+  mannerLevel: number;
   updatedAt: string;
   mainP: number;
   subP: number;
@@ -28,8 +20,8 @@ interface UserState {
   isBlind: boolean;
   loginType: string;
   winrate: number;
-  gameStyleResponseDTOList: GameStyle[];
-  championResponseDTOList: Champion[];
+  gameStyleResponseList: GameStyleList[];
+  championResponseList: ChampionList[];
   blocked: boolean;
   friend: boolean;
   friendRequestMemberId: number | null;
@@ -43,8 +35,9 @@ const initialState: UserState = {
   gameName: '',
   tag: '',
   tier: '',
-  rank: 0,
-  manner: 0,
+  gameRank: 0,
+  mannerRank: 0,
+  mannerLevel: 0,
   updatedAt: '',
   mainP: 0,
   subP: 0,
@@ -53,8 +46,8 @@ const initialState: UserState = {
   isBlind: false,
   loginType: '',
   winrate: 0,
-  gameStyleResponseDTOList: [],
-  championResponseDTOList: [],
+  gameStyleResponseList: [],
+  championResponseList: [],
   blocked: false,
   friend: false,
   friendRequestMemberId: null,
@@ -76,7 +69,7 @@ export const userSlice = createSlice({
     setUserMike: (state, action: PayloadAction<boolean>) => {
       state.mike = action.payload;
     },
-    setUserProfile: (state: any, action: PayloadAction<UserState>) => {
+    setUserProfile: (state: any, action: PayloadAction<Partial<UserState>>) => {
       return { ...state, ...action.payload };
     },
     clearUserProfile(state) {
@@ -87,8 +80,9 @@ export const userSlice = createSlice({
       state.gameName = '';
       state.tag = '';
       state.tier = '';
-      state.rank = 0;
-      state.manner = 0;
+      state.gameRank = 0;
+      state.mannerRank = 0;
+      state.mannerLevel = 0;
       state.updatedAt = '';
       state.mainP = 0;
       state.subP = 0;
@@ -97,8 +91,8 @@ export const userSlice = createSlice({
       state.isBlind = false;
       state.loginType = '';
       state.winrate = 0;
-      state.gameStyleResponseDTOList = [];
-      state.championResponseDTOList = [];
+      state.gameStyleResponseList = [];
+      state.championResponseList = [];
       state.blocked = false;
       state.friend = false;
       state.friendRequestMemberId = null;

@@ -1,6 +1,6 @@
 "use client";
 
-import { resetPassword } from "@/api/password";
+import { resetPassword } from "@/api/password/password";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import { RootState } from "@/redux/store";

@@ -8,6 +8,7 @@ import { theme } from "@/styles/theme";
 import { useState } from "react";
 import Alert from "@/components/common/Alert";
 import { getAccessToken } from "@/utils/storage";
+import { AuthAxios } from "@/api/auth";
 
 const HomePage = () => {
   const router = useRouter();

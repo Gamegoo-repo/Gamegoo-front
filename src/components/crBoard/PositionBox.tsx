@@ -81,7 +81,6 @@ const PositionBox = (props: PositionBoxProps) => {
     setSelectedBox(position);
   };
 
-
   const closePosition = () => {
     setOpenPosition(null);
   };
@@ -186,6 +185,6 @@ const Title = styled.p`
   margin-bottom: 6px;
 `;
 
-const StyledImage = styled(Image) <{ $status: string | undefined }>`
+const StyledImage = styled(Image)<{ $status: string | undefined }>`
   cursor: ${({ $status }) => ($status === "posting" ? "pointer" : "unset")};
 `;

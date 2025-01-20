@@ -10,12 +10,9 @@ import {
   setChatRoomUuid,
 } from "@/redux/slices/chatSlice";
 import SearchBar from "./SearchBar";
-import FriendList from "./FriendList";
 import ChatRoomList from "./ChatRoomList";
 import { RootState } from "@/redux/store";
 import ChatLayout from "./ChatLayout";
-import { FriendListInterface } from "@/interface/friends";
-import { getFriendsList, likeFriend, unLikeFriend } from "@/api/friends";
 import { ChatroomList } from "@/interface/chat";
 import { Mannerstatus } from "@/interface/manner";
 import {
@@ -26,7 +23,7 @@ import {
   postMannerValue,
 } from "@/api/manner";
 import ConfirmModal from "../common/ConfirmModal";
-import { leaveChatroom } from "@/api/chat";
+import { leaveChatroom } from "@/api/chat/chat";
 import { setCloseModal, setOpenModal } from "@/redux/slices/modalSlice";
 import { socket } from "@/socket";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
@@ -35,8 +32,13 @@ import FormModal from "../common/FormModal";
 import Checkbox from "../common/Checkbox";
 import Input from "../common/Input";
 import { REPORT_REASON } from "@/data/report";
-import { blockMember, reportMember } from "@/api/member";
+import { reportMember } from "@/api/report/report";
 import { notify } from "@/hooks/notify";
+import { FriendList } from "@/types/friend/friendList";
+import { getFriendsList } from "@/api/friend/get";
+import ChatFriendList from "./ChatFriendList";
+import { patchFriendStar } from "@/api/friend/star";
+import { blockMember } from "@/api/block/block";
 import Tabs from "./Tabs";
 import { resetPosition, setPosition } from "@/redux/slices/chatPositionSlice";
 
@@ -48,10 +50,8 @@ const Layout = () => {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
 
   const [activeTab, setActiveTab] = useState(0);
-  const [friends, setFriends] = useState<FriendListInterface[]>([]);
-  const [favoriteFriends, setFavoriteFriends] = useState<FriendListInterface[]>(
-    []
-  );
+  const [friends, setFriends] = useState<FriendList[]>([]);
+  const [favoriteFriends, setFavoriteFriends] = useState<FriendList[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const tabs = ["친구 목록", "대화방"];
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState<number | null>(null);
@@ -65,15 +65,10 @@ const Layout = () => {
     []
   );
   const [reportDetail, setReportDetail] = useState<string>("");
-  const [isMannerValue, setIsMannerValue] = useState<
-    Mannerstatus | undefined
-  >();
-  const [isBadMannerValue, setIsBadMannerValue] = useState<
-    Mannerstatus | undefined
-  >();
+  const [isMannerValue, setIsMannerValue] = useState<Mannerstatus>();
+  const [isBadMannerValue, setIsBadMannerValue] = useState<Mannerstatus>();
   const [isEditMode, setIsEditMode] = useState(false);
-  const [cursor, setCursor] = useState<number | null>(null);
-  const [hasNext, setHasNext] = useState<boolean>(true);
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const isChatRoomOpen = useSelector(
@@ -169,18 +164,16 @@ const Layout = () => {
   };
 
   /* 친구 목록 가져오기 */
-  const handleFetchFriendsList = async (cursor?: number) => {
+  const handleFetchFriendsList = async () => {
     setIsLoading(true);
     try {
-      const data = await getFriendsList(cursor);
-      const friendsList = data?.result?.friendInfoDTOList;
+      const response = await getFriendsList();
+      const friendsList = response.data.friendInfoList;
 
       if (Array.isArray(friendsList)) {
         setFriends(friendsList);
-        const likedFriends = friendsList.filter((friend) => friend.isLiked);
+        const likedFriends = friendsList.filter((friend) => friend.liked);
         setFavoriteFriends(likedFriends);
-        setHasNext(data.result.has_next);
-        setCursor(data.result.next_cursor);
       } else {
         setFriends([]);
         setFavoriteFriends([]);
@@ -194,19 +187,13 @@ const Layout = () => {
     }
   };
 
-  /* 친구 목록 페이지 - 스크롤이 끝에 도달하면 다음 페이지 가져오기 */
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    if (!cursor) return;
-    const bottom =
-      e.currentTarget.scrollHeight - e.currentTarget.scrollTop ===
-      e.currentTarget.clientHeight;
-    if (hasNext && bottom && !isLoading) {
-      handleFetchFriendsList(cursor);
-    }
-  };
+  useEffect(() => {
+    const likedFriends = friends.filter((friend) => friend.liked);
+    setFavoriteFriends(likedFriends);
+  }, [friends]);
 
   useEffect(() => {
-    const likedFriends = friends.filter((friend) => friend.isLiked);
+    const likedFriends = friends.filter((friend) => friend.liked);
     setFavoriteFriends(likedFriends);
   }, [friends]);
 
@@ -218,7 +205,7 @@ const Layout = () => {
   }, [activeTab, isSearching]);
 
   /* 친구 검색 */
-  const handleSearch = (searchResults: FriendListInterface[] | null) => {
+  const handleSearch = (searchResults: FriendList[] | null) => {
     if (searchResults === null) {
       // 검색어 결과 없을 경우 전체 친구 목록 보여주기
       setIsSearching(false);
@@ -228,7 +215,7 @@ const Layout = () => {
       setIsSearching(true);
       setFriends(searchResults);
 
-      const likedFriends = searchResults.filter((friend) => friend.isLiked);
+      const likedFriends = searchResults.filter((friend) => friend.liked);
       setFavoriteFriends(likedFriends);
     }
   };
@@ -243,7 +230,7 @@ const Layout = () => {
     // friends 배열과 검색된 친구 목록에서 해당 친구 찾기
     const friend = friends.find((f) => f.memberId === friendId);
     if (friend) {
-      const newLikedStatus = !friend.isLiked;
+      const newLikedStatus = !friend.liked;
 
       // friends 상태 업데이트
       setFriends((prevFriends) =>
@@ -260,11 +247,7 @@ const Layout = () => {
       );
 
       try {
-        if (newLikedStatus) {
-          await likeFriend(friendId);
-        } else {
-          await unLikeFriend(friendId);
-        }
+        await patchFriendStar(friendId);
       } catch (error) {
         console.error(error);
       }
@@ -275,8 +258,8 @@ const Layout = () => {
   const handleMannerValuesGet = async (memberId: number) => {
     try {
       const response = await getMannerValues(memberId);
-      await setIsMannerValue(response.result);
-      await setCheckedMannerItems(response.result.mannerRatingKeywordList);
+      await setIsMannerValue(response.data);
+      await setCheckedMannerItems(response.data.mannerKeywordIdList);
     } catch (error) {
       console.error(error);
     }
@@ -286,8 +269,8 @@ const Layout = () => {
   const handleBadMannerValuesGet = async (memberId: number) => {
     try {
       const response = await getBadMannerValues(memberId);
-      await setIsBadMannerValue(response.result);
-      await setCheckedBadMannerItems(response.result.mannerRatingKeywordList);
+      await setIsBadMannerValue(response.data);
+      await setCheckedBadMannerItems(response.data.mannerKeywordIdList);
     } catch (error) {
       console.error(error);
     }
@@ -339,8 +322,8 @@ const Layout = () => {
     if (!selectedChatroom) return;
 
     try {
-      const response = await leaveChatroom(selectedChatroom.uuid);
-      if (response.isSuccess && socket) {
+      const response = await leaveChatroom({ uuid: selectedChatroom.uuid });
+      if (response.status === 200 && socket) {
         socket.emit("exit-chatroom", { uuid: selectedChatroom.uuid });
       }
       await dispatch(setCloseModal());
@@ -358,7 +341,7 @@ const Layout = () => {
 
     try {
       const response = await blockMember(selectedChatroom.targetMemberId);
-      if (response.isSuccess && socket) {
+      if (response.data && socket) {
         socket.emit("exit-chatroom", { uuid: selectedChatroom.uuid });
         await dispatch(setOpenModal("doneBlock"));
       }
@@ -372,9 +355,10 @@ const Layout = () => {
     if (!selectedChatroom) return;
 
     const params = {
-      targetMemberId: selectedChatroom.targetMemberId,
-      reportTypeIdList: checkedReportItems,
+      memberId: selectedChatroom.targetMemberId,
+      reportCodeList: checkedReportItems,
       contents: reportDetail,
+      pathCode: 2, // CHAT
     };
 
     try {
@@ -396,12 +380,12 @@ const Layout = () => {
 
   /* 매너평가 등록 */
   const handleMannerPost = async () => {
-    const mannerId = isMannerValue?.mannerId;
+    const mannerId = isMannerValue?.mannerRatingId;
     if (!selectedChatroom || mannerId !== null) return;
 
     const params = {
-      toMemberId: selectedChatroom.targetMemberId,
-      mannerRatingKeywordList: checkedMannerItems,
+      memberId: selectedChatroom.targetMemberId,
+      mannerKeywordIdList: checkedMannerItems,
     };
 
     try {
@@ -420,12 +404,12 @@ const Layout = () => {
 
   /* 비매너평가 등록 */
   const handleBadMannerPost = async () => {
-    const badMannerId = isBadMannerValue?.mannerId;
+    const badMannerId = isBadMannerValue?.mannerRatingId;
     if (!selectedChatroom || badMannerId !== null) return;
 
     const params = {
-      toMemberId: selectedChatroom.targetMemberId,
-      mannerRatingKeywordList: checkedBadMannerItems,
+      memberId: selectedChatroom.targetMemberId,
+      mannerKeywordIdList: checkedBadMannerItems,
     };
 
     try {
@@ -463,7 +447,7 @@ const Layout = () => {
   /* 매너, 비매너 평가 수정 */
   const handleMannerEdit = async (type: string) => {
     const params = {
-      mannerRatingKeywordList:
+      mannerKeywordIdList:
         type === "manner" ? checkedMannerItems : checkedBadMannerItems,
     };
 
@@ -471,9 +455,12 @@ const Layout = () => {
       if (
         type === "manner" &&
         isMannerValue &&
-        isMannerValue.mannerId !== null
+        isMannerValue.mannerRatingId !== null
       ) {
-        await editManners(isMannerValue.mannerId, params);
+        await editManners({
+          mannerId: isMannerValue.mannerRatingId,
+          mannerKeywordIdList: params.mannerKeywordIdList,
+        });
         await notify({
           text: "매너 평가 수정이 완료되었습니다",
           icon: "👌🏼",
@@ -482,9 +469,12 @@ const Layout = () => {
       } else if (
         type === "badManner" &&
         isBadMannerValue &&
-        isBadMannerValue.mannerId !== null
+        isBadMannerValue.mannerRatingId !== null
       ) {
-        await editManners(isBadMannerValue.mannerId, params);
+        await editManners({
+          mannerId: isBadMannerValue.mannerRatingId,
+          mannerKeywordIdList: params.mannerKeywordIdList,
+        });
         await notify({
           text: "비매너 평가 수정이 완료되었습니다",
           icon: "👌🏼",
@@ -499,13 +489,13 @@ const Layout = () => {
   };
 
   const isMannerEditable =
-    isMannerValue?.isExist &&
+    (isMannerValue?.mannerKeywordIdList?.length as number) > 0 &&
     !isEditMode &&
-    isMannerValue?.mannerRatingKeywordList.length !== 0;
+    isMannerValue?.mannerKeywordIdList.length !== 0;
   const isBadMannerEditable =
-    isBadMannerValue?.isExist &&
+    (isBadMannerValue?.mannerKeywordIdList?.length as number) > 0 &&
     !isEditMode &&
-    isBadMannerValue?.mannerRatingKeywordList.length !== 0;
+    isBadMannerValue?.mannerKeywordIdList.length !== 0;
 
   return (
     <>
@@ -539,8 +529,8 @@ const Layout = () => {
             <ChatMain className={activeTab === 0 ? "friend" : "chat"}>
               <Content className={activeTab === 0 ? "friend" : "chat"}>
                 {activeTab === 0 ? (
-                  <div onScroll={handleScroll}>
-                    <FriendList
+                  <div>
+                    <ChatFriendList
                       onChatRoom={handleGoToChatRoom}
                       friends={friends}
                       favoriteFriends={favoriteFriends}
@@ -698,7 +688,7 @@ const Layout = () => {
             ) : (
               <Button
                 onClick={() =>
-                  isMannerValue.isExist
+                  isMannerValue.mannerKeywordIdList.length > 0
                     ? handleMannerEdit("manner")
                     : handleMannerPost()
                 }
@@ -747,7 +737,7 @@ const Layout = () => {
             ) : (
               <Button
                 onClick={() =>
-                  isBadMannerValue.isExist
+                  isBadMannerValue.mannerKeywordIdList.length > 0
                     ? handleMannerEdit("badManner")
                     : handleBadMannerPost()
                 }

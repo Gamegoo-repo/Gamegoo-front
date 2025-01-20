@@ -35,8 +35,7 @@ Axios.interceptors.response.use(
   },
   (error) => {
     if (error.response) {
-      const errorData = error.response.data;
-      return Promise.reject(new Error(errorData.message || 'Failed to fetch data'));
+      return Promise.reject(error);
     }
     return Promise.reject(error);
   }

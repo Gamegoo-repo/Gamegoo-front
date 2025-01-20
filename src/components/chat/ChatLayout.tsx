@@ -18,7 +18,7 @@ import {
   enterUsingMemberId,
   enterUsingUuid,
   leaveChatroom,
-} from "@/api/chat";
+} from "@/api/chat/chat";
 import { RootState } from "@/redux/store";
 import { socket } from "@/socket";
 import {
@@ -35,18 +35,19 @@ import Input from "../common/Input";
 import Button from "../common/Button";
 import Checkbox from "../common/Checkbox";
 import { setCloseModal, setOpenModal } from "@/redux/slices/modalSlice";
-import { blockMember, reportMember } from "@/api/member";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
 import { REPORT_REASON } from "@/data/report";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
-import {
-  acceptFriendReq,
-  cancelFriendReq,
-  deleteFriend,
-  rejectFriendReq,
-  reqFriend,
-} from "@/api/friends";
 import { notify } from "@/hooks/notify";
+import { deleteFriend } from "@/api/friend/delete";
+import {
+  acceptFriendRequest,
+  cancelFriendRequest,
+  rejectFriendRequest,
+  sendFriendRequest,
+} from "@/api/friend/request";
+import { blockMember } from "@/api/block/block";
+import { reportMember } from "@/api/report/report";
 
 interface System {
   flag: number;
@@ -104,30 +105,30 @@ const ChatLayout = (props: ChatLayoutProps) => {
     try {
       // 친구목록에서 채팅방 입장
       if (apiType === 0 && typeof isChatUuid === "number") {
-        const data = await enterUsingMemberId(isChatUuid);
-        setChatEnterData(data.result);
-        dispatch(setCurrentChatUuid(data.result.uuid));
-        removeUnreadUuid(data.result.uuid);
+        const data = await enterUsingMemberId({ memberId: isChatUuid });
+        setChatEnterData(data.data);
+        dispatch(setCurrentChatUuid(data.data.uuid));
+        removeUnreadUuid(data.data.uuid);
       }
 
       // 대화방에서 채팅방 입장
       if (apiType === 1 && typeof isChatUuid === "string") {
-        const data = await enterUsingUuid(isChatUuid);
-        setChatEnterData(data.result);
-        dispatch(setCurrentChatUuid(data.result.uuid));
-        removeUnreadUuid(data.result.uuid);
+        const data = await enterUsingUuid({ uuid: isChatUuid });
+        setChatEnterData(data.data);
+        dispatch(setCurrentChatUuid(data.data.uuid));
+        removeUnreadUuid(data.data.uuid);
       }
 
       // 게시글에서 채팅방 입장
       if (apiType === 2 && typeof isChatUuid === "number") {
-        const data = await enterUsingBoardId(isChatUuid);
-        setChatEnterData(data.result);
-        dispatch(setCurrentChatUuid(data.result.uuid));
-        setIsSystemMsg(data.result.system);
-        removeUnreadUuid(data.result.uuid);
+        const data = await enterUsingBoardId({ boardId: isChatUuid });
+        setChatEnterData(data.data);
+        dispatch(setCurrentChatUuid(data.data.uuid));
+        setIsSystemMsg(data.data.system);
+        removeUnreadUuid(data.data.uuid);
         // 실시간으로 시스템 메시지 보여주기 위함
         let systemMessage: DesignedSystemMessage;
-        if (data.result.system.flag === 1) {
+        if (data.data.system.flag === 1) {
           systemMessage = {
             senderId: 0,
             senderName: null,
@@ -137,7 +138,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
             createdAt: null,
             timestamp: null,
             systemType: 0,
-            boardId: data.result.system.boardId,
+            boardId: data.data.system.boardId,
           };
         } else {
           systemMessage = {
@@ -148,7 +149,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
             createdAt: null,
             timestamp: null,
             systemType: 0,
-            boardId: data.result.system.boardId,
+            boardId: data.data.system.boardId,
           };
         }
         setSystemMessage(systemMessage);
@@ -193,8 +194,9 @@ const ChatLayout = (props: ChatLayoutProps) => {
     if (!chatEnterData) return;
 
     try {
-      const response = await leaveChatroom(chatEnterData.uuid);
-      if (response.isSuccess && socket) {
+      const response = await leaveChatroom({ uuid: chatEnterData.uuid });
+
+      if (response.status === 200 && socket) {
         socket.emit("exit-chatroom", { uuid: chatEnterData.uuid });
       }
       await dispatch(setCloseModal());
@@ -212,7 +214,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
 
     try {
       const response = await blockMember(chatEnterData.memberId);
-      if (response.isSuccess && socket) {
+      if (response.data && socket) {
         socket.emit("exit-chatroom", { uuid: chatEnterData.uuid });
         await dispatch(setOpenModal("doneBlock"));
       }
@@ -223,17 +225,21 @@ const ChatLayout = (props: ChatLayoutProps) => {
 
   /* 매너평가 등록 */
   const handleMannerPost = async () => {
-    const mannerId = isMannerValue?.mannerId;
+    const mannerId = isMannerValue?.mannerRatingId;
     if (!chatEnterData || mannerId !== null) return;
 
     const params = {
-      toMemberId: chatEnterData.memberId,
-      mannerRatingKeywordList: checkedMannerItems,
+      memberId: chatEnterData.memberId,
+      mannerKeywordIdList: checkedMannerItems,
     };
 
     try {
-      await postMannerValue(params)
-      await notify({ text: "매너 평가가 완료되었습니다", icon: '👌🏼', type: 'success' });
+      await postMannerValue(params);
+      await notify({
+        text: "매너 평가가 완료되었습니다",
+        icon: "👌🏼",
+        type: "success",
+      });
       await handleModalClose();
       setIsEditMode(false);
     } catch (error) {
@@ -243,17 +249,21 @@ const ChatLayout = (props: ChatLayoutProps) => {
 
   /* 비매너평가 등록 */
   const handleBadMannerPost = async () => {
-    const badMannerId = isBadMannerValue?.mannerId;
+    const badMannerId = isBadMannerValue?.mannerRatingId;
     if (!chatEnterData || badMannerId !== null) return;
 
     const params = {
-      toMemberId: chatEnterData.memberId,
-      mannerRatingKeywordList: checkedBadMannerItems,
+      memberId: chatEnterData.memberId,
+      mannerKeywordIdList: checkedBadMannerItems,
     };
 
     try {
-      await postBadMannerValue(params)
-      await notify({ text: "비매너 평가가 완료되었습니다", icon: '👌🏼', type: 'success' });
+      await postBadMannerValue(params);
+      await notify({
+        text: "비매너 평가가 완료되었습니다",
+        icon: "👌🏼",
+        type: "success",
+      });
       await handleModalClose();
       setIsEditMode(false);
     } catch (error) {
@@ -261,20 +271,42 @@ const ChatLayout = (props: ChatLayoutProps) => {
     }
   };
 
-
   /* 매너, 비매너 평가 수정 */
   const handleMannerEdit = async (type: string) => {
     const params = {
-      mannerRatingKeywordList: type === 'manner' ? checkedMannerItems : checkedBadMannerItems,
+      mannerKeywordIdList:
+        type === "manner" ? checkedMannerItems : checkedBadMannerItems,
     };
 
     try {
-      if (type === 'manner' && isMannerValue && isMannerValue.mannerId !== null) {
-        await editManners(isMannerValue.mannerId, params);
-        await notify({ text: "매너 평가 수정이 완료되었습니다", icon: '👌🏼', type: 'success' });
-      } else if (type === 'badManner' && isBadMannerValue && isBadMannerValue.mannerId !== null) {
-        await editManners(isBadMannerValue.mannerId, params);
-        await notify({ text: "비매너 평가 수정이 완료되었습니다", icon: '👌🏼', type: 'success' });
+      if (
+        type === "manner" &&
+        isMannerValue &&
+        isMannerValue.mannerRatingId !== null
+      ) {
+        await editManners({
+          mannerId: isMannerValue.mannerRatingId,
+          mannerKeywordIdList: params.mannerKeywordIdList,
+        });
+        await notify({
+          text: "매너 평가 수정이 완료되었습니다",
+          icon: "👌🏼",
+          type: "success",
+        });
+      } else if (
+        type === "badManner" &&
+        isBadMannerValue &&
+        isBadMannerValue.mannerRatingId !== null
+      ) {
+        await editManners({
+          mannerId: isBadMannerValue.mannerRatingId,
+          mannerKeywordIdList: params.mannerKeywordIdList,
+        });
+        await notify({
+          text: "비매너 평가 수정이 완료되었습니다",
+          icon: "👌🏼",
+          type: "success",
+        });
       }
       await handleModalClose();
       setIsEditMode(false);
@@ -287,8 +319,8 @@ const ChatLayout = (props: ChatLayoutProps) => {
   const handleMannerValuesGet = async (memberId: number) => {
     try {
       const response = await getMannerValues(memberId);
-      await setIsMannerValue(response.result);
-      await setCheckedMannerItems(response.result.mannerRatingKeywordList);
+      await setIsMannerValue(response.data);
+      await setCheckedMannerItems(response.data.mannerKeywordIdList);
     } catch (error) {
       console.error(error);
     }
@@ -298,8 +330,8 @@ const ChatLayout = (props: ChatLayoutProps) => {
   const handleBadMannerValuesGet = async (memberId: number) => {
     try {
       const response = await getBadMannerValues(memberId);
-      await setIsBadMannerValue(response.result);
-      await setCheckedBadMannerItems(response.result.mannerRatingKeywordList);
+      await setIsBadMannerValue(response.data);
+      await setCheckedBadMannerItems(response.data.mannerKeywordIdList);
     } catch (error) {
       console.error(error);
     }
@@ -372,9 +404,10 @@ const ChatLayout = (props: ChatLayoutProps) => {
     if (!chatEnterData) return;
 
     const params = {
-      targetMemberId: chatEnterData.memberId,
-      reportTypeIdList: checkedReportItems,
+      memberId: chatEnterData.memberId,
+      reportCodeList: checkedReportItems,
       contents: reportDetail,
+      pathCode: 2, // CHAT
     };
 
     try {
@@ -403,7 +436,6 @@ const ChatLayout = (props: ChatLayoutProps) => {
     );
   };
 
-
   /* 비매너 평가 체크박스 */
   const handleBadMannerCheckboxChange = (checked: number) => {
     setCheckedBadMannerItems((prev) =>
@@ -417,20 +449,19 @@ const ChatLayout = (props: ChatLayoutProps) => {
   const handleFriendAdd = async () => {
     if (!chatEnterData) return;
     try {
-      await reqFriend(chatEnterData.memberId);
+      await sendFriendRequest(chatEnterData.memberId);
       await handleChatEnter();
     } catch (error) {
       console.error(error);
     }
   };
 
-
   /* 친구 요청 취소 */
   const handleCancelFriendReq = async () => {
     if (!chatEnterData) return;
 
     try {
-      await cancelFriendReq(chatEnterData.memberId);
+      await cancelFriendRequest(chatEnterData.memberId);
       await handleChatEnter();
     } catch (error) {
       console.error(error);
@@ -442,7 +473,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
     if (!chatEnterData) return;
 
     try {
-      await acceptFriendReq(chatEnterData.memberId);
+      await acceptFriendRequest(chatEnterData.memberId);
       await handleChatEnter();
     } catch (error) {
       console.error(error);
@@ -454,7 +485,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
     if (!chatEnterData) return;
 
     try {
-      await rejectFriendReq(chatEnterData.memberId);
+      await rejectFriendRequest(chatEnterData.memberId);
       await handleChatEnter();
     } catch (error) {
       console.error(error);
@@ -507,55 +538,55 @@ const ChatLayout = (props: ChatLayoutProps) => {
   /* 더보기 버튼 */
   const menuItems: MoreBoxMenuItems[] = chatEnterData?.blind
     ? [
-      {
-        text: "채팅방 나가기",
-        onClick: (e: React.MouseEvent) => handleModalChange(e, "leave"),
-      },
-    ]
+        {
+          text: "채팅방 나가기",
+          onClick: (e: React.MouseEvent) => handleModalChange(e, "leave"),
+        },
+      ]
     : ([
-      {
-        text: "채팅방 나가기",
-        onClick: (e: React.MouseEvent) => handleModalChange(e, "leave"),
-      },
-      // 친구 추가 조건: 친구가 아니고, 친구 요청도 하지 않은 경우
-      !chatEnterData?.friend &&
-      chatEnterData?.friendRequestMemberId === null && {
-        text: "친구 추가",
-        onClick: handleFriendAdd,
-      },
-      // 친구 취소 조건: 친구인 경우
-      chatEnterData?.friend && {
-        text: "친구 삭제",
-        onClick: handleFriendDelete,
-      },
-      // 친구 요청 취소 조건: 친구가 아니고, 친구 요청을 이미 한 경우
-      !chatEnterData?.friend &&
-      chatEnterData?.friendRequestMemberId === isUser.id && {
-        text: "친구 요청 취소",
-        onClick: handleCancelFriendReq,
-      },
-      // 친구 요청 수정 및 거절 조건: 친구가 아니고, 친구 요청을 받은 경우
-      !chatEnterData?.friend &&
-      chatEnterData?.friendRequestMemberId !== null &&
-      chatEnterData?.friendRequestMemberId !== isUser.id && {
-        text: "친구 요청 수락",
-        onClick: handleAcceptFriendReq,
-      },
-      !chatEnterData?.friend &&
-      chatEnterData?.friendRequestMemberId !== null &&
-      chatEnterData?.friendRequestMemberId !== isUser.id && {
-        text: "친구 요청 거절",
-        onClick: handleRejectFriendReq,
-      },
+        {
+          text: "채팅방 나가기",
+          onClick: (e: React.MouseEvent) => handleModalChange(e, "leave"),
+        },
+        // 친구 추가 조건: 친구가 아니고, 친구 요청도 하지 않은 경우
+        !chatEnterData?.friend &&
+          chatEnterData?.friendRequestMemberId === null && {
+            text: "친구 추가",
+            onClick: handleFriendAdd,
+          },
+        // 친구 취소 조건: 친구인 경우
+        chatEnterData?.friend && {
+          text: "친구 삭제",
+          onClick: handleFriendDelete,
+        },
+        // 친구 요청 취소 조건: 친구가 아니고, 친구 요청을 이미 한 경우
+        !chatEnterData?.friend &&
+          chatEnterData?.friendRequestMemberId === isUser.id && {
+            text: "친구 요청 취소",
+            onClick: handleCancelFriendReq,
+          },
+        // 친구 요청 수정 및 거절 조건: 친구가 아니고, 친구 요청을 받은 경우
+        !chatEnterData?.friend &&
+          chatEnterData?.friendRequestMemberId !== null &&
+          chatEnterData?.friendRequestMemberId !== isUser.id && {
+            text: "친구 요청 수락",
+            onClick: handleAcceptFriendReq,
+          },
+        !chatEnterData?.friend &&
+          chatEnterData?.friendRequestMemberId !== null &&
+          chatEnterData?.friendRequestMemberId !== isUser.id && {
+            text: "친구 요청 거절",
+            onClick: handleRejectFriendReq,
+          },
 
-      {
-        text: "차단하기",
-        onClick: (e: React.MouseEvent) => handleModalChange(e, "block"),
-      },
-      { text: "신고하기", onClick: handleReportClick },
-      { text: "매너 평가", onClick: handleMannerClick },
-      { text: "비매너 평가", onClick: handleBadMannerClick },
-    ].filter((item) => item) as MoreBoxMenuItems[]);
+        {
+          text: "차단하기",
+          onClick: (e: React.MouseEvent) => handleModalChange(e, "block"),
+        },
+        { text: "신고하기", onClick: handleReportClick },
+        { text: "매너 평가", onClick: handleMannerClick },
+        { text: "비매너 평가", onClick: handleBadMannerClick },
+      ].filter((item) => item) as MoreBoxMenuItems[]);
 
   /* 더보기 버튼 외부 클릭 시 닫힘 */
   const handleOutsideModalClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -567,13 +598,13 @@ const ChatLayout = (props: ChatLayoutProps) => {
   };
 
   const isMannerEditable =
-    isMannerValue?.isExist &&
+    (isMannerValue?.mannerKeywordIdList.length as number) > 0 &&
     !isEditMode &&
-    isMannerValue?.mannerRatingKeywordList.length !== 0;
+    isMannerValue?.mannerKeywordIdList.length !== 0;
   const isBadMannerEditable =
-    isBadMannerValue?.isExist &&
+    (isBadMannerValue?.mannerKeywordIdList.length as number) > 0 &&
     !isEditMode &&
-    isBadMannerValue?.mannerRatingKeywordList.length !== 0;
+    isBadMannerValue?.mannerKeywordIdList.length !== 0;
 
   return (
     <>
@@ -736,7 +767,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
             ) : (
               <Button
                 onClick={() =>
-                  isMannerValue.isExist
+                  isMannerValue.mannerKeywordIdList.length > 0
                     ? handleMannerEdit("manner")
                     : handleMannerPost()
                 }
@@ -785,7 +816,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
             ) : (
               <Button
                 onClick={() =>
-                  isBadMannerValue.isExist
+                  isBadMannerValue.mannerKeywordIdList.length > 0
                     ? handleMannerEdit("badManner")
                     : handleBadMannerPost()
                 }

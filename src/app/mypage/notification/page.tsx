@@ -5,20 +5,16 @@ import { theme } from "@/styles/theme";
 import AlertBox from "@/components/mypage/notification/AlertBox";
 import Pagination from "@/components/common/Pagination";
 import { useEffect, useState } from "react";
-import { getNotiCount, getNotiTotal, readNoti } from "@/api/notification";
 import { useRouter } from "next/navigation";
 import { setNotiCount } from "@/redux/slices/notiSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-
-export interface Notification {
-  notificationId: number;
-  notificationType: number;
-  content: string;
-  pageUrl: string;
-  read: boolean;
-  createdAt: string;
-}
+import {
+  getTotalNotification,
+  getUnreadNotificationCount,
+  patchReadNotification,
+} from "@/api/notification/notification";
+import { Notification } from "@/types/notification/notification";
 
 const MyAlertPage = () => {
   const router = useRouter();
@@ -30,17 +26,15 @@ const MyAlertPage = () => {
   const itemsPerPage = 10;
   const pageButtonCount = 5;
 
-  // const [count, setCount] = useState<number>(0);
   const notiCount = useSelector((state: RootState) => state.noti.count);
 
   useEffect(() => {
     const fetchNotiList = async () => {
       try {
-        const response = await getNotiTotal(currentPage);
-        if (response.isSuccess) {
-          const { notificationDTOList, totalPage, totalElements } =
-            response.result;
-          setNotiList(notificationDTOList);
+        const response = await getTotalNotification(currentPage);
+        if (response.data) {
+          const { notificationList, totalPage, totalElements } = response.data;
+          setNotiList(notificationList);
           setTotalPages(totalPage);
           setTotalItems(totalElements);
         } else {
@@ -53,9 +47,8 @@ const MyAlertPage = () => {
 
     const fetchNotiCount = async () => {
       try {
-        const response = await getNotiCount();
-        // setCount(response.result);
-        dispatch(setNotiCount(response.result));
+        const response = await getUnreadNotificationCount();
+        dispatch(setNotiCount(response.data));
       } catch (error) {
         console.error(error);
       }
@@ -93,7 +86,7 @@ const MyAlertPage = () => {
     );
     if (notification && !notification.read) {
       try {
-        await readNoti(notificationId);
+        await patchReadNotification(notificationId);
         setNotiList((prevNotiList) =>
           prevNotiList.map((n) =>
             n.notificationId === notificationId ? { ...n, read: true } : n

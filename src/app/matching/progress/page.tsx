@@ -12,7 +12,7 @@ import { sendMatchingQuitEvent, socket } from "@/socket";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { messagesWithN, messagesWithoutN } from "@/constants/messages";
 import { getSystemMsg } from "@/api/socket";
-import { getBoardList } from "@/api/board";
+import { getBoardList } from "@/api/board/board";
 import { setOpenPostingModal } from "@/redux/slices/modalSlice";
 import { useDispatch } from "react-redux";
 import { setBoardFilters } from "@/redux/slices/boardSlice";
@@ -241,6 +241,7 @@ const Progress = () => {
             : null;
 
         const params = {
+          page: 1,
           pageIdx: 1,
           mode: mode,
           tier: user.tier,
@@ -249,7 +250,7 @@ const Progress = () => {
         };
         try {
           const response = await getBoardList(params);
-          if (response.result.totalCount > 0) {
+          if (response.data.totalCount > 0) {
             dispatch(setBoardFilters(params));
             setIsSecondYes(true);
           } else {

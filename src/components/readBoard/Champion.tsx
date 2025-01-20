@@ -3,7 +3,7 @@ import Image from "next/image";
 
 interface ChampionProps {
   title?: boolean;
-  list: number[];
+  list?: number[];
   size?: number;
 }
 

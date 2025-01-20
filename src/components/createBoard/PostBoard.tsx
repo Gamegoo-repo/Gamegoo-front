@@ -12,7 +12,7 @@ import GameStyle from "./GameStyle";
 import ConfirmModal from "../common/ConfirmModal";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { editPost, postBoard } from "@/api/board";
+import { editPost, postBoard } from "@/api/board/board";
 import {
   clearCurrentPost,
   PostUpdate,
@@ -22,10 +22,10 @@ import {
 import { PostReq } from "@/interface/board";
 import Alert from "../common/Alert";
 import { useRouter } from "next/navigation";
-import { getProfile } from "@/api/user";
 import { setUserProfile } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
 import { setClosePostingModal } from "@/redux/slices/modalSlice";
+import { getMyProfile } from "@/api/user/profile/get";
 
 interface PostBoardProps {
   onClose: () => void;
@@ -45,9 +45,7 @@ const PostBoard = (props: PostBoardProps) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const postStatus = useSelector(
-    (state: RootState) => state.post.postStatus
-  );
+  const postStatus = useSelector((state: RootState) => state.post.postStatus);
   const user = useSelector((state: RootState) => state.user);
   const currentPost = useSelector((state: RootState) => state.post.currentPost);
   const currentPostId = useSelector(
@@ -72,7 +70,7 @@ const PostBoard = (props: PostBoardProps) => {
   );
   const [isMicOn, setIsMicOn] = useState<boolean>(currentPost?.mike || false);
   const gameStyleIds =
-    user?.gameStyleResponseDTOList?.map((item) => item.gameStyleId) || [];
+    user?.gameStyleResponseList?.map((item) => item.gameStyleId) || [];
   const [selectedStyleIds, setSelectedStyleIds] = useState<number[]>(
     currentPost?.gameStyles || gameStyleIds
   );
@@ -84,21 +82,20 @@ const PostBoard = (props: PostBoardProps) => {
 
   const fetchProfile = async () => {
     try {
-      const response = await getProfile();
-      dispatch(setUserProfile(response));
+      const response = await getMyProfile();
+      dispatch(setUserProfile(response.data));
     } catch (error) {
       console.error(error);
     }
   };
 
+  useEffect(() => {
+    fetchProfile();
 
-useEffect(() => {
-  fetchProfile();
-
-  return () => {
-    dispatch(setClosePostingModal());
-  };
-}, []);
+    return () => {
+      dispatch(setClosePostingModal());
+    };
+  }, []);
 
   /* 유저가 게시판에 올린 글에 대한 데이터 */
   useEffect(() => {
@@ -128,7 +125,7 @@ useEffect(() => {
       });
       setSelectedImageIndex(user.profileImg);
       const ids =
-        user?.gameStyleResponseDTOList?.map((item) => item.gameStyleId) || [];
+        user?.gameStyleResponseList?.map((item) => item.gameStyleId) || [];
       setSelectedStyleIds(ids ? ids : []);
     }
   }, [user, currentPost]);
@@ -204,15 +201,21 @@ useEffect(() => {
     const isImageIndexUndefined = selectedImageIndex === undefined;
     const isDropOptionUndefined = selectedDropOption === undefined;
     const isTextareaEmpty = textareaValue.trim() === "";
-    const isPositionValueInvalid = !positionValue ||
+    const isPositionValueInvalid =
+      !positionValue ||
       positionValue.main === undefined ||
       positionValue.sub === undefined ||
       positionValue.want === undefined;
 
     // 칼바람일 때는 포지션 없어도 된다.
     if (
-      (isARAM && (isImageIndexUndefined || isDropOptionUndefined || isTextareaEmpty)) ||
-      (!isARAM && (isImageIndexUndefined || isDropOptionUndefined || isPositionValueInvalid || isTextareaEmpty))
+      (isARAM &&
+        (isImageIndexUndefined || isDropOptionUndefined || isTextareaEmpty)) ||
+      (!isARAM &&
+        (isImageIndexUndefined ||
+          isDropOptionUndefined ||
+          isPositionValueInvalid ||
+          isTextareaEmpty))
     ) {
       return;
     }
@@ -252,7 +255,7 @@ useEffect(() => {
     dispatch(clearCurrentPost());
     dispatch(setPostStatus(""));
   };
-  
+
   return (
     <CRModal type="posting" onClose={handleModalClose}>
       {showAlert && (
@@ -292,7 +295,7 @@ useEffect(() => {
               account={user.gameName}
               tag={user.tag}
               tier={user.tier}
-              rank={user.rank}
+              rank={user.gameRank}
             />
           </UserSection>
         )}
@@ -317,7 +320,7 @@ useEffect(() => {
             />
           </Div>
         </QueueNMicSection>
-        {selectedDropOption !== 4 &&
+        {selectedDropOption !== 4 && (
           <PositionSection>
             <Title className="positionTitle">포지션</Title>
             <PositionBox
@@ -328,7 +331,7 @@ useEffect(() => {
               want={positionValue?.want}
             />
           </PositionSection>
-        }
+        )}
         <StyleSection>
           <Title className="gameStyleTitle">게임 스타일</Title>
           <GameStyle
@@ -359,15 +362,18 @@ useEffect(() => {
             </TextCount>
           </InputWrapper>
         </MemoSection>
-        <ButtonContent className={` 
-  ${selectedStyleIds.length === 0 && selectedDropOption === 4
-            ? 'margin-1'
-            : selectedStyleIds.length !== 0 && selectedDropOption === 4
-              ? 'margin-2'
-              : selectedStyleIds.length !== 0 && selectedDropOption !== 4
-                ? 'margin-3'
-                : 'baseMargin'
-          }`}>
+        <ButtonContent
+          className={` 
+  ${
+    selectedStyleIds.length === 0 && selectedDropOption === 4
+      ? "margin-1"
+      : selectedStyleIds.length !== 0 && selectedDropOption === 4
+      ? "margin-2"
+      : selectedStyleIds.length !== 0 && selectedDropOption !== 4
+      ? "margin-3"
+      : "baseMargin"
+  }`}
+        >
           <Button
             type="submit"
             buttonType="primary"
@@ -450,11 +456,11 @@ const TextCount = styled.div<{ $isFocused: boolean }>`
 const ButtonContent = styled.p`
   padding: 0 0 28px;
   text-align: center;
-  &.baseMargin{
+  &.baseMargin {
     margin-top: 54px;
   }
   &.margin-1 {
-    margin-top:213px;
+    margin-top: 213px;
   }
   &.margin-2 {
     margin-top: 185px;
@@ -463,4 +469,3 @@ const ButtonContent = styled.p`
     margin-top: 23px;
   }
 `;
-

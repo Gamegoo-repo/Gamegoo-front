@@ -10,13 +10,7 @@ export interface Manner {
   memberId?: number;
   mannerLevel: number;
   mannerRank: number;
-  mannerKeywords: [
-    {
-      isPositive: boolean;
-      mannerKeywordId: number;
-      count: number;
-    }
-  ];
+  mannerKeywords: { mannerKeywordId: number; count: number }[];
 }
 
 const UserProfile = ({
@@ -34,14 +28,17 @@ const UserProfile = ({
 }) => {
   const goodMannerEvaluations =
     manner.mannerKeywords
-      .filter((keyword) => keyword.isPositive)
+      .filter(
+        (keyword) =>
+          keyword.mannerKeywordId >= 1 && keyword.mannerKeywordId <= 6
+      )
       .map((keyword) => ({
         id: keyword.mannerKeywordId,
         count: keyword.count,
       })) || [];
   const badMannerEvaluations =
     manner.mannerKeywords
-      .filter((keyword) => !keyword.isPositive)
+      .filter((keyword) => keyword.mannerKeywordId >= 7)
       .map((keyword) => ({
         id: keyword.mannerKeywordId,
         count: keyword.count,

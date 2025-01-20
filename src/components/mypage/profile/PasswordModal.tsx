@@ -5,8 +5,8 @@ import Image from "next/image";
 import Input from "@/components/common/Input";
 import FormModal from "@/components/common/FormModal";
 import Button from "@/components/common/Button";
-import { checkPassword, resetJwtPassword } from "@/api/password";
 import { notify } from "@/hooks/notify";
+import { changePassword, checkPassword } from "@/api/password/password";
 
 interface PasswordModalProps {
   onClose: () => void;
@@ -42,7 +42,7 @@ const PasswordModal = (props: PasswordModalProps) => {
       setIsPasswordValid(true);
 
       if (validation) {
-        await resetJwtPassword(newPassword);
+        await changePassword(newPassword);
         notify({
           text: "비밀번호가 성공적으로 변경되었습니다.",
           type: "success",
