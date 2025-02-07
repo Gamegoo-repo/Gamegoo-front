@@ -56,10 +56,11 @@ interface System {
 
 interface ChatLayoutProps {
   apiType: number;
+  onDragStart: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 const ChatLayout = (props: ChatLayoutProps) => {
-  const { apiType } = props;
+  const { apiType, onDragStart } = props;
   const dispatch = useDispatch();
 
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
@@ -88,6 +89,9 @@ const ChatLayout = (props: ChatLayoutProps) => {
   const isChatUuid = useSelector(
     (state: RootState) => state.chat.isChatRoomUuid
   );
+  const chatEnterType = useSelector(
+    (state: RootState) => state.chat.chatEnterType
+  );
   const isModalType = useSelector((state: RootState) => state.modal.modalType);
   const isUser = useSelector((state: RootState) => state.user);
 
@@ -104,7 +108,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
 
     try {
       // 친구목록에서 채팅방 입장
-      if (apiType === 0 && typeof isChatUuid === "number") {
+      if (chatEnterType === 0 && typeof isChatUuid === "number") {
         const data = await enterUsingMemberId({ memberId: isChatUuid });
         setChatEnterData(data.data);
         dispatch(setCurrentChatUuid(data.data.uuid));
@@ -112,7 +116,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
       }
 
       // 대화방에서 채팅방 입장
-      if (apiType === 1 && typeof isChatUuid === "string") {
+      if (chatEnterType === 1 && typeof isChatUuid === "string") {
         const data = await enterUsingUuid({ uuid: isChatUuid });
         setChatEnterData(data.data);
         dispatch(setCurrentChatUuid(data.data.uuid));
@@ -120,7 +124,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
       }
 
       // 게시글에서 채팅방 입장
-      if (apiType === 2 && typeof isChatUuid === "number") {
+      if (chatEnterType === 2 && typeof isChatUuid === "number") {
         const data = await enterUsingBoardId({ boardId: isChatUuid });
         setChatEnterData(data.data);
         dispatch(setCurrentChatUuid(data.data.uuid));
@@ -611,12 +615,14 @@ const ChatLayout = (props: ChatLayoutProps) => {
       <Overlay>
         {isChatRoomOpen && chatEnterData && isChatUuid !== null && (
           <Wrapper onClick={handleOutsideModalClick}>
-            <MessageHeader
-              isMoreBoxOpen={isMoreBoxOpen}
-              chatEnterData={chatEnterData}
-              onMoreBoxOpen={handleMoreBoxOpen}
-              menuItems={menuItems}
-            />
+            <HeaderWrapper onMouseDown={onDragStart}>
+              <MessageHeader
+                isMoreBoxOpen={isMoreBoxOpen}
+                chatEnterData={chatEnterData}
+                onMoreBoxOpen={handleMoreBoxOpen}
+                menuItems={menuItems}
+              />
+            </HeaderWrapper>
             <MessageList
               chatEnterData={chatEnterData}
               systemMessage={systemMessage}
@@ -834,13 +840,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
 
 export default ChatLayout;
 
-const Overlay = styled.div`
-  position: fixed;
-  top: 50%;
-  right: 8%;
-  transform: translate(0, -50%);
-  z-index: 1;
-`;
+const Overlay = styled.div``;
 
 const Wrapper = styled.div`
   position: relative;
@@ -848,7 +848,12 @@ const Wrapper = styled.div`
   border-radius: 20px;
   display: flex;
   flex-direction: column;
-  width: 418px;
+  width: 100%;
+`;
+
+const HeaderWrapper = styled.div`
+  user-select: auto;
+  cursor: move;
 `;
 
 const CheckContent = styled.div`

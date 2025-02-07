@@ -499,60 +499,66 @@ const Layout = () => {
 
   return (
     <>
-      {isChatRoomOpen && isChatUuid !== null ? (
-        <ChatLayout apiType={activeTab} />
-      ) : (
-        <Overlay $top={position.top} $left={position.left}>
-          <Wrapper onClick={handleOutsideModalClick}>
-            <Header onMouseDown={handleDragStart}>
-              <HeaderTitle>메신저</HeaderTitle>
-              <CloseButton
-                onClick={(e) => {
-                  e.stopPropagation();
-                  dispatch(closeChat());
-                  dispatch(resetPosition());
-                }}
-                onMouseDown={(e) => {
-                  e.stopPropagation();
-                }}
-              >
-                <CloseImage
-                  src="/assets/icons/close.svg"
-                  width={12}
-                  height={12}
-                  alt="닫기"
-                />
-              </CloseButton>
-            </Header>
-            <Tabs tabs={tabs} activeTab={activeTab} onTabClick={setActiveTab} />
-            {activeTab === 0 && <SearchBar onSearch={handleSearch} />}
-            <ChatMain className={activeTab === 0 ? "friend" : "chat"}>
-              <Content className={activeTab === 0 ? "friend" : "chat"}>
-                {activeTab === 0 ? (
-                  <div>
-                    <ChatFriendList
-                      onChatRoom={handleGoToChatRoom}
-                      friends={friends}
-                      favoriteFriends={favoriteFriends}
-                      onFavoriteToggle={handleFavoriteToggle}
-                      handleFetchFriendsList={handleFetchFriendsList}
-                      isSearching={isSearching}
-                    />
-                  </div>
-                ) : (
-                  <ChatRoomList
-                    onChatRoom={handleGoToChatRoom}
-                    activeTab={activeTab}
-                    isMoreBoxOpen={isMoreBoxOpen}
-                    setIsMoreBoxOpen={setIsMoreBoxOpen}
-                    handleMoreBoxOpen={handleMoreBoxOpen}
+      <Overlay $top={position.top} $left={position.left}>
+        <Wrapper onClick={handleOutsideModalClick}>
+          {isChatRoomOpen && isChatUuid !== null ? (
+            <ChatLayout apiType={activeTab} onDragStart={handleDragStart} />
+          ) : (
+            <>
+              <Header onMouseDown={handleDragStart}>
+                <HeaderTitle>메신저</HeaderTitle>
+                <CloseButton
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    dispatch(closeChat());
+                    dispatch(resetPosition());
+                  }}
+                  onMouseDown={(e) => {
+                    e.stopPropagation();
+                  }}
+                >
+                  <CloseImage
+                    src="/assets/icons/close.svg"
+                    width={12}
+                    height={12}
+                    alt="닫기"
                   />
-                )}
-              </Content>
-            </ChatMain>
-          </Wrapper>
-        </Overlay>
-      )}
+                </CloseButton>
+              </Header>
+              <Tabs
+                tabs={tabs}
+                activeTab={activeTab}
+                onTabClick={setActiveTab}
+              />
+              {activeTab === 0 && <SearchBar onSearch={handleSearch} />}
+              <ChatMain className={activeTab === 0 ? "friend" : "chat"}>
+                <Content className={activeTab === 0 ? "friend" : "chat"}>
+                  {activeTab === 0 ? (
+                    <div>
+                      <ChatFriendList
+                        onChatRoom={handleGoToChatRoom}
+                        friends={friends}
+                        favoriteFriends={favoriteFriends}
+                        onFavoriteToggle={handleFavoriteToggle}
+                        handleFetchFriendsList={handleFetchFriendsList}
+                        isSearching={isSearching}
+                      />
+                    </div>
+                  ) : (
+                    <ChatRoomList
+                      onChatRoom={handleGoToChatRoom}
+                      activeTab={activeTab}
+                      isMoreBoxOpen={isMoreBoxOpen}
+                      setIsMoreBoxOpen={setIsMoreBoxOpen}
+                      handleMoreBoxOpen={handleMoreBoxOpen}
+                    />
+                  )}
+                </Content>
+              </ChatMain>
+            </>
+          )}
+        </Wrapper>
+      </Overlay>
 
       {/* 채팅창 나가기 팝업 */}
       {!isChatRoomOpen && isModalType === "leave" && selectedChatroom && (

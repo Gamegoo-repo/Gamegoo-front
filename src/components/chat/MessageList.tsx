@@ -49,16 +49,16 @@ const MessageList = (props: MessageListProps) => {
   const dispatch = useDispatch();
 
   const [messageList, setMessageList] = useState<ChatMessageDto[]>(
-    chatEnterData?.chatMessageListResponse.chatMessageDtoList || []
+    chatEnterData?.chatMessageListResponse.chatMessageList || []
   );
   const [isLoading, setIsLoading] = useState(false);
   const [cursor, setCursor] = useState<number | null>(
-    chatEnterData?.chatMessageListResponse.has_next
-      ? chatEnterData.chatMessageListResponse.next_cursor
+    chatEnterData?.chatMessageListResponse.hasNext
+      ? chatEnterData.chatMessageListResponse.nextCursor
       : null
   );
   const [hasMore, setHasMore] = useState<boolean>(
-    chatEnterData?.chatMessageListResponse.has_next
+    chatEnterData?.chatMessageListResponse.hasNext
   );
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [isBoardId, setIsBoardId] = useState(0);
@@ -182,17 +182,14 @@ const MessageList = (props: MessageListProps) => {
       const previousScrollHeight = chatElement.scrollHeight;
 
       const data = await getChatList({ uuid: chatEnterData.uuid, cursor });
-      const { chatMessageDtoList, next_cursor, has_next } =
+      const { chatMessageList, nextCursor, hasNext } =
         data.data.chatMessageList;
 
       // 기존 메시지 목록에 새로운 메시지 추가
-      setMessageList((prevMessages) => [
-        ...chatMessageDtoList,
-        ...prevMessages,
-      ]);
+      setMessageList((prevMessages) => [...chatMessageList, ...prevMessages]);
 
-      setCursor(next_cursor);
-      setHasMore(has_next);
+      setCursor(nextCursor);
+      setHasMore(hasNext);
 
       requestAnimationFrame(() => {
         // 새로운 메시지가 추가된 후의 스크롤 높이 차이 계산

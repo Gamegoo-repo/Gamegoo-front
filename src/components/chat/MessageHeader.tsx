@@ -80,7 +80,7 @@ const MessageHeader = (props: MessageHeaderProps) => {
               >
                 {chatEnterData.gameName}
               </UserName>
-              {chatEnterData?.friend &&
+              {chatEnterData?.friend && (
                 <>
                   {onlineFriends.includes(chatEnterData.memberId) ? (
                     <>
@@ -96,16 +96,17 @@ const MessageHeader = (props: MessageHeaderProps) => {
                     <OnlineStatus>오프라인</OnlineStatus>
                   )}
                 </>
-              }
+              )}
             </Div>
           </Middle>
-          <ThreeDotsImage
-            onClick={onMoreBoxOpen}
-            src="/assets/icons/three_dots_button.svg"
-            width={3}
-            height={15}
-            alt="상세보기"
-          />
+          <ThreeDotsButton onClick={onMoreBoxOpen}>
+            <ThreeDotsImage
+              src="/assets/icons/three_dots_button.svg"
+              width={3}
+              height={15}
+              alt="상세보기"
+            />
+          </ThreeDotsButton>
         </ChatHeader>
       )}
     </>
@@ -148,6 +149,7 @@ const ImageWrapper = styled.div<{ $bgColor: string }>`
   height: 47px;
   background: ${(props) => props.$bgColor};
   border-radius: 50%;
+  cursor: pointer;
 `;
 
 const ProfileImage = styled.object`
@@ -176,10 +178,16 @@ const UserName = styled.p`
 const OnlineStatus = styled.p`
   ${(props) => props.theme.fonts.medium11};
   color: ${theme.colors.gray200};
+  cursor: default;
 `;
 
 const OnlineImage = styled(Image)`
   position: absolute;
   top: 1%;
   right: -11%;
+`;
+
+const ThreeDotsButton = styled.button`
+  width: 20px;
+  height: 20px;
 `;

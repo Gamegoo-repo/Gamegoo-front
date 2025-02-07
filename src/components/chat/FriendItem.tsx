@@ -4,6 +4,8 @@ import Image from "next/image";
 import DeleteFriend from "./DeleteFriend";
 import { getProfileBgColor } from "@/utils/profile";
 import { FriendList } from "@/types/friend/friendList";
+import { setChatEnterType } from "@/redux/slices/chatSlice";
+import { useDispatch } from "react-redux";
 
 interface FriendItemProps {
   friend: FriendList;
@@ -28,10 +30,15 @@ const FriendItem = (props: FriendItemProps) => {
     handleDeleteFriend,
   } = props;
 
+  const dispatch = useDispatch();
+
   return (
     <UserContent
       onContextMenu={(event) => onContextMenu(event, friend.memberId)}
-      onClick={() => onChatRoom(friend.memberId)}
+      onClick={() => {
+        onChatRoom(friend.memberId);
+        dispatch(setChatEnterType(0)); // 친구목록에서 채팅방 입장
+      }}
     >
       {deleteMenu.friendId === friend.memberId && (
         <DeleteFriend
