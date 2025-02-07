@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import { updateGameStyles } from "@/redux/slices/matchInfo";
 import { setUserMike } from "@/redux/slices/userSlice";
 import { putGameStyle, putMike } from "@/api/user/profile/put";
+import { Mike } from "@/types/user/mike";
 
 type profileType = "me" | "other" | "none" | "mini";
 
@@ -22,7 +23,7 @@ interface GameStyle {
 interface GameStyleProps {
   gameStyleResponseDTOList: GameStyle[];
   profileType: profileType;
-  mike: boolean;
+  mike: Mike;
   handleMike?: () => void;
 }
 
@@ -39,7 +40,7 @@ const GameStyle = (props: GameStyleProps) => {
   const [selectedStyles, setSelectedStyles] = useState<number[]>(
     gameStyleResponseDTOList.map((style) => style.gameStyleId)
   );
-  const [isMike, setIsMike] = useState(mike);
+  const [mikeState, setMikeState] = useState(mike);
 
   useEffect(() => {
     if (gameStyleResponseDTOList.length > 0) {
@@ -96,8 +97,9 @@ const GameStyle = (props: GameStyleProps) => {
     .filter(Boolean);
 
   const handleChangeMike = async () => {
-    const newMikeValue = !isMike;
-    setIsMike(newMikeValue);
+    const newMikeValue =
+      mikeState === "AVAILABLE" ? "UNAVAILABLE" : "AVAILABLE";
+    setMikeState(newMikeValue);
 
     try {
       await putMike(newMikeValue);

@@ -1,5 +1,6 @@
 import dayjs from "@/libs/dayjs";
 import { Position } from "@/types/position/position";
+import { Mike } from "@/types/user/mike";
 
 export function setQueueType(gameMode: number) {
   switch (gameMode) {
@@ -112,13 +113,13 @@ export const tierStringToId = (tier: string | null) => {
   }
 };
 
-export const mikeBooleanToId = (mike: boolean | null) => {
+export const mikeBooleanToId = (mike: Mike | null) => {
   switch (mike) {
     case null:
       return 0;
-    case true:
+    case "AVAILABLE":
       return 1;
-    case false:
+    case "UNAVAILABLE":
       return 2;
     default:
       return null;

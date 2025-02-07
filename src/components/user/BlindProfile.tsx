@@ -57,7 +57,7 @@ const BlindProfile = () => {
                   <Mike>
                     마이크
                     <Toggle
-                      isOn={false}
+                      isOn={"UNAVAILABLE"}
                       onToggle={() => {}}
                       disabled={true}
                       isBlind={true}

@@ -18,6 +18,7 @@ import { setComplete } from "@/redux/slices/matchingSlice";
 import { setIsCompleted } from "@/utils/storage";
 import { getMyProfile } from "@/api/user/profile/get";
 import { Position } from "@/types/position/position";
+import { Mike } from "@/types/user/mike";
 
 interface User {
   memberId: number;
@@ -31,7 +32,7 @@ interface User {
   mainPosition: Position;
   subPosition: Position;
   wantPosition: Position;
-  mike: boolean;
+  mike: Mike;
   gameStyleList: string[];
 }
 
@@ -59,7 +60,7 @@ const Complete = () => {
     mainPosition: "ANY",
     subPosition: "ANY",
     wantPosition: "ANY",
-    mike: false,
+    mike: "UNAVAILABLE",
     gameStyleList: [],
   });
 
@@ -75,7 +76,7 @@ const Complete = () => {
     mainPosition: "ANY",
     subPosition: "ANY",
     wantPosition: "ANY",
-    mike: false,
+    mike: "UNAVAILABLE",
     gameStyleList: [],
   });
 

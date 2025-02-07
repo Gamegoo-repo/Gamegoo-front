@@ -18,6 +18,7 @@ import { useDispatch } from "react-redux";
 import { setBoardFilters } from "@/redux/slices/boardSlice";
 import { setIsCompleted } from "@/utils/storage";
 import { Position } from "@/types/position/position";
+import { Mike } from "@/types/user/mike";
 
 interface User {
   memberId: number;
@@ -31,7 +32,7 @@ interface User {
   mainPosition: Position;
   subPosition: Position;
   wantPosition: Position;
-  mike: boolean;
+  mike: Mike;
   gameStyleList: string[];
 }
 
@@ -63,7 +64,7 @@ const Progress = () => {
     mainPosition: (searchParams.get("mainPosition") as Position) || "ANY",
     subPosition: (searchParams.get("subPosition") as Position) || "ANY",
     wantPosition: (searchParams.get("wantPosition") as Position) || "ANY",
-    mike: searchParams.get("mike") === "true",
+    mike: (searchParams.get("mike") as Mike) || "AVAILABLE",
     gameStyleList: (searchParams.get("gameStyleList") || "").split(","),
   };
 

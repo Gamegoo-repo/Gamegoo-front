@@ -10,6 +10,7 @@ import { setAbbrevTier, setPositionImg } from "@/utils/custom";
 import { getProfileBgColor } from "@/utils/profile";
 import { toLowerCaseString } from "@/utils/string";
 import { Position as PositionType } from "@/types/position/position";
+import { Mike } from "@/types/user/mike";
 
 interface User {
   memberId: number;
@@ -23,7 +24,7 @@ interface User {
   mainPosition: PositionType;
   subPosition: PositionType;
   wantPosition: PositionType;
-  mike: boolean;
+  mike: Mike;
   gameStyleList?: string[];
 }
 

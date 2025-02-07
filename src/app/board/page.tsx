@@ -27,6 +27,7 @@ import { mikeBooleanToId, tierStringToId } from "@/utils/custom";
 import { resetBoardFilters } from "@/redux/slices/boardSlice";
 import { rotate } from "@/styles/animation";
 import { Position } from "@/types/position/position";
+import { Mike } from "@/types/user/mike";
 
 const ITEMS_PER_PAGE = 20;
 const BUTTONS_PER_PAGE = 5;
@@ -44,7 +45,7 @@ const BoardPage = () => {
     string | number | null
   >(null);
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
-  const [selectedMic, setSelectedMic] = useState<boolean | string | null>(null);
+  const [selectedMic, setSelectedMic] = useState<Mike | null>(null);
   const [showAlert, setShowAlert] = useState(false);
   const [refresh, setRefresh] = useState(false);
 
@@ -173,10 +174,10 @@ const BoardPage = () => {
     dispatch(resetBoardFilters());
     switch (id) {
       case 1:
-        setSelectedMic(true);
+        setSelectedMic("AVAILABLE");
         break;
       case 2:
-        setSelectedMic(false);
+        setSelectedMic("UNAVAILABLE");
         break;
       default:
         setSelectedMic(null);

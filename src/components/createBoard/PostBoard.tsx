@@ -26,6 +26,7 @@ import { setUserProfile } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
 import { setClosePostingModal } from "@/redux/slices/modalSlice";
 import { getMyProfile } from "@/api/user/profile/get";
+import { Mike } from "@/types/user/mike";
 
 interface PostBoardProps {
   onClose: () => void;
@@ -68,7 +69,9 @@ const PostBoard = (props: PostBoardProps) => {
       want: currentPost?.wantPosition || user?.wantP || "ANY",
     }
   );
-  const [isMicOn, setIsMicOn] = useState<boolean>(currentPost?.mike || false);
+  const [isMicOn, setIsMicOn] = useState<Mike>(
+    currentPost?.mike || "UNAVAILABLE"
+  );
   const gameStyleIds =
     user?.gameStyleResponseList?.map((item) => item.gameStyleId) || [];
   const [selectedStyleIds, setSelectedStyleIds] = useState<number[]>(
@@ -169,7 +172,7 @@ const PostBoard = (props: PostBoardProps) => {
 
   /* 마이크 유무 선택 */
   const toggleMicHandler = () => {
-    setIsMicOn(!isMicOn);
+    setIsMicOn(isMicOn === "AVAILABLE" ? "UNAVAILABLE" : "AVAILABLE");
   };
 
   /* 글 수정 */

@@ -1,10 +1,11 @@
 import { ChampionList, GameStyleList } from "@/interface/profile";
 import { ApiResponse } from "../api";
+import { Mike } from "@/types/user/mike";
 
 interface BaseProfileData {
   id: number;
   profileImg: number;
-  mike: boolean;
+  mike: Mike;
   gameName: string;
   tag: string;
   tier: string;

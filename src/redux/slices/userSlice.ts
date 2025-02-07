@@ -1,11 +1,12 @@
 import { ChampionList, GameStyleList } from '@/interface/profile';
 import { Position } from '@/types/position/position';
+import { Mike } from '@/types/user/mike';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface UserState {
   id?: number | undefined;
   profileImg: number;
-  mike: boolean;
+  mike: Mike;
   email: string;
   gameName: string;
   tag: string;
@@ -31,7 +32,7 @@ interface UserState {
 const initialState: UserState = {
   id: 0,
   profileImg: 1,
-  mike: false,
+  mike: "UNAVAILABLE",
   email: "",
   gameName: "",
   tag: "",
@@ -67,7 +68,7 @@ export const userSlice = createSlice({
     setUserProfileImg: (state, action: PayloadAction<number>) => {
       state.profileImg = action.payload;
     },
-    setUserMike: (state, action: PayloadAction<boolean>) => {
+    setUserMike: (state, action: PayloadAction<Mike>) => {
       state.mike = action.payload;
     },
     setUserProfile: (state: any, action: PayloadAction<Partial<UserState>>) => {
@@ -76,7 +77,7 @@ export const userSlice = createSlice({
     clearUserProfile(state) {
       state.id = 0;
       state.profileImg = 1;
-      state.mike = false;
+      state.mike = "UNAVAILABLE";
       state.email = '';
       state.gameName = '';
       state.tag = '';
