@@ -52,7 +52,7 @@ export const getMemberMannerLevel = async (
   }
 };
 
-/* 매너 키워드 정보 조회 */
+/* 매너 키워드 개수 조회 */
 export const getMemberMannerKeyword = async (
   memberId: number
 ): Promise<MemberMannerKeywordsResponse> => {
