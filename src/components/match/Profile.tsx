@@ -37,6 +37,7 @@ import {
 import { deleteFriend } from "@/api/friend/delete";
 import { blockMember, unblockMember } from "@/api/block/block";
 import { Mike as MikeType } from "@/types/user/mike";
+import { Position as PositionType } from "@/types/position/position";
 
 type profileType = "normal" | "wind" | "other" | "me";
 
@@ -244,11 +245,11 @@ const Profile: React.FC<Profile> = ({
     }
   };
 
-  const handleCategoryButtonClick = (positionId: number) => {
+  const handleCategoryButtonClick = (positionName: PositionType) => {
     if (selectedBox) {
       const newPositionValue = {
         ...positionValue,
-        [selectedBox]: positionId,
+        [selectedBox]: positionName,
       };
       setPositionValue(newPositionValue);
       handlePositionChange(newPositionValue);
