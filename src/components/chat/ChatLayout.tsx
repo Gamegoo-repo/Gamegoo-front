@@ -89,6 +89,9 @@ const ChatLayout = (props: ChatLayoutProps) => {
   const isChatUuid = useSelector(
     (state: RootState) => state.chat.isChatRoomUuid
   );
+  const chatEnterType = useSelector(
+    (state: RootState) => state.chat.chatEnterType
+  );
   const isModalType = useSelector((state: RootState) => state.modal.modalType);
   const isUser = useSelector((state: RootState) => state.user);
 
@@ -105,7 +108,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
 
     try {
       // 친구목록에서 채팅방 입장
-      if (apiType === 0 && typeof isChatUuid === "number") {
+      if (chatEnterType === 0 && typeof isChatUuid === "number") {
         const data = await enterUsingMemberId({ memberId: isChatUuid });
         setChatEnterData(data.data);
         dispatch(setCurrentChatUuid(data.data.uuid));
@@ -113,7 +116,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
       }
 
       // 대화방에서 채팅방 입장
-      if (apiType === 1 && typeof isChatUuid === "string") {
+      if (chatEnterType === 1 && typeof isChatUuid === "string") {
         const data = await enterUsingUuid({ uuid: isChatUuid });
         setChatEnterData(data.data);
         dispatch(setCurrentChatUuid(data.data.uuid));
@@ -121,7 +124,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
       }
 
       // 게시글에서 채팅방 입장
-      if (apiType === 2 && typeof isChatUuid === "number") {
+      if (chatEnterType === 2 && typeof isChatUuid === "number") {
         const data = await enterUsingBoardId({ boardId: isChatUuid });
         setChatEnterData(data.data);
         dispatch(setCurrentChatUuid(data.data.uuid));
