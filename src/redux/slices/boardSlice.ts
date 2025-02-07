@@ -1,4 +1,5 @@
 import { Position } from '@/types/position/position';
+import { Mike } from '@/types/user/mike';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface BoardState {
@@ -6,7 +7,7 @@ interface BoardState {
   mode: number | null;
   tier: string | null;
   mainPosition: Position;
-  mike: boolean | null;
+  mike: Mike | null;
 }
 
 const initialState: BoardState = {

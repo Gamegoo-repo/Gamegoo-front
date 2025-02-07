@@ -1,5 +1,6 @@
 import { Position } from "@/types/position/position";
 import { ApiResponse } from "../api";
+import { Mike } from "@/types/user/mike";
 
 // 기본 DTO 인터페이스들
 interface ChampionResponseDTO {
@@ -30,7 +31,7 @@ interface GameInfo {
   mainPosition: Position;
   subPosition: Position;
   wantPosition: Position;
-  mike: boolean;
+  mike: Mike;
   gameStyles: Array<number>;
 }
 

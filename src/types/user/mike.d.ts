@@ -1,0 +1,1 @@
+export type Mike = "UNAVAILABLE" | "AVAILABLE" | "ONLY_LISTEN";

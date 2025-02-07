@@ -1,4 +1,5 @@
 import { Position } from "@/types/position/position";
+import { Mike } from "@/types/user/mike";
 
 export type profileType = "normal" | "wind" | "other" | "me";
 
@@ -15,7 +16,7 @@ export interface GameStyle {
 export interface User {
   id?: number;
   profileImg: number;
-  mike: boolean;
+  mike: Mike;
   email?: string;
   gameName: string;
   tag: string;

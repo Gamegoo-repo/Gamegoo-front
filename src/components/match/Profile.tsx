@@ -36,6 +36,7 @@ import {
 } from "@/api/friend/request";
 import { deleteFriend } from "@/api/friend/delete";
 import { blockMember, unblockMember } from "@/api/block/block";
+import { Mike as MikeType } from "@/types/user/mike";
 
 type profileType = "normal" | "wind" | "other" | "me";
 
@@ -82,7 +83,7 @@ const Profile: React.FC<Profile> = ({
   const [selectedBox, setSelectedBox] = useState("");
 
   /* user부터 가져오는 상태들 */
-  const [isMike, setIsMike] = useState<boolean>(user.mike);
+  const [isMike, setIsMike] = useState<MikeType>(user.mike);
   const [positionValue, setPositionValue] = useState<PositionState>({
     main: user.mainP,
     sub: user.subP,
@@ -139,7 +140,7 @@ const Profile: React.FC<Profile> = ({
   }, [isMike]);
 
   const handleMike = () => {
-    setIsMike(!isMike);
+    setIsMike(isMike === "AVAILABLE" ? "UNAVAILABLE" : "AVAILABLE");
     dispatch(updateMike(isMike));
   };
 

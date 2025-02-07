@@ -96,7 +96,7 @@ const ProfilePage = () => {
     const matchingData = {
       matchingType,
       gameMode,
-      mike: matchInfo.mike ?? false,
+      mike: matchInfo.mike ?? "UNAVAILABLE",
       mainP: (matchInfo.mainP ?? 0).toString(),
       subP: (matchInfo.subP ?? 0).toString(),
       wantP: (matchInfo.wantP ?? 0).toString(),

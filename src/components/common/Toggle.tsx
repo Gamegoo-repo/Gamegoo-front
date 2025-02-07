@@ -1,10 +1,11 @@
 import { theme } from "@/styles/theme";
+import { Mike } from "@/types/user/mike";
 import styled from "styled-components";
 import { css } from "styled-components";
 
 interface ToggleProps {
-  isOn: boolean;
-  onToggle: (state: boolean) => void;
+  isOn: Mike;
+  onToggle: (state: Mike) => void;
   disabled?: boolean;
   type?: string;
   isBlind?: boolean;
@@ -14,7 +15,7 @@ const Toggle = (props: ToggleProps) => {
   const { isOn, onToggle, disabled = false, type, isBlind = false } = props;
 
   const toggleHandler = () => {
-    const newState = !isOn;
+    const newState = isOn === "AVAILABLE" ? "UNAVAILABLE" : "AVAILABLE";
     onToggle(newState);
   };
 
@@ -26,9 +27,15 @@ const Toggle = (props: ToggleProps) => {
         $type={type}
         $isBlind={isBlind}
       >
-        <div className={`toggle-circle ${isOn ? null : "toggle--unchecked"}`} />
         <div
-          className={`toggle-container ${isOn ? null : "toggle--unchecked"}`}
+          className={`toggle-circle ${
+            isOn === "AVAILABLE" ? null : "toggle--unchecked"
+          }`}
+        />
+        <div
+          className={`toggle-container ${
+            isOn === "AVAILABLE" ? null : "toggle--unchecked"
+          }`}
         />
       </ToggleContainer>
     </>

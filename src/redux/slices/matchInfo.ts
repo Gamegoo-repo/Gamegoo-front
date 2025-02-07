@@ -1,8 +1,9 @@
 import { Position } from '@/types/position/position';
+import { Mike } from '@/types/user/mike';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface MatchInfoState {
-  mike: boolean | null;                        // 마이크 사용 여부
+  mike: Mike | null;                        // 마이크 사용 여부
   mainP: Position;                             // 주 포지션
   subP: Position;                              // 부 포지션
   wantP: Position;                             // 원하는 포지션
@@ -10,7 +11,7 @@ export interface MatchInfoState {
 }
 
 const initialState: MatchInfoState = {
-  mike: false,
+  mike: "UNAVAILABLE",
   mainP: "ANY",
   subP: "ANY",
   wantP: "ANY",
@@ -46,7 +47,7 @@ const matchInfoSlice = createSlice({
     },
 
      // 마이크만 업데이트
-    updateMike: (state, action: PayloadAction<boolean>) => {
+    updateMike: (state, action: PayloadAction<Mike>) => {
       state.mike = action.payload;
     },
   },
