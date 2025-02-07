@@ -15,11 +15,11 @@ import { setCloseModal, setOpenReadingModal } from "@/redux/slices/modalSlice";
 import { useRouter } from "next/navigation";
 import Alert from "../common/Alert";
 import ConfirmModal from "../common/ConfirmModal";
-import ChatLayout from "../chat/ChatLayout";
 import Champion from "../readBoard/Champion";
 import { BoardDetail } from "@/interface/board";
 import { getProfileBgColor } from "@/utils/profile";
 import { toLowerCaseString } from "@/utils/string";
+import Layout from "../chat/Layout";
 
 interface TableTitleProps {
   id: number;
@@ -140,7 +140,7 @@ const Table = (props: TableProps) => {
 
       {isReadingModal && !isChatRoomOpen && <ReadBoard postId={isBoardId} />}
 
-      {isChatRoomOpen && <ChatLayout apiType={2} />}
+      {isChatRoomOpen && <Layout />}
 
       {copiedAlert && <Copied>소환사명이 클립보드에 복사되었습니다.</Copied>}
       <TableWrapper>

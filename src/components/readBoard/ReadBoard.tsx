@@ -40,6 +40,7 @@ import { AlertProps } from "@/interface/modal";
 import { useRouter } from "next/navigation";
 import {
   openChatRoom,
+  setChatEnterType,
   setChatRoomUuid,
   setErrorMessage,
 } from "@/redux/slices/chatSlice";
@@ -513,6 +514,7 @@ const ReadBoard = (props: ReadBoardProps) => {
         if (isPost) {
           dispatch(setChatRoomUuid(isPost.boardId));
           dispatch(openChatRoom());
+          dispatch(setChatEnterType(2)); // 게시글에서 채팅방 입장
         }
       } catch (error) {
         console.error(error);

@@ -13,12 +13,17 @@ import ConfirmModal from "@/components/common/ConfirmModal";
 import ChatLayout from "@/components/chat/ChatLayout";
 import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { openChatRoom, setChatRoomUuid } from "@/redux/slices/chatSlice";
+import {
+  openChatRoom,
+  setChatEnterType,
+  setChatRoomUuid,
+} from "@/redux/slices/chatSlice";
 import { setComplete } from "@/redux/slices/matchingSlice";
 import { setIsCompleted } from "@/utils/storage";
 import { getMyProfile } from "@/api/user/profile/get";
 import { Position } from "@/types/position/position";
 import { Mike } from "@/types/user/mike";
+import Layout from "@/components/chat/Layout";
 
 interface User {
   memberId: number;
@@ -311,6 +316,7 @@ const Complete = () => {
     const data = res.data;
     dispatch(setChatRoomUuid(data.chatroomUuid)); // 채팅방 UUID 설정
     dispatch(openChatRoom()); // 채팅방 열기
+    dispatch(setChatEnterType(1)); // 대화방에서 채팅방 입장
   };
 
   // matching-fail 수신 시 타이머 종료 및 실패 모달 표시
@@ -348,7 +354,7 @@ const Complete = () => {
 
   return (
     <Suspense>
-      {isChatRoomOpen && <ChatLayout apiType={1} />}
+      {isChatRoomOpen && <Layout />}
       <Wrapper>
         <MatchContent>
           <HeaderTitle
