@@ -61,7 +61,9 @@ export const cancelFriendRequest = async (
   memberId: number
 ): Promise<FriendStatusResponse> => {
   try {
-    const response = await AuthAxios.delete(`/v1/friends/request/${memberId}`);
+    const response = await AuthAxios.delete(
+      `/api/v2/friend/request/${memberId}`
+    );
     return response.data;
   } catch (error: any) {
     let errorMessage = "친구 요청 취소에 실패했습니다.";
@@ -94,7 +96,7 @@ export const acceptFriendRequest = async (
 ): Promise<FriendStatusResponse> => {
   try {
     const response = await AuthAxios.patch(
-      `/v1/friends/request/${memberId}/accept`
+      `/api/v2/friend/request/${memberId}/accept`
     );
     return response.data;
   } catch (error) {
@@ -108,7 +110,7 @@ export const rejectFriendRequest = async (
 ): Promise<FriendStatusResponse> => {
   try {
     const response = await AuthAxios.patch(
-      `/v1/friends/request/${memberId}/reject`
+      `/api/v2/friend/request/${memberId}/reject`
     );
     return response.data;
   } catch (error) {
