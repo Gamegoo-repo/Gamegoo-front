@@ -7,19 +7,20 @@ import Mid from "../../../public/assets/icons/position_mid_unclicked.svg";
 import OndDeal from "../../../public/assets/icons/position_one_deal_unclicked.svg";
 import Supporter from "../../../public/assets/icons/position_supporter_unclicked.svg";
 import React, { useEffect } from "react";
+import { Position } from "@/types/position/position";
 
 interface PositionComponentProps {
   onClose: () => void;
   boxName?: string;
-  onSelect: (positionId: number) => void;
+  onSelect: (positionName: Position) => void;
 }
 
 const PositionCategory = (props: PositionComponentProps) => {
   const { onClose, onSelect } = props;
   const boxRef = React.useRef<HTMLDivElement>(null);
 
-  const handlePositionCategory = (positionId: number) => {
-    onSelect(positionId);
+  const handlePositionCategory = (positionName: Position) => {
+    onSelect(positionName);
     onClose();
   };
 
@@ -39,22 +40,22 @@ const PositionCategory = (props: PositionComponentProps) => {
   return (
     <Wrapper>
       <Box ref={boxRef}>
-        <AllButton onClick={() => handlePositionCategory(0)}>
+        <AllButton onClick={() => handlePositionCategory("ANY")}>
           <All />
         </AllButton>
-        <TopButton onClick={() => handlePositionCategory(1)}>
+        <TopButton onClick={() => handlePositionCategory("TOP")}>
           <Top />
         </TopButton>
-        <JungleButton onClick={() => handlePositionCategory(2)}>
+        <JungleButton onClick={() => handlePositionCategory("JUNGLE")}>
           <Jungle />
         </JungleButton>
-        <MidButton onClick={() => handlePositionCategory(3)}>
+        <MidButton onClick={() => handlePositionCategory("MID")}>
           <Mid />
         </MidButton>
-        <OneDealButton onClick={() => handlePositionCategory(4)}>
+        <OneDealButton onClick={() => handlePositionCategory("ADC")}>
           <OndDeal />
         </OneDealButton>
-        <SupporterButton onClick={() => handlePositionCategory(5)}>
+        <SupporterButton onClick={() => handlePositionCategory("SUP")}>
           <Supporter />
         </SupporterButton>
       </Box>

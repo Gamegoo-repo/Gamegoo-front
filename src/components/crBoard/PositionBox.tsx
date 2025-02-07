@@ -32,6 +32,7 @@ const PositionBox = (props: PositionBoxProps) => {
     want: want,
   });
 
+  console.log("positionValue,", positionValue);
   useEffect(() => {
     setPositionValue({
       main: main ?? "ANY",
@@ -40,16 +41,16 @@ const PositionBox = (props: PositionBoxProps) => {
     });
   }, [main, sub, want]);
 
-  const handleCategoryButtonClick = (positionId: number) => {
+  const handleCategoryButtonClick = (positionName: PositionType) => {
     if (selectedBox) {
       setPositionValue((prevPositionValue) => ({
         ...prevPositionValue,
-        [selectedBox]: positionId,
+        [selectedBox]: "ANY",
       }));
       if (onPositionChange) {
         onPositionChange({
           ...positionValue,
-          [selectedBox]: positionId,
+          [selectedBox]: positionName,
         });
       }
     }
