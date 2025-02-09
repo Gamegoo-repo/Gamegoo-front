@@ -63,6 +63,10 @@ export interface GetBoardListData extends BoardListStructure {
   boards: Array<BoardDetail>;
 }
 
+export interface GetMyBoardListData extends BoardListStructure {
+  myBoards: Array<MyBoardDetail>;
+}
+
 interface BoardDetail
   extends BasePlayerInfo,
     GameInfo,
@@ -70,6 +74,15 @@ interface BoardDetail
     GameStats {
   mannerLevel: number;
   createdAt: string;
+  bumpTime: string;
+}
+
+interface MyBoardDetail
+extends BasePlayerInfo,
+BaseBoardInfo,
+GameStats {
+  createdAt: string;
+  bumpTime: string;
 }
 
 export interface MemberPostBoardData
@@ -108,3 +121,4 @@ export type BoardEditResponse = ApiResponse<BoardEditData>;
 export type NotMemberBoardResponse = ApiResponse<NotMemberBoardData>;
 export type MemberPostBoardResponse = ApiResponse<MemberPostBoardData>;
 export type GetBoardListResponse = ApiResponse<GetBoardListData>;
+export type GetMyBoardListResponse = ApiResponse<GetMyBoardListData>;
