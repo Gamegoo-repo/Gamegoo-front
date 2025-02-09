@@ -9,7 +9,7 @@ const MatchTypePage = () => {
   return (
     <Wrapper>
       <MatchContent>
-        <HeaderTitle title="바로 매칭하기" />
+        <HeaderTitle title="매칭 종류 선택" />
         <Main>
           {MATCH_TYPE_PAGE_DATA.map((box) => {
             return (

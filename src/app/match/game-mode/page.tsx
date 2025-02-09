@@ -17,7 +17,7 @@ const GameModePage = () => {
   return (
     <Wrapper>
       <MatchContent>
-        <HeaderTitle title="게임 모드 선택" />
+        <HeaderTitle title="게임모드 선택" />
         <Main>
           {displayedData.map((box) => {
             return (

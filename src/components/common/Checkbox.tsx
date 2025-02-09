@@ -52,7 +52,7 @@ const Checkbox = (props: CheckboxProps) => {
   return (
     <StyledCheckbox
       fontSize={fontSize || "semiBold16"}
-      color={color || "black"}
+      color={color || "gray800"}
       gap={gap || "1.7rem"}
     >
       <Check
@@ -87,7 +87,7 @@ const StyledCheckbox = styled.div<{
   color: ${(props) =>
     props.color
       ? props.theme.colors[props.color as keyof typeof props.theme.colors]
-      : props.theme.colors.black};
+      : props.theme.colors.gray800};
   cursor: pointer;
 `;
 
@@ -96,13 +96,13 @@ const Check = styled.input`
   appearance: none;
   width: 22px;
   height: 22px;
-  border: 0.3px solid #bebebe;
+  border: 0.3px solid ${theme.colors.gray500};
   background-color: ${theme.colors.white};
   border-radius: 2.8px;
   outline: none;
 
   &:hover {
-    box-shadow: 0 0 0 max(0, 0.3em) ${theme.colors.purple500};
+    box-shadow: 0 0 0 max(0, 0.3em) ${theme.colors.violet600};
   }
 
   &:checked {

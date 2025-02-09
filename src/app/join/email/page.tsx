@@ -31,7 +31,7 @@ const Email = () => {
 
   /* 타이머 */
   const [timer, setTimer] = useState<number>(180);
-  const [timerColor, setTimerColor] = useState<string>(theme.colors.purple100);
+  const [timerColor, setTimerColor] = useState<string>(theme.colors.violet600);
 
   const emailRedux = useSelector((state: RootState) => state.signIn.email);
   const authCodeRedux = useSelector(
@@ -116,9 +116,9 @@ const Email = () => {
 
       // 타이머 색상 업데이트
       if (timer <= 30) {
-        setTimerColor(theme.colors.error100);
+        setTimerColor(theme.colors.red600);
       } else {
-        setTimerColor(theme.colors.purple100);
+        setTimerColor(theme.colors.violet600);
       }
     }
 
@@ -248,7 +248,7 @@ const Timer = styled.div<{ color: string }>`
 `;
 
 const ReButton = styled.button`
-  color: ${theme.colors.purple100};
+  color: ${theme.colors.violet600};
   ${(props) => props.theme.fonts.medium16};
   text-decoration-line: underline;
   text-align: left;

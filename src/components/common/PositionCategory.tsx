@@ -91,13 +91,13 @@ const Box = styled.div`
   column-gap: 50px;
   width: 482px;
   padding: 18px 27px;
-  background: ${theme.colors.black};
+  background: ${theme.colors.gray900};
   border-radius: 16.3px;
   &:after {
     border-top: 0 solid transparent;
     border-left: 9px solid transparent;
     border-right: 9px solid transparent;
-    border-bottom: 18px solid ${theme.colors.black};
+    border-bottom: 18px solid ${theme.colors.gray900};
     content: "";
     position: absolute;
     top: -13px;
@@ -107,60 +107,60 @@ const Box = styled.div`
 
 const AllButton = styled.button`
   &:hover path {
-    stroke: ${theme.colors.purple200};
+    stroke: ${theme.colors.violet200};
   }
   &:active,
   &:focus path {
-    stroke: ${theme.colors.purple100};
+    stroke: ${theme.colors.violet600};
   }
 `;
 
 const TopButton = styled.button`
   &:hover path:first-child {
-    fill: ${theme.colors.purple200};
+    fill: ${theme.colors.violet200};
   }
   &:active,
   &:focus path:first-child {
-    fill: ${theme.colors.purple100};
+    fill: ${theme.colors.violet600};
   }
 `;
 
 const JungleButton = styled.button`
   &:hover path {
-    fill: ${theme.colors.purple200};
+    fill: ${theme.colors.violet200};
   }
   &:active,
   &:focus path {
-    fill: ${theme.colors.purple100};
+    fill: ${theme.colors.violet600};
   }
 `;
 
 const MidButton = styled.button`
   &:hover path:nth-child(2) {
-    fill: ${theme.colors.purple200};
+    fill: ${theme.colors.violet200};
   }
   &:active,
   &:focus path:nth-child(2) {
-    fill: ${theme.colors.purple100};
+    fill: ${theme.colors.violet600};
   }
 `;
 
 const OneDealButton = styled.button`
   &:hover path:nth-child(2) {
-    fill: ${theme.colors.purple200};
+    fill: ${theme.colors.violet200};
   }
   &:active,
   &:focus path:nth-child(2) {
-    fill: ${theme.colors.purple100};
+    fill: ${theme.colors.violet600};
   }
 `;
 
 const SupporterButton = styled.button`
   &:hover path {
-    fill: ${theme.colors.purple200};
+    fill: ${theme.colors.violet200};
   }
   &:active,
   &:focus path {
-    fill: ${theme.colors.purple100};
+    fill: ${theme.colors.violet600};
   }
 `;

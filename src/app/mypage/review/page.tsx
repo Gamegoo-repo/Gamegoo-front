@@ -174,14 +174,14 @@ const Box = styled.div`
   justify-content: space-between;
   padding: 29px 36px;
   border-radius: 20px;
-  background: ${theme.colors.gray500};
+  background: ${theme.colors.gray100};
 `;
 
 const Top = styled.div`
   display: flex;
   align-items: center;
   gap: 22px;
-  color: ${theme.colors.gray600};
+  color: ${theme.colors.gray800};
   ${(props) => props.theme.fonts.medium16};
 `;
 
@@ -194,11 +194,11 @@ const Title = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
-  color: ${theme.colors.gray700};
+  color: ${theme.colors.gray800};
   ${(props) => props.theme.fonts.regular25};
   padding-bottom: 13px;
   margin-bottom: 20px;
-  border-bottom: 1px solid ${theme.colors.gray400};
+  border-bottom: 1px solid ${theme.colors.gray300};
 `;
 
 const Row = styled.div`
@@ -226,7 +226,7 @@ const MannerBox = styled.div`
   height: 313px;
   border-radius: 20px;
   padding: 32px;
-  background: ${theme.colors.gray600};
+  background: ${theme.colors.gray100};
   box-shadow: 0px 4px 18.4px 0px rgba(0, 0, 0, 0.25);
 `;
 
@@ -250,15 +250,15 @@ const Value = styled.p`
   ${(props) => props.theme.fonts.medium16};
 
   &.default {
-    color: ${theme.colors.gray200};
+    color: ${theme.colors.gray800};
   }
 
   &.mannerEmph {
-    color: ${theme.colors.purple300};
+    color: ${theme.colors.violet500};
   }
 
   &.badEmph {
-    color: ${theme.colors.error200};
+    color: ${theme.colors.red500};
   }
 `;
 
@@ -273,14 +273,14 @@ const Type = styled.p`
   ${(props) => props.theme.fonts.medium16};
 
   &.default {
-    color: ${theme.colors.gray200};
+    color: ${theme.colors.gray800};
   }
 
   &.mannerEmph {
-    color: ${theme.colors.purple300};
+    color: ${theme.colors.violet500};
   }
 
   &.badEmph {
-    color: ${theme.colors.error200};
+    color: ${theme.colors.red500};
   }
 `;

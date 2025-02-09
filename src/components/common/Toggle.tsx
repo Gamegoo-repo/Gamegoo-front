@@ -59,7 +59,7 @@ const ToggleContainer = styled.div<{
     height: ${({ $type }) =>
       $type === "board" ? "37px" : $type === "mini" ? "32px" : "46px"};
     border-radius: 49px;
-    background-color: ${theme.colors.purple200};
+    background-color: ${theme.colors.violet400};
     /* ${({ disabled }) =>
       disabled &&
       css`
@@ -68,7 +68,7 @@ const ToggleContainer = styled.div<{
   }
 
   > .toggle--unchecked {
-    background-color: ${theme.colors.gray300};
+    background-color: ${theme.colors.gray500};
     transition: 0.5s;
     /* ${({ disabled }) =>
       disabled &&
@@ -78,7 +78,7 @@ const ToggleContainer = styled.div<{
     ${({ $isBlind }) =>
       $isBlind &&
       css`
-        background-color: ${theme.colors.gray800};
+        background-color: ${theme.colors.gray400};
       `}
   }
 

@@ -39,7 +39,7 @@ const MicText = styled.p`
   ${(props) => props.theme.fonts.bold10};
   margin-top: 6px;
   &.on {
-    color: ${theme.colors.purple100};
+    color: ${theme.colors.violet600};
   }
   &.off {
     color: #606060;

@@ -829,7 +829,7 @@ const Content = styled.main`
   }
   &::-webkit-scrollbar-thumb {
     border-radius: 66px;
-    background: ${theme.colors.gray300};
+    background: ${theme.colors.gray500};
   }
   &::-webkit-scrollbar-track {
     border-radius: 66px;

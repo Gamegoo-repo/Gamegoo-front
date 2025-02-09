@@ -171,7 +171,7 @@ const Top = styled.div`
   color: ${theme.colors.gray700};
   ${(props) => props.theme.fonts.regular25};
   padding-bottom: 13px;
-  border-bottom: 1px solid ${theme.colors.gray400};
+  border-bottom: 1px solid ${theme.colors.gray300};
 `;
 
 const AlertList = styled.div`

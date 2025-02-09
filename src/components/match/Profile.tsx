@@ -684,7 +684,7 @@ const Container = styled.div`
   box-sizing: border-box;
   border-radius: 30px;
   padding: 23px 44px 44px 44px;
-  background: ${theme.colors.gray500};
+  background: ${theme.colors.violet100};
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -856,23 +856,22 @@ const Top = styled.div`
   align-items: center;
   justify-content: flex-end;
   gap: 16px;
-  color: ${theme.colors.gray100};
+  color: ${theme.colors.gray800};
   font-size: ${theme.fonts.bold32};
   white-space: nowrap;
 `;
 
 const Span = styled.span`
   margin-right: 5px;
-  color: ${theme.colors.gray300};
-  font-size: ${theme.fonts.regular25};
+  color: ${theme.colors.gray500};
+  font-size: ${theme.fonts.light32};
 `;
 
 const Rank = styled.div`
   display: flex;
   align-items: center;
-  color: #44515c;
-  font-size: ${theme.fonts.regular25};
-  font-weight: 300;
+  color: ${theme.colors.gray700};
+  font-size: ${theme.fonts.bold20};
   gap: 10px;
 `;
 

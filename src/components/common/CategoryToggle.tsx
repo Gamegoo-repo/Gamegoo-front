@@ -40,12 +40,12 @@ const CategoryToggleButton = styled.button<{ isSelected: boolean }>`
   cursor: pointer;
   background-color: ${theme.colors.white};
   color: ${({ isSelected }) =>
-    isSelected ? theme.colors.purple100 : theme.colors.gray700};
+    isSelected ? theme.colors.violet600 : theme.colors.gray700};
   ${({ isSelected }) =>
     isSelected ? theme.fonts.bold16 : theme.fonts.medium16};
   border: ${({ isSelected }) =>
     isSelected
-      ? `1px solid ${theme.colors.purple100}`
+      ? `1px solid ${theme.colors.violet600}`
       : `1px solid ${theme.colors.gray200}`};
   transition: all 0.3s;
   margin-right: -1px;

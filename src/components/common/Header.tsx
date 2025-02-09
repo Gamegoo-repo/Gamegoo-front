@@ -345,7 +345,7 @@ const HeaderProfileImg = styled.object`
 `;
 
 const Login = styled.button`
-  color: ${theme.colors.purple100};
+  color: ${theme.colors.violet600};
   ${(props) => props.theme.fonts.bold14}
 `;
 
@@ -366,7 +366,7 @@ const MyProfile = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 0 9px 23px 9px;
-  border-bottom: 1px solid #d4d4d4;
+  border-bottom: 1px solid ${theme.colors.gray300};
 `;
 
 const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
@@ -388,7 +388,7 @@ const ProfileImg = styled.object`
 const MyName = styled.div`
   margin-left: 15px;
   margin-right: auto;
-  color: ${theme.colors.black};
+  color: ${theme.colors.gray800};
   ${(props) => props.theme.fonts.bold20};
   white-space: nowrap;
 `;
@@ -400,7 +400,7 @@ const TabMenu = styled.div`
   justify-content: center;
   padding-top: 18px;
   gap: 4px;
-  color: ${theme.colors.black};
+  color: ${theme.colors.gray800};
   ${(props) => props.theme.fonts.semiBold18};
 `;
 
@@ -420,13 +420,13 @@ const Line = styled.div`
   border-radius: 10px;
 
   &:hover {
-    background: ${theme.colors.gray500};
+    background: ${theme.colors.gray100};
   }
 `;
 
 const Divider = styled.div`
   width: 100%;
   height: 1px;
-  background-color: #d4d4d4;
+  background-color: ${theme.colors.gray300};
   margin: 18px 0;
 `;

@@ -106,7 +106,7 @@ const Header = styled.header<{ $type: string }>`
 
 const CheckboxTitle = styled.p`
   ${(props) => props.theme.fonts.bold22};
-  color: ${theme.colors.black};
+  color: ${theme.colors.gray900};
 `;
 
 const CloseButton = styled.p`

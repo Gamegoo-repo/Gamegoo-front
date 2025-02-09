@@ -87,7 +87,7 @@ const AlertImage = styled.div<{ size: string }>`
     `}
 `;
 
-const StyledObject = styled.object <{ size: string }>`
+const StyledObject = styled.object<{ size: string }>`
   width: 46px;
   height: 46px;
   background: ${theme.colors.gray300};
@@ -108,7 +108,7 @@ const StyledObject = styled.object <{ size: string }>`
 const Read = styled.div<{ $read: boolean; size: string }>`
   width: 10px;
   height: 10px;
-  background: ${theme.colors.purple100};
+  background: ${theme.colors.violet600};
   opacity: ${(props) => (props.$read ? 0 : 1)};
   border-radius: 100px;
   position: absolute;

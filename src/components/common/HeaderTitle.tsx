@@ -63,7 +63,7 @@ const StyledImage = styled(Image)`
 `;
 
 const Title = styled.div`
-  color: ${theme.colors.gray100};
+  color: ${theme.colors.gray800};
   margin-right: 40px;
 
   &.bold {
@@ -81,6 +81,6 @@ const Sub = styled.div`
 `;
 
 const Blocked = styled.div`
-  color: ${theme.colors.error200};
+  color: ${theme.colors.red500};
   ${theme.fonts.bold14};
 `;

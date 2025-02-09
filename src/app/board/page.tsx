@@ -445,7 +445,7 @@ const FirstBlock = styled.div`
 `;
 
 const PositionBox = styled.div`
-  background: ${theme.colors.gray500};
+  background: ${theme.colors.gray200};
   border-radius: 10px;
 `;
 

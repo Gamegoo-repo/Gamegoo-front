@@ -146,7 +146,7 @@ const ProfilePage = () => {
   return (
     <Wrapper>
       <MatchContent>
-        <HeaderTitle title="프로필 설정" />
+        <HeaderTitle title="프로필 등록" />
         <Main>
           {user ? (
             <Profile profileType={profileType ?? "normal"} user={user} />
@@ -216,6 +216,6 @@ const Column = styled.div`
 `;
 
 const Warning = styled.div`
-  color: ${theme.colors.error100};
+  color: ${theme.colors.red600};
   ${(props) => props.theme.fonts.regular16};
 `;

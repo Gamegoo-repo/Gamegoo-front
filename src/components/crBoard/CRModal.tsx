@@ -47,8 +47,8 @@ const Overlay = styled.div<{ $hideContent: boolean | undefined }>`
   top: 50%;
   left: 50%;
   z-index: 100;
-  background: ${({ $hideContent }) => ($hideContent ? "unset" : '#0000009c')};
-  overflow-y: ${({ $hideContent }) => ($hideContent ? "unset" : 'scroll')};
+  background: ${({ $hideContent }) => ($hideContent ? "unset" : "#0000009c")};
+  overflow-y: ${({ $hideContent }) => ($hideContent ? "unset" : "scroll")};
   inset: ${({ $hideContent }) => ($hideContent ? "unset" : 0)};
 
   /* 스크롤바 */
@@ -58,7 +58,7 @@ const Overlay = styled.div<{ $hideContent: boolean | undefined }>`
   }
   &::-webkit-scrollbar-thumb {
     border-radius: 26px;
-    background: ${theme.colors.gray300};
+    background: ${theme.colors.gray500};
     background-clip: padding-box;
     border: 6px solid transparent;
   }
@@ -67,7 +67,10 @@ const Overlay = styled.div<{ $hideContent: boolean | undefined }>`
   }
 `;
 
-const Wrapper = styled.div<{ $type: string; $hideContent: boolean | undefined }>`
+const Wrapper = styled.div<{
+  $type: string;
+  $hideContent: boolean | undefined;
+}>`
   border-radius: 20px;
   max-width: 555px;
   width: 100%;
@@ -77,8 +80,10 @@ const Wrapper = styled.div<{ $type: string; $hideContent: boolean | undefined }>
   height: auto;
   margin: 50px;
   padding: 0 20px;
-  background:  ${({ $hideContent }) => ($hideContent ? "unset" : `${theme.colors.white}`)};
-  box-shadow:  ${({ $hideContent }) => ($hideContent ? "unset" : "0 4px 96.4px 0 #00000040")};
+  background: ${({ $hideContent }) =>
+    $hideContent ? "unset" : `${theme.colors.white}`};
+  box-shadow: ${({ $hideContent }) =>
+    $hideContent ? "unset" : "0 4px 96.4px 0 #00000040"};
 
   /* 스크롤바 */
   &::-webkit-scrollbar {
@@ -86,7 +91,7 @@ const Wrapper = styled.div<{ $type: string; $hideContent: boolean | undefined }>
   }
   &::-webkit-scrollbar-thumb {
     border-radius: 26px;
-    background: ${theme.colors.gray300};
+    background: ${theme.colors.gray500};
     background-clip: padding-box;
     border: 6px solid transparent;
   }

@@ -370,7 +370,7 @@ const Complete = () => {
                 <>
                   <Button
                     buttonType="secondary"
-                    text="매칭 거절하기"
+                    text="매칭 다시하기"
                     onClick={handleReject}
                   />
                   <Text>{timeLeft}초 뒤 자동으로 대화방이 생성됩니다.</Text>
@@ -445,6 +445,6 @@ const Oppnent = styled.div`
 `;
 
 const Text = styled.div`
-  color: ${theme.colors.purple100};
+  color: ${theme.colors.violet600};
   ${(props) => props.theme.fonts.regular18};
 `;

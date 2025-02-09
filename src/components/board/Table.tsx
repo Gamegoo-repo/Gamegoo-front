@@ -239,7 +239,7 @@ const Table = (props: TableProps) => {
                     </P>
                   </Seventh>
                   <Eighth className="table_width">
-                    <P>{setDateFormatter(data.createdAt)}</P>
+                    <P className="gray">{setDateFormatter(data.createdAt)}</P>
                   </Eighth>
                 </Row>
               );
@@ -303,8 +303,8 @@ const TableHead = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 14px 21px;
-  ${(props) => props.theme.fonts.bold16};
-  background: ${theme.colors.gray600};
+  ${(props) => props.theme.fonts.bold14};
+  background: ${theme.colors.gray800};
   color: ${theme.colors.white};
   border-radius: 8px;
 `;
@@ -334,7 +334,7 @@ const First = styled.div`
 
 const Second = styled.div`
   p {
-    color: ${theme.colors.purple100};
+    color: ${theme.colors.violet600};
     ${(props) => props.theme.fonts.bold16};
   }
 `;
@@ -401,14 +401,14 @@ const NameRow = styled.div`
 
 const P = styled.p`
   ${(props) => props.theme.fonts.medium16};
-  color: ${theme.colors.black};
+  color: ${theme.colors.gray800};
   white-space: nowrap;
   &.emph {
-    color: ${theme.colors.purple100};
+    color: ${theme.colors.violet600};
     ${(props) => props.theme.fonts.bold16};
   }
-  &.basic {
-    color: ${theme.colors.black};
+  &.gray {
+    color: ${theme.colors.gray500};
     ${(props) => props.theme.fonts.medium16};
   }
 `;
@@ -431,7 +431,7 @@ const CopyButton = styled.button`
 
   display: none;
   &:hover {
-    color: ${theme.colors.purple300};
+    color: ${theme.colors.violet300};
   }
 `;
 

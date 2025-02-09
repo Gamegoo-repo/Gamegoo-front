@@ -82,7 +82,7 @@ const Wrapper = styled.div<{
   ${({ $background }) =>
     $background &&
     css`
-      background: ${theme.colors.gray600};
+      background: ${theme.colors.gray800};
       &:hover {
         box-shadow: 0px 0px 38.3px 0px rgba(90, 66, 238, 0.7);
       }
@@ -110,7 +110,7 @@ const Title = styled.div<{ $top: string; $left: string }>`
   transform: ${(props) =>
     props.$top !== "50%" ? undefined : `translate(-50%, -50%);`};
   color: white;
-  ${(props) => props.theme.fonts.bold32};
+  ${(props) => props.theme.fonts.bold25};
   line-height: 37px;
   white-space: nowrap;
 `;

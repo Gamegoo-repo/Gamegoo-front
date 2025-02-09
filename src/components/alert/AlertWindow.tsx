@@ -230,7 +230,7 @@ const Tab = styled.button`
     bottom: -2px;
     width: 100%;
     height: 4px;
-    background-color: ${theme.colors.purple100};
+    background-color: ${theme.colors.violet600};
     border-radius: 60px;
     transform: translateX(-50%);
     transition: width 0.3s ease;
@@ -243,7 +243,7 @@ const Background = styled.div`
   flex-direction: column;
   gap: 11px;
   padding: 14px 19px;
-  background: ${theme.colors.gray500};
+  background: ${theme.colors.gray100};
   overflow-y: auto;
   border-radius: 0 0 20px 20px;
 
@@ -253,7 +253,7 @@ const Background = styled.div`
   }
   &::-webkit-scrollbar-thumb {
     border-radius: 66px;
-    background: ${theme.colors.gray300};
+    background: ${theme.colors.gray500};
   }
   &::-webkit-scrollbar-track {
     border-radius: 66px;

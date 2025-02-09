@@ -53,12 +53,12 @@ const UserAccount = styled.div`
 
 const Account = styled.p`
   ${(props) => props.theme.fonts.bold20};
-  color: ${theme.colors.black};
+  color: ${theme.colors.gray700};
 `;
 
 const Tag = styled.p`
   ${(props) => props.theme.fonts.regular20};
-  color: ${theme.colors.gray300};
+  color: ${theme.colors.gray400};
   margin-left: 5px;
 `;
 

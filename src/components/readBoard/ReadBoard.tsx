@@ -732,7 +732,7 @@ export default ReadBoard;
 
 const UpdatedDate = styled.p`
   ${(props) => props.theme.fonts.medium11};
-  color: ${theme.colors.gray200};
+  color: ${theme.colors.gray600};
   margin: 1px 0 12px;
 `;
 
@@ -794,7 +794,7 @@ const Memo = styled.div`
   max-height: 220px;
   padding: 11px 20px;
   border-radius: 15px;
-  border: 1px solid ${theme.colors.purple300};
+  border: 1px solid ${theme.colors.gray400};
   overflow-y: scroll;
 
   /* 스크롤바 */
@@ -803,7 +803,7 @@ const Memo = styled.div`
   }
   &::-webkit-scrollbar-thumb {
     border-radius: 10px;
-    background: ${theme.colors.gray300};
+    background: ${theme.colors.gray500};
     background-clip: padding-box;
     border: 6px solid transparent;
   }
@@ -813,7 +813,7 @@ const Memo = styled.div`
 `;
 
 const MemoData = styled.p`
-  color: #606060;
+  color: ${theme.colors.gray700};
   ${(props) => props.theme.fonts.regular18}
 `;
 

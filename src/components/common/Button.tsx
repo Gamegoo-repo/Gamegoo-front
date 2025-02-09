@@ -52,17 +52,17 @@ const StyledButton = styled.button<{ width?: string }>`
 
   /*buttonType*/
   &.primary {
-    background: ${theme.colors.purple100};
+    background: ${theme.colors.violet600};
     &:hover:not(:disabled) {
-      background: #7362de;
-      color: rgba(255, 255, 255, 0.42);
+      background: ${theme.colors.violet600};
+      color: #ffffff65;
     }
     &:disabled {
-      background: ${theme.colors.gray300};
+      background: #c5c5c7;
     }
   }
   &.secondary {
-    background: ${theme.colors.gray100};
+    background: ${theme.colors.gray800};
     &:hover:not(:disabled) {
       background: #606060;
       color: rgba(255, 255, 255, 0.42);
@@ -75,20 +75,23 @@ const StyledButton = styled.button<{ width?: string }>`
   &.default {
     background: ${theme.colors.white};
     border: 1px solid ${theme.colors.gray300};
-    color: ${theme.colors.black};
+    color: ${theme.colors.gray900};
     ${(props) => props.theme.fonts.medium16};
     &:hover:not(:disabled) {
-      border: 1px solid ${theme.colors.purple100};
-      background: ${theme.colors.purple500};
+      border: 1px solid ${theme.colors.violet600};
+      background: ${theme.colors.violet500};
     }
     &:disabled {
       background: ${theme.colors.gray300};
     }
   }
   &.light {
-    background: ${theme.colors.purple500};
-    border: 1px solid ${theme.colors.purple100};
-    color: ${theme.colors.gray100};
+    background: ${theme.colors.violet100};
+    border: 1px solid ${theme.colors.violet600};
+    color: ${theme.colors.gray800};
     ${(props) => props.theme.fonts.medium16};
+    &:hover:not(:disabled) {
+      background: ${theme.colors.violet200};
+    }
   }
 `;

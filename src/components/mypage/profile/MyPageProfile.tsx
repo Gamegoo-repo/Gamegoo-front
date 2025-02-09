@@ -133,7 +133,7 @@ const Container = styled.div`
   box-sizing: border-box;
   border-radius: 20px;
   padding: 28px 37px;
-  background: ${theme.colors.gray500};
+  background: ${theme.colors.gray100};
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -268,7 +268,7 @@ const Div = styled.div`
 `;
 
 const Tag = styled.div`
-  color: ${theme.colors.gray300};
+  color: ${theme.colors.gray500};
   ${(props) => props.theme.fonts.regular25}
 `;
 
@@ -277,7 +277,7 @@ const Top = styled.div`
   align-items: center;
   gap: 7px;
   ${(props) => props.theme.fonts.bold25};
-  color: ${theme.colors.gray600};
+  color: ${theme.colors.gray800};
 `;
 
 const TierImage = styled.object`

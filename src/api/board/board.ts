@@ -5,6 +5,7 @@ import {
   BoardDeleteResponse,
   BoardEditResponse,
   GetBoardListResponse,
+  GetMyBoardListResponse,
   MemberPostBoardResponse,
   NotMemberBoardResponse,
   PostsResponse,
@@ -92,6 +93,18 @@ export const deletePost = async (
     return response.data;
   } catch (error) {
     console.error("게시글 삭제 실패:", error);
+    throw error;
+  }
+};
+
+/* 내가 쓴 글 목록 조회 */
+export const getMyPost = async (page: number): Promise<GetMyBoardListResponse> => {
+  const endpoint = `/api/v2/posts/my?page=${page}`;
+  try {
+    const response = await AuthAxios.get(endpoint);
+    return response.data;
+  } catch (error) {
+    console.error("내가 작성한 글 목록 조회 실패:", error);
     throw error;
   }
 };

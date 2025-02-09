@@ -71,10 +71,15 @@ const SearchImage = styled(Image)`
 
 const SearchInput = styled.input`
   width: 100%;
-  background: ${theme.colors.gray500};
-  border: 1px solid ${theme.colors.gray500};
+  background: ${theme.colors.gray100};
+  border: none;
+  outline: none;
   border-radius: 10px;
   padding: 10px 15px 10px 47px;
   ${(props) => props.theme.fonts.regular14};
-  color: ${theme.colors.gray200};
+  color: ${theme.colors.gray800};
+
+  &::placeholder {
+    color: ${theme.colors.gray500};
+  }
 `;

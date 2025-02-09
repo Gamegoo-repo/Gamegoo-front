@@ -93,7 +93,7 @@ const MsgButton = styled.button`
   width: 89px;
   height: 89px;
   border-radius: 50%;
-  background: ${theme.colors.purple100};
+  background: ${theme.colors.violet600};
   position: fixed;
   bottom: 34px;
   right: 134px;
@@ -114,12 +114,12 @@ const MsgCount = styled.div`
   height: 22px;
   position: absolute;
   border-radius: 50%;
-  border: 1px solid ${theme.colors.purple200};
+  border: 1px solid ${theme.colors.violet200};
   background: ${theme.colors.white};
   right: 5px;
 `;
 
 const Count = styled.p`
   ${(props) => props.theme.fonts.semiBold14};
-  color: ${theme.colors.purple100};
+  color: ${theme.colors.violet600};
 `;
