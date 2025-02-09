@@ -183,7 +183,7 @@ const Row = styled.div`
 
 const Error = styled.div`
   height: 15px;
-  color: ${theme.colors.error100};
+  color: ${theme.colors.red600};
   ${(props) => props.theme.fonts.regular12};
   margin-left: 18px;
   margin-right: 18px;

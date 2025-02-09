@@ -39,7 +39,7 @@ const TabButton = styled.div<{ $isActive: boolean }>`
   cursor: pointer;
   ${(props) =>
     props.$isActive ? props.theme.fonts.bold14 : props.theme.fonts.semiBold14};
-  color: ${theme.colors.gray600};
+  color: ${theme.colors.gray800};
   &:after {
     content: "";
     position: absolute;
@@ -47,7 +47,7 @@ const TabButton = styled.div<{ $isActive: boolean }>`
     bottom: -2px;
     width: ${(props) => (props.$isActive ? "100%" : "none")};
     height: 4px;
-    background-color: ${theme.colors.purple100};
+    background-color: ${theme.colors.violet600};
     border-radius: 60px;
     transform: translateX(-50%);
     transition: width 0.3s ease;

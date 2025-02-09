@@ -84,7 +84,7 @@ const Top = styled.div`
   ${(props) => props.theme.fonts.regular25};
   padding-bottom: 13px;
   margin-bottom: 20px;
-  border-bottom: 1px solid ${theme.colors.gray400};
+  border-bottom: 1px solid ${theme.colors.gray300};
 `;
 
 const Content = styled.div`
@@ -93,7 +93,7 @@ const Content = styled.div`
   justify-content: flex-start;
   align-items: center;
   gap: 27px;
-  color: ${theme.colors.gray600};
+  color: ${theme.colors.gray700};
   ${theme.fonts.regular18};
   text-align: center;
 `;
@@ -104,11 +104,11 @@ const Box = styled.div`
   padding: 20px 30px;
   display: flex;
   align-items: center;
-  background: ${theme.colors.purple500};
-  border: 0.5px solid ${theme.colors.purple200};
+  background: ${theme.colors.violet100};
+  border: 0.5px solid ${theme.colors.violet200};
   gap: 94px;
   text-align: left;
-  color: black;
+  color: ${theme.colors.gray900};
   ${theme.fonts.medium16};
 `;
 
@@ -117,7 +117,7 @@ const Column = styled.div`
   flex-direction: column;
 `;
 const StyledLink = styled.a`
-  color: black;
+  color: ${theme.colors.gray900};
   text-decoration: none;
   &:hover {
     text-decoration: underline;

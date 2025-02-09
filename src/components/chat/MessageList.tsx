@@ -467,7 +467,7 @@ const ChatBorder = styled.div`
 `;
 
 const ChatMain = styled.main`
-  border-top: 1px solid #c1b7ff;
+  border-top: 1px solid ${theme.colors.violet300};
   padding: 10px 8px;
   height: 471px;
   overflow-y: auto;
@@ -489,7 +489,7 @@ const spin = keyframes`
 
 const LoadingSpinner = styled.div`
   border: 4px solid ${theme.colors.gray200};
-  border-top: 4px solid ${theme.colors.purple100};
+  border-top: 4px solid ${theme.colors.violet600};
   border-radius: 50%;
   width: 24px;
   height: 24px;
@@ -548,7 +548,7 @@ const YourDiv = styled.div<{ $hasProfileImage: boolean }>`
 
 const YourMessage = styled.div`
   ${(props) => props.theme.fonts.regular14};
-  color: ${theme.colors.gray600};
+  color: ${theme.colors.gray800};
   background: ${theme.colors.white};
   border-radius: 13px;
   padding: 5px 13px;
@@ -577,8 +577,8 @@ const MyDiv = styled.div`
 
 const MyMessage = styled.div`
   ${(props) => props.theme.fonts.regular14};
-  color: ${theme.colors.gray600};
-  background: ${theme.colors.purple300};
+  color: ${theme.colors.gray800};
+  background: ${theme.colors.violet300};
   border-radius: 13px;
   padding: 5px 13px;
   max-width: 196px;
@@ -629,7 +629,7 @@ const SmileImage = styled(Image)`
 
 const Text = styled.p`
   ${(props) => props.theme.fonts.regular14};
-  color: ${theme.colors.gray600};
+  color: ${theme.colors.gray800};
   &:first-child {
     margin-bottom: 5px;
   }
@@ -640,7 +640,7 @@ const StyledButton = styled.button`
   border-radius: 53px;
   margin-top: 12px;
   ${(props) => props.theme.fonts.semiBold12};
-  background: ${theme.colors.purple100};
+  background: ${theme.colors.violet600};
   color: ${theme.colors.white};
   padding: 10px 0;
 `;

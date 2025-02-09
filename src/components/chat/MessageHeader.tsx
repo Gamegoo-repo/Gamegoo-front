@@ -171,13 +171,13 @@ const Div = styled.div`
 
 const UserName = styled.p`
   ${(props) => props.theme.fonts.semiBold18};
-  color: ${theme.colors.gray600};
+  color: ${theme.colors.gray800};
   cursor: pointer;
 `;
 
 const OnlineStatus = styled.p`
   ${(props) => props.theme.fonts.medium11};
-  color: ${theme.colors.gray200};
+  color: ${theme.colors.gray600};
   cursor: default;
 `;
 

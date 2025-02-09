@@ -452,7 +452,7 @@ const Time = styled.div`
 `;
 
 const Span = styled.span`
-  color: ${theme.colors.purple100};
+  color: ${theme.colors.violet600};
   ${(props) => props.theme.fonts.bold45}
 `;
 
@@ -469,13 +469,13 @@ const Waiting = styled.div`
   width: 100%;
   height: 580px;
   border-radius: 30px;
-  background: ${theme.colors.gray500};
+  background: ${theme.colors.gray100};
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 42px;
-  color: ${theme.colors.gray600};
+  color: ${theme.colors.gray800};
   ${(props) => props.theme.fonts.regular25};
 
   animation: ${fadeIn} 0.5s ease-in forwards;

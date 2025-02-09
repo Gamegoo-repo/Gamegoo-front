@@ -309,7 +309,7 @@ const PostBoard = (props: PostBoardProps) => {
             <Toggle isOn={isMicOn} onToggle={toggleMicHandler} type="board" />
           </Div>
           <Div>
-            <Title className="queueTitle">큐타입</Title>
+            <Title className="queueTitle">큐 타입</Title>
             <Dropdown
               ref={dropdownRef}
               type="type2"
@@ -394,7 +394,7 @@ export default PostBoard;
 const Form = styled.form``;
 const Title = styled.p`
   ${(props) => props.theme.fonts.semiBold14};
-  color: #2d2d2d;
+  color: ${theme.colors.gray800};
   &.micTitle {
     margin-bottom: 11px;
   }
@@ -451,7 +451,7 @@ const InputWrapper = styled.div`
 const TextCount = styled.div<{ $isFocused: boolean }>`
   margin-left: 15px;
   color: ${({ $isFocused, theme }) =>
-    $isFocused ? theme.colors.purple300 : "#b5b5b5"};
+    $isFocused ? theme.colors.violet300 : theme.colors.gray400};
   ${theme.fonts.regular12};
   z-index: 99;
 `;

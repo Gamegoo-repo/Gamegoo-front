@@ -105,7 +105,8 @@ const Terms = () => {
               isChecked={terms[index]}
               onChange={(isChecked) => handleCheckboxChange(index, isChecked)}
               fontSize="regular16"
-              color="darkGray100"
+              color="gray700"
+              gap="8px"
             >
               {item.text}
             </Checkbox>
@@ -131,7 +132,7 @@ const Div = styled.div`
 `;
 
 const Label = styled.div`
-  color: ${theme.colors.gray700};
+  color: ${theme.colors.gray800};
   ${(props) => props.theme.fonts.regular25};
   margin-bottom: 62px;
 `;

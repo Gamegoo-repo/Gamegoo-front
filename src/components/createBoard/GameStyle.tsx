@@ -44,8 +44,9 @@ const GameStyle = (props: GameStyleProps) => {
   useEffect(() => {
     setSelectedStyleIds(selectedStyles);
   }, [selectedStyles, setSelectedStyleIds]);
-  const selectedGameStyles = GAME_STYLE.filter(style => selectedStyleIds.includes(style.gameStyleId))
-    .map(style => style.gameStyleName);
+  const selectedGameStyles = GAME_STYLE.filter((style) =>
+    selectedStyleIds.includes(style.gameStyleId)
+  ).map((style) => style.gameStyleName);
 
   return (
     <>
@@ -87,7 +88,7 @@ const StylesWrapper = styled.div`
 
 const Content = styled.p`
   padding: 6px 21px;
-  background: ${theme.colors.purple100};
+  background: ${theme.colors.violet600};
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.medium14};
   border-radius: 46px;
@@ -110,6 +111,6 @@ const AddGameStyle = styled.p`
   padding: 8px 12px;
   margin-top: 15px;
   border-radius: 17px;
-  background: ${theme.colors.purple300};
+  background: ${theme.colors.violet300};
   cursor: pointer;
 `;

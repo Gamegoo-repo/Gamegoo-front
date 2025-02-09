@@ -94,40 +94,40 @@ const BubbleWrapper = styled.div<{
 `;
 
 const Bubble = styled.div`
-  border: 1px solid ${theme.colors.purple200};
+  border: 1px solid ${theme.colors.violet400};
   padding: 7px 13px;
-  background: ${theme.colors.purple500};
+  background: ${theme.colors.gray100};
   border-radius: 46px;
   white-space: nowrap;
 
   &:before {
     content: "";
     position: absolute;
-    bottom: -11.5px;
+    bottom: -10.5px;
     left: 100px;
     width: 0;
     height: 0;
-    border-width: 12px 8px 0;
+    border-width: 11px 8px 0;
     border-style: solid;
-    border-color: ${theme.colors.purple200} transparent transparent transparent;
+    border-color: ${theme.colors.violet400} transparent transparent transparent;
   }
 
   &:after {
     content: "";
     position: absolute;
-    bottom: -10px;
+    bottom: -9px;
     left: 101px;
     width: 0;
     height: 0;
-    border-width: 11px 7px 0;
+    border-width: 10px 7.5px 0;
     border-style: solid;
-    border-color: ${theme.colors.purple500} transparent transparent transparent;
+    border-color: ${theme.colors.gray100} transparent transparent transparent;
   }
 `;
 
 const P = styled.p`
-  ${(props) => props.theme.fonts.medium11};
-  color: #000;
+  ${theme.fonts.medium11};
+  color: ${theme.colors.gray800};
 `;
 
 const Level = styled.div`
@@ -153,5 +153,5 @@ const ClickArea = styled.div`
 
 const Text = styled.p`
   ${(props) => props.theme.fonts.bold14};
-  color: ${theme.colors.purple300};
+  color: ${theme.colors.violet300};
 `;

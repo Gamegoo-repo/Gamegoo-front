@@ -183,7 +183,7 @@ const Guide = () => {
 
       <H2>Form Modal</H2>
       <button
-        style={{ border: "1px solid black", padding: "10px" }}
+        style={{ border: "1px solid theme.colors.gray900", padding: "10px" }}
         onClick={handleFormModalOpen}
       >
         텍스트 모달 열기 버튼

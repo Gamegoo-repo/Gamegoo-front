@@ -111,7 +111,7 @@ const PageButton = styled.span<{ $isActive: boolean }>`
     background: #f9f8ff;
   }
   color: ${({ $isActive }) =>
-    $isActive ? `${theme.colors.purple100}` : "#A1A1A8"};
+    $isActive ? `${theme.colors.violet600}` : "#A1A1A8"};
   ${(props) =>
     props.$isActive ? props.theme.fonts.bold14 : props.theme.fonts.regular14};
 `;

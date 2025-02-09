@@ -54,7 +54,7 @@ const Required = styled.span`
   position: absolute;
   top: -12px;
   left: 0;
-  color: ${theme.colors.error100};
+  color: ${theme.colors.red600};
   margin-right: 6px;
 `;
 
@@ -81,7 +81,7 @@ const Content = styled.div`
 
   &::-webkit-scrollbar-thumb {
     border-radius: 26px;
-    background: ${theme.colors.gray200};
+    background: ${theme.colors.gray500};
     background-clip: padding-box;
     border: 8px solid transparent;
   }

@@ -219,7 +219,7 @@ const Text = styled.div`
 
 const Span = styled.span`
   ${(props) => props.theme.fonts.bold16};
-  color: ${theme.colors.purple100};
+  color: ${theme.colors.violet600};
 `;
 
 const MannerList = styled.div`
@@ -244,11 +244,11 @@ const Value = styled.p`
   }
 
   &.mannerEmph {
-    color: ${theme.colors.purple300};
+    color: ${theme.colors.violet300};
   }
 
   &.badEmph {
-    color: ${theme.colors.error200};
+    color: ${theme.colors.red500};
   }
 `;
 
@@ -266,10 +266,10 @@ const Type = styled.p`
   }
 
   &.mannerEmph {
-    color: ${theme.colors.purple300};
+    color: ${theme.colors.violet300};
   }
 
   &.badEmph {
-    color: ${theme.colors.error200};
+    color: ${theme.colors.red500};
   }
 `;

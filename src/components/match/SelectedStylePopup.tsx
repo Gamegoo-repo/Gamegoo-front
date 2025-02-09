@@ -133,10 +133,11 @@ const Box = styled.button<{
   align-items: center;
   border-radius: 59.263px;
   background: ${({ selected }) =>
-    selected ? theme.colors.purple100 : theme.colors.gray200};
+    selected ? theme.colors.violet600 : theme.colors.gray500};
   color: ${theme.colors.white};
   font-size: ${({ $position }) =>
     $position ? theme.fonts.medium14 : theme.fonts.medium20};
+  font-family: "Pretendard";
 
   /* 프로필 미니 */
   ${({ $profileType }) =>

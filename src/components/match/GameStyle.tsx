@@ -185,6 +185,7 @@ const LeftLabel = styled.div<{ $profileType: profileType }>`
   flex-direction: column;
   align-items: flex-start;
   gap: 12px;
+  color: ${theme.colors.gray800};
   ${({ $profileType }) =>
     $profileType !== "none" &&
     css`
@@ -218,7 +219,7 @@ const AddGameStyle = styled.button<{ $profileType: profileType }>`
   justify-content: center;
   align-items: center;
   border-radius: 25px;
-  background: ${theme.colors.purple300};
+  background: ${theme.colors.violet300};
   outline: none;
 
   ${({ $profileType }) =>

@@ -71,15 +71,15 @@ const AllButton = styled.button`
   max-width: 48px;
   height: 56px;
   padding: 0 15px;
-  border-right: 1px solid ${theme.colors.gray400};
+  border-right: 1px solid ${theme.colors.gray300};
   border-radius: 10px 0 0 10px;
 
   &:hover {
-    background: ${theme.colors.gray300};
+    background: ${theme.colors.gray400};
   }
 
   &.clicked {
-    background: ${theme.colors.purple100};
+    background: ${theme.colors.violet600};
 
     path {
       stroke: ${theme.colors.white};
@@ -91,14 +91,14 @@ const TopButton = styled.button`
   max-width: 48px;
   height: 56px;
   padding: 0 15px;
-  border-right: 1px solid ${theme.colors.gray400};
+  border-right: 1px solid ${theme.colors.gray300};
 
   &:hover {
-    background: ${theme.colors.gray300};
+    background: ${theme.colors.gray400};
   }
 
   &.clicked {
-    background: ${theme.colors.purple100};
+    background: ${theme.colors.violet600};
 
     path:first-child {
       fill: ${theme.colors.white};
@@ -110,14 +110,14 @@ const JungleButton = styled.button`
   max-width: 48px;
   height: 56px;
   padding: 0 15px;
-  border-right: 1px solid ${theme.colors.gray400};
+  border-right: 1px solid ${theme.colors.gray300};
 
   &:hover {
-    background: ${theme.colors.gray300};
+    background: ${theme.colors.gray400};
   }
 
   &.clicked {
-    background: ${theme.colors.purple100};
+    background: ${theme.colors.violet600};
 
     path {
       fill: ${theme.colors.white};
@@ -129,14 +129,14 @@ const MidButton = styled.button`
   max-width: 48px;
   height: 56px;
   padding: 0 15px;
-  border-right: 1px solid ${theme.colors.gray400};
+  border-right: 1px solid ${theme.colors.gray300};
 
   &:hover {
-    background: ${theme.colors.gray300};
+    background: ${theme.colors.gray400};
   }
 
   &.clicked {
-    background: ${theme.colors.purple100};
+    background: ${theme.colors.violet600};
 
     path:nth-child(2) {
       fill: ${theme.colors.white};
@@ -148,14 +148,14 @@ const OneDealButton = styled.button`
   max-width: 48px;
   height: 56px;
   padding: 0 15px;
-  border-right: 1px solid ${theme.colors.gray400};
+  border-right: 1px solid ${theme.colors.gray300};
 
   &:hover {
-    background: ${theme.colors.gray300};
+    background: ${theme.colors.gray400};
   }
 
   &.clicked {
-    background: ${theme.colors.purple100};
+    background: ${theme.colors.violet600};
 
     path:nth-child(2) {
       fill: ${theme.colors.white};
@@ -170,11 +170,11 @@ const SupporterButton = styled.button`
   border-radius: 0 10px 10px 0;
 
   &:hover {
-    background: ${theme.colors.gray300};
+    background: ${theme.colors.gray400};
   }
 
   &.clicked {
-    background: ${theme.colors.purple100};
+    background: ${theme.colors.violet600};
 
     path {
       fill: ${theme.colors.white};

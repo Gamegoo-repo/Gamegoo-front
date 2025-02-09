@@ -97,7 +97,7 @@ const UserContent = styled.div`
   cursor: pointer;
   padding: 5px 18px 5px 16px;
   &:hover {
-    background: ${theme.colors.gray500};
+    background: ${theme.colors.gray100};
   }
 `;
 
@@ -126,7 +126,7 @@ const StyledImage = styled.object`
 
 const UserName = styled.p`
   ${(props) => props.theme.fonts.semiBold14};
-  color: ${theme.colors.gray600};
+  color: ${theme.colors.gray800};
 `;
 
 const Online = styled(Image)`

@@ -26,7 +26,7 @@ const StyledBox = styled.div<{ $shape: ShapeType; $profiletype?: profileType }>`
   padding: 10px 35px;
   justify-content: center;
   align-items: center;
-  background: ${theme.colors.purple100};
+  background: ${theme.colors.violet600};
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.regular20}
   white-space: nowrap;

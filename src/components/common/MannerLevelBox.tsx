@@ -133,40 +133,40 @@ const SubTitle = styled.p`
 const MannerListBox = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 26px;
+  margin-bottom: 21px;
   &:last-child {
     margin-bottom: unset;
   }
 `;
 
 const Value = styled.p`
-  ${(props) => props.theme.fonts.semiBold16};
+  ${(props) => props.theme.fonts.medium16};
 
   &.default {
-    color: ${theme.colors.gray200};
+    color: ${theme.colors.gray600};
   }
 
   &.mannerEmph {
-    color: ${theme.colors.purple300};
+    color: ${theme.colors.violet400};
   }
 
   &.badEmph {
-    color: ${theme.colors.error200};
+    color: ${theme.colors.red400};
   }
 `;
 
 const Type = styled.p`
-  ${(props) => props.theme.fonts.semiBold16};
+  ${(props) => props.theme.fonts.medium16};
   margin-left: 11px;
   &.default {
-    color: ${theme.colors.gray200};
+    color: ${theme.colors.gray600};
   }
 
   &.mannerEmph {
-    color: ${theme.colors.purple300};
+    color: ${theme.colors.violet400};
   }
 
   &.badEmph {
-    color: ${theme.colors.error200};
+    color: ${theme.colors.red400};
   }
 `;

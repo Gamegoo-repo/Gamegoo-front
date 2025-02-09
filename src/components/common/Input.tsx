@@ -131,21 +131,21 @@ const StyledInput = styled.input<InputProps>`
     borderRadius ? borderRadius : "15px"};
   border: ${({ isValid }) =>
     isValid === undefined
-      ? `1px solid #b5b5b5`
+      ? `1px solid ${theme.colors.gray400}`
       : isValid === true
-      ? `1px solid ${theme.colors.purple300}`
-      : `1px solid ${theme.colors.error100}`};
-  color: ${theme.colors.black};
+      ? `1px solid ${theme.colors.violet300}`
+      : `1px solid ${theme.colors.red600}`};
+  color: ${theme.colors.gray900};
   ${(props) => props.theme.fonts.regular16}
 
   &:focus {
     outline: none;
     border: ${({ isValid }) =>
-      isValid === undefined && `1px solid ${theme.colors.purple300}`};
+      isValid === undefined && `1px solid ${theme.colors.violet300}`};
   }
 
   &:disabled {
-    background: ${theme.colors.purple500};
+    background: ${theme.colors.violet500};
   }
 
   &::placeholder {
@@ -163,8 +163,8 @@ const StyledTextarea = styled.textarea<{
   padding: 11px 10px 11px 15px;
   border-radius: ${({ $borderRadius }) =>
     $borderRadius ? $borderRadius : "15px"};
-  border: 1px solid #b5b5b5;
-  color: ${theme.colors.black};
+  border: 1px solid ${theme.colors.gray400};
+  color: ${theme.colors.gray900};
   ${({ $height }) =>
     $height ? `${theme.fonts.regular18}` : `${theme.fonts.regular20}`};
   resize: none;
@@ -176,7 +176,7 @@ const StyledTextarea = styled.textarea<{
   resize: none;
   &:focus {
     outline: none;
-    border: 1px solid ${theme.colors.purple300};
+    border: 1px solid ${theme.colors.violet300};
   }
   &::placeholder {
     color: #7c7c7c;
@@ -188,7 +188,7 @@ const StyledTextarea = styled.textarea<{
   }
   &::-webkit-scrollbar-thumb {
     border-radius: 10px;
-    background: ${theme.colors.gray300};
+    background: ${theme.colors.gray500};
     background-clip: padding-box;
     border: 6px solid transparent;
   }
@@ -206,7 +206,7 @@ const Tag = styled.div`
   top: 50%;
   left: 15px;
   transform: translate(0, -50%);
-  color: ${theme.colors.black};
+  color: ${theme.colors.gray900};
   ${(props) => props.theme.fonts.medium16}
 `;
 
@@ -218,6 +218,6 @@ const Valid = styled.div`
 `;
 
 const Error = styled.div`
-  color: ${theme.colors.error100};
+  color: ${theme.colors.red600};
   ${(props) => props.theme.fonts.regular12}
 `;

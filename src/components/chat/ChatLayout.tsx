@@ -844,7 +844,7 @@ const Overlay = styled.div``;
 
 const Wrapper = styled.div`
   position: relative;
-  background: ${theme.colors.purple400};
+  background: ${theme.colors.violet200};
   border-radius: 20px;
   display: flex;
   flex-direction: column;

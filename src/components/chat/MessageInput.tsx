@@ -125,14 +125,14 @@ const Row = styled.div`
 `;
 
 const TextCount = styled.div<{ $color: boolean }>`
-  color: ${({ $color }) => ($color ? theme.colors.purple300 : "#b5b5b5")};
+  color: ${({ $color }) => ($color ? theme.colors.violet300 : "#b5b5b5")};
   ${theme.fonts.regular12};
 `;
 
 const SubmitButton = styled.button`
   ${(props) => props.theme.fonts.semiBold15};
   color: ${theme.colors.white};
-  background: ${theme.colors.purple100};
+  background: ${theme.colors.violet600};
   border-radius: 25px;
   padding: 12px 20px;
   transition: background-color 200ms;

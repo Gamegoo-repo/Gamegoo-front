@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import PositionCategory from "../common/PositionCategory";
 import { Position as PositionType } from "@/types/position/position";
+import { theme } from "@/styles/theme";
 
 type Status = "reading" | "posting";
 
@@ -163,7 +164,7 @@ const FirstBox = styled.div`
   align-items: center;
   width: 100%;
   white-space: nowrap;
-  background: #f6f6f6;
+  background: ${theme.colors.gray100};
   border-radius: 10px;
   padding: 24px 54px 24px 47px;
   gap: 59px;
@@ -175,7 +176,7 @@ const Section = styled.div`
 
 const SecondBox = styled.div`
   text-align: center;
-  background: #f6f6f6;
+  background: ${theme.colors.gray100};
   white-space: nowrap;
   border-radius: 10px;
   padding: 24px 91px;
@@ -183,6 +184,7 @@ const SecondBox = styled.div`
 `;
 
 const Title = styled.p`
+  color: ${theme.colors.gray800};
   ${(props) => props.theme.fonts.medium11};
   margin-bottom: 6px;
 `;
