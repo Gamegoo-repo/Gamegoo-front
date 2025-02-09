@@ -98,8 +98,8 @@ export const deletePost = async (
 };
 
 /* 내가 쓴 글 목록 조회 */
-export const getMyPost = async (pageIdx: number): Promise<GetMyBoardListResponse> => {
-  const endpoint = `/api/v2/posts/my?pageIdx=${pageIdx}`;
+export const getMyPost = async (page: number): Promise<GetMyBoardListResponse> => {
+  const endpoint = `/api/v2/posts/my?page=${page}`;
   try {
     const response = await AuthAxios.get(endpoint);
     return response.data;
