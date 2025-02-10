@@ -83,6 +83,7 @@ export default function RootLayout({
     setIsLoggedIn(!!getAccessToken());
   }, [pathname]);
 
+  // 테스트용 주석
   return (
     <html>
       <head>
