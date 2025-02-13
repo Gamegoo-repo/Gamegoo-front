@@ -217,15 +217,15 @@ const BoardPage = () => {
   const getList = async () => {
     const params = {
       page: currentPage,
-      mode:
-        boardFilters.mode && boardFilters.mode !== null
-          ? boardFilters.mode
+      gameMode:
+        boardFilters.gameMode && boardFilters.gameMode !== null
+          ? boardFilters.gameMode
           : selectedGameMode,
       tier:
         boardFilters.tier && boardFilters.tier !== null
           ? boardFilters.tier
           : selectedTier,
-      mainPosition: boardFilters.mainPosition || isPosition,
+      mainP: boardFilters.mainP || isPosition,
       mike:
         boardFilters.mike && boardFilters.mike !== null
           ? boardFilters.mike
@@ -337,7 +337,7 @@ const BoardPage = () => {
                   open={isGameModeDropdownOpen}
                   setOpen={setIsGameModeDropdownOpen}
                   onDropValue={handleGameModeDropValue}
-                  defaultValue={boardFilters.mode || selectedGameMode}
+                  defaultValue={boardFilters.gameMode || selectedGameMode}
                 />
                 <Dropdown
                   type="type1"

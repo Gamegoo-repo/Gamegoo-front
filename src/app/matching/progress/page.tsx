@@ -245,9 +245,9 @@ const Progress = () => {
         const params = {
           page: 1,
           pageIdx: 1,
-          mode: mode,
+          gameMode: mode,
           tier: user.tier,
-          mainPosition: user.mainPosition,
+          mainP: user.mainPosition,
           mike: user.mike,
         };
         try {
