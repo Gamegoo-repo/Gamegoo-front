@@ -28,6 +28,7 @@ import { resetBoardFilters } from "@/redux/slices/boardSlice";
 import { rotate } from "@/styles/animation";
 import { Position } from "@/types/position/position";
 import { Mike } from "@/types/user/mike";
+import { GameMode } from "@/types/game/gameMode";
 
 const ITEMS_PER_PAGE = 20;
 const BUTTONS_PER_PAGE = 5;
@@ -41,9 +42,9 @@ const BoardPage = () => {
   const [isGameModeDropdownOpen, setIsGameModeDropdownOpen] = useState(false);
   const [isTierDropdownOpen, setIsTierDropdownOpen] = useState(false);
   const [isMicDropdownOpen, setIsMicDropdownOpen] = useState(false);
-  const [selectedGameMode, setSelectedGameMode] = useState<
-    string | number | null
-  >(null);
+  const [selectedGameMode, setSelectedGameMode] = useState<GameMode | null>(
+    null
+  );
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
   const [selectedMic, setSelectedMic] = useState<Mike | null>(null);
   const [showAlert, setShowAlert] = useState(false);
@@ -67,14 +68,22 @@ const BoardPage = () => {
   const boardFilters = useSelector((state: RootState) => state.board);
 
   /* 게임모드 드롭 */
-  const handleGameModeDropValue = (id: number | null) => {
+  const handleGameModeDropValue = (gameMode: number | GameMode | null) => {
+    if (typeof gameMode === "number") {
+      return;
+    }
     dispatch(resetBoardFilters());
-    setSelectedGameMode(id);
+    setSelectedGameMode(gameMode);
     setIsGameModeDropdownOpen(false);
+    console.log(gameMode);
   };
 
   /* 티어 드롭 */
-  const handleTierDropValue = (id: number | null) => {
+  const handleTierDropValue = (id: number | GameMode | null) => {
+    if (typeof id === "object" && id !== null) {
+      return;
+    }
+
     dispatch(resetBoardFilters());
     switch (id) {
       case 1:
@@ -170,7 +179,10 @@ const BoardPage = () => {
   };
 
   /* 마이크 드롭 */
-  const handleMicDropValue = (id: number | null) => {
+  const handleMicDropValue = (id: number | GameMode | null) => {
+    if (typeof id === "object" && id !== null) {
+      return;
+    }
     dispatch(resetBoardFilters());
     switch (id) {
       case 1:

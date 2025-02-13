@@ -2,9 +2,10 @@ import Image from "next/image";
 import { Dispatch, forwardRef, useState } from "react";
 import { theme } from "@/styles/theme";
 import styled from "styled-components";
+import { GameMode } from "@/types/game/gameMode";
 
 interface ListProps {
-  id: number | null;
+  id: number | GameMode | null;
   value: string;
 }
 
@@ -15,7 +16,7 @@ interface DropdownProps {
   width: string;
   open: boolean;
   setOpen: Dispatch<React.SetStateAction<boolean>>;
-  onDropValue: (id: number | null) => void;
+  onDropValue: (id: number | GameMode | null) => void;
   defaultValue: number | string | boolean | null;
 }
 
