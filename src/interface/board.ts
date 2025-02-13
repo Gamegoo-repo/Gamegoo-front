@@ -1,4 +1,5 @@
 import { MannerKeywordDTO } from "@/types/api/board/board";
+import { GameMode } from "@/types/game/gameMode";
 import { Position } from "@/types/position/position";
 import { Mike } from "@/types/user/mike";
 
@@ -21,7 +22,7 @@ export interface BoardDetail {
   tag: string;
   tier: string;
   rank?: number;
-  gameMode: number;
+  gameMode: GameMode;
   mainPosition: Position;
   subPosition: Position;
   wantPosition: Position;
@@ -53,7 +54,7 @@ export interface MemberPost {
   mike: Mike;
   championResponseList?: ChampionResponseDTOList[];
   championResponseDTOList?: ChampionResponseDTOList[];
-  gameMode: number;
+  gameMode: GameMode;
   mainPosition?: Position;
   subPosition?: Position;
   wantPosition?: Position;
@@ -66,10 +67,10 @@ export interface MemberPost {
 
 export interface PostReq {
   boardProfileImage: number;
-  gameMode: number;
-  mainPosition: Position;
-  subPosition: Position;
-  wantPosition: Position;
+  gameMode: GameMode;
+  mainP: Position;
+  subP: Position;
+  wantP: Position;
   mike: Mike;
   gameStyles: number[];
   contents: string;
