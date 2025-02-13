@@ -49,6 +49,7 @@ import ConfirmModal from "../common/ConfirmModal";
 import { cancelFriendRequest, sendFriendRequest } from "@/api/friend/request";
 import { deleteFriend } from "@/api/friend/delete";
 import { blockMember, unblockMember } from "@/api/block/block";
+import { GameMode } from "@/types/game/gameMode";
 
 interface ReadBoardProps {
   postId: number;
@@ -69,7 +70,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   const [isFriendStatus, setIsFriendStatus] = useState(false);
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
   const [reportDetail, setReportDetail] = useState<string>("");
-  const [gameMode, setGameMode] = useState<number>(1);
+  const [gameMode, setGameMode] = useState<GameMode>("FAST");
   const [showAlert, setShowAlert] = useState(false);
   const [alertProps, setAlertProps] = useState<AlertProps>({
     icon: "",
@@ -590,7 +591,7 @@ const ReadBoard = (props: ReadBoardProps) => {
                 />
                 <QueueType value={isPost.gameMode} />
               </ChampionNQueueSection>
-              {gameMode !== 4 && (
+              {gameMode !== "ARAM" && (
                 <PositionSection>
                   <Title>포지션</Title>
                   <PositionBox
@@ -776,16 +777,16 @@ const PositionSection = styled.div`
   margin-top: 33px;
 `;
 
-const WinningRateSection = styled.div<{ $gameType: number }>`
-  margin-top: ${({ $gameType }) => ($gameType !== 4 ? "33px" : "46px")};
+const WinningRateSection = styled.div<{ $gameType: GameMode }>`
+  margin-top: ${({ $gameType }) => ($gameType !== "ARAM" ? "33px" : "46px")};
 `;
 
-const StyleSection = styled.div<{ $gameType: number }>`
-  margin-top: ${({ $gameType }) => ($gameType !== 4 ? "33px" : "46px")};
+const StyleSection = styled.div<{ $gameType: GameMode }>`
+  margin-top: ${({ $gameType }) => ($gameType !== "ARAM" ? "33px" : "46px")};
 `;
 
-const MemoSection = styled.div<{ $gameType: number }>`
-  margin-top: ${({ $gameType }) => ($gameType !== 4 ? "33px" : "46px")};
+const MemoSection = styled.div<{ $gameType: GameMode }>`
+  margin-top: ${({ $gameType }) => ($gameType !== "ARAM" ? "33px" : "46px")};
 `;
 
 const Memo = styled.div`
@@ -817,8 +818,8 @@ const MemoData = styled.p`
   ${(props) => props.theme.fonts.regular18}
 `;
 
-const ButtonContent = styled.p<{ $gameType: number }>`
-  margin: ${({ $gameType }) => ($gameType !== 4 ? "30px" : "150px")} 0 28px;
+const ButtonContent = styled.p<{ $gameType: GameMode }>`
+  margin: ${({ $gameType }) => ($gameType !== "ARAM" ? "30px" : "150px")} 0 28px;
   text-align: center;
 `;
 
