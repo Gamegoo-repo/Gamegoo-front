@@ -124,6 +124,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       if (!!isUser.id && postId) {
         const memberData = await getMemberPost(postId);
         setIsPost(memberData.data);
+        console.log(memberData.data);
         setGameMode(memberData.data.gameMode);
         setIsBlockedStatus(memberData.data.isBlocked);
       } else if (!isUser.id && postId) {
@@ -596,9 +597,9 @@ const ReadBoard = (props: ReadBoardProps) => {
                   <Title>포지션</Title>
                   <PositionBox
                     status="reading"
-                    main={isPost.mainPosition}
-                    sub={isPost.subPosition}
-                    want={isPost.wantPosition}
+                    main={isPost.mainP}
+                    sub={isPost.subP}
+                    want={isPost.wantP}
                   />
                 </PositionSection>
               )}

@@ -33,7 +33,6 @@ interface TableProps {
 
 const Table = (props: TableProps) => {
   const { title, content } = props;
-
   const [isBoardId, setIsBoardId] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
   const [alertContent, setAlertContent] = useState("");
@@ -205,13 +204,13 @@ const Table = (props: TableProps) => {
                   </Third>
                   <Fourth className="table_width">
                     <Image
-                      src={setPositionImg(data.mainPosition)}
+                      src={setPositionImg(data.mainP)}
                       width={35}
                       height={28}
                       alt="메인 포지션"
                     />
                     <Image
-                      src={setPositionImg(data.subPosition)}
+                      src={setPositionImg(data.subP)}
                       width={35}
                       height={28}
                       alt="서브 포지션"
@@ -219,7 +218,7 @@ const Table = (props: TableProps) => {
                   </Fourth>
                   <Fifth className="table_width">
                     <Image
-                      src={setPositionImg(data.wantPosition)}
+                      src={setPositionImg(data.wantP)}
                       width={35}
                       height={28}
                       alt="찾는 포지션"

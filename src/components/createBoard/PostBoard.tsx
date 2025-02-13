@@ -59,9 +59,9 @@ const PostBoard = (props: PostBoardProps) => {
   );
   const [positionValue, setPositionValue] = useState<PositionState | undefined>(
     {
-      main: currentPost?.mainPosition || user?.mainP || "ANY",
-      sub: currentPost?.subPosition || user?.subP || "ANY",
-      want: currentPost?.wantPosition || user?.wantP || "ANY",
+      main: currentPost?.mainP || user?.mainP || "ANY",
+      sub: currentPost?.subP || user?.subP || "ANY",
+      want: currentPost?.wantP || user?.wantP || "ANY",
     }
   );
   const [isMicOn, setIsMicOn] = useState<Mike>(
@@ -101,9 +101,9 @@ const PostBoard = (props: PostBoardProps) => {
       setSelectedDropOption(currentPost.gameMode);
 
       setPositionValue({
-        main: currentPost.mainPosition,
-        sub: currentPost.subPosition,
-        want: currentPost.wantPosition,
+        main: currentPost.mainP,
+        sub: currentPost.subP,
+        want: currentPost.wantP,
       });
 
       setSelectedImageIndex(currentPost.profileImage);

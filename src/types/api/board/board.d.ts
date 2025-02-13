@@ -29,9 +29,9 @@ interface BasePlayerInfo {
 // 게임 관련 기본 정보 인터페이스
 interface GameInfo {
   gameMode: GameMode;
-  mainPosition: Position;
-  subPosition: Position;
-  wantPosition: Position;
+  mainP: Position;
+  subP: Position;
+  wantP: Position;
   mike: Mike;
   gameStyles: Array<number>;
 }
