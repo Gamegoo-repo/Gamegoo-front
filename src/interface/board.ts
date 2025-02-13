@@ -27,7 +27,8 @@ export interface BoardDetail {
   subP: Position;
   wantP: Position;
   championResponseList?: ChampionResponseDTOList[];
-  winRate: number;
+  freeWinRate: number;
+  soloWinRate: number;
   createdAt: string;
   mike: Mike;
 }
@@ -59,7 +60,8 @@ export interface MemberPost {
   subP?: Position;
   wantP?: Position;
   recentGameCount?: number;
-  winRate: number;
+  freeWinRate: number;
+  soloWinRate: number;
   gameStyles: number[];
   contents: string;
   rank?: number;

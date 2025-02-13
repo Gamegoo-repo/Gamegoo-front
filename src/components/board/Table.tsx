@@ -233,8 +233,24 @@ const Table = (props: TableProps) => {
                     />
                   </Sixth>
                   <Seventh className="table_width">
-                    <P className={data.winRate >= 50 ? "emph" : "basic"}>
-                      {data.winRate === null ? "0%" : `${data.winRate}%`}
+                    <P
+                      className={
+                        data.gameMode === "FREE"
+                          ? data.freeWinRate >= 50
+                            ? "emph"
+                            : "basic"
+                          : data.soloWinRate >= 50
+                          ? "emph"
+                          : "basic"
+                      }
+                    >
+                      {data.gameMode === "FREE"
+                        ? data.freeWinRate === null
+                          ? "0%"
+                          : `${data.freeWinRate}%`
+                        : data.soloWinRate === null
+                        ? "0%"
+                        : `${data.soloWinRate}%`}
                     </P>
                   </Seventh>
                   <Eighth className="table_width">
