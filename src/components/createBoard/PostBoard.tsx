@@ -227,9 +227,9 @@ const PostBoard = (props: PostBoardProps) => {
       mike: isMicOn,
       gameStyles: selectedStyleIds,
       contents: textareaValue,
-      mainP: isARAM ? null : positionValue?.main,
-      subP: isARAM ? null : positionValue?.sub,
-      wantP: isARAM ? null : positionValue?.want,
+      mainP: isARAM ? "ANY" : positionValue?.main,
+      subP: isARAM ? "ANY" : positionValue?.sub,
+      wantP: isARAM ? "ANY" : positionValue?.want,
     };
 
     if (currentPost) {
