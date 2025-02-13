@@ -19,7 +19,9 @@ interface InputProps {
   checkIcon?: boolean;
   fontSize?: string;
   borderRadius?: string;
+  $borderradius?: string;
   tag?: boolean;
+  $hastag?: boolean;
   onFocus?: () => void;
   onBlur?: () => void;
   maxLeng?: number;
@@ -65,7 +67,7 @@ const Input = (props: InputProps) => {
           onChange={handleChange}
           placeholder={placeholder}
           $fontSize={fontSize || "regular20"}
-          $borderRadius={borderRadius || "15px"}
+          $borderradius={borderRadius || "15px"}
           onFocus={onFocus}
           onBlur={onBlur}
           maxLength={maxLeng}
@@ -81,9 +83,9 @@ const Input = (props: InputProps) => {
             placeholder={placeholder}
             isValid={isValid}
             disabled={disabled}
-            borderRadius={borderRadius || "15px"}
+            $borderradius={borderRadius || "15px"}
             height={height}
-            tag={tag}
+            $hastag={tag}
             onFocus={onFocus}
             onBlur={onBlur}
           />
@@ -126,9 +128,9 @@ const StyledLabel = styled.label`
 const StyledInput = styled.input<InputProps>`
   width: 100%;
   height: ${({ height }) => (height ? height : "58px")};
-  padding: ${({ tag }) => (tag ? "11px 30px" : "11px 20px")};
-  border-radius: ${({ borderRadius }) =>
-    borderRadius ? borderRadius : "15px"};
+  padding: ${({ $hastag }) => ($hastag ? "11px 30px" : "11px 20px")};
+  border-radius: ${({ $borderradius }) =>
+    $borderradius ? $borderradius : "15px"};
   border: ${({ isValid }) =>
     isValid === undefined
       ? `1px solid ${theme.colors.gray400}`
@@ -155,14 +157,14 @@ const StyledInput = styled.input<InputProps>`
 
 const StyledTextarea = styled.textarea<{
   $height: string | undefined;
-  $borderRadius: string | undefined;
+  $borderradius: string | undefined;
   $fontSize: string | undefined;
 }>`
   width: 100%;
   min-height: 100px;
   padding: 11px 10px 11px 15px;
-  border-radius: ${({ $borderRadius }) =>
-    $borderRadius ? $borderRadius : "15px"};
+  border-radius: ${({ $borderradius }) =>
+    $borderradius ? $borderradius : "15px"};
   border: 1px solid ${theme.colors.gray400};
   color: ${theme.colors.gray900};
   ${({ $height }) =>

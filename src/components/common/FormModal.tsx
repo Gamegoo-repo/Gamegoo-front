@@ -37,7 +37,7 @@ const FormModal = (props: FormModalProps) => {
         $type={type}
         $width={width}
         $height={height}
-        $borderRadius={borderRadius}
+        $borderradius={borderRadius}
       >
         <Header $type={type}>
           {type === "checkbox" && <CheckboxTitle>{title}</CheckboxTitle>}
@@ -85,7 +85,7 @@ const Wrapper = styled.div<{
   $type: string;
   $width: string;
   $height: string | undefined;
-  $borderRadius: string;
+  $borderradius: string;
 }>`
   box-shadow: 0 0 21.3px 0 rgba(0, 0, 0, 0.15);
   background: ${theme.colors.white};
@@ -93,7 +93,7 @@ const Wrapper = styled.div<{
   width: 100%;
   max-height: ${({ $height }) => $height};
   height: ${({ $height }) => ($height ? "100%" : "auto")};
-  border-radius: ${({ $borderRadius }) => $borderRadius};
+  border-radius: ${({ $borderradius }) => $borderradius};
   padding: ${({ $type }) =>
     $type === "checkbox" ? "26px 31px 22px" : "29px 37px 38px"};
 `;

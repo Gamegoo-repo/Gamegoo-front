@@ -323,7 +323,7 @@ const BoardPage = () => {
                 width={30}
                 height={27}
                 alt="새로고침"
-                isRotating={isRotating}
+                $isrotating={isRotating}
               />
             </FirstRow>
             <SecondRow>
@@ -435,12 +435,12 @@ const Title = styled.p`
 `;
 
 interface RefreshImageProps extends ImageProps {
-  isRotating: boolean;
+  $isrotating: boolean;
 }
 
 const RefreshImage = styled(Image)<RefreshImageProps>`
   cursor: pointer;
-  animation: ${(props) => (props.isRotating ? rotate : "none")} 1s linear;
+  animation: ${(props) => (props.$isrotating ? rotate : "none")} 1s linear;
 `;
 
 const SecondRow = styled.div`

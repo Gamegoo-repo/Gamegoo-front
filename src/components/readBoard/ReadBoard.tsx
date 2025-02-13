@@ -124,7 +124,6 @@ const ReadBoard = (props: ReadBoardProps) => {
       if (!!isUser.id && postId) {
         const memberData = await getMemberPost(postId);
         setIsPost(memberData.data);
-        console.log(memberData.data);
         setGameMode(memberData.data.gameMode);
         setIsBlockedStatus(memberData.data.isBlocked);
       } else if (!isUser.id && postId) {
