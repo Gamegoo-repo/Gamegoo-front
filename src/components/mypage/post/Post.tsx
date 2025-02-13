@@ -257,7 +257,6 @@ const TierImage = styled.object`
 
 const Memo = styled.div`
   width: 100%;
-  height: 40px;
   text-overflow: ellipsis;
   overflow: hidden;
   word-wrap: break-word;
