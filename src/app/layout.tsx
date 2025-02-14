@@ -40,7 +40,8 @@ export default function RootLayout({
     isNotFoundPage ||
     pathname === "/login" ||
     pathname.includes("/join") ||
-    pathname.includes("/password")
+    pathname.includes("/password") ||
+    pathname.includes("/riot")
   );
 
   /* 로그인 이전 소켓 연결 */

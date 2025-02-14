@@ -77,7 +77,7 @@ const Top = styled.div`
 const Content = styled.div`
   width: 100%;
   height: 100%;
-  padding: 28px 18px 28px 26px;
+  padding: 28px 18px;
   display: flex;
   flex-direction: column;
   gap: 23px;
@@ -92,7 +92,7 @@ const Content = styled.div`
   }
 
   &::-webkit-scrollbar-thumb {
-    /* width: 6px; */
+    width: 6px;
     border-radius: 26px;
     background: ${theme.colors.gray500};
     background-clip: padding-box;
