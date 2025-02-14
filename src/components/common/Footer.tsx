@@ -55,7 +55,9 @@ const Footer = (props: FooterProps) => {
             <br />
             copyright 2024. GameGoo All Rights Reserved.
           </LeftDiv>
-          <FeedBackInput />
+          <FeedbackWrapper>
+            <FeedBackInput />
+          </FeedbackWrapper>
         </LeftWrapper>
         <RightDiv>
           <Bold>Resources</Bold>
@@ -82,7 +84,6 @@ const Wrapper = styled.div`
 `;
 
 const Container = styled.div`
-  max-width: 1440px;
   width: 100%;
   height: 429px;
   padding: 60px 80px;
@@ -106,6 +107,12 @@ const LeftDiv = styled.div`
   gap: 28px;
   ${theme.fonts.regular14};
   white-space: nowrap;
+`;
+
+const FeedbackWrapper = styled.div`
+  @media (max-width: 1349px) {
+    display: none;
+  }
 `;
 
 const RightDiv = styled.div`

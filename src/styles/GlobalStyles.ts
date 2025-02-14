@@ -11,7 +11,7 @@ const GlobalStyles = createGlobalStyle`
 html,
 body {
   width: 100%;
-  min-width: 1200px;
+  /* min-width: 1200px; */
   font-family: "Pretendard", sans-serif;
   white-space: pre-line;
 
