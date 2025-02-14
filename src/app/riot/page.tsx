@@ -1,28 +1,11 @@
 "use client";
 
-import { getUnreadUuid } from "@/api/chat/chat";
-import { postLogin } from "@/api/login/login";
-import { socketLogin } from "@/api/socket";
 import Button from "@/components/common/Button";
 import Checkbox from "@/components/common/Checkbox";
-import Input from "@/components/common/Input";
-import { emailRegEx } from "@/constants/regEx";
-import { setUnreadUuid } from "@/redux/slices/chatSlice";
 import { clearSignIn } from "@/redux/slices/signInSlice";
-import {
-  clearUserProfile,
-  setUserName,
-  setUserProfileImg,
-  setUserId,
-} from "@/redux/slices/userSlice";
+import { clearUserProfile } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
-import {
-  clearTokens,
-  setName,
-  setProfileImg,
-  setToken,
-  setId,
-} from "@/utils/storage";
+import { clearTokens } from "@/utils/storage";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -43,10 +26,8 @@ const RiotLogin = () => {
 
   /* 로그인 */
   const handleLogin = async () => {
-    if (1) {
-      router.push("/join/terms");
-    } else {
-    }
+    // 추후 Riot 로그인 기능 구현
+    router.push("/join/terms");
   };
 
   const handleDirectMain = () => {
@@ -54,9 +35,9 @@ const RiotLogin = () => {
   };
 
   return (
-    <Container>
-      <Box>
-        <Top>
+    <Layout>
+      <Container>
+        <Box>
           <button onClick={handleDirectMain}>
             <Image
               src="/assets/icons/logo.svg"
@@ -66,8 +47,8 @@ const RiotLogin = () => {
             />
           </button>
           <P>GAMEGOO에 오신 것을 환영합니다.</P>
-        </Top>
-        <Middle>
+        </Box>
+        <Box>
           <Title>{`서비스를 이용하려면\n라이엇 계정으로 로그인하세요`}</Title>
           <Content>
             <Button
@@ -88,10 +69,10 @@ const RiotLogin = () => {
               자동 로그인
             </Check>
           </Content>
-        </Middle>
-        <Bottom>
+        </Box>
+        <Box>
           <Line />
-          <Join href="/join/terms">
+          <Join href="https://signup.kr.riotgames.com">
             라이엇 계정을 보유하고 있지 않습니다
             <Image
               src="/assets/icons/chevron_right.svg"
@@ -100,15 +81,15 @@ const RiotLogin = () => {
               alt=""
             />
           </Join>
-        </Bottom>
-      </Box>
-    </Container>
+        </Box>
+      </Container>
+    </Layout>
   );
 };
 
 export default RiotLogin;
 
-const Container = styled.div`
+const Layout = styled.div`
   width: 100%;
   height: 100vh;
   display: flex;
@@ -116,7 +97,7 @@ const Container = styled.div`
   align-items: center;
 `;
 
-const Box = styled.div`
+const Container = styled.div`
   width: 374px;
   display: flex;
   flex-direction: column;
@@ -124,30 +105,12 @@ const Box = styled.div`
   align-items: center;
 `;
 
-const Top = styled.div`
+const Box = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-`;
-const Middle = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-const Bottom = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const Content = styled.div`
-  width: 100%;
 `;
 
 const P = styled.p`
@@ -163,6 +126,10 @@ const Title = styled.div`
   padding: 0 40px;
   margin-bottom: 36px;
   text-align: center;
+`;
+
+const Content = styled.div`
+  width: 100%;
 `;
 
 const Check = styled.div`
