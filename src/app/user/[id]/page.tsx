@@ -3,6 +3,7 @@
 import { getMemberMannerKeyword, getMemberMannerLevel } from "@/api/manner";
 import { getOtherProfile } from "@/api/user/profile/get";
 import BlindProfile from "@/components/user/BlindProfile";
+import GuestProfile from "@/components/user/GuestProfile";
 import UserProfile, { Manner } from "@/components/user/UserProfile";
 import { User } from "@/interface/profile";
 import { useParams } from "next/navigation";
@@ -67,6 +68,7 @@ const UserProfilePage = () => {
   };
 
   return otherProfile ? (
+    // <GuestProfile/>
     otherProfile.isBlind ? (
       <BlindProfile />
     ) : (
