@@ -54,7 +54,7 @@ const UserProfile = ({
         <Row>
           <HeaderTitle
             title={`${profile.gameName} 님의 프로필`}
-            size="regular"
+            size="bold"
             blocked={profile.blocked}
           />
         </Row>

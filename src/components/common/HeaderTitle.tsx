@@ -35,10 +35,10 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({
     <Header>
       <StyledImage
         onClick={handleBackClick}
-        src="/assets/icons/left_arrow.svg"
-        width={20}
-        height={39}
-        alt="back button"
+        src="/assets/icons/arrow_left.svg"
+        width={40}
+        height={40}
+        alt="뒤로가기"
       />
       <Title className={size}>{title}</Title>
       {sub && <Sub>{sub}</Sub>}
@@ -58,7 +58,7 @@ const Header = styled.header`
 `;
 
 const StyledImage = styled(Image)`
-  margin-right: 35px;
+  margin-right: 12px;
   cursor: pointer;
 `;
 
