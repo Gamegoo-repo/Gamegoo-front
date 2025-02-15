@@ -134,7 +134,7 @@ const Login = () => {
           }}
         >
           <Image
-            src="/assets/icons/logo_m.svg"
+            src="/assets/icons/logo.svg"
             width={277}
             height={88}
             alt="logo"

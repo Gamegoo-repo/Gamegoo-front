@@ -32,7 +32,7 @@ const HomePage = () => {
       <HomeContent>
         <Header>
           <Image
-            src="/assets/icons/logo_m.svg"
+            src="/assets/icons/logo.svg"
             width={371}
             height={117}
             priority
