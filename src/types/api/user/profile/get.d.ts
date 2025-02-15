@@ -8,8 +8,10 @@ interface BaseProfileData {
   mike: Mike;
   gameName: string;
   tag: string;
-  tier: string;
-  gameRank: number;
+  soloTier: string;
+  freeTier: string;
+  soloRank: number;
+  freeRank: number;
   mannerRank: number;
   mannerLevel: number;
   updatedAt: string;
@@ -19,7 +21,8 @@ interface BaseProfileData {
   isAgree: boolean;
   isBlind: boolean;
   loginType: string;
-  winrate: number;
+  soloWinrate: number;
+  freeWinrate: number;
   gameStyleResponseList: GameStyleList[];
   championResponseList: ChampionList[];
 }

@@ -20,8 +20,10 @@ export interface User {
   email?: string;
   gameName: string;
   tag: string;
-  tier: string;
-  gameRank: number;
+  soloTier: string;
+  freeTier: string;
+  soloRank: number;
+  freeRank: number;
   mannerLevel: number;
   mannerRank?: null | number;
   mannerRatingCount?: number;
@@ -33,7 +35,8 @@ export interface User {
   isAgree: boolean;
   isBlind: boolean;
   loginType: string;
-  winrate: number;
+  soloWinrate: number;
+  freeWinrate: number;
   gameStyleResponseList: GameStyle[];
   championResponseList: Champion[];
   friend: boolean;
