@@ -184,18 +184,20 @@ const LeftLabel = styled.div<{ $profileType: profileType }>`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 12px;
+  gap: 10px;
   color: ${theme.colors.gray800};
+  ${theme.fonts.regular14};
+
   ${({ $profileType }) =>
-    $profileType !== "none" &&
+    $profileType === "mini" &&
     css`
-      font: ${theme.fonts.semiBold14};
+      gap: 6px;
     `}
 `;
 
 const GameBox = styled.div<{ $profileType: profileType }>`
-  display: row;
   display: flex;
+  align-items: center;
   gap: 16px;
   position: relative;
 
