@@ -24,10 +24,10 @@ const MoreBoxButton = (props: MoreBoxButtonProps) => {
 export default MoreBoxButton;
 
 const Wrapper = styled.div`
-  width: 40px;
+  width: 25px;
   height: 40px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
 `;
 

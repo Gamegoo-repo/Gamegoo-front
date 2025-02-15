@@ -5,7 +5,7 @@ import Button from "../common/Button";
 import PositionBox from "../crBoard/PositionBox";
 import { useEffect, useRef, useState } from "react";
 import ProfileImage from "./ProfileImage";
-import User from "../crBoard/User";
+import User from "../crBoard/UserAccount";
 import MannerLevel from "../common/MannerLevel";
 import Mic from "./Mic";
 import MoreBoxButton from "./MoreBoxButton";
@@ -50,6 +50,8 @@ import { cancelFriendRequest, sendFriendRequest } from "@/api/friend/request";
 import { deleteFriend } from "@/api/friend/delete";
 import { blockMember, unblockMember } from "@/api/block/block";
 import { GameMode } from "@/types/game/gameMode";
+import UserAccount from "../crBoard/UserAccount";
+import UserTier from "../crBoard/UserTier";
 
 interface ReadBoardProps {
   postId: number;
@@ -549,13 +551,18 @@ const ReadBoard = (props: ReadBoardProps) => {
               <UserSection>
                 <UserLeft>
                   <ProfileImage image={isPost.profileImage} />
+                  <UserWapper>
+                    <UserAccount account={isPost.gameName} tag={isPost.tag} />
+                    <UserTierWrapper>
+                      <UserTier
+                        soloTier={isPost.tier}
+                        freeTier={isPost.tier}
+                        soloRank={isPost.rank}
+                        freeRank={isPost.rank}
+                      />
+                    </UserTierWrapper>
+                  </UserWapper>
                   <UserNManner>
-                    <User
-                      account={isPost.gameName}
-                      tag={isPost.tag}
-                      tier={isPost.tier}
-                      rank={isPost.rank}
-                    />
                     <MannerLevelWrapper>
                       <MannerLevel
                         forNoData={isPost.tier}
@@ -750,18 +757,31 @@ const UserSection = styled.div`
 
 const UserLeft = styled.div`
   display: flex;
-  align-items: center;
+`;
+
+const UserWapper = styled.div`
+  position: relative;
+  margin-top: 9px;
+`;
+
+const UserTierWrapper = styled.div`
+  position: absolute;
+  top: 30px;
+  left: 0px;
 `;
 
 const UserNManner = styled.div`
   display: flex;
+  margin-top: 9px;
 `;
+
 const UserRight = styled.div`
   display: flex;
 `;
+
 const Title = styled.p`
   ${(props) => props.theme.fonts.semiBold14};
-  color: #222222;
+  color: ${theme.colors.gray800};
   margin-bottom: 5px;
 `;
 
