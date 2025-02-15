@@ -157,7 +157,7 @@ const GameStyle = (props: GameStyleProps) => {
           )}
         </GameBox>
       </LeftLabel>
-      {((profileType === "none" && handleMike) || profileType === "mini") && (
+      {profileType === "mini" && (
         <LeftLabel $profileType={profileType}>
           마이크
           <Toggle

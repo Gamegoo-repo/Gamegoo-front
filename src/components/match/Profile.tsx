@@ -18,14 +18,13 @@ import MoreBox from "../common/MoreBox";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import { User } from "@/interface/profile";
 import { PositionState } from "../crBoard/PositionBox";
-import { setAbbrevTier, setPositionImg } from "@/utils/custom";
+import { setPositionImg } from "@/utils/custom";
 import { useParams } from "next/navigation";
 import { reportMember } from "@/api/report/report";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { getProfileBgColor } from "@/utils/profile";
 import { setMatchInfo, updateMike } from "@/redux/slices/matchInfo";
-import { toLowerCaseString } from "@/utils/string";
 import { setUserProfileImg } from "@/redux/slices/userSlice";
 import { putPosition, putProfileImage } from "@/api/user/profile/put";
 import {
@@ -39,6 +38,7 @@ import { blockMember, unblockMember } from "@/api/block/block";
 import { Mike as MikeType } from "@/types/user/mike";
 import { Position as PositionType } from "@/types/position/position";
 import RankTier from "../common/RankTier";
+import { profile } from "console";
 
 type profileType = "normal" | "wind" | "other" | "me";
 
@@ -484,7 +484,9 @@ const Profile: React.FC<Profile> = ({
           )}
         </ImageContainer>
         <StyledBox>
-          <TopContainer>
+          <TopContainer
+            $isMatching={profileType === "wind" || profileType === "normal"}
+          >
             <Top>
               {user.gameName}
               <Span>{`#${user.tag}`}</Span>
@@ -495,12 +497,18 @@ const Profile: React.FC<Profile> = ({
             <RankTier type="free" tier={user.freeTier} rank={user.freeRank} />
           </RankTierWrapper>
           {profileType === "wind" ? (
-            <GameStyle
-              profileType="none"
-              gameStyleResponseDTOList={user.gameStyleResponseList}
-              mike={isMike}
-              handleMike={handleMike}
-            />
+            <StyledBox>
+              <Mike>
+                마이크
+                <Toggle isOn={isMike} onToggle={handleMike} />
+              </Mike>
+              <GameStyle
+                profileType="none"
+                gameStyleResponseDTOList={user.gameStyleResponseList}
+                mike={isMike}
+                handleMike={handleMike}
+              />
+            </StyledBox>
           ) : (
             <UnderRow>
               <Position>
@@ -546,16 +554,14 @@ const Profile: React.FC<Profile> = ({
                     )}
                   />
                 )}
-              {(profileType === "other" || profileType === "me") && (
-                <Mike>
-                  마이크
-                  <Toggle
-                    isOn={isMike}
-                    onToggle={handleMike}
-                    disabled={profileType === "other"}
-                  />
-                </Mike>
-              )}
+              <Mike>
+                마이크
+                <Toggle
+                  isOn={isMike}
+                  onToggle={handleMike}
+                  disabled={profileType === "other"}
+                />
+              </Mike>
             </UnderRow>
           )}
           {(profileType === "normal" ||
@@ -850,13 +856,19 @@ const StyledBox = styled.div`
   gap: 36px;
 `;
 
-const TopContainer = styled.div`
+const TopContainer = styled.div<{ $isMatching: boolean }>`
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 36px;
   ${theme.fonts.bold32};
+
+  ${({ $isMatching }) =>
+    $isMatching &&
+    css`
+      margin-top: 21px;
+    `}
 `;
 
 const Top = styled.div`
