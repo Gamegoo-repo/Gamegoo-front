@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import Button from "../common/Button";
 import CRModal from "../crBoard/CRModal";
 import UpdateProfileImage from "./UpdateProfileImage";
-import User from "../crBoard/UserAccount";
+import UserAccount from "../crBoard/UserAccount";
 import Toggle from "../common/Toggle";
 import PositionBox, { PositionState } from "../crBoard/PositionBox";
 import GameStyle from "./GameStyle";
@@ -292,7 +292,7 @@ const PostBoard = (props: PostBoardProps) => {
               isProfileListOpen={isProfileListOpen}
               onImageClick={handleImageClick}
             />
-            <User account={user.gameName} tag={user.tag} />
+            <UserAccount account={user.gameName} tag={user.tag} />
           </UserSection>
         )}
 
