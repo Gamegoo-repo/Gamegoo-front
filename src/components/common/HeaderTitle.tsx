@@ -12,6 +12,7 @@ interface HeaderTitleProps {
   size?: fontSize;
   blocked?: boolean;
   isDoubleBack?: boolean;
+  marginBottom?: string;
 }
 
 const HeaderTitle: React.FC<HeaderTitleProps> = ({
@@ -20,6 +21,7 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({
   size = "bold",
   blocked = false,
   isDoubleBack = false,
+  marginBottom,
 }) => {
   const router = useRouter();
 
@@ -32,7 +34,7 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({
   };
 
   return (
-    <Header>
+    <Header $marginBottom={marginBottom}>
       <StyledImage
         onClick={handleBackClick}
         src="/assets/icons/arrow_left.svg"
@@ -49,12 +51,13 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({
 
 export default HeaderTitle;
 
-const Header = styled.header`
+const Header = styled.header<{ $marginBottom?: string }>`
   width: 100%;
   display: flex;
   align-items: center;
   width: 100%;
-  margin-bottom: 32px;
+  margin-bottom: ${({ $marginBottom }) =>
+    $marginBottom ? $marginBottom : "32px"};
 `;
 
 const StyledImage = styled(Image)`

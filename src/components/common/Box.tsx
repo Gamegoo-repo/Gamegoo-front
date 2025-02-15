@@ -44,7 +44,7 @@ const StyledBox = styled.div<{ $shape: ShapeType; $profiletype?: profileType }>`
     `}
 
   ${(props) =>
-    props.$profiletype === "mini" &&
+    (props.$profiletype === "mini" || props.$profiletype === "other") &&
     css`
       height: 33px;
       padding: 6px 16px;

@@ -584,7 +584,7 @@ const ReadBoard = (props: ReadBoardProps) => {
               <ChampionNQueueSection>
                 <Champion
                   title={true}
-                  size={14}
+                  font="semiBold14"
                   list={isPost?.championResponseDTOList?.map(
                     (champion) => champion.championId
                   )}
