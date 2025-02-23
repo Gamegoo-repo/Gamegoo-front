@@ -48,6 +48,7 @@ import {
 } from "@/api/friend/request";
 import { blockMember } from "@/api/block/block";
 import { reportMember } from "@/api/report/report";
+import { getAccessToken } from "@/utils/storage";
 
 interface System {
   flag: number;
@@ -62,6 +63,7 @@ interface ChatLayoutProps {
 const ChatLayout = (props: ChatLayoutProps) => {
   const { apiType, onDragStart } = props;
   const dispatch = useDispatch();
+  const currentPost = useSelector((state: RootState) => state.post.currentPost);
 
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
   const [chatEnterData, setChatEnterData] = useState<Chat>();
@@ -105,65 +107,120 @@ const ChatLayout = (props: ChatLayoutProps) => {
   /* 채팅방 입장 */
   const handleChatEnter = async () => {
     if (!isChatUuid) return;
+    const accessToken = getAccessToken();
 
-    try {
-      // 친구목록에서 채팅방 입장
-      if (chatEnterType === 0 && typeof isChatUuid === "number") {
-        const data = await enterUsingMemberId({ memberId: isChatUuid });
-        setChatEnterData(data.data);
-        dispatch(setCurrentChatUuid(data.data.uuid));
-        removeUnreadUuid(data.data.uuid);
-      }
-
-      // 대화방에서 채팅방 입장
-      if (chatEnterType === 1 && typeof isChatUuid === "string") {
-        const data = await enterUsingUuid({ uuid: isChatUuid });
-        setChatEnterData(data.data);
-        dispatch(setCurrentChatUuid(data.data.uuid));
-        removeUnreadUuid(data.data.uuid);
-      }
-
-      // 게시글에서 채팅방 입장
-      if (chatEnterType === 2 && typeof isChatUuid === "number") {
-        const data = await enterUsingBoardId({ boardId: isChatUuid });
-        setChatEnterData(data.data);
-        dispatch(setCurrentChatUuid(data.data.uuid));
-        setIsSystemMsg(data.data.system);
-        removeUnreadUuid(data.data.uuid);
-        // 실시간으로 시스템 메시지 보여주기 위함
-        let systemMessage: DesignedSystemMessage;
-        if (data.data.system.flag === 1) {
-          systemMessage = {
-            senderId: 0,
-            senderName: null,
-            senderProfileImg: null,
-            message:
-              "상대방이 게시한 글을 보고 말을 걸었어요. 대화를 시작해보세요~",
-            createdAt: null,
-            timestamp: null,
-            systemType: 0,
-            boardId: data.data.system.boardId,
-          };
-        } else {
-          systemMessage = {
-            senderId: 0,
-            senderName: null,
-            senderProfileImg: null,
-            message: "상대방이 게시한 글을 보고 말을 걸었어요.",
-            createdAt: null,
-            timestamp: null,
-            systemType: 0,
-            boardId: data.data.system.boardId,
-          };
+    if (accessToken) {
+      try {
+        // 친구목록에서 채팅방 입장
+        if (chatEnterType === 0 && typeof isChatUuid === "number") {
+          const data = await enterUsingMemberId({ memberId: isChatUuid });
+          setChatEnterData(data.data);
+          dispatch(setCurrentChatUuid(data.data.uuid));
+          removeUnreadUuid(data.data.uuid);
         }
-        setSystemMessage(systemMessage);
+
+        // 대화방에서 채팅방 입장
+        if (chatEnterType === 1 && typeof isChatUuid === "string") {
+          const data = await enterUsingUuid({ uuid: isChatUuid });
+          setChatEnterData(data.data);
+          dispatch(setCurrentChatUuid(data.data.uuid));
+          removeUnreadUuid(data.data.uuid);
+        }
+
+        // 게시글에서 채팅방 입장
+        if (chatEnterType === 2 && typeof isChatUuid === "number") {
+          const data = await enterUsingBoardId({ boardId: isChatUuid });
+          setChatEnterData(data.data);
+          dispatch(setCurrentChatUuid(data.data.uuid));
+          setIsSystemMsg(data.data.system);
+          removeUnreadUuid(data.data.uuid);
+          // 실시간으로 시스템 메시지 보여주기 위함
+          let systemMessage: DesignedSystemMessage;
+          if (data.data.system.flag === 1) {
+            systemMessage = {
+              senderId: 0,
+              senderName: null,
+              senderProfileImg: null,
+              message:
+                "상대방이 게시한 글을 보고 말을 걸었어요. 대화를 시작해보세요~",
+              createdAt: null,
+              timestamp: null,
+              systemType: 0,
+              boardId: data.data.system.boardId,
+            };
+          } else {
+            systemMessage = {
+              senderId: 0,
+              senderName: null,
+              senderProfileImg: null,
+              message: "상대방이 게시한 글을 보고 말을 걸었어요.",
+              createdAt: null,
+              timestamp: null,
+              systemType: 0,
+              boardId: data.data.system.boardId,
+            };
+          }
+          setSystemMessage(systemMessage);
+        }
+      } catch (err) {
+        const error = err as AxiosError<ErrorResponse>;
+        console.error(error.message);
+        dispatch(
+          setErrorMessage(error.message || "알 수 없는 오류가 발생했습니다.")
+        );
       }
-    } catch (err) {
-      const error = err as AxiosError<ErrorResponse>;
-      console.error(error.message);
-      dispatch(
-        setErrorMessage(error.message || "알 수 없는 오류가 발생했습니다.")
-      );
+    } else {
+      // 비회원 접근 (isPost에서 불러온 정보 주입)
+      dispatch(setCurrentChatUuid("guest"));
+      setSystemMessage({
+        senderId: 0,
+        senderName: null,
+        senderProfileImg: null,
+        message:
+          "상대방이 게시한 글을 보고 말을 걸었어요. 대화를 시작해보세요~",
+        createdAt: null,
+        timestamp: null,
+        systemType: 0,
+        boardId: currentPost?.boardId || 0,
+      });
+
+      setChatEnterData({
+        uuid: "guest",
+        memberId: currentPost?.memberId || 0,
+        gameName: currentPost?.gameName || "",
+        memberProfileImg: currentPost?.profileImage || 0,
+        friend: false,
+        blocked: false,
+        blind: false,
+        friendRequestMemberId: 6,
+        system: {
+          flag: 1,
+          boardId: 31,
+        },
+        chatMessageListResponse: {
+          chatMessageList: [
+            {
+              senderId: (currentPost?.memberId || 0) + 1,
+              senderName: "",
+              senderProfileImg: 4,
+              message: "안녕하세요!",
+              createdAt: new Date().toISOString(), // 현재 날짜 사용
+              timestamp: Date.now(),
+            },
+            {
+              senderId: currentPost?.memberId || 0,
+              senderName: currentPost?.gameName || "",
+              senderProfileImg: currentPost?.profileImage || 0,
+              message: "겜구에 오신 것을 환영합니다!",
+              createdAt: new Date().toISOString(), // 현재 날짜 사용
+              timestamp: Date.now(),
+            },
+          ],
+          listSize: 2,
+          hasNext: false,
+          nextCursor: null,
+        },
+      });
     }
   };
 
@@ -621,6 +678,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
                 chatEnterData={chatEnterData}
                 onMoreBoxOpen={handleMoreBoxOpen}
                 menuItems={menuItems}
+                disabled={chatEnterData.uuid === "guest"}
               />
             </HeaderWrapper>
             <MessageList
@@ -634,6 +692,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
               setMessage={setMessage}
               sendMessage={sendMessage}
               chatEnterData={chatEnterData}
+              disabled={chatEnterData.uuid === "guest"}
             />
           </Wrapper>
         )}

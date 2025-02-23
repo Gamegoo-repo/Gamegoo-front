@@ -7,10 +7,17 @@ interface MessageInputProps {
   setMessage: React.Dispatch<React.SetStateAction<string>>;
   sendMessage: (event: React.FormEvent<HTMLFormElement>) => void;
   chatEnterData: Chat | undefined;
+  disabled?: boolean;
 }
 
 const MessageInput = (props: MessageInputProps) => {
-  const { message, setMessage, sendMessage, chatEnterData } = props;
+  const {
+    message,
+    setMessage,
+    sendMessage,
+    chatEnterData,
+    disabled = false,
+  } = props;
 
   const getPlaceholderText = () => {
     if (!!chatEnterData?.blocked) {
@@ -48,8 +55,14 @@ const MessageInput = (props: MessageInputProps) => {
                 }
               }}
               onKeyDown={handlePressEnterKey}
-              disabled={!!chatEnterData.blocked || !!chatEnterData.blind}
-              placeholder={getPlaceholderText()}
+              disabled={
+                disabled || !!chatEnterData.blocked || !!chatEnterData.blind
+              }
+              placeholder={
+                disabled
+                  ? "로그인이 필요한 서비스입니다.\n지금 로그인하고 게임 친구와 대화를 시작해보세요!"
+                  : getPlaceholderText()
+              }
             />
             <Row>
               <TextCount $color={message.length > 0}>
@@ -104,7 +117,8 @@ const Textarea = styled.textarea`
   &:disabled {
     background-color: unset;
     &::placeholder {
-      color: ${theme.colors.gray200};
+      ${(props) => props.theme.fonts.semiBold14};
+      color: ${theme.colors.gray800};
     }
   }
 

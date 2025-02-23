@@ -9,19 +9,29 @@ import { getProfileBgColor } from "@/utils/profile";
 import { useRouter } from "next/navigation";
 import { RootState } from "@/redux/store";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
+import Alert from "../common/Alert";
+import { useState } from "react";
 
 interface MessageHeaderProps {
   isMoreBoxOpen: boolean;
   chatEnterData?: Chat;
   onMoreBoxOpen: () => void;
   menuItems: MoreBoxMenuItems[];
+  disabled?: boolean;
 }
 
 const MessageHeader = (props: MessageHeaderProps) => {
-  const { isMoreBoxOpen, chatEnterData, onMoreBoxOpen, menuItems } = props;
+  const {
+    isMoreBoxOpen,
+    chatEnterData,
+    onMoreBoxOpen,
+    menuItems,
+    disabled = false,
+  } = props;
 
   const dispatch = useDispatch();
   const router = useRouter();
+  const [showAlert, setShowAlert] = useState<boolean>(false);
 
   const onlineFriends = useSelector(
     (state: RootState) => state.chat.onlineFriends
@@ -34,12 +44,35 @@ const MessageHeader = (props: MessageHeaderProps) => {
   };
 
   const handleGoToPrevious = () => {
-    dispatch(closeChatRoom());
-    dispatch(openChat());
+    if (disabled) {
+      setShowAlert(true);
+    } else {
+      dispatch(closeChatRoom());
+      dispatch(openChat());
+    }
+  };
+
+  const handleMoreBoxOpen = () => {
+    if (disabled) {
+      setShowAlert(true);
+    } else {
+      onMoreBoxOpen();
+    }
   };
 
   return (
     <>
+      {showAlert && (
+        <Alert
+          icon="exclamation"
+          width={68}
+          height={58}
+          content="로그인이 필요한 서비스입니다."
+          alt="경고"
+          onClose={() => setShowAlert(false)}
+          buttonText="확인"
+        />
+      )}
       {isMoreBoxOpen && <MoreBox items={menuItems} top={35} left={200} />}
       <CloseButton>
         <CloseImage
@@ -54,7 +87,7 @@ const MessageHeader = (props: MessageHeaderProps) => {
         <ChatHeader>
           <PrevImage
             onClick={handleGoToPrevious}
-            src="/assets/icons/left_arrow.svg"
+            src="/assets/icons/chevron_left.svg"
             width={9}
             height={18}
             alt="뒤로가기"
@@ -99,7 +132,7 @@ const MessageHeader = (props: MessageHeaderProps) => {
               )}
             </Div>
           </Middle>
-          <ThreeDotsButton onClick={onMoreBoxOpen}>
+          <ThreeDotsButton onClick={handleMoreBoxOpen}>
             <ThreeDotsImage
               src="/assets/icons/three_dots_button.svg"
               width={3}
