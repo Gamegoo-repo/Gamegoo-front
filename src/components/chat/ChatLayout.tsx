@@ -107,7 +107,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
   /* 채팅방 입장 */
   const handleChatEnter = async () => {
     if (!isChatUuid) return;
-    const accessToken = getAccessToken();
+    const accessToken = getAccessToken() || "";
 
     if (accessToken) {
       try {
@@ -233,7 +233,9 @@ const ChatLayout = (props: ChatLayoutProps) => {
   /* 읽은 채팅 채팅 버튼에 실시간으로 반영 */
   const removeUnreadUuid = (uuidToRemove: string) => {
     const unreadUuids = sessionStorage.getItem("unreadChatUuids");
-
+    if (!unreadUuids || unreadUuids === "undefined") {
+      return;
+    }
     if (unreadUuids) {
       let unreadUuidsArray: string[] = JSON.parse(unreadUuids);
       unreadUuidsArray = unreadUuidsArray.filter(
