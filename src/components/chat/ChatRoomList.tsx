@@ -292,6 +292,7 @@ const ChatRoomList = (props: ChatRoomListProps) => {
             isMoreBoxOpen={isMoreBoxOpen}
             handleMoreBoxOpen={handleMoreBoxOpen}
             moreMenuItems={moreMenuItems}
+            setIsMoreBoxOpen={setIsMoreBoxOpen}
           />
         );
       })}

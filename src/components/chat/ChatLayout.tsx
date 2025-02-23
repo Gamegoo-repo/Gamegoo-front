@@ -679,6 +679,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
                 onMoreBoxOpen={handleMoreBoxOpen}
                 menuItems={menuItems}
                 disabled={chatEnterData.uuid === "guest"}
+                setIsMoreBoxOpen={setIsMoreBoxOpen}
               />
             </HeaderWrapper>
             <MessageList
