@@ -1,11 +1,11 @@
 import { theme } from "@/styles/theme";
 import styled from "styled-components";
-import All from "../../../public/assets/icons/position_all_unclicked.svg";
-import Top from "../../../public/assets/icons/position_top_unclicked.svg";
-import Jungle from "../../../public/assets/icons/position_jungle_unclicked.svg";
-import Mid from "../../../public/assets/icons/position_mid_unclicked.svg";
-import OndDeal from "../../../public/assets/icons/position_one_deal_unclicked.svg";
-import Supporter from "../../../public/assets/icons/position_supporter_unclicked.svg";
+import All from "../../../public/assets/images/position/position_all_unclicked.svg";
+import Top from "../../../public/assets/images/position/position_top_unclicked.svg";
+import Jungle from "../../../public/assets/images/position/position_jungle_unclicked.svg";
+import Mid from "../../../public/assets/images/position/position_mid_unclicked.svg";
+import OndDeal from "../../../public/assets/images/position/position_one_deal_unclicked.svg";
+import Supporter from "../../../public/assets/images/position/position_supporter_unclicked.svg";
 import React, { useEffect } from "react";
 import { Position } from "@/types/position/position";
 

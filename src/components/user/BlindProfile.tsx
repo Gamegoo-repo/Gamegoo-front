@@ -1,10 +1,13 @@
 import styled from "styled-components";
 import HeaderTitle from "@/components/common/HeaderTitle";
 import { theme } from "@/styles/theme";
-import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
+import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants/mannerLevel";
 import MannerLevelBar from "@/components/common/MannerLevelBar";
 import Image from "next/image";
 import Toggle from "../common/Toggle";
+import { css } from "styled-components";
+import { POSITIONS } from "@/constants/profile";
+import { setPositionImg } from "@/utils/custom";
 
 const BlindProfile = () => {
   const goodMannerEvaluations =
@@ -22,7 +25,11 @@ const BlindProfile = () => {
     <Wrapper>
       <MatchContent>
         <Row>
-          <HeaderTitle title={`탈퇴한 사용자 님의 프로필`} size="regular" />
+          <HeaderTitle
+            title="탈퇴한 사용자 님의 프로필"
+            size="bold"
+            marginBottom="20px"
+          />
         </Row>
         <Main>
           <Container>
@@ -34,11 +41,11 @@ const BlindProfile = () => {
                 <Top>탈퇴한 사용자</Top>
                 <UnderRow>
                   <Position>
-                    {["주 포지션", "부 포지션"].map((position, index) => (
-                      <Posi key={index}>
-                        {position}
+                    {POSITIONS.map((position, index) => (
+                      <Posi key={index} $isWantP={index === 2}>
+                        {position.label}
                         <Image
-                          src="/assets/icons/position_all_unclicked.svg"
+                          src={"/assets/images/position/position_all_blind.svg"}
                           width={55}
                           height={40}
                           alt="포지션"
@@ -176,7 +183,7 @@ const Box = styled.div`
   height: 269px;
   border-radius: 20px;
   padding: 18px 32px;
-  background: ${theme.colors.gray500};
+  background: ${theme.colors.gray100};
 `;
 
 const Text = styled.div`
@@ -221,13 +228,12 @@ const Type = styled.p`
 `;
 
 /* 프로필 부분 */
-
 const Container = styled.div`
   width: 100%;
   box-sizing: border-box;
   border-radius: 30px;
   padding: 23px 44px 44px 44px;
-  background: ${theme.colors.gray500};
+  background: ${theme.colors.gray100};
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -277,32 +283,42 @@ const Top = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 16px;
-  color: ${theme.colors.gray600};
-  font-size: ${theme.fonts.bold32};
+  gap: 6px;
+  ${theme.fonts.bold32};
+  color: ${theme.colors.gray800};
   white-space: nowrap;
 `;
 
 const Position = styled.div`
   display: flex;
-  gap: 33px;
+  gap: 24px;
   align-items: center;
 `;
 
-const Posi = styled.div`
+const Posi = styled.div<{ $isWantP: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 15px;
-  align-items: center;
-  font-size: ${theme.fonts.semiBold14};
+  align-items: flex-start;
+  font-size: ${theme.fonts.regular14};
   position: relative;
+
+  &.other {
+    font-size: ${theme.fonts.regular14};
+  }
+
+  ${({ $isWantP }) =>
+    $isWantP &&
+    css`
+      margin-left: 36px;
+    `}
 `;
 
 const Champion = styled.div`
   display: flex;
   flex-direction: column;
   gap: 7px;
-  font-size: ${theme.fonts.semiBold14};
+  font-size: ${theme.fonts.regular14};
 `;
 
 const ChampionImages = styled.div`
@@ -314,7 +330,7 @@ const ChampionImages = styled.div`
 const Round = styled.div`
   width: 52px;
   height: 52px;
-  background-color: ${theme.colors.gray800};
+  background-color: #606060;
   border-radius: 50%;
 `;
 
@@ -323,5 +339,5 @@ const Mike = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
-  font-size: ${theme.fonts.semiBold14};
+  font-size: ${theme.fonts.regular14};
 `;

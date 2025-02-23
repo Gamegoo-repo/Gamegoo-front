@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 import Alert from "../common/Alert";
 import ConfirmModal from "../common/ConfirmModal";
 import Champion from "../readBoard/Champion";
-import { BoardDetail } from "@/interface/board";
+import { BoardListDetail } from "@/interface/board";
 import { getProfileBgColor } from "@/utils/profile";
 import { toLowerCaseString } from "@/utils/string";
 import Layout from "../chat/Layout";
@@ -28,7 +28,7 @@ interface TableTitleProps {
 
 interface TableProps {
   title: TableTitleProps[];
-  content: BoardDetail[];
+  content: BoardListDetail[];
 }
 
 const Table = (props: TableProps) => {
@@ -105,11 +105,6 @@ const Table = (props: TableProps) => {
   /* 다른 사람 프로필 이동 */
   const handleMoveProfilePage = (e: React.MouseEvent, memberId: number) => {
     e.stopPropagation();
-
-    if (!isUser.gameName) {
-      setAlertContent("로그인이 필요한 서비스입니다.");
-      return setShowAlert(true);
-    }
 
     router.push(`/user/${memberId}`);
   };
@@ -198,7 +193,7 @@ const Table = (props: TableProps) => {
                       height={26}
                     />
                     <P>
-                      {setAbbrevTier(data.tier)}
+                      {setAbbrevTier(data.tier || "")}
                       {data.tier !== "UNRANKED" && data.rank}
                     </P>
                   </Third>
@@ -217,40 +212,27 @@ const Table = (props: TableProps) => {
                     />
                   </Fourth>
                   <Fifth className="table_width">
-                    <Image
-                      src={setPositionImg(data.wantP)}
-                      width={35}
-                      height={28}
-                      alt="찾는 포지션"
-                    />
+                    {data.wantP.map((posi, i) => (
+                      <Image
+                        key={`${posi}-${i}`}
+                        src={setPositionImg(posi)}
+                        width={35}
+                        height={28}
+                        alt="찾는 포지션"
+                      />
+                    ))}
                   </Fifth>
                   <Sixth className="table_width">
                     <Champion
-                      size={14}
+                      font="semiBold14"
                       list={data?.championResponseList?.map(
                         (champion) => champion.championId
                       )}
                     />
                   </Sixth>
                   <Seventh className="table_width">
-                    <P
-                      className={
-                        data.gameMode === "FREE"
-                          ? data.freeWinRate >= 50
-                            ? "emph"
-                            : "basic"
-                          : data.soloWinRate >= 50
-                          ? "emph"
-                          : "basic"
-                      }
-                    >
-                      {data.gameMode === "FREE"
-                        ? data.freeWinRate === null
-                          ? "0%"
-                          : `${data.freeWinRate}%`
-                        : data.soloWinRate === null
-                        ? "0%"
-                        : `${data.soloWinRate}%`}
+                    <P className={data.winRate >= 50 ? "emph" : "basic"}>
+                      {data.winRate === null ? "0%" : `${data.winRate}%`}
                     </P>
                   </Seventh>
                   <Eighth className="table_width">

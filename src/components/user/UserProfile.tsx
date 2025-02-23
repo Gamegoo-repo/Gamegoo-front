@@ -2,9 +2,11 @@ import styled from "styled-components";
 import Profile from "@/components/match/Profile";
 import HeaderTitle from "@/components/common/HeaderTitle";
 import { theme } from "@/styles/theme";
-import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
+import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants/mannerLevel";
 import MannerLevelBar from "@/components/common/MannerLevelBar";
-import { User } from "@/interface/profile";
+import { profileType, User } from "@/interface/profile";
+import { getUserId } from "@/utils/storage";
+import Champion from "../readBoard/Champion";
 
 export interface Manner {
   memberId?: number;
@@ -15,16 +17,20 @@ export interface Manner {
 
 const UserProfile = ({
   profile,
+  profileType,
   manner,
   updateFriendState,
+  isDefault,
 }: {
   profile: User;
+  profileType?: profileType;
   manner: Manner;
   updateFriendState: (state: {
     friend: boolean;
     friendRequestMemberId: number | null;
     blocked: boolean;
   }) => void;
+  isDefault?: boolean; // 비회원용 default 프로필 여부
 }) => {
   const goodMannerEvaluations =
     manner.mannerKeywords
@@ -44,29 +50,39 @@ const UserProfile = ({
         count: keyword.count,
       })) || [];
 
-  const goodMannerCount = (
-    goodMannerEvaluations as { id: number; count: number }[]
-  ).reduce((total, item) => total + item.count, 0);
-
   return (
     <Wrapper>
       <MatchContent>
         <Row>
           <HeaderTitle
-            title={`${profile.gameName} 님의 프로필`}
-            size="regular"
+            title={
+              isDefault
+                ? "로그인이 필요한 서비스"
+                : `${profile.gameName}님의 프로필`
+            }
+            mini={
+              isDefault
+                ? "로그인 후 다른 플레이어들의 정보를 확인해 보세요!"
+                : ""
+            }
+            size="bold"
             blocked={profile.blocked}
+            marginBottom="20px"
           />
         </Row>
         <Main>
           <Profile
-            profileType="other"
+            profileType={
+              profileType ||
+              (profile.id === Number(getUserId()) ? "me" : "other")
+            }
             user={profile}
             updateFriendState={updateFriendState}
+            isDefault={isDefault}
           />
           <Content>
             <div>
-              <Title>{`${profile.gameName}의 매너레벨`}</Title>
+              <Title>{`${profile.gameName}님의 매너레벨`}</Title>
               <Box>
                 <Text>
                   매너 레벨은 겜구 사용자로부터 받은 매너평가, 비매너평가를
@@ -152,6 +168,32 @@ const UserProfile = ({
               </Box>
             </div>
           </Content>
+          <Content>
+            <div>
+              <Title>최근 30게임</Title>
+              <RecentBox>
+                <Column>
+                  <RecentInfo>14승 16패</RecentInfo>
+                  <DetailInfo>46.7%</DetailInfo>
+                </Column>
+                <Column>
+                  <RecentInfo>6.0 / 5.4 / 6.5</RecentInfo>
+                  <DetailInfo>KDA 2.33</DetailInfo>
+                </Column>
+                <Column>
+                  <RecentInfo>평균 CS 7.6</RecentInfo>
+                  <DetailInfo>CS 226</DetailInfo>
+                </Column>
+                <Champion
+                  title={true}
+                  font="regular14"
+                  list={profile.championResponseList.map(
+                    (champion) => champion.championId
+                  )}
+                />
+              </RecentBox>
+            </div>
+          </Content>
         </Main>
       </MatchContent>
     </Wrapper>
@@ -206,15 +248,14 @@ const Box = styled.div`
   width: 100%;
   height: 269px;
   border-radius: 20px;
-  padding: 18px 32px;
-  background: ${theme.colors.gray500};
+  padding: 26px 28px;
+  background: ${theme.colors.gray100};
 `;
 
 const Text = styled.div`
   ${(props) => props.theme.fonts.regular16};
   color: ${theme.colors.gray700};
-  margin-top: 8px;
-  margin-bottom: 40px;
+  margin-bottom: 66px;
 `;
 
 const Span = styled.span`
@@ -240,11 +281,11 @@ const Value = styled.p`
   ${(props) => props.theme.fonts.medium16};
 
   &.default {
-    color: ${theme.colors.gray200};
+    color: ${theme.colors.gray800};
   }
 
   &.mannerEmph {
-    color: ${theme.colors.violet300};
+    color: ${theme.colors.violet500};
   }
 
   &.badEmph {
@@ -262,14 +303,38 @@ const Type = styled.p`
   ${(props) => props.theme.fonts.medium16};
 
   &.default {
-    color: ${theme.colors.gray200};
+    color: ${theme.colors.gray800};
   }
 
   &.mannerEmph {
-    color: ${theme.colors.violet300};
+    color: ${theme.colors.violet500};
   }
 
   &.badEmph {
     color: ${theme.colors.red500};
   }
+`;
+
+const RecentBox = styled.div`
+  max-width: 756px;
+  border-radius: 20px;
+  padding: 16px 32px;
+  background: ${theme.colors.gray100};
+  display: flex;
+  align-items: center;
+  gap: 56px;
+`;
+
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const RecentInfo = styled.div`
+  color: ${theme.colors.gray700};
+  ${theme.fonts.bold20};
+`;
+
+const DetailInfo = styled.div`
+  color: ${theme.colors.gray600};
+  ${theme.fonts.regular14};
 `;

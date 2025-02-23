@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import Button from "../common/Button";
 import CRModal from "../crBoard/CRModal";
 import UpdateProfileImage from "./UpdateProfileImage";
-import User from "../crBoard/User";
+import UserAccount from "../crBoard/UserAccount";
 import Toggle from "../common/Toggle";
 import PositionBox, { PositionState } from "../crBoard/PositionBox";
 import GameStyle from "./GameStyle";
@@ -27,7 +27,7 @@ import { theme } from "@/styles/theme";
 import { setClosePostingModal } from "@/redux/slices/modalSlice";
 import { getMyProfile } from "@/api/user/profile/get";
 import { Mike } from "@/types/user/mike";
-import { GAME_MODE } from "@/data/board";
+import { GAME_MODE } from "@/constants/board";
 import { GameMode } from "@/types/game/gameMode";
 
 interface PostBoardProps {
@@ -61,7 +61,7 @@ const PostBoard = (props: PostBoardProps) => {
     {
       main: currentPost?.mainP || user?.mainP || "ANY",
       sub: currentPost?.subP || user?.subP || "ANY",
-      want: currentPost?.wantP || user?.wantP || "ANY",
+      want: currentPost?.wantP || user?.wantP || ["ANY", "ANY"],
     }
   );
   const [isMicOn, setIsMicOn] = useState<Mike>(
@@ -119,7 +119,7 @@ const PostBoard = (props: PostBoardProps) => {
       setPositionValue({
         main: user.mainP ? user.mainP : "ANY",
         sub: user.subP ? user.subP : "ANY",
-        want: user.wantP ? user.wantP : "ANY",
+        want: user.wantP ? user.wantP : ["ANY", "ANY"],
       });
       setSelectedImageIndex(user.profileImg);
       const ids =
@@ -229,9 +229,10 @@ const PostBoard = (props: PostBoardProps) => {
       contents: textareaValue,
       mainP: isARAM ? "ANY" : positionValue?.main,
       subP: isARAM ? "ANY" : positionValue?.sub,
-      wantP: isARAM ? "ANY" : positionValue?.want,
+      wantP: isARAM ? ["ANY", "ANY"] : positionValue?.want,
     };
 
+    console.log("params", params);
     if (currentPost) {
       try {
         await handleEdit(params);
@@ -292,12 +293,7 @@ const PostBoard = (props: PostBoardProps) => {
               isProfileListOpen={isProfileListOpen}
               onImageClick={handleImageClick}
             />
-            <User
-              account={user.gameName}
-              tag={user.tag}
-              tier={user.tier}
-              rank={user.gameRank}
-            />
+            <UserAccount account={user.gameName} tag={user.tag} />
           </UserSection>
         )}
 

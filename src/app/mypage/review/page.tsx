@@ -3,7 +3,7 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import MannerLevelBar from "@/components/common/MannerLevelBar";
-import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
+import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants/mannerLevel";
 import { useEffect, useState } from "react";
 import { Manner } from "@/components/user/UserProfile";
 import { useSelector } from "react-redux";

@@ -149,7 +149,11 @@ const ProfilePage = () => {
         <HeaderTitle title="프로필 등록" />
         <Main>
           {user ? (
-            <Profile profileType={profileType ?? "normal"} user={user} />
+            <Profile
+              profileType={profileType ? profileType : "normal"}
+              user={user}
+              backgroundColor={theme.colors.violet100}
+            />
           ) : (
             <p>Loading...</p>
           )}

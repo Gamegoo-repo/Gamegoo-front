@@ -78,8 +78,8 @@ const FriendItem = (props: FriendItemProps) => {
               ? "/assets/icons/favorites.svg"
               : "/assets/icons/nonFavorites.svg"
           }
-          width={15}
-          height={15}
+          width={36}
+          height={36}
           alt="즐겨찾기 버튼"
         />
       )}

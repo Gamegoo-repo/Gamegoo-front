@@ -1,4 +1,4 @@
-import { POSITIONS } from "@/data/profile";
+import { POSITIONS } from "@/constants/profile";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import React, { useState } from "react";

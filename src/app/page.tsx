@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { MATCH_PAGE_DATA } from "@/data/match";
+import { MATCH_PAGE_DATA } from "@/constants/match";
 import Image from "next/image";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
@@ -32,7 +32,7 @@ const HomePage = () => {
       <HomeContent>
         <Header>
           <Image
-            src="/assets/icons/logo_m.svg"
+            src="/assets/icons/logo.svg"
             width={371}
             height={117}
             priority

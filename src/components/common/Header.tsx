@@ -1,4 +1,4 @@
-import { HEADER_MODAL_TAB } from "@/data/tab";
+import { HEADER_MODAL_TAB } from "@/constants/tab";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import Link from "next/link";

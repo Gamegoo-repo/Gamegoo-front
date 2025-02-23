@@ -1,4 +1,4 @@
-import { MYPAGE_TAB } from "@/data/tab";
+import { MYPAGE_TAB } from "@/constants/tab";
 import { theme } from "@/styles/theme";
 import { usePathname, useRouter } from "next/navigation";
 import styled from "styled-components";

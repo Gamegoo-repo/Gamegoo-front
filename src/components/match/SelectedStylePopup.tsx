@@ -1,4 +1,4 @@
-import { GAME_STYLE } from "@/data/profile";
+import { GAME_STYLE } from "@/constants/profile";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import React from "react";
@@ -31,8 +31,8 @@ const SelectedStylePopup: React.FC<SelectedStylePopupProps> = ({
         3개까지 선택가능
         <CloseImage
           src="/assets/icons/close_white.svg"
-          width={position ? 9 : 14}
-          height={position ? 9 : 14}
+          width={position ? 9 : profileType === "mini" ? 10 : 14}
+          height={position ? 9 : profileType === "mini" ? 10 : 14}
           alt="close"
           onClick={onClose}
         />
@@ -82,8 +82,10 @@ const Container = styled.div<{
   ${({ $profileType }) =>
     $profileType === "mini" &&
     css`
-      width: 570px;
+      width: 555px;
       height: auto;
+      padding: 13px 22px;
+      gap: 12px;
     `}
 `;
 
@@ -94,7 +96,7 @@ const Top = styled.div<{ $position: positionType | undefined }>`
   align-items: center;
   color: ${theme.colors.white};
   font-size: ${({ $position }) =>
-    $position ? theme.fonts.regular14 : theme.fonts.regular20};
+    $position ? theme.fonts.regular14 : theme.fonts.regular14};
 `;
 
 const CloseImage = styled(Image)`
@@ -133,7 +135,7 @@ const Box = styled.button<{
   align-items: center;
   border-radius: 59.263px;
   background: ${({ selected }) =>
-    selected ? theme.colors.violet600 : theme.colors.gray500};
+    selected ? theme.colors.violet600 : theme.colors.gray700};
   color: ${theme.colors.white};
   font-size: ${({ $position }) =>
     $position ? theme.fonts.medium14 : theme.fonts.medium20};
@@ -143,8 +145,8 @@ const Box = styled.button<{
   ${({ $profileType }) =>
     $profileType === "mini" &&
     css`
-      height: 30px;
-      padding: 8px 18px;
-      ${(props) => props.theme.fonts.regular14}
+      height: 29px;
+      padding: 4px 16px;
+      ${(props) => props.theme.fonts.semiBold14}
     `}
 `;
