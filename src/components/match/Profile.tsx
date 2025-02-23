@@ -38,6 +38,7 @@ import { blockMember, unblockMember } from "@/api/block/block";
 import { Mike as MikeType } from "@/types/user/mike";
 import { Position as PositionType } from "@/types/position/position";
 import RankTier from "../common/RankTier";
+import Alert from "../common/Alert";
 
 type profileType = "normal" | "wind" | "other" | "me";
 
@@ -81,10 +82,9 @@ const Profile: React.FC<Profile> = ({
     false,
     false,
   ]);
-
-  const matchInfo = useSelector((state: RootState) => state.matchInfo);
-
   const [selectedBox, setSelectedBox] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
+  const matchInfo = useSelector((state: RootState) => state.matchInfo);
 
   /* user부터 가져오는 상태들 */
   const [isMike, setIsMike] = useState<MikeType>(user.mike);
@@ -426,11 +426,26 @@ const Profile: React.FC<Profile> = ({
   }, [isMoreBoxOpen]);
 
   const handleMoreBoxOpen = () => {
-    setIsMoreBoxOpen((prevState) => !prevState);
+    if (isDefault) {
+      setShowAlert(true);
+    } else {
+      setIsMoreBoxOpen((prevState) => !prevState);
+    }
   };
 
   return (
     <Container className={profileType} $backgroundColor={backgroundColor}>
+      {showAlert && (
+        <Alert
+          icon="exclamation"
+          width={68}
+          height={58}
+          content="로그인이 필요한 서비스입니다."
+          alt="경고"
+          onClose={() => setShowAlert(false)}
+          buttonText="확인"
+        />
+      )}
       <Row $profileType={profileType}>
         <ImageContainer>
           <ProfileImgWrapper $bgColor={getProfileBgColor(selectedImageIndex)}>
@@ -576,9 +591,9 @@ const Profile: React.FC<Profile> = ({
           )}
         </StyledBox>
       </Row>
-      {!isDefault && profileType === "other" && (
+      {profileType === "other" && (
         <More>
-          <Admit>{renderFriendsButton()}</Admit>
+          {!isDefault && <Admit>{renderFriendsButton()}</Admit>}
           {/* 더보기 버튼 */}
           {memberId !== myId && (
             <MoreDiv ref={moreBoxRef}>
