@@ -91,7 +91,7 @@ const ChatFriendList = (props: FriendListProps) => {
     <List>
       {favoriteFriends?.length > 0 && (
         <FavoritesWrapper $length={favoriteFriends.length}>
-          <FavoritesTitle>즐겨찾기</FavoritesTitle>
+          <FavoritesTitle>즐겨 찾기</FavoritesTitle>
           {favoriteFriends.map((friend) => {
             return (
               <FriendItem

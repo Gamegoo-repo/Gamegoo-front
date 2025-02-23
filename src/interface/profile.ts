@@ -30,7 +30,7 @@ export interface User {
   updatedAt: string;
   mainP: Position;
   subP: Position;
-  wantP: Position;
+  wantP: Position[];
   blocked: boolean;
   isAgree: boolean;
   isBlind: boolean;

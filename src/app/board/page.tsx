@@ -19,7 +19,7 @@ import {
   setOpenPostingModal,
 } from "@/redux/slices/modalSlice";
 import { getBoardList } from "@/api/board/board";
-import { BoardDetail } from "@/interface/board";
+import { BoardListDetail } from "@/interface/board";
 import Alert from "@/components/common/Alert";
 import { useRouter } from "next/navigation";
 import { clearCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
@@ -34,7 +34,7 @@ const ITEMS_PER_PAGE = 20;
 const BUTTONS_PER_PAGE = 5;
 
 const BoardPage = () => {
-  const [boardList, setBoardList] = useState<BoardDetail[]>([]);
+  const [boardList, setBoardList] = useState<BoardListDetail[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
   const [totalItems, setTotalItems] = useState(0);

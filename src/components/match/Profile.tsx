@@ -119,7 +119,7 @@ const Profile: React.FC<Profile> = ({
         mike: isMike,
         mainP: positionValue.main ?? "ANY",
         subP: positionValue.sub ?? "ANY",
-        wantP: positionValue.want ?? "ANY",
+        wantP: positionValue.want ?? ["ANY", "ANY"],
         gameStyleResponseDTOList: gameStyleIds,
       })
     );
@@ -228,7 +228,7 @@ const Profile: React.FC<Profile> = ({
         await putPosition({
           mainP: newPositionValue.main,
           subP: newPositionValue.sub,
-          wantP: newPositionValue.want || "ANY",
+          wantP: newPositionValue.want || ["ANY", "ANY"],
         });
 
         // 포지션 상태 업데이트
@@ -242,7 +242,7 @@ const Profile: React.FC<Profile> = ({
           ...matchInfo,
           mainP: newPositionValue.main ?? "ANY",
           subP: newPositionValue.sub ?? "ANY",
-          wantP: newPositionValue.want ?? "ANY",
+          wantP: newPositionValue.want ?? ["ANY", "ANY"],
         })
       );
     }
@@ -526,7 +526,8 @@ const Profile: React.FC<Profile> = ({
                           ? positionValue.main ?? "ANY"
                           : index === 1
                           ? positionValue.sub ?? "ANY"
-                          : positionValue.want ?? "ANY"
+                          : (positionValue.want && positionValue.want[0]) ??
+                            "ANY"
                       )}
                       width={55}
                       height={40}

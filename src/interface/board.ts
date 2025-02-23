@@ -13,7 +13,7 @@ export interface gameStyleResponseDTOList {
   gameStyleName: string;
 }
 
-export interface BoardDetail {
+export interface BoardListDetail {
   boardId: number;
   memberId: number;
   profileImage: number;
@@ -21,14 +21,34 @@ export interface BoardDetail {
   mannerLevel: number;
   tag: string;
   tier: string;
-  rank?: number;
+  rank: number;
   gameMode: GameMode;
   mainP: Position;
   subP: Position;
-  wantP: Position;
+  wantP: Position[];
   championResponseList?: ChampionResponseDTOList[];
-  freeWinRate: number;
-  soloWinRate: number;
+  winRate: number;
+  createdAt: string;
+  mike: Mike;
+}
+
+export interface BoardDetail {
+  boardId: number;
+  memberId: number;
+  profileImage: number;
+  gameName: string;
+  mannerLevel: number;
+  tag: string;
+  soloTier: string;
+  freeTier: string;
+  soloRank: number;
+  freeRanks: number;
+  gameMode: GameMode;
+  mainP: Position;
+  subP: Position;
+  wantP: Position[];
+  championResponseList?: ChampionResponseDTOList[];
+  winRate: number;
   createdAt: string;
   mike: Mike;
 }
@@ -36,7 +56,7 @@ export interface BoardDetail {
 export interface BoardList {
   totalPage: number;
   totalCount: number;
-  boards: BoardDetail[];
+  boards: BoardListDetail[];
 }
 
 export interface MemberPost {
@@ -59,10 +79,9 @@ export interface MemberPost {
   gameMode: GameMode;
   mainP?: Position;
   subP?: Position;
-  wantP?: Position;
+  wantP?: Position[];
   recentGameCount?: number;
-  freeWinRate: number;
-  soloWinRate: number;
+  winRate: number;
   gameStyles: number[];
   contents: string;
   soloRank?: number;
@@ -74,7 +93,7 @@ export interface PostReq {
   gameMode: GameMode;
   mainP: Position;
   subP: Position;
-  wantP: Position;
+  wantP: Position[];
   mike: Mike;
   gameStyles: number[];
   contents: string;

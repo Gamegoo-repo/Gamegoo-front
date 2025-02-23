@@ -17,7 +17,7 @@ interface BaseProfileData {
   updatedAt: string;
   mainP: Position;
   subP: Position;
-  wantP: Position;
+  wantP: Position[];
   isAgree: boolean;
   isBlind: boolean;
   loginType: string;

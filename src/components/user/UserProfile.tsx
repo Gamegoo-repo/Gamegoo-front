@@ -7,7 +7,6 @@ import MannerLevelBar from "@/components/common/MannerLevelBar";
 import { profileType, User } from "@/interface/profile";
 import { getUserId } from "@/utils/storage";
 import Champion from "../readBoard/Champion";
-import { isErrored } from "stream";
 
 export interface Manner {
   memberId?: number;

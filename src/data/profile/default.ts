@@ -17,7 +17,7 @@ export const DEFAULT_PROFILE = {
   updatedAt: "",
   mainP: "ANY" as Position,
   subP: "ANY" as Position,
-  wantP: "ANY" as Position,
+  wantP: ["ANY", "ANY"] as Position[],
   blocked: false,
   isAgree: false,
   isBlind: false,

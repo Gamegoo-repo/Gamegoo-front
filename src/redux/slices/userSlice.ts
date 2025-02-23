@@ -19,7 +19,7 @@ interface UserState {
   updatedAt: string;
   mainP: Position;
   subP: Position;
-  wantP: Position;
+  wantP: Position[];
   isAgree: boolean;
   isBlind: boolean;
   loginType: string;
@@ -48,11 +48,11 @@ const initialState: UserState = {
   updatedAt: "",
   mainP: "ANY",
   subP: "ANY",
-  wantP: "ANY",
+  wantP: ["ANY", "ANY"],
   isAgree: false,
   isBlind: false,
   loginType: "",
-    soloWinrate: 0,
+  soloWinrate: 0,
   freeWinrate: 0,
   gameStyleResponseList: [],
   championResponseList: [],
@@ -96,7 +96,7 @@ export const userSlice = createSlice({
       state.updatedAt = '';
       state.mainP = "ANY";
       state.subP = "ANY";
-      state.wantP = "ANY";
+      state.wantP = ["ANY", "ANY"];
       state.isAgree = false;
       state.isBlind = false;
       state.loginType = '';
