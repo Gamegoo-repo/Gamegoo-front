@@ -2,9 +2,9 @@ import styled from "styled-components";
 import Profile from "@/components/match/Profile";
 import HeaderTitle from "@/components/common/HeaderTitle";
 import { theme } from "@/styles/theme";
-import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
+import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants/mannerLevel";
 import MannerLevelBar from "@/components/common/MannerLevelBar";
-import { User } from "@/interface/profile";
+import { profileType, User } from "@/interface/profile";
 import { getUserId } from "@/utils/storage";
 import Champion from "../readBoard/Champion";
 
@@ -17,16 +17,20 @@ export interface Manner {
 
 const UserProfile = ({
   profile,
+  profileType,
   manner,
   updateFriendState,
+  isDefault,
 }: {
   profile: User;
+  profileType?: profileType;
   manner: Manner;
   updateFriendState: (state: {
     friend: boolean;
     friendRequestMemberId: number | null;
     blocked: boolean;
   }) => void;
+  isDefault?: boolean; // 비회원용 default 프로필 여부
 }) => {
   const goodMannerEvaluations =
     manner.mannerKeywords
@@ -59,9 +63,13 @@ const UserProfile = ({
         </Row>
         <Main>
           <Profile
-            profileType={profile.id === Number(getUserId()) ? "me" : "other"}
+            profileType={
+              profileType ||
+              (profile.id === Number(getUserId()) ? "me" : "other")
+            }
             user={profile}
             updateFriendState={updateFriendState}
+            isDefault={isDefault}
           />
           <Content>
             <div>

@@ -3,14 +3,14 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 import styled, { css } from "styled-components";
 import GameStyle from "./GameStyle";
-import { POSITIONS } from "@/data/profile";
+import { POSITIONS } from "@/constants/profile";
 import Champion from "../readBoard/Champion";
 import Toggle from "../common/Toggle";
 import Button from "../common/Button";
 import MoreBoxButton from "../readBoard/MoreBoxButton";
 import FormModal from "../common/FormModal";
 import Checkbox from "../common/Checkbox";
-import { REPORT_REASON } from "@/data/report";
+import { REPORT_REASON } from "@/constants/report";
 import Input from "../common/Input";
 import ConfirmModal from "../common/ConfirmModal";
 import PositionCategory from "../common/PositionCategory";
@@ -38,7 +38,6 @@ import { blockMember, unblockMember } from "@/api/block/block";
 import { Mike as MikeType } from "@/types/user/mike";
 import { Position as PositionType } from "@/types/position/position";
 import RankTier from "../common/RankTier";
-import { profile } from "console";
 
 type profileType = "normal" | "wind" | "other" | "me";
 
@@ -51,6 +50,7 @@ interface Profile {
     blocked: boolean;
   }) => void;
   backgroundColor?: string;
+  isDefault?: boolean; // 비회원용 default 프로필 여부
 }
 
 const Profile: React.FC<Profile> = ({
@@ -58,6 +58,7 @@ const Profile: React.FC<Profile> = ({
   user,
   updateFriendState,
   backgroundColor,
+  isDefault = false,
 }) => {
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -512,10 +513,7 @@ const Profile: React.FC<Profile> = ({
           ) : (
             <UnderRow>
               <Position>
-                {(profileType === "other"
-                  ? POSITIONS.slice(0, 2)
-                  : POSITIONS
-                ).map((position, index) => (
+                {POSITIONS.map((position, index) => (
                   <Posi
                     key={index}
                     className={profileType}
@@ -577,7 +575,7 @@ const Profile: React.FC<Profile> = ({
           )}
         </StyledBox>
       </Row>
-      {profileType === "other" && (
+      {!isDefault && profileType === "other" && (
         <More>
           <Admit>{renderFriendsButton()}</Admit>
           {/* 더보기 버튼 */}
