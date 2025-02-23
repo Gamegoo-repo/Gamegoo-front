@@ -1,4 +1,4 @@
-import { GAME_STYLE } from "@/data/profile";
+import { GAME_STYLE } from "@/constants/profile";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import React from "react";

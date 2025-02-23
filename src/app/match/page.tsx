@@ -2,7 +2,7 @@
 
 import styled from "styled-components";
 import GraphicBox from "@/components/match/GraphicBox";
-import { MATCH_TYPE_PAGE_DATA } from "@/data/match";
+import { MATCH_TYPE_PAGE_DATA } from "@/constants/match";
 import HeaderTitle from "@/components/common/HeaderTitle";
 
 const MatchTypePage = () => {

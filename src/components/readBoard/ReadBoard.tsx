@@ -24,7 +24,7 @@ import { reportMember } from "@/api/report/report";
 import FormModal from "../common/FormModal";
 import Input from "../common/Input";
 import Checkbox from "../common/Checkbox";
-import { REPORT_REASON } from "@/data/report";
+import { REPORT_REASON } from "@/constants/report";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { AxiosError } from "axios";

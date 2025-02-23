@@ -4,7 +4,7 @@ import styled from "styled-components";
 import Image, { ImageProps } from "next/image";
 import { theme } from "@/styles/theme";
 import { useEffect, useRef, useState } from "react";
-import { BOARD_TITLE, GAME_MODE, MIC, TIER } from "@/data/board";
+import { BOARD_TITLE, GAME_MODE, MIC, TIER } from "@/constants/board";
 import Button from "@/components/common/Button";
 import Dropdown from "@/components/common/Dropdown";
 import Table from "@/components/board/Table";

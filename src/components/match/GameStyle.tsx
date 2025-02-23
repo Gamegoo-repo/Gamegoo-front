@@ -6,7 +6,7 @@ import Toggle from "../common/Toggle";
 import { theme } from "@/styles/theme";
 import SelectedStylePopup from "./SelectedStylePopup";
 import { css } from "styled-components";
-import { GAME_STYLE } from "@/data/profile";
+import { GAME_STYLE } from "@/constants/profile";
 import { useDispatch } from "react-redux";
 import { updateGameStyles } from "@/redux/slices/matchInfo";
 import { setUserMike } from "@/redux/slices/userSlice";

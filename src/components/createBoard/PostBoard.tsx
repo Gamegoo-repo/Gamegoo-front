@@ -27,7 +27,7 @@ import { theme } from "@/styles/theme";
 import { setClosePostingModal } from "@/redux/slices/modalSlice";
 import { getMyProfile } from "@/api/user/profile/get";
 import { Mike } from "@/types/user/mike";
-import { GAME_MODE } from "@/data/board";
+import { GAME_MODE } from "@/constants/board";
 import { GameMode } from "@/types/game/gameMode";
 
 interface PostBoardProps {

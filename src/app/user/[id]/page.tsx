@@ -3,8 +3,8 @@
 import { getMemberMannerKeyword, getMemberMannerLevel } from "@/api/manner";
 import { getOtherProfile } from "@/api/user/profile/get";
 import BlindProfile from "@/components/user/BlindProfile";
-import GuestProfile from "@/components/user/GuestProfile";
 import UserProfile, { Manner } from "@/components/user/UserProfile";
+import { DEFAULT_MANNER, DEFAULT_PROFILE } from "@/data/profile/default";
 import { User } from "@/interface/profile";
 import { getAccessToken } from "@/utils/storage";
 import { useParams } from "next/navigation";
@@ -71,7 +71,12 @@ const UserProfilePage = () => {
   };
 
   return !getAccessToken() ? (
-    <GuestProfile />
+    <UserProfile
+      profile={DEFAULT_PROFILE}
+      manner={DEFAULT_MANNER}
+      updateFriendState={updateFriendState}
+      isDefault={true}
+    />
   ) : !otherProfile ? (
     <p>Loading...</p>
   ) : otherProfile.isBlind ? (
@@ -79,6 +84,7 @@ const UserProfilePage = () => {
   ) : (
     <UserProfile
       profile={otherProfile}
+      profileType="other"
       manner={otherManner}
       updateFriendState={updateFriendState}
     />
