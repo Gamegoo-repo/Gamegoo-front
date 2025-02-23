@@ -81,8 +81,8 @@ const UserProfilePage = () => {
     setFriendState(newFriendState);
   };
 
-  // 토큰 확인이 완료되기 전 또는 토큰은 있지만 프로필 정보가 아직 없을 경우
-  if (!isTokenChecked || !otherProfile) {
+  // 토큰 확인이 완료되기 전
+  if (!isTokenChecked) {
     return (
       <LoadingContainer>
         <LoadingSpinner />
@@ -99,6 +99,15 @@ const UserProfilePage = () => {
         updateFriendState={updateFriendState}
         isDefault={true}
       />
+    );
+  }
+
+  // 토큰은 있지만 프로필 정보가 아직 없을 경우
+  if (!otherProfile) {
+    return (
+      <LoadingContainer>
+        <LoadingSpinner />
+      </LoadingContainer>
     );
   }
 
