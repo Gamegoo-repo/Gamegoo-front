@@ -68,71 +68,33 @@ const BoardPage = () => {
   const boardFilters = useSelector((state: RootState) => state.board);
 
   /* 게임모드 드롭 */
-  const handleGameModeDropValue = (gameMode: number | GameMode | null) => {
-    if (typeof gameMode === "number") {
-      return;
-    }
+  const handleGameModeDropValue = (id: number | null) => {
     dispatch(resetBoardFilters());
-    setSelectedGameMode(gameMode);
+
+    const selectedGameModeObj = GAME_MODE.find(
+      (gameMode) => gameMode.id === id
+    );
+    setSelectedGameMode(selectedGameModeObj ? selectedGameModeObj.key : null);
     setIsGameModeDropdownOpen(false);
-    console.log(gameMode);
   };
 
   /* 티어 드롭 */
-  const handleTierDropValue = (id: number | GameMode | null) => {
-    if (typeof id === "object" && id !== null) {
-      return;
-    }
-
+  const handleTierDropValue = (id: number | null) => {
     dispatch(resetBoardFilters());
-    switch (id) {
-      case 1:
-        setSelectedTier("IRON");
-        break;
-      case 2:
-        setSelectedTier("BRONZE");
-        break;
-      case 3:
-        setSelectedTier("SILVER");
-        break;
-      case 4:
-        setSelectedTier("GOLD");
-        break;
-      case 5:
-        setSelectedTier("PLATINUM");
-        break;
-      case 6:
-        setSelectedTier("EMERALD");
-        break;
-      case 7:
-        setSelectedTier("DIAMOND");
-        break;
-      case 8:
-        setSelectedTier("MASTER");
-        break;
-      case 9:
-        setSelectedTier("GRANDMASTER");
-        break;
-      case 10:
-        setSelectedTier("CHALLENGER");
-        break;
-      default:
-        setSelectedTier(null);
-        break;
-    }
 
+    const selectedTierObj = TIER.find((tier) => tier.id === id);
+    setSelectedTier(selectedTierObj ? selectedTierObj.key : null);
     setIsTierDropdownOpen(false);
   };
 
-  // useEffect(() => {
-  //   if (boardFilters) {
-  //     console.log(boardFilters);
-  //     setSelectedGameMode(boardFilters.mode || "솔로 랭크");
-  //     setSelectedTier(boardFilters.tier || "티어 선택");
-  //     setIsPosition(boardFilters.mainPosition || 0);
-  //     setSelectedMic(boardFilters.mike || "음성 채팅");
-  //   }
-  // }, [boardFilters]);
+  /* 마이크 드롭 */
+  const handleMicDropValue = (id: number | null) => {
+    dispatch(resetBoardFilters());
+
+    const selectedMicObj = MIC.find((mic) => mic.id === id);
+    setSelectedMic(selectedMicObj ? selectedMicObj.key : null);
+    setIsMicDropdownOpen(false);
+  };
 
   /* 게임모드 드롭박스 외부 클릭 */
   const handleGameModeDropdownClickOutside = (event: MouseEvent) => {
@@ -176,27 +138,6 @@ const BoardPage = () => {
   const handlePositionFilter = (id: Position) => {
     dispatch(resetBoardFilters());
     setIsPosition(id);
-  };
-
-  /* 마이크 드롭 */
-  const handleMicDropValue = (id: number | GameMode | null) => {
-    if (typeof id === "object" && id !== null) {
-      return;
-    }
-    dispatch(resetBoardFilters());
-    switch (id) {
-      case 1:
-        setSelectedMic("AVAILABLE");
-        break;
-      case 2:
-        setSelectedMic("UNAVAILABLE");
-        break;
-      default:
-        setSelectedMic(null);
-        break;
-    }
-
-    setIsMicDropdownOpen(false);
   };
 
   /* 글쓰기 모달 오픈 */
@@ -430,8 +371,8 @@ const FirstRow = styled.div`
 `;
 
 const Title = styled.p`
-  ${(props) => props.theme.fonts.regular35};
-  color: #44515c;
+  color: ${theme.colors.gray700};
+  ${theme.fonts.bold32};
 `;
 
 interface RefreshImageProps extends ImageProps {
