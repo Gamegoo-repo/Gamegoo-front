@@ -45,7 +45,7 @@ const BlindProfile = () => {
                       <Posi key={index} $isWantP={index === 2}>
                         {position.label}
                         <Image
-                          src={"/assets/icons/position_all_blind.svg"}
+                          src={"/assets/images/position/position_all_blind.svg"}
                           width={55}
                           height={40}
                           alt="포지션"

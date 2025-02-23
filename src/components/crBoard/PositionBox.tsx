@@ -60,19 +60,19 @@ const PositionBox = (props: PositionBoxProps) => {
   const handlePositionImgSet = (positionId: string | undefined) => {
     switch (positionId) {
       case "ANY":
-        return "/assets/icons/position_all_purple.svg";
+        return "/assets/images/position/position_all_purple.svg";
       case "TOP":
-        return "/assets/icons/position_top_purple.svg";
+        return "/assets/images/position/position_top_purple.svg";
       case "JUNGLE":
-        return "/assets/icons/position_jungle_purple.svg";
+        return "/assets/images/position/position_jungle_purple.svg";
       case "MID":
-        return "/assets/icons/position_mid_purple.svg";
+        return "/assets/images/position/position_mid_purple.svg";
       case "ADC":
-        return "/assets/icons/position_one_deal_purple.svg";
+        return "/assets/images/position/position_one_deal_purple.svg";
       case "SUP":
-        return "/assets/icons/position_supporter_purple.svg";
+        return "/assets/images/position/position_supporter_purple.svg";
       default:
-        return "/assets/icons/position_all_purple.svg";
+        return "/assets/images/position/position_all_purple.svg";
     }
   };
 
