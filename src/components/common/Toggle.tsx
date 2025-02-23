@@ -79,6 +79,7 @@ const ToggleContainer = styled.div<{
       $isBlind &&
       css`
         background-color: ${theme.colors.gray400};
+        background-color: #606060;
       `}
   }
 

@@ -71,7 +71,9 @@ const UserProfilePage = () => {
   };
 
   return !getAccessToken() ? (
-    <GuestProfile />
+    <>
+      <GuestProfile />
+    </>
   ) : !otherProfile ? (
     <p>Loading...</p>
   ) : otherProfile.isBlind ? (
