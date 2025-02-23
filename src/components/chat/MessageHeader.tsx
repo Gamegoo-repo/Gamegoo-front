@@ -18,6 +18,7 @@ interface MessageHeaderProps {
   onMoreBoxOpen: () => void;
   menuItems: MoreBoxMenuItems[];
   disabled?: boolean;
+  setIsMoreBoxOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const MessageHeader = (props: MessageHeaderProps) => {
@@ -27,6 +28,7 @@ const MessageHeader = (props: MessageHeaderProps) => {
     onMoreBoxOpen,
     menuItems,
     disabled = false,
+    setIsMoreBoxOpen,
   } = props;
 
   const dispatch = useDispatch();
@@ -73,7 +75,14 @@ const MessageHeader = (props: MessageHeaderProps) => {
           buttonText="확인"
         />
       )}
-      {isMoreBoxOpen && <MoreBox items={menuItems} top={35} left={200} />}
+      {isMoreBoxOpen && (
+        <MoreBox
+          items={menuItems}
+          top={35}
+          left={200}
+          onClose={() => setIsMoreBoxOpen(false)}
+        />
+      )}
       <CloseButton>
         <CloseImage
           onClick={() => dispatch(closeChatRoom())}
