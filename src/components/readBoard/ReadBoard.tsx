@@ -491,12 +491,16 @@ const ReadBoard = (props: ReadBoardProps) => {
   /* 채팅방 연결 */
   const handleChatStart = async () => {
     if (!isUser.id) {
-      return showAlertWithContent(
-        "exclamation",
-        loginRequiredMessage,
-        () => setShowAlert(false),
-        "확인"
-      );
+      // 비회원 게스트용
+      if (isPost) {
+        await dispatch(
+          setCurrentPost({ currentPost: isPost, currentPostId: postId })
+        );
+        dispatch(setChatRoomUuid(isPost.boardId));
+        dispatch(setCloseReadingModal());
+        dispatch(openChatRoom());
+        dispatch(setChatEnterType(2));
+      }
     }
 
     if (isPost?.isBlocked) {

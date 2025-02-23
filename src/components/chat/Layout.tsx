@@ -42,6 +42,7 @@ import { blockMember } from "@/api/block/block";
 import Tabs from "./Tabs";
 import { resetPosition, setPosition } from "@/redux/slices/chatPositionSlice";
 import useDrag from "@/hooks/useDrag";
+import { getAccessToken } from "@/utils/storage";
 
 const Layout = () => {
   const dispatch = useDispatch();
@@ -125,6 +126,9 @@ const Layout = () => {
   /* 친구 목록 가져오기 */
   const handleFetchFriendsList = async () => {
     setIsLoading(true);
+    const accessToken = getAccessToken();
+    if (!accessToken) return;
+
     try {
       const response = await getFriendsList();
       const friendsList = response.data.friendInfoList;
