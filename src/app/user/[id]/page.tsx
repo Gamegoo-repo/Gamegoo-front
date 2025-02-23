@@ -6,6 +6,7 @@ import BlindProfile from "@/components/user/BlindProfile";
 import GuestProfile from "@/components/user/GuestProfile";
 import UserProfile, { Manner } from "@/components/user/UserProfile";
 import { User } from "@/interface/profile";
+import { getAccessToken } from "@/utils/storage";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -34,28 +35,30 @@ const UserProfilePage = () => {
   });
 
   useEffect(() => {
-    const fetchOtherProfile = async () => {
-      try {
-        const response = await getOtherProfile(Number(id));
-        setOtherProfile(response.data);
-        console.log(response);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+    if (getAccessToken()) {
+      const fetchOtherProfile = async () => {
+        try {
+          const response = await getOtherProfile(Number(id));
+          setOtherProfile(response.data);
+          console.log(response);
+        } catch (error) {
+          console.error(error);
+        }
+      };
 
-    const fetchOtherManner = async () => {
-      try {
-        const response_level = await getMemberMannerLevel(Number(id));
-        const response_keywords = await getMemberMannerKeyword(Number(id));
-        setOtherManner({ ...response_level.data, ...response_keywords.data });
-      } catch (error) {
-        console.error(error);
-      }
-    };
+      const fetchOtherManner = async () => {
+        try {
+          const response_level = await getMemberMannerLevel(Number(id));
+          const response_keywords = await getMemberMannerKeyword(Number(id));
+          setOtherManner({ ...response_level.data, ...response_keywords.data });
+        } catch (error) {
+          console.error(error);
+        }
+      };
 
-    fetchOtherProfile();
-    fetchOtherManner();
+      fetchOtherProfile();
+      fetchOtherManner();
+    }
   }, [id, friendState]);
 
   // 상태 업데이트를 처리하는 함수
@@ -67,21 +70,18 @@ const UserProfilePage = () => {
     setFriendState(newFriendState);
   };
 
-  return otherProfile ? (
-    // <GuestProfile/>
-    otherProfile.isBlind ? (
-      <BlindProfile />
-    ) : (
-      otherManner && (
-        <UserProfile
-          profile={otherProfile}
-          manner={otherManner}
-          updateFriendState={updateFriendState}
-        />
-      )
-    )
-  ) : (
+  return !getAccessToken() ? (
+    <GuestProfile />
+  ) : !otherProfile ? (
     <p>Loading...</p>
+  ) : otherProfile.isBlind ? (
+    <BlindProfile />
+  ) : (
+    <UserProfile
+      profile={otherProfile}
+      manner={otherManner}
+      updateFriendState={updateFriendState}
+    />
   );
 };
 
