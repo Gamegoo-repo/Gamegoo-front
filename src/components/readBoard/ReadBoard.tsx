@@ -604,11 +604,7 @@ const ReadBoard = (props: ReadBoardProps) => {
               )}
               <WinningRateSection $gameType={gameMode}>
                 <WinningRate
-                  completed={
-                    gameMode === "FREE"
-                      ? isPost.freeWinRate
-                      : isPost.soloWinRate
-                  }
+                  completed={isPost.winRate}
                   recentGameCount={isPost?.recentGameCount}
                 />
               </WinningRateSection>

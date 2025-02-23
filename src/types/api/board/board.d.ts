@@ -38,8 +38,7 @@ interface GameInfo {
 
 // 게임 스탯 정보 인터페이스
 interface GameStats {
-  freeWinRate: number;
-  soloWinRate: number;
+  winRate: number;
   recentGameCount?: number;
   championResponseList?: ChampionResponseDTO[];
   championResponseDTOList?: ChampionResponseDTO[];
