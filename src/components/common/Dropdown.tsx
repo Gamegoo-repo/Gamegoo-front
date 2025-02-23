@@ -16,7 +16,7 @@ interface DropdownProps {
   width: string;
   open: boolean;
   setOpen: Dispatch<React.SetStateAction<boolean>>;
-  onDropValue: (id: number | GameMode | null) => void;
+  onDropValue: (id: number | null) => void;
   defaultValue: number | string | boolean | null;
 }
 
