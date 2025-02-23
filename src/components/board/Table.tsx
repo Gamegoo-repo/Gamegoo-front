@@ -106,11 +106,6 @@ const Table = (props: TableProps) => {
   const handleMoveProfilePage = (e: React.MouseEvent, memberId: number) => {
     e.stopPropagation();
 
-    if (!isUser.gameName) {
-      setAlertContent("로그인이 필요한 서비스입니다.");
-      return setShowAlert(true);
-    }
-
     router.push(`/user/${memberId}`);
   };
 
