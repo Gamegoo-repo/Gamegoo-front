@@ -16,6 +16,7 @@ interface GraphicBoxProps {
   backgroundColor?: string; // 추가: Hover 시 변경될 배경색을 전달받음
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
+  onClick?: () => void;
 }
 
 const GraphicBox = (props: GraphicBoxProps) => {
@@ -32,16 +33,21 @@ const GraphicBox = (props: GraphicBoxProps) => {
     backgroundColor, // 추가
     onMouseEnter,
     onMouseLeave,
+    onClick,
   } = props;
 
   const handleClick = () => {
-    router.push(
-      type
-        ? rank
-          ? `${pathname}?type=${type}&rank=${rank}`
-          : `${pathname}?type=${type}`
-        : pathname
-    );
+    if (onClick) {
+      onClick();
+    } else {
+      router.push(
+        type
+          ? rank
+            ? `${pathname}?type=${type}&rank=${rank}`
+            : `${pathname}?type=${type}`
+          : pathname
+      );
+    }
   };
 
   return (

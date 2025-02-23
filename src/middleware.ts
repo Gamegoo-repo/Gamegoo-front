@@ -8,9 +8,8 @@ export function middleware(request: NextRequest) {
   // 로그인하지 않은 상태
   if (
     token &&
-    (pathname.startsWith("/match") ||
-      pathname.startsWith("/matching") ||
-      pathname.startsWith("/mypage"))
+    (pathname.startsWith("/match/game-mode") ||
+    pathname.startsWith("/matching") || pathname.startsWith("/mypage"))
   ) {
     // 루트 경로로 리다이렉트
     return NextResponse.redirect(new URL("/", request.url));
