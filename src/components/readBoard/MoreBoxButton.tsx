@@ -24,7 +24,11 @@ const MoreBoxButton = (props: MoreBoxButtonProps) => {
 export default MoreBoxButton;
 
 const Wrapper = styled.div`
-  margin-left: 26px;
+  width: 25px;
+  height: 40px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 `;
 
 const ThreeDotsImage = styled(Image)`

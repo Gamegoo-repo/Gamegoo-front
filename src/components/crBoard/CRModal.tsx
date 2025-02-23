@@ -72,14 +72,14 @@ const Wrapper = styled.div<{
   $hideContent: boolean | undefined;
 }>`
   border-radius: 20px;
-  max-width: 555px;
+  max-width: 580px;
   width: 100%;
   position: relative;
   min-height: ${({ $type }) => ($type === "posting" ? "837px" : "1000px")};
   max-height: ${({ $type }) => ($type === "posting" ? "837px" : "1000px")};
   height: auto;
   margin: 50px;
-  padding: 0 20px;
+  padding: 24px 30px;
   background: ${({ $hideContent }) =>
     $hideContent ? "unset" : `${theme.colors.white}`};
   box-shadow: ${({ $hideContent }) =>
@@ -101,7 +101,7 @@ const Wrapper = styled.div<{
 `;
 
 const Header = styled.header<{ $type: string }>`
-  padding: 26px 0px 0 0;
+  /* padding: 26px 0px 0 0; */
 `;
 
 const CloseButton = styled.p<{ $type: string }>`
@@ -118,5 +118,5 @@ const Main = styled.main``;
 
 const MainContent = styled.div`
   height: 100%;
-  padding: 0 14px;
+  /* padding: 0 14px; */
 `;

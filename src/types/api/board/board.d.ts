@@ -23,7 +23,9 @@ interface BasePlayerInfo {
   profileImage: number;
   gameName: string;
   tag: string;
-  tier: string;
+  // tier?: string;
+  // soloTier?: string;
+  // freeTier?: string;
 }
 
 // 게임 관련 기본 정보 인터페이스
@@ -31,7 +33,7 @@ interface GameInfo {
   gameMode: GameMode;
   mainP: Position;
   subP: Position;
-  wantP: Position;
+  wantP: Position[];
   mike: Mike;
   gameStyles: Array<number>;
 }
@@ -48,7 +50,9 @@ interface GameStats {
 interface BaseBoardInfo {
   boardId: number;
   contents: string;
-  rank?: number;
+  // rank?: number;
+  // soloRank?: number;
+  // freeRank?: number;
 }
 
 // 게시글 목록의 기본 구조
@@ -58,7 +62,10 @@ interface BoardListStructure {
 }
 
 // 구체적인 인터페이스들
-export interface PostsData extends BasePlayerInfo, GameInfo, BaseBoardInfo {}
+export interface PostsData extends BasePlayerInfo, GameInfo, BaseBoardInfo {
+  tier: string;
+  rank: number;
+}
 
 export interface GetBoardListData extends BoardListStructure {
   boards: Array<BoardDetail>;
@@ -73,15 +80,16 @@ interface BoardDetail
     GameInfo,
     BaseBoardInfo,
     GameStats {
+  tier: string;
+  rank: number;
   mannerLevel: number;
   createdAt: string;
   bumpTime: string;
 }
 
-interface MyBoardDetail
-extends BasePlayerInfo,
-BaseBoardInfo,
-GameStats {
+interface MyBoardDetail extends BasePlayerInfo, BaseBoardInfo, GameStats {
+  tier: string;
+  rank: number;
   createdAt: string;
   bumpTime: string;
 }
@@ -91,6 +99,10 @@ export interface MemberPostBoardData
     GameInfo,
     BaseBoardInfo,
     GameStats {
+  soloTier: string;
+  freeTier: string;
+  soloRank: number;
+  freeRank: number;
   isBlocked: boolean;
   isFriend: boolean;
   friendRequestMemberId: number;
@@ -104,6 +116,10 @@ export interface NotMemberBoardData
     GameInfo,
     BaseBoardInfo,
     GameStats {
+  soloTier: string;
+  freeTier: string;
+  soloRank: number;
+  freeRank: number;
   createdAt: string;
   mannerLevel: number;
 }

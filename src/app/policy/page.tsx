@@ -70,8 +70,8 @@ const Content = styled.div`
   flex-direction: column;
   gap: 23px;
   border-radius: 12px;
-  background: ${theme.colors.gray500};
-  color: #000;
+  background: ${theme.colors.gray200};
+  color: ${theme.colors.gray900};
   overflow-y: auto;
 
   &::-webkit-scrollbar {

@@ -3,7 +3,7 @@ import { theme } from "@/styles/theme";
 import SelectedStylePopup from "../match/SelectedStylePopup";
 import Image from "next/image";
 import { Dispatch, useEffect, useState } from "react";
-import { GAME_STYLE } from "@/data/profile";
+import { GAME_STYLE } from "@/constants/profile";
 
 interface GameStyleProps {
   selectedStyleIds: number[];

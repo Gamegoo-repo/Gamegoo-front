@@ -6,7 +6,7 @@ export interface MatchInfoState {
   mike: Mike | null;                        // 마이크 사용 여부
   mainP: Position;                             // 주 포지션
   subP: Position;                              // 부 포지션
-  wantP: Position;                             // 원하는 포지션
+  wantP: Position[];                             // 원하는 포지션
   gameStyleResponseDTOList: number[];          // 게임 스타일 목록
 }
 
@@ -14,7 +14,7 @@ const initialState: MatchInfoState = {
   mike: "UNAVAILABLE",
   mainP: "ANY",
   subP: "ANY",
-  wantP: "ANY",
+  wantP: ["ANY", "ANY"],
   gameStyleResponseDTOList: [],
 };
 

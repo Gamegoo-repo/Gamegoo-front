@@ -80,7 +80,7 @@ const MyPostPage = () => {
                   profileImage={item.profileImage}
                   gameName={item.gameName}
                   tag={item.tag}
-                  tier={item.tier}
+                  tier={item.tier || ""}
                   rank={item.rank || 0}
                   contents={item.contents}
                   createdAt={item.createdAt}

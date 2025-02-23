@@ -5,7 +5,6 @@ import Button from "../common/Button";
 import PositionBox from "../crBoard/PositionBox";
 import { useEffect, useRef, useState } from "react";
 import ProfileImage from "./ProfileImage";
-import User from "../crBoard/User";
 import MannerLevel from "../common/MannerLevel";
 import Mic from "./Mic";
 import MoreBoxButton from "./MoreBoxButton";
@@ -24,7 +23,7 @@ import { reportMember } from "@/api/report/report";
 import FormModal from "../common/FormModal";
 import Input from "../common/Input";
 import Checkbox from "../common/Checkbox";
-import { REPORT_REASON } from "@/data/report";
+import { REPORT_REASON } from "@/constants/report";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { AxiosError } from "axios";
@@ -50,6 +49,8 @@ import { cancelFriendRequest, sendFriendRequest } from "@/api/friend/request";
 import { deleteFriend } from "@/api/friend/delete";
 import { blockMember, unblockMember } from "@/api/block/block";
 import { GameMode } from "@/types/game/gameMode";
+import UserAccount from "../crBoard/UserAccount";
+import UserTier from "../crBoard/UserTier";
 
 interface ReadBoardProps {
   postId: number;
@@ -549,16 +550,20 @@ const ReadBoard = (props: ReadBoardProps) => {
               <UserSection>
                 <UserLeft>
                   <ProfileImage image={isPost.profileImage} />
+                  <UserWapper>
+                    <UserAccount account={isPost.gameName} tag={isPost.tag} />
+                    <UserTierWrapper>
+                      <UserTier
+                        soloTier={isPost.soloTier || ""}
+                        freeTier={isPost.freeTier || ""}
+                        soloRank={isPost.soloRank}
+                        freeRank={isPost.freeRank}
+                      />
+                    </UserTierWrapper>
+                  </UserWapper>
                   <UserNManner>
-                    <User
-                      account={isPost.gameName}
-                      tag={isPost.tag}
-                      tier={isPost.tier}
-                      rank={isPost.rank}
-                    />
                     <MannerLevelWrapper>
                       <MannerLevel
-                        forNoData={isPost.tier}
                         level={isPost.mannerLevel}
                         onClick={handleMannerLevelBoxOpen}
                         position="top"
@@ -584,8 +589,8 @@ const ReadBoard = (props: ReadBoardProps) => {
               <ChampionNQueueSection>
                 <Champion
                   title={true}
-                  size={14}
-                  list={isPost?.championResponseDTOList?.map(
+                  font="semiBold14"
+                  list={isPost?.championResponseList?.map(
                     (champion) => champion.championId
                   )}
                 />
@@ -746,18 +751,31 @@ const UserSection = styled.div`
 
 const UserLeft = styled.div`
   display: flex;
-  align-items: center;
+`;
+
+const UserWapper = styled.div`
+  position: relative;
+  margin-top: 9px;
+`;
+
+const UserTierWrapper = styled.div`
+  position: absolute;
+  top: 30px;
+  left: 0px;
 `;
 
 const UserNManner = styled.div`
   display: flex;
+  margin-top: 9px;
 `;
+
 const UserRight = styled.div`
   display: flex;
 `;
+
 const Title = styled.p`
   ${(props) => props.theme.fonts.semiBold14};
-  color: #222222;
+  color: ${theme.colors.gray800};
   margin-bottom: 5px;
 `;
 

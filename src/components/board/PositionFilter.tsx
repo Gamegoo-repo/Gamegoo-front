@@ -1,11 +1,11 @@
 import { theme } from "@/styles/theme";
 import styled from "styled-components";
-import All from "../../../public/assets/icons/default_all.svg";
-import Top from "../../../public/assets/icons/default_top.svg";
-import Jungle from "../../../public/assets/icons/default_jungle.svg";
-import Mid from "../../../public/assets/icons/default_mid.svg";
-import OneDeal from "../../../public/assets/icons/default_one_deal.svg";
-import Supporter from "../../../public/assets/icons/default_supporter.svg";
+import All from "../../../public/assets/images/position/default/default_all.svg";
+import Top from "../../../public/assets/images/position/default/default_top.svg";
+import Jungle from "../../../public/assets/images/position/default/default_jungle.svg";
+import Mid from "../../../public/assets/images/position/default/default_mid.svg";
+import OneDeal from "../../../public/assets/images/position/default/default_one_deal.svg";
+import Supporter from "../../../public/assets/images/position/default/default_supporter.svg";
 import { Position } from "@/types/position/position";
 
 interface SvgProps {

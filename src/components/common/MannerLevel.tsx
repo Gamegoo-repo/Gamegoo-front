@@ -4,14 +4,13 @@ import { useEffect, useState } from "react";
 
 type positionType = "top" | "right";
 interface MannerLevelProps {
-  forNoData: string;
   level: number;
   onClick: (e: React.MouseEvent) => void;
   position?: positionType;
 }
 
 const MannerLevel = (props: MannerLevelProps) => {
-  const { forNoData, level, onClick, position = "top" } = props;
+  const { level, onClick, position = "top" } = props;
 
   const [isVisible, setIsVisible] = useState(true);
 
@@ -30,10 +29,7 @@ const MannerLevel = (props: MannerLevelProps) => {
       {level && (
         <LevelWrapper>
           <Level>
-            <ClickArea
-              onClick={onClick}
-              className={!forNoData ? "bigMargin" : ""}
-            >
+            <ClickArea onClick={onClick}>
               <Text>LV.{level}</Text>
             </ClickArea>
             <BubbleWrapper
@@ -135,9 +131,6 @@ const Level = styled.div`
 `;
 
 const ClickArea = styled.div`
-  &.bigMargin {
-    margin-left: 40.63px;
-  }
   margin-left: 23px;
   width: 53px;
   height: 26px;

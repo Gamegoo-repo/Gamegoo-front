@@ -10,18 +10,21 @@ interface UserState {
   email: string;
   gameName: string;
   tag: string;
-  tier: string;
-  gameRank: number;
+  soloTier: string;
+  freeTier: string;
+  soloRank: number;
+  freeRank: number;
   mannerRank: number;
   mannerLevel: number;
   updatedAt: string;
   mainP: Position;
   subP: Position;
-  wantP: Position;
+  wantP: Position[];
   isAgree: boolean;
   isBlind: boolean;
   loginType: string;
-  winrate: number;
+  soloWinrate: number;
+  freeWinrate: number;
   gameStyleResponseList: GameStyleList[];
   championResponseList: ChampionList[];
   blocked: boolean;
@@ -36,18 +39,21 @@ const initialState: UserState = {
   email: "",
   gameName: "",
   tag: "",
-  tier: "",
-  gameRank: 0,
+  soloTier: "",
+  freeTier: "",
+  soloRank: 0,
+  freeRank: 0,
   mannerRank: 0,
   mannerLevel: 0,
   updatedAt: "",
   mainP: "ANY",
   subP: "ANY",
-  wantP: "ANY",
+  wantP: ["ANY", "ANY"],
   isAgree: false,
   isBlind: false,
   loginType: "",
-  winrate: 0,
+  soloWinrate: 0,
+  freeWinrate: 0,
   gameStyleResponseList: [],
   championResponseList: [],
   blocked: false,
@@ -81,18 +87,21 @@ export const userSlice = createSlice({
       state.email = '';
       state.gameName = '';
       state.tag = '';
-      state.tier = '';
-      state.gameRank = 0;
+      state.soloTier = '';
+      state.freeTier = '';
+      state.soloRank = 0;
+      state.freeRank = 0;
       state.mannerRank = 0;
       state.mannerLevel = 0;
       state.updatedAt = '';
       state.mainP = "ANY";
       state.subP = "ANY";
-      state.wantP = "ANY";
+      state.wantP = ["ANY", "ANY"];
       state.isAgree = false;
       state.isBlind = false;
       state.loginType = '';
-      state.winrate = 0;
+      state.soloWinrate = 0;
+      state.freeWinrate = 0;
       state.gameStyleResponseList = [];
       state.championResponseList = [];
       state.blocked = false;

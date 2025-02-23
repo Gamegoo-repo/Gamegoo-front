@@ -12,15 +12,15 @@ interface PositionBoxProps {
   onPositionChange?: (newPositionValue: PositionState) => void;
   main: PositionType | undefined;
   sub: PositionType | undefined;
-  want: PositionType | undefined;
+  want: PositionType[] | undefined;
 }
 
-type Position = "main" | "sub" | "want";
+type Position = "main" | "sub" | "want1" | "want2";
 
 export interface PositionState {
   main: PositionType | undefined;
   sub: PositionType | undefined;
-  want: PositionType | undefined;
+  want: PositionType[] | undefined;
 }
 
 const PositionBox = (props: PositionBoxProps) => {
@@ -33,46 +33,89 @@ const PositionBox = (props: PositionBoxProps) => {
     want: want,
   });
 
+  // useEffect(() => {
+  //   setPositionValue({
+  //     main: main ?? "ANY",
+  //     sub: sub ?? "ANY",
+  //     want: want ?? ["ANY"],
+  //   });
+  //   console.log("positionValue,", positionValue);
+  // }, [main, sub, want]);
+
+  // 3) 초기 마운트 시 want가 없거나 길이가 2 미만이면 ["ANY", "ANY"]로 맞춤
   useEffect(() => {
+    // (예) 부모에서 want를 ["TOP"]만 넘기거나 undefined로 넘길 수 있으므로 보정
+    let finalWant = want ?? ["ANY", "ANY"];
+    if (finalWant.length < 2) {
+      finalWant = [finalWant[0] ?? "ANY", "ANY"];
+    } else if (finalWant.length > 2) {
+      // 혹시 2개 이상 넘기면 앞의 2개만 사용
+      finalWant = [finalWant[0], finalWant[1]];
+    }
+
     setPositionValue({
       main: main ?? "ANY",
       sub: sub ?? "ANY",
-      want: want ?? "ANY",
+      want: finalWant,
     });
-    console.log("positionValue,", positionValue);
   }, [main, sub, want]);
 
+  // 4) 포지션 선택 로직
   const handleCategoryButtonClick = (positionName: PositionType) => {
-    if (selectedBox) {
-      setPositionValue((prevPositionValue) => ({
-        ...prevPositionValue,
-        [selectedBox]: "ANY",
-      }));
-      if (onPositionChange) {
-        onPositionChange({
-          ...positionValue,
-          [selectedBox]: positionName,
-        });
-      }
+    // if (selectedBox) {
+    //   setPositionValue((prevPositionValue) => ({
+    //     ...prevPositionValue,
+    //     [selectedBox]: "ANY",
+    //   }));
+    //   if (onPositionChange) {
+    //     onPositionChange({
+    //       ...positionValue,
+    //       [selectedBox]: positionName,
+    //     });
+    //   }
+    // }
+    if (!selectedBox) return;
+
+    // main / sub / want1 / want2 중 어떤 박스가 선택되었는지 분기
+    if (selectedBox === "main" || selectedBox === "sub") {
+      // main, sub는 단일 값
+      setPositionValue((prev) => {
+        const updated = { ...prev, [selectedBox]: positionName };
+        onPositionChange && onPositionChange(updated);
+        return updated;
+      });
+    } else {
+      // want1, want2는 배열의 특정 인덱스 업데이트
+      setPositionValue((prev) => {
+        const newWant = [...(prev.want ?? ["ANY", "ANY"])];
+        if (selectedBox === "want1") {
+          newWant[0] = positionName;
+        } else if (selectedBox === "want2") {
+          newWant[1] = positionName;
+        }
+        const updated = { ...prev, want: newWant };
+        onPositionChange && onPositionChange(updated);
+        return updated;
+      });
     }
   };
 
-  const handlePositionImgSet = (positionId: string | undefined) => {
+  const handlePositionImgSet = (positionId: PositionType | undefined) => {
     switch (positionId) {
       case "ANY":
-        return "/assets/icons/position_all_purple.svg";
+        return "/assets/images/position/position_all_purple.svg";
       case "TOP":
-        return "/assets/icons/position_top_purple.svg";
+        return "/assets/images/position/position_top_purple.svg";
       case "JUNGLE":
-        return "/assets/icons/position_jungle_purple.svg";
+        return "/assets/images/position/position_jungle_purple.svg";
       case "MID":
-        return "/assets/icons/position_mid_purple.svg";
+        return "/assets/images/position/position_mid_purple.svg";
       case "ADC":
-        return "/assets/icons/position_one_deal_purple.svg";
+        return "/assets/images/position/position_one_deal_purple.svg";
       case "SUP":
-        return "/assets/icons/position_supporter_purple.svg";
+        return "/assets/images/position/position_supporter_purple.svg";
       default:
-        return "/assets/icons/position_all_purple.svg";
+        return "/assets/images/position/position_all_purple.svg";
     }
   };
 
@@ -130,21 +173,40 @@ const PositionBox = (props: PositionBoxProps) => {
       </FirstBox>
       <SecondBox>
         <Title>찾는 포지션</Title>
-        <StyledImage
-          $status={status}
-          onClick={() => handleBoxClick("want")}
-          src={handlePositionImgSet(positionValue.want)}
-          width={35}
-          height={34}
-          alt="찾는 포지션"
-        />
-        {openPosition === "want" && (
-          <PositionCategory
-            onClose={closePosition}
-            boxName={selectedBox}
-            onSelect={handleCategoryButtonClick}
+        <WantPWrapper>
+          <StyledImage
+            $status={status}
+            onClick={() => handleBoxClick("want1")}
+            src={handlePositionImgSet(positionValue.want?.[0])}
+            width={35}
+            height={34}
+            alt="첫 번째 찾는 포지션"
           />
-        )}
+          {openPosition === "want1" && (
+            <PositionCategory
+              onClose={closePosition}
+              boxName={selectedBox}
+              onSelect={handleCategoryButtonClick}
+            />
+          )}
+
+          {/* 두 번째 want 포지션 */}
+          <StyledImage
+            $status={status}
+            onClick={() => handleBoxClick("want2")}
+            src={handlePositionImgSet(positionValue.want?.[1])}
+            width={35}
+            height={34}
+            alt="두 번째 찾는 포지션"
+          />
+          {openPosition === "want2" && (
+            <PositionCategory
+              onClose={closePosition}
+              boxName={selectedBox}
+              onSelect={handleCategoryButtonClick}
+            />
+          )}
+        </WantPWrapper>
       </SecondBox>
     </PositionWrapper>
   );
@@ -181,6 +243,12 @@ const SecondBox = styled.div`
   border-radius: 10px;
   padding: 24px 91px;
   position: relative;
+`;
+
+const WantPWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 30px;
 `;
 
 const Title = styled.p`

@@ -19,8 +19,8 @@ const Layout = (props: any) => {
           }}
         >
           <Image
-            src="/assets/icons/logo_m.svg"
-            width={277}
+            src="/assets/icons/logo.svg"
+            width={318}
             height={88}
             alt="logo"
           />

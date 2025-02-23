@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
-import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
+import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants/mannerLevel";
 import { useEffect, useState } from "react";
 import { MannerKeywords } from "@/interface/manner";
 import { getMemberMannerKeyword } from "@/api/manner";
