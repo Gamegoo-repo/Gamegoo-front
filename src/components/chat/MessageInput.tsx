@@ -109,7 +109,7 @@ const Textarea = styled.textarea`
   width: 100%;
   padding: 14px 17px;
   ${(props) => props.theme.fonts.regular14};
-  color: ${theme.colors.gray600};
+  color: ${theme.colors.gray800};
   resize: none;
   &:focus {
     outline: none;
