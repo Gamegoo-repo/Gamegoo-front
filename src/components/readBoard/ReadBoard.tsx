@@ -5,7 +5,6 @@ import Button from "../common/Button";
 import PositionBox from "../crBoard/PositionBox";
 import { useEffect, useRef, useState } from "react";
 import ProfileImage from "./ProfileImage";
-import User from "../crBoard/UserAccount";
 import MannerLevel from "../common/MannerLevel";
 import Mic from "./Mic";
 import MoreBoxButton from "./MoreBoxButton";
@@ -555,17 +554,16 @@ const ReadBoard = (props: ReadBoardProps) => {
                     <UserAccount account={isPost.gameName} tag={isPost.tag} />
                     <UserTierWrapper>
                       <UserTier
-                        soloTier={isPost.tier}
-                        freeTier={isPost.tier}
-                        soloRank={isPost.rank}
-                        freeRank={isPost.rank}
+                        soloTier={isPost.soloTier || ""}
+                        freeTier={isPost.freeTier || ""}
+                        soloRank={isPost.soloRank}
+                        freeRank={isPost.freeRank}
                       />
                     </UserTierWrapper>
                   </UserWapper>
                   <UserNManner>
                     <MannerLevelWrapper>
                       <MannerLevel
-                        forNoData={isPost.tier}
                         level={isPost.mannerLevel}
                         onClick={handleMannerLevelBoxOpen}
                         position="top"

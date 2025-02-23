@@ -23,7 +23,9 @@ interface BasePlayerInfo {
   profileImage: number;
   gameName: string;
   tag: string;
-  tier: string;
+  tier?: string;
+  soloTier?: string;
+  freeTier?: string;
 }
 
 // 게임 관련 기본 정보 인터페이스
@@ -50,6 +52,8 @@ interface BaseBoardInfo {
   boardId: number;
   contents: string;
   rank?: number;
+  soloRank?: number;
+  freeRank?: number;
 }
 
 // 게시글 목록의 기본 구조

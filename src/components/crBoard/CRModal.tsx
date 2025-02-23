@@ -72,7 +72,7 @@ const Wrapper = styled.div<{
   $hideContent: boolean | undefined;
 }>`
   border-radius: 20px;
-  max-width: 555px;
+  max-width: 580px;
   width: 100%;
   position: relative;
   min-height: ${({ $type }) => ($type === "posting" ? "837px" : "1000px")};

@@ -51,7 +51,8 @@ export interface MemberPost {
   tag: string;
   mannerLevel: number;
   mannerKeywords?: MannerKeywordDTO[];
-  tier: string;
+  soloTier?: string;
+  freeTier?: string;
   mike: Mike;
   championResponseList?: ChampionResponseDTOList[];
   championResponseDTOList?: ChampionResponseDTOList[];
@@ -64,7 +65,8 @@ export interface MemberPost {
   soloWinRate: number;
   gameStyles: number[];
   contents: string;
-  rank?: number;
+  soloRank?: number;
+  freeRank?: number;
 }
 
 export interface PostReq {
