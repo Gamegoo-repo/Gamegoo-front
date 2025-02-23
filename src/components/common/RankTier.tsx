@@ -23,7 +23,7 @@ const RankTier = (props: RankTierProps) => {
       <Tier $direct={direct}>
         <TierImage
           data={`/assets/images/tier/${
-            toLowerCaseString(tier) || "unrank"
+            toLowerCaseString(tier) || "unranked"
           }.svg`}
           width={32}
           height={32}

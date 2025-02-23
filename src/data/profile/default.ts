@@ -2,58 +2,58 @@ import { Position } from "@/types/position/position";
 import { Mike } from "@/types/user/mike";
 
 export const DEFAULT_PROFILE = {
-    profileImg: 3,
-    mike: "AVAILABLE" as Mike,
-    email: "",
-    gameName: "GAMEGOO",
-    tag: "KR1",
-    soloTier: "SILVER",
-    freeTier: "UNRANK",
-    soloRank: 3,
-    freeRank: 0,
-    mannerLevel: 4,
-    mannerRank: 15,
-    mannerRatingCount: 4,
-    updatedAt: "",
-    mainP: "ANY" as Position,
-    subP: "ANY" as Position,
-    wantP: "ANY" as Position,
-    blocked: false,
-    isAgree: false,
-    isBlind: false,
-    loginType: "",
-    soloWinrate: 0,
-    freeWinrate: 0,
-    gameStyleResponseList: [
-        {
-            gameStyleId: 3,
-            gameStyleName: "이기기만 하면 뭔들",
-        },
-        {
-            gameStyleId: 8,
-            gameStyleName: "과도한 핑은 사절이에요",
-        },
-        {
-            gameStyleId: 2,
-            gameStyleName: "랭크 올리고 싶어요",
-        },
-    ],
-    championResponseList: [
-        {
-            championId: 910,
-            championName: "Hwei",
-        },
-        {
-            championId: 777,
-            championName: "Yone",
-        },
-        {
-            championId: 64,
-            championName: "Lee Sin",
-        },
-    ],
-    friend: false,
-    friendRequestMemberId: null,
+  profileImg: 3,
+  mike: "AVAILABLE" as Mike,
+  email: "",
+  gameName: "GAMEGOO",
+  tag: "KR1",
+  soloTier: "SILVER",
+  freeTier: "UNRANKED",
+  soloRank: 3,
+  freeRank: 0,
+  mannerLevel: 4,
+  mannerRank: 15,
+  mannerRatingCount: 4,
+  updatedAt: "",
+  mainP: "ANY" as Position,
+  subP: "ANY" as Position,
+  wantP: "ANY" as Position,
+  blocked: false,
+  isAgree: false,
+  isBlind: false,
+  loginType: "",
+  soloWinrate: 0,
+  freeWinrate: 0,
+  gameStyleResponseList: [
+    {
+      gameStyleId: 3,
+      gameStyleName: "이기기만 하면 뭔들",
+    },
+    {
+      gameStyleId: 8,
+      gameStyleName: "과도한 핑은 사절이에요",
+    },
+    {
+      gameStyleId: 2,
+      gameStyleName: "랭크 올리고 싶어요",
+    },
+  ],
+  championResponseList: [
+    {
+      championId: 910,
+      championName: "Hwei",
+    },
+    {
+      championId: 777,
+      championName: "Yone",
+    },
+    {
+      championId: 64,
+      championName: "Lee Sin",
+    },
+  ],
+  friend: false,
+  friendRequestMemberId: null,
 };
 
 export const DEFAULT_MANNER = {
