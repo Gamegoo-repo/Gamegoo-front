@@ -14,6 +14,7 @@ interface GraphicBoxProps {
   top: string;
   left: string;
   background?: string | undefined;
+  onClick?: () => void;
 }
 
 const GraphicBox = (props: GraphicBoxProps) => {
@@ -28,16 +29,21 @@ const GraphicBox = (props: GraphicBoxProps) => {
     top,
     left,
     background,
+    onClick,
   } = props;
 
   const hadleClick = () => {
-    router.push(
-      type
-        ? rank
-          ? `${pathname}?type=${type}&rank=${rank}`
-          : `${pathname}?type=${type}`
-        : pathname
-    );
+    if (onClick) {
+      onClick();
+    } else {
+      router.push(
+        type
+          ? rank
+            ? `${pathname}?type=${type}&rank=${rank}`
+            : `${pathname}?type=${type}`
+          : pathname
+      );
+    }
   };
   return (
     <>
