@@ -1,9 +1,10 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import { setQueueType } from "@/utils/custom";
+import { GameMode } from "@/types/game/gameMode";
 
 interface QueueTypeProps {
-  value: number;
+  value: GameMode;
 }
 
 const QueueType = (props: QueueTypeProps) => {

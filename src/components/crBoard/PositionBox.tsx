@@ -33,13 +33,13 @@ const PositionBox = (props: PositionBoxProps) => {
     want: want,
   });
 
-  console.log("positionValue,", positionValue);
   useEffect(() => {
     setPositionValue({
       main: main ?? "ANY",
       sub: sub ?? "ANY",
       want: want ?? "ANY",
     });
+    console.log("positionValue,", positionValue);
   }, [main, sub, want]);
 
   const handleCategoryButtonClick = (positionName: PositionType) => {

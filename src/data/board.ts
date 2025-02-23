@@ -1,3 +1,5 @@
+import { GameMode } from "@/types/game/gameMode";
+
 export const BOARD_TITLE = [
     { id: 1, name: '소환사' },
     { id: 2, name: '매너 레벨' },
@@ -11,11 +13,11 @@ export const BOARD_TITLE = [
 ];
 
 export const GAME_MODE = [
-    { id: null, value: '게임 모드 전체' },
-    { id: 1, value: '빠른대전' },
-    { id: 2, value: '솔로랭크' },
-    { id: 3, value: '자유랭크' },
-    { id: 4, value: '칼바람 나락' },
+  { id: null, value: "게임 모드 전체" },
+  { id: "FAST" as GameMode, value: "빠른대전" },
+  { id: "SOLO" as GameMode, value: "솔로랭크" },
+  { id: "FREE" as GameMode, value: "자유랭크" },
+  { id: "ARAM" as GameMode, value: "칼바람 나락" },
 ];
 
 export const TIER = [

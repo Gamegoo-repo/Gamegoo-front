@@ -1,16 +1,17 @@
 import dayjs from "@/libs/dayjs";
+import { GameMode } from "@/types/game/gameMode";
 import { Position } from "@/types/position/position";
 import { Mike } from "@/types/user/mike";
 
-export function setQueueType(gameMode: number) {
+export function setQueueType(gameMode: GameMode) {
   switch (gameMode) {
-    case 1:
+    case "FAST":
       return "빠른대전";
-    case 2:
+    case "SOLO":
       return "솔로랭크";
-    case 3:
+    case "FREE":
       return "자유랭크";
-    case 4:
+    case "ARAM":
       return "칼바람 나락";
     default:
       return "빠른대전";

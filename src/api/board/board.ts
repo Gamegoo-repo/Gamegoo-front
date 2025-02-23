@@ -11,12 +11,13 @@ import {
   PostsResponse,
 } from "@/types/api/board/board";
 import { Position } from "@/types/position/position";
+import { GameMode } from "@/types/game/gameMode";
 
 interface ListInterface {
   page: number;
-  mode: string | number | null;
+  gameMode: number | GameMode | null;
   tier: string | null;
-  mainPosition: Position
+  mainP: Position
   mike: string | boolean | null;
 }
 

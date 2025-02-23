@@ -1,6 +1,7 @@
 import { Position } from "@/types/position/position";
 import { ApiResponse } from "../api";
 import { Mike } from "@/types/user/mike";
+import { GameMode } from "@/types/game/gameMode";
 
 // 기본 DTO 인터페이스들
 interface ChampionResponseDTO {
@@ -27,17 +28,18 @@ interface BasePlayerInfo {
 
 // 게임 관련 기본 정보 인터페이스
 interface GameInfo {
-  gameMode: number;
-  mainPosition: Position;
-  subPosition: Position;
-  wantPosition: Position;
+  gameMode: GameMode;
+  mainP: Position;
+  subP: Position;
+  wantP: Position;
   mike: Mike;
   gameStyles: Array<number>;
 }
 
 // 게임 스탯 정보 인터페이스
 interface GameStats {
-  winRate: number;
+  freeWinRate: number;
+  soloWinRate: number;
   recentGameCount?: number;
   championResponseList?: ChampionResponseDTO[];
   championResponseDTOList?: ChampionResponseDTO[];

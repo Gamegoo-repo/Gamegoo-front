@@ -27,18 +27,13 @@ import { theme } from "@/styles/theme";
 import { setClosePostingModal } from "@/redux/slices/modalSlice";
 import { getMyProfile } from "@/api/user/profile/get";
 import { Mike } from "@/types/user/mike";
+import { GAME_MODE } from "@/data/board";
+import { GameMode } from "@/types/game/gameMode";
 
 interface PostBoardProps {
   onClose: () => void;
   onCompletedPostingClose: () => void;
 }
-
-const DROP_DATA = [
-  { id: 1, value: "빠른대전" },
-  { id: 2, value: "솔로랭크" },
-  { id: 3, value: "자유랭크" },
-  { id: 4, value: "칼바람 나락" },
-];
 
 const PostBoard = (props: PostBoardProps) => {
   const { onClose, onCompletedPostingClose } = props;
@@ -59,14 +54,14 @@ const PostBoard = (props: PostBoardProps) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState<
     number | undefined
   >(currentPost?.profileImage ?? user?.profileImg);
-  const [selectedDropOption, setSelectedDropOption] = useState<number>(
-    currentPost?.gameMode || 1
+  const [selectedDropOption, setSelectedDropOption] = useState<GameMode>(
+    currentPost?.gameMode || "FAST"
   );
   const [positionValue, setPositionValue] = useState<PositionState | undefined>(
     {
-      main: currentPost?.mainPosition || user?.mainP || "ANY",
-      sub: currentPost?.subPosition || user?.subP || "ANY",
-      want: currentPost?.wantPosition || user?.wantP || "ANY",
+      main: currentPost?.mainP || user?.mainP || "ANY",
+      sub: currentPost?.subP || user?.subP || "ANY",
+      want: currentPost?.wantP || user?.wantP || "ANY",
     }
   );
   const [isMicOn, setIsMicOn] = useState<Mike>(
@@ -106,9 +101,9 @@ const PostBoard = (props: PostBoardProps) => {
       setSelectedDropOption(currentPost.gameMode);
 
       setPositionValue({
-        main: currentPost.mainPosition,
-        sub: currentPost.subPosition,
-        want: currentPost.wantPosition,
+        main: currentPost.mainP,
+        sub: currentPost.subP,
+        want: currentPost.wantP,
       });
 
       setSelectedImageIndex(currentPost.profileImage);
@@ -142,9 +137,12 @@ const PostBoard = (props: PostBoardProps) => {
   };
 
   /* 큐타입 선택 */
-  const handleDropValue = (id: number | null) => {
-    if (!id) return;
-    setSelectedDropOption(id);
+  const handleDropValue = (gameMode: number | GameMode | null) => {
+    if (!gameMode) return;
+    if (typeof gameMode === "number") {
+      return;
+    }
+    setSelectedDropOption(gameMode);
     setIsDropdownOpen(false);
   };
 
@@ -200,7 +198,7 @@ const PostBoard = (props: PostBoardProps) => {
       return setShowAlert(true);
     }
 
-    const isARAM = selectedDropOption === 4; // 칼바람
+    const isARAM = selectedDropOption === "ARAM"; // 칼바람
     const isImageIndexUndefined = selectedImageIndex === undefined;
     const isDropOptionUndefined = selectedDropOption === undefined;
     const isTextareaEmpty = textareaValue.trim() === "";
@@ -229,9 +227,9 @@ const PostBoard = (props: PostBoardProps) => {
       mike: isMicOn,
       gameStyles: selectedStyleIds,
       contents: textareaValue,
-      mainPosition: isARAM ? null : positionValue?.main,
-      subPosition: isARAM ? null : positionValue?.sub,
-      wantPosition: isARAM ? null : positionValue?.want,
+      mainP: isARAM ? "ANY" : positionValue?.main,
+      subP: isARAM ? "ANY" : positionValue?.sub,
+      wantP: isARAM ? "ANY" : positionValue?.want,
     };
 
     if (currentPost) {
@@ -315,7 +313,7 @@ const PostBoard = (props: PostBoardProps) => {
               type="type2"
               padding="11px 21px"
               width="234px"
-              list={DROP_DATA}
+              list={GAME_MODE.slice(1)}
               open={isDropdownOpen}
               setOpen={setIsDropdownOpen}
               onDropValue={handleDropValue}
@@ -323,7 +321,7 @@ const PostBoard = (props: PostBoardProps) => {
             />
           </Div>
         </QueueNMicSection>
-        {selectedDropOption !== 4 && (
+        {selectedDropOption !== "ARAM" && (
           <PositionSection>
             <Title className="positionTitle">포지션</Title>
             <PositionBox
@@ -368,11 +366,11 @@ const PostBoard = (props: PostBoardProps) => {
         <ButtonContent
           className={` 
   ${
-    selectedStyleIds.length === 0 && selectedDropOption === 4
+    selectedStyleIds.length === 0 && selectedDropOption === "ARAM"
       ? "margin-1"
-      : selectedStyleIds.length !== 0 && selectedDropOption === 4
+      : selectedStyleIds.length !== 0 && selectedDropOption === "ARAM"
       ? "margin-2"
-      : selectedStyleIds.length !== 0 && selectedDropOption !== 4
+      : selectedStyleIds.length !== 0 && selectedDropOption !== "ARAM"
       ? "margin-3"
       : "baseMargin"
   }`}

@@ -46,6 +46,7 @@ const Overlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 10;
 `;
 
 const Container = styled.div`
@@ -77,7 +78,7 @@ const Top = styled.div`
 const Content = styled.div`
   width: 100%;
   height: 100%;
-  padding: 28px 18px 28px 26px;
+  padding: 28px 18px;
   display: flex;
   flex-direction: column;
   gap: 23px;
@@ -92,7 +93,7 @@ const Content = styled.div`
   }
 
   &::-webkit-scrollbar-thumb {
-    /* width: 6px; */
+    width: 6px;
     border-radius: 26px;
     background: ${theme.colors.gray500};
     background-clip: padding-box;
