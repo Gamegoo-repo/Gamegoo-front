@@ -9,6 +9,7 @@ type fontSize = "bold" | "regular";
 interface HeaderTitleProps {
   title: string;
   sub?: string;
+  mini?: string;
   size?: fontSize;
   blocked?: boolean;
   isDoubleBack?: boolean;
@@ -18,6 +19,7 @@ interface HeaderTitleProps {
 const HeaderTitle: React.FC<HeaderTitleProps> = ({
   title,
   sub,
+  mini,
   size = "bold",
   blocked = false,
   isDoubleBack = false,
@@ -44,6 +46,7 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({
       />
       <Title className={size}>{title}</Title>
       {sub && <Sub>{sub}</Sub>}
+      {mini && <Mini>{mini}</Mini>}
       {blocked && <Blocked>차단된 사용자입니다</Blocked>}
     </Header>
   );
@@ -67,7 +70,6 @@ const StyledImage = styled(Image)`
 
 const Title = styled.div`
   color: ${theme.colors.gray800};
-  margin-right: 40px;
 
   &.bold {
     ${(props) => props.theme.fonts.bold32};
@@ -79,8 +81,15 @@ const Title = styled.div`
 `;
 
 const Sub = styled.div`
-  ${(props) => props.theme.fonts.regular28};
+  margin-left: 40px;
   color: ${theme.colors.gray600};
+  ${(props) => props.theme.fonts.regular28};
+`;
+
+const Mini = styled.div`
+  margin-left: 12px;
+  color: ${theme.colors.gray800};
+  ${(props) => props.theme.fonts.regular20};
 `;
 
 const Blocked = styled.div`

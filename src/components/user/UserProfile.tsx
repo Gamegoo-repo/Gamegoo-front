@@ -7,6 +7,7 @@ import MannerLevelBar from "@/components/common/MannerLevelBar";
 import { profileType, User } from "@/interface/profile";
 import { getUserId } from "@/utils/storage";
 import Champion from "../readBoard/Champion";
+import { isErrored } from "stream";
 
 export interface Manner {
   memberId?: number;
@@ -55,7 +56,16 @@ const UserProfile = ({
       <MatchContent>
         <Row>
           <HeaderTitle
-            title={`${profile.gameName}님의 프로필`}
+            title={
+              isDefault
+                ? "로그인이 필요한 서비스"
+                : `${profile.gameName}님의 프로필`
+            }
+            mini={
+              isDefault
+                ? "로그인 후 다른 플레이어들의 정보를 확인해 보세요!"
+                : ""
+            }
             size="bold"
             blocked={profile.blocked}
             marginBottom="20px"
