@@ -92,3 +92,5 @@ export const GAME_MODE_PAGE_DATA = [
     title: "칼바람",
   },
 ];
+
+export const STEPS = ["매칭 종류 선택", "게임모드 선택", "프로필 등록"];

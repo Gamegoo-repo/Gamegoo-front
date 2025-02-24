@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
 import styled from "styled-components";
+import StepNavigation from "./StepNavigation";
 
 type fontSize = "bold" | "regular";
 
@@ -37,14 +38,18 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({
 
   return (
     <Header $marginBottom={marginBottom}>
-      <StyledImage
-        onClick={handleBackClick}
-        src="/assets/icons/arrow_left.svg"
-        width={40}
-        height={40}
-        alt="뒤로가기"
-      />
-      <Title className={size}>{title}</Title>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <StyledImage
+          onClick={handleBackClick}
+          src="/assets/icons/arrow_left.svg"
+          width={40}
+          height={40}
+          alt="뒤로가기"
+        />
+        <Title className={size}>{title}</Title>
+      </div>
+
+      <StepNavigation title={title} />
       {sub && <Sub>{sub}</Sub>}
       {mini && <Mini>{mini}</Mini>}
       {blocked && <Blocked>차단된 사용자입니다</Blocked>}
@@ -58,6 +63,7 @@ const Header = styled.header<{ $marginBottom?: string }>`
   width: 100%;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   width: 100%;
   margin-bottom: ${({ $marginBottom }) =>
     $marginBottom ? $marginBottom : "32px"};
