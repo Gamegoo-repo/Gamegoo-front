@@ -13,13 +13,16 @@ const GameModePage = () => {
   const [displayedData, setDisplayedData] = useState(GAME_MODE_PAGE_DATA);
   const searchParams = useSearchParams();
   const params = searchParams.get("type");
-
+  // "custom"일 때 "칼바람" 제외
+  const filteredData = GAME_MODE_PAGE_DATA.filter(
+    (box) => !(params === "custom" && box.title === "칼바람")
+  );
   return (
     <Wrapper>
       <MatchContent>
         <HeaderTitle title="게임모드 선택" />
         <Main>
-          {displayedData.map((box) => {
+          {filteredData.map((box) => {
             return (
               <BoxWrapper key={box.id}>
                 <GraphicBox
@@ -29,7 +32,7 @@ const GameModePage = () => {
                   height={box.height}
                   top={box.top}
                   left={box.left}
-                  background={""}
+                  backgroundColor="#2E3032"
                 >
                   {box.title}
                 </GraphicBox>
