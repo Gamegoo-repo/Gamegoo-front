@@ -13,7 +13,9 @@ interface GraphicBoxProps {
   height: string;
   top: string;
   left: string;
-  background?: string | undefined;
+  backgroundColor?: string; // 추가: Hover 시 변경될 배경색을 전달받음
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 }
 
 const GraphicBox = (props: GraphicBoxProps) => {
@@ -27,10 +29,12 @@ const GraphicBox = (props: GraphicBoxProps) => {
     height,
     top,
     left,
-    background,
+    backgroundColor, // 추가
+    onMouseEnter,
+    onMouseLeave,
   } = props;
 
-  const hadleClick = () => {
+  const handleClick = () => {
     router.push(
       type
         ? rank
@@ -39,29 +43,23 @@ const GraphicBox = (props: GraphicBoxProps) => {
         : pathname
     );
   };
+
   return (
-    <>
-      <Wrapper
-        onClick={hadleClick}
-        $width={width}
-        $height={height}
-        $background={background === ""}
-      >
-        {background && (
-          <BackgroundImage
-            src={background}
-            width={580}
-            height={285}
-            alt="graphic"
-          />
-        )}
-        <Box>
-          <Title $top={top} $left={left}>
-            {children}
-          </Title>
-        </Box>
-      </Wrapper>
-    </>
+    <Wrapper
+      onClick={handleClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      $width={width}
+      $height={height}
+      style={{ backgroundColor }} // background-color 동적 적용
+      $background={backgroundColor ? true : false}
+    >
+      <Box>
+        <Title $top={top} $left={left}>
+          {children}
+        </Title>
+      </Box>
+    </Wrapper>
   );
 };
 
@@ -73,7 +71,7 @@ const Wrapper = styled.div<{
   $background: boolean;
 }>`
   position: relative;
-  max-width: ${(props) => (props.$width ? props.$width : undefined)};
+  max-width: ${(props) => (props.$width ? props.$width : "auto")};
   width: 100%;
   height: ${(props) => props.$height};
   border-radius: 30px;
