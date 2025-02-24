@@ -4,14 +4,18 @@ import styled from "styled-components";
 import GraphicBox from "@/components/match/GraphicBox";
 import { MATCH_TYPE_PAGE_DATA } from "@/constants/match";
 import HeaderTitle from "@/components/common/HeaderTitle";
-
+import ChevronRight from "../../../public/assets/icons/chevron_right.svg";
+import { useState } from "react";
 const MatchTypePage = () => {
+  const [hoveredBox, setHoveredBox] = useState<number | null>(null);
+
   return (
     <Wrapper>
       <MatchContent>
         <HeaderTitle title="매칭 종류 선택" />
         <Main>
           {MATCH_TYPE_PAGE_DATA.map((box) => {
+            const isHovered = hoveredBox === box.id;
             return (
               <GraphicBox
                 key={box.id}
@@ -21,12 +25,23 @@ const MatchTypePage = () => {
                 height={box.height}
                 top={box.top}
                 left={box.left}
-                background={box.background}
+                backgroundColor={
+                  isHovered ? box.hoverBackground : box.background
+                } // Hover 시 배경 변경
+                onMouseEnter={() => setHoveredBox(box.id)}
+                onMouseLeave={() => setHoveredBox(null)}
               >
-                <div>
-                  {box.title}
-                  <Sub>{box.sub}</Sub>
-                </div>
+                <GraphicBoxTitle>
+                  <GraphicBoxTitleMain>
+                    {/* Hover 시 title 변경 */}
+                    {isHovered ? box.hoverTitle : box.title}
+                    <ChevronRight />
+                  </GraphicBoxTitleMain>
+                  <GraphicBoxTitleSub isHovered={isHovered}>
+                    {/* Hover 시 sub 변경 */}
+                    {isHovered ? box.hoverSub : box.sub}
+                  </GraphicBoxTitleSub>
+                </GraphicBoxTitle>
               </GraphicBox>
             );
           })}
@@ -42,6 +57,8 @@ const Wrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
+  text-align: center;
   padding-top: 110px;
 `;
 
@@ -66,7 +83,22 @@ const Main = styled.main`
   }
 `;
 
-const Sub = styled.div`
+const GraphicBoxTitle = styled.div``;
+
+const GraphicBoxTitleMain = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+`;
+
+const GraphicBoxTitleSub = styled.div<{ isHovered: boolean }>`
   ${(props) => props.theme.fonts.regular18};
+  display: flex;
+  width: 100%;
   white-space: pre-wrap;
+  color: ${(props) =>
+    props.isHovered
+      ? props.theme.colors.violet300
+      : props.theme.colors.gray500};
 `;
