@@ -99,14 +99,20 @@ const BackgroundImage = styled(Image)`
   }
 `;
 
-const Box = styled.div``;
+const Box = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+`;
 
 const Title = styled.div<{ $top: string; $left: string }>`
-  position: absolute;
-  top: ${(props) => props.$top};
-  left: ${(props) => props.$left};
-  transform: ${(props) =>
-    props.$top !== "50%" ? undefined : `translate(-50%, -50%);`};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   color: white;
   ${(props) => props.theme.fonts.bold25};
   line-height: 37px;

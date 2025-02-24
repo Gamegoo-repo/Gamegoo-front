@@ -95,6 +95,9 @@ const GraphicBoxTitleMain = styled.div`
 const GraphicBoxTitleSub = styled.div<{ isHovered: boolean }>`
   ${(props) => props.theme.fonts.regular18};
   display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
   width: 100%;
   white-space: pre-wrap;
   color: ${(props) =>
