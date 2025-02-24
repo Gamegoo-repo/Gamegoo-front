@@ -2,13 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { MATCH_PAGE_DATA } from "@/constants/match";
-import Image from "next/image";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import { useState } from "react";
 import Alert from "@/components/common/Alert";
 import { getAccessToken } from "@/utils/storage";
-import { AuthAxios } from "@/api/auth";
+import Banner from "@/components/common/Banner";
 
 const HomePage = () => {
   const router = useRouter();
@@ -30,16 +29,7 @@ const HomePage = () => {
         />
       )}
       <HomeContent>
-        <Header>
-          <Image
-            src="/assets/icons/logo.svg"
-            width={371}
-            height={117}
-            priority
-            alt="logo"
-          />
-          <SubTitle>겜구 커뮤니티에 오신 것을 환영합니다.</SubTitle>
-        </Header>
+        <Banner />
         <Main>
           {MATCH_PAGE_DATA.map((content) => {
             return (

@@ -53,6 +53,14 @@ button {
     src: url("/public/assets/fonts/PretendardVariable.woff2") format('font-woff2'),
     url("/assets/fonts/PretendardVariable.ttf") format('truetype'); 
   }
+/* 새로 추가한 Time For Salad */
+@font-face {
+  font-family: "TimeForSalad";
+  src: url("/assets/fonts/TimeForSalad.woff2") format("woff2"),
+       url("/assets/fonts/TimeForSalad.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
 `;
 
 export default GlobalStyles;
