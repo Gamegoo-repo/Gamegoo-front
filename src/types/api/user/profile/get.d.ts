@@ -12,8 +12,6 @@ interface BaseProfileData {
   freeTier: string;
   soloRank: number;
   freeRank: number;
-  mannerRank: number;
-  mannerLevel: number;
   updatedAt: string;
   mainP: Position;
   subP: Position;
@@ -32,7 +30,6 @@ export interface GetMyProfileData extends BaseProfileData {
 }
 
 export interface GetOtherProfileData extends BaseProfileData {
-  mannerRatingCount: number;
   blocked: boolean;
   friend: boolean;
   friendRequestMemberId: number;

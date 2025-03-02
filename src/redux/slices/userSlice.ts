@@ -14,8 +14,8 @@ interface UserState {
   freeTier: string;
   soloRank: number;
   freeRank: number;
-  mannerRank: number;
-  mannerLevel: number;
+  // mannerRank: number;
+  // mannerLevel: number;
   updatedAt: string;
   mainP: Position;
   subP: Position;
@@ -43,12 +43,12 @@ const initialState: UserState = {
   freeTier: "",
   soloRank: 0,
   freeRank: 0,
-  mannerRank: 0,
-  mannerLevel: 0,
+  // mannerRank: 0,
+  // mannerLevel: 0,
   updatedAt: "",
   mainP: "ANY",
   subP: "ANY",
-  wantP: ["ANY", "ANY"],
+  wantP: [],
   isAgree: false,
   isBlind: false,
   loginType: "",
@@ -91,12 +91,12 @@ export const userSlice = createSlice({
       state.freeTier = '';
       state.soloRank = 0;
       state.freeRank = 0;
-      state.mannerRank = 0;
-      state.mannerLevel = 0;
+      // state.mannerRank = 0;
+      // state.mannerLevel = 0;
       state.updatedAt = '';
       state.mainP = "ANY";
       state.subP = "ANY";
-      state.wantP = ["ANY", "ANY"];
+      state.wantP = [];
       state.isAgree = false;
       state.isBlind = false;
       state.loginType = '';
