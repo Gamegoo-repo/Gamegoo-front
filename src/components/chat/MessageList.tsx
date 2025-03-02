@@ -78,7 +78,6 @@ const MessageList = (props: MessageListProps) => {
   );
 
   const router = useRouter();
-
   const { newMessage, mannerSystemMessage } = useChatMessage();
 
   /* 매너 시스템 소켓 이벤트 리스닝 */
@@ -114,7 +113,20 @@ const MessageList = (props: MessageListProps) => {
   useEffect(() => {
     if (chatEnterData.uuid !== currentChatUuid) return;
 
-    if (newMessage) {
+    if (chatEnterData.uuid === "guest") {
+      setMessageList((prevMessages) => {
+        if (systemMessage && !isSystemMessageShown) {
+          const systemMessageAsChatMessage: ChatMessageDto = {
+            ...systemMessage,
+            createdAt: new Date().toISOString(),
+            timestamp: new Date().getTime(),
+          };
+          // 시스템 메시지를 맨 앞에, 그 뒤에 이전 메시지들을 추가
+          return [systemMessageAsChatMessage, ...prevMessages];
+        }
+        return prevMessages;
+      });
+    } else if (newMessage) {
       setMessageList((prevMessages) => {
         let updatedMessages = [...prevMessages];
 

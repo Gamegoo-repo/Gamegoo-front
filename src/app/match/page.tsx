@@ -4,10 +4,27 @@ import styled from "styled-components";
 import GraphicBox from "@/components/match/GraphicBox";
 import { MATCH_TYPE_PAGE_DATA } from "@/constants/match";
 import HeaderTitle from "@/components/common/HeaderTitle";
+import { getAccessToken } from "@/utils/storage";
+import Alert from "@/components/common/Alert";
+import { useState } from "react";
 
 const MatchTypePage = () => {
+  const accesssToken = getAccessToken(); // 로그인 유무 결정
+  const [showAlert, setShowAlert] = useState(false);
+
   return (
     <Wrapper>
+      {showAlert && (
+        <Alert
+          icon="exclamation"
+          width={68}
+          height={58}
+          content="로그인이 필요한 서비스입니다."
+          alt="경고"
+          onClose={() => setShowAlert(false)}
+          buttonText="확인"
+        />
+      )}
       <MatchContent>
         <HeaderTitle title="매칭 종류 선택" />
         <Main>
@@ -22,6 +39,7 @@ const MatchTypePage = () => {
                 top={box.top}
                 left={box.left}
                 background={box.background}
+                onClick={accesssToken ? undefined : () => setShowAlert(true)}
               >
                 <div>
                   {box.title}

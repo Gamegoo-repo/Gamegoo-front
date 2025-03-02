@@ -18,11 +18,18 @@ interface ChatRoomItemProps {
     e: React.MouseEvent
   ) => void;
   moreMenuItems: (room: ChatroomList) => MoreBoxMenuItems[];
+  setIsMoreBoxOpen: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
 const ChatRoomItem = (props: ChatRoomItemProps) => {
-  const { room, onChatRoom, isMoreBoxOpen, handleMoreBoxOpen, moreMenuItems } =
-    props;
+  const {
+    room,
+    onChatRoom,
+    isMoreBoxOpen,
+    handleMoreBoxOpen,
+    moreMenuItems,
+    setIsMoreBoxOpen,
+  } = props;
 
   const handleUnreadMsgCount = (unread: number) => {
     return unread > 99 ? "99+" : unread;
@@ -31,7 +38,12 @@ const ChatRoomItem = (props: ChatRoomItemProps) => {
   return (
     <UserContent onClick={() => onChatRoom(room.uuid)} key={room.chatroomId}>
       {isMoreBoxOpen === room.chatroomId && (
-        <MoreBox items={moreMenuItems(room)} top={10} left={208} />
+        <MoreBox
+          items={moreMenuItems(room)}
+          top={10}
+          left={208}
+          onClose={() => setIsMoreBoxOpen(null)}
+        />
       )}
       <Left>
         <ImageWrapper $bgColor={getProfileBgColor(room.targetMemberImg)}>

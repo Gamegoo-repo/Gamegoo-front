@@ -51,6 +51,7 @@ import { blockMember, unblockMember } from "@/api/block/block";
 import { GameMode } from "@/types/game/gameMode";
 import UserAccount from "../crBoard/UserAccount";
 import UserTier from "../crBoard/UserTier";
+import { getAccessToken } from "@/utils/storage";
 
 interface ReadBoardProps {
   postId: number;
@@ -490,13 +491,21 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 채팅방 연결 */
   const handleChatStart = async () => {
+    console.log("0");
     if (!isUser.id) {
-      return showAlertWithContent(
-        "exclamation",
-        loginRequiredMessage,
-        () => setShowAlert(false),
-        "확인"
-      );
+      // 비회원 게스트용
+      console.log("1");
+      if (isPost) {
+        console.log("2");
+        await dispatch(
+          setCurrentPost({ currentPost: isPost, currentPostId: postId })
+        );
+        console.log("3");
+        dispatch(setChatRoomUuid(isPost.boardId));
+        dispatch(setCloseReadingModal());
+        dispatch(openChatRoom());
+        dispatch(setChatEnterType(2));
+      }
     }
 
     if (isPost?.isBlocked) {
