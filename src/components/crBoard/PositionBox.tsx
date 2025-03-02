@@ -11,14 +11,14 @@ type Status = "reading" | "posting";
 interface PositionBoxProps {
   status?: Status;
   onPositionChange?: (newPositionValue: PositionState) => void;
-  main: Position | undefined;
-  sub: Position | undefined;
+  main: Position;
+  sub: Position;
   want: (Position | null)[] | undefined;
 }
 
 export interface PositionState {
-  main: Position | undefined;
-  sub: Position | undefined;
+  main: Position;
+  sub: Position;
   want: (Position | null)[] | undefined | null;
 }
 
@@ -29,51 +29,48 @@ const PositionBox = (props: PositionBoxProps) => {
   const [positionValue, setPositionValue] = useState<PositionState>({
     main: main,
     sub: sub,
-    want: want ?? [null, null],
+    want: want ?? [],
   });
 
   useEffect(() => {
-    let finalWant: (Position | null)[] = want ?? [null, null];
-    if (finalWant.length < 2) {
-      finalWant = [finalWant[0] ?? null, null];
-    } else if (finalWant.length > 2) {
-      finalWant = [finalWant[0], finalWant[1]];
-    }
-
     setPositionValue({
       main: main ?? "ANY",
       sub: sub ?? "ANY",
-      want: finalWant,
+      want: want ?? [],
     });
   }, [main, sub, want]);
 
   /* 포지션 선택  */
-  const handleCategoryButtonClick = (positionName: Position | null) => {
-    if (!selectedBox) return;
+  const handleCategoryButtonClick = (
+    selectedValues: Position | (Position | null)[]
+  ) => {
+    setPositionValue((prev) => {
+      let updated;
 
-    // 포지션 박스 타입별 처리
-    if (selectedBox === "main" || selectedBox === "sub") {
-      setPositionValue((prev) => {
-        const updated = { ...prev, [selectedBox]: positionName };
-        onPositionChange && onPositionChange(updated);
-        return updated;
-      });
-    } else {
-      setPositionValue((prev) => {
-        const newWant = [...(prev.want ?? [null, null])];
-        if (selectedBox === "want1") {
-          newWant[0] = positionName;
-        } else if (selectedBox === "want2") {
-          newWant[1] = positionName;
-        }
-        const updated = { ...prev, want: newWant };
-        onPositionChange && onPositionChange(updated);
-        return updated;
-      });
-    }
+      if (selectedBox === "want") {
+        // `want`는 배열 형태로 유지 (최대 2개 선택 가능)
+        updated = {
+          ...prev,
+          want: Array.isArray(selectedValues)
+            ? selectedValues
+            : [selectedValues],
+        };
+        console.log(updated);
+      } else {
+        // `main`과 `sub`은 단일 값만 저장
+        updated = {
+          ...prev,
+          [selectedBox as "main" | "sub"]: selectedValues as Position,
+        };
+      }
+
+      onPositionChange && onPositionChange(updated);
+      return updated;
+    });
   };
 
   const handlePositionImgSet = (positionId: Position | undefined | null) => {
+    // console.log("handlePositionImgSet", positionId);
     const positionData = POSITION.find((p) => p.key === positionId);
     if (!positionData || !positionData.image)
       return "/assets/icons/bottom_caution.svg";
@@ -139,33 +136,25 @@ const PositionBox = (props: PositionBoxProps) => {
         <WantPWrapper>
           <StyledImage
             $status={status}
-            onClick={() => handleBoxClick("want1")}
+            onClick={() => handleBoxClick("want")}
             src={handlePositionImgSet(positionValue.want?.[0])}
             width={35}
             height={34}
             alt="첫 번째 찾는 포지션"
           />
-          {openPosition === "want1" && (
-            <PositionCategory
-              selectedBox={selectedBox}
-              onClose={closePosition}
-              value={positionValue.want?.[0]}
-              onSelect={handleCategoryButtonClick}
-            />
-          )}
           <StyledImage
             $status={status}
-            onClick={() => handleBoxClick("want2")}
+            onClick={() => handleBoxClick("want")}
             src={handlePositionImgSet(positionValue.want?.[1])}
             width={35}
             height={34}
             alt="두 번째 찾는 포지션"
           />
-          {openPosition === "want2" && (
+          {openPosition === "want" && (
             <PositionCategory
-              selectedBox={"want2"}
+              selectedBox={selectedBox}
               onClose={closePosition}
-              value={positionValue.want?.[1]}
+              value={positionValue.want || []}
               onSelect={handleCategoryButtonClick}
             />
           )}
