@@ -2,54 +2,41 @@ import styled from "styled-components";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import PositionCategory from "../common/PositionCategory";
-import { Position as PositionType } from "@/types/position/position";
+import { Position, PositionType } from "@/types/position/position";
 import { theme } from "@/styles/theme";
+import { POSITION } from "@/constants/position";
 
 type Status = "reading" | "posting";
 
 interface PositionBoxProps {
   status?: Status;
   onPositionChange?: (newPositionValue: PositionState) => void;
-  main: PositionType | undefined;
-  sub: PositionType | undefined;
-  want: PositionType[] | undefined;
+  main: Position | undefined;
+  sub: Position | undefined;
+  want: (Position | null)[] | undefined;
 }
 
-type Position = "main" | "sub" | "want1" | "want2";
-
 export interface PositionState {
-  main: PositionType | undefined;
-  sub: PositionType | undefined;
-  want: PositionType[] | undefined;
+  main: Position | undefined;
+  sub: Position | undefined;
+  want: (Position | null)[] | undefined | null;
 }
 
 const PositionBox = (props: PositionBoxProps) => {
   const { status, onPositionChange, main, sub, want } = props;
-  const [selectedBox, setSelectedBox] = useState("");
-  const [openPosition, setOpenPosition] = useState<Position | null>(null);
+  const [selectedBox, setSelectedBox] = useState<PositionType | null>(null);
+  const [openPosition, setOpenPosition] = useState<PositionType | null>(null);
   const [positionValue, setPositionValue] = useState<PositionState>({
     main: main,
     sub: sub,
-    want: want,
+    want: want ?? [null, null],
   });
 
-  // useEffect(() => {
-  //   setPositionValue({
-  //     main: main ?? "ANY",
-  //     sub: sub ?? "ANY",
-  //     want: want ?? ["ANY"],
-  //   });
-  //   console.log("positionValue,", positionValue);
-  // }, [main, sub, want]);
-
-  // 3) 초기 마운트 시 want가 없거나 길이가 2 미만이면 ["ANY", "ANY"]로 맞춤
   useEffect(() => {
-    // (예) 부모에서 want를 ["TOP"]만 넘기거나 undefined로 넘길 수 있으므로 보정
-    let finalWant = want ?? ["ANY", "ANY"];
+    let finalWant: (Position | null)[] = want ?? [null, null];
     if (finalWant.length < 2) {
-      finalWant = [finalWant[0] ?? "ANY", "ANY"];
+      finalWant = [finalWant[0] ?? null, null];
     } else if (finalWant.length > 2) {
-      // 혹시 2개 이상 넘기면 앞의 2개만 사용
       finalWant = [finalWant[0], finalWant[1]];
     }
 
@@ -60,34 +47,20 @@ const PositionBox = (props: PositionBoxProps) => {
     });
   }, [main, sub, want]);
 
-  // 4) 포지션 선택 로직
-  const handleCategoryButtonClick = (positionName: PositionType) => {
-    // if (selectedBox) {
-    //   setPositionValue((prevPositionValue) => ({
-    //     ...prevPositionValue,
-    //     [selectedBox]: "ANY",
-    //   }));
-    //   if (onPositionChange) {
-    //     onPositionChange({
-    //       ...positionValue,
-    //       [selectedBox]: positionName,
-    //     });
-    //   }
-    // }
+  /* 포지션 선택  */
+  const handleCategoryButtonClick = (positionName: Position | null) => {
     if (!selectedBox) return;
 
-    // main / sub / want1 / want2 중 어떤 박스가 선택되었는지 분기
+    // 포지션 박스 타입별 처리
     if (selectedBox === "main" || selectedBox === "sub") {
-      // main, sub는 단일 값
       setPositionValue((prev) => {
         const updated = { ...prev, [selectedBox]: positionName };
         onPositionChange && onPositionChange(updated);
         return updated;
       });
     } else {
-      // want1, want2는 배열의 특정 인덱스 업데이트
       setPositionValue((prev) => {
-        const newWant = [...(prev.want ?? ["ANY", "ANY"])];
+        const newWant = [...(prev.want ?? [null, null])];
         if (selectedBox === "want1") {
           newWant[0] = positionName;
         } else if (selectedBox === "want2") {
@@ -100,26 +73,14 @@ const PositionBox = (props: PositionBoxProps) => {
     }
   };
 
-  const handlePositionImgSet = (positionId: PositionType | undefined) => {
-    switch (positionId) {
-      case "ANY":
-        return "/assets/images/position/position_all_purple.svg";
-      case "TOP":
-        return "/assets/images/position/position_top_purple.svg";
-      case "JUNGLE":
-        return "/assets/images/position/position_jungle_purple.svg";
-      case "MID":
-        return "/assets/images/position/position_mid_purple.svg";
-      case "ADC":
-        return "/assets/images/position/position_one_deal_purple.svg";
-      case "SUP":
-        return "/assets/images/position/position_supporter_purple.svg";
-      default:
-        return "/assets/images/position/position_all_purple.svg";
-    }
+  const handlePositionImgSet = (positionId: Position | undefined | null) => {
+    const positionData = POSITION.find((p) => p.key === positionId);
+    if (!positionData || !positionData.image)
+      return "/assets/icons/bottom_caution.svg";
+    return `/assets/images/position/position_${positionData.image}_purple.svg`;
   };
 
-  const handleBoxClick = (position: Position) => {
+  const handleBoxClick = (position: PositionType) => {
     if (status === "reading") return;
     setOpenPosition((prevPosition) =>
       prevPosition === position ? null : position
@@ -146,8 +107,9 @@ const PositionBox = (props: PositionBoxProps) => {
           />
           {openPosition === "main" && (
             <PositionCategory
+              selectedBox={selectedBox}
               onClose={closePosition}
-              boxName={selectedBox}
+              value={positionValue.main}
               onSelect={handleCategoryButtonClick}
             />
           )}
@@ -164,8 +126,9 @@ const PositionBox = (props: PositionBoxProps) => {
           />
           {openPosition === "sub" && (
             <PositionCategory
+              selectedBox={selectedBox}
               onClose={closePosition}
-              boxName={selectedBox}
+              value={positionValue.sub}
               onSelect={handleCategoryButtonClick}
             />
           )}
@@ -184,13 +147,12 @@ const PositionBox = (props: PositionBoxProps) => {
           />
           {openPosition === "want1" && (
             <PositionCategory
+              selectedBox={selectedBox}
               onClose={closePosition}
-              boxName={selectedBox}
+              value={positionValue.want?.[0]}
               onSelect={handleCategoryButtonClick}
             />
           )}
-
-          {/* 두 번째 want 포지션 */}
           <StyledImage
             $status={status}
             onClick={() => handleBoxClick("want2")}
@@ -201,8 +163,9 @@ const PositionBox = (props: PositionBoxProps) => {
           />
           {openPosition === "want2" && (
             <PositionCategory
+              selectedBox={"want2"}
               onClose={closePosition}
-              boxName={selectedBox}
+              value={positionValue.want?.[1]}
               onSelect={handleCategoryButtonClick}
             />
           )}
