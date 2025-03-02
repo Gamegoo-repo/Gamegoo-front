@@ -1,26 +1,34 @@
 import { theme } from "@/styles/theme";
 import styled from "styled-components";
+import React, { useEffect } from "react";
+import { Position, PositionType } from "@/types/position/position";
+import Image from "next/image";
+import { POSITION } from "@/constants/position";
 import All from "../../../public/assets/images/position/position_all_unclicked.svg";
 import Top from "../../../public/assets/images/position/position_top_unclicked.svg";
 import Jungle from "../../../public/assets/images/position/position_jungle_unclicked.svg";
 import Mid from "../../../public/assets/images/position/position_mid_unclicked.svg";
-import OndDeal from "../../../public/assets/images/position/position_one_deal_unclicked.svg";
+import OneDeal from "../../../public/assets/images/position/position_one_deal_unclicked.svg";
 import Supporter from "../../../public/assets/images/position/position_supporter_unclicked.svg";
-import React, { useEffect } from "react";
-import { Position } from "@/types/position/position";
 
 interface PositionComponentProps {
+  selectedBox?: PositionType | null;
+  value?: Position | null;
+  onSelect: (positionName: Position | null) => void;
   onClose: () => void;
-  boxName?: string;
-  onSelect: (positionName: Position) => void;
 }
 
 const PositionCategory = (props: PositionComponentProps) => {
-  const { onClose, onSelect } = props;
+  const { selectedBox, value, onSelect, onClose } = props;
   const boxRef = React.useRef<HTMLDivElement>(null);
 
-  const handlePositionCategory = (positionName: Position) => {
-    onSelect(positionName);
+  const handlePositionCategory = (positionName: Position | null) => {
+    if (value === positionName) {
+      // 현재 선택 포지션 클릭시 초기화
+      onSelect(null);
+    } else {
+      onSelect(positionName);
+    }
     onClose();
   };
 
@@ -37,27 +45,59 @@ const PositionCategory = (props: PositionComponentProps) => {
     };
   }, [onClose]);
 
+  const getImageSrc = (position: Position | null) => {
+    const positionData = POSITION.find((p) => p.key === position);
+    if (!positionData || !positionData.image) return "";
+    return `/assets/images/position/position_${positionData.image}_${
+      value === position ? "purple" : "unclicked"
+    }.svg`;
+  };
+
+  const getSvgComponent = (position: Position | null) => {
+    switch (position) {
+      case "ANY":
+        return <All />;
+      case "TOP":
+        return <Top />;
+      case "JUNGLE":
+        return <Jungle />;
+      case "MID":
+        return <Mid />;
+      case "ADC":
+        return <OneDeal />;
+      case "SUP":
+        return <Supporter />;
+      default:
+        return <All />;
+    }
+  };
+
+  const positionList =
+    selectedBox === "want1" || selectedBox === "want2"
+      ? POSITION.slice(2)
+      : POSITION.slice(1);
+
   return (
     <Wrapper>
       <Box ref={boxRef}>
-        <AllButton onClick={() => handlePositionCategory("ANY")}>
-          <All />
-        </AllButton>
-        <TopButton onClick={() => handlePositionCategory("TOP")}>
-          <Top />
-        </TopButton>
-        <JungleButton onClick={() => handlePositionCategory("JUNGLE")}>
-          <Jungle />
-        </JungleButton>
-        <MidButton onClick={() => handlePositionCategory("MID")}>
-          <Mid />
-        </MidButton>
-        <OneDealButton onClick={() => handlePositionCategory("ADC")}>
-          <OndDeal />
-        </OneDealButton>
-        <SupporterButton onClick={() => handlePositionCategory("SUP")}>
-          <Supporter />
-        </SupporterButton>
+        {positionList.map((pos) => (
+          <StyledButton
+            key={pos.id}
+            posKey={pos.key || null}
+            onClick={() => handlePositionCategory(pos.key)}
+          >
+            {value === pos.key ? (
+              <Image
+                src={getImageSrc(pos.key)}
+                alt={pos.key || "선택"}
+                width={35}
+                height={35}
+              />
+            ) : (
+              getSvgComponent(pos.key)
+            )}
+          </StyledButton>
+        ))}
       </Box>
     </Wrapper>
   );
@@ -71,18 +111,6 @@ const Wrapper = styled.div`
   top: 100px;
   left: calc(50% - 35px);
   z-index: 10;
-  &.main {
-    top: 47%;
-    left: 10%;
-  }
-  &.sub {
-    top: 47%;
-    left: 28.5%;
-  }
-  &.want {
-    top: 47%;
-    left: 65.5%;
-  }
 `;
 
 const Box = styled.div`
@@ -105,62 +133,42 @@ const Box = styled.div`
   }
 `;
 
-const AllButton = styled.button`
-  &:hover path {
-    stroke: ${theme.colors.violet200};
-  }
-  &:active,
-  &:focus path {
-    stroke: ${theme.colors.violet600};
-  }
-`;
+const StyledButton = styled.button<{ posKey: Position | null }>`
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
 
-const TopButton = styled.button`
-  &:hover path:first-child {
-    fill: ${theme.colors.violet200};
-  }
-  &:active,
-  &:focus path:first-child {
-    fill: ${theme.colors.violet600};
-  }
-`;
+  ${({ posKey }) =>
+    (posKey === "ANY" || posKey === "JUNGLE" || posKey === "SUP") &&
+    `
+      &:hover path {
+        fill: ${theme.colors.violet200};
+      }
+      &:active, &:focus path {
+        fill: ${theme.colors.violet600};
+      }
+  `}
 
-const JungleButton = styled.button`
-  &:hover path {
-    fill: ${theme.colors.violet200};
-  }
-  &:active,
-  &:focus path {
-    fill: ${theme.colors.violet600};
-  }
-`;
+  ${({ posKey }) =>
+    posKey === "TOP" &&
+    `
+      &:hover path:first-child {
+        fill: ${theme.colors.violet200};
+      }
+      &:active, &:focus path:first-child {
+        fill: ${theme.colors.violet600};
+      }
+  `}
 
-const MidButton = styled.button`
-  &:hover path:nth-child(2) {
-    fill: ${theme.colors.violet200};
-  }
-  &:active,
-  &:focus path:nth-child(2) {
-    fill: ${theme.colors.violet600};
-  }
-`;
-
-const OneDealButton = styled.button`
-  &:hover path:nth-child(2) {
-    fill: ${theme.colors.violet200};
-  }
-  &:active,
-  &:focus path:nth-child(2) {
-    fill: ${theme.colors.violet600};
-  }
-`;
-
-const SupporterButton = styled.button`
-  &:hover path {
-    fill: ${theme.colors.violet200};
-  }
-  &:active,
-  &:focus path {
-    fill: ${theme.colors.violet600};
-  }
+  ${({ posKey }) =>
+    (posKey === "MID" || posKey === "ADC") &&
+    `
+      &:hover path:nth-child(2) {
+        fill: ${theme.colors.violet200};
+      }
+      &:active, &:focus path:nth-child(2) {
+        fill: ${theme.colors.violet600};
+      }
+  `}
 `;
