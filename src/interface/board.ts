@@ -25,7 +25,7 @@ export interface BoardListDetail {
   gameMode: GameMode;
   mainP: Position;
   subP: Position;
-  wantP: Position[];
+  wantP: (Position|null)[];
   championResponseList?: ChampionResponseDTOList[];
   winRate: number;
   createdAt: string;

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import PositionCategory from "../common/PositionCategory";
 import { Position, PositionType } from "@/types/position/position";
 import { theme } from "@/styles/theme";
@@ -11,15 +11,15 @@ type Status = "reading" | "posting";
 interface PositionBoxProps {
   status?: Status;
   onPositionChange?: (newPositionValue: PositionState) => void;
-  main: Position;
-  sub: Position;
-  want: (Position | null)[] | undefined;
+  main: Position | null;
+  sub: Position | null;
+  want: (Position | null)[] | null;
 }
 
 export interface PositionState {
   main: Position;
   sub: Position;
-  want: (Position | null)[] | undefined | null;
+  want: (Position | null)[] | null;
 }
 
 const PositionBox = (props: PositionBoxProps) => {
@@ -27,18 +27,10 @@ const PositionBox = (props: PositionBoxProps) => {
   const [selectedBox, setSelectedBox] = useState<PositionType | null>(null);
   const [openPosition, setOpenPosition] = useState<PositionType | null>(null);
   const [positionValue, setPositionValue] = useState<PositionState>({
-    main: main,
-    sub: sub,
+    main: main || "ANY",
+    sub: sub || "ANY",
     want: want ?? [],
   });
-
-  useEffect(() => {
-    setPositionValue({
-      main: main ?? "ANY",
-      sub: sub ?? "ANY",
-      want: want ?? [],
-    });
-  }, [main, sub, want]);
 
   /* 포지션 선택  */
   const handleCategoryButtonClick = (
@@ -142,14 +134,16 @@ const PositionBox = (props: PositionBoxProps) => {
             height={34}
             alt="첫 번째 찾는 포지션"
           />
-          <StyledImage
-            $status={status}
-            onClick={() => handleBoxClick("want")}
-            src={handlePositionImgSet(positionValue.want?.[1])}
-            width={35}
-            height={34}
-            alt="두 번째 찾는 포지션"
-          />
+          {(positionValue.want?.[1] || status === "posting") && (
+            <StyledImage
+              $status={status}
+              onClick={() => handleBoxClick("want")}
+              src={handlePositionImgSet(positionValue.want?.[1])}
+              width={35}
+              height={34}
+              alt="두 번째 찾는 포지션"
+            />
+          )}
           {openPosition === "want" && (
             <PositionCategory
               selectedBox={selectedBox}
