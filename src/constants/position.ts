@@ -1,7 +1,6 @@
 import { Position } from "@/types/position/position";
 
 export const POSITION = [
-    { id: 0, key: null, image: null },
     { id: 1, key: "ANY" as Position, image: "all" },
     { id: 2, key: "TOP" as Position, image: "top" },
     { id: 3, key: "JUNGLE" as Position, image: "jungle" },

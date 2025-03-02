@@ -13,22 +13,46 @@ import Supporter from "../../../public/assets/images/position/position_supporter
 
 interface PositionComponentProps {
   selectedBox?: PositionType | null;
-  value?: Position | null;
-  onSelect: (positionName: Position | null) => void;
+  value?: Position | (Position | null)[];
+  onSelect: (selectedValues: Position | (Position | null)[]) => void;
   onClose: () => void;
 }
 
 const PositionCategory = (props: PositionComponentProps) => {
-  const { selectedBox, value, onSelect, onClose } = props;
+  const { selectedBox, value = [], onSelect, onClose } = props;
   const boxRef = React.useRef<HTMLDivElement>(null);
 
   const handlePositionCategory = (positionName: Position | null) => {
-    if (value === positionName) {
-      // 현재 선택 포지션 클릭시 초기화
-      onSelect(null);
+    console.log("positionName", positionName);
+
+    let updatedValues: Position | (Position | null)[];
+
+    if (selectedBox === "want") {
+      // 찾는 포지션 (want) → 최대 2개 선택 가능
+      let wantArray = Array.isArray(value) ? [...value] : [];
+
+      // 이미 선택된 경우 → 제거
+      if (wantArray.includes(positionName)) {
+        updatedValues = wantArray.filter((v) => v !== positionName);
+      } else if (wantArray.length < 2 || wantArray.includes(null)) {
+        // 최대 2개 선택 가능
+        const firstEmptyIndex = wantArray.indexOf(null);
+        if (firstEmptyIndex !== -1) {
+          wantArray[firstEmptyIndex] = positionName;
+        } else {
+          wantArray.push(positionName);
+        }
+        updatedValues = wantArray.slice(0, 2);
+      } else {
+        updatedValues = wantArray;
+      }
     } else {
-      onSelect(positionName);
+      // 주/부 포지션 (main, sub) → 하나만 선택 가능
+      updatedValues = positionName || "ANY";
     }
+
+    console.log(updatedValues);
+    onSelect(updatedValues);
     onClose();
   };
 
@@ -45,11 +69,12 @@ const PositionCategory = (props: PositionComponentProps) => {
     };
   }, [onClose]);
 
-  const getImageSrc = (position: Position | null) => {
-    const positionData = POSITION.find((p) => p.key === position);
-    if (!positionData || !positionData.image) return "";
+  const getImageSrc = (position: Position) => {
+    const positionData =
+      POSITION.find((p) => p.key === position) || POSITION[1];
+
     return `/assets/images/position/position_${positionData.image}_${
-      value === position ? "purple" : "unclicked"
+      value.includes(position) ? "purple" : "unclicked"
     }.svg`;
   };
 
@@ -72,21 +97,18 @@ const PositionCategory = (props: PositionComponentProps) => {
     }
   };
 
-  const positionList =
-    selectedBox === "want1" || selectedBox === "want2"
-      ? POSITION.slice(2)
-      : POSITION.slice(1);
+  const positionList = selectedBox === "want" ? POSITION.slice(1) : POSITION;
 
   return (
     <Wrapper>
-      <Box ref={boxRef}>
+      <Box $isWant={selectedBox === "want"} ref={boxRef}>
         {positionList.map((pos) => (
           <StyledButton
             key={pos.id}
-            posKey={pos.key || null}
+            posKey={pos.key}
             onClick={() => handlePositionCategory(pos.key)}
           >
-            {value === pos.key ? (
+            {value.includes(pos.key) ? (
               <Image
                 src={getImageSrc(pos.key)}
                 alt={pos.key || "선택"}
@@ -113,11 +135,11 @@ const Wrapper = styled.div`
   z-index: 10;
 `;
 
-const Box = styled.div`
+const Box = styled.div<{ $isWant: boolean }>`
   display: flex;
   align-items: center;
   column-gap: 50px;
-  width: 482px;
+  width: ${({ $isWant }) => ($isWant ? "410px" : "482px")};
   padding: 18px 27px;
   background: ${theme.colors.gray900};
   border-radius: 16.3px;
@@ -133,7 +155,7 @@ const Box = styled.div`
   }
 `;
 
-const StyledButton = styled.button<{ posKey: Position | null }>`
+const StyledButton = styled.button<{ posKey: Position }>`
   background: none;
   border: none;
   padding: 0;
