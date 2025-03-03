@@ -110,6 +110,11 @@ const StyledButton = styled.button<{ $width?: string; $borderradius?: string }>`
     border: none;
     color: ${theme.colors.white};
     ${(props) => props.theme.fonts.bold14};
+    width: 374px;
+    @media (max-width: 420px) {
+      width: 272px;
+      margin: 0 auto;
+    }
   }
 `;
 
