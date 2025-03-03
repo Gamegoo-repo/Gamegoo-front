@@ -75,6 +75,7 @@ const Container = styled.div`
   @media (max-width: 420px) {
     width: 90%;
     height: 90%;
+    min-width: 300px;
   }
 `;
 
