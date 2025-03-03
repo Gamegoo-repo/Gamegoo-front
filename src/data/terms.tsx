@@ -9,9 +9,9 @@ export const createTerms = (
     id: 1,
     text: (
       <Text>
+        <Span onClick={() => openModal("SERVICE", 0)}>이용 약관</Span>
+        {` `}동의
         <Required $isRequired={true}>(필수)</Required>
-        <Span onClick={() => openModal("SERVICE", 0)}>이용 약관</Span>에
-        동의합니다.
       </Text>
     ),
     require: true,
@@ -20,9 +20,9 @@ export const createTerms = (
     id: 2,
     text: (
       <Text>
+        <Span onClick={() => openModal("PRIVATE", 1)}>개인정보 처리방침</Span>
+        {` `}동의
         <Required $isRequired={true}>(필수)</Required>
-        <Span onClick={() => openModal("PRIVATE", 1)}>개인정보 처리방침</Span>에
-        동의합니다.
       </Text>
     ),
     require: true,
@@ -31,12 +31,11 @@ export const createTerms = (
     id: 3,
     text: (
       <Text>
-        <Required $isRequired={false}>(선택)</Required>
-        서비스 홍보 및 마케팅 목적의{` `}
         <Span onClick={() => openModal("MARKETING", 2)}>
-          개인정보 수집 및 이용
+          마케팅 목적 개인정보 수집 및 이용
         </Span>
-        에 동의합니다.
+        {` `}동의
+        <Required $isRequired={false}>(선택)</Required>
       </Text>
     ),
     require: false,
@@ -53,7 +52,7 @@ const Required = styled.span<{ $isRequired: boolean }>`
   color: ${({ $isRequired }) =>
     $isRequired ? theme.colors.violet800 : theme.colors.gray500};
   ${theme.fonts.regular16};
-  margin-right: 4px;
+  margin-left: 4px;
 `;
 
 const Span = styled.span`
