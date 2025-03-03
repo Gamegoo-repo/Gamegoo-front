@@ -6,18 +6,24 @@ import styled from "styled-components";
 interface TermModalProps {
   title: string;
   content: string;
+  isRequired: boolean;
   onClose: () => void;
   children?: React.ReactNode;
 }
 const TermModal = (props: TermModalProps) => {
-  const { title, content, onClose, children } = props;
+  const { title, content, isRequired, onClose, children } = props;
 
   return (
     <Overlay>
       <Container>
         <Top>
           <Title>
-            <TitleText>{title}</TitleText>
+            <span>{title}</span>
+            {isRequired ? (
+              <RequiredText>(필수)</RequiredText>
+            ) : (
+              <UnRequiredText>(선택)</UnRequiredText>
+            )}
           </Title>
           <Image
             src="/assets/icons/close_modal.svg"
@@ -50,7 +56,8 @@ const Overlay = styled.div`
 `;
 
 const Container = styled.div`
-  width: 630px;
+  max-width: 523px;
+  width: 100%;
   height: 785px;
   padding: 32px 38px;
   border-radius: 30px;
@@ -64,6 +71,11 @@ const Container = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   gap: 20px;
+
+  @media (max-width: 420px) {
+    width: 90%;
+    height: 90%;
+  }
 `;
 
 const Top = styled.div`
@@ -86,7 +98,11 @@ const Content = styled.div`
   background: ${theme.colors.gray200};
   color: ${theme.colors.gray800};
   overflow-y: auto;
+  overflow-x: clip;
 
+  @media (max-width: 420px) {
+    ${(props) => props.theme.fonts.medium11};
+  }
   &::-webkit-scrollbar {
     width: 24px;
     height: 100px;
@@ -107,11 +123,18 @@ const Content = styled.div`
 
 const Title = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: flex-start;
   position: relative;
+  @media (max-width: 420px) {
+    ${(props) => props.theme.fonts.bold16};
+  }
 `;
 
-const TitleText = styled.div`
-  margin-left: 10px;
+const RequiredText = styled.span`
+  color: ${theme.colors.violet600};
+`;
+
+const UnRequiredText = styled.span`
+  color: ${theme.colors.gray500};
 `;
