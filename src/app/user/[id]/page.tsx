@@ -1,6 +1,9 @@
 "use client";
 
-import { getMemberMannerKeyword, getMemberMannerLevel } from "@/api/manner";
+import {
+  getMemberMannerKeyword,
+  getMemberMannerLevel,
+} from "@/api/manner/manner";
 import { getOtherProfile } from "@/api/user/profile/get";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import BlindProfile from "@/components/user/BlindProfile";

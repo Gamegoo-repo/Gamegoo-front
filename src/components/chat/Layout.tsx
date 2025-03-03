@@ -21,7 +21,7 @@ import {
   getMannerValues,
   postBadMannerValue,
   postMannerValue,
-} from "@/api/manner";
+} from "@/api/manner/manner";
 import ConfirmModal from "../common/ConfirmModal";
 import { leaveChatroom } from "@/api/chat/chat";
 import { setCloseModal, setOpenModal } from "@/redux/slices/modalSlice";
