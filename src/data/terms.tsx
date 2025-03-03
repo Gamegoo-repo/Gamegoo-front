@@ -45,7 +45,7 @@ export const createTerms = (
 const Text = styled.div`
   color: ${theme.colors.gray700};
   ${theme.fonts.regular16};
-  white-space: nowrap;
+  /* white-space: nowrap; */
 `;
 
 const Required = styled.span<{ $isRequired: boolean }>`
