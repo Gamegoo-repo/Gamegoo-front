@@ -13,18 +13,14 @@ const Layout = (props: any) => {
   return (
     <Container>
       <Box>
-        <button
+        <Logo
           onClick={() => {
             router.push("/login");
           }}
         >
-          <Image
-            src="/assets/icons/logo.svg"
-            width={318}
-            height={88}
-            alt="logo"
-          />
-        </button>
+          <Image src="/assets/icons/logo.svg" fill alt="logo" />
+        </Logo>
+
         <Title>{isTerm ? "이용 약관 동의" : "회원가입"}</Title>
         <Content>{props.children}</Content>
       </Box>
@@ -43,17 +39,33 @@ const Container = styled.div`
 `;
 
 const Box = styled.div`
-  max-width: 540px;
+  max-width: 468px;
   width: 100%;
-  padding: 35px;
+  margin-top: 173px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  @media (max-width: 420px) {
+    width: 90%;
+  }
 `;
-
+const Logo = styled.button`
+  position: relative;
+  width: 318px;
+  height: 88px;
+  @media (max-width: 420px) {
+    width: 186px;
+    height: 46px;
+  }
+`;
 const Title = styled.div`
   color: ${theme.colors.gray700};
   ${(props) => props.theme.fonts.light32};
+  margin-bottom: 188px;
+  @media (max-width: 420px) {
+    ${(props) => props.theme.fonts.regular20};
+    margin-bottom: 0;
+  }
 `;
 
 const Content = styled.div`
