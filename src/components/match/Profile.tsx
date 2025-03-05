@@ -36,7 +36,7 @@ import {
 import { deleteFriend } from "@/api/friend/delete";
 import { blockMember, unblockMember } from "@/api/block/block";
 import { Mike as MikeType } from "@/types/user/mike";
-import { Position as PositionType } from "@/types/position/position";
+import { Position, PositionType } from "@/types/position/position";
 import RankTier from "../common/RankTier";
 import Alert from "../common/Alert";
 
@@ -119,7 +119,7 @@ const Profile: React.FC<Profile> = ({
         mike: isMike,
         mainP: positionValue.main ?? "ANY",
         subP: positionValue.sub ?? "ANY",
-        wantP: positionValue.want ?? ["ANY", "ANY"],
+        wantP: positionValue.want ?? [],
         gameStyleResponseDTOList: gameStyleIds,
       })
     );
@@ -228,7 +228,7 @@ const Profile: React.FC<Profile> = ({
         await putPosition({
           mainP: newPositionValue.main,
           subP: newPositionValue.sub,
-          wantP: newPositionValue.want || ["ANY", "ANY"],
+          wantP: newPositionValue.want || [],
         });
 
         // 포지션 상태 업데이트
@@ -248,11 +248,13 @@ const Profile: React.FC<Profile> = ({
     }
   };
 
-  const handleCategoryButtonClick = (positionName: PositionType) => {
+  const handleCategoryButtonClick = (
+    selectedValues: Position | (Position | null)[]
+  ) => {
     if (selectedBox) {
       const newPositionValue = {
         ...positionValue,
-        [selectedBox]: positionName,
+        [selectedBox]: selectedValues,
       };
       setPositionValue(newPositionValue);
       handlePositionChange(newPositionValue);
@@ -527,7 +529,7 @@ const Profile: React.FC<Profile> = ({
             </StyledBox>
           ) : (
             <UnderRow>
-              <Position>
+              <Positions>
                 {POSITIONS.map((position, index) => (
                   <Posi
                     key={index}
@@ -551,13 +553,21 @@ const Profile: React.FC<Profile> = ({
                     />
                     {isPositionOpen[index] && (
                       <PositionCategory
+                        value={
+                          index === 0
+                            ? positionValue.main ?? "ANY"
+                            : index === 1
+                            ? positionValue.sub ?? "ANY"
+                            : (positionValue.want && positionValue.want[0]) ??
+                              "ANY"
+                        }
                         onClose={() => handlePositionClose(index)}
                         onSelect={handleCategoryButtonClick}
                       />
                     )}
                   </Posi>
                 ))}
-              </Position>
+              </Positions>
               {(profileType === "other" || profileType === "me") &&
                 user.championResponseList && (
                   <Champion
@@ -957,7 +967,7 @@ const MsgConfirm = styled(Msg)`
   margin: 80px 0;
 `;
 
-const Position = styled.div`
+const Positions = styled.div`
   display: flex;
   gap: 24px;
   align-items: center;

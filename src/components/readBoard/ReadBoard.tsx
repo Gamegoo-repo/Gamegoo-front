@@ -610,9 +610,13 @@ const ReadBoard = (props: ReadBoardProps) => {
                   <Title>포지션</Title>
                   <PositionBox
                     status="reading"
-                    main={isPost.mainP}
-                    sub={isPost.subP}
-                    want={isPost.wantP}
+                    main={isPost.mainP || null}
+                    sub={isPost.subP || null}
+                    want={
+                      Array.isArray(isPost.wantP)
+                        ? isPost.wantP.filter((v) => v !== null)
+                        : null
+                    }
                   />
                 </PositionSection>
               )}

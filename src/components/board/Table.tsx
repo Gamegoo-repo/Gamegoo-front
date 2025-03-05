@@ -212,15 +212,24 @@ const Table = (props: TableProps) => {
                     />
                   </Fourth>
                   <Fifth className="table_width">
-                    {data.wantP.map((posi, i) => (
+                    {data.wantP?.length > 0 ? (
+                      data.wantP.map((posi, i) => (
+                        <Image
+                          key={`${posi}-${i}`}
+                          src={setPositionImg(posi || "ANY")}
+                          width={35}
+                          height={28}
+                          alt="찾는 포지션"
+                        />
+                      ))
+                    ) : (
                       <Image
-                        key={`${posi}-${i}`}
-                        src={setPositionImg(posi)}
+                        src={setPositionImg("ANY")}
                         width={35}
                         height={28}
                         alt="찾는 포지션"
                       />
-                    ))}
+                    )}
                   </Fifth>
                   <Sixth className="table_width">
                     <Champion

@@ -11,9 +11,6 @@ export const DEFAULT_PROFILE = {
   freeTier: "UNRANKED",
   soloRank: 3,
   freeRank: 0,
-  mannerLevel: 4,
-  mannerRank: 15,
-  mannerRatingCount: 4,
   updatedAt: "",
   mainP: "ANY" as Position,
   subP: "ANY" as Position,
@@ -57,57 +54,58 @@ export const DEFAULT_PROFILE = {
 };
 
 export const DEFAULT_MANNER = {
-    memberId: 0,
-    mannerLevel: 4,
-    mannerRank: 15,
-    mannerKeywords: [
-        {
-            mannerKeywordId: 1,
-            count: 0,
-        },
-        {
-            mannerKeywordId: 2,
-            count: 0,
-        },
-        {
-            mannerKeywordId: 3,
-            count: 0,
-        },
-        {
-            mannerKeywordId: 4,
-            count: 0,
-        },
-        {
-            mannerKeywordId: 5,
-            count: 0,
-        },
-        {
-            mannerKeywordId: 6,
-            count: 0,
-        },
-        {
-            mannerKeywordId: 7,
-            count: 0,
-        },
-        {
-            mannerKeywordId: 8,
-            count: 0,
-        },
-        {
-            mannerKeywordId: 9,
-            count: 0,
-        },
-        {
-            mannerKeywordId: 10,
-            count: 0,
-        },
-        {
-            mannerKeywordId: 11,
-            count: 0,
-        },
-        {
-            mannerKeywordId: 12,
-            count: 0,
-        },
-    ],
+  memberId: 0,
+  mannerLevel: 4,
+  mannerRank: 15,
+  mannerRatingCount: 4,
+  mannerKeywords: [
+    {
+      mannerKeywordId: 1,
+      count: 0,
+    },
+    {
+      mannerKeywordId: 2,
+      count: 0,
+    },
+    {
+      mannerKeywordId: 3,
+      count: 0,
+    },
+    {
+      mannerKeywordId: 4,
+      count: 0,
+    },
+    {
+      mannerKeywordId: 5,
+      count: 0,
+    },
+    {
+      mannerKeywordId: 6,
+      count: 0,
+    },
+    {
+      mannerKeywordId: 7,
+      count: 0,
+    },
+    {
+      mannerKeywordId: 8,
+      count: 0,
+    },
+    {
+      mannerKeywordId: 9,
+      count: 0,
+    },
+    {
+      mannerKeywordId: 10,
+      count: 0,
+    },
+    {
+      mannerKeywordId: 11,
+      count: 0,
+    },
+    {
+      mannerKeywordId: 12,
+      count: 0,
+    },
+  ],
 };

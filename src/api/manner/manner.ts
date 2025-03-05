@@ -4,7 +4,7 @@ import {
   MemberMannerLevelResponse,
   MemberPositiveNegativeMannerResponse,
 } from "@/types/api/manner/manner";
-import { AuthAxios } from "./auth";
+import { AuthAxios } from "../auth";
 
 interface MannerInterface {
   memberId: number;
@@ -71,7 +71,9 @@ export const postMannerValue = async (
   try {
     const response = await AuthAxios.post(
       `/api/v2/manner/positive/${params.memberId}`,
-      params.mannerKeywordIdList
+      {
+        mannerKeywordIdList: params.mannerKeywordIdList
+      }
     );
     return response.data;
   } catch (error) {
@@ -86,7 +88,9 @@ export const postBadMannerValue = async (
   try {
     const response = await AuthAxios.post(
       `/api/v2/manner/negative/${params.memberId}`,
-      params.mannerKeywordIdList
+      {
+        mannerKeywordIdList: params.mannerKeywordIdList
+      }
     );
     return response.data;
   } catch (error) {
@@ -102,7 +106,9 @@ export const editManners = async ({
   try {
     const response = await AuthAxios.put(
       `/api/v2/manner/${mannerId}`,
-      mannerKeywordIdList
+      {
+        mannerKeywordIdList: mannerKeywordIdList
+      }
     );
     return response.data;
   } catch (error) {
