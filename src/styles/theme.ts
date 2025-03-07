@@ -200,9 +200,17 @@ const fonts = {
     weight: 400,
     size: 14,
   }),
+  regular13: FONT({
+    weight: 400,
+    size: 13,
+  }),
   regular12: FONT({
     weight: 400,
     size: 12,
+  }),
+  regular9: FONT({
+    weight: 400,
+    size: 9,
   }),
   regular8: FONT({
     weight: 400,
