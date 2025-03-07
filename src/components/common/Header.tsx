@@ -23,11 +23,13 @@ import {
 } from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
 import Alert from "./Alert";
+import ChatButton from "./ChatButton";
 import { setNotiCount } from "@/redux/slices/notiSlice";
 import { socketLogout } from "@/api/socket";
 import { closeChat } from "@/redux/slices/chatSlice";
 import { postLogout } from "@/api/login/logout";
 import { getUnreadNotificationCount } from "@/api/notification/notification";
+import useMediaQueries from "@/hooks/useMediaQueries";
 
 interface HeaderProps {
   selected: boolean;
@@ -36,6 +38,7 @@ interface HeaderProps {
 const Header = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const isMobile = useMediaQueries({ breakpoint: 700 });
   const pathname = usePathname();
   const [isAlertWindow, setIsAlertWindow] = useState<Boolean>(false);
   const [isMyPage, setIsMyPage] = useState<Boolean>(false);
@@ -125,8 +128,9 @@ const Header = () => {
           buttonText="확인"
         />
       )}
+
       <HeaderBar>
-        <Left>
+        <LogoButton>
           <Link href="/">
             <Image
               src="/assets/icons/logo.svg"
@@ -136,42 +140,66 @@ const Header = () => {
               priority
             />
           </Link>
-          <Menus>
-            <Menu
-              selected={pathname.includes("/match")}
-              onClick={() => {
-                if (!accesssToken) {
-                  setShowAlert(true);
-                } else {
-                  router.push("/match");
-                }
-              }}
-            >
-              바로 매칭
-            </Menu>
-            <Bar />
-            <Menu
-              selected={pathname === "/board"}
-              onClick={() => {
-                router.push("/board");
-              }}
-            >
-              매칭 게시판
-            </Menu>
-          </Menus>
-        </Left>
+        </LogoButton>
+
+        <Menus>
+          <Menu
+            selected={pathname === "/"}
+            onClick={() => {
+              router.push("/");
+            }}
+          >
+            홈
+          </Menu>
+          <Menu
+            selected={pathname.includes("/match")}
+            onClick={() => {
+              if (!accesssToken) {
+                setShowAlert(true);
+              } else {
+                router.push("/match");
+              }
+            }}
+          >
+            바로 매칭
+          </Menu>
+          {isMobile ? <></> : <Bar />}
+          <Menu
+            selected={pathname === "/board"}
+            onClick={() => {
+              router.push("/board");
+            }}
+          >
+            {isMobile ? "게시판" : "매칭 게시판"}
+          </Menu>
+        </Menus>
         {accesssToken && name && profileImg ? (
           <Right>
-            <Image
-              src={`/assets/icons/noti_${notiCount > 0 ? "on" : "off"}.svg`}
-              width={24}
-              height={30}
-              alt="noti"
-              onClick={handleAlertWindow}
-            />
+            <IconButton>
+              <Image
+                src={`/assets/icons/noti_${notiCount > 0 ? "on" : "off"}.svg`}
+                width={24}
+                height={30}
+                alt="noti"
+                onClick={handleAlertWindow}
+              />
+            </IconButton>
+            {isMobile ? (
+              <IconButton>
+                <ChatButton />
+              </IconButton>
+            ) : (
+              <></>
+            )}
+
             <Profile
               className="profile"
               onClick={() => {
+                if (isMobile) {
+                  router.push("/mypage/profile");
+                  return;
+                }
+
                 setIsMyPage(!isMyPage);
               }}
             >
@@ -182,13 +210,19 @@ const Header = () => {
                   height={25}
                 />
               </HeaderProfileImgWrapper>
-              {name}
-              <Image
-                src="/assets/icons/chevron_down.svg"
-                width={7}
-                height={7}
-                alt="more"
-              />
+              {isMobile ? (
+                <></>
+              ) : (
+                <>
+                  {name}
+                  <Image
+                    src="/assets/icons/chevron_down.svg"
+                    width={7}
+                    height={7}
+                    alt="more"
+                  />
+                </>
+              )}
             </Profile>
           </Right>
         ) : (
@@ -291,16 +325,49 @@ const HeaderBar = styled.div`
   align-items: center;
   justify-content: space-between;
   white-space: nowrap;
+
+  @media screen and (max-width: 700px) {
+    width: 90%;
+    padding: 0;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto auto;
+    align-items: center;
+  }
+`;
+
+const LogoButton = styled.button`
+  @media screen and (max-width: 700px) {
+    grid-column: 1;
+    justify-self: start;
+  }
 `;
 
 const Menus = styled.div`
   display: flex;
   gap: 25px;
+  flex-grow: 1;
+  justify-content: flex-start;
+  @media screen and (max-width: 700px) {
+    width: 100%;
+    grid-column: 1 / span 2;
+    display: flex;
+    gap: 42px;
+    margin-top: 10px;
+    padding: 0 20px;
+    border-bottom: 1px solid ${theme.colors.gray300};
+  }
 `;
 
 const Menu = styled.button<HeaderProps>`
   ${(props) => props.theme.fonts.regular14};
   font-weight: ${({ selected }) => (selected ? "700" : "400")};
+
+  @media screen and (max-width: 700px) {
+    padding: 10px 0;
+    border-bottom: ${({ selected }) =>
+      selected ? `3px solid ${theme.colors.gray800}` : "none"};
+  }
 `;
 
 const Bar = styled.div`
@@ -309,18 +376,25 @@ const Bar = styled.div`
   background: #d7d7d7;
 `;
 
-const Left = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 60px;
-`;
-
 const Right = styled.div`
   display: flex;
   align-items: center;
   gap: 20px;
+  @media screen and (max-width: 700px) {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+  }
 `;
 
+const IconButton = styled.button`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  &:active {
+    background-color: ${theme.colors.violet100};
+  }
+`;
 const Profile = styled.div`
   display: flex;
   align-items: center;
