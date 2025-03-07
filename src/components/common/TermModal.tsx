@@ -123,9 +123,6 @@ const Content = styled.div`
 `;
 
 const Title = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
   position: relative;
   @media (max-width: 420px) {
     ${(props) => props.theme.fonts.bold16};

@@ -301,7 +301,7 @@ export const PRIVATE_TERMS = {
 };
 
 export const MARKETING_TERMS = {
-  title: "개인정보 수집∙이용 동의서",
+  title: "마케팅 목적 개인정보 수집 및 이용",
   isRequired: false,
   content: `'겜구' 서비스의 서비스 홍보 및 마케팅 정보 발송을 위해 아래와 같이 개인정보의 수집·이용목적, 수집하는 개인정보의 항목, 개인정보의 보유 및 이용기간을 안내하여 드리오니 내용을 자세히 읽으신 후 동의 여부를 결정하여 주십시오.
 
