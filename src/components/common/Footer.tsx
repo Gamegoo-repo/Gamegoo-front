@@ -6,12 +6,14 @@ import Alert from "./Alert";
 import FeedBackInput from "./FeedbackInput";
 import { useRouter } from "next/navigation";
 import ChatButton from "./ChatButton";
+import useMediaQueries from "@/hooks/useMediaQueries";
 
 interface FooterProps {
   isShowChat: boolean;
 }
 
 const Footer = (props: FooterProps) => {
+  const isMobile = useMediaQueries({ breakpoint: 700 });
   const { isShowChat } = props;
   const router = useRouter();
   const [showAlert, setShowAlert] = useState(false);
@@ -65,10 +67,12 @@ const Footer = (props: FooterProps) => {
           <button onClick={handleDirectService}>이용약관</button>
         </RightDiv>
       </Container>
-      {isShowChat && (
+      {isShowChat && !isMobile ? (
         <ChatButtonWrapper>
           <ChatButton />
         </ChatButtonWrapper>
+      ) : (
+        <></>
       )}
     </Wrapper>
   );
