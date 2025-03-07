@@ -142,6 +142,7 @@ const Title = styled.div`
   @media (max-width: 420px) {
     font-size: 18px;
     margin-bottom: 30px;
+    letter-spacing: -1px;
   }
 `;
 
