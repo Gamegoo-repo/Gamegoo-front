@@ -45,7 +45,7 @@ const Box = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  @media (max-width: 420px) {
+  @media (max-width: 500px) {
     width: 90%;
   }
 `;
