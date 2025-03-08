@@ -14,7 +14,6 @@ body {
   /* min-width: 1200px; */
   font-family: "Pretendard", sans-serif;
   white-space: pre-line;
-  overflow: hidden;
   &::-webkit-scrollbar {
     width: 20px;
   }
