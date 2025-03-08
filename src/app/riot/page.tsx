@@ -46,12 +46,15 @@ const RiotLogin = () => {
         <Box>
           <Title>{`서비스를 이용하려면\n라이엇 계정으로 로그인하세요`}</Title>
           <Content>
-            <Button
-              buttonType="riot"
-              text="라이엇 계정으로 시작하기"
-              icon="/assets/icons/riot.svg"
-              onClick={handleLogin}
-            />
+            <LoginButton>
+              <Button
+                buttonType="riot"
+                text="라이엇 계정으로 시작하기"
+                icon="/assets/icons/riot.svg"
+                onClick={handleLogin}
+              />
+            </LoginButton>
+
             <Check>
               <Checkbox
                 value="autoLogin"
@@ -150,6 +153,13 @@ const Content = styled.div`
   width: 100%;
 `;
 
+const LoginButton = styled.div`
+  width: 374px;
+  @media (max-width: 420px) {
+    width: 272px;
+    margin: 0 auto;
+  }
+`;
 const Check = styled.div`
   display: flex;
   justify-content: flex-end;
