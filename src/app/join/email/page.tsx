@@ -163,7 +163,7 @@ const Email = () => {
           }
         }}
         placeholder="이메일 주소"
-        isValid={emailValid}
+        isvalid={emailValid}
         disabled={isSend}
       />
       {isSend && !authCodeRedux && (
@@ -182,7 +182,7 @@ const Email = () => {
               }
             }}
             placeholder="인증 코드 입력"
-            isValid={authCodeValid}
+            isvalid={authCodeValid}
             errorMsg=""
             checkIcon={false}
           />
