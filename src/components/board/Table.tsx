@@ -245,8 +245,11 @@ const Table = (props: TableProps) => {
                     </P>
                   </Seventh>
                   <Eighth className="table_width">
-                    <P className="gray">{setDateFormatter(data.createdAt)}</P>
+                    <P>{data.contents}</P>
                   </Eighth>
+                  <Ninth className="table_width">
+                    <P className="gray">{setDateFormatter(data.createdAt)}</P>
+                  </Ninth>
                 </Row>
               );
             })}
@@ -297,6 +300,9 @@ const TableWrapper = styled.div`
     }
     &:nth-child(7) {
       width: 9%;
+    }
+    &:nth-child(8) {
+      width: 15%;
     }
     &:last-child {
       width: 11%;
@@ -393,7 +399,12 @@ const Sixth = styled.div`
 `;
 
 const Seventh = styled.div``;
-const Eighth = styled.div``;
+const Eighth = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+const Ninth = styled.div``;
 
 const NameRow = styled.div`
   display: flex;
