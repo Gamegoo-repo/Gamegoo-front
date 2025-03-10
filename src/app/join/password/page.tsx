@@ -45,19 +45,19 @@ const Password = () => {
     !!password.match(/[@$!%*?&#^()]/);
 
   const validatePassword = (password: string) => {
-    const isValid = passwordRegEx.test(password);
-    setPasswordValid(isValid);
-    if (isValid) {
+    const isvalid = passwordRegEx.test(password);
+    setPasswordValid(isvalid);
+    if (isvalid) {
       dispatch(updatePassword(password));
     }
   };
 
   const validateRepassword = (repassword: string) => {
-    const isValid =
+    const isvalid =
       repassword === password &&
       repassword.length >= 8 &&
       repassword.length <= 16;
-    setRepasswordValid(isValid);
+    setRepasswordValid(isvalid);
   };
 
   const handleSendPassword = () => {
@@ -77,7 +77,7 @@ const Password = () => {
           validatePassword(value);
         }}
         placeholder="비밀번호"
-        isValid={passwordValid}
+        isvalid={passwordValid}
       />
       <Valid>
         비밀번호 요구사항
@@ -116,7 +116,7 @@ const Password = () => {
           validateRepassword(value);
         }}
         placeholder="비밀번호 재입력"
-        isValid={repasswordValid}
+        isvalid={repasswordValid}
       />
       <Button
         buttonType="primary"

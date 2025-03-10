@@ -85,7 +85,7 @@ const PasswordModal = (props: PasswordModalProps) => {
             setIsPasswordValid(undefined);
           }}
           placeholder="현재 비밀번호 입력"
-          isValid={isPasswordValid}
+          isvalid={isPasswordValid}
           errorMsg="비밀번호 불일치"
         />
         <Input
@@ -97,7 +97,7 @@ const PasswordModal = (props: PasswordModalProps) => {
             validateNewPassword(value);
           }}
           placeholder="신규 비밀번호 입력"
-          isValid={
+          isvalid={
             newPassword === "" ? undefined : isLengthValid && hasSpecialChar
           }
         />
@@ -149,7 +149,7 @@ const PasswordModal = (props: PasswordModalProps) => {
             setRePassword(value);
           }}
           placeholder="신규 비밀번호 재입력"
-          isValid={
+          isvalid={
             rePassword === ""
               ? undefined
               : newPassword.length > 0 && newPassword === rePassword
