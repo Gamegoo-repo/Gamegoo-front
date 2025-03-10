@@ -5,7 +5,7 @@ import { Dispatch } from "react";
 interface TabsProps {
   tabs: string[];
   activeTab: number;
-  onTabClick: Dispatch<React.SetStateAction<number>>;
+  onTabClick: (index: number) => void;
 }
 
 const Tabs = (props: TabsProps) => {

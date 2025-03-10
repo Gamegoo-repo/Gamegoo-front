@@ -55,7 +55,7 @@ const ChatButton = () => {
       return setShowAlert(true);
     }
     dispatch(toggleChat());
-    dispatch(resetPosition());
+    // dispatch(resetPosition());
   };
 
   return (
