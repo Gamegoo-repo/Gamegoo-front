@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import Button from "../common/Button";
 import CRModal from "../crBoard/CRModal";
 import UpdateProfileImage from "./UpdateProfileImage";
-import User from "../crBoard/User";
+import UserAccount from "../crBoard/UserAccount";
 import Toggle from "../common/Toggle";
 import PositionBox, { PositionState } from "../crBoard/PositionBox";
 import GameStyle from "./GameStyle";
@@ -26,18 +26,14 @@ import { setUserProfile } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
 import { setClosePostingModal } from "@/redux/slices/modalSlice";
 import { getMyProfile } from "@/api/user/profile/get";
+import { Mike } from "@/types/user/mike";
+import { GAME_MODE } from "@/constants/board";
+import { GameMode } from "@/types/game/gameMode";
 
 interface PostBoardProps {
   onClose: () => void;
   onCompletedPostingClose: () => void;
 }
-
-const DROP_DATA = [
-  { id: 1, value: "빠른대전" },
-  { id: 2, value: "솔로랭크" },
-  { id: 3, value: "자유랭크" },
-  { id: 4, value: "칼바람 나락" },
-];
 
 const PostBoard = (props: PostBoardProps) => {
   const { onClose, onCompletedPostingClose } = props;
@@ -58,17 +54,19 @@ const PostBoard = (props: PostBoardProps) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState<
     number | undefined
   >(currentPost?.profileImage ?? user?.profileImg);
-  const [selectedDropOption, setSelectedDropOption] = useState<number>(
-    currentPost?.gameMode || 1
+  const [selectedDropOption, setSelectedDropOption] = useState<GameMode>(
+    currentPost?.gameMode || "FAST"
   );
   const [positionValue, setPositionValue] = useState<PositionState | undefined>(
     {
-      main: currentPost?.mainPosition || user?.mainP || 0,
-      sub: currentPost?.subPosition || user?.subP || 0,
-      want: currentPost?.wantPosition || user?.wantP || 0,
+      main: currentPost?.mainP || user?.mainP || "ANY",
+      sub: currentPost?.subP || user?.subP || "ANY",
+      want: currentPost?.wantP || user?.wantP || ["ANY", "ANY"],
     }
   );
-  const [isMicOn, setIsMicOn] = useState<boolean>(currentPost?.mike || false);
+  const [isMicOn, setIsMicOn] = useState<Mike>(
+    currentPost?.mike || "UNAVAILABLE"
+  );
   const gameStyleIds =
     user?.gameStyleResponseList?.map((item) => item.gameStyleId) || [];
   const [selectedStyleIds, setSelectedStyleIds] = useState<number[]>(
@@ -103,9 +101,9 @@ const PostBoard = (props: PostBoardProps) => {
       setSelectedDropOption(currentPost.gameMode);
 
       setPositionValue({
-        main: currentPost.mainPosition,
-        sub: currentPost.subPosition,
-        want: currentPost.wantPosition,
+        main: currentPost.mainP || "ANY",
+        sub: currentPost.subP || "ANY",
+        want: currentPost.wantP || [],
       });
 
       setSelectedImageIndex(currentPost.profileImage);
@@ -119,9 +117,9 @@ const PostBoard = (props: PostBoardProps) => {
   useEffect(() => {
     if (user.gameName && !currentPost) {
       setPositionValue({
-        main: user.mainP ? user.mainP : 0,
-        sub: user.subP ? user.subP : 0,
-        want: user.wantP ? user.wantP : 0,
+        main: user.mainP ? user.mainP : "ANY",
+        sub: user.subP ? user.subP : "ANY",
+        want: user.wantP ? user.wantP : ["ANY", "ANY"],
       });
       setSelectedImageIndex(user.profileImg);
       const ids =
@@ -139,9 +137,12 @@ const PostBoard = (props: PostBoardProps) => {
   };
 
   /* 큐타입 선택 */
-  const handleDropValue = (id: number | null) => {
-    if (!id) return;
-    setSelectedDropOption(id);
+  const handleDropValue = (gameMode: number | GameMode | null) => {
+    if (!gameMode) return;
+    if (typeof gameMode === "number") {
+      return;
+    }
+    setSelectedDropOption(gameMode);
     setIsDropdownOpen(false);
   };
 
@@ -169,7 +170,7 @@ const PostBoard = (props: PostBoardProps) => {
 
   /* 마이크 유무 선택 */
   const toggleMicHandler = () => {
-    setIsMicOn(!isMicOn);
+    setIsMicOn(isMicOn === "AVAILABLE" ? "UNAVAILABLE" : "AVAILABLE");
   };
 
   /* 글 수정 */
@@ -197,7 +198,7 @@ const PostBoard = (props: PostBoardProps) => {
       return setShowAlert(true);
     }
 
-    const isARAM = selectedDropOption === 4; // 칼바람
+    const isARAM = selectedDropOption === "ARAM"; // 칼바람
     const isImageIndexUndefined = selectedImageIndex === undefined;
     const isDropOptionUndefined = selectedDropOption === undefined;
     const isTextareaEmpty = textareaValue.trim() === "";
@@ -226,11 +227,18 @@ const PostBoard = (props: PostBoardProps) => {
       mike: isMicOn,
       gameStyles: selectedStyleIds,
       contents: textareaValue,
-      mainPosition: isARAM ? null : positionValue?.main,
-      subPosition: isARAM ? null : positionValue?.sub,
-      wantPosition: isARAM ? null : positionValue?.want,
+      mainP: isARAM ? "ANY" : positionValue?.main,
+      subP: isARAM ? "ANY" : positionValue?.sub,
+      wantP: isARAM
+        ? ["ANY"]
+        : Array.isArray(positionValue?.want)
+        ? positionValue?.want.length > 0
+          ? positionValue?.want
+          : ["ANY"]
+        : ["ANY"],
     };
 
+    console.log("params", params);
     if (currentPost) {
       try {
         await handleEdit(params);
@@ -291,12 +299,7 @@ const PostBoard = (props: PostBoardProps) => {
               isProfileListOpen={isProfileListOpen}
               onImageClick={handleImageClick}
             />
-            <User
-              account={user.gameName}
-              tag={user.tag}
-              tier={user.tier}
-              rank={user.gameRank}
-            />
+            <UserAccount account={user.gameName} tag={user.tag} />
           </UserSection>
         )}
 
@@ -306,13 +309,13 @@ const PostBoard = (props: PostBoardProps) => {
             <Toggle isOn={isMicOn} onToggle={toggleMicHandler} type="board" />
           </Div>
           <Div>
-            <Title className="queueTitle">큐타입</Title>
+            <Title className="queueTitle">큐 타입</Title>
             <Dropdown
               ref={dropdownRef}
               type="type2"
               padding="11px 21px"
               width="234px"
-              list={DROP_DATA}
+              list={GAME_MODE.slice(1)}
               open={isDropdownOpen}
               setOpen={setIsDropdownOpen}
               onDropValue={handleDropValue}
@@ -320,15 +323,21 @@ const PostBoard = (props: PostBoardProps) => {
             />
           </Div>
         </QueueNMicSection>
-        {selectedDropOption !== 4 && (
+        {selectedDropOption !== "ARAM" && (
           <PositionSection>
             <Title className="positionTitle">포지션</Title>
             <PositionBox
               status="posting"
               onPositionChange={handlePositionChange}
-              main={positionValue?.main}
-              sub={positionValue?.sub}
-              want={positionValue?.want}
+              main={positionValue?.main || null}
+              sub={positionValue?.sub || null}
+              want={
+                Array.isArray(positionValue?.want) &&
+                positionValue.want.length === 1 &&
+                positionValue.want[0] === "ANY"
+                  ? []
+                  : positionValue?.want || null
+              }
             />
           </PositionSection>
         )}
@@ -365,11 +374,11 @@ const PostBoard = (props: PostBoardProps) => {
         <ButtonContent
           className={` 
   ${
-    selectedStyleIds.length === 0 && selectedDropOption === 4
+    selectedStyleIds.length === 0 && selectedDropOption === "ARAM"
       ? "margin-1"
-      : selectedStyleIds.length !== 0 && selectedDropOption === 4
+      : selectedStyleIds.length !== 0 && selectedDropOption === "ARAM"
       ? "margin-2"
-      : selectedStyleIds.length !== 0 && selectedDropOption !== 4
+      : selectedStyleIds.length !== 0 && selectedDropOption !== "ARAM"
       ? "margin-3"
       : "baseMargin"
   }`}
@@ -391,7 +400,7 @@ export default PostBoard;
 const Form = styled.form``;
 const Title = styled.p`
   ${(props) => props.theme.fonts.semiBold14};
-  color: #2d2d2d;
+  color: ${theme.colors.gray800};
   &.micTitle {
     margin-bottom: 11px;
   }
@@ -448,7 +457,7 @@ const InputWrapper = styled.div`
 const TextCount = styled.div<{ $isFocused: boolean }>`
   margin-left: 15px;
   color: ${({ $isFocused, theme }) =>
-    $isFocused ? theme.colors.purple300 : "#b5b5b5"};
+    $isFocused ? theme.colors.violet300 : theme.colors.gray400};
   ${theme.fonts.regular12};
   z-index: 99;
 `;

@@ -8,7 +8,7 @@ import Image from "next/image";
 import { theme } from "@/styles/theme";
 import { useEffect, useRef, useState } from "react";
 import ConfirmModal from "@/components/common/ConfirmModal";
-import { sendMatchingQuitEvent, socket } from "@/socket";
+import { socket } from "@/socket";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { messagesWithN, messagesWithoutN } from "@/constants/messages";
 import { getSystemMsg } from "@/api/socket";
@@ -17,6 +17,8 @@ import { setOpenPostingModal } from "@/redux/slices/modalSlice";
 import { useDispatch } from "react-redux";
 import { setBoardFilters } from "@/redux/slices/boardSlice";
 import { setIsCompleted } from "@/utils/storage";
+import { Position } from "@/types/position/position";
+import { Mike } from "@/types/user/mike";
 
 interface User {
   memberId: number;
@@ -27,10 +29,10 @@ interface User {
   mannerLevel: number;
   profileImg: number;
   gameMode: number;
-  mainPosition: number;
-  subPosition: number;
-  wantPosition: number;
-  mike: boolean;
+  mainPosition: Position;
+  subPosition: Position;
+  wantPosition: Position;
+  mike: Mike;
   gameStyleList: string[];
 }
 
@@ -59,10 +61,10 @@ const Progress = () => {
     mannerLevel: parseInt(searchParams.get("mannerLevel") || "0", 10),
     profileImg: parseInt(searchParams.get("profileImg") || "0", 10),
     gameMode: parseInt(searchParams.get("gameMode") || "1", 10),
-    mainPosition: parseInt(searchParams.get("mainPosition") || "1", 10),
-    subPosition: parseInt(searchParams.get("subPosition") || "1", 10),
-    wantPosition: parseInt(searchParams.get("wantPosition") || "1", 10),
-    mike: searchParams.get("mike") === "true",
+    mainPosition: (searchParams.get("mainPosition") as Position) || "ANY",
+    subPosition: (searchParams.get("subPosition") as Position) || "ANY",
+    wantPosition: (searchParams.get("wantPosition") as Position) || "ANY",
+    mike: (searchParams.get("mike") as Mike) || "AVAILABLE",
     gameStyleList: (searchParams.get("gameStyleList") || "").split(","),
   };
 
@@ -243,9 +245,9 @@ const Progress = () => {
         const params = {
           page: 1,
           pageIdx: 1,
-          mode: mode,
+          gameMode: mode,
           tier: user.tier,
-          mainPosition: user.mainPosition,
+          mainP: user.mainPosition,
           mike: user.mike,
         };
         try {
@@ -450,7 +452,7 @@ const Time = styled.div`
 `;
 
 const Span = styled.span`
-  color: ${theme.colors.purple100};
+  color: ${theme.colors.violet600};
   ${(props) => props.theme.fonts.bold45}
 `;
 
@@ -467,13 +469,13 @@ const Waiting = styled.div`
   width: 100%;
   height: 580px;
   border-radius: 30px;
-  background: ${theme.colors.gray500};
+  background: ${theme.colors.gray100};
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 42px;
-  color: ${theme.colors.gray600};
+  color: ${theme.colors.gray800};
   ${(props) => props.theme.fonts.regular25};
 
   animation: ${fadeIn} 0.5s ease-in forwards;

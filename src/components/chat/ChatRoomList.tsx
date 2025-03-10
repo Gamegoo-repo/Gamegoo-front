@@ -9,7 +9,7 @@ import { RootState } from "@/redux/store";
 import { getChatrooms } from "@/api/chat/chat";
 import ChatRoomItem from "./ChatRoomItem";
 import useChatMessage from "@/hooks/useChatMessage";
-import { setCurrentChatUuid } from "@/redux/slices/chatSlice";
+import { setChatEnterType, setCurrentChatUuid } from "@/redux/slices/chatSlice";
 import useChatList from "@/hooks/useChatList";
 import {
   acceptFriendRequest,
@@ -285,10 +285,14 @@ const ChatRoomList = (props: ChatRoomListProps) => {
           <ChatRoomItem
             key={room.uuid}
             room={room}
-            onChatRoom={(id) => onChatRoom(id)}
+            onChatRoom={(id) => {
+              onChatRoom(id);
+              dispatch(setChatEnterType(1)); // 대화방에서 채팅방 입장
+            }}
             isMoreBoxOpen={isMoreBoxOpen}
             handleMoreBoxOpen={handleMoreBoxOpen}
             moreMenuItems={moreMenuItems}
+            setIsMoreBoxOpen={setIsMoreBoxOpen}
           />
         );
       })}

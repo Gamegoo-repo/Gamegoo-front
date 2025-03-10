@@ -91,7 +91,7 @@ const ChatFriendList = (props: FriendListProps) => {
     <List>
       {favoriteFriends?.length > 0 && (
         <FavoritesWrapper $length={favoriteFriends.length}>
-          <FavoritesTitle>즐겨찾기</FavoritesTitle>
+          <FavoritesTitle>즐겨 찾기</FavoritesTitle>
           {favoriteFriends.map((friend) => {
             return (
               <FriendItem
@@ -148,20 +148,20 @@ const FriendsWrapper = styled.div<{ $length: number }>`
 `;
 
 const FavoritesTitle = styled.p`
-  ${(props) => props.theme.fonts.medium11};
-  color: ${theme.colors.gray200};
-  padding: 0 16px 11px 18px;
+  ${theme.fonts.medium11};
+  color: ${theme.colors.gray500};
+  padding: 6px 18px 7px 18px;
 `;
 
 const FriendsTitle = styled.p`
-  ${(props) => props.theme.fonts.medium11};
-  color: ${theme.colors.gray200};
-  padding: 0 16px 11px 18px;
+  ${theme.fonts.medium11};
+  color: ${theme.colors.gray500};
+  padding: 6px 18px 7px 18px;
 `;
 
 const NoData = styled.p`
   text-align: center;
   color: ${theme.colors.gray600};
-  ${(props) => props.theme.fonts.regular16};
+  ${theme.fonts.regular16};
   margin-top: 50%;
 `;

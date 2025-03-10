@@ -15,11 +15,11 @@ import { setCloseModal, setOpenReadingModal } from "@/redux/slices/modalSlice";
 import { useRouter } from "next/navigation";
 import Alert from "../common/Alert";
 import ConfirmModal from "../common/ConfirmModal";
-import ChatLayout from "../chat/ChatLayout";
 import Champion from "../readBoard/Champion";
-import { BoardDetail } from "@/interface/board";
+import { BoardListDetail } from "@/interface/board";
 import { getProfileBgColor } from "@/utils/profile";
 import { toLowerCaseString } from "@/utils/string";
+import Layout from "../chat/Layout";
 
 interface TableTitleProps {
   id: number;
@@ -28,12 +28,11 @@ interface TableTitleProps {
 
 interface TableProps {
   title: TableTitleProps[];
-  content: BoardDetail[];
+  content: BoardListDetail[];
 }
 
 const Table = (props: TableProps) => {
   const { title, content } = props;
-
   const [isBoardId, setIsBoardId] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
   const [alertContent, setAlertContent] = useState("");
@@ -107,11 +106,6 @@ const Table = (props: TableProps) => {
   const handleMoveProfilePage = (e: React.MouseEvent, memberId: number) => {
     e.stopPropagation();
 
-    if (!isUser.gameName) {
-      setAlertContent("로그인이 필요한 서비스입니다.");
-      return setShowAlert(true);
-    }
-
     router.push(`/user/${memberId}`);
   };
 
@@ -140,7 +134,7 @@ const Table = (props: TableProps) => {
 
       {isReadingModal && !isChatRoomOpen && <ReadBoard postId={isBoardId} />}
 
-      {isChatRoomOpen && <ChatLayout apiType={2} />}
+      {isChatRoomOpen && <Layout />}
 
       {copiedAlert && <Copied>소환사명이 클립보드에 복사되었습니다.</Copied>}
       <TableWrapper>
@@ -199,35 +193,47 @@ const Table = (props: TableProps) => {
                       height={26}
                     />
                     <P>
-                      {setAbbrevTier(data.tier)}
+                      {setAbbrevTier(data.tier || "")}
                       {data.tier !== "UNRANKED" && data.rank}
                     </P>
                   </Third>
                   <Fourth className="table_width">
                     <Image
-                      src={setPositionImg(data.mainPosition)}
+                      src={setPositionImg(data.mainP)}
                       width={35}
                       height={28}
                       alt="메인 포지션"
                     />
                     <Image
-                      src={setPositionImg(data.subPosition)}
+                      src={setPositionImg(data.subP)}
                       width={35}
                       height={28}
                       alt="서브 포지션"
                     />
                   </Fourth>
                   <Fifth className="table_width">
-                    <Image
-                      src={setPositionImg(data.wantPosition)}
-                      width={35}
-                      height={28}
-                      alt="찾는 포지션"
-                    />
+                    {data.wantP?.length > 0 ? (
+                      data.wantP.map((posi, i) => (
+                        <Image
+                          key={`${posi}-${i}`}
+                          src={setPositionImg(posi || "ANY")}
+                          width={35}
+                          height={28}
+                          alt="찾는 포지션"
+                        />
+                      ))
+                    ) : (
+                      <Image
+                        src={setPositionImg("ANY")}
+                        width={35}
+                        height={28}
+                        alt="찾는 포지션"
+                      />
+                    )}
                   </Fifth>
                   <Sixth className="table_width">
                     <Champion
-                      size={14}
+                      font="semiBold14"
                       list={data?.championResponseList?.map(
                         (champion) => champion.championId
                       )}
@@ -239,7 +245,7 @@ const Table = (props: TableProps) => {
                     </P>
                   </Seventh>
                   <Eighth className="table_width">
-                    <P>{setDateFormatter(data.createdAt)}</P>
+                    <P className="gray">{setDateFormatter(data.createdAt)}</P>
                   </Eighth>
                 </Row>
               );
@@ -303,8 +309,8 @@ const TableHead = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 14px 21px;
-  ${(props) => props.theme.fonts.bold16};
-  background: ${theme.colors.gray600};
+  ${(props) => props.theme.fonts.bold14};
+  background: ${theme.colors.gray800};
   color: ${theme.colors.white};
   border-radius: 8px;
 `;
@@ -334,7 +340,7 @@ const First = styled.div`
 
 const Second = styled.div`
   p {
-    color: ${theme.colors.purple100};
+    color: ${theme.colors.violet600};
     ${(props) => props.theme.fonts.bold16};
   }
 `;
@@ -401,14 +407,14 @@ const NameRow = styled.div`
 
 const P = styled.p`
   ${(props) => props.theme.fonts.medium16};
-  color: ${theme.colors.black};
+  color: ${theme.colors.gray800};
   white-space: nowrap;
   &.emph {
-    color: ${theme.colors.purple100};
+    color: ${theme.colors.violet600};
     ${(props) => props.theme.fonts.bold16};
   }
-  &.basic {
-    color: ${theme.colors.black};
+  &.gray {
+    color: ${theme.colors.gray500};
     ${(props) => props.theme.fonts.medium16};
   }
 `;
@@ -431,7 +437,7 @@ const CopyButton = styled.button`
 
   display: none;
   &:hover {
-    color: ${theme.colors.purple300};
+    color: ${theme.colors.violet300};
   }
 `;
 

@@ -40,5 +40,5 @@ const Profile = styled.header`
 
 const Title = styled.div`
   ${(props) => props.theme.fonts.bold25};
-  color: ${theme.colors.gray700};
+  color: ${theme.colors.gray800};
 `;

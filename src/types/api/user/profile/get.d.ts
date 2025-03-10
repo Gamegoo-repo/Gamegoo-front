@@ -1,24 +1,26 @@
 import { ChampionList, GameStyleList } from "@/interface/profile";
 import { ApiResponse } from "../api";
+import { Mike } from "@/types/user/mike";
 
 interface BaseProfileData {
   id: number;
   profileImg: number;
-  mike: boolean;
+  mike: Mike;
   gameName: string;
   tag: string;
-  tier: string;
-  gameRank: number;
-  mannerRank: number;
-  mannerLevel: number;
+  soloTier: string;
+  freeTier: string;
+  soloRank: number;
+  freeRank: number;
   updatedAt: string;
-  mainP: number;
-  subP: number;
-  wantP: number;
+  mainP: Position;
+  subP: Position;
+  wantP: Position[];
   isAgree: boolean;
   isBlind: boolean;
   loginType: string;
-  winrate: number;
+  soloWinrate: number;
+  freeWinrate: number;
   gameStyleResponseList: GameStyleList[];
   championResponseList: ChampionList[];
 }
@@ -28,7 +30,6 @@ export interface GetMyProfileData extends BaseProfileData {
 }
 
 export interface GetOtherProfileData extends BaseProfileData {
-  mannerRatingCount: number;
   blocked: boolean;
   friend: boolean;
   friendRequestMemberId: number;

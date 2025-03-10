@@ -26,7 +26,7 @@ const StyledBox = styled.div<{ $shape: ShapeType; $profiletype?: profileType }>`
   padding: 10px 35px;
   justify-content: center;
   align-items: center;
-  background: ${theme.colors.purple100};
+  background: ${theme.colors.violet600};
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.regular20}
   white-space: nowrap;
@@ -44,11 +44,11 @@ const StyledBox = styled.div<{ $shape: ShapeType; $profiletype?: profileType }>`
     `}
 
   ${(props) =>
-    props.$profiletype === "mini" &&
+    (props.$profiletype === "mini" || props.$profiletype === "other") &&
     css`
-      height: 25px;
-      padding: 5px 17px;
-      ${(props) => props.theme.fonts.bold12}
+      height: 33px;
+      padding: 6px 16px;
+      ${(props) => props.theme.fonts.semiBold14}
     `}
 
   ${(props) =>

@@ -4,10 +4,10 @@ import styled, { css } from "styled-components";
 import ChevronDownIcon from "../../../public/assets/icons/chevron_down.svg";
 
 const levelColors = [
-  theme.colors.purple400,
-  theme.colors.purple300,
-  theme.colors.purple200,
-  theme.colors.purple100,
+  theme.colors.violet400,
+  theme.colors.violet300,
+  theme.colors.violet200,
+  theme.colors.violet600,
   theme.colors.gray700,
 ];
 
@@ -164,7 +164,7 @@ const LevelBox = styled.div<{ $isColor: boolean }>`
   align-items: center;
   justify-content: flex-end;
   color: ${({ theme, $isColor }) =>
-    $isColor ? theme.colors.purple100 : theme.colors.gray700};
+    $isColor ? theme.colors.violet600 : theme.colors.gray700};
   position: relative;
   z-index: 20;
 `;

@@ -2,9 +2,10 @@ import Image from "next/image";
 import { Dispatch, forwardRef, useState } from "react";
 import { theme } from "@/styles/theme";
 import styled from "styled-components";
+import { GameMode } from "@/types/game/gameMode";
 
 interface ListProps {
-  id: number | null;
+  id: number | GameMode | null;
   value: string;
 }
 
@@ -98,13 +99,13 @@ const DropdownHeader = styled.div<{
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: ${theme.colors.black};
+  color: ${theme.colors.gray800};
   border-radius: 10px;
   padding: ${({ $padding }) => $padding};
   background: ${({ $type }) =>
-    $type === "type1" ? `${theme.colors.gray500}` : `${theme.colors.white}`};
+    $type === "type1" ? `${theme.colors.gray200}` : `${theme.colors.white}`};
   border: ${({ $type }) =>
-    $type === "type2" ? `1px solid ${theme.colors.gray300}` : "none"};
+    $type === "type2" ? `1px solid ${theme.colors.gray400}` : "none"};
   ${({ $type }) =>
     $type === "type1" ? `${theme.fonts.medium16}` : `${theme.fonts.regular18}`};
   cursor: pointer;
@@ -114,7 +115,6 @@ const Title = styled.p``;
 
 const DropBox = styled.div`
   position: absolute;
-  /* background: ${theme.colors.white}; */
   z-index: 1;
 `;
 
@@ -123,16 +123,16 @@ const DropdownListContent = styled.ul<{ $type: string; $width: string }>`
   margin: 0;
   border-radius: 10px;
   background: ${({ $type }) =>
-    $type === "type1" ? "#F5F5F5" : `${theme.colors.white}`};
+    $type === "type1" ? `${theme.colors.gray100}` : `${theme.colors.white}`};
   border: ${({ $type }) =>
-    $type === "type2" ? `1px solid ${theme.colors.gray300}` : "none"};
+    $type === "type2" ? `1px solid ${theme.colors.gray400}` : "none"};
   box-sizing: border-box;
   width: ${(props) => props.$width};
 `;
 
 const ListItem = styled.li<{ $type: string; $width: string }>`
   list-style: none;
-  color: ${theme.colors.black};
+  color: ${theme.colors.gray900};
   ${({ $type }) =>
     $type === "type1" ? `${theme.fonts.medium16}` : `${theme.fonts.regular18}`};
   padding: 10px 16px;
@@ -146,7 +146,7 @@ const ListItem = styled.li<{ $type: string; $width: string }>`
         border-radius: 0 0 10px 10px;
       }
       color: ${theme.colors.white};
-      background: ${theme.colors.purple100};
+      background: ${theme.colors.violet600};
     }
   }
 
@@ -158,8 +158,8 @@ const ListItem = styled.li<{ $type: string; $width: string }>`
       &:last-child {
         border-radius: 0 0 10px 10px;
       }
-      color: ${theme.colors.purple100};
-      background: #f9f8ff;
+      color: ${theme.colors.violet600};
+      background: ${theme.colors.violet100};
     }
   }
 `;

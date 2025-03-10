@@ -9,19 +9,31 @@ import { getProfileBgColor } from "@/utils/profile";
 import { useRouter } from "next/navigation";
 import { RootState } from "@/redux/store";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
+import Alert from "../common/Alert";
+import { useState } from "react";
 
 interface MessageHeaderProps {
   isMoreBoxOpen: boolean;
   chatEnterData?: Chat;
   onMoreBoxOpen: () => void;
   menuItems: MoreBoxMenuItems[];
+  disabled?: boolean;
+  setIsMoreBoxOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const MessageHeader = (props: MessageHeaderProps) => {
-  const { isMoreBoxOpen, chatEnterData, onMoreBoxOpen, menuItems } = props;
+  const {
+    isMoreBoxOpen,
+    chatEnterData,
+    onMoreBoxOpen,
+    menuItems,
+    disabled = false,
+    setIsMoreBoxOpen,
+  } = props;
 
   const dispatch = useDispatch();
   const router = useRouter();
+  const [showAlert, setShowAlert] = useState<boolean>(false);
 
   const onlineFriends = useSelector(
     (state: RootState) => state.chat.onlineFriends
@@ -34,13 +46,43 @@ const MessageHeader = (props: MessageHeaderProps) => {
   };
 
   const handleGoToPrevious = () => {
-    dispatch(closeChatRoom());
-    dispatch(openChat());
+    if (disabled) {
+      setShowAlert(true);
+    } else {
+      dispatch(closeChatRoom());
+      dispatch(openChat());
+    }
+  };
+
+  const handleMoreBoxOpen = () => {
+    if (disabled) {
+      setShowAlert(true);
+    } else {
+      onMoreBoxOpen();
+    }
   };
 
   return (
     <>
-      {isMoreBoxOpen && <MoreBox items={menuItems} top={35} left={200} />}
+      {showAlert && (
+        <Alert
+          icon="exclamation"
+          width={68}
+          height={58}
+          content="로그인이 필요한 서비스입니다."
+          alt="경고"
+          onClose={() => setShowAlert(false)}
+          buttonText="확인"
+        />
+      )}
+      {isMoreBoxOpen && (
+        <MoreBox
+          items={menuItems}
+          top={35}
+          left={200}
+          onClose={() => setIsMoreBoxOpen(false)}
+        />
+      )}
       <CloseButton>
         <CloseImage
           onClick={() => dispatch(closeChatRoom())}
@@ -54,7 +96,7 @@ const MessageHeader = (props: MessageHeaderProps) => {
         <ChatHeader>
           <PrevImage
             onClick={handleGoToPrevious}
-            src="/assets/icons/left_arrow.svg"
+            src="/assets/icons/chevron_left.svg"
             width={9}
             height={18}
             alt="뒤로가기"
@@ -80,7 +122,7 @@ const MessageHeader = (props: MessageHeaderProps) => {
               >
                 {chatEnterData.gameName}
               </UserName>
-              {chatEnterData?.friend &&
+              {chatEnterData?.friend && (
                 <>
                   {onlineFriends.includes(chatEnterData.memberId) ? (
                     <>
@@ -96,16 +138,17 @@ const MessageHeader = (props: MessageHeaderProps) => {
                     <OnlineStatus>오프라인</OnlineStatus>
                   )}
                 </>
-              }
+              )}
             </Div>
           </Middle>
-          <ThreeDotsImage
-            onClick={onMoreBoxOpen}
-            src="/assets/icons/three_dots_button.svg"
-            width={3}
-            height={15}
-            alt="상세보기"
-          />
+          <ThreeDotsButton onClick={handleMoreBoxOpen}>
+            <ThreeDotsImage
+              src="/assets/icons/three_dots_button.svg"
+              width={3}
+              height={15}
+              alt="상세보기"
+            />
+          </ThreeDotsButton>
         </ChatHeader>
       )}
     </>
@@ -148,6 +191,7 @@ const ImageWrapper = styled.div<{ $bgColor: string }>`
   height: 47px;
   background: ${(props) => props.$bgColor};
   border-radius: 50%;
+  cursor: pointer;
 `;
 
 const ProfileImage = styled.object`
@@ -169,17 +213,23 @@ const Div = styled.div`
 
 const UserName = styled.p`
   ${(props) => props.theme.fonts.semiBold18};
-  color: ${theme.colors.gray600};
+  color: ${theme.colors.gray800};
   cursor: pointer;
 `;
 
 const OnlineStatus = styled.p`
   ${(props) => props.theme.fonts.medium11};
-  color: ${theme.colors.gray200};
+  color: ${theme.colors.gray600};
+  cursor: default;
 `;
 
 const OnlineImage = styled(Image)`
   position: absolute;
   top: 1%;
   right: -11%;
+`;
+
+const ThreeDotsButton = styled.button`
+  width: 20px;
+  height: 20px;
 `;

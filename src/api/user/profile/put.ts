@@ -1,5 +1,6 @@
 import { PutPositionRequest, PutProfileResponse } from "@/types/api/user/profile/put";
 import { AuthAxios } from "../../auth";
+import { Mike } from "@/types/user/mike";
 
 export const putProfileImage = async (
   profileImage: number
@@ -42,10 +43,10 @@ export const putPosition = async ({
   }
 };
 
-export const putMike = async (isMike: boolean): Promise<PutProfileResponse> => {
+export const putMike = async (mike: Mike): Promise<PutProfileResponse> => {
   const endpoint = "/api/v2/profile/mike";
   try {
-    const response = await AuthAxios.put(endpoint, { isMike });
+    const response = await AuthAxios.put(endpoint, { mike });
     return response.data;
   } catch (error) {
     console.error("마이크 수정 실패:", error);

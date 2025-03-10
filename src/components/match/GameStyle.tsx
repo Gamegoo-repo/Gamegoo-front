@@ -6,11 +6,12 @@ import Toggle from "../common/Toggle";
 import { theme } from "@/styles/theme";
 import SelectedStylePopup from "./SelectedStylePopup";
 import { css } from "styled-components";
-import { GAME_STYLE } from "@/data/profile";
+import { GAME_STYLE } from "@/constants/profile";
 import { useDispatch } from "react-redux";
 import { updateGameStyles } from "@/redux/slices/matchInfo";
 import { setUserMike } from "@/redux/slices/userSlice";
 import { putGameStyle, putMike } from "@/api/user/profile/put";
+import { Mike } from "@/types/user/mike";
 
 type profileType = "me" | "other" | "none" | "mini";
 
@@ -22,7 +23,7 @@ interface GameStyle {
 interface GameStyleProps {
   gameStyleResponseDTOList: GameStyle[];
   profileType: profileType;
-  mike: boolean;
+  mike: Mike;
   handleMike?: () => void;
 }
 
@@ -39,7 +40,7 @@ const GameStyle = (props: GameStyleProps) => {
   const [selectedStyles, setSelectedStyles] = useState<number[]>(
     gameStyleResponseDTOList.map((style) => style.gameStyleId)
   );
-  const [isMike, setIsMike] = useState(mike);
+  const [mikeState, setMikeState] = useState(mike);
 
   useEffect(() => {
     if (gameStyleResponseDTOList.length > 0) {
@@ -96,8 +97,9 @@ const GameStyle = (props: GameStyleProps) => {
     .filter(Boolean);
 
   const handleChangeMike = async () => {
-    const newMikeValue = !isMike;
-    setIsMike(newMikeValue);
+    const newMikeValue =
+      mikeState === "AVAILABLE" ? "UNAVAILABLE" : "AVAILABLE";
+    setMikeState(newMikeValue);
 
     try {
       await putMike(newMikeValue);
@@ -155,7 +157,7 @@ const GameStyle = (props: GameStyleProps) => {
           )}
         </GameBox>
       </LeftLabel>
-      {((profileType === "none" && handleMike) || profileType === "mini") && (
+      {profileType === "mini" && (
         <LeftLabel $profileType={profileType}>
           마이크
           <Toggle
@@ -182,17 +184,20 @@ const LeftLabel = styled.div<{ $profileType: profileType }>`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 12px;
+  gap: 10px;
+  color: ${theme.colors.gray800};
+  ${theme.fonts.regular14};
+
   ${({ $profileType }) =>
-    $profileType !== "none" &&
+    $profileType === "mini" &&
     css`
-      font: ${theme.fonts.semiBold14};
+      gap: 6px;
     `}
 `;
 
 const GameBox = styled.div<{ $profileType: profileType }>`
-  display: row;
   display: flex;
+  align-items: center;
   gap: 16px;
   position: relative;
 
@@ -216,7 +221,7 @@ const AddGameStyle = styled.button<{ $profileType: profileType }>`
   justify-content: center;
   align-items: center;
   border-radius: 25px;
-  background: ${theme.colors.purple300};
+  background: ${theme.colors.violet300};
   outline: none;
 
   ${({ $profileType }) =>

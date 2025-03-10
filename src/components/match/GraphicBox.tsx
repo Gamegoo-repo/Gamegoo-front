@@ -14,6 +14,7 @@ interface GraphicBoxProps {
   top: string;
   left: string;
   background?: string | undefined;
+  onClick?: () => void;
 }
 
 const GraphicBox = (props: GraphicBoxProps) => {
@@ -28,16 +29,21 @@ const GraphicBox = (props: GraphicBoxProps) => {
     top,
     left,
     background,
+    onClick,
   } = props;
 
   const hadleClick = () => {
-    router.push(
-      type
-        ? rank
-          ? `${pathname}?type=${type}&rank=${rank}`
-          : `${pathname}?type=${type}`
-        : pathname
-    );
+    if (onClick) {
+      onClick();
+    } else {
+      router.push(
+        type
+          ? rank
+            ? `${pathname}?type=${type}&rank=${rank}`
+            : `${pathname}?type=${type}`
+          : pathname
+      );
+    }
   };
   return (
     <>
@@ -82,7 +88,7 @@ const Wrapper = styled.div<{
   ${({ $background }) =>
     $background &&
     css`
-      background: ${theme.colors.gray600};
+      background: ${theme.colors.gray800};
       &:hover {
         box-shadow: 0px 0px 38.3px 0px rgba(90, 66, 238, 0.7);
       }
@@ -110,7 +116,7 @@ const Title = styled.div<{ $top: string; $left: string }>`
   transform: ${(props) =>
     props.$top !== "50%" ? undefined : `translate(-50%, -50%);`};
   color: white;
-  ${(props) => props.theme.fonts.bold32};
+  ${(props) => props.theme.fonts.bold25};
   line-height: 37px;
   white-space: nowrap;
 `;

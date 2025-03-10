@@ -58,9 +58,8 @@ const SecondRow = styled.div<{ $completed: number }>`
   }
   .barCompleted {
     background: linear-gradient(90deg, #342688 0, #5a42ee 100%);
-    border-radius: ${({ $completed }) =>
-      $completed === null ? "11px" : "11px 0 0 11px"};
-    width: ${({ $completed }) => $completed}%;
+    border-radius: 11px;
+    width: ${({ $completed }) => $completed || 0}%;
   }
   .label {
     color: transparent;
@@ -82,10 +81,10 @@ const WinningTitle = styled.p`
 
 const Percent = styled.p`
   ${(props) => props.theme.fonts.semiBold14};
-  color: ${theme.colors.purple100};
+  color: ${theme.colors.violet600};
 `;
 
 const History = styled.p`
   ${(props) => props.theme.fonts.medium11};
-  color: ${theme.colors.gray300};
+  color: ${theme.colors.gray400};
 `;

@@ -48,6 +48,6 @@ const Error = styled.div`
 `;
 
 const P = styled.p`
-  color: ${theme.colors.gray700};
+  color: ${theme.colors.gray600};
   ${(props) => props.theme.fonts.bold32};
 `;

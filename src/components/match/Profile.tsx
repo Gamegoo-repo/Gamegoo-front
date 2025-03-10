@@ -3,14 +3,14 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 import styled, { css } from "styled-components";
 import GameStyle from "./GameStyle";
-import { POSITIONS } from "@/data/profile";
+import { POSITIONS } from "@/constants/profile";
 import Champion from "../readBoard/Champion";
 import Toggle from "../common/Toggle";
 import Button from "../common/Button";
 import MoreBoxButton from "../readBoard/MoreBoxButton";
 import FormModal from "../common/FormModal";
 import Checkbox from "../common/Checkbox";
-import { REPORT_REASON } from "@/data/report";
+import { REPORT_REASON } from "@/constants/report";
 import Input from "../common/Input";
 import ConfirmModal from "../common/ConfirmModal";
 import PositionCategory from "../common/PositionCategory";
@@ -18,14 +18,13 @@ import MoreBox from "../common/MoreBox";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import { User } from "@/interface/profile";
 import { PositionState } from "../crBoard/PositionBox";
-import { setAbbrevTier, setPositionImg } from "@/utils/custom";
+import { setPositionImg } from "@/utils/custom";
 import { useParams } from "next/navigation";
 import { reportMember } from "@/api/report/report";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { getProfileBgColor } from "@/utils/profile";
 import { setMatchInfo, updateMike } from "@/redux/slices/matchInfo";
-import { toLowerCaseString } from "@/utils/string";
 import { setUserProfileImg } from "@/redux/slices/userSlice";
 import { putPosition, putProfileImage } from "@/api/user/profile/put";
 import {
@@ -36,6 +35,10 @@ import {
 } from "@/api/friend/request";
 import { deleteFriend } from "@/api/friend/delete";
 import { blockMember, unblockMember } from "@/api/block/block";
+import { Mike as MikeType } from "@/types/user/mike";
+import { Position, PositionType } from "@/types/position/position";
+import RankTier from "../common/RankTier";
+import Alert from "../common/Alert";
 
 type profileType = "normal" | "wind" | "other" | "me";
 
@@ -47,12 +50,16 @@ interface Profile {
     friendRequestMemberId: number | null;
     blocked: boolean;
   }) => void;
+  backgroundColor?: string;
+  isDefault?: boolean; // 비회원용 default 프로필 여부
 }
 
 const Profile: React.FC<Profile> = ({
   profileType,
   user,
   updateFriendState,
+  backgroundColor,
+  isDefault = false,
 }) => {
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -70,19 +77,17 @@ const Profile: React.FC<Profile> = ({
   const [reportDetail, setReportDetail] = useState<string>("");
 
   /* 포지션 */
-  const [positions, setPositions] = useState(POSITIONS);
   const [isPositionOpen, setIsPositionOpen] = useState<boolean[]>([
     false,
     false,
     false,
   ]);
-
+  const [selectedBox, setSelectedBox] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
   const matchInfo = useSelector((state: RootState) => state.matchInfo);
 
-  const [selectedBox, setSelectedBox] = useState("");
-
   /* user부터 가져오는 상태들 */
-  const [isMike, setIsMike] = useState<boolean>(user.mike);
+  const [isMike, setIsMike] = useState<MikeType>(user.mike);
   const [positionValue, setPositionValue] = useState<PositionState>({
     main: user.mainP,
     sub: user.subP,
@@ -112,9 +117,9 @@ const Profile: React.FC<Profile> = ({
     dispatch(
       setMatchInfo({
         mike: isMike,
-        mainP: positionValue.main ?? null,
-        subP: positionValue.sub ?? null,
-        wantP: positionValue.want ?? null,
+        mainP: positionValue.main ?? "ANY",
+        subP: positionValue.sub ?? "ANY",
+        wantP: positionValue.want ?? [],
         gameStyleResponseDTOList: gameStyleIds,
       })
     );
@@ -139,7 +144,7 @@ const Profile: React.FC<Profile> = ({
   }, [isMike]);
 
   const handleMike = () => {
-    setIsMike(!isMike);
+    setIsMike(isMike === "AVAILABLE" ? "UNAVAILABLE" : "AVAILABLE");
     dispatch(updateMike(isMike));
   };
 
@@ -223,7 +228,7 @@ const Profile: React.FC<Profile> = ({
         await putPosition({
           mainP: newPositionValue.main,
           subP: newPositionValue.sub,
-          wantP: newPositionValue.want || 0,
+          wantP: newPositionValue.want || [],
         });
 
         // 포지션 상태 업데이트
@@ -235,20 +240,21 @@ const Profile: React.FC<Profile> = ({
       dispatch(
         setMatchInfo({
           ...matchInfo,
-          mainP: newPositionValue.main ?? null,
-          subP: newPositionValue.sub ?? null,
-          wantP: newPositionValue.want ?? null,
+          mainP: newPositionValue.main ?? "ANY",
+          subP: newPositionValue.sub ?? "ANY",
+          wantP: newPositionValue.want ?? ["ANY", "ANY"],
         })
       );
-      console.log("디스패치 ㅘㄴ료");
     }
   };
 
-  const handleCategoryButtonClick = (positionId: number) => {
+  const handleCategoryButtonClick = (
+    selectedValues: Position | (Position | null)[]
+  ) => {
     if (selectedBox) {
       const newPositionValue = {
         ...positionValue,
-        [selectedBox]: positionId,
+        [selectedBox]: selectedValues,
       };
       setPositionValue(newPositionValue);
       handlePositionChange(newPositionValue);
@@ -422,11 +428,26 @@ const Profile: React.FC<Profile> = ({
   }, [isMoreBoxOpen]);
 
   const handleMoreBoxOpen = () => {
-    setIsMoreBoxOpen((prevState) => !prevState);
+    if (isDefault) {
+      setShowAlert(true);
+    } else {
+      setIsMoreBoxOpen((prevState) => !prevState);
+    }
   };
 
   return (
-    <Container className={profileType}>
+    <Container className={profileType} $backgroundColor={backgroundColor}>
+      {showAlert && (
+        <Alert
+          icon="exclamation"
+          width={68}
+          height={58}
+          content="로그인이 필요한 서비스입니다."
+          alt="경고"
+          onClose={() => setShowAlert(false)}
+          buttonText="확인"
+        />
+      )}
       <Row $profileType={profileType}>
         <ImageContainer>
           <ProfileImgWrapper $bgColor={getProfileBgColor(selectedImageIndex)}>
@@ -481,154 +502,49 @@ const Profile: React.FC<Profile> = ({
           )}
         </ImageContainer>
         <StyledBox>
-          <TopContainer>
+          <TopContainer
+            $isMatching={profileType === "wind" || profileType === "normal"}
+          >
             <Top>
               {user.gameName}
               <Span>{`#${user.tag}`}</Span>
-              <Rank>
-                <TierImage
-                  data={`/assets/images/tier/${toLowerCaseString(
-                    user.tier
-                  )}.svg`}
-                  width={42}
-                  height={42}
-                />
-                {setAbbrevTier(user.tier)}
-                {user.tier !== "UNRANKED" && user.gameRank}
-              </Rank>
             </Top>
-            {profileType === "other" && (
-              <More>
-                <Admit>{renderFriendsButton()}</Admit>
-                {/* 더보기 버튼 */}
-                {memberId !== myId && (
-                  <MoreDiv ref={moreBoxRef}>
-                    <MoreBoxButton onClick={handleMoreBoxOpen} />
-                    {isMoreBoxOpen && (
-                      <MoreBox
-                        items={MoreBoxMenuItems}
-                        top={15}
-                        left={45}
-                        onClose={handleMoreBoxOpen}
-                      />
-                    )}
-                  </MoreDiv>
-                )}
-
-                {/* 신고하기 팝업 */}
-                {isReportBoxOpen && (
-                  <FormModal
-                    type="checkbox"
-                    title="유저 신고하기"
-                    width="494px"
-                    height="721px"
-                    closeButtonWidth={17}
-                    closeButtonHeight={17}
-                    borderRadius="20px"
-                    onClose={handleReportBoxClose}
-                  >
-                    <div>
-                      <ReportLabel>신고 사유</ReportLabel>
-                      <ReportReasonContent>
-                        {REPORT_REASON.map((data) => (
-                          <Checkbox
-                            key={data.id}
-                            value={data.id}
-                            label={data.text}
-                            fontSize="regular18"
-                            isChecked={checkedItems.includes(data.id)}
-                            onArrayChange={handleCheckboxChange}
-                          />
-                        ))}
-                      </ReportReasonContent>
-                      <ReportLabel>상세 내용</ReportLabel>
-                      <ReportContent>
-                        <Input
-                          inputType="textarea"
-                          value={reportDetail}
-                          onChange={(value) => {
-                            setReportDetail(value);
-                          }}
-                          placeholder="내용을 입력하세요. (선택)"
-                          borderRadius="8px"
-                          fontSize="regular18"
-                          height="134px"
-                        />
-                      </ReportContent>
-                      <ReportButton>
-                        <Button
-                          onClick={handleRunReport}
-                          buttonType="primary"
-                          text="신고하기"
-                          disabled={checkedItems.length === 0}
-                        />
-                      </ReportButton>
-                    </div>
-                  </FormModal>
-                )}
-                {/* 차단하기 팝업 */}
-                {isBlockBoxOpen && (
-                  <ConfirmModal
-                    width="540px"
-                    primaryButtonText="예"
-                    secondaryButtonText="아니요"
-                    onPrimaryClick={() => handleRunBlock()}
-                    onSecondaryClick={() => {
-                      setIsBlockBoxOpen(false);
-                    }}
-                  >
-                    {user.blocked ? (
-                      <MsgConfirm>{"차단을 해제 하시겠습니까?"}</MsgConfirm>
-                    ) : (
-                      <Msg>
-                        {
-                          "차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다.\n\n차단하시겠습니까?"
-                        }
-                      </Msg>
-                    )}
-                  </ConfirmModal>
-                )}
-                {/* 차단하기 확인 팝업 */}
-                {isBlockConfirmOpen && (
-                  <ConfirmModal
-                    width="540px"
-                    primaryButtonText="확인"
-                    onPrimaryClick={() => {
-                      setIsBlockConfrimOpen(false);
-                    }}
-                  >
-                    <MsgConfirm>{`${
-                      user.blocked ? "차단이" : "차단 해제가"
-                    } 완료되었습니다.`}</MsgConfirm>
-                  </ConfirmModal>
-                )}
-                {/* 차단 해제하기 확인 팝업 */}
-              </More>
-            )}
           </TopContainer>
+          <RankTierWrapper>
+            <RankTier type="solo" tier={user.soloTier} rank={user.soloRank} />
+            <RankTier type="free" tier={user.freeTier} rank={user.freeRank} />
+          </RankTierWrapper>
           {profileType === "wind" ? (
-            <GameStyle
-              profileType="none"
-              gameStyleResponseDTOList={user.gameStyleResponseList}
-              mike={isMike}
-              handleMike={handleMike}
-            />
+            <StyledBox>
+              <Mike>
+                마이크
+                <Toggle isOn={isMike} onToggle={handleMike} />
+              </Mike>
+              <GameStyle
+                profileType="none"
+                gameStyleResponseDTOList={user.gameStyleResponseList}
+                mike={isMike}
+                handleMike={handleMike}
+              />
+            </StyledBox>
           ) : (
             <UnderRow>
-              <Position>
-                {(profileType === "other"
-                  ? positions.slice(0, 2)
-                  : positions
-                ).map((position, index) => (
-                  <Posi key={index} className={profileType}>
-                    {POSITIONS[index].label}
+              <Positions>
+                {POSITIONS.map((position, index) => (
+                  <Posi
+                    key={index}
+                    className={profileType}
+                    $isWantP={index === 2}
+                  >
+                    {position.label}
                     <Image
                       src={setPositionImg(
                         index === 0
-                          ? positionValue.main ?? 0
+                          ? positionValue.main ?? "ANY"
                           : index === 1
-                          ? positionValue.sub ?? 0
-                          : positionValue.want ?? 0
+                          ? positionValue.sub ?? "ANY"
+                          : (positionValue.want && positionValue.want[0]) ??
+                            "ANY"
                       )}
                       width={55}
                       height={40}
@@ -637,40 +553,160 @@ const Profile: React.FC<Profile> = ({
                     />
                     {isPositionOpen[index] && (
                       <PositionCategory
+                        value={
+                          index === 0
+                            ? positionValue.main ?? "ANY"
+                            : index === 1
+                            ? positionValue.sub ?? "ANY"
+                            : (positionValue.want && positionValue.want[0]) ??
+                              "ANY"
+                        }
                         onClose={() => handlePositionClose(index)}
                         onSelect={handleCategoryButtonClick}
                       />
                     )}
                   </Posi>
                 ))}
-              </Position>
-              {profileType === "other" && user.championResponseList && (
-                <Champion
-                  title={true}
-                  size={14}
-                  list={user.championResponseList.map(
-                    (champion) => champion.championId
-                  )}
+              </Positions>
+              {(profileType === "other" || profileType === "me") &&
+                user.championResponseList && (
+                  <Champion
+                    title={true}
+                    font="regular14"
+                    list={user.championResponseList.map(
+                      (champion) => champion.championId
+                    )}
+                  />
+                )}
+              <Mike>
+                마이크
+                <Toggle
+                  isOn={isMike}
+                  onToggle={handleMike}
+                  disabled={profileType === "other"}
                 />
-              )}
-              {profileType === "other" && (
-                <Mike>
-                  마이크
-                  <Toggle isOn={isMike} onToggle={handleMike} disabled={true} />
-                </Mike>
-              )}
+              </Mike>
             </UnderRow>
+          )}
+          {(profileType === "normal" ||
+            profileType === "other" ||
+            (profileType === "me" &&
+              user.gameStyleResponseList.length > 0)) && (
+            <GameStyle
+              profileType={profileType === "normal" ? "none" : profileType}
+              gameStyleResponseDTOList={user.gameStyleResponseList}
+              mike={isMike}
+              handleMike={handleMike}
+            />
           )}
         </StyledBox>
       </Row>
-      {(profileType === "normal" ||
-        (profileType === "other" && user.gameStyleResponseList.length > 0)) && (
-        <GameStyle
-          profileType={profileType === "normal" ? "none" : profileType}
-          gameStyleResponseDTOList={user.gameStyleResponseList}
-          mike={isMike}
-          handleMike={handleMike}
-        />
+      {profileType === "other" && (
+        <More>
+          {!isDefault && <Admit>{renderFriendsButton()}</Admit>}
+          {/* 더보기 버튼 */}
+          {memberId !== myId && (
+            <MoreDiv ref={moreBoxRef}>
+              <MoreBoxButton onClick={handleMoreBoxOpen} />
+              {isMoreBoxOpen && (
+                <MoreBox
+                  items={MoreBoxMenuItems}
+                  top={15}
+                  left={45}
+                  onClose={handleMoreBoxOpen}
+                />
+              )}
+            </MoreDiv>
+          )}
+
+          {/* 신고하기 팝업 */}
+          {isReportBoxOpen && (
+            <FormModal
+              type="checkbox"
+              title="유저 신고하기"
+              width="494px"
+              height="721px"
+              closeButtonWidth={17}
+              closeButtonHeight={17}
+              borderRadius="20px"
+              onClose={handleReportBoxClose}
+            >
+              <div>
+                <ReportLabel>신고 사유</ReportLabel>
+                <ReportReasonContent>
+                  {REPORT_REASON.map((data) => (
+                    <Checkbox
+                      key={data.id}
+                      value={data.id}
+                      label={data.text}
+                      fontSize="regular18"
+                      isChecked={checkedItems.includes(data.id)}
+                      onArrayChange={handleCheckboxChange}
+                    />
+                  ))}
+                </ReportReasonContent>
+                <ReportLabel>상세 내용</ReportLabel>
+                <ReportContent>
+                  <Input
+                    inputType="textarea"
+                    value={reportDetail}
+                    onChange={(value) => {
+                      setReportDetail(value);
+                    }}
+                    placeholder="내용을 입력하세요. (선택)"
+                    borderRadius="8px"
+                    fontSize="regular18"
+                    height="134px"
+                  />
+                </ReportContent>
+                <ReportButton>
+                  <Button
+                    onClick={handleRunReport}
+                    buttonType="primary"
+                    text="신고하기"
+                    disabled={checkedItems.length === 0}
+                  />
+                </ReportButton>
+              </div>
+            </FormModal>
+          )}
+          {/* 차단하기 팝업 */}
+          {isBlockBoxOpen && (
+            <ConfirmModal
+              width="540px"
+              primaryButtonText="예"
+              secondaryButtonText="아니요"
+              onPrimaryClick={() => handleRunBlock()}
+              onSecondaryClick={() => {
+                setIsBlockBoxOpen(false);
+              }}
+            >
+              {user.blocked ? (
+                <MsgConfirm>{"차단을 해제 하시겠습니까?"}</MsgConfirm>
+              ) : (
+                <Msg>
+                  {
+                    "차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다.\n\n차단하시겠습니까?"
+                  }
+                </Msg>
+              )}
+            </ConfirmModal>
+          )}
+          {/* 차단/차단 해제 확인 팝업 */}
+          {isBlockConfirmOpen && (
+            <ConfirmModal
+              width="540px"
+              primaryButtonText="확인"
+              onPrimaryClick={() => {
+                setIsBlockConfrimOpen(false);
+              }}
+            >
+              <MsgConfirm>{`${
+                user.blocked ? "차단이" : "차단 해제가"
+              } 완료되었습니다.`}</MsgConfirm>
+            </ConfirmModal>
+          )}
+        </More>
       )}
     </Container>
   );
@@ -678,20 +714,23 @@ const Profile: React.FC<Profile> = ({
 
 export default Profile;
 
-const Container = styled.div`
+const Container = styled.div<{ $backgroundColor?: string }>`
   width: 100%;
+  height: 445px;
   box-sizing: border-box;
   border-radius: 30px;
   padding: 23px 44px 44px 44px;
-  background: ${theme.colors.gray500};
+  background: ${({ $backgroundColor }) =>
+    $backgroundColor ? $backgroundColor : theme.colors.gray100};
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
   gap: 15px;
+  position: relative;
 
   &.other {
-    padding: 39px 44px 48px 44px;
+    padding: 42px 41px;
   }
 `;
 
@@ -722,7 +761,7 @@ const UnderRow = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
-  gap: 54px;
+  gap: 60px;
 `;
 
 const ImageContainer = styled.div`
@@ -834,61 +873,64 @@ const ProfileListImage = styled.object`
 
 const StyledBox = styled.div`
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 15px;
+  gap: 36px;
 `;
 
-const TopContainer = styled.div`
+const TopContainer = styled.div<{ $isMatching: boolean }>`
   width: 100%;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  color: ${theme.colors.gray100};
-  font-size: ${theme.fonts.bold32};
+  gap: 36px;
+  ${theme.fonts.bold32};
+
+  ${({ $isMatching }) =>
+    $isMatching &&
+    css`
+      margin-top: 21px;
+    `}
 `;
 
 const Top = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 16px;
-  color: ${theme.colors.gray100};
-  font-size: ${theme.fonts.bold32};
+  gap: 6px;
+  color: ${theme.colors.gray800};
   white-space: nowrap;
 `;
 
 const Span = styled.span`
   margin-right: 5px;
-  color: ${theme.colors.gray300};
-  font-size: ${theme.fonts.regular25};
+  color: ${theme.colors.gray500};
+  font-size: ${theme.fonts.regular32};
 `;
 
-const Rank = styled.div`
+const RankTierWrapper = styled.div`
   display: flex;
   align-items: center;
-  color: #44515c;
-  font-size: ${theme.fonts.regular25};
-  font-weight: 300;
-  gap: 10px;
-`;
-
-const TierImage = styled.object`
-  pointer-events: none;
+  gap: 28px;
 `;
 
 const More = styled.div`
   display: flex;
   align-items: center;
-  gap: 32px;
-  margin-bottom: 20px;
+  gap: 20px;
+  position: absolute;
+  top: 52px;
+  right: 30px;
 `;
 
 const Admit = styled.div``;
 
 const MoreDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: relative;
 `;
 
@@ -925,23 +967,29 @@ const MsgConfirm = styled(Msg)`
   margin: 80px 0;
 `;
 
-const Position = styled.div`
+const Positions = styled.div`
   display: flex;
-  gap: 33px;
+  gap: 24px;
   align-items: center;
 `;
 
-const Posi = styled.div`
+const Posi = styled.div<{ $isWantP: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 15px;
-  align-items: center;
+  align-items: flex-start;
   font-size: ${theme.fonts.regular14};
   position: relative;
 
   &.other {
-    font-size: ${theme.fonts.semiBold14};
+    font-size: ${theme.fonts.regular14};
   }
+
+  ${({ $isWantP }) =>
+    $isWantP &&
+    css`
+      margin-left: 36px;
+    `}
 `;
 
 const Mike = styled.div`
@@ -949,5 +997,5 @@ const Mike = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
-  font-size: ${theme.fonts.semiBold14};
+  font-size: ${theme.fonts.regular14};
 `;

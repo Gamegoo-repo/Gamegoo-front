@@ -1,10 +1,11 @@
 import { theme } from "@/styles/theme";
+import { Mike } from "@/types/user/mike";
 import styled from "styled-components";
 import { css } from "styled-components";
 
 interface ToggleProps {
-  isOn: boolean;
-  onToggle: (state: boolean) => void;
+  isOn: Mike;
+  onToggle: (state: Mike) => void;
   disabled?: boolean;
   type?: string;
   isBlind?: boolean;
@@ -14,7 +15,7 @@ const Toggle = (props: ToggleProps) => {
   const { isOn, onToggle, disabled = false, type, isBlind = false } = props;
 
   const toggleHandler = () => {
-    const newState = !isOn;
+    const newState = isOn === "AVAILABLE" ? "UNAVAILABLE" : "AVAILABLE";
     onToggle(newState);
   };
 
@@ -26,9 +27,15 @@ const Toggle = (props: ToggleProps) => {
         $type={type}
         $isBlind={isBlind}
       >
-        <div className={`toggle-circle ${isOn ? null : "toggle--unchecked"}`} />
         <div
-          className={`toggle-container ${isOn ? null : "toggle--unchecked"}`}
+          className={`toggle-circle ${
+            isOn === "AVAILABLE" ? null : "toggle--unchecked"
+          }`}
+        />
+        <div
+          className={`toggle-container ${
+            isOn === "AVAILABLE" ? null : "toggle--unchecked"
+          }`}
         />
       </ToggleContainer>
     </>
@@ -52,7 +59,7 @@ const ToggleContainer = styled.div<{
     height: ${({ $type }) =>
       $type === "board" ? "37px" : $type === "mini" ? "32px" : "46px"};
     border-radius: 49px;
-    background-color: ${theme.colors.purple200};
+    background-color: ${theme.colors.violet400};
     /* ${({ disabled }) =>
       disabled &&
       css`
@@ -61,7 +68,7 @@ const ToggleContainer = styled.div<{
   }
 
   > .toggle--unchecked {
-    background-color: ${theme.colors.gray300};
+    background-color: ${theme.colors.gray500};
     transition: 0.5s;
     /* ${({ disabled }) =>
       disabled &&
@@ -71,7 +78,8 @@ const ToggleContainer = styled.div<{
     ${({ $isBlind }) =>
       $isBlind &&
       css`
-        background-color: ${theme.colors.gray800};
+        background-color: ${theme.colors.gray400};
+        background-color: #606060;
       `}
   }
 

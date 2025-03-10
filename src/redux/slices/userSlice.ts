@@ -1,25 +1,30 @@
 import { ChampionList, GameStyleList } from '@/interface/profile';
+import { Position } from '@/types/position/position';
+import { Mike } from '@/types/user/mike';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface UserState {
   id?: number | undefined;
   profileImg: number;
-  mike: boolean;
+  mike: Mike;
   email: string;
   gameName: string;
   tag: string;
-  tier: string;
-  gameRank: number;
-  mannerRank: number;
-  mannerLevel: number;
+  soloTier: string;
+  freeTier: string;
+  soloRank: number;
+  freeRank: number;
+  // mannerRank: number;
+  // mannerLevel: number;
   updatedAt: string;
-  mainP: number;
-  subP: number;
-  wantP: number;
+  mainP: Position;
+  subP: Position;
+  wantP: Position[];
   isAgree: boolean;
   isBlind: boolean;
   loginType: string;
-  winrate: number;
+  soloWinrate: number;
+  freeWinrate: number;
   gameStyleResponseList: GameStyleList[];
   championResponseList: ChampionList[];
   blocked: boolean;
@@ -30,22 +35,25 @@ interface UserState {
 const initialState: UserState = {
   id: 0,
   profileImg: 1,
-  mike: false,
-  email: '',
-  gameName: '',
-  tag: '',
-  tier: '',
-  gameRank: 0,
-  mannerRank: 0,
-  mannerLevel: 0,
-  updatedAt: '',
-  mainP: 0,
-  subP: 0,
-  wantP: 0,
+  mike: "UNAVAILABLE",
+  email: "",
+  gameName: "",
+  tag: "",
+  soloTier: "",
+  freeTier: "",
+  soloRank: 0,
+  freeRank: 0,
+  // mannerRank: 0,
+  // mannerLevel: 0,
+  updatedAt: "",
+  mainP: "ANY",
+  subP: "ANY",
+  wantP: [],
   isAgree: false,
   isBlind: false,
-  loginType: '',
-  winrate: 0,
+  loginType: "",
+  soloWinrate: 0,
+  freeWinrate: 0,
   gameStyleResponseList: [],
   championResponseList: [],
   blocked: false,
@@ -66,7 +74,7 @@ export const userSlice = createSlice({
     setUserProfileImg: (state, action: PayloadAction<number>) => {
       state.profileImg = action.payload;
     },
-    setUserMike: (state, action: PayloadAction<boolean>) => {
+    setUserMike: (state, action: PayloadAction<Mike>) => {
       state.mike = action.payload;
     },
     setUserProfile: (state: any, action: PayloadAction<Partial<UserState>>) => {
@@ -75,22 +83,25 @@ export const userSlice = createSlice({
     clearUserProfile(state) {
       state.id = 0;
       state.profileImg = 1;
-      state.mike = false;
+      state.mike = "UNAVAILABLE";
       state.email = '';
       state.gameName = '';
       state.tag = '';
-      state.tier = '';
-      state.gameRank = 0;
-      state.mannerRank = 0;
-      state.mannerLevel = 0;
+      state.soloTier = '';
+      state.freeTier = '';
+      state.soloRank = 0;
+      state.freeRank = 0;
+      // state.mannerRank = 0;
+      // state.mannerLevel = 0;
       state.updatedAt = '';
-      state.mainP = 0;
-      state.subP = 0;
-      state.wantP = 0;
+      state.mainP = "ANY";
+      state.subP = "ANY";
+      state.wantP = [];
       state.isAgree = false;
       state.isBlind = false;
       state.loginType = '';
-      state.winrate = 0;
+      state.soloWinrate = 0;
+      state.freeWinrate = 0;
       state.gameStyleResponseList = [];
       state.championResponseList = [];
       state.blocked = false;

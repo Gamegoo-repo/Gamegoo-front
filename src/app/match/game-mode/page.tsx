@@ -4,7 +4,7 @@ import GraphicBox from "@/components/match/GraphicBox";
 import styled from "styled-components";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { GAME_MODE_PAGE_DATA } from "@/data/match";
+import { GAME_MODE_PAGE_DATA } from "@/constants/match";
 import HeaderTitle from "@/components/common/HeaderTitle";
 import { Suspense } from "react";
 
@@ -17,7 +17,7 @@ const GameModePage = () => {
   return (
     <Wrapper>
       <MatchContent>
-        <HeaderTitle title="게임 모드 선택" />
+        <HeaderTitle title="게임모드 선택" />
         <Main>
           {displayedData.map((box) => {
             return (

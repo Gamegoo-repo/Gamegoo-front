@@ -20,6 +20,7 @@ import {
   setIsCompleted,
 } from "@/utils/storage";
 import { notify } from "@/hooks/notify";
+import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 
 export default function RootLayout({
   children,
@@ -40,7 +41,8 @@ export default function RootLayout({
     isNotFoundPage ||
     pathname === "/login" ||
     pathname.includes("/join") ||
-    pathname.includes("/password")
+    pathname.includes("/password") ||
+    pathname.includes("/riot")
   );
 
   /* 로그인 이전 소켓 연결 */
@@ -82,6 +84,7 @@ export default function RootLayout({
     setIsLoggedIn(!!getAccessToken());
   }, [pathname]);
 
+  // 테스트용 주석
   return (
     <html>
       <head>
@@ -95,6 +98,12 @@ export default function RootLayout({
         <link rel="icon" href="/icon.png" />
       </head>
       <body>
+        <GoogleTagManager
+          gtmId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER || ""}
+        />
+        <GoogleAnalytics
+          gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS || ""}
+        />
         <HelmetProvider>
           <Helmet>
             <link

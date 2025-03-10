@@ -1,5 +1,6 @@
 "use client";
 
+import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import styled from "styled-components";
@@ -18,8 +19,8 @@ const Layout = (props: any) => {
           }}
         >
           <Image
-            src="/assets/icons/logo_m.svg"
-            width={277}
+            src="/assets/icons/logo.svg"
+            width={318}
             height={88}
             alt="logo"
           />
@@ -51,7 +52,7 @@ const Box = styled.div`
 `;
 
 const Title = styled.div`
-  color: #44515c;
+  color: ${theme.colors.gray700};
   ${(props) => props.theme.fonts.light32};
 `;
 

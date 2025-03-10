@@ -1,6 +1,5 @@
 "use client";
 
-import Axios from "@/api";
 import { getUnreadUuid } from "@/api/chat/chat";
 import { postLogin } from "@/api/login/login";
 import { socketLogin } from "@/api/socket";
@@ -16,7 +15,6 @@ import {
   setUserProfileImg,
   setUserId,
 } from "@/redux/slices/userSlice";
-import { connectSocket, socket } from "@/socket";
 import { theme } from "@/styles/theme";
 import {
   clearTokens,
@@ -136,7 +134,7 @@ const Login = () => {
           }}
         >
           <Image
-            src="/assets/icons/logo_m.svg"
+            src="/assets/icons/logo.svg"
             width={277}
             height={88}
             alt="logo"
@@ -244,7 +242,7 @@ const Box = styled.div`
 
 const Title = styled.div`
   margin-top: 26px;
-  color: #44515c;
+  color: ${theme.colors.gray800};
   ${(props) => props.theme.fonts.regular35};
 `;
 
@@ -255,8 +253,8 @@ const Content = styled.div`
 
 const P = styled.div`
   display: flex;
-  color: ${theme.colors.gray200};
-  ${(props) => props.theme.fonts.regular14};
+  color: ${theme.colors.gray500};
+  ${(props) => props.theme.fonts.regular16};
   gap: 10px;
 `;
 
@@ -288,7 +286,6 @@ const Line = styled.div`
   width: 100%;
   height: 1px;
   background: #d4d4d4;
-  /* margin: 54px 0 74px 0; */
   margin: 30px 0 45px 0;
 `;
 
@@ -300,6 +297,6 @@ const SocialIcons = styled.div`
 `;
 
 const Join = styled(Link)`
-  color: ${theme.colors.gray300};
+  color: ${theme.colors.gray700};
   font-weight: 500;
 `;

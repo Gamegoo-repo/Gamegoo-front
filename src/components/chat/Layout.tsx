@@ -21,17 +21,17 @@ import {
   getMannerValues,
   postBadMannerValue,
   postMannerValue,
-} from "@/api/manner";
+} from "@/api/manner/manner";
 import ConfirmModal from "../common/ConfirmModal";
 import { leaveChatroom } from "@/api/chat/chat";
 import { setCloseModal, setOpenModal } from "@/redux/slices/modalSlice";
 import { socket } from "@/socket";
-import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/data/mannerLevel";
+import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants/mannerLevel";
 import Button from "../common/Button";
 import FormModal from "../common/FormModal";
 import Checkbox from "../common/Checkbox";
 import Input from "../common/Input";
-import { REPORT_REASON } from "@/data/report";
+import { REPORT_REASON } from "@/constants/report";
 import { reportMember } from "@/api/report/report";
 import { notify } from "@/hooks/notify";
 import { FriendList } from "@/types/friend/friendList";
@@ -42,6 +42,7 @@ import { blockMember } from "@/api/block/block";
 import Tabs from "./Tabs";
 import { resetPosition, setPosition } from "@/redux/slices/chatPositionSlice";
 import useDrag from "@/hooks/useDrag";
+import { getAccessToken } from "@/utils/storage";
 
 const Layout = () => {
   const dispatch = useDispatch();
@@ -125,6 +126,9 @@ const Layout = () => {
   /* 친구 목록 가져오기 */
   const handleFetchFriendsList = async () => {
     setIsLoading(true);
+    const accessToken = getAccessToken();
+    if (!accessToken) return;
+
     try {
       const response = await getFriendsList();
       const friendsList = response.data.friendInfoList;
@@ -458,60 +462,66 @@ const Layout = () => {
 
   return (
     <>
-      {isChatRoomOpen && isChatUuid !== null ? (
-        <ChatLayout apiType={activeTab} />
-      ) : (
-        <Overlay $top={position.top} $left={position.left}>
-          <Wrapper onClick={handleOutsideModalClick}>
-            <Header onMouseDown={handleDragStart}>
-              <HeaderTitle>메신저</HeaderTitle>
-              <CloseButton
-                onClick={(e) => {
-                  e.stopPropagation();
-                  dispatch(closeChat());
-                  dispatch(resetPosition());
-                }}
-                onMouseDown={(e) => {
-                  e.stopPropagation();
-                }}
-              >
-                <CloseImage
-                  src="/assets/icons/close.svg"
-                  width={12}
-                  height={12}
-                  alt="닫기"
-                />
-              </CloseButton>
-            </Header>
-            <Tabs tabs={tabs} activeTab={activeTab} onTabClick={setActiveTab} />
-            {activeTab === 0 && <SearchBar onSearch={handleSearch} />}
-            <ChatMain className={activeTab === 0 ? "friend" : "chat"}>
-              <Content className={activeTab === 0 ? "friend" : "chat"}>
-                {activeTab === 0 ? (
-                  <div>
-                    <ChatFriendList
-                      onChatRoom={handleGoToChatRoom}
-                      friends={friends}
-                      favoriteFriends={favoriteFriends}
-                      onFavoriteToggle={handleFavoriteToggle}
-                      handleFetchFriendsList={handleFetchFriendsList}
-                      isSearching={isSearching}
-                    />
-                  </div>
-                ) : (
-                  <ChatRoomList
-                    onChatRoom={handleGoToChatRoom}
-                    activeTab={activeTab}
-                    isMoreBoxOpen={isMoreBoxOpen}
-                    setIsMoreBoxOpen={setIsMoreBoxOpen}
-                    handleMoreBoxOpen={handleMoreBoxOpen}
+      <Overlay $top={position.top} $left={position.left}>
+        <Wrapper onClick={handleOutsideModalClick}>
+          {isChatRoomOpen && isChatUuid !== null ? (
+            <ChatLayout apiType={activeTab} onDragStart={handleDragStart} />
+          ) : (
+            <>
+              <Header onMouseDown={handleDragStart}>
+                <HeaderTitle>메신저</HeaderTitle>
+                <CloseButton
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    dispatch(closeChat());
+                    dispatch(resetPosition());
+                  }}
+                  onMouseDown={(e) => {
+                    e.stopPropagation();
+                  }}
+                >
+                  <CloseImage
+                    src="/assets/icons/close.svg"
+                    width={12}
+                    height={12}
+                    alt="닫기"
                   />
-                )}
-              </Content>
-            </ChatMain>
-          </Wrapper>
-        </Overlay>
-      )}
+                </CloseButton>
+              </Header>
+              <Tabs
+                tabs={tabs}
+                activeTab={activeTab}
+                onTabClick={setActiveTab}
+              />
+              {activeTab === 0 && <SearchBar onSearch={handleSearch} />}
+              <ChatMain className={activeTab === 0 ? "friend" : "chat"}>
+                <Content className={activeTab === 0 ? "friend" : "chat"}>
+                  {activeTab === 0 ? (
+                    <div>
+                      <ChatFriendList
+                        onChatRoom={handleGoToChatRoom}
+                        friends={friends}
+                        favoriteFriends={favoriteFriends}
+                        onFavoriteToggle={handleFavoriteToggle}
+                        handleFetchFriendsList={handleFetchFriendsList}
+                        isSearching={isSearching}
+                      />
+                    </div>
+                  ) : (
+                    <ChatRoomList
+                      onChatRoom={handleGoToChatRoom}
+                      activeTab={activeTab}
+                      isMoreBoxOpen={isMoreBoxOpen}
+                      setIsMoreBoxOpen={setIsMoreBoxOpen}
+                      handleMoreBoxOpen={handleMoreBoxOpen}
+                    />
+                  )}
+                </Content>
+              </ChatMain>
+            </>
+          )}
+        </Wrapper>
+      </Overlay>
 
       {/* 채팅창 나가기 팝업 */}
       {!isChatRoomOpen && isModalType === "leave" && selectedChatroom && (
@@ -782,7 +792,7 @@ const Content = styled.main`
   }
   &::-webkit-scrollbar-thumb {
     border-radius: 66px;
-    background: ${theme.colors.gray300};
+    background: ${theme.colors.gray500};
   }
   &::-webkit-scrollbar-track {
     border-radius: 66px;

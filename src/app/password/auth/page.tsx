@@ -29,7 +29,7 @@ const Auth = () => {
 
   /* 타이머 */
   const [timer, setTimer] = useState<number>(180);
-  const [timerColor, setTimerColor] = useState<string>(theme.colors.purple100);
+  const [timerColor, setTimerColor] = useState<string>(theme.colors.violet600);
 
   useEffect(() => {
     setAuth(authRedux);
@@ -69,9 +69,9 @@ const Auth = () => {
 
     // 타이머 색상 업데이트
     if (timer <= 30) {
-      setTimerColor(theme.colors.error100);
+      setTimerColor(theme.colors.red600);
     } else {
-      setTimerColor(theme.colors.purple100);
+      setTimerColor(theme.colors.violet600);
     }
 
     return () => {

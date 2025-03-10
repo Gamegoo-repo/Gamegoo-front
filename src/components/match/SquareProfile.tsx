@@ -1,4 +1,4 @@
-import { POSITIONS } from "@/data/profile";
+import { POSITIONS } from "@/constants/profile";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -9,6 +9,8 @@ import MannerLevelBox from "../common/MannerLevelBox";
 import { setAbbrevTier, setPositionImg } from "@/utils/custom";
 import { getProfileBgColor } from "@/utils/profile";
 import { toLowerCaseString } from "@/utils/string";
+import { Position as PositionType } from "@/types/position/position";
+import { Mike } from "@/types/user/mike";
 
 interface User {
   memberId: number;
@@ -19,10 +21,10 @@ interface User {
   mannerLevel: number;
   profileImg: number;
   gameMode: number;
-  mainPosition: number;
-  subPosition: number;
-  wantPosition: number;
-  mike: boolean;
+  mainPosition: PositionType;
+  subPosition: PositionType;
+  wantPosition: PositionType;
+  mike: Mike;
   gameStyleList?: string[];
 }
 
@@ -49,7 +51,8 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
     <Container $opponent={opponent}>
       <Column>
         <Top>
-          {user.gameName}
+          {/* {user.gameName} */}
+          유진주
           <Rank>
             <TierImage
               data={`/assets/images/tier/${
@@ -144,7 +147,7 @@ const Container = styled.div<{ $opponent: boolean }>`
   border-radius: 30px;
   border: 1px solid
     ${({ $opponent }) =>
-      $opponent ? theme.colors.purple100 : theme.colors.gray400};
+      $opponent ? theme.colors.violet600 : theme.colors.gray400};
   background: ${theme.colors.white};
 
   display: flex;
@@ -195,7 +198,7 @@ const Level = styled.button`
   border-radius: 57px;
   background: rgba(0, 0, 0, 0.64);
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-  color: ${theme.colors.purple300};
+  color: ${theme.colors.violet300};
   ${(props) => props.theme.fonts.bold14};
   position: absolute;
   bottom: 130px;
@@ -213,10 +216,10 @@ const Bubble = styled.div`
   align-items: center;
   justify-content: center;
   border-radius: 20px;
-  border: 1px solid ${theme.colors.purple200};
-  background: ${theme.colors.purple400};
-  color: ${theme.colors.gray600};
-  ${(props) => props.theme.fonts.medium11};
+  border: 1px solid ${theme.colors.violet400};
+  background: ${theme.colors.gray100};
+  color: ${theme.colors.gray800};
+  ${theme.fonts.medium11};
   position: absolute;
   bottom: 140px;
   left: 65%;
@@ -237,7 +240,7 @@ const Bubble = styled.div`
     border-top: 3px solid transparent;
     border-left: 6px solid transparent;
     border-right: 6px solid transparent;
-    border-bottom: 9px solid #9f90f9;
+    border-bottom: 9px solid ${theme.colors.violet400};
     content: "";
     position: absolute;
     bottom: 0.2px;
@@ -251,7 +254,7 @@ const Bubble = styled.div`
     border-top: 0 solid transparent;
     border-left: 6px solid transparent;
     border-right: 4.5px solid transparent;
-    border-bottom: 9px solid #e3deff;
+    border-bottom: 9px solid ${theme.colors.gray100};
     content: "";
     position: absolute;
     bottom: 2px;
@@ -266,14 +269,14 @@ const Top = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  color: ${theme.colors.gray600};
+  color: ${theme.colors.gray800};
   ${(props) => props.theme.fonts.bold25};
 `;
 
 const Rank = styled.div`
   display: flex;
   align-items: center;
-  color: ${theme.colors.gray700};
+  color: ${theme.colors.gray500};
   ${(props) => props.theme.fonts.regular14};
 `;
 
@@ -297,14 +300,13 @@ const Position = styled.div`
   width: 100%;
   height: 116px;
   border-radius: 8px;
-  background: var(--12, #f7f7f9);
+  background: ${theme.colors.gray100};
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 33px;
-  font-size: ${theme.fonts.regular12};
-  font-weight: 500;
-  color: ${theme.colors.gray600};
+  ${theme.fonts.medium11};
+  color: ${theme.colors.gray800};
 `;
 
 const Posi = styled.div`

@@ -14,7 +14,8 @@ const Alert = (props: AlertProps) => {
             src={`/assets/icons/${icon}.svg`}
             width={width}
             height={height}
-            alt={alt} />
+            alt={alt}
+          />
           <Text>{content}</Text>
         </TextWrapper>
         <ButtonWrapper>
@@ -22,7 +23,7 @@ const Alert = (props: AlertProps) => {
         </ButtonWrapper>
       </Wrapper>
     </Overlay>
-  )
+  );
 };
 
 export default Alert;
@@ -32,7 +33,7 @@ const Overlay = styled.div`
   justify-content: center;
   align-items: center;
   position: fixed;
-  background:#0000009C;
+  background: #0000009c;
   inset: 0;
   z-index: 100;
   top: 0;
@@ -43,34 +44,34 @@ const Overlay = styled.div`
 
 const Wrapper = styled.div`
   position: absolute;
-  bottom:28px;  
+  bottom: 28px;
   width: 640px;
   overflow: hidden;
 `;
 
 const TextWrapper = styled.div`
   background: ${theme.colors.white};
-  border-radius:17px;
+  border-radius: 17px;
   margin-bottom: 10px;
   text-align: center;
-  padding:17px 0 25px;
+  padding: 17px 0 25px;
 `;
 
 const Text = styled.p`
   ${(props) => props.theme.fonts.bold20};
-  color: ${theme.colors.gray600};
+  color: ${theme.colors.gray700};
   margin-top: 18px;
 `;
 
 const ButtonWrapper = styled.div`
   background: ${theme.colors.white};
-  border-radius:17px;
+  border-radius: 17px;
   text-align: center;
-  padding:17px 0;
+  padding: 17px 0;
   cursor: pointer;
 `;
 
 const Button = styled.p`
   ${(props) => props.theme.fonts.regular20};
-  color: ${theme.colors.gray600};
+  color: ${theme.colors.gray700};
 `;

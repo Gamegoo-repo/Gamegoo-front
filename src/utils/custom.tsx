@@ -1,14 +1,17 @@
 import dayjs from "@/libs/dayjs";
+import { GameMode } from "@/types/game/gameMode";
+import { Position } from "@/types/position/position";
+import { Mike } from "@/types/user/mike";
 
-export function setQueueType(gameMode: number) {
+export function setQueueType(gameMode: GameMode) {
   switch (gameMode) {
-    case 1:
+    case "FAST":
       return "빠른대전";
-    case 2:
+    case "SOLO":
       return "솔로랭크";
-    case 3:
+    case "FREE":
       return "자유랭크";
-    case 4:
+    case "ARAM":
       return "칼바람 나락";
     default:
       return "빠른대전";
@@ -38,22 +41,22 @@ export function setProfileImg(profile: number) {
   }
 }
 
-export function setPositionImg(position: number) {
+export function setPositionImg(position: Position) {
   switch (position) {
-    case 0:
-      return "/assets/icons/position_all_purple.svg";
-    case 1:
-      return "/assets/icons/position_top_purple.svg";
-    case 2:
-      return "/assets/icons/position_jungle_purple.svg";
-    case 3:
-      return "/assets/icons/position_mid_purple.svg";
-    case 4:
-      return "/assets/icons/position_one_deal_purple.svg";
-    case 5:
-      return "/assets/icons/position_supporter_purple.svg";
+    case "ANY":
+      return "/assets/images/position/position_all_purple.svg";
+    case "TOP":
+      return "/assets/images/position/position_top_purple.svg";
+    case "JUNGLE":
+      return "/assets/images/position/position_jungle_purple.svg";
+    case "MID":
+      return "/assets/images/position/position_mid_purple.svg";
+    case "ADC":
+      return "/assets/images/position/position_one_deal_purple.svg";
+    case "SUP":
+      return "/assets/images/position/position_supporter_purple.svg";
     default:
-      return "/assets/icons/position_all_purple.svg";
+      return "/assets/images/position/position_all_purple.svg";
   }
 }
 
@@ -111,13 +114,13 @@ export const tierStringToId = (tier: string | null) => {
   }
 };
 
-export const mikeBooleanToId = (mike: boolean | null) => {
+export const mikeBooleanToId = (mike: Mike | null) => {
   switch (mike) {
     case null:
       return 0;
-    case true:
+    case "AVAILABLE":
       return 1;
-    case false:
+    case "UNAVAILABLE":
       return 2;
     default:
       return null;

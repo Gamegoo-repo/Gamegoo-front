@@ -6,10 +6,13 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // 로그인하지 않은 상태
-  if (false && (pathname.startsWith('/match') || pathname.startsWith('/matching') || pathname.startsWith('/mypage') || pathname.startsWith('/user'))) {
-  // if (token && (pathname.startsWith('/match') || pathname.startsWith('/matching') || pathname.startsWith('/mypage') || pathname.startsWith('/user'))) {
+  if (
+    token &&
+    (pathname.startsWith("/match/game-mode") ||
+    pathname.startsWith("/matching") || pathname.startsWith("/mypage"))
+  ) {
     // 루트 경로로 리다이렉트
-    return NextResponse.redirect(new URL('/', request.url));
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
   if ((pathname==="/match/game-mode" || pathname==="/match/profile" || pathname==="/match/progress" || pathname==="/matching/complete") && !request.nextUrl.search) {

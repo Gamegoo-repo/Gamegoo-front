@@ -254,8 +254,8 @@ const Button = styled.button<{ $type: string | undefined }>`
     &:hover,
     &:active,
     &:focus {
-      color: ${theme.colors.purple100};
-      background: ${theme.colors.gray500};
+      color: ${theme.colors.violet600};
+      background: ${theme.colors.gray100};
       border-radius: 0 0 0 20px;
     }
   }
@@ -264,8 +264,8 @@ const Button = styled.button<{ $type: string | undefined }>`
     &:hover,
     &:active,
     &:focus {
-      color: ${theme.colors.purple100};
-      background: ${theme.colors.gray500};
+      color: ${theme.colors.violet600};
+      background: ${theme.colors.gray100};
       border-radius: 0 0 20px 0;
     }
   }
@@ -274,8 +274,8 @@ const Button = styled.button<{ $type: string | undefined }>`
     &:hover,
     &:active,
     &:focus {
-      color: ${theme.colors.purple100};
-      background: ${theme.colors.gray500};
+      color: ${theme.colors.violet600};
+      background: ${theme.colors.gray100};
       border-radius: 0 0 20px 20px;
     }
   }

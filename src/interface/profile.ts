@@ -1,3 +1,6 @@
+import { Position } from "@/types/position/position";
+import { Mike } from "@/types/user/mike";
+
 export type profileType = "normal" | "wind" | "other" | "me";
 
 export interface Champion {
@@ -13,24 +16,27 @@ export interface GameStyle {
 export interface User {
   id?: number;
   profileImg: number;
-  mike: boolean;
+  mike: Mike;
   email?: string;
   gameName: string;
   tag: string;
-  tier: string;
-  gameRank: number;
-  mannerLevel: number;
-  mannerRank?: null | number;
-  mannerRatingCount?: number;
+  soloTier: string;
+  freeTier: string;
+  soloRank: number;
+  freeRank: number;
+  // mannerLevel: number;
+  // mannerRank?: null | number;
+  // mannerRatingCount?: number;
   updatedAt: string;
-  mainP: number;
-  subP: number;
-  wantP: number;
+  mainP: Position;
+  subP: Position;
+  wantP: Position[];
   blocked: boolean;
   isAgree: boolean;
   isBlind: boolean;
   loginType: string;
-  winrate: number;
+  soloWinrate: number;
+  freeWinrate: number;
   gameStyleResponseList: GameStyle[];
   championResponseList: Champion[];
   friend: boolean;
@@ -56,8 +62,8 @@ export interface UserInfo {
   id: number;
   isAgree: boolean;
   isBlind: boolean;
-  mainP: number;
-  subP: number;
+  mainP: Position;
+  subP: Position;
   winRate: number;
   profileImg: number;
   email: string;
@@ -65,7 +71,7 @@ export interface UserInfo {
   tag: string;
   tier: string;
   rank: string;
-  updatedAt: string,
+  updatedAt: string;
   gameStyleResponseDTOList: GameStyleList[];
   championResponseDTOList: ChampionList[];
   loginType: string;

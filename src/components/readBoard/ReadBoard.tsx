@@ -5,7 +5,6 @@ import Button from "../common/Button";
 import PositionBox from "../crBoard/PositionBox";
 import { useEffect, useRef, useState } from "react";
 import ProfileImage from "./ProfileImage";
-import User from "../crBoard/User";
 import MannerLevel from "../common/MannerLevel";
 import Mic from "./Mic";
 import MoreBoxButton from "./MoreBoxButton";
@@ -24,7 +23,7 @@ import { reportMember } from "@/api/report/report";
 import FormModal from "../common/FormModal";
 import Input from "../common/Input";
 import Checkbox from "../common/Checkbox";
-import { REPORT_REASON } from "@/data/report";
+import { REPORT_REASON } from "@/constants/report";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { AxiosError } from "axios";
@@ -40,6 +39,7 @@ import { AlertProps } from "@/interface/modal";
 import { useRouter } from "next/navigation";
 import {
   openChatRoom,
+  setChatEnterType,
   setChatRoomUuid,
   setErrorMessage,
 } from "@/redux/slices/chatSlice";
@@ -48,6 +48,10 @@ import ConfirmModal from "../common/ConfirmModal";
 import { cancelFriendRequest, sendFriendRequest } from "@/api/friend/request";
 import { deleteFriend } from "@/api/friend/delete";
 import { blockMember, unblockMember } from "@/api/block/block";
+import { GameMode } from "@/types/game/gameMode";
+import UserAccount from "../crBoard/UserAccount";
+import UserTier from "../crBoard/UserTier";
+import { getAccessToken } from "@/utils/storage";
 
 interface ReadBoardProps {
   postId: number;
@@ -68,7 +72,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   const [isFriendStatus, setIsFriendStatus] = useState(false);
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
   const [reportDetail, setReportDetail] = useState<string>("");
-  const [gameMode, setGameMode] = useState<number>(1);
+  const [gameMode, setGameMode] = useState<GameMode>("FAST");
   const [showAlert, setShowAlert] = useState(false);
   const [alertProps, setAlertProps] = useState<AlertProps>({
     icon: "",
@@ -487,13 +491,21 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 채팅방 연결 */
   const handleChatStart = async () => {
+    console.log("0");
     if (!isUser.id) {
-      return showAlertWithContent(
-        "exclamation",
-        loginRequiredMessage,
-        () => setShowAlert(false),
-        "확인"
-      );
+      // 비회원 게스트용
+      console.log("1");
+      if (isPost) {
+        console.log("2");
+        await dispatch(
+          setCurrentPost({ currentPost: isPost, currentPostId: postId })
+        );
+        console.log("3");
+        dispatch(setChatRoomUuid(isPost.boardId));
+        dispatch(setCloseReadingModal());
+        dispatch(openChatRoom());
+        dispatch(setChatEnterType(2));
+      }
     }
 
     if (isPost?.isBlocked) {
@@ -513,6 +525,7 @@ const ReadBoard = (props: ReadBoardProps) => {
         if (isPost) {
           dispatch(setChatRoomUuid(isPost.boardId));
           dispatch(openChatRoom());
+          dispatch(setChatEnterType(2)); // 게시글에서 채팅방 입장
         }
       } catch (error) {
         console.error(error);
@@ -546,16 +559,20 @@ const ReadBoard = (props: ReadBoardProps) => {
               <UserSection>
                 <UserLeft>
                   <ProfileImage image={isPost.profileImage} />
+                  <UserWapper>
+                    <UserAccount account={isPost.gameName} tag={isPost.tag} />
+                    <UserTierWrapper>
+                      <UserTier
+                        soloTier={isPost.soloTier || ""}
+                        freeTier={isPost.freeTier || ""}
+                        soloRank={isPost.soloRank}
+                        freeRank={isPost.freeRank}
+                      />
+                    </UserTierWrapper>
+                  </UserWapper>
                   <UserNManner>
-                    <User
-                      account={isPost.gameName}
-                      tag={isPost.tag}
-                      tier={isPost.tier}
-                      rank={isPost.rank}
-                    />
                     <MannerLevelWrapper>
                       <MannerLevel
-                        forNoData={isPost.tier}
                         level={isPost.mannerLevel}
                         onClick={handleMannerLevelBoxOpen}
                         position="top"
@@ -581,21 +598,25 @@ const ReadBoard = (props: ReadBoardProps) => {
               <ChampionNQueueSection>
                 <Champion
                   title={true}
-                  size={14}
-                  list={isPost?.championResponseDTOList?.map(
+                  font="semiBold14"
+                  list={isPost?.championResponseList?.map(
                     (champion) => champion.championId
                   )}
                 />
                 <QueueType value={isPost.gameMode} />
               </ChampionNQueueSection>
-              {gameMode !== 4 && (
+              {gameMode !== "ARAM" && (
                 <PositionSection>
                   <Title>포지션</Title>
                   <PositionBox
                     status="reading"
-                    main={isPost.mainPosition}
-                    sub={isPost.subPosition}
-                    want={isPost.wantPosition}
+                    main={isPost.mainP || null}
+                    sub={isPost.subP || null}
+                    want={
+                      Array.isArray(isPost.wantP)
+                        ? isPost.wantP.filter((v) => v !== null)
+                        : null
+                    }
                   />
                 </PositionSection>
               )}
@@ -730,7 +751,7 @@ export default ReadBoard;
 
 const UpdatedDate = styled.p`
   ${(props) => props.theme.fonts.medium11};
-  color: ${theme.colors.gray200};
+  color: ${theme.colors.gray600};
   margin: 1px 0 12px;
 `;
 
@@ -743,18 +764,31 @@ const UserSection = styled.div`
 
 const UserLeft = styled.div`
   display: flex;
-  align-items: center;
+`;
+
+const UserWapper = styled.div`
+  position: relative;
+  margin-top: 9px;
+`;
+
+const UserTierWrapper = styled.div`
+  position: absolute;
+  top: 30px;
+  left: 0px;
 `;
 
 const UserNManner = styled.div`
   display: flex;
+  margin-top: 9px;
 `;
+
 const UserRight = styled.div`
   display: flex;
 `;
+
 const Title = styled.p`
   ${(props) => props.theme.fonts.semiBold14};
-  color: #222222;
+  color: ${theme.colors.gray800};
   margin-bottom: 5px;
 `;
 
@@ -774,16 +808,16 @@ const PositionSection = styled.div`
   margin-top: 33px;
 `;
 
-const WinningRateSection = styled.div<{ $gameType: number }>`
-  margin-top: ${({ $gameType }) => ($gameType !== 4 ? "33px" : "46px")};
+const WinningRateSection = styled.div<{ $gameType: GameMode }>`
+  margin-top: ${({ $gameType }) => ($gameType !== "ARAM" ? "33px" : "46px")};
 `;
 
-const StyleSection = styled.div<{ $gameType: number }>`
-  margin-top: ${({ $gameType }) => ($gameType !== 4 ? "33px" : "46px")};
+const StyleSection = styled.div<{ $gameType: GameMode }>`
+  margin-top: ${({ $gameType }) => ($gameType !== "ARAM" ? "33px" : "46px")};
 `;
 
-const MemoSection = styled.div<{ $gameType: number }>`
-  margin-top: ${({ $gameType }) => ($gameType !== 4 ? "33px" : "46px")};
+const MemoSection = styled.div<{ $gameType: GameMode }>`
+  margin-top: ${({ $gameType }) => ($gameType !== "ARAM" ? "33px" : "46px")};
 `;
 
 const Memo = styled.div`
@@ -792,7 +826,7 @@ const Memo = styled.div`
   max-height: 220px;
   padding: 11px 20px;
   border-radius: 15px;
-  border: 1px solid ${theme.colors.purple300};
+  border: 1px solid ${theme.colors.gray400};
   overflow-y: scroll;
 
   /* 스크롤바 */
@@ -801,7 +835,7 @@ const Memo = styled.div`
   }
   &::-webkit-scrollbar-thumb {
     border-radius: 10px;
-    background: ${theme.colors.gray300};
+    background: ${theme.colors.gray500};
     background-clip: padding-box;
     border: 6px solid transparent;
   }
@@ -811,12 +845,12 @@ const Memo = styled.div`
 `;
 
 const MemoData = styled.p`
-  color: #606060;
+  color: ${theme.colors.gray700};
   ${(props) => props.theme.fonts.regular18}
 `;
 
-const ButtonContent = styled.p<{ $gameType: number }>`
-  margin: ${({ $gameType }) => ($gameType !== 4 ? "30px" : "150px")} 0 28px;
+const ButtonContent = styled.p<{ $gameType: GameMode }>`
+  margin: ${({ $gameType }) => ($gameType !== "ARAM" ? "30px" : "150px")} 0 28px;
   text-align: center;
 `;
 

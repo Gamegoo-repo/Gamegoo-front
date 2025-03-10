@@ -195,12 +195,12 @@ const Title = styled.div`
   align-items: flex-end;
   gap: 22px;
   ${(props) => props.theme.fonts.bold25};
-  color: ${theme.colors.gray700};
+  color: ${theme.colors.gray800};
 `;
 
 const Small = styled.div`
   ${(props) => props.theme.fonts.bold11};
-  color: ${theme.colors.gray800};
+  color: ${theme.colors.gray400};
   margin-bottom: 5px;
 `;
 
@@ -250,7 +250,7 @@ const Circle = styled.div`
 `;
 
 const Modify = styled.button`
-  color: ${theme.colors.purple100};
+  color: ${theme.colors.violet600};
   ${(props) => props.theme.fonts.bold12};
 `;
 

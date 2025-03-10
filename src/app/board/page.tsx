@@ -4,7 +4,7 @@ import styled from "styled-components";
 import Image, { ImageProps } from "next/image";
 import { theme } from "@/styles/theme";
 import { useEffect, useRef, useState } from "react";
-import { BOARD_TITLE, GAME_MODE, MIC, TIER } from "@/data/board";
+import { BOARD_TITLE, GAME_MODE, MIC, TIER } from "@/constants/board";
 import Button from "@/components/common/Button";
 import Dropdown from "@/components/common/Dropdown";
 import Table from "@/components/board/Table";
@@ -19,31 +19,34 @@ import {
   setOpenPostingModal,
 } from "@/redux/slices/modalSlice";
 import { getBoardList } from "@/api/board/board";
-import { BoardDetail } from "@/interface/board";
+import { BoardListDetail } from "@/interface/board";
 import Alert from "@/components/common/Alert";
 import { useRouter } from "next/navigation";
 import { clearCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { mikeBooleanToId, tierStringToId } from "@/utils/custom";
 import { resetBoardFilters } from "@/redux/slices/boardSlice";
 import { rotate } from "@/styles/animation";
+import { Position } from "@/types/position/position";
+import { Mike } from "@/types/user/mike";
+import { GameMode } from "@/types/game/gameMode";
 
 const ITEMS_PER_PAGE = 20;
 const BUTTONS_PER_PAGE = 5;
 
 const BoardPage = () => {
-  const [boardList, setBoardList] = useState<BoardDetail[]>([]);
+  const [boardList, setBoardList] = useState<BoardListDetail[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
-  const [isPosition, setIsPosition] = useState(0);
+  const [isPosition, setIsPosition] = useState<Position>("ANY");
   const [isGameModeDropdownOpen, setIsGameModeDropdownOpen] = useState(false);
   const [isTierDropdownOpen, setIsTierDropdownOpen] = useState(false);
   const [isMicDropdownOpen, setIsMicDropdownOpen] = useState(false);
-  const [selectedGameMode, setSelectedGameMode] = useState<
-    string | number | null
-  >(null);
+  const [selectedGameMode, setSelectedGameMode] = useState<GameMode | null>(
+    null
+  );
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
-  const [selectedMic, setSelectedMic] = useState<boolean | string | null>(null);
+  const [selectedMic, setSelectedMic] = useState<Mike | null>(null);
   const [showAlert, setShowAlert] = useState(false);
   const [refresh, setRefresh] = useState(false);
 
@@ -67,61 +70,31 @@ const BoardPage = () => {
   /* 게임모드 드롭 */
   const handleGameModeDropValue = (id: number | null) => {
     dispatch(resetBoardFilters());
-    setSelectedGameMode(id);
+
+    const selectedGameModeObj = GAME_MODE.find(
+      (gameMode) => gameMode.id === id
+    );
+    setSelectedGameMode(selectedGameModeObj ? selectedGameModeObj.key : null);
     setIsGameModeDropdownOpen(false);
   };
 
   /* 티어 드롭 */
   const handleTierDropValue = (id: number | null) => {
     dispatch(resetBoardFilters());
-    switch (id) {
-      case 1:
-        setSelectedTier("IRON");
-        break;
-      case 2:
-        setSelectedTier("BRONZE");
-        break;
-      case 3:
-        setSelectedTier("SILVER");
-        break;
-      case 4:
-        setSelectedTier("GOLD");
-        break;
-      case 5:
-        setSelectedTier("PLATINUM");
-        break;
-      case 6:
-        setSelectedTier("EMERALD");
-        break;
-      case 7:
-        setSelectedTier("DIAMOND");
-        break;
-      case 8:
-        setSelectedTier("MASTER");
-        break;
-      case 9:
-        setSelectedTier("GRANDMASTER");
-        break;
-      case 10:
-        setSelectedTier("CHALLENGER");
-        break;
-      default:
-        setSelectedTier(null);
-        break;
-    }
 
+    const selectedTierObj = TIER.find((tier) => tier.id === id);
+    setSelectedTier(selectedTierObj ? selectedTierObj.key : null);
     setIsTierDropdownOpen(false);
   };
 
-  // useEffect(() => {
-  //   if (boardFilters) {
-  //     console.log(boardFilters);
-  //     setSelectedGameMode(boardFilters.mode || "솔로 랭크");
-  //     setSelectedTier(boardFilters.tier || "티어 선택");
-  //     setIsPosition(boardFilters.mainPosition || 0);
-  //     setSelectedMic(boardFilters.mike || "음성 채팅");
-  //   }
-  // }, [boardFilters]);
+  /* 마이크 드롭 */
+  const handleMicDropValue = (id: number | null) => {
+    dispatch(resetBoardFilters());
+
+    const selectedMicObj = MIC.find((mic) => mic.id === id);
+    setSelectedMic(selectedMicObj ? selectedMicObj.key : null);
+    setIsMicDropdownOpen(false);
+  };
 
   /* 게임모드 드롭박스 외부 클릭 */
   const handleGameModeDropdownClickOutside = (event: MouseEvent) => {
@@ -162,27 +135,9 @@ const BoardPage = () => {
   }, []);
 
   /* 포지션 필터 */
-  const handlePositionFilter = (id: number) => {
+  const handlePositionFilter = (id: Position) => {
     dispatch(resetBoardFilters());
     setIsPosition(id);
-  };
-
-  /* 마이크 드롭 */
-  const handleMicDropValue = (id: number | null) => {
-    dispatch(resetBoardFilters());
-    switch (id) {
-      case 1:
-        setSelectedMic(true);
-        break;
-      case 2:
-        setSelectedMic(false);
-        break;
-      default:
-        setSelectedMic(null);
-        break;
-    }
-
-    setIsMicDropdownOpen(false);
   };
 
   /* 글쓰기 모달 오픈 */
@@ -203,15 +158,15 @@ const BoardPage = () => {
   const getList = async () => {
     const params = {
       page: currentPage,
-      mode:
-        boardFilters.mode && boardFilters.mode !== null
-          ? boardFilters.mode
+      gameMode:
+        boardFilters.gameMode && boardFilters.gameMode !== null
+          ? boardFilters.gameMode
           : selectedGameMode,
       tier:
         boardFilters.tier && boardFilters.tier !== null
           ? boardFilters.tier
           : selectedTier,
-      mainPosition: boardFilters.mainPosition || isPosition,
+      mainP: boardFilters.mainP || isPosition,
       mike:
         boardFilters.mike && boardFilters.mike !== null
           ? boardFilters.mike
@@ -309,7 +264,7 @@ const BoardPage = () => {
                 width={30}
                 height={27}
                 alt="새로고침"
-                isRotating={isRotating}
+                $isrotating={isRotating}
               />
             </FirstRow>
             <SecondRow>
@@ -323,7 +278,7 @@ const BoardPage = () => {
                   open={isGameModeDropdownOpen}
                   setOpen={setIsGameModeDropdownOpen}
                   onDropValue={handleGameModeDropValue}
-                  defaultValue={boardFilters.mode || selectedGameMode}
+                  defaultValue={boardFilters.gameMode || selectedGameMode}
                 />
                 <Dropdown
                   type="type1"
@@ -416,17 +371,17 @@ const FirstRow = styled.div`
 `;
 
 const Title = styled.p`
-  ${(props) => props.theme.fonts.regular35};
-  color: #44515c;
+  color: ${theme.colors.gray700};
+  ${theme.fonts.bold32};
 `;
 
 interface RefreshImageProps extends ImageProps {
-  isRotating: boolean;
+  $isrotating: boolean;
 }
 
 const RefreshImage = styled(Image)<RefreshImageProps>`
   cursor: pointer;
-  animation: ${(props) => (props.isRotating ? rotate : "none")} 1s linear;
+  animation: ${(props) => (props.$isrotating ? rotate : "none")} 1s linear;
 `;
 
 const SecondRow = styled.div`
@@ -443,7 +398,7 @@ const FirstBlock = styled.div`
 `;
 
 const PositionBox = styled.div`
-  background: ${theme.colors.gray500};
+  background: ${theme.colors.gray200};
   border-radius: 10px;
 `;
 

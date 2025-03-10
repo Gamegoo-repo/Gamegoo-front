@@ -2,17 +2,17 @@
 
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
-import Post, { PostProps } from "@/components/mypage/post/Post";
+import Post from "@/components/mypage/post/Post";
 import { useEffect, useState } from "react";
-import { getMyPost } from "@/api/user";
 import Pagination from "@/components/common/Pagination";
-import { deletePost } from "@/api/board/board";
+import { deletePost, getMyPost } from "@/api/board/board";
 import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
+import { MyBoardDetail } from "@/types/api/board/board";
 
 const MyPostPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [postList, setPostList] = useState<PostProps[]>([]);
+  const [postList, setPostList] = useState<MyBoardDetail[]>([]);
   const [hasMoreItems, setHasMoreItems] = useState(true);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [totalCount, setTotalCount] = useState<number>(1);
@@ -24,10 +24,12 @@ const MyPostPage = () => {
   useEffect(() => {
     const fetchGetMyPost = async () => {
       const response = await getMyPost(currentPage);
-      setPostList(response.result.myBoards);
-      setTotalPage(response.result.totalPage);
-      setTotalCount(response.result.totalCount);
-      setHasMoreItems(response.result.length === ITEMS_PER_PAGE);
+
+      const { totalPage, totalCount } = response.data;
+      setPostList(response.data.myBoards);
+      setTotalPage(totalPage);
+      setTotalCount(totalCount);
+      setHasMoreItems(response.data.myBoards.length === ITEMS_PER_PAGE);
     };
 
     fetchGetMyPost();
@@ -78,10 +80,11 @@ const MyPostPage = () => {
                   profileImage={item.profileImage}
                   gameName={item.gameName}
                   tag={item.tag}
-                  tier={item.tier}
-                  rank={item.rank}
+                  tier={item.tier || ""}
+                  rank={item.rank || 0}
                   contents={item.contents}
                   createdAt={item.createdAt}
+                  bumpTime={item.bumpTime}
                   boardNumber={index + 1}
                   onDeletePost={handleDeletePost}
                 />
@@ -138,14 +141,14 @@ const Top = styled.div`
   ${(props) => props.theme.fonts.regular25};
   padding-bottom: 13px;
   margin-bottom: 20px;
-  border-bottom: 1px solid ${theme.colors.gray400};
+  border-bottom: 1px solid ${theme.colors.gray300};
 `;
 
 const Columns = styled.div`
   width: 100%;
   height: 48px;
   border-radius: 8px;
-  background: ${theme.colors.gray600};
+  background: ${theme.colors.gray800};
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.bold14};
   padding: 0 15px;

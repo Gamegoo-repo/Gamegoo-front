@@ -1,4 +1,4 @@
-import { MYPAGE_TAB } from "@/data/tab";
+import { MYPAGE_TAB } from "@/constants/tab";
 import { theme } from "@/styles/theme";
 import { usePathname, useRouter } from "next/navigation";
 import styled from "styled-components";
@@ -40,8 +40,8 @@ const Tab = styled.div<{ selected: boolean }>`
   padding: 22px 26px;
   border-radius: 4px;
   background: ${({ selected }) =>
-    selected ? theme.colors.gray500 : "transparent"};
-  color: ${theme.colors.gray600};
+    selected ? theme.colors.gray100 : "transparent"};
+  color: ${theme.colors.gray800};
   ${({ selected, theme }) =>
     selected ? theme.fonts.bold16 : theme.fonts.regular16};
   cursor: pointer;

@@ -187,7 +187,7 @@ const Span = styled.div<{ $selected: boolean }>`
   gap: 7px;
   align-items: center;
   color: ${({ theme, $selected }) =>
-    $selected ? theme.colors.purple100 : "#737373"};
+    $selected ? theme.colors.violet600 : "#737373"};
   font-weight: 400;
 `;
 

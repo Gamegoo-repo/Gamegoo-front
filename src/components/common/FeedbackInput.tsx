@@ -63,7 +63,7 @@ function FeedBackInput() {
           transition={{ duration: 0 }}
           onClick={handleSend}
           disabled={disabled}
-          feedbackLength={feedback.length}
+          $feedbacklength={feedback.length}
         >
           <Image
             src={`/assets/icons/send_${isFocused ? "purple" : "gray"}.svg`}
@@ -102,7 +102,7 @@ const FeedBack = styled.div`
   }
 `;
 
-const SendIcon = styled(motion.button)<{ feedbackLength: number }>`
+const SendIcon = styled(motion.button)<{ $feedbacklength: number }>`
   width: 36px;
   height: 36px;
   display: flex;
@@ -110,7 +110,7 @@ const SendIcon = styled(motion.button)<{ feedbackLength: number }>`
   align-items: center;
   border-radius: 50%;
   border: none;
-  opacity: ${({ feedbackLength }) => (feedbackLength > 0 ? 1 : 0.4)};
+  opacity: ${({ $feedbacklength }) => ($feedbacklength > 0 ? 1 : 0.4)};
   transition: all 0.15s ease-in;
   cursor: pointer;
 

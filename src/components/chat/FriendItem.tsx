@@ -4,6 +4,8 @@ import Image from "next/image";
 import DeleteFriend from "./DeleteFriend";
 import { getProfileBgColor } from "@/utils/profile";
 import { FriendList } from "@/types/friend/friendList";
+import { setChatEnterType } from "@/redux/slices/chatSlice";
+import { useDispatch } from "react-redux";
 
 interface FriendItemProps {
   friend: FriendList;
@@ -28,10 +30,15 @@ const FriendItem = (props: FriendItemProps) => {
     handleDeleteFriend,
   } = props;
 
+  const dispatch = useDispatch();
+
   return (
     <UserContent
       onContextMenu={(event) => onContextMenu(event, friend.memberId)}
-      onClick={() => onChatRoom(friend.memberId)}
+      onClick={() => {
+        onChatRoom(friend.memberId);
+        dispatch(setChatEnterType(0)); // 친구목록에서 채팅방 입장
+      }}
     >
       {deleteMenu.friendId === friend.memberId && (
         <DeleteFriend
@@ -71,8 +78,8 @@ const FriendItem = (props: FriendItemProps) => {
               ? "/assets/icons/favorites.svg"
               : "/assets/icons/nonFavorites.svg"
           }
-          width={15}
-          height={15}
+          width={36}
+          height={36}
           alt="즐겨찾기 버튼"
         />
       )}
@@ -90,7 +97,7 @@ const UserContent = styled.div`
   cursor: pointer;
   padding: 5px 18px 5px 16px;
   &:hover {
-    background: ${theme.colors.gray500};
+    background: ${theme.colors.gray100};
   }
 `;
 
@@ -119,7 +126,7 @@ const StyledImage = styled.object`
 
 const UserName = styled.p`
   ${(props) => props.theme.fonts.semiBold14};
-  color: ${theme.colors.gray600};
+  color: ${theme.colors.gray800};
 `;
 
 const Online = styled(Image)`

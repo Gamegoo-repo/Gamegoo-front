@@ -21,7 +21,7 @@ import {
 } from "@/utils/custom";
 import { getProfileBgColor } from "@/utils/profile";
 import { toLowerCaseString } from "@/utils/string";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
@@ -32,9 +32,10 @@ export interface PostProps {
   gameName: string;
   tag: string;
   tier: string;
-  rank: string;
+  rank: number;
   contents: string;
   createdAt: string;
+  bumpTime: string;
   boardNumber: number;
   onDeletePost?: (boardId: number) => void;
 }
@@ -256,7 +257,6 @@ const TierImage = styled.object`
 
 const Memo = styled.div`
   width: 100%;
-  height: 40px;
   text-overflow: ellipsis;
   overflow: hidden;
   word-wrap: break-word;
@@ -271,7 +271,7 @@ const Date = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: ${theme.colors.gray200};
+  color: ${theme.colors.gray500};
   ${(props) => props.theme.fonts.medium11};
 `;
 

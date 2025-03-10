@@ -11,7 +11,7 @@ const GlobalStyles = createGlobalStyle`
 html,
 body {
   width: 100%;
-  min-width: 1200px;
+  /* min-width: 1200px; */
   font-family: "Pretendard", sans-serif;
   white-space: pre-line;
 
@@ -20,7 +20,7 @@ body {
   }
   &::-webkit-scrollbar-thumb {
     border-radius: 26px;
-    background: ${theme.colors.gray300};
+    background: ${theme.colors.gray500};
     background-clip: padding-box;
     border: 6px solid transparent;
   }

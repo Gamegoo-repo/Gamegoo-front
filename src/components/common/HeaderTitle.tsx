@@ -9,17 +9,21 @@ type fontSize = "bold" | "regular";
 interface HeaderTitleProps {
   title: string;
   sub?: string;
+  mini?: string;
   size?: fontSize;
   blocked?: boolean;
   isDoubleBack?: boolean;
+  marginBottom?: string;
 }
 
 const HeaderTitle: React.FC<HeaderTitleProps> = ({
   title,
   sub,
+  mini,
   size = "bold",
   blocked = false,
   isDoubleBack = false,
+  marginBottom,
 }) => {
   const router = useRouter();
 
@@ -32,16 +36,17 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({
   };
 
   return (
-    <Header>
+    <Header $marginBottom={marginBottom}>
       <StyledImage
         onClick={handleBackClick}
-        src="/assets/icons/left_arrow.svg"
-        width={20}
-        height={39}
-        alt="back button"
+        src="/assets/icons/arrow_left.svg"
+        width={40}
+        height={40}
+        alt="뒤로가기"
       />
       <Title className={size}>{title}</Title>
       {sub && <Sub>{sub}</Sub>}
+      {mini && <Mini>{mini}</Mini>}
       {blocked && <Blocked>차단된 사용자입니다</Blocked>}
     </Header>
   );
@@ -49,22 +54,22 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({
 
 export default HeaderTitle;
 
-const Header = styled.header`
+const Header = styled.header<{ $marginBottom?: string }>`
   width: 100%;
   display: flex;
   align-items: center;
   width: 100%;
-  margin-bottom: 32px;
+  margin-bottom: ${({ $marginBottom }) =>
+    $marginBottom ? $marginBottom : "32px"};
 `;
 
 const StyledImage = styled(Image)`
-  margin-right: 35px;
+  margin-right: 12px;
   cursor: pointer;
 `;
 
 const Title = styled.div`
-  color: ${theme.colors.gray100};
-  margin-right: 40px;
+  color: ${theme.colors.gray800};
 
   &.bold {
     ${(props) => props.theme.fonts.bold32};
@@ -76,11 +81,18 @@ const Title = styled.div`
 `;
 
 const Sub = styled.div`
-  ${(props) => props.theme.fonts.regular28};
+  margin-left: 40px;
   color: ${theme.colors.gray600};
+  ${(props) => props.theme.fonts.regular28};
+`;
+
+const Mini = styled.div`
+  margin-left: 12px;
+  color: ${theme.colors.gray800};
+  ${(props) => props.theme.fonts.regular20};
 `;
 
 const Blocked = styled.div`
-  color: ${theme.colors.error200};
+  color: ${theme.colors.red500};
   ${theme.fonts.bold14};
 `;

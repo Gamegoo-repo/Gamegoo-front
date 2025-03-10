@@ -43,7 +43,7 @@ const Container = styled.div`
   align-items: center;
   border-radius: 30px;
   margin-bottom: 8px;
-  background: ${theme.colors.purple300};
+  background: ${theme.colors.violet300};
   box-shadow: 0 4px 7.7px 0 rgba(0, 0, 0, 0.25);
 `;
 

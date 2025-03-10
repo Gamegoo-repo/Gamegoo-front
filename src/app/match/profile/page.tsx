@@ -96,7 +96,7 @@ const ProfilePage = () => {
     const matchingData = {
       matchingType,
       gameMode,
-      mike: matchInfo.mike ?? false,
+      mike: matchInfo.mike ?? "UNAVAILABLE",
       mainP: (matchInfo.mainP ?? 0).toString(),
       subP: (matchInfo.subP ?? 0).toString(),
       wantP: (matchInfo.wantP ?? 0).toString(),
@@ -146,10 +146,14 @@ const ProfilePage = () => {
   return (
     <Wrapper>
       <MatchContent>
-        <HeaderTitle title="프로필 설정" />
+        <HeaderTitle title="프로필 등록" />
         <Main>
           {user ? (
-            <Profile profileType={profileType ?? "normal"} user={user} />
+            <Profile
+              profileType={profileType ? profileType : "normal"}
+              user={user}
+              backgroundColor={theme.colors.violet100}
+            />
           ) : (
             <p>Loading...</p>
           )}
@@ -216,6 +220,6 @@ const Column = styled.div`
 `;
 
 const Warning = styled.div`
-  color: ${theme.colors.error100};
+  color: ${theme.colors.red600};
   ${(props) => props.theme.fonts.regular16};
 `;

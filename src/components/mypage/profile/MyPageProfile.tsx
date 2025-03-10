@@ -1,5 +1,6 @@
 import { getMyProfile } from "@/api/user/profile/get";
 import { putProfileImage } from "@/api/user/profile/put";
+import RankTier from "@/components/common/RankTier";
 import GameStyle from "@/components/match/GameStyle";
 import { Profile } from "@/interface/profile";
 import { setUserProfile, setUserProfileImg } from "@/redux/slices/userSlice";
@@ -105,17 +106,14 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
         )}
       </ImageContainer>
       <Div>
-        <Top>
-          <TierImage
-            data={`/assets/images/tier/${
-              toLowerCaseString(user.tier) || "unrank"
-            }.svg`}
-            width={43}
-            height={43}
-          />
+        <Name>
           {user.gameName}
           <Tag>#{user.tag}</Tag>
-        </Top>
+        </Name>
+        <RankTierWrapper>
+          <RankTier type="solo" tier={user.soloTier} rank={user.soloRank} />
+          <RankTier type="free" tier={user.freeTier} rank={user.freeRank} />
+        </RankTierWrapper>
         <GameStyle
           gameStyleResponseDTOList={user.gameStyleResponseList}
           profileType="mini"
@@ -130,13 +128,13 @@ export default MyPageProfile;
 
 const Container = styled.div`
   width: 100%;
+  height: 267px;
   box-sizing: border-box;
   border-radius: 20px;
-  padding: 28px 37px;
-  background: ${theme.colors.gray500};
+  padding: 27px 50px 27px 37px;
+  background: ${theme.colors.gray100};
   display: flex;
   justify-content: flex-start;
-  align-items: center;
   gap: 26px;
   white-space: nowrap;
 `;
@@ -205,16 +203,6 @@ const ProfileListBoxTop = styled.div`
   ${theme.fonts.regular20};
 `;
 
-// const ProfileList = styled.div`
-//   width: 100%;
-//   height: 100%;
-//   padding: 0 14px 29px 14px;
-//   row-gap: 25px;
-//   display: grid;
-//   grid-template-columns: repeat(4, 1fr);
-//   grid-template-rows: repeat(2, 1fr);
-// `;
-
 const ProfileList = styled.div`
   width: 100%;
   height: 100%;
@@ -263,23 +251,25 @@ const Div = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: center;
-  gap: 18px;
+  gap: 24px;
+  margin-top: 10px;
 `;
 
-const Tag = styled.div`
-  color: ${theme.colors.gray300};
-  ${(props) => props.theme.fonts.regular25}
-`;
-
-const Top = styled.div`
+const Name = styled.div`
   display: flex;
   align-items: center;
   gap: 7px;
   ${(props) => props.theme.fonts.bold25};
-  color: ${theme.colors.gray600};
+  color: ${theme.colors.gray800};
 `;
 
-const TierImage = styled.object`
-  pointer-events: none;
+const Tag = styled.div`
+  color: ${theme.colors.gray500};
+  ${(props) => props.theme.fonts.regular25}
+`;
+
+const RankTierWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 28px;
 `;

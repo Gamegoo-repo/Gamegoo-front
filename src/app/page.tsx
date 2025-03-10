@@ -1,38 +1,20 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { MATCH_PAGE_DATA } from "@/data/match";
+import { MATCH_PAGE_DATA } from "@/constants/match";
 import Image from "next/image";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
-import { useState } from "react";
-import Alert from "@/components/common/Alert";
-import { getAccessToken } from "@/utils/storage";
-import { AuthAxios } from "@/api/auth";
 
 const HomePage = () => {
   const router = useRouter();
 
-  const accesssToken = getAccessToken(); // 로그인 유무 결정
-  const [showAlert, setShowAlert] = useState(false);
-
   return (
     <Wrapper>
-      {showAlert && (
-        <Alert
-          icon="exclamation"
-          width={68}
-          height={58}
-          content="로그인이 필요한 서비스입니다."
-          alt="경고"
-          onClose={() => setShowAlert(false)}
-          buttonText="확인"
-        />
-      )}
       <HomeContent>
         <Header>
           <Image
-            src="/assets/icons/logo_m.svg"
+            src="/assets/icons/logo.svg"
             width={371}
             height={117}
             priority
@@ -46,11 +28,7 @@ const HomePage = () => {
               <ContentWrapper
                 key={content.id}
                 onClick={() => {
-                  if (!accesssToken && content.id === 1) {
-                    setShowAlert(true);
-                  } else {
-                    router.push(content.pathname);
-                  }
+                  router.push(content.pathname);
                 }}
               >
                 <StyledObject

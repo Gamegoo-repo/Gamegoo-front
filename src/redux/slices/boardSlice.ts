@@ -1,18 +1,21 @@
+import { GameMode } from '@/types/game/gameMode';
+import { Position } from '@/types/position/position';
+import { Mike } from '@/types/user/mike';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface BoardState {
   pageIdx: number;
-  mode: number | null;
+  gameMode: number | GameMode | null;
   tier: string | null;
-  mainPosition: number | null;
-  mike: boolean | null;
+  mainP: Position;
+  mike: Mike | null;
 }
 
 const initialState: BoardState = {
   pageIdx: 1,
-  mode: null,
+  gameMode: null,
   tier: null,
-  mainPosition: null,
+  mainP: "ANY",
   mike: null,
 };
 

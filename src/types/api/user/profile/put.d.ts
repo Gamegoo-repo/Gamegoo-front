@@ -1,9 +1,10 @@
+import { Position } from "@/types/position/position";
 import { ApiResponse } from "../../api";
 
 interface PutPositionRequest {
-  mainP: number;
-  subP: number;
-  wantP: number;
+  mainP: Position;
+  subP: Position;
+  wantP: (Position|null)[];
 }
 
 export interface PutProfileData {

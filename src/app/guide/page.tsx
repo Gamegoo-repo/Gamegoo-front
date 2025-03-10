@@ -7,6 +7,7 @@ import { useState } from "react";
 import RadioCard from "@/components/common/RadioCard";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import Toggle from "@/components/common/Toggle";
+import { Mike } from "@/types/user/mike";
 
 const Guide = () => {
   /* Input State */
@@ -28,7 +29,7 @@ const Guide = () => {
   const [isPosition, setIsPosition] = useState("");
 
   /* Toggle */
-  const [isOn, setisOn] = useState(false);
+  const [isOn, setisOn] = useState<Mike>("UNAVAILABLE");
 
   const handleOptionChange = (value: string) => {
     setIsSelected(value);
@@ -59,7 +60,7 @@ const Guide = () => {
 
   /* Toggle */
   const toggleHandler = () => {
-    setisOn(!isOn);
+    setisOn(isOn === "AVAILABLE" ? "UNAVAILABLE" : "AVAILABLE");
   };
   const handlePosition = (value: string) => {
     setIsPosition(value);
@@ -182,7 +183,7 @@ const Guide = () => {
 
       <H2>Form Modal</H2>
       <button
-        style={{ border: "1px solid black", padding: "10px" }}
+        style={{ border: "1px solid theme.colors.gray900", padding: "10px" }}
         onClick={handleFormModalOpen}
       >
         텍스트 모달 열기 버튼
