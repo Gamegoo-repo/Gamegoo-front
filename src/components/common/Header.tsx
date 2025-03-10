@@ -45,6 +45,9 @@ const Header = () => {
   const profileImg = useSelector((state: RootState) => state.user.profileImg);
   const notiCount = useSelector((state: RootState) => state.noti.count);
 
+  const alertButtonRef = useRef<HTMLButtonElement>(null);
+  const myPageDivRef = useRef<HTMLDivElement>(null);
+
   const myPageRef = useRef<HTMLDivElement>(null);
   const [showAlert, setShowAlert] = useState(false);
 
@@ -67,15 +70,20 @@ const Header = () => {
   }, []);
 
   /* 알림창 열고 닫는 함수 */
-  const handleAlertWindow = () => {
-    setIsAlertWindow(!isAlertWindow);
+  const handleAlertWindow = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setIsAlertWindow((prev) => !prev);
   };
 
-  /* 외부 영역 클릭시 팝업 닫힘 */
+  /* 마이페이지 모달 외부 영역 클릭시 팝업 닫힘 */
   const handleClickOutside = (event: MouseEvent) => {
     if (
       myPageRef.current &&
-      !myPageRef.current.contains(event.target as Node)
+      !myPageRef.current.contains(event.target as Node) &&
+      !(
+        myPageDivRef.current &&
+        myPageDivRef.current.contains(event.target as Node)
+      )
     ) {
       setIsMyPage(false);
     }
@@ -162,14 +170,16 @@ const Header = () => {
         </Left>
         {accesssToken && name && profileImg ? (
           <Right>
-            <Image
-              src={`/assets/icons/noti_${notiCount > 0 ? "on" : "off"}.svg`}
-              width={24}
-              height={30}
-              alt="noti"
-              onClick={handleAlertWindow}
-            />
+            <button ref={alertButtonRef} onClick={handleAlertWindow}>
+              <Image
+                src={`/assets/icons/noti_${notiCount > 0 ? "on" : "off"}.svg`}
+                width={24}
+                height={30}
+                alt="noti"
+              />
+            </button>
             <Profile
+              ref={myPageDivRef}
               className="profile"
               onClick={() => {
                 setIsMyPage(!isMyPage);
@@ -199,6 +209,7 @@ const Header = () => {
         <AlertWindow
           countFunc={fetchNotiCount}
           onClose={() => setIsAlertWindow(false)}
+          alertButtonRef={alertButtonRef}
         />
       )}
       {isMyPage && (

@@ -131,7 +131,7 @@ const Div = styled.div`
 `;
 
 const Text = styled.div<{ size: string }>`
-  color: ${theme.colors.gray600};
+  color: ${theme.colors.gray800};
   ${(props) => props.theme.fonts.semiBold18};
 
   ${(props) =>
@@ -142,7 +142,7 @@ const Text = styled.div<{ size: string }>`
 `;
 
 const Time = styled.div<{ size: string }>`
-  color: ${theme.colors.gray200};
+  color: ${theme.colors.gray500};
   ${(props) => props.theme.fonts.medium16};
 
   ${(props) =>
