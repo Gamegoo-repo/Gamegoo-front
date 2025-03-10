@@ -154,7 +154,7 @@ const Login = () => {
                 }}
                 errorMsg="정보 불일치"
                 placeholder="이메일 주소"
-                isValid={emailValid}
+                isvalid={emailValid}
               />
               <Input
                 inputType="password"
@@ -165,7 +165,7 @@ const Login = () => {
                 }}
                 errorMsg="정보 불일치"
                 placeholder="비밀번호"
-                isValid={passwordValid}
+                isvalid={passwordValid}
                 onKeyDown={handleKeyDown}
               />
             </InputList>
