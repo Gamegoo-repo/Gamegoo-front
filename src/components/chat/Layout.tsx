@@ -8,6 +8,7 @@ import {
   closeChatRoom,
   openChatRoom,
   setChatRoomUuid,
+  setActiveTab,
 } from "@/redux/slices/chatSlice";
 import SearchBar from "./SearchBar";
 import ChatRoomList from "./ChatRoomList";
@@ -40,7 +41,6 @@ import ChatFriendList from "./ChatFriendList";
 import { patchFriendStar } from "@/api/friend/star";
 import { blockMember } from "@/api/block/block";
 import Tabs from "./Tabs";
-import { resetPosition, setPosition } from "@/redux/slices/chatPositionSlice";
 import { getAccessToken } from "@/utils/storage";
 import useDrag from "@/hooks/useDrag";
 
@@ -48,10 +48,10 @@ const Layout = () => {
   const dispatch = useDispatch();
   /* 채팅창 위치 관련 상태 */
   const position = useSelector((state: RootState) => state.chatPosition);
+  const activeTab = useSelector((state: RootState) => state.chat.activeTab);
   // const [isDragging, setIsDragging] = useState(false);
   // const [offset, setOffset] = useState({ x: 0, y: 0 });
 
-  const [activeTab, setActiveTab] = useState(0);
   const [friends, setFriends] = useState<FriendList[]>([]);
   const [favoriteFriends, setFavoriteFriends] = useState<FriendList[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -485,7 +485,7 @@ const Layout = () => {
                   onClick={(e) => {
                     e.stopPropagation();
                     dispatch(closeChat());
-                    dispatch(resetPosition());
+                    // dispatch(resetPosition());
                   }}
                   onMouseDown={(e) => {
                     e.stopPropagation();
@@ -502,7 +502,7 @@ const Layout = () => {
               <Tabs
                 tabs={tabs}
                 activeTab={activeTab}
-                onTabClick={setActiveTab}
+                onTabClick={(index: number) => dispatch(setActiveTab(index))}
               />
               {activeTab === 0 && <SearchBar onSearch={handleSearch} />}
               <ChatMain className={activeTab === 0 ? "friend" : "chat"}>

@@ -97,13 +97,6 @@ const ChatLayout = (props: ChatLayoutProps) => {
   const isModalType = useSelector((state: RootState) => state.modal.modalType);
   const isUser = useSelector((state: RootState) => state.user);
 
-  /* 채팅창이 닫힐 때 store에서 채팅창 닫힘 처리 */
-  useEffect(() => {
-    return () => {
-      dispatch(closeChatRoom());
-    };
-  }, []);
-
   /* 채팅방 입장 */
   const handleChatEnter = async () => {
     if (!isChatUuid) return;
