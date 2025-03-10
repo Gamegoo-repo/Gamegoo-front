@@ -109,7 +109,7 @@ const Auth = () => {
             }}
             placeholder="인증코드 입력"
             disabled={authStatusRedux}
-            isValid={authValid}
+            isvalid={authValid}
             errorMsg=""
             checkIcon={false}
           />

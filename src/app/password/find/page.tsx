@@ -71,7 +71,7 @@ const Find = () => {
             validateEmail(value);
           }}
           placeholder="이메일 주소"
-          isValid={emailValid}
+          isvalid={emailValid}
         />
         <Button
           buttonType="primary"

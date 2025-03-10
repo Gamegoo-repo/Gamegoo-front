@@ -92,7 +92,7 @@ const Guide = () => {
           setInputValid(value);
         }}
         placeholder="placeholder"
-        isValid={true}
+        isvalid={true}
       />
       <Input
         inputType="input"
@@ -102,7 +102,7 @@ const Guide = () => {
           setInputError(value);
         }}
         placeholder="placeholder"
-        isValid={false}
+        isvalid={false}
       />
       <Input
         inputType="password"
