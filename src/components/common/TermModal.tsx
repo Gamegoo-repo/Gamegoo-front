@@ -76,6 +76,9 @@ const Container = styled.div`
     width: 90%;
     height: 90%;
     min-width: 300px;
+    padding: 20px;
+    border-radius: 8px;
+    gap: 10px;
   }
 `;
 
@@ -103,6 +106,8 @@ const Content = styled.div`
 
   @media (max-width: 420px) {
     ${(props) => props.theme.fonts.medium11};
+    padding: 13px;
+    border-radius: 8px;
   }
   &::-webkit-scrollbar {
     width: 24px;
@@ -126,6 +131,9 @@ const Title = styled.div`
   position: relative;
   @media (max-width: 420px) {
     ${(props) => props.theme.fonts.bold16};
+  }
+  span {
+    margin-right: 5px;
   }
 `;
 
