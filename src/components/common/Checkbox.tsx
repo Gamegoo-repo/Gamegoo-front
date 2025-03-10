@@ -96,7 +96,7 @@ const Check = styled.input`
   appearance: none;
   width: 22px;
   height: 22px;
-  border: 0.3px solid ${theme.colors.gray500};
+  border: 1px solid ${theme.colors.gray500};
   background-color: ${theme.colors.white};
   border-radius: 2.8px;
   outline: none;

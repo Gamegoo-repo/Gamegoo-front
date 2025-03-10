@@ -38,27 +38,23 @@ const RiotLogin = () => {
     <Layout>
       <Container>
         <Box>
-          <button onClick={handleDirectMain}>
-            <Image
-              src="/assets/icons/logo.svg"
-              width={318}
-              height={87}
-              alt="GAMEGOO"
-            />
-          </button>
+          <Logo onClick={handleDirectMain}>
+            <Image src="/assets/icons/logo.svg" fill alt="GAMEGOO" />
+          </Logo>
           <P>GAMEGOO에 오신 것을 환영합니다.</P>
         </Box>
         <Box>
           <Title>{`서비스를 이용하려면\n라이엇 계정으로 로그인하세요`}</Title>
           <Content>
-            <Button
-              buttonType="riot"
-              text="라이엇 계정으로 시작하기"
-              icon="/assets/icons/riot.svg"
-              width="374px"
-              borderRadius="8px"
-              onClick={handleLogin}
-            />
+            <LoginButton>
+              <Button
+                buttonType="riot"
+                text="라이엇 계정으로 시작하기"
+                icon="/assets/icons/riot.svg"
+                onClick={handleLogin}
+              />
+            </LoginButton>
+
             <Check>
               <Checkbox
                 value="autoLogin"
@@ -73,7 +69,7 @@ const RiotLogin = () => {
         <Box>
           <Line />
           <Join href="https://signup.kr.riotgames.com">
-            라이엇 계정을 보유하고 있지 않습니다
+            라이엇 계정 만들기
             <Image
               src="/assets/icons/chevron_right.svg"
               width={16}
@@ -89,12 +85,28 @@ const RiotLogin = () => {
 
 export default RiotLogin;
 
+const Logo = styled.button`
+  position: relative;
+  width: 374px;
+  height: 87px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  @media (max-width: 420px) {
+    width: 234px;
+    height: 40px;
+    margin-bottom: 12px;
+  }
+`;
+
 const Layout = styled.div`
   width: 100%;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  @media (max-width: 420px) {
+    width: 90%;
+  }
 `;
 
 const Container = styled.div`
@@ -117,6 +129,10 @@ const P = styled.p`
   color: ${theme.colors.gray500};
   ${theme.fonts.regular16};
   margin-bottom: 100px;
+  @media (max-width: 420px) {
+    font-size: 13px;
+    margin-bottom: 70px;
+  }
 `;
 
 const Title = styled.div`
@@ -126,12 +142,24 @@ const Title = styled.div`
   padding: 0 40px;
   margin-bottom: 36px;
   text-align: center;
+  @media (max-width: 420px) {
+    font-size: 18px;
+    margin-bottom: 30px;
+    letter-spacing: -1px;
+  }
 `;
 
 const Content = styled.div`
   width: 100%;
 `;
 
+const LoginButton = styled.div`
+  width: 374px;
+  @media (max-width: 420px) {
+    width: 272px;
+    margin: 0 auto;
+  }
+`;
 const Check = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -140,6 +168,9 @@ const Check = styled.div`
   margin-top: 28px;
   color: ${theme.colors.gray800};
   ${theme.fonts.regular16};
+  @media (max-width: 420px) {
+    font-size: 14px;
+  }
 `;
 
 const Line = styled.div`

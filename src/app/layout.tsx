@@ -37,7 +37,7 @@ export default function RootLayout({
   const pathname = usePathname();
   const previousPathname = useRef(pathname);
   const isNotFoundPage = pathname === "/404" || pathname === "/not-found";
-  const isHeader = !(
+  const isHeaderFooterShow = !(
     isNotFoundPage ||
     pathname === "/login" ||
     pathname.includes("/join") ||
@@ -120,10 +120,12 @@ export default function RootLayout({
                 <SocketConnection key={isLoggedIn ? "loggedIn" : "loggedOut"} />
                 <Container>
                   <Main>
-                    {isHeader && <Header />}
+                    {isHeaderFooterShow && <Header />}
                     {children}
                   </Main>
-                  <Footer isShowChat={isHeader} />
+                  {isHeaderFooterShow && (
+                    <Footer isShowChat={isHeaderFooterShow} />
+                  )}
                 </Container>
               </Provider>
             </ThemeProvider>
