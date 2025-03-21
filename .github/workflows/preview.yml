@@ -1,0 +1,59 @@
+name: Preview
+
+on:
+  pull_request:
+    branches: ["main", "develop"]
+
+jobs:
+  vercel-preview:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pages: write
+      deployments: write
+      id-token: write
+      issues: write
+      pull-requests: write
+
+    env:
+      VERCEL_ORG_ID: ${{ secrets.GAMEGOO_VERCEL_ORG_ID }}
+
+      VERCEL_PROJECT_ID: ${{ secrets.GAMEGOO_VERCEL_PROJECT_ID }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Vercel CLI
+
+        run: npm install --global vercel@latest
+
+      - name: Get Vercel Environment Variables
+
+        run: vercel pull --yes --environment=preview --token=${{ secrets.GAMEGOO_VERCEL_TOKEN }}
+
+      - name: Build Project Artifacts
+
+        run: vercel build --token=${{ secrets.GAMEGOO_VERCEL_TOKEN }}
+
+      - name: Deploy Project Artifacts to Vercel
+
+        id: deploy
+
+        run: |
+
+          vercel deploy --prebuilt --token=${{ secrets.GAMEGOO_VERCEL_TOKEN }} > vercel-output.txt
+
+          echo "preview_url=$(cat vercel-output.txt)" >> $GITHUB_OUTPUT
+
+      - name: Comment PR with Preview URL
+
+        uses: thollander/actions-comment-pull-request@v2
+
+        with:
+          message: |
+            ## ✅ Deploy Preview Success
+            성공적으로 배포 미리보기가 진행되었습니다.
+            본 [링크](${{ steps.deploy.outputs.preview_url }})에서 배포 결과를 확인하세요!
+
+            <img src="https://github.com/user-attachments/assets/d005c1f2-4253-4759-b38a-b440c15ba243" width="50%" />
