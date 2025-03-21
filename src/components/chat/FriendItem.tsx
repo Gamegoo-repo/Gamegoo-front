@@ -76,7 +76,7 @@ const FriendItem = (props: FriendItemProps) => {
           src={
             friend.liked
               ? "/assets/icons/favorites.svg"
-              : "/assets/icons/nonFavorites.svg"
+              : "/assets/icons/non_favorites.svg"
           }
           width={36}
           height={36}
