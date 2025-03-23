@@ -140,10 +140,12 @@ const fonts = {
     weight: 600,
     size: 12,
   }),
+
   semiBold10: FONT({
     weight: 600,
     size: 10,
   }),
+
 
   /*Medium*/
   medium20: FONT({
