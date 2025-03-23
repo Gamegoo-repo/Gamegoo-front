@@ -151,14 +151,19 @@ const Header = () => {
         </LogoButton>
 
         <Menus>
-          <Menu
-            selected={pathname === "/"}
-            onClick={() => {
-              router.push("/");
-            }}
-          >
-            홈
-          </Menu>
+          {isMobile ? (
+            <Menu
+              selected={pathname === "/"}
+              onClick={() => {
+                router.push("/");
+              }}
+            >
+              홈
+            </Menu>
+          ) : (
+            <></>
+          )}
+
           <Menu
             selected={pathname.includes("/match")}
             onClick={() => {
@@ -171,7 +176,6 @@ const Header = () => {
           >
             바로 매칭
           </Menu>
-          {isMobile ? <></> : <Bar />}
           <Menu
             selected={pathname === "/board"}
             onClick={() => {
@@ -355,35 +359,32 @@ const LogoButton = styled.button`
 
 const Menus = styled.div`
   display: flex;
-  gap: 25px;
+  gap: 40px;
   flex-grow: 1;
   justify-content: flex-start;
+  margin-left: 70px;
+
   @media screen and (max-width: 700px) {
     width: 100%;
     grid-column: 1 / span 2;
     display: flex;
     gap: 42px;
-    margin-top: 10px;
+    margin: 10px 0 0;
     padding: 0 20px;
     border-bottom: 1px solid ${theme.colors.gray300};
   }
 `;
 
 const Menu = styled.button<HeaderProps>`
-  ${(props) => props.theme.fonts.regular14};
+  ${(props) => props.theme.fonts.regular20};
   font-weight: ${({ selected }) => (selected ? "700" : "400")};
 
   @media screen and (max-width: 700px) {
+    ${(props) => props.theme.fonts.regular14};
     padding: 10px 0;
     border-bottom: ${({ selected }) =>
       selected ? `3px solid ${theme.colors.gray800}` : "none"};
   }
-`;
-
-const Bar = styled.div`
-  width: 0.5px;
-  height: 18.5px;
-  background: #d7d7d7;
 `;
 
 const Right = styled.div`
