@@ -8,8 +8,10 @@ import { RootState } from "@/redux/store";
 import { toggleChat } from "@/redux/slices/chatSlice";
 import Layout from "../chat/Layout";
 import { resetPosition } from "@/redux/slices/chatPositionSlice";
+import useMediaQueries from "@/hooks/useMediaQueries";
 
 const ChatButton = () => {
+  const isMobile = useMediaQueries({ breakpoint: 700 });
   const [showAlert, setShowAlert] = useState(false);
   const [unreadChatUuids, setUnreadChatUuids] = useState<string[]>([]);
   const [chatCount, setChatCount] = useState<number>(0);
@@ -70,22 +72,55 @@ const ChatButton = () => {
         />
       )}
       {isChatOpen && <Layout />}
-      <MsgButton onClick={handleToggleChat}>
-        <Image
-          src="/assets/icons/chat_box.svg"
-          width={36}
-          height={34}
-          alt="채팅"
-        />
-        <MsgCount>
-          <Count>{chatCount}</Count>
-        </MsgCount>
-      </MsgButton>
+      {isMobile ? (
+        <MoMsgIconWrapper onClick={handleToggleChat}>
+          <Image
+            src="/assets/icons/chat.svg"
+            width={30}
+            height={30}
+            alt="logo"
+          />
+          <MoMsgCount>
+            <MoCount>{chatCount}</MoCount>
+          </MoMsgCount>
+        </MoMsgIconWrapper>
+      ) : (
+        <MsgButton onClick={handleToggleChat}>
+          <Image
+            src="/assets/icons/chat_box.svg"
+            width={36}
+            height={34}
+            alt="채팅"
+          />
+          <MsgCount>
+            <Count>{chatCount}</Count>
+          </MsgCount>
+        </MsgButton>
+      )}
     </>
   );
 };
 
 export default ChatButton;
+
+const MoMsgIconWrapper = styled.div`
+  position: relative;
+`;
+
+const MoMsgCount = styled.div`
+  position: absolute;
+  top: 0;
+  right: 5px;
+  width: 14px;
+  height: 14px;
+  line-height: 0%;
+  background: ${theme.colors.violet600};
+  border-radius: 50%;
+`;
+const MoCount = styled.p`
+  ${(props) => props.theme.fonts.semiBold10};
+  color: ${theme.colors.white};
+`;
 
 const MsgButton = styled.button`
   display: flex;
