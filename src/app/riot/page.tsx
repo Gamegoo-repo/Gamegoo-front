@@ -6,6 +6,7 @@ import { clearSignIn } from "@/redux/slices/signInSlice";
 import { clearUserProfile } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
 import { clearTokens } from "@/utils/storage";
+import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -27,7 +28,10 @@ const RiotLogin = () => {
   /* 로그인 */
   const handleLogin = async () => {
     // 추후 Riot 로그인 기능 구현
-    router.push("/join/terms");
+    window.location.href =
+      "https://auth.riotgames.com/authorize?redirect_uri=https://www.gamegoo.co.kr/oauth&client_id=43277efb-2a7d-488f-bb73-6c49c40d7099&response_type=code&scope=openid";
+
+    // router.push("/join/terms");
   };
 
   const handleDirectMain = () => {
