@@ -5,12 +5,28 @@ import GraphicBox from "@/components/match/GraphicBox";
 import { MATCH_TYPE_PAGE_DATA } from "@/constants/match";
 import HeaderTitle from "@/components/common/HeaderTitle";
 import ChevronRight from "../../../public/assets/icons/chevron_right.svg";
+import { getAccessToken } from "@/utils/storage";
+import Alert from "@/components/common/Alert";
 import { useState } from "react";
+
 const MatchTypePage = () => {
+  const accesssToken = getAccessToken(); // 로그인 유무 결정
+  const [showAlert, setShowAlert] = useState(false);
   const [hoveredBox, setHoveredBox] = useState<number | null>(null);
 
   return (
     <Wrapper>
+      {showAlert && (
+        <Alert
+          icon="exclamation"
+          width={68}
+          height={58}
+          content="로그인이 필요한 서비스입니다."
+          alt="경고"
+          onClose={() => setShowAlert(false)}
+          buttonText="확인"
+        />
+      )}
       <MatchContent>
         <HeaderTitle title="매칭 종류 선택" />
         <Main>
@@ -30,6 +46,7 @@ const MatchTypePage = () => {
                 } // Hover 시 배경 변경
                 onMouseEnter={() => setHoveredBox(box.id)}
                 onMouseLeave={() => setHoveredBox(null)}
+                onClick={accesssToken ? undefined : () => setShowAlert(true)}
               >
                 <GraphicBoxTitle>
                   <GraphicBoxTitleMain>

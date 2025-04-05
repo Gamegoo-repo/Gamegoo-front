@@ -16,6 +16,7 @@ interface GraphicBoxProps {
   backgroundColor?: string; // 추가: Hover 시 변경될 배경색을 전달받음
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
+  onClick?: () => void;
 }
 
 const GraphicBox = (props: GraphicBoxProps) => {
@@ -29,19 +30,24 @@ const GraphicBox = (props: GraphicBoxProps) => {
     height,
     top,
     left,
-    backgroundColor, // 추가
+    backgroundColor,
     onMouseEnter,
     onMouseLeave,
+    onClick,
   } = props;
 
   const handleClick = () => {
-    router.push(
-      type
-        ? rank
-          ? `${pathname}?type=${type}&rank=${rank}`
-          : `${pathname}?type=${type}`
-        : pathname
-    );
+    if (onClick) {
+      onClick();
+    } else {
+      router.push(
+        type
+          ? rank
+            ? `${pathname}?type=${type}&rank=${rank}`
+            : `${pathname}?type=${type}`
+          : pathname
+      );
+    }
   };
 
   return (
@@ -87,18 +93,6 @@ const Wrapper = styled.div<{
     `}
 `;
 
-const BackgroundImage = styled(Image)`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
-  img {
-    width: 580px;
-    height: 285px;
-  }
-`;
-
 const Box = styled.div`
   display: flex;
   justify-content: center;
@@ -113,7 +107,7 @@ const Title = styled.div<{ $top: string; $left: string }>`
   align-items: center;
   justify-content: center;
   text-align: center;
-  color: white;
+  color: ${theme.colors.white};
   ${(props) => props.theme.fonts.bold25};
   line-height: 37px;
   white-space: nowrap;

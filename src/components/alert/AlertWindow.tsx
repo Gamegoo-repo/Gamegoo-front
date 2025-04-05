@@ -13,11 +13,11 @@ import { Notification } from "@/types/notification/notification";
 interface AlertWindowProps {
   countFunc: () => void;
   onClose: () => void;
+  alertButtonRef: React.RefObject<HTMLButtonElement>;
 }
-
 const AlertWindow = (props: AlertWindowProps) => {
   const router = useRouter();
-  const { countFunc, onClose } = props;
+  const { countFunc, onClose, alertButtonRef } = props;
 
   const alertWindowRef = useRef<HTMLDivElement>(null);
 
@@ -30,7 +30,11 @@ const AlertWindow = (props: AlertWindowProps) => {
     (event: MouseEvent) => {
       if (
         alertWindowRef.current &&
-        !alertWindowRef.current.contains(event.target as Node)
+        !alertWindowRef.current.contains(event.target as Node) &&
+        !(
+          alertButtonRef.current &&
+          alertButtonRef.current.contains(event.target as Node)
+        )
       ) {
         onClose();
       }
@@ -201,7 +205,7 @@ const Top = styled.div`
 
 const HeaderTitle = styled.p`
   ${(props) => props.theme.fonts.bold20};
-  color: ${theme.colors.gray600};
+  color: ${theme.colors.gray800};
 `;
 
 const AllButton = styled.button`
@@ -222,7 +226,7 @@ const Tab = styled.button`
   position: relative;
   padding: 4px 0;
   ${(props) => props.theme.fonts.semiBold14};
-  color: ${theme.colors.gray600};
+  color: ${theme.colors.gray800};
   &:after {
     content: "";
     position: absolute;

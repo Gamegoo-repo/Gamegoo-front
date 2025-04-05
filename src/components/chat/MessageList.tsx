@@ -78,7 +78,6 @@ const MessageList = (props: MessageListProps) => {
   );
 
   const router = useRouter();
-
   const { newMessage, mannerSystemMessage } = useChatMessage();
 
   /* 매너 시스템 소켓 이벤트 리스닝 */
@@ -114,7 +113,20 @@ const MessageList = (props: MessageListProps) => {
   useEffect(() => {
     if (chatEnterData.uuid !== currentChatUuid) return;
 
-    if (newMessage) {
+    if (chatEnterData.uuid === "guest") {
+      setMessageList((prevMessages) => {
+        if (systemMessage && !isSystemMessageShown) {
+          const systemMessageAsChatMessage: ChatMessageDto = {
+            ...systemMessage,
+            createdAt: new Date().toISOString(),
+            timestamp: new Date().getTime(),
+          };
+          // 시스템 메시지를 맨 앞에, 그 뒤에 이전 메시지들을 추가
+          return [systemMessageAsChatMessage, ...prevMessages];
+        }
+        return prevMessages;
+      });
+    } else if (newMessage) {
       setMessageList((prevMessages) => {
         let updatedMessages = [...prevMessages];
 
@@ -379,14 +391,14 @@ const MessageList = (props: MessageListProps) => {
                     <FeedbackDiv>
                       <FeedbackContainer>
                         <Feedback>
-                          <Text>매칭은 어떠셨나요?</Text>
-                          <Text>상대방의 매너를 평가해주세요!</Text>
                           <SmileImage
                             src="/assets/icons/clicked_smile.svg"
                             width={22}
                             height={22}
                             alt="스마일 이모티콘"
                           />
+                          <Text>매칭은 어떠셨나요?</Text>
+                          <Text>상대방의 매너를 평가해주세요!</Text>
                           <StyledButton onClick={handleMannerEvaluate}>
                             매너평가 하기
                           </StyledButton>
@@ -507,14 +519,11 @@ const LoadingContainer = styled.div`
 const MsgContainer = styled.div``;
 
 const Timestamp = styled.p`
-  max-width: 79px;
-  margin: 0 auto 10px;
+  margin: 10px auto;
   text-align: center;
-  background: #000000a3;
   border-radius: 14px;
-  padding: 4px 10px;
-  ${(props) => props.theme.fonts.regular8};
-  color: ${theme.colors.white};
+  ${(props) => props.theme.fonts.medium11};
+  color: ${theme.colors.gray700};
   white-space: nowrap;
 `;
 
@@ -559,8 +568,8 @@ const YourMessage = styled.div`
 
 const YourDate = styled.p`
   margin-left: 9px;
-  ${(props) => props.theme.fonts.regular8};
-  color: ${theme.colors.gray700};
+  ${(props) => props.theme.fonts.regular9};
+  color: ${theme.colors.violet400};
 `;
 
 const MyMessageContainer = styled.div`
@@ -619,16 +628,17 @@ const Feedback = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 18px 15px 10px;
+  border: 1px solid ${theme.colors.violet300};
   background: ${theme.colors.white};
   border-radius: 13px;
 `;
 
 const SmileImage = styled(Image)`
-  margin-top: 12px;
+  margin-bottom: 7px;
 `;
 
 const Text = styled.p`
-  ${(props) => props.theme.fonts.regular14};
+  ${(props) => props.theme.fonts.regular13};
   color: ${theme.colors.gray800};
   &:first-child {
     margin-bottom: 5px;
@@ -636,10 +646,10 @@ const Text = styled.p`
 `;
 
 const StyledButton = styled.button`
-  width: 100%;
+  width: 119px;
   border-radius: 53px;
   margin-top: 12px;
-  ${(props) => props.theme.fonts.semiBold12};
+  ${(props) => props.theme.fonts.semiBold13};
   background: ${theme.colors.violet600};
   color: ${theme.colors.white};
   padding: 10px 0;

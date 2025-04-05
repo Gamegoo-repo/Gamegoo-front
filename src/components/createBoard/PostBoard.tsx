@@ -101,9 +101,9 @@ const PostBoard = (props: PostBoardProps) => {
       setSelectedDropOption(currentPost.gameMode);
 
       setPositionValue({
-        main: currentPost.mainP,
-        sub: currentPost.subP,
-        want: currentPost.wantP,
+        main: currentPost.mainP || "ANY",
+        sub: currentPost.subP || "ANY",
+        want: currentPost.wantP || [],
       });
 
       setSelectedImageIndex(currentPost.profileImage);
@@ -229,7 +229,13 @@ const PostBoard = (props: PostBoardProps) => {
       contents: textareaValue,
       mainP: isARAM ? "ANY" : positionValue?.main,
       subP: isARAM ? "ANY" : positionValue?.sub,
-      wantP: isARAM ? ["ANY", "ANY"] : positionValue?.want,
+      wantP: isARAM
+        ? ["ANY"]
+        : Array.isArray(positionValue?.want)
+        ? positionValue?.want.length > 0
+          ? positionValue?.want
+          : ["ANY"]
+        : ["ANY"],
     };
 
     console.log("params", params);
@@ -323,9 +329,15 @@ const PostBoard = (props: PostBoardProps) => {
             <PositionBox
               status="posting"
               onPositionChange={handlePositionChange}
-              main={positionValue?.main}
-              sub={positionValue?.sub}
-              want={positionValue?.want}
+              main={positionValue?.main || null}
+              sub={positionValue?.sub || null}
+              want={
+                Array.isArray(positionValue?.want) &&
+                positionValue.want.length === 1 &&
+                positionValue.want[0] === "ANY"
+                  ? []
+                  : positionValue?.want || null
+              }
             />
           </PositionSection>
         )}

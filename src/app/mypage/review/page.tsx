@@ -8,7 +8,10 @@ import { useEffect, useState } from "react";
 import { Manner } from "@/components/user/UserProfile";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { getMemberMannerKeyword, getMemberMannerLevel } from "@/api/manner";
+import {
+  getMemberMannerKeyword,
+  getMemberMannerLevel,
+} from "@/api/manner/manner";
 
 const MyReviewPage = () => {
   const myId = useSelector((state: RootState) => state.user.id);

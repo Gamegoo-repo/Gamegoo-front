@@ -27,6 +27,7 @@ const Terms = () => {
   const [modalData, setModalData] = useState<{
     title: string;
     content: string;
+    isRequired: boolean;
     index: number;
   } | null>(null);
 
@@ -71,14 +72,15 @@ const Terms = () => {
   };
   return (
     <Div>
-      <Label>아래 이용 약관을 확인해주세요.</Label>
+      {/* <Label>아래 이용 약관을 확인해주세요.</Label> */}
       {modalData && (
         <TermModal
           title={modalData.title}
           content={modalData.content}
+          isRequired={modalData.isRequired}
           onClose={closeModal}
         >
-          <Checkbox
+          {/* <Checkbox
             value="terms"
             isChecked={terms[modalData.index]}
             onChange={(isChecked) =>
@@ -93,7 +95,7 @@ const Terms = () => {
                 modalData.index
               ].text
             }
-          </Checkbox>
+          </Checkbox> */}
         </TermModal>
       )}
       <CheckList>
@@ -144,4 +146,7 @@ const CheckList = styled.div`
   align-items: flex-start;
   gap: 25px;
   margin-bottom: 45px;
+  @media (max-width: 420px) {
+    margin-bottom: 94px;
+  }
 `;

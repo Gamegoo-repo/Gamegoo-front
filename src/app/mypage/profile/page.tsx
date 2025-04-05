@@ -135,7 +135,7 @@ const MyProfilePage = () => {
                   setIsPasswordValid(undefined);
                 }}
                 placeholder="현재 비밀번호 입력"
-                isValid={isPasswordValid}
+                isvalid={isPasswordValid}
               />
             </ModalContent>
           </ConfirmModal>

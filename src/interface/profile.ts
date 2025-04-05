@@ -24,9 +24,9 @@ export interface User {
   freeTier: string;
   soloRank: number;
   freeRank: number;
-  mannerLevel: number;
-  mannerRank?: null | number;
-  mannerRatingCount?: number;
+  // mannerLevel: number;
+  // mannerRank?: null | number;
+  // mannerRatingCount?: number;
   updatedAt: string;
   mainP: Position;
   subP: Position;

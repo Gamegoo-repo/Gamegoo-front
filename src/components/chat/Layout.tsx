@@ -8,6 +8,7 @@ import {
   closeChatRoom,
   openChatRoom,
   setChatRoomUuid,
+  setActiveTab,
 } from "@/redux/slices/chatSlice";
 import SearchBar from "./SearchBar";
 import ChatRoomList from "./ChatRoomList";
@@ -21,7 +22,7 @@ import {
   getMannerValues,
   postBadMannerValue,
   postMannerValue,
-} from "@/api/manner";
+} from "@/api/manner/manner";
 import ConfirmModal from "../common/ConfirmModal";
 import { leaveChatroom } from "@/api/chat/chat";
 import { setCloseModal, setOpenModal } from "@/redux/slices/modalSlice";
@@ -40,16 +41,17 @@ import ChatFriendList from "./ChatFriendList";
 import { patchFriendStar } from "@/api/friend/star";
 import { blockMember } from "@/api/block/block";
 import Tabs from "./Tabs";
-import { resetPosition, setPosition } from "@/redux/slices/chatPositionSlice";
+import { getAccessToken } from "@/utils/storage";
+import useDrag from "@/hooks/useDrag";
 
 const Layout = () => {
   const dispatch = useDispatch();
   /* 채팅창 위치 관련 상태 */
   const position = useSelector((state: RootState) => state.chatPosition);
-  const [isDragging, setIsDragging] = useState(false);
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const activeTab = useSelector((state: RootState) => state.chat.activeTab);
+  // const [isDragging, setIsDragging] = useState(false);
+  // const [offset, setOffset] = useState({ x: 0, y: 0 });
 
-  const [activeTab, setActiveTab] = useState(0);
   const [friends, setFriends] = useState<FriendList[]>([]);
   const [favoriteFriends, setFavoriteFriends] = useState<FriendList[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -80,36 +82,6 @@ const Layout = () => {
   const isModalType = useSelector((state: RootState) => state.modal.modalType);
 
   /* 채팅창 위치 관련 함수 */
-  // 드래그 시작
-  const handleDragStart = (e: React.MouseEvent<HTMLDivElement>) => {
-    setIsDragging(true);
-    const overlay = e.currentTarget.parentElement;
-    if (overlay) {
-      const rect = overlay.getBoundingClientRect();
-      setOffset({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-      });
-    }
-  };
-
-  // 드래그 이동
-  const handleDrag = (e: MouseEvent) => {
-    if (!isDragging) return;
-
-    const left = `${e.clientX - offset.x}px`;
-    const top = `${e.clientY - offset.y}px`;
-    const adjustedPosition = adjustPosition({ top, left });
-    setPosition(adjustedPosition);
-
-    dispatch(setPosition(adjustedPosition));
-  };
-
-  // 드래그 종료
-  const handleDragEnd = () => {
-    setIsDragging(false);
-  };
-
   // 경계 제한 로직
   const adjustPosition = ({ top, left }: { top: string; left: string }) => {
     const overlayWidth = 420;
@@ -131,20 +103,8 @@ const Layout = () => {
     return { top: `${topValue}px`, left: `${leftValue}px` };
   };
 
-  // 마우스 이동 이벤트 등록 및 해제
-  useEffect(() => {
-    if (isDragging) {
-      window.addEventListener("mousemove", handleDrag);
-      window.addEventListener("mouseup", handleDragEnd);
-    } else {
-      window.removeEventListener("mousemove", handleDrag);
-      window.removeEventListener("mouseup", handleDragEnd);
-    }
-    return () => {
-      window.removeEventListener("mousemove", handleDrag);
-      window.removeEventListener("mouseup", handleDragEnd);
-    };
-  }, [isDragging]);
+  /* useDrag 커스텀 훅 */
+  const { handleDragStart } = useDrag(position, adjustPosition);
 
   useEffect(() => {
     console.log(position.left, position.top);
@@ -166,6 +126,9 @@ const Layout = () => {
   /* 친구 목록 가져오기 */
   const handleFetchFriendsList = async () => {
     setIsLoading(true);
+    const accessToken = getAccessToken();
+    if (!accessToken) return;
+
     try {
       const response = await getFriendsList();
       const friendsList = response.data.friendInfoList;
@@ -227,30 +190,41 @@ const Layout = () => {
   ) => {
     event.stopPropagation();
 
-    // friends 배열과 검색된 친구 목록에서 해당 친구 찾기
-    const friend = friends.find((f) => f.memberId === friendId);
-    if (friend) {
-      const newLikedStatus = !friend.liked;
-
+    try {
+      const response = await patchFriendStar(friendId);
+      console.log(response.data.friendMemberId);
+      const updatedFriendId = response.data.friendMemberId;
       // friends 상태 업데이트
       setFriends((prevFriends) =>
         prevFriends.map((f) =>
-          f.memberId === friendId ? { ...f, isLiked: newLikedStatus } : f
+          f.memberId === updatedFriendId ? { ...f, liked: !f.liked } : f
         )
       );
 
       // favoriteFriends 상태 업데이트
-      setFavoriteFriends((prevFavorites) =>
-        newLikedStatus
-          ? [...prevFavorites, { ...friend, isLiked: newLikedStatus }]
-          : prevFavorites.filter((f) => f.memberId !== friendId)
-      );
+      setFavoriteFriends((prevFavorites) => {
+        const isCurrentlyFavorite = prevFavorites.some(
+          (f) => f.memberId === updatedFriendId
+        );
 
-      try {
-        await patchFriendStar(friendId);
-      } catch (error) {
-        console.error(error);
-      }
+        if (isCurrentlyFavorite) {
+          // 이미 즐겨찾기 상태면 제거
+          return prevFavorites.filter((f) => f.memberId !== updatedFriendId);
+        } else {
+          // 즐겨찾기에 추가
+          const updatedFriend = friends.find(
+            (f) => f.memberId === updatedFriendId
+          );
+          return updatedFriend
+            ? [
+                ...prevFavorites,
+                { ...updatedFriend, liked: !updatedFriend.liked },
+              ]
+            : prevFavorites;
+        }
+      });
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -511,7 +485,7 @@ const Layout = () => {
                   onClick={(e) => {
                     e.stopPropagation();
                     dispatch(closeChat());
-                    dispatch(resetPosition());
+                    // dispatch(resetPosition());
                   }}
                   onMouseDown={(e) => {
                     e.stopPropagation();
@@ -528,7 +502,7 @@ const Layout = () => {
               <Tabs
                 tabs={tabs}
                 activeTab={activeTab}
-                onTabClick={setActiveTab}
+                onTabClick={(index: number) => dispatch(setActiveTab(index))}
               />
               {activeTab === 0 && <SearchBar onSearch={handleSearch} />}
               <ChatMain className={activeTab === 0 ? "friend" : "chat"}>
@@ -790,7 +764,7 @@ const Header = styled.div`
 
 const HeaderTitle = styled.p`
   ${(props) => props.theme.fonts.bold20};
-  color: ${theme.colors.gray600};
+  color: ${theme.colors.gray800};
 `;
 
 const CloseButton = styled.button`
@@ -808,7 +782,6 @@ const ChatMain = styled.div`
   background: ${theme.colors.white};
   &.friend {
     box-shadow: none;
-    padding-right: 6px;
   }
   &.chat {
     box-shadow: inset 0 0 4.7px 0 #00000026;
