@@ -3,7 +3,7 @@ import { ApiResponse } from "../api";
 import { FriendList } from "@/types/friend/friendList";
 
 interface FriendStatusData {
-  targetMemberId: number;
+  friendMemberId: number;
   message: string;
 }
 

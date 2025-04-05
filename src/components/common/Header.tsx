@@ -23,11 +23,13 @@ import {
 } from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
 import Alert from "./Alert";
+import ChatButton from "./ChatButton";
 import { setNotiCount } from "@/redux/slices/notiSlice";
 import { socketLogout } from "@/api/socket";
 import { closeChat } from "@/redux/slices/chatSlice";
 import { postLogout } from "@/api/login/logout";
 import { getUnreadNotificationCount } from "@/api/notification/notification";
+import useMediaQueries from "@/hooks/useMediaQueries";
 
 interface HeaderProps {
   selected: boolean;
@@ -36,6 +38,7 @@ interface HeaderProps {
 const Header = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const isMobile = useMediaQueries({ breakpoint: 700 });
   const pathname = usePathname();
   const [isAlertWindow, setIsAlertWindow] = useState<Boolean>(false);
   const [isMyPage, setIsMyPage] = useState<Boolean>(false);
@@ -44,6 +47,9 @@ const Header = () => {
   const name = useSelector((state: RootState) => state.user.gameName);
   const profileImg = useSelector((state: RootState) => state.user.profileImg);
   const notiCount = useSelector((state: RootState) => state.noti.count);
+
+  const alertButtonRef = useRef<HTMLButtonElement>(null);
+  const myPageDivRef = useRef<HTMLDivElement>(null);
 
   const myPageRef = useRef<HTMLDivElement>(null);
   const [showAlert, setShowAlert] = useState(false);
@@ -67,15 +73,20 @@ const Header = () => {
   }, []);
 
   /* 알림창 열고 닫는 함수 */
-  const handleAlertWindow = () => {
-    setIsAlertWindow(!isAlertWindow);
+  const handleAlertWindow = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setIsAlertWindow((prev) => !prev);
   };
 
-  /* 외부 영역 클릭시 팝업 닫힘 */
+  /* 마이페이지 모달 외부 영역 클릭시 팝업 닫힘 */
   const handleClickOutside = (event: MouseEvent) => {
     if (
       myPageRef.current &&
-      !myPageRef.current.contains(event.target as Node)
+      !myPageRef.current.contains(event.target as Node) &&
+      !(
+        myPageDivRef.current &&
+        myPageDivRef.current.contains(event.target as Node)
+      )
     ) {
       setIsMyPage(false);
     }
@@ -125,8 +136,9 @@ const Header = () => {
           buttonText="확인"
         />
       )}
+
       <HeaderBar>
-        <Left>
+        <LogoButton>
           <Link href="/">
             <Image
               src="/assets/icons/logo.svg"
@@ -136,42 +148,71 @@ const Header = () => {
               priority
             />
           </Link>
-          <Menus>
+        </LogoButton>
+
+        <Menus>
+          {isMobile ? (
             <Menu
-              selected={pathname.includes("/match")}
+              selected={pathname === "/"}
               onClick={() => {
-                if (!accesssToken) {
-                  setShowAlert(true);
-                } else {
-                  router.push("/match");
-                }
+                router.push("/");
               }}
             >
-              바로 매칭
+              홈
             </Menu>
-            <Bar />
-            <Menu
-              selected={pathname === "/board"}
-              onClick={() => {
-                router.push("/board");
-              }}
-            >
-              매칭 게시판
-            </Menu>
-          </Menus>
-        </Left>
+          ) : (
+            <></>
+          )}
+
+          <Menu
+            selected={pathname.includes("/match")}
+            onClick={() => {
+              if (!accesssToken) {
+                setShowAlert(true);
+              } else {
+                router.push("/match");
+              }
+            }}
+          >
+            바로 매칭
+          </Menu>
+          <Menu
+            selected={pathname === "/board"}
+            onClick={() => {
+              router.push("/board");
+            }}
+          >
+            {isMobile ? "게시판" : "매칭 게시판"}
+          </Menu>
+        </Menus>
         {accesssToken && name && profileImg ? (
           <Right>
-            <Image
-              src={`/assets/icons/noti_${notiCount > 0 ? "on" : "off"}.svg`}
-              width={24}
-              height={30}
-              alt="noti"
-              onClick={handleAlertWindow}
-            />
+            <IconButton>
+              <Image
+                src={`/assets/icons/noti_${notiCount > 0 ? "on" : "off"}.svg`}
+                width={24}
+                height={30}
+                alt="noti"
+                onClick={handleAlertWindow}
+              />
+            </IconButton>
+            {isMobile ? (
+              <IconButton>
+                <ChatButton />
+              </IconButton>
+            ) : (
+              <></>
+            )}
+
             <Profile
+              ref={myPageDivRef}
               className="profile"
               onClick={() => {
+                if (isMobile) {
+                  router.push("/mypage/profile");
+                  return;
+                }
+
                 setIsMyPage(!isMyPage);
               }}
             >
@@ -182,13 +223,19 @@ const Header = () => {
                   height={25}
                 />
               </HeaderProfileImgWrapper>
-              {name}
-              <Image
-                src="/assets/icons/chevron_down.svg"
-                width={7}
-                height={7}
-                alt="more"
-              />
+              {isMobile ? (
+                <></>
+              ) : (
+                <>
+                  {name}
+                  <Image
+                    src="/assets/icons/chevron_down.svg"
+                    width={7}
+                    height={7}
+                    alt="more"
+                  />
+                </>
+              )}
             </Profile>
           </Right>
         ) : (
@@ -199,6 +246,7 @@ const Header = () => {
         <AlertWindow
           countFunc={fetchNotiCount}
           onClose={() => setIsAlertWindow(false)}
+          alertButtonRef={alertButtonRef}
         />
       )}
       {isMyPage && (
@@ -291,36 +339,73 @@ const HeaderBar = styled.div`
   align-items: center;
   justify-content: space-between;
   white-space: nowrap;
+
+  @media screen and (max-width: 700px) {
+    width: 90%;
+    padding: 0;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto auto;
+    align-items: center;
+  }
+`;
+
+const LogoButton = styled.button`
+  @media screen and (max-width: 700px) {
+    grid-column: 1;
+    justify-self: start;
+  }
 `;
 
 const Menus = styled.div`
   display: flex;
-  gap: 25px;
+  gap: 40px;
+  flex-grow: 1;
+  justify-content: flex-start;
+  margin-left: 70px;
+
+  @media screen and (max-width: 700px) {
+    width: 100%;
+    grid-column: 1 / span 2;
+    display: flex;
+    gap: 42px;
+    margin: 10px 0 0;
+    padding: 0 20px;
+    border-bottom: 1px solid ${theme.colors.gray300};
+  }
 `;
 
 const Menu = styled.button<HeaderProps>`
-  ${(props) => props.theme.fonts.regular14};
+  ${(props) => props.theme.fonts.regular20};
   font-weight: ${({ selected }) => (selected ? "700" : "400")};
-`;
 
-const Bar = styled.div`
-  width: 0.5px;
-  height: 18.5px;
-  background: #d7d7d7;
-`;
-
-const Left = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 60px;
+  @media screen and (max-width: 700px) {
+    ${(props) => props.theme.fonts.regular14};
+    padding: 10px 0;
+    border-bottom: ${({ selected }) =>
+      selected ? `3px solid ${theme.colors.gray800}` : "none"};
+  }
 `;
 
 const Right = styled.div`
   display: flex;
   align-items: center;
   gap: 20px;
+  @media screen and (max-width: 700px) {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+  }
 `;
 
+const IconButton = styled.button`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  &:active {
+    background-color: ${theme.colors.violet100};
+  }
+`;
 const Profile = styled.div`
   display: flex;
   align-items: center;
