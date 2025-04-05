@@ -53,15 +53,6 @@ const HomeContent = styled.div`
   padding: 0px 80px;
 `;
 
-const Header = styled.header`
-  margin-bottom: 35px;
-`;
-
-const SubTitle = styled.div`
-  ${(props) => props.theme.fonts.regular25};
-  color: #44515c;
-`;
-
 const Main = styled.main`
   width: 100%;
   display: flex;

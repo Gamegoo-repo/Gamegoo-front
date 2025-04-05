@@ -10,9 +10,9 @@ import Alert from "@/components/common/Alert";
 import { useState } from "react";
 
 const MatchTypePage = () => {
-  const [hoveredBox, setHoveredBox] = useState<number | null>(null);
   const accesssToken = getAccessToken(); // 로그인 유무 결정
   const [showAlert, setShowAlert] = useState(false);
+  const [hoveredBox, setHoveredBox] = useState<number | null>(null);
 
   return (
     <Wrapper>

@@ -2,7 +2,6 @@ import { DefaultTheme } from "styled-components";
 
 const colors = {
   white: "#ffffff",
-  //   black: "#393939",
 
   violet100: "#F0F0FC",
   violet200: "#DFDEFF",
@@ -13,11 +12,6 @@ const colors = {
   violet700: "#452AEA",
   violet800: "#2811BA",
   violet900: "#1C0A88",
-  // purple100: "#5A42EE",
-  // purple200: "#9F90F9",
-  // purple300: "#C1B7FF",
-  // purple400: "#E3DEFF",
-  // purple500: "#F2F0FC",
 
   gray100: "#F1F5FA",
   gray200: "#EDF2F8",
@@ -28,30 +22,18 @@ const colors = {
   gray700: "#41454A",
   gray800: "#2E3032",
   gray900: "#191B1E",
-  //   gray100: "#393939",
-  //   gray200: "#8C8C96",
-  //   gray300: "#C5C5C7",
-  //   gray400: "#E2E2E2",
-  //   gray500: "#F7F7F9",
-  //   gray600: "#2D2D2D",
-  //   gray700: "#44515C",
-  //   gray800: "#606060",
 
   red100: "#FEF2F2",
   red400: "#FF9090",
   red500: "#FF5252",
   red600: "#F52E2E",
   red900: "#5C0E0E",
-  //   error100: "#FF5252",
-  //   error200: "#FF7474",
 
   green100: "#EAFFEF",
   green400: "#8AEA9F",
   green500: "#69D180",
   green600: "#41BF5D",
   green900: "#165524",
-
-  //   darkGray100: "#7C7C7C",
 } as const;
 
 interface Font {
@@ -140,6 +122,12 @@ const fonts = {
     weight: 600,
     size: 12,
   }),
+
+  semiBold10: FONT({
+    weight: 600,
+    size: 10,
+  }),
+
 
   /*Medium*/
   medium20: FONT({

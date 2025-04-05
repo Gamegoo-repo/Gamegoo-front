@@ -30,7 +30,7 @@ const GraphicBox = (props: GraphicBoxProps) => {
     height,
     top,
     left,
-    backgroundColor, // 추가
+    backgroundColor,
     onMouseEnter,
     onMouseLeave,
     onClick,
@@ -93,18 +93,6 @@ const Wrapper = styled.div<{
     `}
 `;
 
-const BackgroundImage = styled(Image)`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
-  img {
-    width: 580px;
-    height: 285px;
-  }
-`;
-
 const Box = styled.div`
   display: flex;
   justify-content: center;
@@ -119,7 +107,7 @@ const Title = styled.div<{ $top: string; $left: string }>`
   align-items: center;
   justify-content: center;
   text-align: center;
-  color: white;
+  color: ${theme.colors.white};
   ${(props) => props.theme.fonts.bold25};
   line-height: 37px;
   white-space: nowrap;
