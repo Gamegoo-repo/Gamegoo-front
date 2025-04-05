@@ -13,7 +13,7 @@ const Oauth = () => {
         formData.append("code", CODE || "");
         formData.append("redirect_uri", "https://www.gamegoo.co.kr/oauth");
         const response = await axios.post(
-          `https://auth.riotgames.com.token`,
+          `https://auth.riotgames.com/token`,
           formData,
           {
             auth: {
