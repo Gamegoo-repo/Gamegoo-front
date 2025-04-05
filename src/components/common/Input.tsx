@@ -12,7 +12,7 @@ interface InputProps {
   onChange: (value: string) => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   placeholder?: string;
-  isValid?: null | boolean;
+  isvalid?: null | boolean;
   disabled?: boolean;
   height?: string;
   errorMsg?: string;
@@ -37,7 +37,7 @@ const Input = (props: InputProps) => {
     onChange,
     onKeyDown,
     placeholder,
-    isValid,
+    isvalid,
     disabled,
     height,
     errorMsg = "사용불가",
@@ -81,7 +81,7 @@ const Input = (props: InputProps) => {
             onChange={handleChange}
             onKeyDown={onKeyDown}
             placeholder={placeholder}
-            isValid={isValid}
+            isvalid={isvalid}
             disabled={disabled}
             $borderradius={borderRadius || "15px"}
             height={height}
@@ -90,9 +90,9 @@ const Input = (props: InputProps) => {
             onBlur={onBlur}
           />
           {tag && <Tag>#</Tag>}
-          {isValid !== undefined && (
+          {isvalid !== undefined && (
             <Valid>
-              {isValid === true && checkIcon === true && (
+              {isvalid === true && checkIcon === true && (
                 <Image
                   src="/assets/icons/check.svg"
                   width={19}
@@ -100,7 +100,7 @@ const Input = (props: InputProps) => {
                   alt="check"
                 />
               )}
-              {isValid === false && <Error>{errorMsg}</Error>}
+              {isvalid === false && <Error>{errorMsg}</Error>}
             </Valid>
           )}
         </Box>
@@ -131,10 +131,10 @@ const StyledInput = styled.input<InputProps>`
   padding: ${({ $hastag }) => ($hastag ? "11px 30px" : "11px 20px")};
   border-radius: ${({ $borderradius }) =>
     $borderradius ? $borderradius : "15px"};
-  border: ${({ isValid }) =>
-    isValid === undefined
+  border: ${({ isvalid }) =>
+    isvalid === undefined
       ? `1px solid ${theme.colors.gray400}`
-      : isValid === true
+      : isvalid === true
       ? `1px solid ${theme.colors.violet300}`
       : `1px solid ${theme.colors.red600}`};
   color: ${theme.colors.gray900};
@@ -142,8 +142,8 @@ const StyledInput = styled.input<InputProps>`
 
   &:focus {
     outline: none;
-    border: ${({ isValid }) =>
-      isValid === undefined && `1px solid ${theme.colors.violet300}`};
+    border: ${({ isvalid }) =>
+      isvalid === undefined && `1px solid ${theme.colors.violet300}`};
   }
 
   &:disabled {

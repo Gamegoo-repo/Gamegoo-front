@@ -115,7 +115,7 @@ const Summoner = () => {
           }}
           placeholder="소환사명"
           errorMsg=""
-          isValid={isCheckRiot}
+          isvalid={isCheckRiot}
         />
         <Input
           inputType="input"
@@ -128,7 +128,7 @@ const Summoner = () => {
           placeholder="소환사 태그 (예시 : #KR1)"
           tag={true}
           errorMsg=""
-          isValid={isCheckRiot}
+          isvalid={isCheckRiot}
         />
       </Row>
       <Error>{errorMsg}</Error>
