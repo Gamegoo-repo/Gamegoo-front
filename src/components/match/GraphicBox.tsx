@@ -13,7 +13,9 @@ interface GraphicBoxProps {
   height: string;
   top: string;
   left: string;
-  background?: string | undefined;
+  backgroundColor?: string; // 추가: Hover 시 변경될 배경색을 전달받음
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
   onClick?: () => void;
 }
 
@@ -28,11 +30,13 @@ const GraphicBox = (props: GraphicBoxProps) => {
     height,
     top,
     left,
-    background,
+    backgroundColor,
+    onMouseEnter,
+    onMouseLeave,
     onClick,
   } = props;
 
-  const hadleClick = () => {
+  const handleClick = () => {
     if (onClick) {
       onClick();
     } else {
@@ -45,29 +49,23 @@ const GraphicBox = (props: GraphicBoxProps) => {
       );
     }
   };
+
   return (
-    <>
-      <Wrapper
-        onClick={hadleClick}
-        $width={width}
-        $height={height}
-        $background={background === ""}
-      >
-        {background && (
-          <BackgroundImage
-            src={background}
-            width={580}
-            height={285}
-            alt="graphic"
-          />
-        )}
-        <Box>
-          <Title $top={top} $left={left}>
-            {children}
-          </Title>
-        </Box>
-      </Wrapper>
-    </>
+    <Wrapper
+      onClick={handleClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      $width={width}
+      $height={height}
+      style={{ backgroundColor }} // background-color 동적 적용
+      $background={backgroundColor ? true : false}
+    >
+      <Box>
+        <Title $top={top} $left={left}>
+          {children}
+        </Title>
+      </Box>
+    </Wrapper>
   );
 };
 
@@ -79,7 +77,7 @@ const Wrapper = styled.div<{
   $background: boolean;
 }>`
   position: relative;
-  max-width: ${(props) => (props.$width ? props.$width : undefined)};
+  max-width: ${(props) => (props.$width ? props.$width : "auto")};
   width: 100%;
   height: ${(props) => props.$height};
   border-radius: 30px;
@@ -95,27 +93,21 @@ const Wrapper = styled.div<{
     `}
 `;
 
-const BackgroundImage = styled(Image)`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
-  img {
-    width: 580px;
-    height: 285px;
-  }
+const Box = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  height: 100%;
 `;
 
-const Box = styled.div``;
-
 const Title = styled.div<{ $top: string; $left: string }>`
-  position: absolute;
-  top: ${(props) => props.$top};
-  left: ${(props) => props.$left};
-  transform: ${(props) =>
-    props.$top !== "50%" ? undefined : `translate(-50%, -50%);`};
-  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: ${theme.colors.white};
   ${(props) => props.theme.fonts.bold25};
   line-height: 37px;
   white-space: nowrap;

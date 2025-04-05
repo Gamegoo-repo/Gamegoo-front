@@ -2,9 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { MATCH_PAGE_DATA } from "@/constants/match";
-import Image from "next/image";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
+import Banner from "@/components/common/Banner";
 
 const HomePage = () => {
   const router = useRouter();
@@ -12,16 +12,7 @@ const HomePage = () => {
   return (
     <Wrapper>
       <HomeContent>
-        <Header>
-          <Image
-            src="/assets/icons/logo.svg"
-            width={371}
-            height={117}
-            priority
-            alt="logo"
-          />
-          <SubTitle>겜구 커뮤니티에 오신 것을 환영합니다.</SubTitle>
-        </Header>
+        <Banner />
         <Main>
           {MATCH_PAGE_DATA.map((content) => {
             return (
@@ -60,15 +51,6 @@ const HomeContent = styled.div`
   max-width: 1440px;
   width: 100%;
   padding: 0px 80px;
-`;
-
-const Header = styled.header`
-  margin-bottom: 35px;
-`;
-
-const SubTitle = styled.div`
-  ${(props) => props.theme.fonts.regular25};
-  color: #44515c;
 `;
 
 const Main = styled.main`
