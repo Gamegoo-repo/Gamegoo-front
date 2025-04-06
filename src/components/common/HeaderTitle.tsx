@@ -37,8 +37,8 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({
   };
 
   return (
-    <Header $marginBottom={marginBottom}>
-      <div style={{ display: "flex", alignItems: "center" }}>
+    <HeaderWrap $marginBottom={marginBottom}>
+      <Header>
         <StyledImage
           onClick={handleBackClick}
           src="/assets/icons/arrow_left.svg"
@@ -47,31 +47,46 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({
           alt="뒤로가기"
         />
         <Title className={size}>{title}</Title>
-      </div>
+      </Header>
 
       <StepNavigation title={title} />
       {sub && <Sub>{sub}</Sub>}
       {mini && <Mini>{mini}</Mini>}
       {blocked && <Blocked>차단된 사용자입니다</Blocked>}
-    </Header>
+    </HeaderWrap>
   );
 };
 
 export default HeaderTitle;
 
-const Header = styled.header<{ $marginBottom?: string }>`
+const HeaderWrap = styled.header<{ $marginBottom?: string }>`
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
   margin-bottom: ${({ $marginBottom }) =>
     $marginBottom ? $marginBottom : "32px"};
+  @media (max-width: 700px) {
+    display: unset;
+    margin-bottom: 12px;
+  }
+`;
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  @media (max-width: 700px) {
+    /* display: unset; */
+    margin-bottom: 17px;
+  }
 `;
 
 const StyledImage = styled(Image)`
   margin-right: 12px;
   cursor: pointer;
+  @media (max-width: 700px) {
+    width: 20px;
+    height: 20px;
+  }
 `;
 
 const Title = styled.div`
@@ -83,6 +98,11 @@ const Title = styled.div`
 
   &.regular {
     ${(props) => props.theme.fonts.regular25};
+  }
+  @media (max-width: 700px) {
+    &.bold {
+      ${(props) => props.theme.fonts.semiBold18};
+    }
   }
 `;
 

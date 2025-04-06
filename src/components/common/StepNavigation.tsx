@@ -1,7 +1,7 @@
-import { STEPS } from '@/constants/match';
-import { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import ChevronRightGray from '../../../public/assets/icons/chevron_right_gray.svg';
+import { STEPS } from "@/constants/match";
+import { useEffect, useState } from "react";
+import styled from "styled-components";
+import ChevronRightGray from "../../../public/assets/icons/chevron_right_gray.svg";
 
 interface StepNavigationProps {
   title: string;
@@ -47,11 +47,14 @@ const NavContainer = styled.nav`
   padding-bottom: 5px;
 
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     left: 0;
     bottom: 0;
     width: 100%;
+  }
+  @media (max-width: 700px) {
+    font-size: 13px;
   }
 `;
 
@@ -62,8 +65,8 @@ const Step = styled.div`
 `;
 
 const StepItem = styled.div<{ active: boolean }>`
-  color: ${(props) => (props.active ? '#343a40' : '#adb5bd')};
-  font-weight: ${(props) => (props.active ? '600' : 'normal')};
+  color: ${(props) => (props.active ? "#343a40" : "#adb5bd")};
+  font-weight: ${(props) => (props.active ? "600" : "normal")};
   cursor: pointer;
   transition: color 0.3s ease-in-out;
   display: flex;
@@ -76,7 +79,7 @@ const StepItem = styled.div<{ active: boolean }>`
     text-align: center;
 
     &::after {
-      content: '';
+      content: "";
       display: none; /* 기존 스타일 숨김 */
     }
 
