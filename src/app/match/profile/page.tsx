@@ -194,12 +194,18 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 110px;
+  @media (max-width: 700px) {
+    padding-top: 0px;
+  }
 `;
 
 const MatchContent = styled.div`
   max-width: 1440px;
   width: 100%;
   padding: 60px 80px 0px 80px;
+  @media (max-width: 700px) {
+    padding: 24px 20px;
+  }
 `;
 
 const Main = styled.main`
@@ -210,6 +216,9 @@ const Main = styled.main`
   gap: 14px;
   margin-top: 40px;
   margin-bottom: 65px;
+  @media (max-width: 700px) {
+    margin-top: 24px;
+  }
 `;
 
 const Column = styled.div`

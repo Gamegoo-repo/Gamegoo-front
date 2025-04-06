@@ -39,6 +39,7 @@ import { Mike as MikeType } from "@/types/user/mike";
 import { Position, PositionType } from "@/types/position/position";
 import RankTier from "../common/RankTier";
 import Alert from "../common/Alert";
+import useMediaQueries from "@/hooks/useMediaQueries";
 
 type profileType = "normal" | "wind" | "other" | "me";
 
@@ -61,6 +62,7 @@ const Profile: React.FC<Profile> = ({
   backgroundColor,
   isDefault = false,
 }) => {
+  const isMobile = useMediaQueries({ breakpoint: 900 });
   const dispatch = useDispatch();
   const { id } = useParams();
   const memberId = Number(id);
@@ -450,24 +452,26 @@ const Profile: React.FC<Profile> = ({
       )}
       <Row $profileType={profileType}>
         <ImageContainer>
-          <ProfileImgWrapper $bgColor={getProfileBgColor(selectedImageIndex)}>
-            <PersonImage
-              data={`/assets/images/profile/profile${selectedImageIndex}.svg`}
-              width={136}
-              height={136}
-            />
-          </ProfileImgWrapper>
-          {profileType !== "other" && (
-            <CameraImgBg
-              onClick={() => setIsProfileListOpen(!isProfileListOpen)}
-            >
-              <CameraImage
-                data="/assets/icons/camera_white.svg"
-                width={30}
-                height={25}
+          <ProfileImgWrapper>
+            <PersonImgWrapper $bgColor={getProfileBgColor(selectedImageIndex)}>
+              <PersonImage
+                data={`/assets/images/profile/profile${selectedImageIndex}.svg`}
+                width={isMobile ? 40 : 136}
+                height={isMobile ? 40 : 136}
               />
-            </CameraImgBg>
-          )}
+            </PersonImgWrapper>
+            {profileType !== "other" && (
+              <CameraImgBg
+                onClick={() => setIsProfileListOpen(!isProfileListOpen)}
+              >
+                <CameraImage
+                  data="/assets/icons/camera_white.svg"
+                  width={isMobile ? 20 : 30}
+                  height={isMobile ? 20 : 25}
+                />
+              </CameraImgBg>
+            )}
+          </ProfileImgWrapper>
           {/* 프로필 이미지 선택 팝업 */}
           {isProfileListOpen && (
             <ProfileListBox>
@@ -492,24 +496,42 @@ const Profile: React.FC<Profile> = ({
                     <ProfileListImage
                       key={item}
                       data={`/assets/images/profile/profile${item}.svg`}
-                      width={70}
-                      height={70}
+                      width={isMobile ? 40 : 70}
+                      height={isMobile ? 40 : 70}
                     />
                   </SelectProfileImgWrapper>
                 ))}
               </ProfileList>
             </ProfileListBox>
           )}
+
+          {isMobile ? (
+            <TopContainer
+              $isMatching={profileType === "wind" || profileType === "normal"}
+            >
+              <Top>
+                {user.gameName}
+                <Span>{`#${user.tag}`}</Span>
+              </Top>
+            </TopContainer>
+          ) : (
+            <></>
+          )}
         </ImageContainer>
         <StyledBox>
-          <TopContainer
-            $isMatching={profileType === "wind" || profileType === "normal"}
-          >
-            <Top>
-              {user.gameName}
-              <Span>{`#${user.tag}`}</Span>
-            </Top>
-          </TopContainer>
+          {isMobile ? (
+            <></>
+          ) : (
+            <TopContainer
+              $isMatching={profileType === "wind" || profileType === "normal"}
+            >
+              <Top>
+                {user.gameName}
+                <Span>{`#${user.tag}`}</Span>
+              </Top>
+            </TopContainer>
+          )}
+
           <RankTierWrapper>
             <RankTier type="solo" tier={user.soloTier} rank={user.soloRank} />
             <RankTier type="free" tier={user.freeTier} rank={user.freeRank} />
@@ -732,6 +754,9 @@ const Container = styled.div<{ $backgroundColor?: string }>`
   &.other {
     padding: 42px 41px;
   }
+  @media (max-width: 900px) {
+    padding: 20px;
+  }
 `;
 
 const Row = styled.div<{ $profileType: string }>`
@@ -746,6 +771,10 @@ const Row = styled.div<{ $profileType: string }>`
     css`
       margin-bottom: 20px;
     `}
+  @media (max-width: 900px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 const FriendRow = styled.div`
@@ -767,9 +796,16 @@ const UnderRow = styled.div`
 const ImageContainer = styled.div`
   height: 186px;
   position: relative;
+  @media (max-width: 900px) {
+    display: flex;
+  }
+`;
+const ProfileImgWrapper = styled.div`
+  @media (max-width: 900px) {
+  }
 `;
 
-const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
+const PersonImgWrapper = styled.div<{ $bgColor: string }>`
   width: 186px;
   height: 186px;
   border-radius: 50%;
@@ -777,6 +813,10 @@ const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
   display: flex;
   align-items: center;
   justify-content: center;
+  @media (max-width: 900px) {
+    width: 52px;
+    height: 52px;
+  }
 `;
 
 const PersonImage = styled.object`
@@ -793,6 +833,11 @@ const CameraImgBg = styled.div`
   box-shadow: 0 0 3.06px 0 #00000040;
   border-radius: 50%;
   top: -51px;
+  @media (max-width: 900px) {
+    width: 20px;
+    height: 20px;
+    top: -17px;
+  }
 `;
 
 const CameraImage = styled.object`
@@ -801,6 +846,10 @@ const CameraImage = styled.object`
   left: 50%;
   transform: translate(-50%, -50%);
   pointer-events: none;
+  @media (max-width: 900px) {
+    width: 10px;
+    height: 10px;
+  }
 `;
 
 const ProfileListBox = styled.div`
@@ -893,6 +942,10 @@ const TopContainer = styled.div<{ $isMatching: boolean }>`
     css`
       margin-top: 21px;
     `}
+
+  @media (max-width: 900px) {
+    margin-top: 0;
+  }
 `;
 
 const Top = styled.div`
@@ -902,12 +955,21 @@ const Top = styled.div`
   gap: 6px;
   color: ${theme.colors.gray800};
   white-space: nowrap;
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+    align-items: flex-start;
+    ${(props) => props.theme.fonts.bold16};
+  }
 `;
 
 const Span = styled.span`
   margin-right: 5px;
   color: ${theme.colors.gray500};
   font-size: ${theme.fonts.regular32};
+  @media (max-width: 900px) {
+    ${(props) => props.theme.fonts.semiBold12};
+  }
 `;
 
 const RankTierWrapper = styled.div`
