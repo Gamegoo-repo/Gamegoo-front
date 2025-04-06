@@ -328,6 +328,9 @@ const Head = styled.div`
   box-sizing: border-box;
   ${(props) => props.theme.fonts.regular14};
   position: relative;
+  @media (max-width: 700px) {
+    justify-content: space-between;
+  }
 `;
 
 const HeaderBar = styled.div`
@@ -341,7 +344,6 @@ const HeaderBar = styled.div`
   white-space: nowrap;
 
   @media screen and (max-width: 700px) {
-    width: 90%;
     padding: 0;
     display: grid;
     grid-template-columns: auto 1fr auto;
@@ -352,6 +354,7 @@ const HeaderBar = styled.div`
 
 const LogoButton = styled.button`
   @media screen and (max-width: 700px) {
+    margin-left: 20px;
     grid-column: 1;
     justify-self: start;
   }
