@@ -22,11 +22,7 @@ const StepNavigation = ({ title }: StepNavigationProps) => {
     <NavContainer>
       <Step>
         {STEPS.map((step, index) => (
-          <StepItem
-            key={index}
-            active={step === title}
-            onClick={() => setActiveStep(index + 1)}
-          >
+          <StepItem key={index} $active={step === title}>
             {step}
             {index !== STEPS.length - 1 && <ChevronRightGray />}
           </StepItem>
@@ -64,9 +60,9 @@ const Step = styled.div`
   gap: 8px;
 `;
 
-const StepItem = styled.div<{ active: boolean }>`
-  color: ${(props) => (props.active ? "#343a40" : "#adb5bd")};
-  font-weight: ${(props) => (props.active ? "600" : "normal")};
+const StepItem = styled.div<{ $active?: boolean }>`
+  color: ${(props) => (props.$active ? "#343a40" : "#adb5bd")};
+  font-weight: ${(props) => (props.$active ? "600" : "normal")};
   cursor: pointer;
   transition: color 0.3s ease-in-out;
   display: flex;
