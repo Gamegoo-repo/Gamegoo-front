@@ -16,8 +16,10 @@ import ConfirmModal from "@/components/common/ConfirmModal";
 import { theme } from "@/styles/theme";
 import { closeChatRoom } from "@/redux/slices/chatSlice";
 import { getMyProfile } from "@/api/user/profile/get";
+import useMediaQueries from "@/hooks/useMediaQueries";
 
 const ProfilePage = () => {
+  const isMobile = useMediaQueries({ breakpoint: 700 });
   const router = useRouter();
   const [profileType, setProfileType] = useState<profileType | undefined>();
   const [isClient, setIsClient] = useState(false);
@@ -159,7 +161,7 @@ const ProfilePage = () => {
           )}
           <Button
             buttonType="primary"
-            width="380px"
+            width={!isMobile ? "380px" : "100%"}
             text="매칭 시작하기"
             onClick={handleMatchStart}
           />

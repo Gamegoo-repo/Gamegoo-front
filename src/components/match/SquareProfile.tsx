@@ -1,7 +1,7 @@
 import { POSITIONS } from "@/constants/profile";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Mic from "../readBoard/Mic";
 import Box from "../common/Box";
@@ -11,6 +11,7 @@ import { getProfileBgColor } from "@/utils/profile";
 import { toLowerCaseString } from "@/utils/string";
 import { Position as PositionType } from "@/types/position/position";
 import { Mike } from "@/types/user/mike";
+import useMediaQueries from "@/hooks/useMediaQueries";
 
 interface User {
   memberId: number;
@@ -30,117 +31,168 @@ interface User {
 
 interface SquareProfileProps {
   opponent?: boolean;
+  isToggleUI?: boolean;
   user: User;
 }
 
 const SquareProfile: React.FC<SquareProfileProps> = ({
   opponent = false,
+  isToggleUI = false,
   user,
 }) => {
+  const isMobile = useMediaQueries({ breakpoint: 700 });
   const [mannerPopup, setMannerPopup] = useState<boolean>(false);
+  const [isOpened, setToggleOpen] = useState<boolean>(false);
 
+  const handleToggleOpen = () => {
+    setToggleOpen(!isOpened);
+  };
   const handleMannerLevel = () => {
     setMannerPopup(!mannerPopup);
   };
+  useEffect(() => {
+    if (!isToggleUI) {
+      setToggleOpen(true);
+      return;
+    }
+    if (!isMobile) {
+      setToggleOpen(true);
+    } else {
+      setToggleOpen(false);
+    }
+  }, [isMobile, isToggleUI]);
 
   if (!user) {
     return null;
   }
 
   return (
-    <Container $opponent={opponent}>
-      <Column>
-        <Top>
-          {/* {user.gameName} */}
-          유진주
-          <Rank>
-            <TierImage
-              data={`/assets/images/tier/${
-                user.tier !== "null" ? toLowerCaseString(user.tier) : "unrank"
-              }.svg`}
-              width={43}
-              height={43}
-            />
-            {setAbbrevTier(user.tier)}
-            {user.rank ? user.rank : ""}
-          </Rank>
-        </Top>
-        <ImageContainer>
-          <ProfileImgWrapper $bgColor={getProfileBgColor(user.profileImg)}>
-            <ProfileImg
-              data={`/assets/images/profile/profile${user.profileImg}.svg`}
-              width={100}
-              height={100}
-            />
-          </ProfileImgWrapper>
-          {opponent && (
-            <>
-              <Level onClick={handleMannerLevel}>LV. {user.mannerLevel}</Level>
-              {mannerPopup && (
-                <MannerLevelBox
-                  memberId={0}
-                  level={5}
-                  top="20px"
-                  right="-17%"
+    <ContainerWrap $opponent={opponent} $isOpened={isOpened}>
+      {isToggleUI && isMobile && (
+        <ToggleProfile $isOpened={isOpened} onClick={handleToggleOpen}>
+          <span>내 프로필</span>
+          <Image
+            src={
+              isOpened
+                ? "/assets/icons/toggle_arrow_up.svg"
+                : "/assets/icons/toggle_arrow_down.svg"
+            }
+            width={16}
+            height={16}
+            alt="toggle-profile"
+          />
+        </ToggleProfile>
+      )}
+      {((isToggleUI && isMobile && isOpened) ||
+        (isMobile && !isToggleUI) ||
+        !isMobile) && (
+        <Container $opponent={opponent}>
+          <Column>
+            <Top>
+              {/* {user.gameName} */}
+              유진주
+              <Rank>
+                {!isMobile && (
+                  <TierImage
+                    data={`/assets/images/tier/${
+                      user.tier !== "null"
+                        ? toLowerCaseString(user.tier)
+                        : "unrank"
+                    }.svg`}
+                    width={43}
+                    height={43}
+                  />
+                )}
+
+                {isMobile && "#"}
+                {setAbbrevTier(user.tier)}
+                {user.rank ? user.rank : ""}
+              </Rank>
+            </Top>
+            <ImageContainer>
+              <ProfileImgWrapper $bgColor={getProfileBgColor(user.profileImg)}>
+                <ProfileImg
+                  data={`/assets/images/profile/profile${user.profileImg}.svg`}
+                  width={!isMobile ? 100 : 67}
+                  height={!isMobile ? 100 : 67}
                 />
-              )}
-              <Bubble>클릭해서 매너키워드 보기</Bubble>
-            </>
-          )}
-        </ImageContainer>
-        <Mic status={user.mike} />
-        <RowBox>
-          {user.gameStyleList &&
-            user.gameStyleList.length > 0 &&
-            user.gameStyleList
-              .filter((item) => item.trim() !== "")
-              .map((item, index) => (
-                <Box
-                  key={index}
-                  shape="round"
-                  profileType="square"
-                  text={item}
-                />
-              ))}
-        </RowBox>
-        <Row>
-          <Position>
-            {POSITIONS.slice(0, 2).map((position, index) => (
-              <Posi key={index}>
-                {POSITIONS[index].label}
-                <Image
-                  src={setPositionImg(
-                    index === 0 ? user.mainPosition : user.subPosition
+              </ProfileImgWrapper>
+              {/* TODO opponent따라서 레벨 보여주는 조건 */}
+              {opponent && (
+                <>
+                  <Level onClick={handleMannerLevel}>
+                    LV. {user.mannerLevel}
+                  </Level>
+                  {mannerPopup && (
+                    <MannerLevelBox
+                      memberId={0}
+                      level={5}
+                      top="20px"
+                      right="-17%"
+                    />
                   )}
-                  width={39}
-                  height={31}
-                  alt="포지션"
-                />
-              </Posi>
-            ))}
-          </Position>
-          <Position>
-            {POSITIONS.slice(-1).map((position, index) => (
-              <Posi key={index}>
-                {POSITIONS[2].label}
-                <Image
-                  src={setPositionImg(user.wantPosition)}
-                  width={39}
-                  height={31}
-                  alt="포지션"
-                />
-              </Posi>
-            ))}
-          </Position>
-        </Row>
-      </Column>
-    </Container>
+                  <Bubble>클릭해서 매너키워드 보기</Bubble>
+                </>
+              )}
+            </ImageContainer>
+            <Mic status={user.mike} />
+            {/* TODO 게임 스타일 UI 확인 필요 */}
+            <RowBox>
+              {user.gameStyleList &&
+                user.gameStyleList.length > 0 &&
+                user.gameStyleList
+                  .filter((item) => item.trim() !== "")
+                  .map((item, index) => (
+                    <Box
+                      key={index}
+                      shape="round"
+                      profileType="square"
+                      text={item}
+                    />
+                  ))}
+            </RowBox>
+            <Row>
+              <Position $opponent={opponent}>
+                {/* 주 포지션, 부 포지션 */}
+                {POSITIONS.slice(0, 2).map((position, index) => (
+                  <Posi $opponent={opponent} key={index}>
+                    {POSITIONS[index].label}
+                    <Image
+                      src={setPositionImg(
+                        index === 0 ? user.mainPosition : user.subPosition
+                      )}
+                      width={39}
+                      height={31}
+                      alt="포지션"
+                    />
+                  </Posi>
+                ))}
+              </Position>
+              <Position $opponent={opponent}>
+                {/* 내가 찾는 포지션 */}
+                {POSITIONS.slice(-1).map((position, index) => (
+                  <Posi $opponent={opponent} key={index}>
+                    {POSITIONS[2].label}
+                    <Image
+                      src={setPositionImg(user.wantPosition)}
+                      width={39}
+                      height={31}
+                      alt="포지션"
+                    />
+                  </Posi>
+                ))}
+              </Position>
+            </Row>
+          </Column>
+        </Container>
+      )}
+    </ContainerWrap>
   );
 };
 
 export default SquareProfile;
 
-const Container = styled.div<{ $opponent: boolean }>`
+const ContainerWrap = styled.div<{ $opponent: boolean; $isOpened: boolean }>`
   width: 100%;
   height: 580px;
   padding: 30px 40px;
@@ -158,6 +210,28 @@ const Container = styled.div<{ $opponent: boolean }>`
 
   /* 그림자 */
   box-shadow: 0px 0px 21.3px 0px rgba(0, 0, 0, 0.15);
+  @media (max-width: 700px) {
+    padding: ${({ $isOpened }) =>
+      $isOpened ? `10px 20px 28px 20px` : `10px 20px`};
+    border-radius: 8px;
+    border: 1px solid ${theme.colors.violet200};
+    height: unset;
+  }
+`;
+
+const ToggleProfile = styled.button<{ $isOpened: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+
+  border-bottom: ${({ $isOpened }) =>
+    $isOpened ? `1px solid ${theme.colors.gray300}` : "none"};
+  ${(props) => props.theme.fonts.bold14};
+  padding-bottom: ${({ $isOpened }) => ($isOpened ? "10px" : "0px")};
+`;
+const Container = styled.div<{ $opponent: boolean }>`
+  width: 100%;
 `;
 
 const Column = styled.div`
@@ -183,6 +257,10 @@ const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
   height: 144px;
   background: ${(props) => props.$bgColor};
   border-radius: 50%;
+  @media (max-width: 700px) {
+    width: 84px;
+    height: 84px;
+  }
 `;
 
 const ProfileImg = styled.object`
@@ -271,6 +349,12 @@ const Top = styled.div`
   justify-content: flex-start;
   color: ${theme.colors.gray800};
   ${(props) => props.theme.fonts.bold25};
+
+  @media (max-width: 700px) {
+    flex-direction: row;
+    ${(props) => props.theme.fonts.bold16};
+    gap: 4px;
+  }
 `;
 
 const Rank = styled.div`
@@ -296,7 +380,7 @@ const RowBox = styled(Row)`
   /* gap: 18px; */
 `;
 
-const Position = styled.div`
+const Position = styled.div<{ $opponent: boolean }>`
   width: 100%;
   height: 116px;
   border-radius: 8px;
@@ -307,11 +391,21 @@ const Position = styled.div`
   gap: 33px;
   ${theme.fonts.medium11};
   color: ${theme.colors.gray800};
+  @media (max-width: 700px) {
+    border-radius: 6px;
+    padding: 12px 20px 8px 20px;
+    gap: ${({ $opponent }) => ($opponent ? "13px" : "33px")};
+  }
 `;
 
-const Posi = styled.div`
+const Posi = styled.div<{ $opponent: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 15px;
   align-items: center;
+
+  @media (max-width: 700px) {
+    ${(props) =>
+      props.$opponent ? props.theme.fonts.medium11 : props.theme.fonts.bold12};
+  }
 `;
