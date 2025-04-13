@@ -29,12 +29,12 @@ const Toggle = (props: ToggleProps) => {
       >
         <div
           className={`toggle-circle ${
-            isOn === "AVAILABLE" ? null : "toggle--unchecked"
+            isOn === "AVAILABLE" ? null : "unchecked"
           }`}
         />
         <div
           className={`toggle-container ${
-            isOn === "AVAILABLE" ? null : "toggle--unchecked"
+            isOn === "AVAILABLE" ? null : "unchecked"
           }`}
         />
       </ToggleContainer>
@@ -65,9 +65,13 @@ const ToggleContainer = styled.div<{
       css`
         background-color: ${theme.colors.gray200};
       `} */
+    @media (max-width: 700px) {
+      width: 54px;
+      height: 32px;
+    }
   }
 
-  > .toggle--unchecked {
+  > .unchecked {
     background-color: ${theme.colors.gray500};
     transition: 0.5s;
     /* ${({ disabled }) =>
@@ -86,7 +90,8 @@ const ToggleContainer = styled.div<{
   > .toggle-circle {
     position: absolute;
     top: 50%;
-    left: 8px;
+    left: ${({ $type }) =>
+      $type === "board" ? "35px" : $type === "mini" ? "32px" : "46px"};
     transform: translate(0, -50%);
     width: ${({ $type }) =>
       $type === "board" ? "27px" : $type === "mini" ? "22px" : "33px"};
@@ -100,10 +105,17 @@ const ToggleContainer = styled.div<{
       css`
         background-color: ${theme.colors.gray300};
       `} */
+    @media (max-width: 700px) {
+      width: 22px;
+      height: 22px;
+      left: 25px;
+    }
   }
-  > .toggle--unchecked {
-    left: ${({ $type }) =>
-      $type === "board" ? "35px" : $type === "mini" ? "32px" : "46px"};
+  > .unchecked {
+    left: 8px;
     transition: 0.5s;
+    @media (max-width: 700px) {
+      left: 8px;
+    }
   }
 `;

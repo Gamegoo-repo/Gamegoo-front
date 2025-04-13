@@ -59,6 +59,9 @@ const RankName = styled.div<{ $direct: string }>`
     css`
       ${theme.fonts.medium11}
     `}
+    @media (max-width: 700px) {
+    ${theme.fonts.medium11}
+  }
 `;
 
 const Tier = styled.div<{ $direct: string }>`
@@ -74,6 +77,9 @@ const Tier = styled.div<{ $direct: string }>`
       color: ${theme.colors.gray600};
       ${theme.fonts.semiBold13}
     `}
+    @media (max-width: 700px) {
+    ${theme.fonts.bold14}
+  }
 `;
 
 const TierImage = styled.object`

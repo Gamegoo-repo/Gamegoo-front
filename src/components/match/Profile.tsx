@@ -62,7 +62,7 @@ const Profile: React.FC<Profile> = ({
   backgroundColor,
   isDefault = false,
 }) => {
-  const isMobile = useMediaQueries({ breakpoint: 900 });
+  const isMobile = useMediaQueries({ breakpoint: 700 });
   const dispatch = useDispatch();
   const { id } = useParams();
   const memberId = Number(id);
@@ -456,8 +456,8 @@ const Profile: React.FC<Profile> = ({
             <PersonImgWrapper $bgColor={getProfileBgColor(selectedImageIndex)}>
               <PersonImage
                 data={`/assets/images/profile/profile${selectedImageIndex}.svg`}
-                width={isMobile ? 40 : 136}
-                height={isMobile ? 40 : 136}
+                width={136}
+                height={136}
               />
             </PersonImgWrapper>
             {profileType !== "other" && (
@@ -466,8 +466,8 @@ const Profile: React.FC<Profile> = ({
               >
                 <CameraImage
                   data="/assets/icons/camera_white.svg"
-                  width={isMobile ? 20 : 30}
-                  height={isMobile ? 20 : 25}
+                  width={30}
+                  height={25}
                 />
               </CameraImgBg>
             )}
@@ -537,20 +537,106 @@ const Profile: React.FC<Profile> = ({
             <RankTier type="free" tier={user.freeTier} rank={user.freeRank} />
           </RankTierWrapper>
           {profileType === "wind" ? (
-            <StyledBox>
-              <Mike>
-                마이크
-                <Toggle isOn={isMike} onToggle={handleMike} />
-              </Mike>
-              <GameStyle
-                profileType="none"
-                gameStyleResponseDTOList={user.gameStyleResponseList}
-                mike={isMike}
-                handleMike={handleMike}
-              />
-            </StyledBox>
+            isMobile ? (
+              <StyledBox>
+                {/* MO && 칼바람 클릭 시 */}
+                <GameStyle
+                  profileType="none"
+                  gameStyleResponseDTOList={user.gameStyleResponseList}
+                  mike={isMike}
+                  handleMike={handleMike}
+                />
+              </StyledBox>
+            ) : (
+              <StyledBox>
+                {/* PC && 칼바람 클릭 시 */}
+                <Mike>
+                  마이크
+                  <Toggle isOn={isMike} onToggle={handleMike} />
+                </Mike>
+                <GameStyle
+                  profileType="none"
+                  gameStyleResponseDTOList={user.gameStyleResponseList}
+                  mike={isMike}
+                  handleMike={handleMike}
+                />
+              </StyledBox>
+            )
+          ) : isMobile ? (
+            <UnderRow>
+              {/* MO && 칼바람 제외 클릭 시 */}
+              <Positions>
+                {/* 주 포지션 + 부 포지션 */}
+                <MoPosiWrap>
+                  {POSITIONS.slice(0, 2).map((position, index) => (
+                    <Posi key={index} className={profileType} $isWantP={false}>
+                      {position.label}
+                      <Image
+                        src={setPositionImg(
+                          index === 0
+                            ? positionValue.main ?? "ANY"
+                            : positionValue.sub ?? "ANY"
+                        )}
+                        width={!isMobile ? 55 : 41}
+                        height={!isMobile ? 40 : 32}
+                        alt="포지션"
+                        onClick={() => handlePosition(index)}
+                      />
+                      {isPositionOpen[index] && (
+                        <PositionCategory
+                          value={
+                            index === 0
+                              ? positionValue.main ?? "ANY"
+                              : positionValue.sub ?? "ANY"
+                          }
+                          onClose={() => handlePositionClose(index)}
+                          onSelect={handleCategoryButtonClick}
+                        />
+                      )}
+                    </Posi>
+                  ))}
+                </MoPosiWrap>
+
+                {/* 내가 찾는 포지션 */}
+                <MoPosiWrap>
+                  <Posi key={2} className={profileType} $isWantP={true}>
+                    {POSITIONS[2].label}
+                    <Image
+                      src={setPositionImg(
+                        (positionValue.want && positionValue.want[0]) ?? "ANY"
+                      )}
+                      width={!isMobile ? 55 : 41}
+                      height={!isMobile ? 40 : 32}
+                      alt="포지션"
+                      onClick={() => handlePosition(2)}
+                    />
+                    {isPositionOpen[2] && (
+                      <PositionCategory
+                        value={
+                          (positionValue.want && positionValue.want[0]) ?? "ANY"
+                        }
+                        onClose={() => handlePositionClose(2)}
+                        onSelect={handleCategoryButtonClick}
+                      />
+                    )}
+                  </Posi>
+                </MoPosiWrap>
+              </Positions>
+              {/* TODO 최근 선호 챔피언 */}
+              {/* {(profileType === "other" || profileType === "me") &&
+                user.championResponseList && (
+                  <Champion
+                    title={true}
+                    font="regular14"
+                    list={user.championResponseList.map(
+                      (champion) => champion.championId
+                    )}
+                  />
+                )} */}
+            </UnderRow>
           ) : (
             <UnderRow>
+              {/* PC && 칼바람 제외 클릭 시 */}
               <Positions>
                 {POSITIONS.map((position, index) => (
                   <Posi
@@ -610,6 +696,7 @@ const Profile: React.FC<Profile> = ({
               </Mike>
             </UnderRow>
           )}
+
           {(profileType === "normal" ||
             profileType === "other" ||
             (profileType === "me" &&
@@ -621,8 +708,19 @@ const Profile: React.FC<Profile> = ({
               handleMike={handleMike}
             />
           )}
+          {isMobile && (
+            <Mike>
+              마이크
+              <Toggle
+                isOn={isMike}
+                onToggle={handleMike}
+                disabled={profileType === "other"}
+              />
+            </Mike>
+          )}
         </StyledBox>
       </Row>
+
       {profileType === "other" && (
         <More>
           {!isDefault && <Admit>{renderFriendsButton()}</Admit>}
@@ -754,8 +852,12 @@ const Container = styled.div<{ $backgroundColor?: string }>`
   &.other {
     padding: 42px 41px;
   }
-  @media (max-width: 900px) {
+  @media (max-width: 700px) {
     padding: 20px;
+
+    &.wind {
+      height: 330px;
+    }
   }
 `;
 
@@ -771,9 +873,10 @@ const Row = styled.div<{ $profileType: string }>`
     css`
       margin-bottom: 20px;
     `}
-  @media (max-width: 900px) {
+  @media (max-width: 700px) {
     flex-direction: column;
     align-items: flex-start;
+    gap: 24px;
   }
 `;
 
@@ -796,12 +899,14 @@ const UnderRow = styled.div`
 const ImageContainer = styled.div`
   height: 186px;
   position: relative;
-  @media (max-width: 900px) {
+  @media (max-width: 700px) {
     display: flex;
   }
 `;
 const ProfileImgWrapper = styled.div`
-  @media (max-width: 900px) {
+  @media (max-width: 700px) {
+    display: flex;
+    position: relative;
   }
 `;
 
@@ -813,7 +918,7 @@ const PersonImgWrapper = styled.div<{ $bgColor: string }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  @media (max-width: 900px) {
+  @media (max-width: 700px) {
     width: 52px;
     height: 52px;
   }
@@ -823,6 +928,10 @@ const PersonImage = styled.object`
   margin-top: 5px;
   filter: drop-shadow(-4px 10px 10px rgba(63, 53, 78, 0.582));
   pointer-events: none;
+  @media (max-width: 700px) {
+    width: 35px;
+    margin-top: 0;
+  }
 `;
 
 const CameraImgBg = styled.div`
@@ -833,10 +942,11 @@ const CameraImgBg = styled.div`
   box-shadow: 0 0 3.06px 0 #00000040;
   border-radius: 50%;
   top: -51px;
-  @media (max-width: 900px) {
+  @media (max-width: 700px) {
+    position: absolute;
     width: 20px;
     height: 20px;
-    top: -17px;
+    top: 35px;
   }
 `;
 
@@ -846,7 +956,7 @@ const CameraImage = styled.object`
   left: 50%;
   transform: translate(-50%, -50%);
   pointer-events: none;
-  @media (max-width: 900px) {
+  @media (max-width: 700px) {
     width: 10px;
     height: 10px;
   }
@@ -927,6 +1037,9 @@ const StyledBox = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 36px;
+  @media (max-width: 700px) {
+    gap: 16px;
+  }
 `;
 
 const TopContainer = styled.div<{ $isMatching: boolean }>`
@@ -943,8 +1056,10 @@ const TopContainer = styled.div<{ $isMatching: boolean }>`
       margin-top: 21px;
     `}
 
-  @media (max-width: 900px) {
+  @media (max-width: 700px) {
     margin-top: 0;
+    margin-left: 8px;
+    gap: 16px;
   }
 `;
 
@@ -956,7 +1071,7 @@ const Top = styled.div`
   color: ${theme.colors.gray800};
   white-space: nowrap;
 
-  @media (max-width: 900px) {
+  @media (max-width: 700px) {
     flex-direction: column;
     align-items: flex-start;
     ${(props) => props.theme.fonts.bold16};
@@ -967,7 +1082,7 @@ const Span = styled.span`
   margin-right: 5px;
   color: ${theme.colors.gray500};
   font-size: ${theme.fonts.regular32};
-  @media (max-width: 900px) {
+  @media (max-width: 700px) {
     ${(props) => props.theme.fonts.semiBold12};
   }
 `;
@@ -1033,6 +1148,22 @@ const Positions = styled.div`
   display: flex;
   gap: 24px;
   align-items: center;
+  @media (max-width: 700px) {
+    width: 100%;
+    gap: 8px;
+  }
+`;
+
+const MoPosiWrap = styled.div`
+  @media (max-width: 700px) {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    background-color: white;
+    width: 100%;
+    border-radius: 6px;
+    padding: 12px 20px;
+  }
 `;
 
 const Posi = styled.div<{ $isWantP: boolean }>`
@@ -1052,6 +1183,16 @@ const Posi = styled.div<{ $isWantP: boolean }>`
     css`
       margin-left: 36px;
     `}
+
+  @media (max-width: 700px) {
+    font-size: ${theme.fonts.medium11};
+    gap: 9px;
+    ${({ $isWantP }) =>
+      $isWantP &&
+      css`
+        margin-left: 0px;
+      `};
+  }
 `;
 
 const Mike = styled.div`
@@ -1060,4 +1201,7 @@ const Mike = styled.div`
   align-items: flex-start;
   gap: 10px;
   font-size: ${theme.fonts.regular14};
+  @media (max-width: 700px) {
+    font-size: ${theme.fonts.medium11};
+  }
 `;

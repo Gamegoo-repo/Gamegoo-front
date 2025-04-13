@@ -49,6 +49,9 @@ const StyledBox = styled.div<{ $shape: ShapeType; $profiletype?: profileType }>`
       height: 33px;
       padding: 6px 16px;
       ${(props) => props.theme.fonts.semiBold14}
+      @media (max-width: 700px) {
+        ${theme.fonts.semiBold13};
+      }
     `}
 
   ${(props) =>
@@ -57,5 +60,15 @@ const StyledBox = styled.div<{ $shape: ShapeType; $profiletype?: profileType }>`
       height: 34px;
       padding: 6px 20px;
       ${(props) => props.theme.fonts.semiBold14}
+      @media (max-width: 700px) {
+        ${theme.fonts.semiBold13};
+      }
     `}
+
+    @media (max-width: 700px) {
+    background: ${theme.colors.white};
+    color: ${theme.colors.gray700};
+    padding: 8px 12px;
+    height: 29px;
+  }
 `;

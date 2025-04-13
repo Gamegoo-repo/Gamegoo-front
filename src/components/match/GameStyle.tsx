@@ -12,7 +12,7 @@ import { updateGameStyles } from "@/redux/slices/matchInfo";
 import { setUserMike } from "@/redux/slices/userSlice";
 import { putGameStyle, putMike } from "@/api/user/profile/put";
 import { Mike } from "@/types/user/mike";
-
+import useMediaQueries from "@/hooks/useMediaQueries";
 type profileType = "me" | "other" | "none" | "mini";
 
 interface GameStyle {
@@ -35,6 +35,7 @@ const GameStyle = (props: GameStyleProps) => {
     handleMike,
   } = props;
 
+  const isMobile = useMediaQueries({ breakpoint: 700 });
   const dispatch = useDispatch();
   const [styledPopup, setStyledPopup] = useState(false);
   const [selectedStyles, setSelectedStyles] = useState<number[]>(
@@ -127,7 +128,11 @@ const GameStyle = (props: GameStyleProps) => {
                 onClick={handleStylePopup}
               >
                 <Image
-                  src="/assets/icons/plus.svg"
+                  src={
+                    isMobile
+                      ? "/assets/icons/plus_violet.svg"
+                      : "/assets/icons/plus.svg"
+                  }
                   width={
                     profileType === "mini"
                       ? 11
@@ -193,6 +198,9 @@ const LeftLabel = styled.div<{ $profileType: profileType }>`
     css`
       gap: 6px;
     `}
+  @media (max-width: 700px) {
+    ${theme.fonts.medium11};
+  }
 `;
 
 const GameBox = styled.div<{ $profileType: profileType }>`
@@ -206,11 +214,19 @@ const GameBox = styled.div<{ $profileType: profileType }>`
     css`
       gap: 6px;
     `}
+
+  @media (max-width: 700px) {
+    gap: 4px;
+  }
 `;
 
 const Div = styled.div`
   width: 62px;
   border-radius: 25px;
+  @media (max-width: 700px) {
+    width: 38px;
+    height: 29px;
+  }
 `;
 
 const AddGameStyle = styled.button<{ $profileType: profileType }>`
@@ -240,4 +256,10 @@ const AddGameStyle = styled.button<{ $profileType: profileType }>`
       padding: 5px 17px;
       font-size: 12px;
     `}
+
+    @media (max-width: 700px) {
+    width: 38px;
+    height: 29px;
+    background: ${theme.colors.white};
+  }
 `;
