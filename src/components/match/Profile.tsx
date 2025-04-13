@@ -505,7 +505,7 @@ const Profile: React.FC<Profile> = ({
             </ProfileListBox>
           )}
 
-          {isMobile ? (
+          {isMobile && (
             <TopContainer
               $isMatching={profileType === "wind" || profileType === "normal"}
             >
@@ -514,14 +514,10 @@ const Profile: React.FC<Profile> = ({
                 <Span>{`#${user.tag}`}</Span>
               </Top>
             </TopContainer>
-          ) : (
-            <></>
           )}
         </ImageContainer>
         <StyledBox>
-          {isMobile ? (
-            <></>
-          ) : (
+          {!isMobile && (
             <TopContainer
               $isMatching={profileType === "wind" || profileType === "normal"}
             >
@@ -537,37 +533,21 @@ const Profile: React.FC<Profile> = ({
             <RankTier type="free" tier={user.freeTier} rank={user.freeRank} />
           </RankTierWrapper>
           {profileType === "wind" ? (
-            isMobile ? (
-              <StyledBox>
-                {/* MO && 칼바람 클릭 시 */}
-                <GameStyle
-                  profileType="none"
-                  gameStyleResponseDTOList={user.gameStyleResponseList}
-                  mike={isMike}
-                  handleMike={handleMike}
-                />
-              </StyledBox>
-            ) : (
-              <StyledBox>
-                {/* PC && 칼바람 클릭 시 */}
-                <Mike>
-                  마이크
-                  <Toggle isOn={isMike} onToggle={handleMike} />
-                </Mike>
-                <GameStyle
-                  profileType="none"
-                  gameStyleResponseDTOList={user.gameStyleResponseList}
-                  mike={isMike}
-                  handleMike={handleMike}
-                />
-              </StyledBox>
-            )
-          ) : isMobile ? (
+            <StyledBox>
+              {/* PC && 칼바람 클릭 시 */}
+              <GameStyle
+                profileType="none"
+                gameStyleResponseDTOList={user.gameStyleResponseList}
+                mike={isMike}
+                handleMike={handleMike}
+              />
+            </StyledBox>
+          ) : (
             <UnderRow>
-              {/* MO && 칼바람 제외 클릭 시 */}
+              {/* 칼바람 제외 클릭 시 */}
               <Positions>
                 {/* 주 포지션 + 부 포지션 */}
-                <MoPosiWrap>
+                <PosiWrap>
                   {POSITIONS.slice(0, 2).map((position, index) => (
                     <Posi key={index} className={profileType} $isWantP={false}>
                       {position.label}
@@ -575,7 +555,10 @@ const Profile: React.FC<Profile> = ({
                         src={setPositionImg(
                           index === 0
                             ? positionValue.main ?? "ANY"
-                            : positionValue.sub ?? "ANY"
+                            : index === 1
+                            ? positionValue.sub ?? "ANY"
+                            : (positionValue.want && positionValue.want[0]) ??
+                              "ANY"
                         )}
                         width={!isMobile ? 55 : 41}
                         height={!isMobile ? 40 : 32}
@@ -587,7 +570,10 @@ const Profile: React.FC<Profile> = ({
                           value={
                             index === 0
                               ? positionValue.main ?? "ANY"
-                              : positionValue.sub ?? "ANY"
+                              : index === 1
+                              ? positionValue.sub ?? "ANY"
+                              : (positionValue.want && positionValue.want[0]) ??
+                                "ANY"
                           }
                           onClose={() => handlePositionClose(index)}
                           onSelect={handleCategoryButtonClick}
@@ -595,10 +581,10 @@ const Profile: React.FC<Profile> = ({
                       )}
                     </Posi>
                   ))}
-                </MoPosiWrap>
+                </PosiWrap>
 
                 {/* 내가 찾는 포지션 */}
-                <MoPosiWrap>
+                <PosiWrap>
                   <Posi key={2} className={profileType} $isWantP={true}>
                     {POSITIONS[2].label}
                     <Image
@@ -620,62 +606,9 @@ const Profile: React.FC<Profile> = ({
                       />
                     )}
                   </Posi>
-                </MoPosiWrap>
+                </PosiWrap>
               </Positions>
               {/* TODO 최근 선호 챔피언 */}
-              {/* {(profileType === "other" || profileType === "me") &&
-                user.championResponseList && (
-                  <Champion
-                    title={true}
-                    font="regular14"
-                    list={user.championResponseList.map(
-                      (champion) => champion.championId
-                    )}
-                  />
-                )} */}
-            </UnderRow>
-          ) : (
-            <UnderRow>
-              {/* PC && 칼바람 제외 클릭 시 */}
-              <Positions>
-                {POSITIONS.map((position, index) => (
-                  <Posi
-                    key={index}
-                    className={profileType}
-                    $isWantP={index === 2}
-                  >
-                    {position.label}
-                    <Image
-                      src={setPositionImg(
-                        index === 0
-                          ? positionValue.main ?? "ANY"
-                          : index === 1
-                          ? positionValue.sub ?? "ANY"
-                          : (positionValue.want && positionValue.want[0]) ??
-                            "ANY"
-                      )}
-                      width={55}
-                      height={40}
-                      alt="포지션"
-                      onClick={() => handlePosition(index)}
-                    />
-                    {isPositionOpen[index] && (
-                      <PositionCategory
-                        value={
-                          index === 0
-                            ? positionValue.main ?? "ANY"
-                            : index === 1
-                            ? positionValue.sub ?? "ANY"
-                            : (positionValue.want && positionValue.want[0]) ??
-                              "ANY"
-                        }
-                        onClose={() => handlePositionClose(index)}
-                        onSelect={handleCategoryButtonClick}
-                      />
-                    )}
-                  </Posi>
-                ))}
-              </Positions>
               {(profileType === "other" || profileType === "me") &&
                 user.championResponseList && (
                   <Champion
@@ -686,14 +619,6 @@ const Profile: React.FC<Profile> = ({
                     )}
                   />
                 )}
-              <Mike>
-                마이크
-                <Toggle
-                  isOn={isMike}
-                  onToggle={handleMike}
-                  disabled={profileType === "other"}
-                />
-              </Mike>
             </UnderRow>
           )}
 
@@ -708,16 +633,14 @@ const Profile: React.FC<Profile> = ({
               handleMike={handleMike}
             />
           )}
-          {isMobile && (
-            <Mike>
-              마이크
-              <Toggle
-                isOn={isMike}
-                onToggle={handleMike}
-                disabled={profileType === "other"}
-              />
-            </Mike>
-          )}
+          <Mike>
+            마이크
+            <Toggle
+              isOn={isMike}
+              onToggle={handleMike}
+              disabled={profileType === "other"}
+            />
+          </Mike>
         </StyledBox>
       </Row>
 
@@ -1154,16 +1077,14 @@ const Positions = styled.div`
   }
 `;
 
-const MoPosiWrap = styled.div`
-  @media (max-width: 700px) {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    background-color: white;
-    width: 100%;
-    border-radius: 6px;
-    padding: 12px 20px;
-  }
+const PosiWrap = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  background-color: white;
+  width: 100%;
+  border-radius: 6px;
+  padding: 12px 20px;
 `;
 
 const Posi = styled.div<{ $isWantP: boolean }>`
