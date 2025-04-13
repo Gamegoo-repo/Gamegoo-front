@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import styled from "styled-components";
 import StepNavigation from "./StepNavigation";
-import useMediaQueries from "@/hooks/useMediaQueries";
 
 type fontSize = "bold" | "regular";
 
@@ -30,7 +29,6 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({
   isMatchProgressOrComplete = false, // 매칭중인지에 대한 여부
 }) => {
   const router = useRouter();
-  const isMobile = useMediaQueries({ breakpoint: 700 });
   const handleBackClick = () => {
     if (isDoubleBack) {
       window.history.go(-2);
@@ -55,9 +53,7 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({
         <Title className={size}>{title}</Title>
       </Header>
 
-      {!isMobile && isMatchProgressOrComplete && (
-        <StepNavigation title={title} />
-      )}
+      {!isMatchProgressOrComplete && <StepNavigation title={title} />}
 
       {sub && <Sub>{sub}</Sub>}
       {mini && <Mini>{mini}</Mini>}
