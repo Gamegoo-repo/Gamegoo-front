@@ -6,6 +6,10 @@ export type profileType = "normal" | "wind" | "other" | "me";
 export interface Champion {
   championId: number;
   championName: string;
+  csPerMinute: number;
+  games: number;
+  winRate: number;
+  wins: number;
 }
 
 export interface GameStyle {
@@ -56,6 +60,8 @@ export interface GameStyleList {
 export interface ChampionList {
   championId: number;
   championName: string;
+  winRate: number;
+  games: number;
 }
 
 export interface UserInfo {
