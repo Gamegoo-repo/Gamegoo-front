@@ -599,9 +599,7 @@ const ReadBoard = (props: ReadBoardProps) => {
                 <Champion
                   title={true}
                   font="semiBold14"
-                  list={isPost?.championResponseList?.map(
-                    (champion) => champion.championId
-                  )}
+                  list={isPost?.championResponseDTOList}
                 />
                 <QueueType value={isPost.gameMode} />
               </ChampionNQueueSection>

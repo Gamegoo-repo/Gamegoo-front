@@ -234,9 +234,7 @@ const Table = (props: TableProps) => {
                   <Sixth className="table_width">
                     <Champion
                       font="semiBold14"
-                      list={data?.championResponseList?.map(
-                        (champion) => champion.championId
-                      )}
+                      list={data?.championResponseList || []}
                     />
                   </Sixth>
                   <Seventh className="table_width">

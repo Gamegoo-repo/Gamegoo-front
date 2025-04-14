@@ -614,9 +614,7 @@ const Profile: React.FC<Profile> = ({
                   <Champion
                     title={true}
                     font="regular14"
-                    list={user.championResponseList.map(
-                      (champion) => champion.championId
-                    )}
+                    list={user.championResponseList}
                   />
                 )}
             </UnderRow>

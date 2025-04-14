@@ -188,9 +188,7 @@ const UserProfile = ({
                 <Champion
                   title={true}
                   font="regular14"
-                  list={profile.championResponseList.map(
-                    (champion) => champion.championId
-                  )}
+                  list={profile.championResponseList}
                 />
               </RecentBox>
             </div>
