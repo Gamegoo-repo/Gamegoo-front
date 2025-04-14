@@ -243,7 +243,7 @@ const Table = (props: TableProps) => {
                     </P>
                   </Seventh>
                   <Eighth className="table_width">
-                    <P>{data.contents}</P>
+                    <Content>{data.contents}</Content>
                   </Eighth>
                   <Ninth className="table_width">
                     <P className="gray">{setDateFormatter(data.createdAt)}</P>
@@ -355,6 +355,7 @@ const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
   height: 50px;
   background: ${(props) => props.$bgColor};
   border-radius: 50%;
+  aspect-ratio: 1;
 `;
 
 const ProfileImg = styled.object`
@@ -426,6 +427,23 @@ const P = styled.p`
     color: ${theme.colors.gray500};
     ${(props) => props.theme.fonts.medium16};
   }
+`;
+
+const Content = styled.div`
+  display: -webkit-box;
+  width: 156px;
+  max-height: 52px;
+  padding: 8px;
+  text-align: center;
+  border-radius: 8px;
+  border: 1px solid ${theme.colors.gray400};
+  background: ${theme.colors.gray100};
+  color: ${theme.colors.gray700};
+  ${(props) => props.theme.fonts.regular13};
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const CopyButton = styled.button`
