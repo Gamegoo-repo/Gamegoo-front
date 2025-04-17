@@ -6,6 +6,10 @@ import { Mike } from "@/types/user/mike";
 export interface ChampionResponseDTOList {
   championId: number;
   championName: string;
+  csPerMinute: number;
+  games: number;
+  winRate: number;
+  wins: number;
 }
 
 export interface gameStyleResponseDTOList {
