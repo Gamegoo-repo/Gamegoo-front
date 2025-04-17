@@ -435,6 +435,11 @@ const HeaderProfileImg = styled.object`
 const Login = styled.button`
   color: ${theme.colors.violet600};
   ${(props) => props.theme.fonts.bold14}
+  @media screen and (max-width: 700px) {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+  }
 `;
 
 const MyPageModal = styled.div`
