@@ -49,25 +49,25 @@ const Oauth = () => {
         return;
       }
 
-      try {
-        const decodedState = JSON.parse(base64urlDecode(stateParam));
-        const csrfInSession = sessionStorage.getItem("csrfToken");
+      // try {
+      //   const decodedState = JSON.parse(base64urlDecode(stateParam));
+      //   const csrfInSession = sessionStorage.getItem("csrfToken");
 
-        if (decodedState.csrfToken !== csrfInSession) {
-          console.error("CSRF token mismatch");
-          return;
-        }
+      //   if (decodedState.csrfToken !== csrfInSession) {
+      //     console.error("CSRF token mismatch");
+      //     return;
+      //   }
 
-        // 백엔드로 code와 state 전달 (GET)
-        await axios.get(`/api/v2/riot/oauth/callback`, {
-          params: {
-            code,
-            state: stateParam,
-          },
-        });
-      } catch (err) {
-        console.error("OAuth 처리 실패:", err);
-      }
+      //   // 백엔드로 code와 state 전달 (GET)
+      //   await axios.get(`/api/v2/riot/oauth/callback`, {
+      //     params: {
+      //       code,
+      //       state: stateParam,
+      //     },
+      //   });
+      // } catch (err) {
+      //   console.error("OAuth 처리 실패:", err);
+      // }
     };
 
     handleCallback();
