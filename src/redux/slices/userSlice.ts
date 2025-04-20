@@ -1,4 +1,5 @@
-import { ChampionList, GameStyleList } from '@/interface/profile';
+import { GameStyleList } from '@/interface/profile';
+import { ChampionResponseDTO } from '@/types/api/board/board';
 import { Position } from '@/types/position/position';
 import { Mike } from '@/types/user/mike';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
@@ -26,7 +27,7 @@ interface UserState {
   soloWinrate: number;
   freeWinrate: number;
   gameStyleResponseList: GameStyleList[];
-  championResponseList: ChampionList[];
+  championResponseList: ChampionResponseDTO[];
   blocked: boolean;
   friend: boolean;
   friendRequestMemberId: number | null;

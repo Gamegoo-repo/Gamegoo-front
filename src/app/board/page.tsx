@@ -176,7 +176,9 @@ const BoardPage = () => {
     try {
       const data = await getBoardList(params);
       if (data.status === 200) {
-        setBoardList(data.data.boards);
+        if (data.data.boards) {
+          setBoardList(data.data.boards);
+        }
         setTotalPage(data.data.totalPage);
         setTotalItems(data.data.totalCount);
       } else {

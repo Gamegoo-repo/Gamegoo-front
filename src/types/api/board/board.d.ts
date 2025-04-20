@@ -7,6 +7,10 @@ import { GameMode } from "@/types/game/gameMode";
 interface ChampionResponseDTO {
   championId: number;
   championName: string;
+  csPerMinute: number;
+  games: number;
+  winRate: number;
+  wins: number;
 }
 
 export interface MannerKeywordDTO {

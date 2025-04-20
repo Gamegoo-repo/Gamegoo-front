@@ -1,16 +1,16 @@
-import { MannerKeywordDTO } from "@/types/api/board/board";
+import { ChampionResponseDTO, MannerKeywordDTO } from "@/types/api/board/board";
 import { GameMode } from "@/types/game/gameMode";
 import { Position } from "@/types/position/position";
 import { Mike } from "@/types/user/mike";
 
-export interface ChampionResponseDTOList {
-  championId: number;
-  championName: string;
-  csPerMinute: number;
-  games: number;
-  winRate: number;
-  wins: number;
-}
+// export interface ChampionResponseDTO {
+//   championId: number;
+//   championName: string;
+//   csPerMinute: number;
+//   games: number;
+//   winRate: number;
+//   wins: number;
+// }
 
 export interface gameStyleResponseDTOList {
   gameStyleId: number;
@@ -30,7 +30,7 @@ export interface BoardListDetail {
   mainP: Position;
   subP: Position;
   wantP: (Position | null)[];
-  championResponseList?: ChampionResponseDTOList[];
+  championResponseList?: ChampionResponseDTO[];
   winRate: number;
   createdAt: string;
   contents: string;
@@ -52,7 +52,7 @@ export interface BoardDetail {
   mainP: Position;
   subP: Position;
   wantP: Position[];
-  championResponseList?: ChampionResponseDTOList[];
+  championResponseList?: ChampionResponseDTO[];
   winRate: number;
   createdAt: string;
   mike: Mike;
@@ -79,8 +79,8 @@ export interface MemberPost {
   soloTier?: string;
   freeTier?: string;
   mike: Mike;
-  championResponseList?: ChampionResponseDTOList[];
-  championResponseDTOList?: ChampionResponseDTOList[];
+  championResponseList?: ChampionResponseDTO[];
+  championResponseDTOList?: ChampionResponseDTO[];
   gameMode: GameMode;
   mainP?: Position;
   subP?: Position;
