@@ -49,7 +49,7 @@ const RiotLogin = () => {
       redirectUri
     )}&client_id=${clientId}&response_type=${responseType}&scope=${scope}&state=${encodeURIComponent(
       encodedState
-    )}`;
+    )}&prompt=login`;
 
     window.location.href = authUrl;
   };
