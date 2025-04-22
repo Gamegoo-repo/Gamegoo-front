@@ -23,8 +23,7 @@ const Terms = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const url = new URL(window.location.href);
-  const puuid = url.searchParams.get("puuid");
-  // const state = url.searchParams.get("state");
+  const [puuid, setPuuid] = useState<string | null>(null);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [terms, setTerms] = useState<boolean[]>([false, false, false]);
@@ -36,6 +35,14 @@ const Terms = () => {
     isRequired: boolean;
     index: number;
   } | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      const queryPuuid = url.searchParams.get("puuid");
+      setPuuid(queryPuuid);
+    }
+  }, []);
 
   /* redux 업데이트 */
   useEffect(() => {
