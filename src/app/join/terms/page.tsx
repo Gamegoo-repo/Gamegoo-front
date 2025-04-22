@@ -22,7 +22,6 @@ import styled from "styled-components";
 const Terms = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const url = new URL(window.location.href);
   const [puuid, setPuuid] = useState<string | null>(null);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -37,11 +36,9 @@ const Terms = () => {
   } | null>(null);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const url = new URL(window.location.href);
-      const queryPuuid = url.searchParams.get("puuid");
-      setPuuid(queryPuuid);
-    }
+    const url = new URL(window.location.href);
+    const queryPuuid = url.searchParams.get("puuid");
+    setPuuid(queryPuuid);
   }, []);
 
   /* redux 업데이트 */
