@@ -10,9 +10,10 @@ import HeaderTitle from "@/components/common/HeaderTitle";
 import ChevronRight from "../../../public/assets/icons/chevron_right.svg";
 import { getAccessToken } from "@/utils/storage";
 import Alert from "@/components/common/Alert";
-import { useState } from "react";
 import useMediaQueries from "@/hooks/useMediaQueries";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import Image from "next/image";
 
 const MatchTypePage = () => {
   const isMobile = useMediaQueries({ breakpoint: 700 });
@@ -67,13 +68,18 @@ const MatchTypePage = () => {
                       }
                     >
                       선택
-                      <ChevronRight />
+                      <Image
+                        src={"/assets/icons/chevron_right.svg"}
+                        width={12}
+                        height={12}
+                        style={{ marginLeft: "4px" }}
+                        alt="go"
+                      />
                     </BoxButton>
                   </Box>
                 );
               })
             : MATCH_TYPE_PAGE_DATA.map((box) => {
-                const isHovered = hoveredBox === box.id;
                 return (
                   <GraphicBox
                     key={box.id}
@@ -84,7 +90,9 @@ const MatchTypePage = () => {
                     top={box.top}
                     left={box.left}
                     backgroundColor={
-                      isHovered ? box.hoverBackground : box.background
+                      hoveredBox === box.id
+                        ? box.hoverBackground
+                        : box.background
                     } // Hover 시 배경 변경
                     onMouseEnter={() => setHoveredBox(box.id)}
                     onMouseLeave={() => setHoveredBox(null)}
@@ -95,12 +103,12 @@ const MatchTypePage = () => {
                     <GraphicBoxTitle>
                       <GraphicBoxTitleMain>
                         {/* Hover 시 title 변경 */}
-                        {isHovered ? box.hoverTitle : box.title}
-                        <ChevronRight />
+                        {hoveredBox === box.id ? box.hoverTitle : box.title}
+                        <ChevronRight width="5px" />
                       </GraphicBoxTitleMain>
-                      <GraphicBoxTitleSub isHovered={isHovered}>
+                      <GraphicBoxTitleSub $isHovered={hoveredBox === box.id}>
                         {/* Hover 시 sub 변경 */}
-                        {isHovered ? box.hoverSub : box.sub}
+                        {hoveredBox === box.id ? box.hoverSub : box.sub}
                       </GraphicBoxTitleSub>
                     </GraphicBoxTitle>
                   </GraphicBox>
@@ -149,7 +157,7 @@ const Main = styled.main`
     gap: 40px;
   }
   @media (max-width: 700px) {
-    margin-top: 24px;
+    margin-top: 15px;
   }
 `;
 const Box = styled.div<{ backgroundColor: string }>`
@@ -189,6 +197,7 @@ const BoxButton = styled.button`
   width: 67px;
   height: 33px;
   border-radius: 9999px;
+  ${(props) => props.theme.fonts.semiBold14};
   color: ${(props) => props.theme.colors.white};
   background: ${(props) => props.theme.colors.violet600};
 `;
@@ -201,7 +210,7 @@ const GraphicBoxTitleMain = styled.div`
   gap: 8px;
 `;
 
-const GraphicBoxTitleSub = styled.div<{ isHovered: boolean }>`
+const GraphicBoxTitleSub = styled.div<{ $isHovered: boolean }>`
   ${(props) => props.theme.fonts.regular18};
   display: flex;
   justify-content: center;
@@ -210,7 +219,7 @@ const GraphicBoxTitleSub = styled.div<{ isHovered: boolean }>`
   width: 100%;
   white-space: pre-wrap;
   color: ${(props) =>
-    props.isHovered
+    props.$isHovered
       ? props.theme.colors.violet300
       : props.theme.colors.gray500};
 `;

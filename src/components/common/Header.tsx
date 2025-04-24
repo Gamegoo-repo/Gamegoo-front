@@ -381,9 +381,9 @@ const Menus = styled.div`
 const Menu = styled.button<HeaderProps>`
   ${(props) => props.theme.fonts.regular20};
   font-weight: ${({ selected }) => (selected ? "700" : "400")};
-
+  color: ${theme.colors.gray800};
   @media screen and (max-width: 700px) {
-    ${(props) => props.theme.fonts.regular14};
+    ${(props) => props.theme.fonts.semiBold14};
     padding: 10px 0;
     border-bottom: ${({ selected }) =>
       selected ? `3px solid ${theme.colors.gray800}` : "none"};
@@ -436,6 +436,7 @@ const Login = styled.button`
   color: ${theme.colors.violet600};
   ${(props) => props.theme.fonts.bold14}
   @media screen and (max-width: 700px) {
+    margin-right: 20px;
     grid-column: 2;
     grid-row: 1;
     justify-self: end;

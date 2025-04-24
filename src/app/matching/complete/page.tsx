@@ -2,6 +2,7 @@
 
 import { Suspense, useCallback } from "react";
 import styled from "styled-components";
+import Image from "next/image";
 import HeaderTitle from "@/components/common/HeaderTitle";
 import SquareProfile from "@/components/match/SquareProfile";
 import Button from "@/components/common/Button";
@@ -12,6 +13,7 @@ import { sendMatchingQuitEvent, socket } from "@/socket";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import ChatLayout from "@/components/chat/ChatLayout";
 import { RootState } from "@/redux/store";
+import useMediaQueries from "@/hooks/useMediaQueries";
 import { useDispatch, useSelector } from "react-redux";
 import {
   openChatRoom,
@@ -42,6 +44,7 @@ interface User {
 }
 
 const Complete = () => {
+  const isMobile = useMediaQueries({ breakpoint: 700 });
   const [timeLeft, setTimeLeft] = useState(10);
   const [showFailModal, setShowFailModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -367,16 +370,34 @@ const Complete = () => {
             <SquareProfile isToggleUI={true} user={userMe} />
             <Oppnent>
               <SquareProfile opponent={true} user={user} />
-              {timeLeft > 0 && (
-                <>
-                  <Button
-                    buttonType="secondary"
-                    text="매칭 다시하기"
-                    onClick={handleReject}
-                  />
-                  <Text>{timeLeft}초 뒤 자동으로 대화방이 생성됩니다.</Text>
-                </>
-              )}
+              {timeLeft > 0 &&
+                (!isMobile ? (
+                  <>
+                    <Button
+                      buttonType="secondary"
+                      text="매칭 다시하기"
+                      onClick={handleReject}
+                    />
+                    <Text>{timeLeft}초 뒤 자동으로 대화방이 생성됩니다.</Text>
+                  </>
+                ) : (
+                  <>
+                    <Text>
+                      {timeLeft}초 뒤 자동으로 대화방이 생성됩니다
+                      <Image
+                        src="/assets/icons/arrow-right-violet.svg"
+                        width={14}
+                        height={14}
+                        alt="10초 뒤 자동으로 대화방이 생성됩니다"
+                      />
+                    </Text>
+                    <Button
+                      buttonType="secondary"
+                      text="매칭 다시하기"
+                      onClick={handleReject}
+                    />
+                  </>
+                ))}
             </Oppnent>
           </Main>
         </MatchContent>
@@ -462,4 +483,12 @@ const Oppnent = styled.div`
 const Text = styled.div`
   color: ${theme.colors.violet600};
   ${(props) => props.theme.fonts.regular18};
+  @media (max-width: 700px) {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 4px;
+    justify-content: center;
+    ${(props) => props.theme.fonts.semiBold14};
+  }
 `;

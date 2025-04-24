@@ -28,7 +28,7 @@ const SelectedStylePopup: React.FC<SelectedStylePopupProps> = ({
   return (
     <Container $position={position} $profileType={profileType}>
       <Top $position={position}>
-        3개까지 선택가능
+        게임 스타일 선택 *최대 3개
         <CloseImage
           src="/assets/icons/close_white.svg"
           width={position ? 9 : profileType === "mini" ? 10 : 14}
@@ -60,7 +60,7 @@ const Container = styled.div<{
   $position: positionType | undefined;
   $profileType: profileType;
 }>`
-  width: ${({ $position }) => ($position ? "574px" : "885px")};
+  width: ${({ $position }) => ($position ? "574px" : "666px")};
   padding: ${({ $position }) => ($position ? "13px 22px" : "28px")};
   display: flex;
   flex-direction: column;
@@ -72,7 +72,6 @@ const Container = styled.div<{
   /* Background Blur */
   box-shadow: 0 4px 8.9px 0 rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(7.5px);
-
   position: absolute;
   top: ${({ $position }) => ($position ? "-3px" : "60px")};
   left: ${({ $position }) => ($position ? "-2px" : "0")};
@@ -87,6 +86,10 @@ const Container = styled.div<{
       padding: 13px 22px;
       gap: 12px;
     `}
+
+  @media (max-width: 700px) {
+    width: 80vw;
+  }
 `;
 
 const Top = styled.div<{ $position: positionType | undefined }>`
@@ -96,7 +99,11 @@ const Top = styled.div<{ $position: positionType | undefined }>`
   align-items: center;
   color: ${theme.colors.white};
   font-size: ${({ $position }) =>
-    $position ? theme.fonts.regular14 : theme.fonts.regular14};
+    $position ? theme.fonts.regular14 : theme.fonts.bold20};
+
+  @media (max-width: 700px) {
+    ${theme.fonts.bold16}
+  }
 `;
 
 const CloseImage = styled(Image)`
@@ -112,7 +119,7 @@ const Boxs = styled.div<{
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: center;
-  gap: ${({ $position }) => ($position ? "9px" : "14px")};
+  gap: ${({ $position }) => ($position ? "9px" : "12px")};
   outline: none;
 
   /* 프로필 미니 */
@@ -128,18 +135,22 @@ const Box = styled.button<{
   $position: positionType | undefined;
   $profileType: profileType;
 }>`
-  display: flex;
   height: ${({ $position }) => ($position ? "29px" : "48px")};
-  padding: ${({ $position }) => ($position ? "6px 20px" : "12px 28px")};
-  justify-content: center;
-  align-items: center;
+  padding: 6px 20px;
   border-radius: 59.263px;
-  background: ${({ selected }) =>
-    selected ? theme.colors.violet600 : theme.colors.gray700};
-  color: ${theme.colors.white};
+  border: 1px solid
+    ${({ selected }) =>
+      selected ? theme.colors.violet600 : theme.colors.gray500};
+  background: ${({ selected }) => (selected ? theme.colors.violet600 : "")};
+  color: ${theme.colors.gray300};
   font-size: ${({ $position }) =>
-    $position ? theme.fonts.medium14 : theme.fonts.medium20};
+    $position ? theme.fonts.medium14 : theme.fonts.semiBold18};
   font-family: "Pretendard";
+
+  @media (max-width: 700px) {
+    padding: 6px 16px;
+    font-size: ${theme.fonts.semiBold14};
+  }
 
   /* 프로필 미니 */
   ${({ $profileType }) =>

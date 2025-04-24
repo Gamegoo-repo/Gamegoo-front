@@ -23,8 +23,6 @@ const PositionCategory = (props: PositionComponentProps) => {
   const boxRef = React.useRef<HTMLDivElement>(null);
 
   const handlePositionCategory = (positionName: Position | null) => {
-    console.log("positionName", positionName);
-
     let updatedValues: Position | (Position | null)[];
 
     if (selectedBox === "want") {
@@ -51,8 +49,10 @@ const PositionCategory = (props: PositionComponentProps) => {
       updatedValues = positionName || "ANY";
     }
 
-    console.log(updatedValues);
     onSelect(updatedValues);
+  };
+
+  const handleClose = () => {
     onClose();
   };
 
@@ -73,9 +73,7 @@ const PositionCategory = (props: PositionComponentProps) => {
     const positionData =
       POSITION.find((p) => p.key === position) || POSITION[1];
 
-    return `/assets/images/position/position_${positionData.image}_${
-      value.includes(position) ? "purple" : "unclicked"
-    }.svg`;
+    return `/assets/images/position/position_${positionData.image}_unclicked.svg`;
   };
 
   const getSvgComponent = (position: Position | null) => {
@@ -101,20 +99,34 @@ const PositionCategory = (props: PositionComponentProps) => {
 
   return (
     <Wrapper>
+      <Header>
+        <Title>주 포지션 선택</Title>
+        <CloseButton onClick={() => handleClose()}>
+          <Image
+            src={"/assets/icons/close_white.svg"}
+            width={16}
+            height={16}
+            alt="go"
+          />
+        </CloseButton>
+      </Header>
+
       <Box $isWant={selectedBox === "want"} ref={boxRef}>
         {positionList.map((pos) => (
           <StyledButton
             key={pos.id}
-            posKey={pos.key}
+            $posKey={pos.key}
             onClick={() => handlePositionCategory(pos.key)}
           >
             {value.includes(pos.key) ? (
-              <Image
-                src={getImageSrc(pos.key)}
-                alt={pos.key || "선택"}
-                width={35}
-                height={35}
-              />
+              <>
+                <Image
+                  src={getImageSrc(pos.key)}
+                  alt={pos.key || "선택"}
+                  width={25}
+                  height={25}
+                />
+              </>
             ) : (
               getSvgComponent(pos.key)
             )}
@@ -128,21 +140,40 @@ const PositionCategory = (props: PositionComponentProps) => {
 export default PositionCategory;
 
 const Wrapper = styled.div`
-  width: 100%;
+  width: 452px;
   position: absolute;
   top: 100px;
   left: calc(50% - 35px);
   z-index: 10;
+  border-radius: 20px;
+  padding: 32px;
+  background: rgba(0, 0, 0, 0.64);
+
+  /* Background Blur */
+  box-shadow: 0 4px 8.9px 0 rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(7.5px);
 `;
+
+const Header = styled.div`
+  margin-bottom: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const Title = styled.div`
+  ${theme.fonts.bold20}
+  color: ${theme.colors.white};
+`;
+
+const CloseButton = styled.button``;
 
 const Box = styled.div<{ $isWant: boolean }>`
   display: flex;
   align-items: center;
-  column-gap: 50px;
+  column-gap: 20px;
   width: ${({ $isWant }) => ($isWant ? "410px" : "482px")};
-  padding: 18px 27px;
-  background: ${theme.colors.gray900};
-  border-radius: 16.3px;
+
   &:after {
     border-top: 0 solid transparent;
     border-left: 9px solid transparent;
@@ -155,42 +186,12 @@ const Box = styled.div<{ $isWant: boolean }>`
   }
 `;
 
-const StyledButton = styled.button<{ posKey: Position }>`
-  background: none;
+const StyledButton = styled.button<{ $posKey: Position }>`
+  width: 48px;
+  /* TODO */
+  /* background: ${(props) =>
+    props.$posKey ? theme.colors.violet600 : ""};   */
   border: none;
   padding: 0;
   cursor: pointer;
-
-  ${({ posKey }) =>
-    (posKey === "ANY" || posKey === "JUNGLE" || posKey === "SUP") &&
-    `
-      &:hover path {
-        fill: ${theme.colors.violet200};
-      }
-      &:active, &:focus path {
-        fill: ${theme.colors.violet600};
-      }
-  `}
-
-  ${({ posKey }) =>
-    posKey === "TOP" &&
-    `
-      &:hover path:first-child {
-        fill: ${theme.colors.violet200};
-      }
-      &:active, &:focus path:first-child {
-        fill: ${theme.colors.violet600};
-      }
-  `}
-
-  ${({ posKey }) =>
-    (posKey === "MID" || posKey === "ADC") &&
-    `
-      &:hover path:nth-child(2) {
-        fill: ${theme.colors.violet200};
-      }
-      &:active, &:focus path:nth-child(2) {
-        fill: ${theme.colors.violet600};
-      }
-  `}
 `;

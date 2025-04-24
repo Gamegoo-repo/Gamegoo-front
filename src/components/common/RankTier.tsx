@@ -51,8 +51,8 @@ const Container = styled.div<{ $direct: string }>`
 `;
 
 const RankName = styled.div<{ $direct: string }>`
-  color: ${theme.colors.gray800};
-  ${theme.fonts.regular14}
+  color: ${theme.colors.gray600};
+  ${theme.fonts.semiBold14}
 
   ${({ $direct }) =>
     $direct === "row" &&
@@ -69,7 +69,7 @@ const Tier = styled.div<{ $direct: string }>`
   align-items: center;
   gap: 4px;
   color: ${theme.colors.gray700};
-  ${theme.fonts.bold20}
+  ${theme.fonts.bold25}
 
   ${({ $direct }) =>
     $direct === "row" &&

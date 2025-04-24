@@ -55,7 +55,7 @@ const StyledBox = styled.div<{ $shape: ShapeType; $profiletype?: profileType }>`
     `}
 
   ${(props) =>
-    (props.$profiletype === "square" || props.$profiletype === "none") &&
+    props.$profiletype === "square" &&
     css`
       height: 34px;
       padding: 6px 20px;
@@ -65,10 +65,18 @@ const StyledBox = styled.div<{ $shape: ShapeType; $profiletype?: profileType }>`
       }
     `}
 
-    @media (max-width: 700px) {
-    background: ${theme.colors.white};
-    color: ${theme.colors.gray700};
-    padding: 8px 12px;
-    height: 29px;
-  }
+    ${(props) =>
+    props.$profiletype === "none" &&
+    css`
+      padding: 6px 20px;
+      ${(props) => props.theme.fonts.semiBold16}
+      background: ${theme.colors.white};
+      color: ${theme.colors.gray700};
+      height: 36px;
+      @media (max-width: 700px) {
+        ${(props) => props.theme.fonts.semiBold13}
+        padding: 8px 12px;
+        height: 29px;
+      }
+    `}
 `;

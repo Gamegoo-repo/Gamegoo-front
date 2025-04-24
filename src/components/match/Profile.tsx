@@ -204,6 +204,7 @@ const Profile: React.FC<Profile> = ({
   /* 포지션 선택창 관련 함수*/
   // 포지션 선택창 열기 (포지션 클릭시 동작)
   const handlePosition = async (index: number) => {
+    // console.log(index, "=====", profileType);
     if (profileType !== "other") {
       setIsPositionOpen((prev) =>
         prev.map((isOpen, i) => (i === index ? !isOpen : false))
@@ -465,9 +466,9 @@ const Profile: React.FC<Profile> = ({
                 onClick={() => setIsProfileListOpen(!isProfileListOpen)}
               >
                 <CameraImage
-                  data="/assets/icons/camera_white.svg"
-                  width={30}
-                  height={25}
+                  data="/assets/icons/edit_pencil.svg"
+                  width={35}
+                  height={30}
                 />
               </CameraImgBg>
             )}
@@ -476,7 +477,7 @@ const Profile: React.FC<Profile> = ({
           {isProfileListOpen && (
             <ProfileListBox>
               <ProfileListBoxTop>
-                프로필 이미지 변경
+                프로필 이미지 선택
                 <Image
                   src="/assets/icons/close_white.svg"
                   width={14}
@@ -493,6 +494,13 @@ const Profile: React.FC<Profile> = ({
                     $isSelected={item === selectedImageIndex}
                     onClick={() => handleImageClick(item)}
                   >
+                    {item === selectedImageIndex && (
+                      <CheckIcon
+                        width={22}
+                        height={22}
+                        data={`/assets/icons/check_white.svg`}
+                      />
+                    )}
                     <ProfileListImage
                       key={item}
                       data={`/assets/images/profile/profile${item}.svg`}
@@ -534,7 +542,6 @@ const Profile: React.FC<Profile> = ({
           </RankTierWrapper>
           {profileType === "wind" ? (
             <StyledBox>
-              {/* PC && 칼바람 클릭 시 */}
               <GameStyle
                 profileType="none"
                 gameStyleResponseDTOList={user.gameStyleResponseList}
@@ -619,7 +626,6 @@ const Profile: React.FC<Profile> = ({
                 )}
             </UnderRow>
           )}
-
           {(profileType === "normal" ||
             profileType === "other" ||
             (profileType === "me" &&
@@ -757,10 +763,10 @@ export default Profile;
 
 const Container = styled.div<{ $backgroundColor?: string }>`
   width: 100%;
-  height: 445px;
+  /* height: 445px; */
   box-sizing: border-box;
   border-radius: 30px;
-  padding: 23px 44px 44px 44px;
+  padding: 45px;
   background: ${({ $backgroundColor }) =>
     $backgroundColor ? $backgroundColor : theme.colors.gray100};
   display: flex;
@@ -784,11 +790,9 @@ const Container = styled.div<{ $backgroundColor?: string }>`
 
 const Row = styled.div<{ $profileType: string }>`
   width: 100%;
-  height: 186px;
   display: flex;
   justify-content: flex-start;
-  align-items: center;
-  gap: 38px;
+  gap: 62px;
   ${({ $profileType }) =>
     $profileType === "other" &&
     css`
@@ -818,7 +822,6 @@ const UnderRow = styled.div`
 `;
 
 const ImageContainer = styled.div`
-  height: 186px;
   position: relative;
   @media (max-width: 700px) {
     display: flex;
@@ -857,8 +860,8 @@ const PersonImage = styled.object`
 
 const CameraImgBg = styled.div`
   position: relative;
-  width: 54px;
-  height: 54px;
+  width: 56px;
+  height: 56px;
   background: #000000a1;
   box-shadow: 0 0 3.06px 0 #00000040;
   border-radius: 50%;
@@ -888,7 +891,7 @@ const ProfileListBox = styled.div`
   height: 335px;
   display: flex;
   flex-direction: column;
-  padding: 26px;
+  padding: 32px;
   gap: 10px;
   justify-content: center;
   align-items: flex-end;
@@ -898,6 +901,9 @@ const ProfileListBox = styled.div`
   top: 205px;
   left: 10px;
   z-index: 100;
+  /* Background Blur */
+  box-shadow: 0 4px 8.9px 0 rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(7.5px);
 `;
 
 const ProfileListBoxTop = styled.div`
@@ -906,7 +912,8 @@ const ProfileListBoxTop = styled.div`
   justify-content: space-between;
   align-items: center;
   color: ${theme.colors.white};
-  ${theme.fonts.regular20};
+  ${theme.fonts.bold20};
+  margin-bottom: 20px;
 `;
 
 const ProfileList = styled.div`
@@ -934,13 +941,26 @@ const SelectProfileImgWrapper = styled.div<{
   ${({ $isSelected }) =>
     $isSelected &&
     css`
-      opacity: 0.5;
+      border: 3.41px solid ${theme.colors.white};
     `}
 
   &:hover {
     filter: drop-shadow(0px 4px 10px rgba(138, 117, 255, 0.7));
     transition: box-shadow 0.3s ease-in-out;
   }
+`;
+
+const CheckIcon = styled.object`
+  position: absolute;
+  top: 15px;
+  left: 10px;
+  z-index: 10;
+  transform: translate(-50%, -50%);
+  width: 36px;
+  height: 36px;
+  background: ${theme.colors.violet600};
+  border-radius: 50%;
+  border: 3.41px solid ${theme.colors.white};
 `;
 
 const ProfileListImage = styled.object`
@@ -1002,7 +1022,7 @@ const Top = styled.div`
 const Span = styled.span`
   margin-right: 5px;
   color: ${theme.colors.gray500};
-  font-size: ${theme.fonts.regular32};
+  font-size: ${theme.fonts.bold20};
   @media (max-width: 700px) {
     ${(props) => props.theme.fonts.semiBold12};
   }
@@ -1067,11 +1087,11 @@ const MsgConfirm = styled(Msg)`
 
 const Positions = styled.div`
   display: flex;
-  gap: 24px;
   align-items: center;
+  width: 412px;
+  gap: 8px;
   @media (max-width: 700px) {
     width: 100%;
-    gap: 8px;
   }
 `;
 
@@ -1090,17 +1110,18 @@ const Posi = styled.div<{ $isWantP: boolean }>`
   flex-direction: column;
   gap: 15px;
   align-items: flex-start;
-  font-size: ${theme.fonts.regular14};
+  font-size: ${theme.fonts.medium16};
+  color: ${theme.colors.gray800};
   position: relative;
 
   &.other {
-    font-size: ${theme.fonts.regular14};
+    font-size: ${theme.fonts.medium16};
   }
 
   ${({ $isWantP }) =>
     $isWantP &&
     css`
-      margin-left: 36px;
+      /* margin-left: 36px; */
     `}
 
   @media (max-width: 700px) {
@@ -1118,8 +1139,8 @@ const Mike = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 10px;
-  font-size: ${theme.fonts.regular14};
+  gap: 12px;
+  font-size: ${theme.fonts.semiBold14};
   @media (max-width: 700px) {
     font-size: ${theme.fonts.medium11};
   }

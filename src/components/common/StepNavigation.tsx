@@ -1,13 +1,17 @@
 import { STEPS } from "@/constants/match";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import Image from "next/image";
 import ChevronRightGray from "../../../public/assets/icons/chevron_right_gray.svg";
+import { theme } from "@/styles/theme";
+import useMediaQueries from "@/hooks/useMediaQueries";
 
 interface StepNavigationProps {
   title: string;
 }
 
 const StepNavigation = ({ title }: StepNavigationProps) => {
+  const isMobile = useMediaQueries({ breakpoint: 700 });
   const [activeStep, setActiveStep] = useState<number | null>(null);
 
   // title과 일치하는 Step 찾기
@@ -24,7 +28,14 @@ const StepNavigation = ({ title }: StepNavigationProps) => {
         {STEPS.map((step, index) => (
           <StepItem key={index} $active={step === title}>
             {step}
-            {index !== STEPS.length - 1 && <ChevronRightGray />}
+            {index !== STEPS.length - 1 && (
+              <Image
+                src={"/assets/icons/chevron_right_gray.svg"}
+                width={20}
+                height={20}
+                alt="go"
+              />
+            )}
           </StepItem>
         ))}
       </Step>
@@ -37,8 +48,7 @@ export default StepNavigation;
 const NavContainer = styled.nav`
   display: flex;
   align-items: center;
-  font-size: 14px;
-  color: #adb5bd;
+  ${(props) => props.theme.fonts.bold16};
   position: relative;
   padding-bottom: 5px;
 
@@ -50,7 +60,7 @@ const NavContainer = styled.nav`
     width: 100%;
   }
   @media (max-width: 700px) {
-    font-size: 13px;
+    ${(props) => props.theme.fonts.semiBold13};
   }
 `;
 
@@ -61,8 +71,8 @@ const Step = styled.div`
 `;
 
 const StepItem = styled.div<{ $active?: boolean }>`
-  color: ${(props) => (props.$active ? "#343a40" : "#adb5bd")};
-  font-weight: ${(props) => (props.$active ? "600" : "normal")};
+  color: ${(props) =>
+    props.$active ? props.theme.colors.gray600 : props.theme.colors.gray400};
   cursor: pointer;
   transition: color 0.3s ease-in-out;
   display: flex;
@@ -79,14 +89,12 @@ const StepItem = styled.div<{ $active?: boolean }>`
       display: none; /* 기존 스타일 숨김 */
     }
 
-    & > svg {
+    & > img {
       margin-left: 10px;
       padding: 5px;
       border: #b5c1d2;
-      background-color: #edf2f8;
+      background-color: ${theme.colors.gray200};
       border-radius: 50%;
-      width: 20px;
-      height: 20px;
       display: inline-flex;
       align-items: center;
       justify-content: center;

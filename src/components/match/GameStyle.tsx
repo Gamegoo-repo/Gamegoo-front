@@ -128,11 +128,7 @@ const GameStyle = (props: GameStyleProps) => {
                 onClick={handleStylePopup}
               >
                 <Image
-                  src={
-                    isMobile
-                      ? "/assets/icons/plus_violet.svg"
-                      : "/assets/icons/plus.svg"
-                  }
+                  src={"/assets/icons/plus_violet.svg"}
                   width={
                     profileType === "mini"
                       ? 11
@@ -189,9 +185,9 @@ const LeftLabel = styled.div<{ $profileType: profileType }>`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 10px;
-  color: ${theme.colors.gray800};
-  ${theme.fonts.regular14};
+  gap: 12px;
+  color: ${theme.colors.gray600};
+  ${theme.fonts.semiBold14};
 
   ${({ $profileType }) =>
     $profileType === "mini" &&
@@ -206,7 +202,7 @@ const LeftLabel = styled.div<{ $profileType: profileType }>`
 const GameBox = styled.div<{ $profileType: profileType }>`
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 8px;
   position: relative;
 
   ${({ $profileType }) =>
@@ -221,7 +217,8 @@ const GameBox = styled.div<{ $profileType: profileType }>`
 `;
 
 const Div = styled.div`
-  width: 62px;
+  width: 56px;
+  height: 36px;
   border-radius: 25px;
   @media (max-width: 700px) {
     width: 38px;
@@ -236,15 +233,15 @@ const AddGameStyle = styled.button<{ $profileType: profileType }>`
   padding: 13px 30px;
   justify-content: center;
   align-items: center;
-  border-radius: 25px;
-  background: ${theme.colors.violet300};
+  border-radius: 999px;
+  background: ${theme.colors.white};
   outline: none;
 
   ${({ $profileType }) =>
     $profileType === "none" &&
     css`
-      width: 40px;
-      height: 34px;
+      width: 56px;
+      height: 36px;
       padding: 10px 13px;
     `}
 
@@ -260,6 +257,5 @@ const AddGameStyle = styled.button<{ $profileType: profileType }>`
     @media (max-width: 700px) {
     width: 38px;
     height: 29px;
-    background: ${theme.colors.white};
   }
 `;

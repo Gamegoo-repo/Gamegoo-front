@@ -8,8 +8,7 @@ import { GAME_MODE_PAGE_DATA } from "@/constants/match";
 import HeaderTitle from "@/components/common/HeaderTitle";
 import { Suspense } from "react";
 import useMediaQueries from "@/hooks/useMediaQueries";
-import ChevronRight from "../../../../public/assets/icons/chevron_right.svg";
-
+import Image from "next/image";
 const GameModePage = () => {
   const isMobile = useMediaQueries({ breakpoint: 700 });
   const router = useRouter();
@@ -43,7 +42,13 @@ const GameModePage = () => {
                       }
                     >
                       선택
-                      <ChevronRight />
+                      <Image
+                        src={"/assets/icons/chevron_right.svg"}
+                        width={12}
+                        height={12}
+                        style={{ marginLeft: "4px" }}
+                        alt="go"
+                      />
                     </BoxButton>
                   </Box>
                 );
@@ -61,6 +66,13 @@ const GameModePage = () => {
                       backgroundColor="#2E3032"
                     >
                       {box.title}
+                      <Image
+                        src={"/assets/icons/chevron_right.svg"}
+                        width={20}
+                        height={20}
+                        style={{ marginLeft: "8px" }}
+                        alt="go"
+                      />
                     </GraphicBox>
                   </BoxWrapper>
                 );
@@ -107,7 +119,7 @@ const Main = styled.main`
   margin-bottom: 65px;
   @media (max-width: 700px) {
     flex-direction: column;
-    margin-top: 24px;
+    margin-top: 15px;
   }
 `;
 const Box = styled.div<{ backgroundColor: string }>`
