@@ -6,13 +6,14 @@ import { clearSignIn } from "@/redux/slices/signInSlice";
 import { clearUserProfile } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
 import { clearTokens } from "@/utils/storage";
-import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import crypto from "crypto-js";
+import { encode as base64urlEncode } from "js-base64";
 
 const RiotLogin = () => {
   const router = useRouter();
@@ -27,11 +28,30 @@ const RiotLogin = () => {
 
   /* 로그인 */
   const handleLogin = async () => {
-    // 추후 Riot 로그인 기능 구현
-    window.location.href =
-      "https://auth.riotgames.com/authorize?redirect_uri=https://www.gamegoo.co.kr/oauth&client_id=43277efb-2a7d-488f-bb73-6c49c40d7099&response_type=code&scope=openid";
+    // 라이엇 로그인으로 이동
+    const csrfToken = crypto.lib.WordArray.random(16).toString();
+    sessionStorage.setItem("csrfToken", csrfToken);
 
-    // router.push("/join/terms");
+    const redirect = process.env.NEXT_PUBLIC_RIOT_REDIRECT_AFTER_LOGIN!;
+    const state = {
+      redirect,
+      csrfToken,
+    };
+    const encodedState = base64urlEncode(JSON.stringify(state));
+
+    const riotAuthUrl = process.env.NEXT_PUBLIC_RIOT_AUTH_URL!;
+    const redirectUri = process.env.NEXT_PUBLIC_RIOT_REDIRECT_URI!;
+    const clientId = process.env.NEXT_PUBLIC_RIOT_CLIENT_ID!;
+    const responseType = process.env.NEXT_PUBLIC_RIOT_RESPONSE_TYPE!;
+    const scope = process.env.NEXT_PUBLIC_RIOT_SCOPE!;
+
+    const authUrl = `${riotAuthUrl}?redirect_uri=${encodeURIComponent(
+      redirectUri
+    )}&client_id=${clientId}&response_type=${responseType}&scope=${scope}&state=${encodeURIComponent(
+      encodedState
+    )}&prompt=login`;
+
+    window.location.href = authUrl;
   };
 
   const handleDirectMain = () => {

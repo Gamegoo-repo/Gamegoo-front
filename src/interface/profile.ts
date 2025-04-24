@@ -1,16 +1,17 @@
+import { ChampionResponseDTO } from "@/types/api/board/board";
 import { Position } from "@/types/position/position";
 import { Mike } from "@/types/user/mike";
 
 export type profileType = "normal" | "wind" | "other" | "me";
 
-export interface Champion {
-  championId: number;
-  championName: string;
-  csPerMinute: number;
-  games: number;
-  winRate: number;
-  wins: number;
-}
+// export interface Champion {
+//   championId: number;
+//   championName: string;
+//   // csPerMinute: number;
+//   games: number;
+//   winRate: number;
+//   // wins: number;
+// }
 
 export interface GameStyle {
   gameStyleId: number;
@@ -42,7 +43,7 @@ export interface User {
   soloWinrate: number;
   freeWinrate: number;
   gameStyleResponseList: GameStyle[];
-  championResponseList: Champion[];
+  championResponseList: ChampionResponseDTO[];
   friend: boolean;
   friendRequestMemberId: number | null;
 }
@@ -57,12 +58,12 @@ export interface GameStyleList {
   gameStyleName: string;
 }
 
-export interface ChampionList {
-  championId: number;
-  championName: string;
-  winRate: number;
-  games: number;
-}
+// export interface ChampionList {
+//   championId: number;
+//   championName: string;
+//   winRate: number;
+//   games: number;
+// }
 
 export interface UserInfo {
   id: number;
@@ -79,7 +80,6 @@ export interface UserInfo {
   rank: string;
   updatedAt: string;
   gameStyleResponseDTOList: GameStyleList[];
-  championResponseDTOList: ChampionList[];
+  championResponseDTOList: ChampionResponseDTO[];
   loginType: string;
 }
-

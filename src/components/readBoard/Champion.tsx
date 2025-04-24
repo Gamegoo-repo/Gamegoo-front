@@ -1,13 +1,13 @@
 import styled from "styled-components";
 import Image from "next/image";
 import { theme } from "@/styles/theme";
-import { ChampionResponseDTOList } from "@/interface/board";
 import { useState } from "react";
 import { fadeIn, fadeOut } from "@/styles/animation";
+import { ChampionResponseDTO } from "@/types/api/board/board";
 
 interface ChampionProps {
   title?: boolean;
-  list?: ChampionResponseDTOList[];
+  list?: ChampionResponseDTO[];
   font?: string;
 }
 
