@@ -6,7 +6,6 @@ import MyPageProfile from "@/components/mypage/profile/MyPageProfile";
 import PasswordModal from "@/components/mypage/profile/PasswordModal";
 import { useEffect, useState } from "react";
 import ConfirmModal from "@/components/common/ConfirmModal";
-import { deleteMember } from "@/api/user";
 import { setUserMike, setUserProfile } from "@/redux/slices/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -16,6 +15,7 @@ import { checkPassword } from "@/api/password/password";
 import { clearTokens } from "@/utils/storage";
 import { useRouter } from "next/navigation";
 import { getMyProfile } from "@/api/user/profile/get";
+import { deleteMember } from "@/api/user/delete";
 
 const passwordLength = 10;
 
