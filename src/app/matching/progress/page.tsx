@@ -305,11 +305,6 @@ const Progress = () => {
               sub="나와 꼭 맞는 상대를 찾는 중..."
               isMatchProgressOrComplete={true}
             />
-            {!isMobile && (
-              <Time>
-                <Span>{formatTime(timeLeft)}&nbsp;</Span>/5:00
-              </Time>
-            )}
           </Header>
           <Main>
             <SquareProfile user={user} isToggleUI={true} />
@@ -323,11 +318,9 @@ const Progress = () => {
               <AnimatedText $visible={textVisible}>
                 {currentMessage}
               </AnimatedText>
-              {isMobile && (
-                <Time>
-                  <Span>{formatTime(timeLeft)}&nbsp;</Span>/ 5:00
-                </Time>
-              )}
+              <Time>
+                <Span>{formatTime(timeLeft)}&nbsp;</Span>/ 5:00
+              </Time>
             </Waiting>
           </Main>
           {/* 즐겜모드, 빡겜모드 매칭 실패 */}
@@ -466,16 +459,13 @@ const Header = styled.div`
 
 const Time = styled.div`
   color: ${theme.colors.gray700};
-  ${(props) => props.theme.fonts.regular28}
+  ${(props) => props.theme.fonts.light32}
   margin-bottom: 32px;
-  @media (max-width: 700px) {
-    ${(props) => props.theme.fonts.light32}
-  }
 `;
 
 const Span = styled.span`
   color: ${theme.colors.violet600};
-  ${(props) => props.theme.fonts.bold45}
+  ${(props) => props.theme.fonts.bold32}
   @media (max-width: 700px) {
     ${(props) => props.theme.fonts.bold32}
   }

@@ -88,27 +88,24 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
         !isMobile) && (
         <Container $opponent={opponent}>
           <Column>
-            <Top>
-              {/* {user.gameName} */}
-              유진주
+            <FirstRow>
+              {user.gameName}
+              <SpanTag>#{user.tag}</SpanTag>
+            </FirstRow>
+            <SecondRow>
               <Rank>
-                {!isMobile && (
-                  <TierImage
-                    data={`/assets/images/tier/${
-                      user.tier !== "null"
-                        ? toLowerCaseString(user.tier)
-                        : "unrank"
-                    }.svg`}
-                    width={43}
-                    height={43}
-                  />
-                )}
-
-                {isMobile && "#"}
-                {setAbbrevTier(user.tier)}
-                {user.rank ? user.rank : ""}
+                <TierImage
+                  data={`/assets/images/tier/${
+                    user.tier !== "null"
+                      ? toLowerCaseString(user.tier)
+                      : "unrank"
+                  }.svg`}
+                  width={43}
+                  height={43}
+                />
+                {user.tier}
               </Rank>
-            </Top>
+            </SecondRow>
             <ImageContainer>
               <ProfileImgWrapper $bgColor={getProfileBgColor(user.profileImg)}>
                 <ProfileImg
@@ -116,24 +113,26 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
                   width={!isMobile ? 100 : 67}
                   height={!isMobile ? 100 : 67}
                 />
+                {opponent ? (
+                  <>
+                    <LevelTag onClick={handleMannerLevel}>
+                      LV. {user.mannerLevel}
+                    </LevelTag>
+                    {mannerPopup && (
+                      <MannerLevelBox
+                        memberId={0}
+                        level={5}
+                        top="20px"
+                        right="-17%"
+                        onClose={() => setMannerPopup(!mannerPopup)}
+                      />
+                    )}
+                    <Bubble>클릭해서 매너키워드 보기</Bubble>
+                  </>
+                ) : (
+                  <LevelTag>LV. {user.mannerLevel}</LevelTag>
+                )}
               </ProfileImgWrapper>
-              {/* TODO opponent따라서 레벨 보여주는 조건 */}
-              {opponent && (
-                <>
-                  <Level onClick={handleMannerLevel}>
-                    LV. {user.mannerLevel}
-                  </Level>
-                  {mannerPopup && (
-                    <MannerLevelBox
-                      memberId={0}
-                      level={5}
-                      top="20px"
-                      right="-17%"
-                    />
-                  )}
-                  <Bubble>클릭해서 매너키워드 보기</Bubble>
-                </>
-              )}
             </ImageContainer>
             <Mic status={user.mike} />
             {/* TODO 게임 스타일 UI 확인 필요 */}
@@ -214,7 +213,6 @@ const ContainerWrap = styled.div<{ $opponent: boolean; $isOpened: boolean }>`
     padding: ${({ $isOpened }) =>
       $isOpened ? `10px 20px 28px 20px` : `10px 20px`};
     border-radius: 8px;
-    border: 1px solid ${theme.colors.violet200};
     height: unset;
   }
 `;
@@ -241,6 +239,9 @@ const Column = styled.div`
   justify-content: flex-start;
   align-items: center;
   gap: 18px;
+  @media (max-width: 700px) {
+    gap: 15px;
+  }
 `;
 
 const ImageContainer = styled.div`
@@ -270,21 +271,23 @@ const ProfileImg = styled.object`
   transform: translate(-50%, -50%);
 `;
 
-const Level = styled.button`
-  width: 53px;
-  height: 26px;
-  border-radius: 57px;
-  background: rgba(0, 0, 0, 0.64);
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-  color: ${theme.colors.violet300};
-  ${(props) => props.theme.fonts.bold14};
+const LevelTag = styled.span`
   position: absolute;
-  bottom: 130px;
+  bottom: -12.5px;
   left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  transform: translate(-50%);
+  border-radius: 57px;
+  padding: 6px 10px;
+  background: ${theme.colors.gray900};
+  color: ${theme.colors.violet300};
+  ${theme.fonts.bold13}
+  backdrop-filter: blur(7.5px);
+
+  @media (max-width: 700px) {
+    ${theme.fonts.bold11}
+    padding: 1px 8px;
+    bottom: -4px;
+  }
 `;
 
 const Bubble = styled.div`
@@ -299,8 +302,8 @@ const Bubble = styled.div`
   color: ${theme.colors.gray800};
   ${theme.fonts.medium11};
   position: absolute;
-  bottom: 140px;
-  left: 65%;
+  top: -15px;
+  left: 20%;
 
   animation: fadeInOut 2s infinite;
 
@@ -315,34 +318,46 @@ const Bubble = styled.div`
   }
 
   &:before {
-    border-top: 3px solid transparent;
-    border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
-    border-bottom: 9px solid ${theme.colors.violet400};
+    top: 100%;
+    left: 30%;
+    border: solid transparent;
     content: "";
+    height: 0;
+    width: 0;
     position: absolute;
-    bottom: 0.2px;
-    left: -5px;
-    transform: rotate(-11deg);
-    z-index: 0;
-    border-radius: 0 0 0 2px;
+    pointer-events: none;
+    border-top-color: ${theme.colors.violet400};
+    border-width: 9px;
+    margin-left: -9px;
   }
 
   &:after {
-    border-top: 0 solid transparent;
-    border-left: 6px solid transparent;
-    border-right: 4.5px solid transparent;
-    border-bottom: 9px solid ${theme.colors.gray100};
+    top: 100%;
+    left: 30%;
+    border: solid transparent;
     content: "";
+    height: 0;
+    width: 0;
     position: absolute;
-    bottom: 2px;
-    left: -2px;
-    transform: rotate(-10deg);
-    z-index: 100;
+    pointer-events: none;
+    border-top-color: ${theme.colors.gray100};
+    border-width: 7px;
+    margin-left: -7px;
   }
 `;
 
-const Top = styled.div`
+const FirstRow = styled.div`
+  ${theme.fonts.bold25}
+  color: ${theme.colors.gray800};
+`;
+
+const SpanTag = styled.span`
+  ${theme.fonts.bold16}
+  color: ${theme.colors.gray500};
+  margin-left: 3px;
+`;
+
+const SecondRow = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;

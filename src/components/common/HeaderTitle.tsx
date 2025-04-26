@@ -71,14 +71,11 @@ const HeaderWrap = styled.header<{
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: ${({ $isMatchProgressOrComplete }) =>
+    $isMatchProgressOrComplete ? "unset" : "space-between"};
   margin-bottom: ${({ $marginBottom }) =>
     $marginBottom ? $marginBottom : "32px"};
   @media (max-width: 700px) {
-    display: ${({ $isMatchProgressOrComplete }) =>
-      $isMatchProgressOrComplete ? "flex" : "unset"};
-    justify-content: ${({ $isMatchProgressOrComplete }) =>
-      $isMatchProgressOrComplete ? "unset" : "space-between"};
     margin-bottom: 12px;
   }
 `;
@@ -119,9 +116,9 @@ const Title = styled.div`
 `;
 
 const Sub = styled.div`
-  margin-left: 40px;
+  margin-left: 14px;
   color: ${theme.colors.gray600};
-  ${(props) => props.theme.fonts.regular28};
+  ${(props) => props.theme.fonts.regular20};
   @media (max-width: 700px) {
     margin-left: 10px;
     ${(props) => props.theme.fonts.regular14};
