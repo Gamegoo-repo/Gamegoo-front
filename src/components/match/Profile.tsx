@@ -567,13 +567,14 @@ const Profile: React.FC<Profile> = ({
                             : (positionValue.want && positionValue.want[0]) ??
                               "ANY"
                         )}
-                        width={!isMobile ? 55 : 41}
-                        height={!isMobile ? 40 : 32}
+                        width={!isMobile ? 55 : 22}
+                        height={!isMobile ? 40 : 22}
                         alt="포지션"
                         onClick={() => handlePosition(index)}
                       />
                       {isPositionOpen[index] && (
                         <PositionCategory
+                          selectedBox={index === 0 ? "main" : "sub"}
                           value={
                             index === 0
                               ? positionValue.main ?? "ANY"
@@ -598,13 +599,14 @@ const Profile: React.FC<Profile> = ({
                       src={setPositionImg(
                         (positionValue.want && positionValue.want[0]) ?? "ANY"
                       )}
-                      width={!isMobile ? 55 : 41}
-                      height={!isMobile ? 40 : 32}
+                      width={!isMobile ? 55 : 22}
+                      height={!isMobile ? 40 : 22}
                       alt="포지션"
                       onClick={() => handlePosition(2)}
                     />
                     {isPositionOpen[2] && (
                       <PositionCategory
+                        selectedBox="want"
                         value={
                           (positionValue.want && positionValue.want[0]) ?? "ANY"
                         }
@@ -1089,27 +1091,33 @@ const Positions = styled.div`
   display: flex;
   align-items: center;
   width: 412px;
-  gap: 8px;
+  gap: 12px;
   @media (max-width: 700px) {
     width: 100%;
   }
 `;
 
 const PosiWrap = styled.div`
+  height: 104px;
   display: flex;
   justify-content: center;
   gap: 12px;
-  background-color: white;
+  background-color: ${theme.colors.white};
   width: 100%;
   border-radius: 6px;
-  padding: 12px 20px;
+  padding: 16px 32px 12px 32px;
+
+  @media (max-width: 700px) {
+    height: 69px;
+    padding: 12px 20px 8px 20px;
+  }
 `;
 
 const Posi = styled.div<{ $isWantP: boolean }>`
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  align-items: flex-start;
+  gap: 8px;
+  align-items: center;
   font-size: ${theme.fonts.medium16};
   color: ${theme.colors.gray800};
   position: relative;
@@ -1117,12 +1125,6 @@ const Posi = styled.div<{ $isWantP: boolean }>`
   &.other {
     font-size: ${theme.fonts.medium16};
   }
-
-  ${({ $isWantP }) =>
-    $isWantP &&
-    css`
-      /* margin-left: 36px; */
-    `}
 
   @media (max-width: 700px) {
     font-size: ${theme.fonts.medium11};

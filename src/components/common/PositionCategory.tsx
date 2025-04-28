@@ -10,6 +10,7 @@ import Jungle from "../../../public/assets/images/position/position_jungle_uncli
 import Mid from "../../../public/assets/images/position/position_mid_unclicked.svg";
 import OneDeal from "../../../public/assets/images/position/position_one_deal_unclicked.svg";
 import Supporter from "../../../public/assets/images/position/position_supporter_unclicked.svg";
+import useMediaQueries from "@/hooks/useMediaQueries";
 
 interface PositionComponentProps {
   selectedBox?: PositionType | null;
@@ -20,6 +21,7 @@ interface PositionComponentProps {
 
 const PositionCategory = (props: PositionComponentProps) => {
   const { selectedBox, value = [], onSelect, onClose } = props;
+  const isMobile = useMediaQueries({ breakpoint: 700 });
   const boxRef = React.useRef<HTMLDivElement>(null);
 
   const handlePositionCategory = (positionName: Position | null) => {
@@ -100,7 +102,14 @@ const PositionCategory = (props: PositionComponentProps) => {
   return (
     <Wrapper>
       <Header>
-        <Title>주 포지션 선택</Title>
+        <Title>
+          {selectedBox === "main"
+            ? "주"
+            : selectedBox === "sub"
+            ? "부"
+            : "내가 찾는"}{" "}
+          포지션 선택
+        </Title>
         <CloseButton onClick={() => handleClose()}>
           <Image
             src={"/assets/icons/close_white.svg"}
@@ -152,10 +161,14 @@ const Wrapper = styled.div`
   /* Background Blur */
   box-shadow: 0 4px 8.9px 0 rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(7.5px);
+
+  @media (max-width: 700px) {
+    width: 224px;
+  }
 `;
 
 const Header = styled.div`
-  margin-bottom: 45px;
+  margin-bottom: 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -178,19 +191,27 @@ const Box = styled.div<{ $isWant: boolean }>`
     border-top: 0 solid transparent;
     border-left: 9px solid transparent;
     border-right: 9px solid transparent;
-    border-bottom: 18px solid ${theme.colors.gray900};
+    border-bottom: 18px solid rgba(0, 0, 0, 0.64);
     content: "";
     position: absolute;
-    top: -13px;
+    top: -18px;
     left: 27px;
+  }
+
+  @media (max-width: 700px) {
+    width: 184px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    row-gap: 20px;
+    column-gap: 0px;
   }
 `;
 
 const StyledButton = styled.button<{ $posKey: Position }>`
   width: 48px;
+  height: 48px;
   /* TODO */
-  /* background: ${(props) =>
-    props.$posKey ? theme.colors.violet600 : ""};   */
+  /* background: ${(props) => (props.$posKey ? theme.colors.violet600 : "")}; */
   border: none;
   padding: 0;
   cursor: pointer;
