@@ -1,5 +1,5 @@
 import { GameStyleList } from '@/interface/profile';
-import { ChampionResponseDTO } from '@/types/api/board/board';
+import { ChampionResponseDTO } from '@/types/api/champion/champion';
 import { Position } from '@/types/position/position';
 import { Mike } from '@/types/user/mike';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';

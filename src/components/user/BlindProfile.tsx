@@ -29,6 +29,7 @@ const BlindProfile = () => {
             title="탈퇴한 사용자 님의 프로필"
             size="bold"
             marginBottom="20px"
+            isMatchProgressOrComplete={true}
           />
         </Row>
         <Main>

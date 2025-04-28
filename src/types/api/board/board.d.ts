@@ -2,17 +2,9 @@ import { Position } from "@/types/position/position";
 import { ApiResponse } from "../api";
 import { Mike } from "@/types/user/mike";
 import { GameMode } from "@/types/game/gameMode";
+import { ChampionResponseDTO } from "../champion/champion";
 
 // 기본 DTO 인터페이스들
-interface ChampionResponseDTO {
-  championId: number;
-  championName: string;
-  csPerMinute: number;
-  games: number;
-  winRate: number;
-  wins: number;
-}
-
 export interface MannerKeywordDTO {
   createdAt: string;
   updatedAt: string;
@@ -46,8 +38,7 @@ interface GameInfo {
 interface GameStats {
   winRate: number;
   recentGameCount?: number;
-  championResponseList?: ChampionResponseDTO[];
-  championResponseDTOList?: ChampionResponseDTO[];
+  championStatsResponseList?: ChampionResponseDTO[];
 }
 
 // 기본 게시글 정보 인터페이스

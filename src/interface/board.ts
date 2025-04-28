@@ -1,4 +1,5 @@
-import { ChampionResponseDTO, MannerKeywordDTO } from "@/types/api/board/board";
+import { MannerKeywordDTO } from "@/types/api/board/board";
+import { ChampionResponseDTO } from "@/types/api/champion/champion";
 import { GameMode } from "@/types/game/gameMode";
 import { Position } from "@/types/position/position";
 import { Mike } from "@/types/user/mike";
@@ -30,7 +31,7 @@ export interface BoardListDetail {
   mainP: Position;
   subP: Position;
   wantP: (Position | null)[];
-  championResponseList?: ChampionResponseDTO[];
+  championStatsResponseList?: ChampionResponseDTO[];
   winRate: number;
   createdAt: string;
   contents: string;
@@ -79,8 +80,7 @@ export interface MemberPost {
   soloTier?: string;
   freeTier?: string;
   mike: Mike;
-  championResponseList?: ChampionResponseDTO[];
-  championResponseDTOList?: ChampionResponseDTO[];
+  championStatsResponseList?: ChampionResponseDTO[];
   gameMode: GameMode;
   mainP?: Position;
   subP?: Position;
