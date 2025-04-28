@@ -50,11 +50,14 @@ function FeedBackInput() {
       <span>{"Gamegoo 팀에게 소중한 피드백을 전달해주세요!"}</span>
       <div className="inputWrapper">
         <Input
-          height="45px"
+          height="40px"
           value={feedback}
+          borderRadius="8px"
+          size="small"
           onChange={(value: string) => setFeedback(value)}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
+          placeholderFontSize="13px"
           placeholder="본 피드백은 서비스 개선에 큰 도움이 됩니다:)"
         />
         <SendIcon
@@ -66,7 +69,7 @@ function FeedBackInput() {
           $feedbacklength={feedback.length}
         >
           <Image
-            src={`/assets/icons/send_${isFocused ? "purple" : "gray"}.svg`}
+            src={`/assets/icons/send.svg`}
             width={24}
             height={24}
             alt="전송"
@@ -89,15 +92,22 @@ const FeedBack = styled.div`
   span {
     ${theme.fonts.medium14};
     margin-left: 10px;
+    @media (max-width: 700px) {
+      ${theme.fonts.bold12};
+      color: ${theme.colors.gray800};
+      margin-left: 0;
+    }
   }
 
   .inputWrapper {
     display: flex;
     align-items: center;
-    gap: 10px;
 
     input {
-      width: 400px;
+      width: 379px;
+      @media (max-width: 700px) {
+        width: 288px;
+      }
     }
   }
 `;

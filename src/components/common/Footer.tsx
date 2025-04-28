@@ -48,24 +48,32 @@ const Footer = (props: FooterProps) => {
         <LeftWrapper>
           <LeftDiv>
             <Image
-              src="/assets/icons/logo.svg"
-              width={285}
-              height={58}
+              src="/assets/icons/logo_gray.svg"
+              width={127}
+              height={22}
               alt="gamegoo"
             />
+            {isMobile && (
+              <FeedbackWrapper>
+                <FeedBackInput />
+              </FeedbackWrapper>
+            )}
+            <TermsTextWrap>
+              <TermsButton onClick={handleDirectPrivacy}>
+                개인정보처리방침
+              </TermsButton>
+              <TermsButton onClick={handleDirectService}>이용약관</TermsButton>
+            </TermsTextWrap>
             email: gamegoo0707@gmail.com
             <br />
             copyright 2024. GameGoo All Rights Reserved.
           </LeftDiv>
-          <FeedbackWrapper>
-            <FeedBackInput />
-          </FeedbackWrapper>
+          {!isMobile && (
+            <FeedbackWrapper>
+              <FeedBackInput />
+            </FeedbackWrapper>
+          )}
         </LeftWrapper>
-        <RightDiv>
-          <Bold>Resources</Bold>
-          <button onClick={handleDirectPrivacy}>개인정보처리방침</button>
-          <button onClick={handleDirectService}>이용약관</button>
-        </RightDiv>
       </Container>
       {isShowChat && !isMobile ? (
         <ChatButtonWrapper>
@@ -82,6 +90,7 @@ export default Footer;
 
 const Wrapper = styled.div`
   width: 100%;
+  max-width: 1440px;
   display: flex;
   justify-content: center;
   align-items: flex-end;
@@ -94,12 +103,17 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  @media (max-width: 700px) {
+    height: unset;
+    padding: 20px;
+  }
 `;
 
 const LeftWrapper = styled.div`
   display: flex;
   justify-content: flex-start;
-  gap: 50px;
+  align-items: end;
+  gap: 170px;
 `;
 
 const LeftDiv = styled.div`
@@ -108,30 +122,32 @@ const LeftDiv = styled.div`
   flex-direction: column;
   justify-content: flex-end;
   align-items: flex-start;
-  gap: 28px;
-  ${theme.fonts.regular14};
+  ${theme.fonts.regular13};
+  color: ${theme.colors.gray500};
   white-space: nowrap;
-`;
-
-const FeedbackWrapper = styled.div`
-  @media (max-width: 1349px) {
-    display: none;
+  @media (max-width: 700px) {
+    ${theme.fonts.regular12};
   }
 `;
 
-const RightDiv = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 54px;
-  ${theme.fonts.regular14};
-  white-space: nowrap;
+const TermsTextWrap = styled.div`
+  margin: 28px 0 20px 0;
+  @media (max-width: 700px) {
+    margin: 28px 0 10px 0;
+  }
 `;
 
-const Bold = styled.div`
-  ${theme.fonts.bold20};
+const TermsButton = styled.button`
+  ${theme.fonts.bold14};
+  color: ${theme.colors.gray500};
+  text-decoration: underline;
+  margin-right: 16px;
+`;
+const FeedbackWrapper = styled.div`
+  @media (max-width: 700px) {
+    margin-top: 25px;
+    ${theme.fonts.bold12};
+  }
 `;
 
 const ChatButtonWrapper = styled.div`
