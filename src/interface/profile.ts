@@ -1,17 +1,8 @@
-import { ChampionResponseDTO } from "@/types/api/board/board";
+import { ChampionResponseDTO } from "@/types/api/champion/champion";
 import { Position } from "@/types/position/position";
 import { Mike } from "@/types/user/mike";
 
 export type profileType = "normal" | "wind" | "other" | "me";
-
-// export interface Champion {
-//   championId: number;
-//   championName: string;
-//   // csPerMinute: number;
-//   games: number;
-//   winRate: number;
-//   // wins: number;
-// }
 
 export interface GameStyle {
   gameStyleId: number;
@@ -29,9 +20,6 @@ export interface User {
   freeTier: string;
   soloRank: number;
   freeRank: number;
-  // mannerLevel: number;
-  // mannerRank?: null | number;
-  // mannerRatingCount?: number;
   updatedAt: string;
   mainP: Position;
   subP: Position;
@@ -57,13 +45,6 @@ export interface GameStyleList {
   gameStyleId: number;
   gameStyleName: string;
 }
-
-// export interface ChampionList {
-//   championId: number;
-//   championName: string;
-//   winRate: number;
-//   games: number;
-// }
 
 export interface UserInfo {
   id: number;

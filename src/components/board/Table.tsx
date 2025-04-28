@@ -234,7 +234,7 @@ const Table = (props: TableProps) => {
                   <Sixth className="table_width">
                     <Champion
                       font="semiBold14"
-                      list={data?.championResponseList || []}
+                      list={data?.championStatsResponseList || []}
                     />
                   </Sixth>
                   <Seventh className="table_width">

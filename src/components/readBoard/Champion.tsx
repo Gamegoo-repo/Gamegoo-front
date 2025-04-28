@@ -3,7 +3,7 @@ import Image from "next/image";
 import { theme } from "@/styles/theme";
 import { useState } from "react";
 import { fadeIn, fadeOut } from "@/styles/animation";
-import { ChampionResponseDTO } from "@/types/api/board/board";
+import { ChampionResponseDTO } from "@/types/api/champion/champion";
 
 interface ChampionProps {
   title?: boolean;
@@ -44,7 +44,7 @@ const Champion = (props: ChampionProps) => {
                   }}
                   onError={handleImageError}
                 />
-                <Percentage>{champion.winRate}%</Percentage>
+                <Percentage>{Math.round(champion.winRate)}%</Percentage>
               </ImageWrapper>
               {hoveredIndex === key && (
                 <Tooltip>
@@ -53,9 +53,11 @@ const Champion = (props: ChampionProps) => {
                   </ChampionName>
                   <ChampionTable>
                     <Head>승률</Head>
-                    <Rate>{champion.winRate}%</Rate>
+                    <Rate>{Math.round(champion.winRate)}%</Rate>
+                    {/* TODO: 추후 wins 값 들어오면 수정 */}
                     <More>
-                      {champion.wins}승 {champion.games - champion.wins}패
+                      {champion.wins || "0"}승{" "}
+                      {champion.wins ? champion.games - champion.wins : "0"}패
                     </More>
                     <Head>KDA</Head>
                     <Rate>1.98</Rate>
