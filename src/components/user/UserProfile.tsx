@@ -69,6 +69,7 @@ const UserProfile = ({
             size="bold"
             blocked={profile.blocked}
             marginBottom="20px"
+            isMatchProgressOrComplete={true}
           />
         </Row>
         <Main>
