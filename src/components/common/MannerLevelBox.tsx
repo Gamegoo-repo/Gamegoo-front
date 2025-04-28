@@ -5,17 +5,19 @@ import { useEffect, useState } from "react";
 import { MannerKeywords } from "@/interface/manner";
 import { getMemberMannerKeyword } from "@/api/manner/manner";
 import Image from "next/image";
+import { css } from "styled-components";
 
 interface MannerLevelBoxProps {
   memberId: number;
   level: number;
   top: string;
   right: string;
+  tail?: boolean;
   onClose?: () => void;
 }
 
 const MannerLevelBox = (props: MannerLevelBoxProps) => {
-  const { memberId, level, top, right, onClose } = props;
+  const { memberId, level, top, right, tail = false, onClose } = props;
 
   const [positiveKeywords, setPositiveKeywords] = useState<MannerKeywords[]>(
     []
@@ -55,7 +57,7 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
   };
 
   return (
-    <Wrapper $top={top} $right={right}>
+    <Wrapper $top={top} $right={right} $tail={tail}>
       <TitleWrap>
         <Title>매너 레벨 {level}</Title>
         <CloseImage
@@ -107,7 +109,7 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
 
 export default MannerLevelBox;
 
-const Wrapper = styled.div<{ $top: string; $right: string }>`
+const Wrapper = styled.div<{ $top: string; $right: string; $tail: boolean }>`
   position: absolute;
   top: ${({ $top }) => $top};
   right: ${({ $right }) => $right};
@@ -119,6 +121,22 @@ const Wrapper = styled.div<{ $top: string; $right: string }>`
   width: fit-content;
   z-index: 100;
   white-space: nowrap;
+
+  ${({ $tail }) =>
+    $tail &&
+    css`
+      &:after {
+        content: "";
+        position: absolute;
+        top: -15px;
+        left: 50%;
+        transform: translateX(-50%); /* 정중앙으로 이동 */
+        border-top: 0 solid transparent;
+        border-left: 9px solid transparent;
+        border-right: 9px solid transparent;
+        border-bottom: 15px solid rgba(0, 0, 0, 0.64);
+      }
+    `}
 
   @media (max-width: 700px) {
     padding: 20px;

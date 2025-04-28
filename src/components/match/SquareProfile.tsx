@@ -113,25 +113,20 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
                   width={!isMobile ? 100 : 67}
                   height={!isMobile ? 100 : 67}
                 />
-                {opponent ? (
-                  <>
-                    <LevelTag onClick={handleMannerLevel}>
-                      LV. {user.mannerLevel}
-                    </LevelTag>
-                    {mannerPopup && (
-                      <MannerLevelBox
-                        memberId={0}
-                        level={5}
-                        top="20px"
-                        right="-17%"
-                        onClose={() => setMannerPopup(!mannerPopup)}
-                      />
-                    )}
-                    <Bubble>클릭해서 매너키워드 보기</Bubble>
-                  </>
-                ) : (
-                  <LevelTag>LV. {user.mannerLevel}</LevelTag>
+                <LevelTag onClick={handleMannerLevel}>
+                  LV. {user.mannerLevel}
+                </LevelTag>
+                {mannerPopup && (
+                  <MannerLevelBox
+                    memberId={user.memberId}
+                    level={user.mannerLevel}
+                    top="172px"
+                    right="-94%"
+                    tail={true}
+                    onClose={() => setMannerPopup(!mannerPopup)}
+                  />
                 )}
+                <Bubble>클릭해서 매너키워드 보기</Bubble>
               </ProfileImgWrapper>
             </ImageContainer>
             <Mic status={user.mike} />
@@ -276,14 +271,17 @@ const LevelTag = styled.span`
   bottom: -12.5px;
   left: 50%;
   transform: translate(-50%);
+  height: 25px;
   border-radius: 57px;
   padding: 6px 10px;
-  background: ${theme.colors.gray900};
+  background: rgba(0, 0, 0, 0.64);
+
   color: ${theme.colors.violet300};
   ${theme.fonts.bold13}
   backdrop-filter: blur(7.5px);
 
   @media (max-width: 700px) {
+    background: ${theme.colors.gray900};
     ${theme.fonts.bold11}
     padding: 1px 8px;
     bottom: -4px;
@@ -397,14 +395,15 @@ const RowBox = styled(Row)`
 
 const Position = styled.div<{ $opponent: boolean }>`
   width: 100%;
-  height: 116px;
+  height: 104px;
+  padding: 16px 32px 12px 32px;
   border-radius: 8px;
   background: ${theme.colors.gray100};
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 33px;
-  ${theme.fonts.medium11};
+  ${theme.fonts.medium16};
   color: ${theme.colors.gray800};
   @media (max-width: 700px) {
     border-radius: 6px;
