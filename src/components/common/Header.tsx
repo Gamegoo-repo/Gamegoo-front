@@ -329,6 +329,7 @@ const Head = styled.div`
   ${(props) => props.theme.fonts.regular14};
   position: relative;
   @media (max-width: 700px) {
+    margin-top: 20px;
     justify-content: space-between;
   }
 `;

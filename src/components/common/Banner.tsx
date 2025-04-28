@@ -1,6 +1,10 @@
+import { theme } from "@/styles/theme";
 import styled from "styled-components";
+import useMediaQueries from "@/hooks/useMediaQueries";
 
 const Banner = () => {
+  const isMobile = useMediaQueries({ breakpoint: 700 });
+
   return (
     <BannerWrapper>
       <TextContainer>
@@ -9,7 +13,7 @@ const Banner = () => {
         </p>
         <Description>게임 친구를 쉽고 빠르게 구해줄게요!</Description>
       </TextContainer>
-      <Logo>GAMGOO</Logo>
+      {!isMobile && <Logo>GAMGOO</Logo>}
     </BannerWrapper>
   );
 };
@@ -26,6 +30,10 @@ const BannerWrapper = styled.div`
   padding: 40px;
   position: relative;
   margin-bottom: 32px;
+  @media (max-width: 700px) {
+    height: unset;
+    padding: 20px;
+  }
 `;
 
 const TextContainer = styled.div`
@@ -33,14 +41,20 @@ const TextContainer = styled.div`
 `;
 
 const HighlightText = styled.span`
-  color: #8a63d2;
-  font-weight: bold;
+  color: ${theme.colors.violet600};
+  ${theme.fonts.bold16}
+  @media (max-width: 700px) {
+    ${theme.fonts.bold13}
+  }
 `;
 
 const Description = styled.p`
-  margin: 0;
-  font-size: 16px;
-  color: #333;
+  margin-top: 4px;
+  ${theme.fonts.regular20}
+  color: ${theme.colors.gray800};
+  @media (max-width: 700px) {
+    ${theme.fonts.regular14}
+  }
 `;
 
 const Logo = styled.div`
@@ -50,6 +64,7 @@ const Logo = styled.div`
   color: #c1b7ff;
   opacity: 0.3;
   position: absolute;
-  right: 20px;
+  right: 40px;
+
   letter-spacing: 5px;
 `;
