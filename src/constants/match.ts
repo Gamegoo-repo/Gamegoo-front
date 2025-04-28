@@ -50,6 +50,34 @@ export const MATCH_TYPE_PAGE_DATA = [
   },
 ];
 
+export const MO_MATCH_TYPE_PAGE_DATA = [
+  {
+    id: 1,
+    type: "gamegoo",
+    pathname: "match/game-mode",
+    width: "600px",
+    height: "276px",
+    top: "50%",
+    left: "50%",
+    title: "겜구 매칭",
+    sub: "간단한 조건만 맞으면 바로 매칭돼요",
+    background: "#2E3032",
+  },
+  {
+    id: 2,
+    type: "custom",
+    pathname: "match/game-mode",
+    width: "600px",
+    height: "276px",
+    top: "50%",
+    left: "50%",
+    title: "맞춤 매칭",
+    option: "*매칭 시간 소요",
+    sub: "원하는 조건에 맞는 친구를 찾아줄게요",
+    background: "#2E3032",
+  },
+];
+
 export const GAME_MODE_PAGE_DATA = [
   {
     id: 1,

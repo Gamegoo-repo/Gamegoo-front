@@ -1,13 +1,13 @@
 export const getProfileBgColor = (id: number) => {
   const colors = [
-    "#CBC3FF",
-    "#D5CEFF",
+    "#DFDEFF",
+    "#FAF9FF",
     "#9F90F9",
-    "#3F3F3F",
-    "#3F3F3F",
+    "#FAF9FF",
+    "#191B1E",
     "#9F90F9",
-    "#DBD5FF",
-    "#9F90F9",
+    "#FAF9FF",
+    "#DFDEFF",
   ];
   return colors[(id - 1) % colors.length];
 };

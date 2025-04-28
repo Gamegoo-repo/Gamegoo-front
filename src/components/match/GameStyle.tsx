@@ -12,7 +12,7 @@ import { updateGameStyles } from "@/redux/slices/matchInfo";
 import { setUserMike } from "@/redux/slices/userSlice";
 import { putGameStyle, putMike } from "@/api/user/profile/put";
 import { Mike } from "@/types/user/mike";
-
+import useMediaQueries from "@/hooks/useMediaQueries";
 type profileType = "me" | "other" | "none" | "mini";
 
 interface GameStyle {
@@ -35,6 +35,7 @@ const GameStyle = (props: GameStyleProps) => {
     handleMike,
   } = props;
 
+  const isMobile = useMediaQueries({ breakpoint: 700 });
   const dispatch = useDispatch();
   const [styledPopup, setStyledPopup] = useState(false);
   const [selectedStyles, setSelectedStyles] = useState<number[]>(
@@ -127,7 +128,7 @@ const GameStyle = (props: GameStyleProps) => {
                 onClick={handleStylePopup}
               >
                 <Image
-                  src="/assets/icons/plus.svg"
+                  src={"/assets/icons/plus_violet.svg"}
                   width={
                     profileType === "mini"
                       ? 11
@@ -184,21 +185,24 @@ const LeftLabel = styled.div<{ $profileType: profileType }>`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 10px;
-  color: ${theme.colors.gray800};
-  ${theme.fonts.regular14};
+  gap: 12px;
+  color: ${theme.colors.gray600};
+  ${theme.fonts.semiBold14};
 
   ${({ $profileType }) =>
     $profileType === "mini" &&
     css`
       gap: 6px;
     `}
+  @media (max-width: 700px) {
+    ${theme.fonts.medium11};
+  }
 `;
 
 const GameBox = styled.div<{ $profileType: profileType }>`
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 8px;
   position: relative;
 
   ${({ $profileType }) =>
@@ -206,11 +210,20 @@ const GameBox = styled.div<{ $profileType: profileType }>`
     css`
       gap: 6px;
     `}
+
+  @media (max-width: 700px) {
+    gap: 4px;
+  }
 `;
 
 const Div = styled.div`
-  width: 62px;
+  width: 56px;
+  height: 36px;
   border-radius: 25px;
+  @media (max-width: 700px) {
+    width: 38px;
+    height: 29px;
+  }
 `;
 
 const AddGameStyle = styled.button<{ $profileType: profileType }>`
@@ -220,15 +233,15 @@ const AddGameStyle = styled.button<{ $profileType: profileType }>`
   padding: 13px 30px;
   justify-content: center;
   align-items: center;
-  border-radius: 25px;
-  background: ${theme.colors.violet300};
+  border-radius: 999px;
+  background: ${theme.colors.white};
   outline: none;
 
   ${({ $profileType }) =>
     $profileType === "none" &&
     css`
-      width: 40px;
-      height: 34px;
+      width: 56px;
+      height: 36px;
       padding: 10px 13px;
     `}
 
@@ -240,4 +253,9 @@ const AddGameStyle = styled.button<{ $profileType: profileType }>`
       padding: 5px 17px;
       font-size: 12px;
     `}
+
+    @media (max-width: 700px) {
+    width: 38px;
+    height: 29px;
+  }
 `;

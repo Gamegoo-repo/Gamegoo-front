@@ -16,7 +16,7 @@ const Mic = (props: MicProps) => {
         src={`/assets/icons/mic_${
           status === "AVAILABLE" ? "on" : "off"
         }_no_bg.svg`}
-        width={27}
+        width={32}
         height={33}
         alt={`mic ${status === "AVAILABLE" ? "on" : "off"}`}
       />
@@ -36,12 +36,12 @@ const Wrapper = styled.div`
 `;
 
 const MicText = styled.p`
-  ${(props) => props.theme.fonts.bold10};
+  ${(props) => props.theme.fonts.semiBold13};
   margin-top: 6px;
   &.on {
     color: ${theme.colors.violet600};
   }
   &.off {
-    color: #606060;
+    color: ${theme.colors.gray600};
   }
 `;

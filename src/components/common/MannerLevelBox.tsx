@@ -4,16 +4,18 @@ import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants/mannerLevel";
 import { useEffect, useState } from "react";
 import { MannerKeywords } from "@/interface/manner";
 import { getMemberMannerKeyword } from "@/api/manner/manner";
+import Image from "next/image";
 
 interface MannerLevelBoxProps {
   memberId: number;
   level: number;
   top: string;
   right: string;
+  onClose?: () => void;
 }
 
 const MannerLevelBox = (props: MannerLevelBoxProps) => {
-  const { memberId, level, top, right } = props;
+  const { memberId, level, top, right, onClose } = props;
 
   const [positiveKeywords, setPositiveKeywords] = useState<MannerKeywords[]>(
     []
@@ -54,7 +56,17 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
 
   return (
     <Wrapper $top={top} $right={right}>
-      <Title>매너 레벨 {level}</Title>
+      <TitleWrap>
+        <Title>매너 레벨 {level}</Title>
+        <CloseImage
+          src="/assets/icons/close_white.svg"
+          width={14}
+          height={14}
+          alt="close"
+          onClick={onClose}
+        />
+      </TitleWrap>
+
       <MannerEvaluations>
         <Div>
           <SubTitle>받은 매너평가</SubTitle>
@@ -99,7 +111,7 @@ const Wrapper = styled.div<{ $top: string; $right: string }>`
   position: absolute;
   top: ${({ $top }) => $top};
   right: ${({ $right }) => $right};
-  padding: 16px 32px 34px;
+  padding: 32px;
   box-shadow: 0 0 21.3px 0 #00000026;
   backdrop-filter: blur(10px);
   border-radius: 19px;
@@ -107,12 +119,29 @@ const Wrapper = styled.div<{ $top: string; $right: string }>`
   width: fit-content;
   z-index: 100;
   white-space: nowrap;
+
+  @media (max-width: 700px) {
+    padding: 20px;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%);
+  }
+`;
+
+const TitleWrap = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
 `;
 
 const Title = styled.div`
   ${(props) => props.theme.fonts.medium16};
   color: ${theme.colors.white};
-  margin-bottom: 10px;
+`;
+
+const CloseImage = styled(Image)`
+  cursor: pointer;
 `;
 
 const MannerEvaluations = styled.div`

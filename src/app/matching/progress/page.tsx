@@ -19,7 +19,7 @@ import { setBoardFilters } from "@/redux/slices/boardSlice";
 import { setIsCompleted } from "@/utils/storage";
 import { Position } from "@/types/position/position";
 import { Mike } from "@/types/user/mike";
-
+import useMediaQueries from "@/hooks/useMediaQueries";
 interface User {
   memberId: number;
   gameName: string;
@@ -48,6 +48,7 @@ const Progress = () => {
   const dispatch = useDispatch();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const isMobile = useMediaQueries({ breakpoint: 700 });
   const type = searchParams.get("matchingType");
   const rank = searchParams.get("gameRank");
   const retry = searchParams.get("retry");
@@ -299,23 +300,27 @@ const Progress = () => {
       <Wrapper>
         <MatchContent>
           <Header>
-            <HeaderTitle title="매칭 중" sub="나와 꼭 맞는 상대를 찾는 중..." />
-            <Time>
-              <Span>{formatTime(timeLeft)}&nbsp;</Span>/5:00
-            </Time>
+            <HeaderTitle
+              title="매칭 중"
+              sub="나와 꼭 맞는 상대를 찾는 중..."
+              isMatchProgressOrComplete={true}
+            />
           </Header>
           <Main>
-            <SquareProfile user={user} />
+            <SquareProfile user={user} isToggleUI={true} />
             <Waiting>
               <AnimatedImage
                 src="/assets/images/wait_heart.svg"
-                width={225}
-                height={225}
+                width={!isMobile ? 225 : 120}
+                height={!isMobile ? 225 : 120}
                 alt="heart"
               />
               <AnimatedText $visible={textVisible}>
                 {currentMessage}
               </AnimatedText>
+              <Time>
+                <Span>{formatTime(timeLeft)}&nbsp;</Span>/ 5:00
+              </Time>
             </Waiting>
           </Main>
           {/* 즐겜모드, 빡겜모드 매칭 실패 */}
@@ -429,12 +434,19 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 110px;
+
+  @media (max-width: 700px) {
+    padding-top: 0px;
+  }
 `;
 
 const MatchContent = styled.div`
   max-width: 1440px;
   width: 100%;
   padding: 0 80px;
+  @media (max-width: 700px) {
+    padding: 24px 20px;
+  }
 `;
 
 const Header = styled.div`
@@ -447,13 +459,16 @@ const Header = styled.div`
 
 const Time = styled.div`
   color: ${theme.colors.gray700};
-  ${(props) => props.theme.fonts.regular28}
+  ${(props) => props.theme.fonts.light32}
   margin-bottom: 32px;
 `;
 
 const Span = styled.span`
   color: ${theme.colors.violet600};
-  ${(props) => props.theme.fonts.bold45}
+  ${(props) => props.theme.fonts.bold32}
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.bold32}
+  }
 `;
 
 const Main = styled.main`
@@ -463,6 +478,11 @@ const Main = styled.main`
   width: 100%;
   gap: 72px;
   margin-bottom: 37px;
+  @media (max-width: 700px) {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
 `;
 
 const Waiting = styled.div`
@@ -480,10 +500,21 @@ const Waiting = styled.div`
 
   animation: ${fadeIn} 0.5s ease-in forwards;
   transition: opacity 0.5s ease-in-out;
+
+  @media (max-width: 700px) {
+    height: 376px;
+    padding: 80px 20px;
+    border-radius: 8px;
+    gap: 0px;
+  }
 `;
 
 const AnimatedImage = styled(Image)`
   animation: ${growShrink} 1.8s ease-in-out infinite;
+
+  @media (max-width: 700px) {
+    margin-bottom: 20px;
+  }
 `;
 
 const AnimatedText = styled.div<{ $visible: boolean }>`
@@ -491,4 +522,9 @@ const AnimatedText = styled.div<{ $visible: boolean }>`
   transition: opacity 0.3s ease-in-out;
   animation: ${({ $visible }) => ($visible ? fadeIn : fadeOut)} 1s ease-in-out
     forwards;
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.medium16};
+    margin-bottom: 6px;
+  }
 `;

@@ -328,6 +328,9 @@ const Head = styled.div`
   box-sizing: border-box;
   ${(props) => props.theme.fonts.regular14};
   position: relative;
+  @media (max-width: 700px) {
+    justify-content: space-between;
+  }
 `;
 
 const HeaderBar = styled.div`
@@ -341,7 +344,6 @@ const HeaderBar = styled.div`
   white-space: nowrap;
 
   @media screen and (max-width: 700px) {
-    width: 90%;
     padding: 0;
     display: grid;
     grid-template-columns: auto 1fr auto;
@@ -352,6 +354,7 @@ const HeaderBar = styled.div`
 
 const LogoButton = styled.button`
   @media screen and (max-width: 700px) {
+    margin-left: 20px;
     grid-column: 1;
     justify-self: start;
   }
@@ -378,9 +381,9 @@ const Menus = styled.div`
 const Menu = styled.button<HeaderProps>`
   ${(props) => props.theme.fonts.regular20};
   font-weight: ${({ selected }) => (selected ? "700" : "400")};
-
+  color: ${theme.colors.gray800};
   @media screen and (max-width: 700px) {
-    ${(props) => props.theme.fonts.regular14};
+    ${(props) => props.theme.fonts.semiBold14};
     padding: 10px 0;
     border-bottom: ${({ selected }) =>
       selected ? `3px solid ${theme.colors.gray800}` : "none"};
@@ -432,6 +435,12 @@ const HeaderProfileImg = styled.object`
 const Login = styled.button`
   color: ${theme.colors.violet600};
   ${(props) => props.theme.fonts.bold14}
+  @media screen and (max-width: 700px) {
+    margin-right: 20px;
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+  }
 `;
 
 const MyPageModal = styled.div`

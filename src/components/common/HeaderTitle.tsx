@@ -15,6 +15,7 @@ interface HeaderTitleProps {
   blocked?: boolean;
   isDoubleBack?: boolean;
   marginBottom?: string;
+  isMatchProgressOrComplete?: boolean;
 }
 
 const HeaderTitle: React.FC<HeaderTitleProps> = ({
@@ -25,9 +26,9 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({
   blocked = false,
   isDoubleBack = false,
   marginBottom,
+  isMatchProgressOrComplete = false, // 매칭중인지에 대한 여부
 }) => {
   const router = useRouter();
-
   const handleBackClick = () => {
     if (isDoubleBack) {
       window.history.go(-2);
@@ -37,8 +38,11 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({
   };
 
   return (
-    <Header $marginBottom={marginBottom}>
-      <div style={{ display: "flex", alignItems: "center" }}>
+    <HeaderWrap
+      $isMatchProgressOrComplete={isMatchProgressOrComplete}
+      $marginBottom={marginBottom}
+    >
+      <Header $isMatchProgressOrComplete={isMatchProgressOrComplete}>
         <StyledImage
           onClick={handleBackClick}
           src="/assets/icons/arrow_left.svg"
@@ -47,31 +51,51 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({
           alt="뒤로가기"
         />
         <Title className={size}>{title}</Title>
-      </div>
+      </Header>
 
-      <StepNavigation title={title} />
+      {!isMatchProgressOrComplete && <StepNavigation title={title} />}
+
       {sub && <Sub>{sub}</Sub>}
       {mini && <Mini>{mini}</Mini>}
       {blocked && <Blocked>차단된 사용자입니다</Blocked>}
-    </Header>
+    </HeaderWrap>
   );
 };
 
 export default HeaderTitle;
 
-const Header = styled.header<{ $marginBottom?: string }>`
+const HeaderWrap = styled.header<{
+  $marginBottom?: string;
+  $isMatchProgressOrComplete?: boolean;
+}>`
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  width: 100%;
+  justify-content: ${({ $isMatchProgressOrComplete }) =>
+    $isMatchProgressOrComplete ? "unset" : "space-between"};
   margin-bottom: ${({ $marginBottom }) =>
     $marginBottom ? $marginBottom : "32px"};
+  @media (max-width: 700px) {
+    margin-bottom: 12px;
+  }
+`;
+const Header = styled.div<{ $isMatchProgressOrComplete?: boolean }>`
+  display: flex;
+  align-items: center;
+  @media (max-width: 700px) {
+    /* display: unset; */
+    margin-bottom: ${({ $isMatchProgressOrComplete }) =>
+      $isMatchProgressOrComplete ? "0px" : "17px"};
+  }
 `;
 
 const StyledImage = styled(Image)`
   margin-right: 12px;
   cursor: pointer;
+  @media (max-width: 700px) {
+    width: 20px;
+    height: 20px;
+  }
 `;
 
 const Title = styled.div`
@@ -84,12 +108,21 @@ const Title = styled.div`
   &.regular {
     ${(props) => props.theme.fonts.regular25};
   }
+  @media (max-width: 700px) {
+    &.bold {
+      ${(props) => props.theme.fonts.semiBold18};
+    }
+  }
 `;
 
 const Sub = styled.div`
-  margin-left: 40px;
+  margin-left: 14px;
   color: ${theme.colors.gray600};
-  ${(props) => props.theme.fonts.regular28};
+  ${(props) => props.theme.fonts.regular20};
+  @media (max-width: 700px) {
+    margin-left: 10px;
+    ${(props) => props.theme.fonts.regular14};
+  }
 `;
 
 const Mini = styled.div`

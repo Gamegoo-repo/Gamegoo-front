@@ -39,6 +39,7 @@ import { Mike as MikeType } from "@/types/user/mike";
 import { Position, PositionType } from "@/types/position/position";
 import RankTier from "../common/RankTier";
 import Alert from "../common/Alert";
+import useMediaQueries from "@/hooks/useMediaQueries";
 
 type profileType = "normal" | "wind" | "other" | "me";
 
@@ -61,6 +62,7 @@ const Profile: React.FC<Profile> = ({
   backgroundColor,
   isDefault = false,
 }) => {
+  const isMobile = useMediaQueries({ breakpoint: 700 });
   const dispatch = useDispatch();
   const { id } = useParams();
   const memberId = Number(id);
@@ -202,6 +204,7 @@ const Profile: React.FC<Profile> = ({
   /* 포지션 선택창 관련 함수*/
   // 포지션 선택창 열기 (포지션 클릭시 동작)
   const handlePosition = async (index: number) => {
+    // console.log(index, "=====", profileType);
     if (profileType !== "other") {
       setIsPositionOpen((prev) =>
         prev.map((isOpen, i) => (i === index ? !isOpen : false))
@@ -450,29 +453,31 @@ const Profile: React.FC<Profile> = ({
       )}
       <Row $profileType={profileType}>
         <ImageContainer>
-          <ProfileImgWrapper $bgColor={getProfileBgColor(selectedImageIndex)}>
-            <PersonImage
-              data={`/assets/images/profile/profile${selectedImageIndex}.svg`}
-              width={136}
-              height={136}
-            />
-          </ProfileImgWrapper>
-          {profileType !== "other" && (
-            <CameraImgBg
-              onClick={() => setIsProfileListOpen(!isProfileListOpen)}
-            >
-              <CameraImage
-                data="/assets/icons/camera_white.svg"
-                width={30}
-                height={25}
+          <ProfileImgWrapper>
+            <PersonImgWrapper $bgColor={getProfileBgColor(selectedImageIndex)}>
+              <PersonImage
+                data={`/assets/images/profile/profile${selectedImageIndex}.svg`}
+                width={136}
+                height={136}
               />
-            </CameraImgBg>
-          )}
+            </PersonImgWrapper>
+            {profileType !== "other" && (
+              <CameraImgBg
+                onClick={() => setIsProfileListOpen(!isProfileListOpen)}
+              >
+                <CameraImage
+                  data="/assets/icons/edit_pencil.svg"
+                  width={35}
+                  height={30}
+                />
+              </CameraImgBg>
+            )}
+          </ProfileImgWrapper>
           {/* 프로필 이미지 선택 팝업 */}
           {isProfileListOpen && (
             <ProfileListBox>
               <ProfileListBoxTop>
-                프로필 이미지 변경
+                프로필 이미지 선택
                 <Image
                   src="/assets/icons/close_white.svg"
                   width={14}
@@ -489,37 +494,54 @@ const Profile: React.FC<Profile> = ({
                     $isSelected={item === selectedImageIndex}
                     onClick={() => handleImageClick(item)}
                   >
+                    {item === selectedImageIndex && (
+                      <CheckIcon
+                        width={22}
+                        height={22}
+                        data={`/assets/icons/check_white.svg`}
+                      />
+                    )}
                     <ProfileListImage
                       key={item}
                       data={`/assets/images/profile/profile${item}.svg`}
-                      width={70}
-                      height={70}
+                      width={isMobile ? 40 : 70}
+                      height={isMobile ? 40 : 70}
                     />
                   </SelectProfileImgWrapper>
                 ))}
               </ProfileList>
             </ProfileListBox>
           )}
+
+          {isMobile && (
+            <TopContainer
+              $isMatching={profileType === "wind" || profileType === "normal"}
+            >
+              <Top>
+                {user.gameName}
+                <Span>{`#${user.tag}`}</Span>
+              </Top>
+            </TopContainer>
+          )}
         </ImageContainer>
         <StyledBox>
-          <TopContainer
-            $isMatching={profileType === "wind" || profileType === "normal"}
-          >
-            <Top>
-              {user.gameName}
-              <Span>{`#${user.tag}`}</Span>
-            </Top>
-          </TopContainer>
+          {!isMobile && (
+            <TopContainer
+              $isMatching={profileType === "wind" || profileType === "normal"}
+            >
+              <Top>
+                {user.gameName}
+                <Span>{`#${user.tag}`}</Span>
+              </Top>
+            </TopContainer>
+          )}
+
           <RankTierWrapper>
             <RankTier type="solo" tier={user.soloTier} rank={user.soloRank} />
             <RankTier type="free" tier={user.freeTier} rank={user.freeRank} />
           </RankTierWrapper>
           {profileType === "wind" ? (
             <StyledBox>
-              <Mike>
-                마이크
-                <Toggle isOn={isMike} onToggle={handleMike} />
-              </Mike>
               <GameStyle
                 profileType="none"
                 gameStyleResponseDTOList={user.gameStyleResponseList}
@@ -529,45 +551,71 @@ const Profile: React.FC<Profile> = ({
             </StyledBox>
           ) : (
             <UnderRow>
+              {/* 칼바람 제외 클릭 시 */}
               <Positions>
-                {POSITIONS.map((position, index) => (
-                  <Posi
-                    key={index}
-                    className={profileType}
-                    $isWantP={index === 2}
-                  >
-                    {position.label}
-                    <Image
-                      src={setPositionImg(
-                        index === 0
-                          ? positionValue.main ?? "ANY"
-                          : index === 1
-                          ? positionValue.sub ?? "ANY"
-                          : (positionValue.want && positionValue.want[0]) ??
-                            "ANY"
-                      )}
-                      width={55}
-                      height={40}
-                      alt="포지션"
-                      onClick={() => handlePosition(index)}
-                    />
-                    {isPositionOpen[index] && (
-                      <PositionCategory
-                        value={
+                {/* 주 포지션 + 부 포지션 */}
+                <PosiWrap>
+                  {POSITIONS.slice(0, 2).map((position, index) => (
+                    <Posi key={index} className={profileType} $isWantP={false}>
+                      {position.label}
+                      <Image
+                        src={setPositionImg(
                           index === 0
                             ? positionValue.main ?? "ANY"
                             : index === 1
                             ? positionValue.sub ?? "ANY"
                             : (positionValue.want && positionValue.want[0]) ??
                               "ANY"
+                        )}
+                        width={!isMobile ? 55 : 41}
+                        height={!isMobile ? 40 : 32}
+                        alt="포지션"
+                        onClick={() => handlePosition(index)}
+                      />
+                      {isPositionOpen[index] && (
+                        <PositionCategory
+                          value={
+                            index === 0
+                              ? positionValue.main ?? "ANY"
+                              : index === 1
+                              ? positionValue.sub ?? "ANY"
+                              : (positionValue.want && positionValue.want[0]) ??
+                                "ANY"
+                          }
+                          onClose={() => handlePositionClose(index)}
+                          onSelect={handleCategoryButtonClick}
+                        />
+                      )}
+                    </Posi>
+                  ))}
+                </PosiWrap>
+
+                {/* 내가 찾는 포지션 */}
+                <PosiWrap>
+                  <Posi key={2} className={profileType} $isWantP={true}>
+                    {POSITIONS[2].label}
+                    <Image
+                      src={setPositionImg(
+                        (positionValue.want && positionValue.want[0]) ?? "ANY"
+                      )}
+                      width={!isMobile ? 55 : 41}
+                      height={!isMobile ? 40 : 32}
+                      alt="포지션"
+                      onClick={() => handlePosition(2)}
+                    />
+                    {isPositionOpen[2] && (
+                      <PositionCategory
+                        value={
+                          (positionValue.want && positionValue.want[0]) ?? "ANY"
                         }
-                        onClose={() => handlePositionClose(index)}
+                        onClose={() => handlePositionClose(2)}
                         onSelect={handleCategoryButtonClick}
                       />
                     )}
                   </Posi>
-                ))}
+                </PosiWrap>
               </Positions>
+              {/* TODO 최근 선호 챔피언 */}
               {(profileType === "other" || profileType === "me") &&
                 user.championResponseList && (
                   <Champion
@@ -576,14 +624,6 @@ const Profile: React.FC<Profile> = ({
                     list={user.championResponseList}
                   />
                 )}
-              <Mike>
-                마이크
-                <Toggle
-                  isOn={isMike}
-                  onToggle={handleMike}
-                  disabled={profileType === "other"}
-                />
-              </Mike>
             </UnderRow>
           )}
           {(profileType === "normal" ||
@@ -597,8 +637,17 @@ const Profile: React.FC<Profile> = ({
               handleMike={handleMike}
             />
           )}
+          <Mike>
+            마이크
+            <Toggle
+              isOn={isMike}
+              onToggle={handleMike}
+              disabled={profileType === "other"}
+            />
+          </Mike>
         </StyledBox>
       </Row>
+
       {profileType === "other" && (
         <More>
           {!isDefault && <Admit>{renderFriendsButton()}</Admit>}
@@ -714,10 +763,10 @@ export default Profile;
 
 const Container = styled.div<{ $backgroundColor?: string }>`
   width: 100%;
-  height: 445px;
+  /* height: 445px; */
   box-sizing: border-box;
   border-radius: 30px;
-  padding: 23px 44px 44px 44px;
+  padding: 45px;
   background: ${({ $backgroundColor }) =>
     $backgroundColor ? $backgroundColor : theme.colors.gray100};
   display: flex;
@@ -730,20 +779,30 @@ const Container = styled.div<{ $backgroundColor?: string }>`
   &.other {
     padding: 42px 41px;
   }
+  @media (max-width: 700px) {
+    padding: 20px;
+
+    &.wind {
+      height: 330px;
+    }
+  }
 `;
 
 const Row = styled.div<{ $profileType: string }>`
   width: 100%;
-  height: 186px;
   display: flex;
   justify-content: flex-start;
-  align-items: center;
-  gap: 38px;
+  gap: 62px;
   ${({ $profileType }) =>
     $profileType === "other" &&
     css`
       margin-bottom: 20px;
     `}
+  @media (max-width: 700px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+  }
 `;
 
 const FriendRow = styled.div`
@@ -763,11 +822,19 @@ const UnderRow = styled.div`
 `;
 
 const ImageContainer = styled.div`
-  height: 186px;
   position: relative;
+  @media (max-width: 700px) {
+    display: flex;
+  }
+`;
+const ProfileImgWrapper = styled.div`
+  @media (max-width: 700px) {
+    display: flex;
+    position: relative;
+  }
 `;
 
-const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
+const PersonImgWrapper = styled.div<{ $bgColor: string }>`
   width: 186px;
   height: 186px;
   border-radius: 50%;
@@ -775,22 +842,36 @@ const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
   display: flex;
   align-items: center;
   justify-content: center;
+  @media (max-width: 700px) {
+    width: 52px;
+    height: 52px;
+  }
 `;
 
 const PersonImage = styled.object`
   margin-top: 5px;
   filter: drop-shadow(-4px 10px 10px rgba(63, 53, 78, 0.582));
   pointer-events: none;
+  @media (max-width: 700px) {
+    width: 35px;
+    margin-top: 0;
+  }
 `;
 
 const CameraImgBg = styled.div`
   position: relative;
-  width: 54px;
-  height: 54px;
+  width: 56px;
+  height: 56px;
   background: #000000a1;
   box-shadow: 0 0 3.06px 0 #00000040;
   border-radius: 50%;
   top: -51px;
+  @media (max-width: 700px) {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 35px;
+  }
 `;
 
 const CameraImage = styled.object`
@@ -799,6 +880,10 @@ const CameraImage = styled.object`
   left: 50%;
   transform: translate(-50%, -50%);
   pointer-events: none;
+  @media (max-width: 700px) {
+    width: 10px;
+    height: 10px;
+  }
 `;
 
 const ProfileListBox = styled.div`
@@ -806,7 +891,7 @@ const ProfileListBox = styled.div`
   height: 335px;
   display: flex;
   flex-direction: column;
-  padding: 26px;
+  padding: 32px;
   gap: 10px;
   justify-content: center;
   align-items: flex-end;
@@ -816,6 +901,9 @@ const ProfileListBox = styled.div`
   top: 205px;
   left: 10px;
   z-index: 100;
+  /* Background Blur */
+  box-shadow: 0 4px 8.9px 0 rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(7.5px);
 `;
 
 const ProfileListBoxTop = styled.div`
@@ -824,7 +912,8 @@ const ProfileListBoxTop = styled.div`
   justify-content: space-between;
   align-items: center;
   color: ${theme.colors.white};
-  ${theme.fonts.regular20};
+  ${theme.fonts.bold20};
+  margin-bottom: 20px;
 `;
 
 const ProfileList = styled.div`
@@ -852,13 +941,26 @@ const SelectProfileImgWrapper = styled.div<{
   ${({ $isSelected }) =>
     $isSelected &&
     css`
-      opacity: 0.5;
+      border: 3.41px solid ${theme.colors.white};
     `}
 
   &:hover {
     filter: drop-shadow(0px 4px 10px rgba(138, 117, 255, 0.7));
     transition: box-shadow 0.3s ease-in-out;
   }
+`;
+
+const CheckIcon = styled.object`
+  position: absolute;
+  top: 15px;
+  left: 10px;
+  z-index: 10;
+  transform: translate(-50%, -50%);
+  width: 36px;
+  height: 36px;
+  background: ${theme.colors.violet600};
+  border-radius: 50%;
+  border: 3.41px solid ${theme.colors.white};
 `;
 
 const ProfileListImage = styled.object`
@@ -876,6 +978,9 @@ const StyledBox = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 36px;
+  @media (max-width: 700px) {
+    gap: 16px;
+  }
 `;
 
 const TopContainer = styled.div<{ $isMatching: boolean }>`
@@ -891,6 +996,12 @@ const TopContainer = styled.div<{ $isMatching: boolean }>`
     css`
       margin-top: 21px;
     `}
+
+  @media (max-width: 700px) {
+    margin-top: 0;
+    margin-left: 8px;
+    gap: 16px;
+  }
 `;
 
 const Top = styled.div`
@@ -900,12 +1011,21 @@ const Top = styled.div`
   gap: 6px;
   color: ${theme.colors.gray800};
   white-space: nowrap;
+
+  @media (max-width: 700px) {
+    flex-direction: column;
+    align-items: flex-start;
+    ${(props) => props.theme.fonts.bold16};
+  }
 `;
 
 const Span = styled.span`
   margin-right: 5px;
   color: ${theme.colors.gray500};
-  font-size: ${theme.fonts.regular32};
+  font-size: ${theme.fonts.bold20};
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.semiBold12};
+  }
 `;
 
 const RankTierWrapper = styled.div`
@@ -967,8 +1087,22 @@ const MsgConfirm = styled(Msg)`
 
 const Positions = styled.div`
   display: flex;
-  gap: 24px;
   align-items: center;
+  width: 412px;
+  gap: 8px;
+  @media (max-width: 700px) {
+    width: 100%;
+  }
+`;
+
+const PosiWrap = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  background-color: white;
+  width: 100%;
+  border-radius: 6px;
+  padding: 12px 20px;
 `;
 
 const Posi = styled.div<{ $isWantP: boolean }>`
@@ -976,24 +1110,38 @@ const Posi = styled.div<{ $isWantP: boolean }>`
   flex-direction: column;
   gap: 15px;
   align-items: flex-start;
-  font-size: ${theme.fonts.regular14};
+  font-size: ${theme.fonts.medium16};
+  color: ${theme.colors.gray800};
   position: relative;
 
   &.other {
-    font-size: ${theme.fonts.regular14};
+    font-size: ${theme.fonts.medium16};
   }
 
   ${({ $isWantP }) =>
     $isWantP &&
     css`
-      margin-left: 36px;
+      /* margin-left: 36px; */
     `}
+
+  @media (max-width: 700px) {
+    font-size: ${theme.fonts.medium11};
+    gap: 9px;
+    ${({ $isWantP }) =>
+      $isWantP &&
+      css`
+        margin-left: 0px;
+      `};
+  }
 `;
 
 const Mike = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 10px;
-  font-size: ${theme.fonts.regular14};
+  gap: 12px;
+  font-size: ${theme.fonts.semiBold14};
+  @media (max-width: 700px) {
+    font-size: ${theme.fonts.medium11};
+  }
 `;

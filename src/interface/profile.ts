@@ -83,4 +83,3 @@ export interface UserInfo {
   championResponseDTOList: ChampionResponseDTO[];
   loginType: string;
 }
-
