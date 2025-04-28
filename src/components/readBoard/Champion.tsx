@@ -155,7 +155,7 @@ const Tooltip = styled.div`
   &::before {
     content: "";
     position: absolute;
-    top: -12px;
+    top: -10.5px;
     left: 50%;
     transform: translateX(-50%);
     border-width: 6px;
