@@ -61,7 +61,11 @@ const Champion = (props: ChampionProps) => {
                     <Rate>1.98</Rate>
                     <More>0 / 0 / 0</More>
                     <Head>CS</Head>
-                    <Rate>{champion.csPerMinute.toFixed(1)}</Rate>
+                    <Rate>
+                      {champion.csPerMinute !== undefined
+                        ? champion.csPerMinute.toFixed(1)
+                        : "-"}
+                    </Rate>
                     <More>190.6</More>
                   </ChampionTable>
                 </Tooltip>
