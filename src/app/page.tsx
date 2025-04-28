@@ -5,9 +5,12 @@ import { MATCH_PAGE_DATA } from "@/constants/match";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Banner from "@/components/common/Banner";
+import Image from "next/image";
+import useMediaQueries from "@/hooks/useMediaQueries";
 
 const HomePage = () => {
   const router = useRouter();
+  const isMobile = useMediaQueries({ breakpoint: 700 });
 
   return (
     <Wrapper>
@@ -23,12 +26,21 @@ const HomePage = () => {
                 }}
               >
                 <StyledObject
-                  data={content.image}
+                  data={!isMobile ? content.image : content.moImage}
                   width={0}
                   height={0}
                   style={{ width: "100%", height: "100%" }}
                 />
-                <ContentTitle>{content.title}</ContentTitle>
+                <TitleWrap>
+                  <ContentTitle>{content.title}</ContentTitle>
+                  <Image
+                    src={"/assets/icons/chevron_right.svg"}
+                    width={!isMobile ? 24 : 14}
+                    height={!isMobile ? 24 : 14}
+                    style={{ marginLeft: "10px" }}
+                    alt="go"
+                  />
+                </TitleWrap>
               </ContentWrapper>
             );
           })}
@@ -45,12 +57,18 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 100px;
+  @media (max-width: 1200px) {
+    padding-top: 24px;
+  }
 `;
 
 const HomeContent = styled.div`
   max-width: 1440px;
   width: 100%;
   padding: 0px 80px;
+  @media (max-width: 1200px) {
+    padding: 0 20px;
+  }
 `;
 
 const Main = styled.main`
@@ -71,18 +89,29 @@ const ContentWrapper = styled.div`
   max-width: 600px;
   position: relative;
   cursor: pointer;
+  @media (max-width: 700px) {
+    min-width: 100%;
+  }
 `;
 
 const StyledObject = styled.object`
   pointer-events: none;
 `;
 
-const ContentTitle = styled.p`
+const TitleWrap = styled.div`
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+`;
+
+const ContentTitle = styled.p`
   ${(props) => props.theme.fonts.bold32};
   color: ${theme.colors.white};
   white-space: nowrap;
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.bold16};
+  }
 `;

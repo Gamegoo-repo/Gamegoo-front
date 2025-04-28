@@ -76,6 +76,10 @@ const HeaderWrap = styled.header<{
   margin-bottom: ${({ $marginBottom }) =>
     $marginBottom ? $marginBottom : "32px"};
   @media (max-width: 700px) {
+    display: ${({ $isMatchProgressOrComplete }) =>
+      $isMatchProgressOrComplete ? "flex" : "unset"};
+    justify-content: ${({ $isMatchProgressOrComplete }) =>
+      $isMatchProgressOrComplete ? "unset" : "space-between"};
     margin-bottom: 12px;
   }
 `;

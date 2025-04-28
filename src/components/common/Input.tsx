@@ -25,6 +25,8 @@ interface InputProps {
   onFocus?: () => void;
   onBlur?: () => void;
   maxLeng?: number;
+  placeholderFontSize?: string;
+  $placeholderFontSize?: string;
 }
 
 const Input = (props: InputProps) => {
@@ -48,6 +50,7 @@ const Input = (props: InputProps) => {
     onFocus,
     onBlur,
     maxLeng,
+    placeholderFontSize,
   } = props;
 
   const handleChange = (event: any) => {
@@ -88,6 +91,7 @@ const Input = (props: InputProps) => {
             $hastag={tag}
             onFocus={onFocus}
             onBlur={onBlur}
+            $placeholderFontSize={placeholderFontSize}
           />
           {tag && <Tag>#</Tag>}
           {isvalid !== undefined && (
@@ -152,6 +156,9 @@ const StyledInput = styled.input<InputProps>`
 
   &::placeholder {
     color: #c0c0c0;
+
+    font-size: ${({ $placeholderFontSize }) =>
+      $placeholderFontSize ? $placeholderFontSize : "16px"};
   }
 `;
 
