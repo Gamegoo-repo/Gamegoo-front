@@ -19,7 +19,8 @@ type ButtonText =
   | "글 작성하기"
   | "글 보러하기"
   | "머무르기"
-  | "매칭 종료";
+  | "매칭 종료"
+  | "회원 탈퇴";
 
 interface ConfirmModalProps {
   type?: "manner";

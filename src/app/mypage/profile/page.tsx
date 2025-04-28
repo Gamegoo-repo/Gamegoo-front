@@ -10,8 +10,8 @@ import { setUserMike, setUserProfile } from "@/redux/slices/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { formatDate } from "@/utils/custom";
-import Input from "@/components/common/Input";
-import { checkPassword } from "@/api/password/password";
+// import Input from "@/components/common/Input";
+// import { checkPassword } from "@/api/password/password";
 import { clearTokens } from "@/utils/storage";
 import { useRouter } from "next/navigation";
 import { getMyProfile } from "@/api/user/profile/get";
@@ -28,9 +28,9 @@ const MyProfilePage = () => {
 
   const [isPasswordModify, setIsPasswordModify] = useState<boolean>(false);
 
-  const [password, setPassword] = useState("");
+  // const [password, setPassword] = useState("");
   /* 현재 비밀번호 일치 여부 */
-  const [isPasswordValid, setIsPasswordValid] = useState<boolean | undefined>();
+  // const [isPasswordValid, setIsPasswordValid] = useState<boolean | undefined>();
 
   /* 회원탈퇴 모달 */
   const [isWithdrawalCaution, setIsWithdrawalCaution] =
@@ -41,16 +41,18 @@ const MyProfilePage = () => {
   const handleWithdrawal = async () => {
     // 회원탈퇴 API 연동
     try {
-      await checkPassword(password);
-      setIsPasswordValid(true);
+      // await checkPassword(password);
+      // setIsPasswordValid(true);
 
       await deleteMember();
       setIsWithdrawalCaution(false);
       setIsWithdrawalComplete(true);
       clearTokens();
-      router.push("/login");
+      setTimeout(() => {
+        router.push("/login");
+      }, 2000);
     } catch (error) {
-      setIsPasswordValid(false);
+      // setIsPasswordValid(false);
     }
   };
 
@@ -113,8 +115,8 @@ const MyProfilePage = () => {
         {isWithdrawalCaution && (
           <ConfirmModal
             width="540px"
-            primaryButtonText="예"
-            secondaryButtonText="아니요"
+            primaryButtonText="회원 탈퇴"
+            secondaryButtonText="취소"
             onPrimaryClick={handleWithdrawal}
             onSecondaryClick={() => setIsWithdrawalCaution(false)}
           >
@@ -126,7 +128,7 @@ const MyProfilePage = () => {
                 <br />
                 아이디 및 데이터는 복구할 수 없습니다.
               </div>
-              <Input
+              {/* <Input
                 inputType="password"
                 value={password}
                 label="현재 비밀번호"
@@ -136,7 +138,7 @@ const MyProfilePage = () => {
                 }}
                 placeholder="현재 비밀번호 입력"
                 isvalid={isPasswordValid}
-              />
+              /> */}
             </ModalContent>
           </ConfirmModal>
         )}
@@ -256,7 +258,7 @@ const Modify = styled.button`
 
 const P = styled.button`
   ${(props) => props.theme.fonts.bold14};
-  color: ${theme.colors.gray200};
+  color: ${theme.colors.gray500};
   text-decoration-line: underline;
 `;
 
