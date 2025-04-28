@@ -166,7 +166,7 @@ const BoardPage = () => {
         boardFilters.tier && boardFilters.tier !== null
           ? boardFilters.tier
           : selectedTier,
-      mainP: boardFilters.mainP || isPosition,
+      mainP: isPosition,
       mike:
         boardFilters.mike && boardFilters.mike !== null
           ? boardFilters.mike
