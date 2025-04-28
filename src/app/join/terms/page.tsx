@@ -1,5 +1,6 @@
 "use client";
 
+import { postRiotJoin } from "@/api/riot/join";
 import Button from "@/components/common/Button";
 import Checkbox from "@/components/common/Checkbox";
 import TermModal from "@/components/common/TermModal";
@@ -9,7 +10,8 @@ import {
   PRIVATE_TERMS,
 } from "@/constants/terms";
 import { createTerms } from "@/data/terms";
-import { updateTerms } from "@/redux/slices/signInSlice";
+import { notify } from "@/hooks/notify";
+import { clearSignIn, updateTerms } from "@/redux/slices/signInSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import { useRouter } from "next/navigation";
@@ -20,8 +22,10 @@ import styled from "styled-components";
 const Terms = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const [terms, setTerms] = useState<boolean[]>([false, false, false]);
+  const [puuid, setPuuid] = useState<string | null>(null);
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [terms, setTerms] = useState<boolean[]>([false, false, false]);
   const termsRedux = useSelector((state: RootState) => state.signIn.terms);
 
   const [modalData, setModalData] = useState<{
@@ -30,6 +34,12 @@ const Terms = () => {
     isRequired: boolean;
     index: number;
   } | null>(null);
+
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const queryPuuid = url.searchParams.get("puuid");
+    setPuuid(queryPuuid);
+  }, []);
 
   /* redux 업데이트 */
   useEffect(() => {
@@ -42,9 +52,37 @@ const Terms = () => {
     setTerms(newTerms);
   };
 
-  const handleNext = async () => {
-    dispatch(updateTerms(terms));
-    router.push("/join/email");
+  // const handleNext = async () => {
+  //   dispatch(updateTerms(terms));
+  //   router.push("/join/email");
+  // };
+
+  const handleSendJoin = async () => {
+    if (puuid) {
+      setIsLoading(true);
+      try {
+        await postRiotJoin({
+          puuid,
+          isAgree: terms[2],
+        });
+        dispatch(clearSignIn());
+        router.push("/riot");
+      } catch (err) {
+        notify({
+          text: "회원가입에 실패했습니다. 다시 시도해주세요.",
+          icon: "🚫",
+          type: "error",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      notify({
+        text: "Riot 로그인으로 회원가입을 진행해주세요.",
+        icon: "🚫",
+        type: "error",
+      });
+    }
   };
 
   const openModal = (type: string, index: number) => {
@@ -117,8 +155,8 @@ const Terms = () => {
       </CheckList>
       <Button
         buttonType="primary"
-        text="다음"
-        onClick={handleNext}
+        text={isLoading ? "가입 중..." : "회원가입 완료"}
+        onClick={handleSendJoin}
         disabled={!allRequiredChecked}
       />
     </Div>
