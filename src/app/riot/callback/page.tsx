@@ -11,6 +11,8 @@ import {
   setUserName,
   setUserProfileImg,
 } from "@/redux/slices/userSlice";
+import { notify } from "@/hooks/notify";
+import { LOGIN } from "@/constants/messages";
 
 const RsoCallback = () => {
   const router = useRouter();
@@ -22,6 +24,17 @@ const RsoCallback = () => {
     const refreshToken = url.searchParams.get("refreshToken");
     const puuid = url.searchParams.get("puuid");
     const state = url.searchParams.get("state");
+    const error = url.searchParams.get("error");
+
+    if (error === "signup_disabled") {
+      // 소환사명이 없을 경우 오류 처리
+      notify({
+        text: LOGIN.MESSAGE.RIOT_ERROR,
+        icon: "🚫",
+        type: "error",
+      });
+      router.push("/riot");
+    }
 
     if (accessToken && refreshToken) {
       // 로그인 완료 처리
