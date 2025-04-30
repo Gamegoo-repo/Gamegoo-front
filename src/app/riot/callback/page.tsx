@@ -22,6 +22,9 @@ const RsoCallback = () => {
     const url = new URL(window.location.href);
     const accessToken = url.searchParams.get("accessToken");
     const refreshToken = url.searchParams.get("refreshToken");
+    const name = url.searchParams.get("name");
+    const profileImage = url.searchParams.get("profileImage");
+    const id = url.searchParams.get("id");
     const puuid = url.searchParams.get("puuid");
     const state = url.searchParams.get("state");
     const error = url.searchParams.get("error");
@@ -36,18 +39,12 @@ const RsoCallback = () => {
       router.push("/riot");
     }
 
-    if (accessToken && refreshToken) {
+    if (accessToken && refreshToken && name && profileImage && id) {
       // 로그인 완료 처리
       setToken(accessToken, refreshToken, true);
-      // 서버 응답값 추가 필요
-      //   dispatch(setUserName(response.data.name));
-      //   dispatch(setUserProfileImg(response.data.profileImage));
-      //   dispatch(setUserId(response.data.id));
-
-      // 테스트용 redux 설정
-      dispatch(setUserName("라이엇"));
-      dispatch(setUserProfileImg(1));
-      dispatch(setUserId(8));
+      dispatch(setUserName(name));
+      dispatch(setUserProfileImg(Number(profileImage)));
+      dispatch(setUserId(Number(id)));
       router.push("/");
     } else if (puuid) {
       // 회원가입 페이지로 이동
