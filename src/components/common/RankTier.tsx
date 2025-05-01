@@ -57,7 +57,7 @@ const RankName = styled.div<{ $direct: string }>`
   ${({ $direct }) =>
     $direct === "row" &&
     css`
-      ${theme.fonts.medium11}
+      ${theme.fonts.bold13}
     `}
     @media (max-width: 700px) {
     ${theme.fonts.medium11}
@@ -75,7 +75,7 @@ const Tier = styled.div<{ $direct: string }>`
     $direct === "row" &&
     css`
       color: ${theme.colors.gray600};
-      ${theme.fonts.semiBold13}
+      ${theme.fonts.bold14}
     `}
     @media (max-width: 700px) {
     ${theme.fonts.bold14}
