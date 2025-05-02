@@ -24,8 +24,10 @@ interface User {
   memberId: number;
   gameName: string;
   tag: string;
-  tier: string;
-  rank: number;
+  soloTier: string;
+  freeTier: string;
+  soloRank: number;
+  freeRank: number;
   mannerLevel: number;
   profileImg: number;
   gameMode: number;
@@ -57,8 +59,11 @@ const Progress = () => {
     memberId: parseInt(searchParams.get("memberId") || "0", 10),
     gameName: searchParams.get("gameName") || "",
     tag: searchParams.get("tag") || "",
-    tier: searchParams.get("tier") || "",
-    rank: parseInt(searchParams.get("rank") || "1", 10),
+    /* TODO : 솔랭, 자랭 값으로 정보 얻어오도록 수정 */
+    soloTier: searchParams.get("tier") || "",
+    freeTier: searchParams.get("tier") || "",
+    soloRank: parseInt(searchParams.get("rank") || "1", 10),
+    freeRank: parseInt(searchParams.get("rank") || "1", 10),
     mannerLevel: parseInt(searchParams.get("mannerLevel") || "0", 10),
     profileImg: parseInt(searchParams.get("profileImg") || "0", 10),
     gameMode: parseInt(searchParams.get("gameMode") || "1", 10),
@@ -86,7 +91,9 @@ const Progress = () => {
         messages[Math.floor(Math.random() * messages.length)];
       /* 나와 같은 티어의 매칭 인원이 필요할 때 */
       if (messagesWithN[1] === randomMessage) {
-        const response = await getSystemMsg(user.tier);
+        /* TODO : 기획사항에 맞게 올바른 티어 전달하기 */
+        // const response = await getSystemMsg(user.tier);
+        const response = await getSystemMsg(user.soloTier); // 임시로 솔로티어로 전달
         setCurrentMessage(
           randomMessage.replace(/n/g, response.result.number.toString())
         );
@@ -247,7 +254,9 @@ const Progress = () => {
           page: 1,
           pageIdx: 1,
           gameMode: mode,
-          tier: user.tier,
+          /* TODO : 기획사항에 맞게 올바른 티어 전달하기 */
+          // tier: user.tier,
+          tier: user.soloTier, // 임시로 솔로티어로 전달
           mainP: user.mainPosition,
           mike: user.mike,
         };
