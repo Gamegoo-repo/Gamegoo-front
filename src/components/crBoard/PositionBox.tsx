@@ -95,7 +95,6 @@ const PositionBox = (props: PositionBoxProps) => {
     handlePositionClose(type, index);
   };
 
-  console.log("ㅋㅋㅋ", positionValue?.want);
   return (
     <PositionWrapper>
       <Positions>
