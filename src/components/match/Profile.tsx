@@ -79,11 +79,11 @@ const Profile: React.FC<Profile> = ({
   const [reportDetail, setReportDetail] = useState<string>("");
 
   /* 포지션 */
-  const [isPositionOpen, setIsPositionOpen] = useState<boolean[]>([
-    false,
-    false,
-    false,
-  ]);
+  const [isPositionOpen, setIsPositionOpen] = useState({
+    main: false,
+    sub: false,
+    want: [false, false], // 최대 2개의 want 포지션
+  });
   const [selectedBox, setSelectedBox] = useState("");
   const [showAlert, setShowAlert] = useState(false);
   const matchInfo = useSelector((state: RootState) => state.matchInfo);
@@ -93,7 +93,7 @@ const Profile: React.FC<Profile> = ({
   const [positionValue, setPositionValue] = useState<PositionState>({
     main: user.mainP,
     sub: user.subP,
-    want: user.wantP,
+    want: [null, null],
   });
   /* 선택된 현재 프로필 이미지 */
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(
@@ -106,7 +106,7 @@ const Profile: React.FC<Profile> = ({
     setPositionValue({
       main: user.mainP,
       sub: user.subP,
-      want: user.wantP, // 나중에 wantP값 받아서 수정
+      want: [null, null], // 나중에 wantP값 받아서 수정
     });
     setSelectedImageIndex(user.profileImg);
   }, [user]);
@@ -203,28 +203,53 @@ const Profile: React.FC<Profile> = ({
 
   /* 포지션 선택창 관련 함수*/
   // 포지션 선택창 열기 (포지션 클릭시 동작)
-  const handlePosition = async (index: number) => {
-    // console.log(index, "=====", profileType);
-    if (profileType !== "other") {
-      setIsPositionOpen((prev) =>
-        prev.map((isOpen, i) => (i === index ? !isOpen : false))
-      );
-      setSelectedBox(index === 0 ? "main" : index === 1 ? "sub" : "want");
-    }
+  const handlePosition = (type: "main" | "sub" | "want", index: number = 0) => {
+    if (profileType === "other") return;
+
+    setSelectedBox(type);
+
+    setIsPositionOpen((prev) => {
+      if (type === "want") {
+        const updatedWant = prev.want.map((open, i) =>
+          i === index ? !open : false
+        );
+        return {
+          ...prev,
+          want: updatedWant,
+          main: false,
+          sub: false,
+        };
+      } else {
+        return {
+          ...prev,
+          [type]: !prev[type],
+          want: [false, false],
+          ...(type === "main" ? { sub: false } : { main: false }),
+        };
+      }
+    });
   };
 
   // 포지션 선택창 닫기
-  const handlePositionClose = (index: number) => {
-    if (profileType !== "other") {
-      setIsPositionOpen((prev) =>
-        prev.map((isOpen, i) => (i === index ? false : isOpen))
-      );
-    }
+  const handlePositionClose = (
+    type: "main" | "sub" | "want",
+    index: number = 0
+  ) => {
+    if (profileType === "other") return;
+
+    setIsPositionOpen((prev) => {
+      if (type === "want") {
+        const updatedWant = [...prev.want];
+        updatedWant[index] = false;
+        return { ...prev, want: updatedWant };
+      } else {
+        return { ...prev, [type]: false };
+      }
+    });
   };
 
   // 포지션 선택해 변경하기
   const handlePositionChange = async (newPositionValue: PositionState) => {
-    // setPositionValue(newPositionValue);
     if (profileType === "me" && newPositionValue.main && newPositionValue.sub) {
       try {
         // 포지션 변경 API 호출
@@ -252,16 +277,23 @@ const Profile: React.FC<Profile> = ({
   };
 
   const handleCategoryButtonClick = (
-    selectedValues: Position | (Position | null)[]
+    selectedValue: Position | null,
+    type: "main" | "sub" | "want",
+    index: number = 0
   ) => {
-    if (selectedBox) {
-      const newPositionValue = {
-        ...positionValue,
-        [selectedBox]: selectedValues,
-      };
-      setPositionValue(newPositionValue);
-      handlePositionChange(newPositionValue);
+    let newPositionValue = { ...positionValue };
+
+    if (type === "want") {
+      const wantArray = [...(newPositionValue.want ?? [])];
+      wantArray[index] = selectedValue;
+      newPositionValue.want = wantArray;
+    } else {
+      if (selectedValue === null) return;
+      newPositionValue[type] = selectedValue;
     }
+
+    setPositionValue(newPositionValue);
+    handlePositionChange(newPositionValue);
   };
 
   const handleFriendState = async (state: string) => {
@@ -555,65 +587,83 @@ const Profile: React.FC<Profile> = ({
               <Positions>
                 {/* 주 포지션 + 부 포지션 */}
                 <PosiWrap>
-                  {POSITIONS.slice(0, 2).map((position, index) => (
-                    <Posi key={index} className={profileType} $isWantP={false}>
-                      {position.label}
-                      <Image
-                        src={setPositionImg(
-                          index === 0
-                            ? positionValue.main ?? "ANY"
-                            : index === 1
-                            ? positionValue.sub ?? "ANY"
-                            : (positionValue.want && positionValue.want[0]) ??
-                              "ANY"
-                        )}
-                        width={!isMobile ? 55 : 22}
-                        height={!isMobile ? 40 : 22}
-                        alt="포지션"
-                        onClick={() => handlePosition(index)}
-                      />
-                      {isPositionOpen[index] && (
-                        <PositionCategory
-                          selectedBox={index === 0 ? "main" : "sub"}
-                          value={
-                            index === 0
-                              ? positionValue.main ?? "ANY"
-                              : index === 1
-                              ? positionValue.sub ?? "ANY"
-                              : (positionValue.want && positionValue.want[0]) ??
-                                "ANY"
-                          }
-                          onClose={() => handlePositionClose(index)}
-                          onSelect={handleCategoryButtonClick}
-                        />
-                      )}
-                    </Posi>
-                  ))}
+                  {POSITIONS.slice(0, 2).map((position, index) => {
+                    const type = index === 0 ? "main" : "sub";
+
+                    return (
+                      <Posi
+                        key={index}
+                        className={profileType}
+                        $isWantP={false}
+                      >
+                        {position.label}
+                        <PosiItem>
+                          <Image
+                            src={setPositionImg(
+                              type === "main"
+                                ? positionValue.main ?? "ANY"
+                                : positionValue.sub ?? "ANY"
+                            )}
+                            width={!isMobile ? 55 : 22}
+                            height={!isMobile ? 40 : 22}
+                            alt="포지션"
+                            onClick={() => handlePosition(type)}
+                          />
+                          {isPositionOpen[type] && (
+                            <PositionCategory
+                              selectedBox={type}
+                              value={positionValue[type] ?? "ANY"}
+                              onClose={() => handlePositionClose(type)}
+                              onSelect={(val) =>
+                                handleCategoryButtonClick(val, type)
+                              }
+                            />
+                          )}
+                        </PosiItem>
+                      </Posi>
+                    );
+                  })}
                 </PosiWrap>
 
                 {/* 내가 찾는 포지션 */}
                 <PosiWrap>
                   <Posi key={2} className={profileType} $isWantP={true}>
                     {POSITIONS[2].label}
-                    <Image
-                      src={setPositionImg(
-                        (positionValue.want && positionValue.want[0]) ?? "ANY"
-                      )}
-                      width={!isMobile ? 55 : 22}
-                      height={!isMobile ? 40 : 22}
-                      alt="포지션"
-                      onClick={() => handlePosition(2)}
-                    />
-                    {isPositionOpen[2] && (
-                      <PositionCategory
-                        selectedBox="want"
-                        value={
-                          (positionValue.want && positionValue.want[0]) ?? "ANY"
-                        }
-                        onClose={() => handlePositionClose(2)}
-                        onSelect={handleCategoryButtonClick}
-                      />
-                    )}
+                    <PosiRow>
+                      {positionValue?.want?.map((posi, index) => (
+                        <PosiItem key={index}>
+                          {posi ? (
+                            <Image
+                              src={setPositionImg(posi)}
+                              width={!isMobile ? 48 : 22}
+                              height={!isMobile ? 40 : 22}
+                              alt="포지션"
+                              onClick={() => handlePosition("want", index)}
+                            />
+                          ) : (
+                            <Plus onClick={() => handlePosition("want", index)}>
+                              <Image
+                                src="/assets/icons/plus_violet.svg"
+                                width={!isMobile ? 16 : 14}
+                                height={!isMobile ? 16 : 14}
+                                alt=""
+                              />
+                            </Plus>
+                          )}
+                          {/* PositionCategory 열기 조건 */}
+                          {isPositionOpen.want[index] && (
+                            <PositionCategory
+                              selectedBox="want"
+                              value={posi}
+                              onClose={() => handlePositionClose("want", index)}
+                              onSelect={(val) =>
+                                handleCategoryButtonClick(val, "want", index)
+                              }
+                            />
+                          )}
+                        </PosiItem>
+                      ))}
+                    </PosiRow>
                   </Posi>
                 </PosiWrap>
               </Positions>
@@ -765,7 +815,6 @@ export default Profile;
 
 const Container = styled.div<{ $backgroundColor?: string }>`
   width: 100%;
-  /* height: 445px; */
   box-sizing: border-box;
   border-radius: 30px;
   padding: 45px;
@@ -1120,7 +1169,6 @@ const Posi = styled.div<{ $isWantP: boolean }>`
   align-items: center;
   font-size: ${theme.fonts.medium16};
   color: ${theme.colors.gray800};
-  position: relative;
 
   &.other {
     font-size: ${theme.fonts.medium16};
@@ -1134,6 +1182,37 @@ const Posi = styled.div<{ $isWantP: boolean }>`
       css`
         margin-left: 0px;
       `};
+  }
+`;
+
+const PosiRow = styled.div`
+  height: 40px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+`;
+
+const PosiItem = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+`;
+
+const Plus = styled.div`
+  display: flex;
+  width: 48px;
+  height: 32px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 999px;
+  background: ${theme.colors.violet100};
+
+  @media (max-width: 700px) {
+    width: 32px;
+    height: 24px;
   }
 `;
 
