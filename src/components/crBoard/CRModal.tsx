@@ -81,7 +81,7 @@ const Wrapper = styled.div<{
   margin: 50px;
   padding: 24px 30px;
   background: ${({ $hideContent }) =>
-    $hideContent ? "unset" : `${theme.colors.white}`};
+    $hideContent ? "unset" : `${theme.colors.gray100}`};
   box-shadow: ${({ $hideContent }) =>
     $hideContent ? "unset" : "0 4px 96.4px 0 #00000040"};
 

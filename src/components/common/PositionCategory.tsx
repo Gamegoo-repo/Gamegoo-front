@@ -125,7 +125,7 @@ export default PositionCategory;
 const Wrapper = styled.div<{ $isWant: boolean }>`
   width: ${({ $isWant }) => ($isWant ? "383px" : "452px")};
   position: absolute;
-  top: 70px;
+  top: 80px;
   left: calc(50% - 35px);
   z-index: 10;
   border-radius: 20px;
