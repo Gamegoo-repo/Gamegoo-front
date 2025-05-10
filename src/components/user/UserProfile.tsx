@@ -207,6 +207,10 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 62px;
+
+  @media (max-width: 700px) {
+    padding-top: 24px;
+  }
 `;
 
 const Row = styled.div`
