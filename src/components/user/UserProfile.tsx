@@ -71,6 +71,7 @@ const UserProfile = ({
             size="bold"
             blocked={profile.blocked}
             marginBottom="20px"
+            isColumn={isMobile && isDefault}
             isMatchProgressOrComplete={true}
           />
         </Row>

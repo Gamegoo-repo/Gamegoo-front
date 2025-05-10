@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import styled from "styled-components";
 import StepNavigation from "./StepNavigation";
+import { css } from "styled-components";
 
 type fontSize = "bold" | "regular";
 
@@ -15,6 +16,7 @@ interface HeaderTitleProps {
   blocked?: boolean;
   isDoubleBack?: boolean;
   marginBottom?: string;
+  isColumn?: boolean;
   isMatchProgressOrComplete?: boolean;
 }
 
@@ -26,6 +28,7 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({
   blocked = false,
   isDoubleBack = false,
   marginBottom,
+  isColumn = false,
   isMatchProgressOrComplete = false, // 매칭중인지에 대한 여부
 }) => {
   const router = useRouter();
@@ -39,6 +42,7 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({
 
   return (
     <HeaderWrap
+      $isColumn={isColumn}
       $isMatchProgressOrComplete={isMatchProgressOrComplete}
       $marginBottom={marginBottom}
     >
@@ -66,6 +70,7 @@ export default HeaderTitle;
 
 const HeaderWrap = styled.header<{
   $marginBottom?: string;
+  $isColumn?: boolean;
   $isMatchProgressOrComplete?: boolean;
 }>`
   width: 100%;
@@ -81,6 +86,14 @@ const HeaderWrap = styled.header<{
     justify-content: ${({ $isMatchProgressOrComplete }) =>
       $isMatchProgressOrComplete ? "unset" : "space-between"};
     margin-bottom: 12px;
+
+    ${({ $isColumn }) =>
+      $isColumn &&
+      css`
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      `}
   }
 `;
 const Header = styled.div<{ $isMatchProgressOrComplete?: boolean }>`
