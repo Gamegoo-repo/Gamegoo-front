@@ -1200,6 +1200,7 @@ const Posi = styled.div<{ $isWantP: boolean }>`
   align-items: center;
   font-size: ${theme.fonts.medium16};
   color: ${theme.colors.gray800};
+  white-space: nowrap;
 
   @media (max-width: 700px) {
     font-size: ${theme.fonts.medium11};

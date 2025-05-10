@@ -10,10 +10,11 @@ interface ChampionProps {
   title?: boolean;
   list?: ChampionResponseDTO[];
   font?: string;
+  color?: string;
 }
 
 const Champion = (props: ChampionProps) => {
-  const { list, font = "semiBold18", title = false } = props;
+  const { list, font = "semiBold18", color, title = false } = props;
   const isMobile = useMediaQueries({ breakpoint: 700 });
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
@@ -24,7 +25,11 @@ const Champion = (props: ChampionProps) => {
 
   return (
     <Wrapper>
-      {title && <Title $font={font}>최근 선호 챔피언</Title>}
+      {title && (
+        <Title $font={font} $color={color}>
+          최근 선호 챔피언
+        </Title>
+      )}
       {list?.length !== 0 ? (
         <Champions>
           {list?.map((champion, key) => (
@@ -91,10 +96,10 @@ const Wrapper = styled.div`
   gap: 9px;
 `;
 
-const Title = styled.p<{ $font: string }>`
+const Title = styled.p<{ $font: string; $color?: string }>`
   ${(props) =>
     props.theme.fonts[`${props.$font}` as keyof typeof props.theme.fonts]};
-  color: ${theme.colors.gray600};
+  color: ${({ $color, theme }) => ($color ? $color : theme.colors.gray600)};
 `;
 
 const Champions = styled.div`

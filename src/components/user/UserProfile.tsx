@@ -7,6 +7,7 @@ import MannerLevelBar from "@/components/common/MannerLevelBar";
 import { profileType, User } from "@/interface/profile";
 import { getUserId } from "@/utils/storage";
 import Champion from "../readBoard/Champion";
+import useMediaQueries from "@/hooks/useMediaQueries";
 
 export interface Manner {
   memberId?: number;
@@ -33,6 +34,7 @@ const UserProfile = ({
   }) => void;
   isDefault?: boolean; // 비회원용 default 프로필 여부
 }) => {
+  const isMobile = useMediaQueries({ breakpoint: 700 });
   const goodMannerEvaluations =
     manner.mannerKeywords
       .filter(
@@ -85,12 +87,11 @@ const UserProfile = ({
           <Content>
             <div>
               <Title>{`${profile.gameName}님의 매너레벨`}</Title>
-              <Box>
+              <LevelBox>
                 <Text>
-                  매너 레벨은 겜구 사용자로부터 받은 매너평가, 비매너평가를
-                  반영한 지표예요.
-                  <br />
-                  최근 <Span>{manner.mannerRatingCount}</Span>명의 사용자가
+                  {/* {!isMobile &&
+                    `매너 레벨은 겜구 사용자로부터 받은 매너평가, 비매너평가를 반영한 지표예요.\n`} */}
+                  최근 <Span>{manner.mannerRatingCount}명</Span>의 사용자가
                   {` `}
                   {profile.gameName}
                   {` `}님에게 긍정적 매너 평가를 남겼어요.
@@ -99,22 +100,12 @@ const UserProfile = ({
                   recentLevel={manner.mannerLevel}
                   mannerRank={manner.mannerRank || null}
                 />
-              </Box>
+              </LevelBox>
             </div>
             <div>
-              <Title>매너 키워드</Title>
-              <Box>
+              <Title>받은 매너평가</Title>
+              <MannerBox>
                 <MannerList>
-                  <ValueWrapper>
-                    {goodMannerEvaluations.map((item) => (
-                      <Value
-                        key={item.id}
-                        className={item.count > 0 ? "mannerEmph" : "default"}
-                      >
-                        {item.count}
-                      </Value>
-                    ))}
-                  </ValueWrapper>
                   <TypeWrapper>
                     {goodMannerEvaluations.map((evaluation) => {
                       const matchedType = MANNER_TYPES.find(
@@ -132,23 +123,23 @@ const UserProfile = ({
                       ) : null;
                     })}
                   </TypeWrapper>
-                </MannerList>
-              </Box>
-            </div>
-            <div>
-              <Title>비매너 키워드</Title>
-              <Box>
-                <MannerList>
                   <ValueWrapper>
-                    {badMannerEvaluations.map((item) => (
+                    {goodMannerEvaluations.map((item) => (
                       <Value
                         key={item.id}
-                        className={item.count > 0 ? "badEmph" : "default"}
+                        className={item.count > 0 ? "mannerEmph" : "default"}
                       >
                         {item.count}
                       </Value>
                     ))}
                   </ValueWrapper>
+                </MannerList>
+              </MannerBox>
+            </div>
+            <div>
+              <Title>받은 비매너평가</Title>
+              <MannerBox>
+                <MannerList>
                   <TypeWrapper>
                     {badMannerEvaluations.map((evaluation) => {
                       const matchedType = BAD_MANNER_TYPES.find(
@@ -166,34 +157,43 @@ const UserProfile = ({
                       ) : null;
                     })}
                   </TypeWrapper>
+                  <ValueWrapper>
+                    {badMannerEvaluations.map((item) => (
+                      <Value
+                        key={item.id}
+                        className={item.count > 0 ? "badEmph" : "default"}
+                      >
+                        {item.count}
+                      </Value>
+                    ))}
+                  </ValueWrapper>
                 </MannerList>
-              </Box>
+              </MannerBox>
             </div>
           </Content>
-          <Content>
-            <div>
-              <Title>최근 30게임</Title>
-              <RecentBox>
-                <Column>
-                  <RecentInfo>14승 16패</RecentInfo>
-                  <DetailInfo>46.7%</DetailInfo>
-                </Column>
-                <Column>
-                  <RecentInfo>6.0 / 5.4 / 6.5</RecentInfo>
-                  <DetailInfo>KDA 2.33</DetailInfo>
-                </Column>
-                <Column>
-                  <RecentInfo>평균 CS 7.6</RecentInfo>
-                  <DetailInfo>CS 226</DetailInfo>
-                </Column>
-                <Champion
-                  title={true}
-                  font="regular14"
-                  list={profile.championResponseList}
-                />
-              </RecentBox>
-            </div>
-          </Content>
+          <RecentContent>
+            <Title>최근 30게임</Title>
+            <RecentBox>
+              <Column>
+                <RecentInfo>14승 16패</RecentInfo>
+                <DetailInfo>46.7%</DetailInfo>
+              </Column>
+              <Column>
+                <RecentInfo>6.0 / 5.4 / 6.5</RecentInfo>
+                <DetailInfo>KDA 2.33</DetailInfo>
+              </Column>
+              <Column>
+                <RecentInfo>평균 CS 7.6</RecentInfo>
+                <DetailInfo>CS 226</DetailInfo>
+              </Column>
+              <Champion
+                title={true}
+                font="medium14"
+                color={theme.colors.gray800}
+                list={profile.championResponseList}
+              />
+            </RecentBox>
+          </RecentContent>
         </Main>
       </MatchContent>
     </Wrapper>
@@ -218,6 +218,10 @@ const MatchContent = styled.div`
   max-width: 1440px;
   width: 100%;
   padding: 0 80px;
+
+  @media (max-width: 700px) {
+    padding: 0 20px;
+  }
 `;
 
 const Main = styled.main`
@@ -235,75 +239,122 @@ const Content = styled.div`
   grid-template-columns: 4fr 1fr 1fr;
   gap: 15px;
   margin-top: 37px;
+
+  @media (max-width: 700px) {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
 `;
 
 const Title = styled.div`
-  padding-left: 6px;
-  margin-bottom: 13px;
+  margin-bottom: 8px;
   ${(props) => props.theme.fonts.regular25};
-  color: ${theme.colors.gray700};
+  color: ${theme.colors.gray800};
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.semiBold18};
+  }
 `;
 
-const Box = styled.div`
+const LevelBox = styled.div`
   width: 100%;
-  height: 269px;
+  height: 260px;
   border-radius: 20px;
-  padding: 26px 28px;
+  padding: 24px 26px;
   background: ${theme.colors.gray100};
+
+  @media (max-width: 700px) {
+    height: 156px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 8px;
+  }
+`;
+
+const MannerBox = styled.div`
+  width: 100%;
+  height: 260px;
+  border-radius: 20px;
+  padding: 28px 24px;
+  background: ${theme.colors.gray800};
+
+  @media (max-width: 700px) {
+    height: 196px;
+    padding: 20.5px 20px;
+    border-radius: 8px;
+  }
 `;
 
 const Text = styled.div`
-  ${(props) => props.theme.fonts.regular16};
-  color: ${theme.colors.gray700};
+  ${(props) => props.theme.fonts.medium16};
+  color: ${theme.colors.gray800};
   margin-bottom: 66px;
+
+  @media (max-width: 700px) {
+    margin-bottom: 0px;
+  }
 `;
 
 const Span = styled.span`
-  ${(props) => props.theme.fonts.bold16};
   color: ${theme.colors.violet600};
 `;
 
 const MannerList = styled.div`
   display: flex;
+  justify-content: space-between;
   align-items: center;
   white-space: nowrap;
-`;
-
-const ValueWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-right: 11px;
-  row-gap: 16px;
-`;
-
-const Value = styled.p`
-  ${(props) => props.theme.fonts.medium16};
-
-  &.default {
-    color: ${theme.colors.gray800};
-  }
-
-  &.mannerEmph {
-    color: ${theme.colors.violet500};
-  }
-
-  &.badEmph {
-    color: ${theme.colors.red500};
-  }
 `;
 
 const TypeWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  row-gap: 16px;
+  row-gap: 12px;
+
+  @media (max-width: 700px) {
+    row-gap: 6.5px;
+  }
 `;
 
 const Type = styled.p`
   ${(props) => props.theme.fonts.medium16};
 
   &.default {
-    color: ${theme.colors.gray800};
+    color: ${theme.colors.gray500};
+  }
+
+  &.mannerEmph {
+    color: ${theme.colors.gray100};
+  }
+
+  &.badEmph {
+    color: ${theme.colors.gray100};
+  }
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.medium14};
+  }
+`;
+
+const ValueWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 12px;
+
+  @media (max-width: 700px) {
+    row-gap: 6.5px;
+  }
+`;
+
+const Value = styled.p`
+  ${(props) => props.theme.fonts.bold16};
+
+  &.default {
+    color: ${theme.colors.gray500};
   }
 
   &.mannerEmph {
@@ -313,6 +364,15 @@ const Type = styled.p`
   &.badEmph {
     color: ${theme.colors.red500};
   }
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.bold14};
+  }
+`;
+
+const RecentContent = styled.div`
+  width: 100%;
+  margin-top: 37px;
 `;
 
 const RecentBox = styled.div`
@@ -323,18 +383,39 @@ const RecentBox = styled.div`
   display: flex;
   align-items: center;
   gap: 56px;
+
+  @media (max-width: 700px) {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+    gap: 12px;
+    border-radius: 8px;
+  }
 `;
 
 const Column = styled.div`
   display: flex;
   flex-direction: column;
+
+  @media (max-width: 700px) {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+  }
 `;
 const RecentInfo = styled.div`
   color: ${theme.colors.gray700};
   ${theme.fonts.bold20};
+  @media (max-width: 700px) {
+    ${theme.fonts.bold16};
+  }
 `;
 
 const DetailInfo = styled.div`
-  color: ${theme.colors.gray600};
-  ${theme.fonts.regular14};
+  color: ${theme.colors.gray500};
+  ${theme.fonts.semiBold14};
+  @media (max-width: 700px) {
+    ${theme.fonts.bold12};
+  }
 `;
