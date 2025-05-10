@@ -1,5 +1,5 @@
 import { theme } from "@/styles/theme";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import React, { useEffect } from "react";
 import { Position, PositionType } from "@/types/position/position";
 import Image from "next/image";
@@ -14,8 +14,9 @@ import useMediaQueries from "@/hooks/useMediaQueries";
 
 interface PositionComponentProps {
   selectedBox?: PositionType | null;
-  value?: Position | (Position | null)[];
-  onSelect: (selectedValues: Position | (Position | null)[]) => void;
+  value?: Position | null;
+  // onSelect: (selectedValues: Position | (Position | null)[]) => void;
+  onSelect: (selectedValue: Position | null) => void;
   onClose: () => void;
 }
 
@@ -25,33 +26,16 @@ const PositionCategory = (props: PositionComponentProps) => {
   const boxRef = React.useRef<HTMLDivElement>(null);
 
   const handlePositionCategory = (positionName: Position | null) => {
-    let updatedValues: Position | (Position | null)[];
+    let updatedValue: Position | null;
 
-    if (selectedBox === "want") {
-      // 찾는 포지션 (want) → 최대 2개 선택 가능
-      let wantArray = Array.isArray(value) ? [...value] : [];
-
-      // 이미 선택된 경우 → 제거
-      if (wantArray.includes(positionName)) {
-        updatedValues = wantArray.filter((v) => v !== positionName);
-      } else if (wantArray.length < 2 || wantArray.includes(null)) {
-        // 최대 2개 선택 가능
-        const firstEmptyIndex = wantArray.indexOf(null);
-        if (firstEmptyIndex !== -1) {
-          wantArray[firstEmptyIndex] = positionName;
-        } else {
-          wantArray.push(positionName);
-        }
-        updatedValues = wantArray.slice(0, 2);
-      } else {
-        updatedValues = wantArray;
-      }
+    // 내가 찾는 포지션: 이미 선택한 포지션을 다시 클릭한 경우 → 해제
+    if (selectedBox === "want" && value === positionName) {
+      updatedValue = null;
     } else {
-      // 주/부 포지션 (main, sub) → 하나만 선택 가능
-      updatedValues = positionName || "ANY";
+      updatedValue = positionName ?? "ANY";
     }
 
-    onSelect(updatedValues);
+    onSelect(updatedValue);
   };
 
   const handleClose = () => {
@@ -100,7 +84,7 @@ const PositionCategory = (props: PositionComponentProps) => {
   const positionList = selectedBox === "want" ? POSITION.slice(1) : POSITION;
 
   return (
-    <Wrapper>
+    <Wrapper $isWant={selectedBox === "want"}>
       <Header>
         <Title>
           {selectedBox === "main"
@@ -126,19 +110,9 @@ const PositionCategory = (props: PositionComponentProps) => {
             key={pos.id}
             $posKey={pos.key}
             onClick={() => handlePositionCategory(pos.key)}
+            $selected={value === pos.key}
           >
-            {value.includes(pos.key) ? (
-              <>
-                <Image
-                  src={getImageSrc(pos.key)}
-                  alt={pos.key || "선택"}
-                  width={25}
-                  height={25}
-                />
-              </>
-            ) : (
-              getSvgComponent(pos.key)
-            )}
+            {getSvgComponent(pos.key)}
           </StyledButton>
         ))}
       </Box>
@@ -148,10 +122,10 @@ const PositionCategory = (props: PositionComponentProps) => {
 
 export default PositionCategory;
 
-const Wrapper = styled.div`
-  width: 452px;
+const Wrapper = styled.div<{ $isWant: boolean }>`
+  width: ${({ $isWant }) => ($isWant ? "383px" : "452px")};
   position: absolute;
-  top: 100px;
+  top: 80px;
   left: calc(50% - 35px);
   z-index: 10;
   border-radius: 20px;
@@ -164,6 +138,11 @@ const Wrapper = styled.div`
 
   @media (max-width: 700px) {
     width: 224px;
+    ${({ $isWant }) =>
+      $isWant &&
+      css`
+        left: calc(50% - 165px);
+      `};
   }
 `;
 
@@ -196,6 +175,14 @@ const Box = styled.div<{ $isWant: boolean }>`
     position: absolute;
     top: -18px;
     left: 27px;
+
+    @media (max-width: 700px) {
+      ${({ $isWant }) =>
+        $isWant &&
+        css`
+          left: 150px;
+        `};
+    }
   }
 
   @media (max-width: 700px) {
@@ -207,12 +194,16 @@ const Box = styled.div<{ $isWant: boolean }>`
   }
 `;
 
-const StyledButton = styled.button<{ $posKey: Position }>`
+const StyledButton = styled.button<{ $posKey: Position; $selected: boolean }>`
   width: 48px;
   height: 48px;
-  /* TODO */
-  /* background: ${(props) => (props.$posKey ? theme.colors.violet600 : "")}; */
-  border: none;
-  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ${(props) =>
+    props.$selected ? theme.colors.violet600 : "transparent"};
+  border-radius: 6px;
+  padding-top: 2px;
+  padding-left: 1px;
   cursor: pointer;
 `;

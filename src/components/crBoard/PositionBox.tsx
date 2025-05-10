@@ -5,6 +5,10 @@ import PositionCategory from "../common/PositionCategory";
 import { Position, PositionType } from "@/types/position/position";
 import { theme } from "@/styles/theme";
 import { POSITION } from "@/constants/position";
+import { POSITIONS } from "@/constants/profile";
+import useMediaQueries from "@/hooks/useMediaQueries";
+import { setPositionImg } from "@/utils/custom";
+import { css } from "styled-components";
 
 type Status = "reading" | "posting";
 
@@ -24,136 +28,152 @@ export interface PositionState {
 
 const PositionBox = (props: PositionBoxProps) => {
   const { status, onPositionChange, main, sub, want } = props;
-  const [selectedBox, setSelectedBox] = useState<PositionType | null>(null);
-  const [openPosition, setOpenPosition] = useState<PositionType | null>(null);
+
+  const isMobile = useMediaQueries({ breakpoint: 700 });
   const [positionValue, setPositionValue] = useState<PositionState>({
     main: main || "ANY",
     sub: sub || "ANY",
-    want: want ?? [],
+    want: want || [null, null],
+  });
+
+  const [isPositionOpen, setIsPositionOpen] = useState({
+    main: false,
+    sub: false,
+    want: [false, false],
   });
 
   /* 포지션 선택  */
-  const handleCategoryButtonClick = (
-    selectedValues: Position | (Position | null)[]
-  ) => {
-    setPositionValue((prev) => {
-      let updated;
-
-      if (selectedBox === "want") {
-        // `want`는 배열 형태로 유지 (최대 2개 선택 가능)
-        updated = {
-          ...prev,
-          want: Array.isArray(selectedValues)
-            ? selectedValues
-            : [selectedValues],
-        };
-        console.log(updated);
+  const handlePosition = (type: "main" | "sub" | "want", index: number = 0) => {
+    if (status === "reading") return;
+    setIsPositionOpen((prev) => {
+      if (type === "want") {
+        const updated = prev.want.map((v, i) => (i === index ? !v : false));
+        return { ...prev, want: updated, main: false, sub: false };
       } else {
-        // `main`과 `sub`은 단일 값만 저장
-        updated = {
-          ...prev,
-          [selectedBox as "main" | "sub"]: selectedValues as Position,
-        };
+        return { ...prev, [type]: !prev[type], want: [false, false] };
       }
-
-      onPositionChange && onPositionChange(updated);
-      return updated;
     });
   };
 
-  const handlePositionImgSet = (positionId: Position | undefined | null) => {
-    // console.log("handlePositionImgSet", positionId);
-    const positionData = POSITION.find((p) => p.key === positionId);
-    if (!positionData || !positionData.image)
-      return "/assets/icons/bottom_caution.svg";
-    return `/assets/images/position/position_${positionData.image}_purple.svg`;
+  const handlePositionClose = (
+    type: "main" | "sub" | "want",
+    index: number = 0
+  ) => {
+    setIsPositionOpen((prev) => {
+      if (type === "want") {
+        const updated = [...prev.want];
+        updated[index] = false;
+        return { ...prev, want: updated };
+      } else {
+        return { ...prev, [type]: false };
+      }
+    });
   };
 
-  const handleBoxClick = (position: PositionType) => {
-    if (status === "reading") return;
-    setOpenPosition((prevPosition) =>
-      prevPosition === position ? null : position
-    );
-    setSelectedBox(position);
-  };
+  const handleCategoryButtonClick = (
+    selectedValue: Position | null,
+    type: "main" | "sub" | "want",
+    index: number = 0
+  ) => {
+    setPositionValue((prev) => {
+      const updated = { ...prev };
 
-  const closePosition = () => {
-    setOpenPosition(null);
+      if (type === "want") {
+        const updatedWant = [...(prev.want ?? [null, null])];
+        updatedWant[index] =
+          updatedWant[index] === selectedValue ? null : selectedValue;
+        updated.want = updatedWant;
+      } else {
+        if (selectedValue === null) return prev; // main/sub에 null 불가
+        updated[type] = selectedValue;
+      }
+
+      onPositionChange?.(updated);
+      return updated;
+    });
+
+    handlePositionClose(type, index);
   };
 
   return (
     <PositionWrapper>
-      <FirstBox>
-        <Section>
-          <Title>주 포지션</Title>
-          <StyledImage
-            $status={status}
-            onClick={() => handleBoxClick("main")}
-            src={handlePositionImgSet(positionValue.main)}
-            width={35}
-            height={34}
-            alt="메인 포지션"
-          />
-          {openPosition === "main" && (
-            <PositionCategory
-              selectedBox={selectedBox}
-              onClose={closePosition}
-              value={positionValue.main}
-              onSelect={handleCategoryButtonClick}
-            />
-          )}
-        </Section>
-        <Section>
-          <Title>부 포지션</Title>
-          <StyledImage
-            $status={status}
-            onClick={() => handleBoxClick("sub")}
-            src={handlePositionImgSet(positionValue.sub)}
-            width={35}
-            height={34}
-            alt="부 포지션"
-          />
-          {openPosition === "sub" && (
-            <PositionCategory
-              selectedBox={selectedBox}
-              onClose={closePosition}
-              value={positionValue.sub}
-              onSelect={handleCategoryButtonClick}
-            />
-          )}
-        </Section>
-      </FirstBox>
-      <SecondBox>
-        <Title>찾는 포지션</Title>
-        <WantPWrapper>
-          <StyledImage
-            $status={status}
-            onClick={() => handleBoxClick("want")}
-            src={handlePositionImgSet(positionValue.want?.[0])}
-            width={35}
-            height={34}
-            alt="첫 번째 찾는 포지션"
-          />
-          {(positionValue.want?.[1] || status === "posting") && (
-            <StyledImage
-              $status={status}
-              onClick={() => handleBoxClick("want")}
-              src={handlePositionImgSet(positionValue.want?.[1])}
-              width={35}
-              height={34}
-              alt="두 번째 찾는 포지션"
-            />
-          )}
-          {openPosition === "want" && (
-            <PositionCategory
-              selectedBox={selectedBox}
-              onClose={closePosition}
-              value={positionValue.want || []}
-              onSelect={handleCategoryButtonClick}
-            />
-          )}
-        </WantPWrapper>
-      </SecondBox>
+      <Positions>
+        {/* 주 포지션 + 부 포지션 */}
+        <PosiWrap>
+          {POSITIONS.slice(0, 2).map((position, index) => {
+            const type = index === 0 ? "main" : "sub";
+
+            return (
+              <Posi key={index} $isWantP={false}>
+                {position.label}
+                <PosiItem>
+                  <Image
+                    src={setPositionImg(
+                      type === "main"
+                        ? positionValue.main ?? "ANY"
+                        : positionValue.sub ?? "ANY"
+                    )}
+                    width={!isMobile ? 55 : 22}
+                    height={!isMobile ? 40 : 22}
+                    alt="포지션"
+                    onClick={() => handlePosition(type)}
+                  />
+                  {isPositionOpen[type] && (
+                    <PositionCategory
+                      selectedBox={type}
+                      value={positionValue[type] ?? "ANY"}
+                      onClose={() => handlePositionClose(type)}
+                      onSelect={(val) => handleCategoryButtonClick(val, type)}
+                    />
+                  )}
+                </PosiItem>
+              </Posi>
+            );
+          })}
+        </PosiWrap>
+
+        {/* 내가 찾는 포지션 */}
+        <PosiWrap>
+          <Posi key={2} $isWantP={true}>
+            {POSITIONS[2].label}
+            <PosiRow>
+              {positionValue?.want?.map((posi, index) => (
+                <PosiItem key={index}>
+                  {posi ? (
+                    <Image
+                      src={setPositionImg(posi)}
+                      width={!isMobile ? 48 : 22}
+                      height={!isMobile ? 40 : 22}
+                      alt="포지션"
+                      onClick={() => handlePosition("want", index)}
+                    />
+                  ) : (
+                    <Plus onClick={() => handlePosition("want", index)}>
+                      <Image
+                        src="/assets/icons/plus_violet.svg"
+                        width={!isMobile ? 16 : 14}
+                        height={!isMobile ? 16 : 14}
+                        alt=""
+                      />
+                    </Plus>
+                  )}
+                  {/* PositionCategory 열기 조건 */}
+                  {isPositionOpen.want[index] && (
+                    <PositionCategory
+                      selectedBox="want"
+                      value={posi}
+                      onClose={() => handlePositionClose("want", index)}
+                      onSelect={(val) =>
+                        handleCategoryButtonClick(val, "want", index)
+                      }
+                    />
+                  )}
+                </PosiItem>
+              ))}
+            </PosiRow>
+          </Posi>
+        </PosiWrap>
+      </Positions>
     </PositionWrapper>
   );
 };
@@ -167,42 +187,75 @@ const PositionWrapper = styled.div`
   gap: 12px;
 `;
 
-const FirstBox = styled.div`
+const Positions = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
-  white-space: nowrap;
-  background: ${theme.colors.gray100};
-  border-radius: 10px;
-  padding: 24px 54px 24px 47px;
-  gap: 59px;
+  gap: 12px;
 `;
 
-const Section = styled.div`
-  position: relative;
-`;
-
-const SecondBox = styled.div`
-  text-align: center;
-  background: ${theme.colors.gray100};
-  white-space: nowrap;
-  border-radius: 10px;
-  padding: 24px 91px;
-  position: relative;
-`;
-
-const WantPWrapper = styled.div`
+const PosiWrap = styled.div`
+  height: 98px;
   display: flex;
+  justify-content: center;
+  gap: 58px;
+  background-color: ${theme.colors.white};
+  width: 100%;
+  border-radius: 6px;
+  padding: 16px 43px;
+
+  @media (max-width: 700px) {
+    height: 69px;
+    padding: 12px 20px 8px 20px;
+  }
+`;
+
+const Posi = styled.div<{ $isWantP: boolean }>`
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 30px;
+  font-size: ${theme.fonts.bold12};
+  color: ${theme.colors.gray700};
+
+  @media (max-width: 700px) {
+    font-size: ${theme.fonts.medium11};
+    gap: 9px;
+    ${({ $isWantP }) =>
+      $isWantP &&
+      css`
+        margin-left: 0px;
+      `};
+  }
 `;
 
-const Title = styled.p`
-  color: ${theme.colors.gray800};
-  ${(props) => props.theme.fonts.medium11};
-  margin-bottom: 6px;
+const PosiRow = styled.div`
+  height: 48px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
 `;
 
-const StyledImage = styled(Image)<{ $status: string | undefined }>`
-  cursor: ${({ $status }) => ($status === "posting" ? "pointer" : "unset")};
+const PosiItem = styled.div`
+  height: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+`;
+
+const Plus = styled.div`
+  display: flex;
+  width: 48px;
+  height: 32px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 999px;
+  background: ${theme.colors.violet100};
+
+  @media (max-width: 700px) {
+    width: 32px;
+    height: 24px;
+  }
 `;

@@ -12,13 +12,16 @@ import { toLowerCaseString } from "@/utils/string";
 import { Position as PositionType } from "@/types/position/position";
 import { Mike } from "@/types/user/mike";
 import useMediaQueries from "@/hooks/useMediaQueries";
+import RankTier from "../common/RankTier";
 
 interface User {
   memberId: number;
   gameName: string;
   tag: string;
-  tier: string;
-  rank: number;
+  soloTier: string;
+  freeTier: string;
+  soloRank: number;
+  freeRank: number;
   mannerLevel: number;
   profileImg: number;
   gameMode: number;
@@ -93,18 +96,19 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
               <SpanTag>#{user.tag}</SpanTag>
             </FirstRow>
             <SecondRow>
-              <Rank>
-                <TierImage
-                  data={`/assets/images/tier/${
-                    user.tier !== "null"
-                      ? toLowerCaseString(user.tier)
-                      : "unrank"
-                  }.svg`}
-                  width={43}
-                  height={43}
-                />
-                {user.tier}
-              </Rank>
+              <RankTier
+                type="solo"
+                tier={user.soloTier}
+                rank={user.soloRank}
+                direct="row"
+              />
+              <Bar />
+              <RankTier
+                type="free"
+                tier={user.freeTier}
+                rank={user.freeRank}
+                direct="row"
+              />
             </SecondRow>
             <ImageContainer>
               <ProfileImgWrapper $bgColor={getProfileBgColor(user.profileImg)}>
@@ -131,7 +135,7 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
             </ImageContainer>
             <Mic status={user.mike} />
             {/* TODO 게임 스타일 UI 확인 필요 */}
-            <RowBox>
+            <GameStyleContainer>
               {user.gameStyleList &&
                 user.gameStyleList.length > 0 &&
                 user.gameStyleList
@@ -144,7 +148,7 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
                       text={item}
                     />
                   ))}
-            </RowBox>
+            </GameStyleContainer>
             <Row>
               <Position $opponent={opponent}>
                 {/* 주 포지션, 부 포지션 */}
@@ -245,6 +249,7 @@ const ImageContainer = styled.div`
   justify-content: center;
   position: relative;
   overflow-x: visible;
+  margin-bottom: 10px;
 `;
 
 const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
@@ -273,11 +278,12 @@ const LevelTag = styled.span`
   transform: translate(-50%);
   height: 25px;
   border-radius: 57px;
-  padding: 6px 10px;
+  padding: 5px 10px;
   background: rgba(0, 0, 0, 0.64);
 
   color: ${theme.colors.violet300};
-  ${theme.fonts.bold13}
+  ${theme.fonts.bold13};
+  line-height: 13px;
   backdrop-filter: blur(7.5px);
 
   @media (max-width: 700px) {
@@ -357,9 +363,10 @@ const SpanTag = styled.span`
 
 const SecondRow = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
+  gap: 16px;
   color: ${theme.colors.gray800};
   ${(props) => props.theme.fonts.bold25};
 
@@ -370,15 +377,10 @@ const SecondRow = styled.div`
   }
 `;
 
-const Rank = styled.div`
-  display: flex;
-  align-items: center;
-  color: ${theme.colors.gray500};
-  ${(props) => props.theme.fonts.regular14};
-`;
-
-const TierImage = styled.object`
-  pointer-events: none;
+const Bar = styled.div`
+  width: 1px;
+  height: 12px;
+  background: ${theme.colors.gray400};
 `;
 
 const Row = styled.div`
@@ -389,8 +391,12 @@ const Row = styled.div`
   gap: 9px;
 `;
 
-const RowBox = styled(Row)`
-  /* gap: 18px; */
+const GameStyleContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
 `;
 
 const Position = styled.div<{ $opponent: boolean }>`
@@ -403,8 +409,9 @@ const Position = styled.div<{ $opponent: boolean }>`
   justify-content: center;
   align-items: center;
   gap: 33px;
-  ${theme.fonts.medium16};
+  ${theme.fonts.semiBold13};
   color: ${theme.colors.gray800};
+
   @media (max-width: 700px) {
     border-radius: 6px;
     padding: 12px 20px 8px 20px;
@@ -417,6 +424,7 @@ const Posi = styled.div<{ $opponent: boolean }>`
   flex-direction: column;
   gap: 15px;
   align-items: center;
+  white-space: nowrap;
 
   @media (max-width: 700px) {
     ${(props) =>

@@ -6,6 +6,12 @@ export const LOGIN = {
     },
   };
 
+export const BOARD = {
+    MESSAGE: {
+      COOLTIME: "게시글 작성 쿨타임이 적용되었습니다.\n5분 후 다시 시도해주세요.",
+    },
+  };
+
 
   export const messagesWithN = [
     "지금 n명이 매칭을 기다리고 있어요!",

@@ -31,8 +31,10 @@ interface User {
   memberId: number;
   gameName: string;
   tag: string;
-  tier: string;
-  rank: number;
+  soloTier: string;
+  freeTier: string;
+  soloRank: number;
+  freeRank: number;
   mannerLevel: number;
   profileImg: number;
   gameMode: number;
@@ -60,8 +62,10 @@ const Complete = () => {
     memberId: 0,
     gameName: "",
     tag: "",
-    tier: "",
-    rank: 0,
+    soloTier: "",
+    freeTier: "",
+    soloRank: 0,
+    freeRank: 0,
     mannerLevel: 0,
     profileImg: 0,
     gameMode: 0,
@@ -76,8 +80,10 @@ const Complete = () => {
     memberId: 0,
     gameName: "",
     tag: "",
-    tier: "",
-    rank: 0,
+    soloTier: "",
+    freeTier: "",
+    soloRank: 0,
+    freeRank: 0,
     mannerLevel: 0,
     profileImg: 0,
     gameMode: 0,
@@ -187,8 +193,11 @@ const Complete = () => {
           memberId: profileData.id,
           gameName: profileData.gameName,
           tag: profileData.tag,
-          tier: profileData.tier,
-          rank: profileData.gameRank,
+          // TODO: profileData로부터 solo & free 티어 및 랭크 받아오기
+          soloTier: profileData.tier,
+          freeTier: profileData.tier,
+          soloRank: profileData.gameRank,
+          freeRank: profileData.gameRank,
           mannerLevel: profileData.mannerLevel,
           profileImg: profileData.profileImg,
           gameMode: 0,

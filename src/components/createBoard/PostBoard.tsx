@@ -29,6 +29,8 @@ import { getMyProfile } from "@/api/user/profile/get";
 import { Mike } from "@/types/user/mike";
 import { GAME_MODE } from "@/constants/board";
 import { GameMode } from "@/types/game/gameMode";
+import { Position } from "@/types/position/position";
+import { notify } from "@/hooks/notify";
 
 interface PostBoardProps {
   onClose: () => void;
@@ -232,8 +234,8 @@ const PostBoard = (props: PostBoardProps) => {
       wantP: isARAM
         ? ["ANY"]
         : Array.isArray(positionValue?.want)
-        ? positionValue?.want.length > 0
-          ? positionValue?.want
+        ? positionValue.want.filter((p): p is Position => p !== null).length > 0
+          ? positionValue.want.filter((p): p is Position => p !== null)
           : ["ANY"]
         : ["ANY"],
     };
@@ -242,7 +244,7 @@ const PostBoard = (props: PostBoardProps) => {
     if (currentPost) {
       try {
         await handleEdit(params);
-      } catch (error) {
+      } catch (error: any) {
         console.error(error);
       }
     }
@@ -333,10 +335,12 @@ const PostBoard = (props: PostBoardProps) => {
               sub={positionValue?.sub || null}
               want={
                 Array.isArray(positionValue?.want) &&
-                positionValue.want.length === 1 &&
-                positionValue.want[0] === "ANY"
-                  ? []
-                  : positionValue?.want || null
+                positionValue?.want.length === 2
+                  ? positionValue?.want
+                  : Array.isArray(positionValue?.want) &&
+                    positionValue?.want.length === 1
+                  ? [positionValue?.want[0], null]
+                  : [null, null]
               }
             />
           </PositionSection>

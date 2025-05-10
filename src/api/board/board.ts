@@ -12,6 +12,8 @@ import {
 } from "@/types/api/board/board";
 import { Position } from "@/types/position/position";
 import { GameMode } from "@/types/game/gameMode";
+import { notify } from "@/hooks/notify";
+import { BOARD } from "@/constants/messages";
 
 interface ListInterface {
   page: number;
@@ -26,10 +28,17 @@ export const postBoard = async (params: PostReq): Promise<PostsResponse> => {
   try {
     const response = await AuthAxios.post("/api/v2/posts", params);
     return response.data;
-  } catch (error) {
-    console.error("글쓰기 실패:", error);
-    throw error;
-  }
+} catch (error: any) {
+      console.error("글쓰기 실패:", error);
+      if (error.response.data.code === "BOARD_412") {
+        notify({
+          text: BOARD.MESSAGE.COOLTIME,
+          icon: "🚫",
+          type: "error",
+        });
+      }
+      throw error;
+    }
 };
 
 /* 게시글 목록 조회 */
