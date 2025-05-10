@@ -50,8 +50,7 @@ import { deleteFriend } from "@/api/friend/delete";
 import { blockMember, unblockMember } from "@/api/block/block";
 import { GameMode } from "@/types/game/gameMode";
 import UserAccount from "../crBoard/UserAccount";
-import UserTier from "../crBoard/UserTier";
-import { getAccessToken } from "@/utils/storage";
+import RankTier from "../common/RankTier";
 
 interface ReadBoardProps {
   postId: number;
@@ -553,97 +552,112 @@ const ReadBoard = (props: ReadBoardProps) => {
                   onClose={() => setIsMoreBoxOpen(false)}
                 />
               )}
-              <UpdatedDate>
-                게시일 : {setPostingDateFormatter(isPost.createdAt)}
-              </UpdatedDate>
-              <UserSection>
-                <UserLeft>
-                  <ProfileImage image={isPost.profileImage} />
-                  <UserWapper>
-                    <UserAccount account={isPost.gameName} tag={isPost.tag} />
-                    <UserTierWrapper>
-                      <UserTier
-                        soloTier={isPost.soloTier || ""}
-                        freeTier={isPost.freeTier || ""}
-                        soloRank={isPost.soloRank}
-                        freeRank={isPost.freeRank}
-                      />
-                    </UserTierWrapper>
-                  </UserWapper>
-                  <UserNManner>
-                    <MannerLevelWrapper>
-                      <MannerLevel
-                        level={isPost.mannerLevel}
-                        onClick={handleMannerLevelBoxOpen}
-                        position="top"
-                      />
-                      {isMannerLevelBoxOpen && (
-                        <div ref={mannerLevelBoxRef}>
-                          <MannerLevelBox
-                            memberId={isPost.memberId}
+              <Wrapper>
+                <UserSection>
+                  <UserLeft>
+                    <UserProfileWrapper>
+                      <ProfileImage image={isPost.profileImage} />
+                      <UserNManner>
+                        <MannerLevelWrapper>
+                          <MannerLevel
                             level={isPost.mannerLevel}
-                            top="69%"
-                            right="-400%"
+                            onClick={handleMannerLevelBoxOpen}
+                            position="top"
                           />
-                        </div>
-                      )}
-                    </MannerLevelWrapper>
-                  </UserNManner>
-                </UserLeft>
-                <UserRight>
-                  <Mic status={isPost.mike} />
-                  <MoreBoxButton onClick={handleMoreBoxToggle} />
-                </UserRight>
-              </UserSection>
-              <ChampionNQueueSection>
-                <Champion
-                  title={true}
-                  font="semiBold14"
-                  list={isPost?.championStatsResponseList}
-                />
-                <QueueType value={isPost.gameMode} />
-              </ChampionNQueueSection>
-              {gameMode !== "ARAM" && (
-                <PositionSection>
-                  <Title>포지션</Title>
-                  <PositionBox
-                    status="reading"
-                    main={isPost.mainP || null}
-                    sub={isPost.subP || null}
-                    want={
-                      Array.isArray(isPost.wantP)
-                        ? isPost.wantP.filter((v) => v !== null)
-                        : null
-                    }
+                          {isMannerLevelBoxOpen && (
+                            <div ref={mannerLevelBoxRef}>
+                              <MannerLevelBox
+                                memberId={isPost.memberId}
+                                level={isPost.mannerLevel}
+                                top="69%"
+                                right="-400%"
+                              />
+                            </div>
+                          )}
+                        </MannerLevelWrapper>
+                      </UserNManner>
+                    </UserProfileWrapper>
+                    <UserAccount
+                      account={isPost.gameName}
+                      mike={isPost.mike}
+                      tag={isPost.tag}
+                    />
+                  </UserLeft>
+                  <UserRight>
+                    <MoreBoxButton onClick={handleMoreBoxToggle} />
+                  </UserRight>
+                </UserSection>
+                <UserTierWrapper>
+                  <RankTier
+                    type="solo"
+                    tier={isPost.soloTier || ""}
+                    rank={isPost.soloRank}
+                    direct="column"
+                    color={theme.colors.gray800}
+                    tierFontSize={theme.fonts.bold20}
                   />
-                </PositionSection>
-              )}
-              <WinningRateSection $gameType={gameMode}>
-                <WinningRate
-                  completed={isPost.winRate}
-                  recentGameCount={isPost?.recentGameCount}
-                />
-              </WinningRateSection>
-              <StyleSection $gameType={gameMode}>
-                <Title>게임 스타일</Title>
-                <GameStyle styles={isPost.gameStyles} />
-              </StyleSection>
-              <MemoSection $gameType={gameMode}>
-                <Title>메모</Title>
-                <Memo>
-                  <MemoData>{isPost.contents}</MemoData>
-                </Memo>
-              </MemoSection>
-              {isUser.gameName !== isPost.gameName && (
-                <ButtonContent $gameType={gameMode}>
-                  <Button
-                    type="submit"
-                    buttonType="primary"
-                    text="말 걸어보기"
-                    onClick={handleChatStart}
+                  <RankTier
+                    type="free"
+                    tier={isPost.freeTier || ""}
+                    rank={isPost.freeRank}
+                    direct="column"
+                    color={theme.colors.gray800}
+                    tierFontSize={theme.fonts.bold20}
                   />
-                </ButtonContent>
-              )}
+                </UserTierWrapper>
+                {gameMode !== "ARAM" && (
+                  <PositionSection>
+                    <Title>포지션</Title>
+                    <PositionBox
+                      status="reading"
+                      main={isPost.mainP || null}
+                      sub={isPost.subP || null}
+                      want={
+                        Array.isArray(isPost.wantP)
+                          ? isPost.wantP.filter((v) => v !== null)
+                          : null
+                      }
+                    />
+                  </PositionSection>
+                )}
+                <ChampionNQueueSection>
+                  <QueueType value={isPost.gameMode} />
+                  <Champion
+                    title={true}
+                    font="semiBold14"
+                    list={isPost?.championStatsResponseList}
+                  />
+                </ChampionNQueueSection>
+                <WinningRateSection $gameType={gameMode}>
+                  <WinningRate
+                    completed={isPost.winRate}
+                    recentGameCount={isPost?.recentGameCount}
+                  />
+                </WinningRateSection>
+                <StyleSection $gameType={gameMode}>
+                  <Title>게임 스타일</Title>
+                  <GameStyle styles={isPost.gameStyles} />
+                </StyleSection>
+                <MemoSection $gameType={gameMode}>
+                  <Title>한마디</Title>
+                  <Memo>
+                    <MemoData>{isPost.contents}</MemoData>
+                  </Memo>
+                  <UpdatedDate>
+                    게시일 : {setPostingDateFormatter(isPost.createdAt)}
+                  </UpdatedDate>
+                </MemoSection>
+                {isUser.gameName !== isPost.gameName && (
+                  <ButtonContent $gameType={gameMode}>
+                    <Button
+                      type="submit"
+                      buttonType="primary"
+                      text="말 걸어보기"
+                      onClick={handleChatStart}
+                    />
+                  </ButtonContent>
+                )}
+              </Wrapper>
             </>
           )
         )}
@@ -747,10 +761,10 @@ const ReadBoard = (props: ReadBoardProps) => {
 
 export default ReadBoard;
 
-const UpdatedDate = styled.p`
-  ${(props) => props.theme.fonts.medium11};
-  color: ${theme.colors.gray600};
-  margin: 1px 0 12px;
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 `;
 
 const UserSection = styled.div`
@@ -762,22 +776,33 @@ const UserSection = styled.div`
 
 const UserLeft = styled.div`
   display: flex;
+  align-items: center;
+  gap: 30px;
 `;
 
-const UserWapper = styled.div`
+const UserProfileWrapper = styled.div`
+  width: 50px;
+  height: 80px;
   position: relative;
-  margin-top: 9px;
-`;
-
-const UserTierWrapper = styled.div`
-  position: absolute;
-  top: 30px;
-  left: 0px;
+  z-index: 100;
 `;
 
 const UserNManner = styled.div`
-  display: flex;
-  margin-top: 9px;
+  position: absolute;
+  bottom: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+`;
+
+const MannerLevelWrapper = styled.div`
+  position: relative;
+`;
+
+const UserTierWrapper = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  align-items: center;
+  gap: 28px;
 `;
 
 const UserRight = styled.div`
@@ -790,32 +815,25 @@ const Title = styled.p`
   margin-bottom: 5px;
 `;
 
-const MannerLevelWrapper = styled.div`
-  position: relative;
-`;
-
 const ChampionNQueueSection = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   align-items: center;
-  justify-content: space-between;
-  gap: 89px;
-  margin-top: 33px;
+  gap: 8px;
 `;
 
-const PositionSection = styled.div`
-  margin-top: 33px;
-`;
+const PositionSection = styled.div``;
 
 const WinningRateSection = styled.div<{ $gameType: GameMode }>`
-  margin-top: ${({ $gameType }) => ($gameType !== "ARAM" ? "33px" : "46px")};
+  margin-top: ${({ $gameType }) => ($gameType !== "ARAM" ? "0px" : "46px")};
 `;
 
 const StyleSection = styled.div<{ $gameType: GameMode }>`
-  margin-top: ${({ $gameType }) => ($gameType !== "ARAM" ? "33px" : "46px")};
+  margin-top: ${({ $gameType }) => ($gameType !== "ARAM" ? "0px" : "46px")};
 `;
 
 const MemoSection = styled.div<{ $gameType: GameMode }>`
-  margin-top: ${({ $gameType }) => ($gameType !== "ARAM" ? "33px" : "46px")};
+  margin-top: ${({ $gameType }) => ($gameType !== "ARAM" ? "0px" : "46px")};
 `;
 
 const Memo = styled.div`
@@ -845,6 +863,13 @@ const Memo = styled.div`
 const MemoData = styled.p`
   color: ${theme.colors.gray700};
   ${(props) => props.theme.fonts.regular18}
+`;
+
+const UpdatedDate = styled.p`
+  ${(props) => props.theme.fonts.medium11};
+  color: ${theme.colors.gray500};
+  text-align: right;
+  margin-top: 6px;
 `;
 
 const ButtonContent = styled.p<{ $gameType: GameMode }>`

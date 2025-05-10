@@ -19,7 +19,7 @@ const WinningRate = (props: WinningRateProps) => {
         <Right>
           {!!history && (
             <History>
-              글 작성 시점 최근 {recentGameCount === null ? 0 : recentGameCount}
+              최근 {recentGameCount === null ? 0 : recentGameCount}
               게임
             </History>
           )}
@@ -86,5 +86,5 @@ const Percent = styled.p`
 
 const History = styled.p`
   ${(props) => props.theme.fonts.medium11};
-  color: ${theme.colors.gray400};
+  color: ${theme.colors.gray500};
 `;

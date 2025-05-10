@@ -191,7 +191,7 @@ const Positions = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
-  gap: 12px;
+  gap: 8px;
 `;
 
 const PosiWrap = styled.div`
@@ -238,7 +238,6 @@ const PosiRow = styled.div`
 `;
 
 const PosiItem = styled.div`
-  height: 48px;
   display: flex;
   justify-content: center;
   align-items: center;
