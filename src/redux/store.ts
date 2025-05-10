@@ -11,6 +11,29 @@ import notiReducer from "./slices/notiSlice";
 import matchingReducer from "./slices/matchingSlice";
 import boardReducer from "./slices/boardSlice";
 import chatPositionReducer from "./slices/chatPositionSlice";
+import storage from "redux-persist/lib/storage";
+
+import {
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
+
+// chat reducer만 persist 적용
+const chatPersistConfig = {
+  key: "chat",
+  storage,
+  whitelist: ["activeTab"],
+};
+
+const persistedChatReducer = persistReducer(
+  chatPersistConfig,
+  chatReducer
+);
 
 export const store = () => {
   return configureStore({
@@ -22,12 +45,18 @@ export const store = () => {
       mannerStatus: mannerStatusReducer,
       post: postReducer,
       matchInfo: matchInfoReducer,
-      chat: chatReducer,
+      chat: persistedChatReducer,
       noti: notiReducer,
       matching: matchingReducer,
       board: boardReducer,
       chatPosition: chatPositionReducer,
     },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        serializableCheck: {
+          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        },
+      }),
   });
 }
 
@@ -35,5 +64,3 @@ export const store = () => {
 export type AppStore = ReturnType<typeof store>;
 export type RootState = ReturnType<AppStore['getState']>;
 export type AppDispatch = AppStore['dispatch'];
-
-export default store;
