@@ -85,7 +85,7 @@ const MessageHeader = (props: MessageHeaderProps) => {
       )}
       <CloseButton>
         <CloseImage
-          onClick={() => dispatch(closeChat())}
+          onClick={() => dispatch(closeChatRoom())}
           src="/assets/icons/close.svg"
           width={11}
           height={11}
