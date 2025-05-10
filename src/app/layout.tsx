@@ -7,7 +7,7 @@ import Header from "@/components/common/Header";
 import StyledComponentsRegistry from "@/libs/registry";
 import { useEffect, useRef, useState } from "react";
 import { Provider } from "react-redux";
-import { AppStore, store } from "@/redux/store";
+import { AppStore } from "@/redux/store";
 import { usePathname } from "next/navigation";
 import SocketConnection from "@/components/socket/SocketConnection";
 import { Toaster } from "react-hot-toast";
@@ -21,6 +21,9 @@ import {
 } from "@/utils/storage";
 import { notify } from "@/hooks/notify";
 import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
+import { PersistGate } from "redux-persist/integration/react";
+import { store as createStore } from "@/redux/store";
+import { persistStore } from "redux-persist";
 
 export default function RootLayout({
   children,
@@ -28,11 +31,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const storeRef = useRef<AppStore>();
+  const [persistor, setPersistor] = useState<any>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(!!getAccessToken());
 
   if (!storeRef.current) {
-    storeRef.current = store();
+    storeRef.current = createStore();
   }
+
+  // SSR-safe: 클라이언트에서만 persistor 생성
+  useEffect(() => {
+    const ps = persistStore(storeRef.current!);
+    setPersistor(ps);
+  }, []);
 
   const pathname = usePathname();
   const previousPathname = useRef(pathname);
@@ -84,7 +94,6 @@ export default function RootLayout({
     setIsLoggedIn(!!getAccessToken());
   }, [pathname]);
 
-  // 테스트용 주석
   return (
     <html>
       <head>
@@ -116,18 +125,24 @@ export default function RootLayout({
             <GlobalStyles />
             <ThemeProvider theme={theme}>
               <Toaster />
-              <Provider store={storeRef.current}>
-                <SocketConnection key={isLoggedIn ? "loggedIn" : "loggedOut"} />
-                <Container>
-                  <Main>
-                    {isHeaderFooterShow && <Header />}
-                    {children}
-                  </Main>
-                  {isHeaderFooterShow && (
-                    <Footer isShowChat={isHeaderFooterShow} />
-                  )}
-                </Container>
-              </Provider>
+              {persistor && (
+                <Provider store={storeRef.current}>
+                  <PersistGate loading={null} persistor={persistor}>
+                    <SocketConnection
+                      key={isLoggedIn ? "loggedIn" : "loggedOut"}
+                    />
+                    <Container>
+                      <Main>
+                        {isHeaderFooterShow && <Header />}
+                        {children}
+                      </Main>
+                      {isHeaderFooterShow && (
+                        <Footer isShowChat={isHeaderFooterShow} />
+                      )}
+                    </Container>
+                  </PersistGate>
+                </Provider>
+              )}
             </ThemeProvider>
           </StyledComponentsRegistry>
         </HelmetProvider>

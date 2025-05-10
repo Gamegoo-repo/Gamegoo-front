@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface ChatState {
+export interface ChatState {
     isChatOpen: boolean;
     isChatRoomOpen: boolean;
   isChatRoomUuid: string | number;
