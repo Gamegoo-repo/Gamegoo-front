@@ -6,7 +6,7 @@ import PositionBox from "../crBoard/PositionBox";
 import { useEffect, useRef, useState } from "react";
 import ProfileImage from "./ProfileImage";
 import MannerLevel from "../common/MannerLevel";
-import Mic from "./Mic";
+import Mic from "../common/Mic";
 import MoreBoxButton from "./MoreBoxButton";
 import Champion from "./Champion";
 import QueueType from "./QueueType";

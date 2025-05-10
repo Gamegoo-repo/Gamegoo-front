@@ -3,7 +3,7 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import Mic from "../readBoard/Mic";
+import Mic from "../common/Mic";
 import Box from "../common/Box";
 import MannerLevelBox from "../common/MannerLevelBox";
 import { setAbbrevTier, setPositionImg } from "@/utils/custom";
