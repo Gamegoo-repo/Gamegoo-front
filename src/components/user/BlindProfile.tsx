@@ -36,33 +36,30 @@ const BlindProfile = () => {
           <Container>
             <ProfileRow>
               <ImageContainer>
-                <ProfileImgWrapper $bgColor="#606060"></ProfileImgWrapper>
+                <ProfileImgWrapper $bgColor={theme.colors.gray600} />
               </ImageContainer>
               <StyledBox>
                 <Top>탈퇴한 사용자</Top>
                 <UnderRow>
-                  <Position>
-                    {POSITIONS.map((position, index) => (
-                      <Posi key={index} $isWantP={index === 2}>
+                  <Div>
+                    {POSITIONS.slice(0, 2).map((position, index) => (
+                      <Element key={index}>
                         {position.label}
-                        <Image
-                          src={"/assets/images/position/position_all_blind.svg"}
-                          width={55}
-                          height={40}
-                          alt="포지션"
-                        />
-                      </Posi>
+                        <div>-</div>
+                      </Element>
                     ))}
-                  </Position>
-                  <Champion>
-                    최근 선호 챔피언
-                    <ChampionImages>
-                      {[...Array(3)].map((_, index) => (
-                        <Round key={index} />
-                      ))}
-                    </ChampionImages>
-                  </Champion>
-                  <Mike>
+                  </Div>
+                  <Div>
+                    <Element>
+                      내가 찾는 포지션
+                      <div>-</div>
+                    </Element>
+                    <Element>
+                      최근 선호 챔피언
+                      <div>-</div>
+                    </Element>
+                  </Div>
+                  {/* <Mike>
                     마이크
                     <Toggle
                       isOn={"UNAVAILABLE"}
@@ -70,7 +67,7 @@ const BlindProfile = () => {
                       disabled={true}
                       isBlind={true}
                     />
-                  </Mike>
+                  </Mike> */}
                 </UnderRow>
               </StyledBox>
             </ProfileRow>
@@ -78,21 +75,23 @@ const BlindProfile = () => {
           <Content>
             <div>
               <Title>{`탈퇴한 사용자님의 매너레벨`}</Title>
-              <Box>
+              <LevelBox>
                 <Text>
-                  매너 레벨은 겜구 사용자로부터 받은 매너평가, 비매너평가를
-                  반영한 지표예요.
-                  <br />
                   최근 <Span>0</Span>명의 사용자가{` `}
                   탈퇴한 사용자{` `}님에게 긍정적 매너 평가를 남겼어요.
                 </Text>
                 <MannerLevelBar recentLevel={0} isBlind={true} />
-              </Box>
+              </LevelBox>
             </div>
             <div>
-              <Title>매너 키워드</Title>
-              <Box>
+              <Title>받은 매너평가</Title>
+              <MannerBox>
                 <MannerList>
+                  <TypeWrapper>
+                    {MANNER_TYPES.map((type) => {
+                      return <Type key={type.id}>{type.text}</Type>;
+                    })}
+                  </TypeWrapper>
                   <ValueWrapper>
                     {goodMannerEvaluations.map((item) => (
                       <Value
@@ -103,30 +102,30 @@ const BlindProfile = () => {
                       </Value>
                     ))}
                   </ValueWrapper>
-                  <TypeWrapper>
-                    {MANNER_TYPES.map((type) => {
-                      return <Type key={type.id}>{type.text}</Type>;
-                    })}
-                  </TypeWrapper>
                 </MannerList>
-              </Box>
+              </MannerBox>
             </div>
             <div>
-              <Title>비매너 키워드</Title>
-              <Box>
+              <Title>받은 비매너평가</Title>
+              <MannerBox>
                 <MannerList>
-                  <ValueWrapper>
-                    {badMannerEvaluations.map((item) => (
-                      <Value key={item.id}>{item.count}</Value>
-                    ))}
-                  </ValueWrapper>
                   <TypeWrapper>
                     {BAD_MANNER_TYPES.map((type) => (
                       <Type key={type.id}>{type.text}</Type>
                     ))}
                   </TypeWrapper>
+                  <ValueWrapper>
+                    {badMannerEvaluations.map((item) => (
+                      <Value
+                        key={item.id}
+                        className={item.count > 0 ? "badEmph" : "default"}
+                      >
+                        {item.count}
+                      </Value>
+                    ))}
+                  </ValueWrapper>
                 </MannerList>
-              </Box>
+              </MannerBox>
             </div>
           </Content>
         </Main>
@@ -142,6 +141,10 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 62px;
+
+  @media (max-width: 700px) {
+    padding-top: 24px;
+  }
 `;
 
 const Row = styled.div`
@@ -153,6 +156,10 @@ const MatchContent = styled.div`
   max-width: 1440px;
   width: 100%;
   padding: 0 80px;
+
+  @media (max-width: 700px) {
+    padding: 0 20px;
+  }
 `;
 
 const Main = styled.main`
@@ -170,28 +177,63 @@ const Content = styled.div`
   grid-template-columns: 4fr 1fr 1fr;
   gap: 15px;
   margin-top: 37px;
+
+  @media (max-width: 850px) {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
 `;
 
 const Title = styled.div`
-  padding-left: 6px;
-  margin-bottom: 13px;
+  margin-bottom: 8px;
   ${(props) => props.theme.fonts.regular25};
-  color: ${theme.colors.gray700};
+  color: ${theme.colors.gray800};
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.semiBold18};
+  }
 `;
 
-const Box = styled.div`
+const LevelBox = styled.div`
   width: 100%;
-  height: 269px;
+  height: 260px;
   border-radius: 20px;
-  padding: 18px 32px;
+  padding: 24px 26px;
   background: ${theme.colors.gray100};
+
+  @media (max-width: 700px) {
+    height: 156px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 8px;
+  }
+`;
+
+const MannerBox = styled.div`
+  width: 100%;
+  height: 260px;
+  border-radius: 20px;
+  padding: 28px 24px;
+  background: ${theme.colors.gray800};
+
+  @media (max-width: 700px) {
+    height: 196px;
+    padding: 20.5px 20px;
+    border-radius: 8px;
+  }
 `;
 
 const Text = styled.div`
-  ${(props) => props.theme.fonts.regular16};
-  color: ${theme.colors.gray700};
-  margin-top: 8px;
-  margin-bottom: 40px;
+  ${(props) => props.theme.fonts.medium16};
+  color: ${theme.colors.gray800};
+  margin-bottom: 66px;
+
+  @media (max-width: 700px) {
+    margin-bottom: 0px;
+  }
 `;
 
 const Span = styled.span`
@@ -200,32 +242,48 @@ const Span = styled.span`
 
 const MannerList = styled.div`
   display: flex;
+  justify-content: space-between;
   align-items: center;
   white-space: nowrap;
+`;
+
+const TypeWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: 12px;
+
+  @media (max-width: 700px) {
+    row-gap: 6.5px;
+  }
+`;
+
+const Type = styled.p`
+  ${(props) => props.theme.fonts.medium16};
+  color: ${theme.colors.gray500};
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.medium14};
+  }
 `;
 
 const ValueWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-right: 11px;
-  row-gap: 16px;
+  row-gap: 12px;
+
+  @media (max-width: 700px) {
+    row-gap: 6.5px;
+  }
 `;
 
 const Value = styled.p`
-  ${(props) => props.theme.fonts.medium16};
-  color: ${theme.colors.gray700};
-`;
+  ${(props) => props.theme.fonts.bold16};
+  color: ${theme.colors.gray500};
 
-const TypeWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  row-gap: 16px;
-`;
-
-const Type = styled.p`
-  ${(props) => props.theme.fonts.medium16};
-  color: ${theme.colors.gray700};
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.bold14};
+  }
 `;
 
 /* 프로필 부분 */
@@ -241,8 +299,9 @@ const Container = styled.div`
   justify-content: flex-start;
   gap: 15px;
 
-  &.other {
-    padding: 39px 44px 48px 44px;
+  @media (max-width: 700px) {
+    padding: 20px;
+    border-radius: 8px;
   }
 `;
 
@@ -256,6 +315,14 @@ const ProfileRow = styled.div`
 
 const UnderRow = styled(Row)`
   gap: 54px;
+  white-space: nowrap;
+
+  @media (max-width: 860px) {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
 `;
 
 const ImageContainer = styled.div`
@@ -270,6 +337,11 @@ const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  @media (max-width: 700px) {
+    width: 100px;
+    height: 100px;
+  }
 `;
 
 const StyledBox = styled.div`
@@ -288,51 +360,39 @@ const Top = styled.div`
   ${theme.fonts.bold32};
   color: ${theme.colors.gray800};
   white-space: nowrap;
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.bold16};
+  }
 `;
 
-const Position = styled.div`
+const Div = styled.div`
   display: flex;
+  align-items: flex-start;
   gap: 24px;
-  align-items: center;
+
+  @media (max-width: 430px) {
+    flex-direction: column;
+    gap: 10px;
+  }
 `;
 
-const Posi = styled.div<{ $isWantP: boolean }>`
+const Element = styled.div`
   display: flex;
   flex-direction: column;
   gap: 15px;
   align-items: flex-start;
-  font-size: ${theme.fonts.regular14};
+  ${theme.fonts.medium14};
+  color: ${theme.colors.gray600};
   position: relative;
 
-  &.other {
-    font-size: ${theme.fonts.regular14};
+  @media (max-width: 700px) {
+    gap: 5px;
   }
 
-  ${({ $isWantP }) =>
-    $isWantP &&
-    css`
-      margin-left: 36px;
-    `}
-`;
-
-const Champion = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  font-size: ${theme.fonts.regular14};
-`;
-
-const ChampionImages = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 9px;
-`;
-
-const Round = styled.div`
-  width: 52px;
-  height: 52px;
-  background-color: #606060;
-  border-radius: 50%;
+  @media (max-width: 430px) {
+    flex-direction: row;
+  }
 `;
 
 const Mike = styled.div`

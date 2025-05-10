@@ -2,6 +2,7 @@ import { theme } from "@/styles/theme";
 import Image from "next/image";
 import styled, { css } from "styled-components";
 import ChevronDownIcon from "../../../public/assets/icons/chevron_down.svg";
+import useMediaQueries from "@/hooks/useMediaQueries";
 
 const levelColors = [
   theme.colors.violet400,
@@ -19,6 +20,8 @@ interface MannerLevelBarProps {
 
 const MannerLevelBar = (props: MannerLevelBarProps) => {
   const { recentLevel, mannerRank, isBlind = false } = props;
+
+  const isMobile = useMediaQueries({ breakpoint: 700 });
 
   return (
     <Container>
@@ -38,7 +41,8 @@ const MannerLevelBar = (props: MannerLevelBarProps) => {
                     mannerRank > 0
                       ? Math.floor(mannerRank)
                       : 1
-                  }% 의 매너레벨`}
+                  }%`}
+                  {!isMobile && " 의 매너레벨"}
                 </Percentage>
                 <DownIconWrapper level={level - 1}>
                   <ChevronDownIcon />
@@ -67,19 +71,27 @@ const MannerLevelBar = (props: MannerLevelBarProps) => {
                   isBlind
                     ? level > 1
                       ? 17
-                      : 39
+                      : !isMobile
+                      ? 39
+                      : 20
                     : level !== recentLevel
                     ? 17
-                    : 39
+                    : !isMobile
+                    ? 39
+                    : 20
                 }
                 height={
                   isBlind
                     ? level > 1
                       ? 17
-                      : 39
+                      : !isMobile
+                      ? 39
+                      : 20
                     : level !== recentLevel
                     ? 17
-                    : 39
+                    : !isMobile
+                    ? 39
+                    : 20
                 }
                 style={{
                   ...(isBlind === false && {
@@ -103,6 +115,10 @@ const Container = styled.div`
   position: relative;
   display: flex;
   justify-content: flex-end;
+
+  @media (max-width: 700px) {
+    height: 70px;
+  }
 `;
 
 const Bar = styled.div`
@@ -114,6 +130,10 @@ const Bar = styled.div`
   position: absolute;
   bottom: 17px;
   left: 15px;
+
+  @media (max-width: 700px) {
+    bottom: 9px;
+  }
 `;
 
 const PurpleBar = styled.div<{ $recentLevel: number; $isBlind: boolean }>`
@@ -135,7 +155,7 @@ const PurpleBar = styled.div<{ $recentLevel: number; $isBlind: boolean }>`
 const BlackBar = styled.div<{ $isBlind: boolean }>`
   width: calc(100% - 30px);
   height: 3.8px;
-  background: #606060;
+  background: ${theme.colors.gray800};
   ${({ $isBlind }) =>
     $isBlind &&
     css`
@@ -179,6 +199,10 @@ const Recent = styled.div`
 const Percentage = styled.div`
   ${(props) => props.theme.fonts.bold11};
   height: 11px;
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.bold9};
+  }
 `;
 
 const DownIconWrapper = styled.div<{ level: number }>`
@@ -200,6 +224,12 @@ const Level = styled.div<{ bold: boolean; $isBlind: boolean }>`
     css`
       color: ${theme.colors.gray700};
     `}
+
+  @media (max-width: 700px) {
+    ${(props) =>
+      props.bold ? props.theme.fonts.bold13 : props.theme.fonts.regular13};
+    margin-bottom: 0px;
+  }
 `;
 
 const ImageWrapper = styled.div`
@@ -208,4 +238,9 @@ const ImageWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  @media (max-width: 700px) {
+    width: 20px;
+    height: 20px;
+  }
 `;

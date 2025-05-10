@@ -200,8 +200,10 @@ const LeftLabel = styled.div<{ $profileType: profileType }>`
 `;
 
 const GameBox = styled.div<{ $profileType: profileType }>`
+  width: 100%;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
   position: relative;
 

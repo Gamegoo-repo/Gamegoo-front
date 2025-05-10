@@ -44,7 +44,7 @@ const StyledBox = styled.div<{ $shape: ShapeType; $profiletype?: profileType }>`
     `}
 
   ${(props) =>
-    (props.$profiletype === "mini" || props.$profiletype === "other") &&
+    props.$profiletype === "mini" &&
     css`
       height: 33px;
       padding: 6px 16px;
@@ -68,7 +68,9 @@ const StyledBox = styled.div<{ $shape: ShapeType; $profiletype?: profileType }>`
     `}
 
     ${(props) =>
-    props.$profiletype === "none" &&
+    (props.$profiletype === "none" ||
+      props.$profiletype === "other" ||
+      props.$profiletype === "me") &&
     css`
       padding: 6px 20px;
       ${(props) => props.theme.fonts.semiBold16}

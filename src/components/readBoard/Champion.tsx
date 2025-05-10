@@ -4,16 +4,18 @@ import { theme } from "@/styles/theme";
 import { useState } from "react";
 import { fadeIn, fadeOut } from "@/styles/animation";
 import { ChampionResponseDTO } from "@/types/api/champion/champion";
+import useMediaQueries from "@/hooks/useMediaQueries";
 
 interface ChampionProps {
   title?: boolean;
   list?: ChampionResponseDTO[];
   font?: string;
+  color?: string;
 }
 
 const Champion = (props: ChampionProps) => {
-  const { list, font = "semiBold18", title = false } = props;
-
+  const { list, font = "semiBold18", color, title = false } = props;
+  const isMobile = useMediaQueries({ breakpoint: 700 });
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   // 챔피언 이미지를 로드 실패 시 기본 이미지로
@@ -23,7 +25,11 @@ const Champion = (props: ChampionProps) => {
 
   return (
     <Wrapper>
-      {title && <Title $font={font}>최근 선호 챔피언</Title>}
+      {title && (
+        <Title $font={font} $color={color}>
+          최근 선호 챔피언
+        </Title>
+      )}
       {list?.length !== 0 ? (
         <Champions>
           {list?.map((champion, key) => (
@@ -35,8 +41,8 @@ const Champion = (props: ChampionProps) => {
               <ImageWrapper>
                 <Image
                   src={`/assets/images/champion/${champion.championId}.png`}
-                  width={48}
-                  height={48}
+                  width={!isMobile ? 48 : 32}
+                  height={!isMobile ? 48 : 32}
                   alt={`champion-${champion.championId}`}
                   style={{
                     transform: "scale(1.2)", // 120% 확대
@@ -90,10 +96,10 @@ const Wrapper = styled.div`
   gap: 9px;
 `;
 
-const Title = styled.p<{ $font: string }>`
+const Title = styled.p<{ $font: string; $color?: string }>`
   ${(props) =>
     props.theme.fonts[`${props.$font}` as keyof typeof props.theme.fonts]};
-  color: ${theme.colors.gray800};
+  color: ${({ $color, theme }) => ($color ? $color : theme.colors.gray600)};
 `;
 
 const Champions = styled.div`
@@ -105,6 +111,10 @@ const Champions = styled.div`
 const ChampionWrapper = styled.div`
   height: 62px;
   position: relative;
+
+  @media (max-width: 700px) {
+    height: 45px;
+  }
 `;
 
 const ImageWrapper = styled.div`
@@ -112,6 +122,11 @@ const ImageWrapper = styled.div`
   height: 52px;
   border-radius: 50%;
   overflow: hidden;
+
+  @media (max-width: 700px) {
+    width: 33px;
+    height: 33px;
+  }
 `;
 
 const Percentage = styled.div`
@@ -129,6 +144,13 @@ const Percentage = styled.div`
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
+
+  @media (max-width: 700px) {
+    width: 33px;
+    height: 17px;
+    padding: 0px 4px;
+    ${theme.fonts.bold11};
+  }
 `;
 
 const Tooltip = styled.div`
