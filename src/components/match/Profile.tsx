@@ -40,6 +40,7 @@ import { Position, PositionType } from "@/types/position/position";
 import RankTier from "../common/RankTier";
 import Alert from "../common/Alert";
 import useMediaQueries from "@/hooks/useMediaQueries";
+import Mic from "../common/Mic";
 
 type profileType = "normal" | "wind" | "other" | "me";
 
@@ -550,7 +551,12 @@ const Profile: React.FC<Profile> = ({
               $isMatching={profileType === "wind" || profileType === "normal"}
             >
               <Top>
-                {user.gameName}
+                <GameNameDiv>
+                  {user.gameName}
+                  {(profileType === "me" || profileType === "other") && (
+                    <Mic status={isMike} />
+                  )}
+                </GameNameDiv>
                 <Span>{`#${user.tag}`}</Span>
               </Top>
             </TopContainer>
@@ -668,11 +674,12 @@ const Profile: React.FC<Profile> = ({
                 </PosiWrap>
               </Positions>
               {/* TODO 최근 선호 챔피언 */}
-              {(profileType === "other" || profileType === "me") &&
+              {!isMobile &&
+                (profileType === "other" || profileType === "me") &&
                 user.championResponseList && (
                   <Champion
                     title={true}
-                    font="regular14"
+                    font="semiBold14"
                     list={user.championResponseList}
                   />
                 )}
@@ -689,14 +696,25 @@ const Profile: React.FC<Profile> = ({
               handleMike={handleMike}
             />
           )}
-          <Mike>
-            마이크
-            <Toggle
-              isOn={isMike}
-              onToggle={handleMike}
-              disabled={profileType === "other"}
-            />
-          </Mike>
+          {!isMobile && (
+            <Mike>
+              마이크
+              <Toggle
+                isOn={isMike}
+                onToggle={handleMike}
+                disabled={profileType === "other"}
+              />
+            </Mike>
+          )}
+          {isMobile &&
+            (profileType === "other" || profileType === "me") &&
+            user.championResponseList && (
+              <Champion
+                title={true}
+                font="medium11"
+                list={user.championResponseList}
+              />
+            )}
         </StyledBox>
       </Row>
 
@@ -829,9 +847,16 @@ const Container = styled.div<{ $backgroundColor?: string }>`
 
   &.other {
     padding: 42px 41px;
+
+    @media (max-width: 700px) {
+      padding: 20px;
+      border-radius: 8px;
+    }
   }
+
   @media (max-width: 700px) {
     padding: 20px;
+    border-radius: 8px;
 
     &.wind {
       height: 330px;
@@ -1070,6 +1095,12 @@ const Top = styled.div`
   }
 `;
 
+const GameNameDiv = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+`;
+
 const Span = styled.span`
   margin-right: 5px;
   color: ${theme.colors.gray500};
@@ -1169,10 +1200,6 @@ const Posi = styled.div<{ $isWantP: boolean }>`
   align-items: center;
   font-size: ${theme.fonts.medium16};
   color: ${theme.colors.gray800};
-
-  &.other {
-    font-size: ${theme.fonts.medium16};
-  }
 
   @media (max-width: 700px) {
     font-size: ${theme.fonts.medium11};
