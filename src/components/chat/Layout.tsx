@@ -55,7 +55,7 @@ const Layout = () => {
   const [friends, setFriends] = useState<FriendList[]>([]);
   const [favoriteFriends, setFavoriteFriends] = useState<FriendList[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-  const tabs = ["친구 목록", "대화방"];
+  const tabs = ["친구 목록", "채팅방"];
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState<number | null>(null);
   const [isUuid, setIsUuid] = useState("");
   const [selectedChatroom, setSelectedChatroom] = useState<ChatroomList | null>(
@@ -480,7 +480,7 @@ const Layout = () => {
           ) : (
             <>
               <Header onMouseDown={handleDragStart}>
-                <HeaderTitle>메신저</HeaderTitle>
+                <HeaderTitle>채팅</HeaderTitle>
                 <CloseButton
                   onClick={(e) => {
                     e.stopPropagation();
@@ -504,8 +504,9 @@ const Layout = () => {
                 activeTab={activeTab}
                 onTabClick={(index: number) => dispatch(setActiveTab(index))}
               />
-              {activeTab === 0 && <SearchBar onSearch={handleSearch} />}
+
               <ChatMain className={activeTab === 0 ? "friend" : "chat"}>
+                {activeTab === 0 && <SearchBar onSearch={handleSearch} />}
                 <Content className={activeTab === 0 ? "friend" : "chat"}>
                   {activeTab === 0 ? (
                     <div>
@@ -780,12 +781,7 @@ const CloseImage = styled(Image)`
 const ChatMain = styled.div`
   border-radius: 0 0 20px 20px;
   background: ${theme.colors.white};
-  &.friend {
-    box-shadow: none;
-  }
-  &.chat {
-    box-shadow: inset 0 0 4.7px 0 #00000026;
-  }
+  box-shadow: inset 0 0 4.7px 0 #00000026;
 `;
 
 const Content = styled.main`

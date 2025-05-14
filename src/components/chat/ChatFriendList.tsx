@@ -143,7 +143,7 @@ const FavoritesWrapper = styled.div<{ $length: number }>`
 
 const FriendsWrapper = styled.div<{ $length: number }>`
   border-top: ${({ $length }) =>
-    $length > 0 ? `1px solid ${theme.colors.gray400}` : "unset"};
+    $length > 0 ? `1px solid ${theme.colors.gray200}` : "unset"};
   padding-top: 6px;
 `;
 
@@ -161,7 +161,7 @@ const FriendsTitle = styled.p`
 
 const NoData = styled.p`
   text-align: center;
-  color: ${theme.colors.gray600};
+  color: ${theme.colors.gray700};
   ${theme.fonts.regular16};
   margin-top: 50%;
 `;
