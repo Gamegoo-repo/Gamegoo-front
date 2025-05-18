@@ -1,29 +1,29 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface ChatState {
-    isChatOpen: boolean;
-    isChatRoomOpen: boolean;
+  isChatOpen: boolean;
+  isChatRoomOpen: boolean;
   isChatRoomUuid: string | number;
-  activeTab: number; // 친구 목록, 대화방
-    chatEnterType: number|null;
-    memberId: number;
-    onlineFriends: number[];
-    unreadUuids: string[];
-    currentChatUuid: string | null;
-    errorMessage: string | null;
+  activeTab: number; // 친구 목록, 채팅방
+  chatEnterType: number | null;
+  memberId: number;
+  onlineFriends: number[];
+  unreadUuids: string[];
+  currentChatUuid: string | null;
+  errorMessage: string | null;
 }
 
 const initialState: ChatState = {
-    isChatOpen: false,
-    isChatRoomOpen: false,
+  isChatOpen: false,
+  isChatRoomOpen: false,
   isChatRoomUuid: 0 || "",
-    activeTab: 0,
-    chatEnterType: null,
-    memberId: 0,
-    onlineFriends: [],
-    currentChatUuid: null,
-    unreadUuids: [],
-    errorMessage: null,
+  activeTab: 0,
+  chatEnterType: null,
+  memberId: 0,
+  onlineFriends: [],
+  currentChatUuid: null,
+  unreadUuids: [],
+  errorMessage: null,
 };
 
 const chatSlice = createSlice({
@@ -51,7 +51,7 @@ const chatSlice = createSlice({
     setChatRoomUuid(state, action: PayloadAction<string | number>) {
       state.isChatRoomUuid = action.payload;
     },
-    setChatEnterType(state, action: PayloadAction<number|null>) {
+    setChatEnterType(state, action: PayloadAction<number | null>) {
       state.chatEnterType = action.payload;
     },
     setMemberId(state, action: PayloadAction<number>) {
@@ -87,19 +87,19 @@ const chatSlice = createSlice({
 });
 
 export const {
-    openChat,
-    closeChat,
-    toggleChat,
-    openChatRoom,
+  openChat,
+  closeChat,
+  toggleChat,
+  openChatRoom,
   closeChatRoom,
-    setActiveTab,
-    setChatRoomUuid,
-    setChatEnterType,
-    setMemberId,
-    setFriendOnline,
-    setFriendOffline,
-    setUnreadUuid,
-    setCurrentChatUuid,
-    setErrorMessage
+  setActiveTab,
+  setChatRoomUuid,
+  setChatEnterType,
+  setMemberId,
+  setFriendOnline,
+  setFriendOffline,
+  setUnreadUuid,
+  setCurrentChatUuid,
+  setErrorMessage,
 } = chatSlice.actions;
 export default chatSlice.reducer;

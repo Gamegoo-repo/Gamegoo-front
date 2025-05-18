@@ -904,11 +904,20 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+
+  @media (max-width: 700px) {
+    border-radius: 0;
+    height: 100vh;
+  }
 `;
 
 const HeaderWrapper = styled.div`
   user-select: auto;
   cursor: move;
+  @media (max-width: 700px) {
+    cursor: default;
+    border-bottom: 1px solid ${theme.colors.violet300};
+  }
 `;
 
 const CheckContent = styled.div`

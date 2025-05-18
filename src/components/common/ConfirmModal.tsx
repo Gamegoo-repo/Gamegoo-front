@@ -2,12 +2,11 @@ import {
   setOpenEvaluationModal,
   setOpenModal,
 } from "@/redux/slices/modalSlice";
-import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-
+import { theme } from "@/styles/theme";
 type ButtonText =
   | "취소"
   | "나가기"
@@ -23,7 +22,7 @@ type ButtonText =
   | "회원 탈퇴";
 
 interface ConfirmModalProps {
-  type?: "manner";
+  type?: "manner" | string;
   children?: string | React.ReactNode;
   width: string;
   primaryButtonText: ButtonText;
@@ -135,6 +134,7 @@ const ConfirmModal = (props: ConfirmModalProps) => {
                 !badMannerStatusClicked
               }
               $type={type}
+              $isRed={type === "withDrawer"}
             >
               {primaryButtonText}
             </Button>
@@ -167,7 +167,7 @@ const Overlay = styled.div<{ $type: string | undefined }>`
   align-items: center;
   position: fixed;
   background: #0000009c;
-  border-radius: ${({ $type }) => ($type ? "20px" : "unset")};
+  border-radius: ${({ $type }) => ($type === "manner" ? "20px" : "unset")};
   inset: 0;
   z-index: 101;
 `;
@@ -175,13 +175,19 @@ const Overlay = styled.div<{ $type: string | undefined }>`
 const Wrapper = styled.div<{ $width: string; $type: string | undefined }>`
   width: ${({ $width }) => $width};
   background: ${theme.colors.white};
-  border-radius: ${({ $type }) => ($type ? "10px" : "20px")};
+  border-radius: ${({ $type }) => ($type === "manner" ? "10px" : "20px")};
   box-shadow: 0 0 14.76px 0 rgba(0, 0, 0, 0.15);
   overflow: hidden;
+  @media (max-width: 700px) {
+    width: 90vw;
+  }
 `;
 
 const Main = styled.main`
   padding: 0 4px;
+  @media (max-width: 700px) {
+    padding: 0;
+  }
 `;
 
 const ImageTop = styled.div`
@@ -194,8 +200,14 @@ const TextTop = styled.div`
   align-items: center;
   justify-content: center;
   text-align: center;
-  border-bottom: 0.58px solid rgba(197, 197, 199, 1);
+  border-bottom: 0.58px solid ${theme.colors.gray400};
   ${(props) => props.theme.fonts.regular25};
+  color: ${theme.colors.gray800};
+
+  @media (max-width: 700px) {
+    min-height: 124px;
+    ${theme.fonts.medium14}
+  }
 `;
 
 const CloseButton = styled.p`
@@ -237,16 +249,23 @@ const ButtonWrapper = styled.div`
   justify-content: center;
 `;
 
-const Button = styled.button<{ $type: string | undefined }>`
+const Button = styled.button<{
+  $type: string | undefined;
+  $isRed?: boolean;
+}>`
   text-align: center;
   ${({ $type }) =>
-    $type ? `${theme.fonts.bold11}` : `${theme.fonts.semiBold18}`};
+    $type === "manner" ? `${theme.fonts.bold11}` : `${theme.fonts.semiBold18}`};
   cursor: pointer;
-  color: ${({ $type }) =>
-    $type ? `${theme.colors.gray600}` : `${theme.colors.gray700}`};
+  color: ${({ $type, $isRed }) =>
+    $type === "manner"
+      ? theme.colors.gray600
+      : $isRed
+      ? theme.colors.red600
+      : theme.colors.gray700};
   width: 100%;
   height: ${({ $type }) => ($type ? "none" : "79px")};
-  padding: 15px 0;
+  padding: 30px 0;
   &:disabled {
     color: ${theme.colors.gray300};
   }
@@ -279,5 +298,11 @@ const Button = styled.button<{ $type: string | undefined }>`
       background: ${theme.colors.gray100};
       border-radius: 0 0 20px 20px;
     }
+  }
+
+  @media (max-width: 700px) {
+    padding: 20px 0;
+    ${theme.fonts.semiBold14}
+    height: unset
   }
 `;

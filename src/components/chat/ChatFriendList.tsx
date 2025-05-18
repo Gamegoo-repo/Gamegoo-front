@@ -143,25 +143,33 @@ const FavoritesWrapper = styled.div<{ $length: number }>`
 
 const FriendsWrapper = styled.div<{ $length: number }>`
   border-top: ${({ $length }) =>
-    $length > 0 ? `1px solid ${theme.colors.gray400}` : "unset"};
-  padding-top: 6px;
+    $length > 0 ? `1px solid ${theme.colors.gray200}` : "unset"};
+  border-bottom: ${({ $length }) =>
+    $length > 0 ? `1px solid ${theme.colors.gray200}` : "unset"};
+  padding: 6px 0 11px 0;
 `;
 
 const FavoritesTitle = styled.p`
   ${theme.fonts.medium11};
   color: ${theme.colors.gray500};
   padding: 6px 18px 7px 18px;
+  @media (max-width: 700px) {
+    text-align: left;
+  }
 `;
 
 const FriendsTitle = styled.p`
   ${theme.fonts.medium11};
   color: ${theme.colors.gray500};
   padding: 6px 18px 7px 18px;
+  @media (max-width: 700px) {
+    text-align: left;
+  }
 `;
 
 const NoData = styled.p`
   text-align: center;
-  color: ${theme.colors.gray600};
+  color: ${theme.colors.gray700};
   ${theme.fonts.regular16};
   margin-top: 50%;
 `;

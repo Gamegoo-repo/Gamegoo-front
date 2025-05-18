@@ -6,6 +6,7 @@ import { ChatroomList } from "@/interface/chat";
 import MoreBox from "../common/MoreBox";
 import { setChatRoomDateFormatter } from "@/utils/custom";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
+import useMediaQueries from "@/hooks/useMediaQueries";
 
 interface ChatRoomItemProps {
   room: ChatroomList;
@@ -31,6 +32,8 @@ const ChatRoomItem = (props: ChatRoomItemProps) => {
     setIsMoreBoxOpen,
   } = props;
 
+  const isMobile = useMediaQueries({ breakpoint: 700 });
+
   const handleUnreadMsgCount = (unread: number) => {
     return unread > 99 ? "99+" : unread;
   };
@@ -41,7 +44,7 @@ const ChatRoomItem = (props: ChatRoomItemProps) => {
         <MoreBox
           items={moreMenuItems(room)}
           top={10}
-          left={208}
+          right={30}
           onClose={() => setIsMoreBoxOpen(null)}
         />
       )}
@@ -58,16 +61,36 @@ const ChatRoomItem = (props: ChatRoomItemProps) => {
           />
         </ImageWrapper>
         <Middle>
-          <Row>
-            <UserName>{room.targetMemberName}</UserName>
-            {room.notReadMsgCnt !== 0 && (
-              <Unread>{handleUnreadMsgCount(room.notReadMsgCnt)}</Unread>
-            )}
-          </Row>
-          <Row>
-            <Msg>{room.lastMsg}</Msg>
-            <Date>{setChatRoomDateFormatter(room.lastMsgAt)}</Date>
-          </Row>
+          {!isMobile ? (
+            <>
+              <Row>
+                <UserName>{room.targetMemberName}</UserName>
+                {room.notReadMsgCnt !== 0 && (
+                  <Unread>{handleUnreadMsgCount(room.notReadMsgCnt)}</Unread>
+                )}
+              </Row>
+              <Row>
+                <Msg>{room.lastMsg}</Msg>
+                <Date>{setChatRoomDateFormatter(room.lastMsgAt)}</Date>
+              </Row>
+            </>
+          ) : (
+            <>
+              <Row>
+                <NameWrap>
+                  <UserName>{room.targetMemberName}</UserName>
+                  <Date>{setChatRoomDateFormatter(room.lastMsgAt)}</Date>
+                </NameWrap>
+
+                {room.notReadMsgCnt !== 0 && (
+                  <Unread>{handleUnreadMsgCount(room.notReadMsgCnt)}</Unread>
+                )}
+              </Row>
+              <Row>
+                <Msg>{room.lastMsg}</Msg>
+              </Row>
+            </>
+          )}
         </Middle>
       </Left>
       <Right
@@ -123,6 +146,15 @@ const ProfileImage = styled.object`
 const Middle = styled.div`
   min-width: 300px;
   margin-left: 14px;
+  @media (max-width: 700px) {
+    min-width: unset;
+  }
+`;
+
+const NameWrap = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
 `;
 
 const UserName = styled.p`
@@ -151,6 +183,10 @@ const Msg = styled.p`
   overflow: hidden;
   text-overflow: ellipsis;
   width: 215px;
+
+  @media (max-width: 700px) {
+    width: initial;
+  }
 `;
 
 const Date = styled.p`

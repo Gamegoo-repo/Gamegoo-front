@@ -54,7 +54,7 @@ export default SearchBar;
 
 const SearchWrapper = styled.div`
   padding: 15px 18px 11px;
-  border-bottom: 1px solid ${theme.colors.gray400};
+  border-bottom: 1px solid ${theme.colors.gray200};
 `;
 
 const Search = styled.div`

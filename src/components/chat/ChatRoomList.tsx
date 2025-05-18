@@ -275,7 +275,7 @@ const ChatRoomList = (props: ChatRoomListProps) => {
   };
 
   if (chatrooms.length === 0) {
-    return <NoData>{`생성된 대화방이 없습니다.`}</NoData>;
+    return <NoData>{`생성된 채팅방이 없습니다.`}</NoData>;
   }
 
   return (
@@ -306,7 +306,7 @@ const List = styled.div``;
 
 const NoData = styled.p`
   text-align: center;
-  color: ${theme.colors.gray600};
+  color: ${theme.colors.gray700};
   ${(props) => props.theme.fonts.regular16};
   margin-top: 50%;
 `;
