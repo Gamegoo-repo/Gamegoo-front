@@ -200,14 +200,14 @@ const Table = (props: TableProps) => {
                   <Fourth className="table_width">
                     <Image
                       src={setPositionImg(data.mainP)}
-                      width={35}
-                      height={28}
+                      width={36}
+                      height={36}
                       alt="메인 포지션"
                     />
                     <Image
                       src={setPositionImg(data.subP)}
-                      width={35}
-                      height={28}
+                      width={36}
+                      height={36}
                       alt="서브 포지션"
                     />
                   </Fourth>
@@ -217,8 +217,8 @@ const Table = (props: TableProps) => {
                         <Image
                           key={`${posi}-${i}`}
                           src={setPositionImg(posi || "ANY")}
-                          width={35}
-                          height={28}
+                          width={36}
+                          height={36}
                           alt="찾는 포지션"
                         />
                       ))
