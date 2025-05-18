@@ -1,7 +1,5 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
-import RankTier from "../common/RankTier";
-import Image from "next/image";
 import Mic from "../common/Mic";
 import { Mike } from "@/types/user/mike";
 

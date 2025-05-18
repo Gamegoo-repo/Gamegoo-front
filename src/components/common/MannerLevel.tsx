@@ -2,7 +2,7 @@ import styled, { keyframes } from "styled-components";
 import { theme } from "@/styles/theme";
 import { useEffect, useState } from "react";
 
-type positionType = "top" | "right";
+type positionType = "top" | "right" | "board";
 interface MannerLevelProps {
   level: number;
   onClick: (e: React.MouseEvent) => void;
@@ -36,7 +36,7 @@ const MannerLevel = (props: MannerLevelProps) => {
               $position={position}
               data-hide={!isVisible ? "true" : undefined}
             >
-              <Bubble>
+              <Bubble $position={position}>
                 <P>클릭해서 매너키워드 보기</P>
               </Bubble>
             </BubbleWrapper>
@@ -80,8 +80,10 @@ const BubbleWrapper = styled.div<{
   "data-hide"?: string;
 }>`
   position: absolute;
-  bottom: ${({ $position }) => ($position === "top" ? "45px" : "10px")};
-  right: ${({ $position }) => ($position === "top" ? "-6px" : "-150px")};
+  bottom: ${({ $position }) =>
+    $position === "top" ? "45px" : $position === "board" ? "80px" : "10px"};
+  right: ${({ $position }) =>
+    $position === "top" ? "-6px" : $position === "board" ? "-80px" : "-150px"};
 
   animation: ${({ "data-hide": hide }) =>
       hide === "true" ? fadeOutDown : fadeInUp}
@@ -89,7 +91,9 @@ const BubbleWrapper = styled.div<{
   animation-fill-mode: forwards;
 `;
 
-const Bubble = styled.div`
+const Bubble = styled.div<{
+  $position: positionType;
+}>`
   border: 1px solid ${theme.colors.violet400};
   padding: 7px 13px;
   background: ${theme.colors.gray100};
@@ -100,24 +104,43 @@ const Bubble = styled.div`
     content: "";
     position: absolute;
     bottom: -10.5px;
-    left: 100px;
-    width: 0;
-    height: 0;
     border-width: 11px 8px 0;
     border-style: solid;
     border-color: ${theme.colors.violet400} transparent transparent transparent;
+    border-style: solid;
+    width: 0;
+    height: 0;
+
+    ${({ $position }) =>
+      $position === "board"
+        ? `
+      left: 24px;
+      `
+        : `
+        left: 100px;
+      `}
   }
 
   &:after {
     content: "";
     position: absolute;
+    bottom: -6px;
     bottom: -9px;
-    left: 101px;
-    width: 0;
-    height: 0;
     border-width: 10px 7.5px 0;
     border-style: solid;
     border-color: ${theme.colors.gray100} transparent transparent transparent;
+    border-style: solid;
+    width: 0;
+    height: 0;
+
+    ${({ $position }) =>
+      $position === "board"
+        ? `
+    left: 25px;
+      `
+        : `
+      left: 101px;
+      `}
   }
 `;
 
@@ -131,7 +154,6 @@ const Level = styled.div`
 `;
 
 const ClickArea = styled.div`
-  margin-left: 23px;
   width: 53px;
   height: 26px;
   background: #000000a6;

@@ -36,10 +36,10 @@ const Wrapper = styled.div`
   padding: 1px 6px;
   border-radius: 999px;
   &.on {
-    border: 1px solid ${theme.colors.violet600};
+    border: 2px solid ${theme.colors.violet600};
   }
   &.off {
-    border: 1px solid ${theme.colors.gray600};
+    border: 2px solid ${theme.colors.gray600};
   }
 `;
 

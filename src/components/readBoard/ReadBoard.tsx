@@ -548,7 +548,7 @@ const ReadBoard = (props: ReadBoardProps) => {
                 <MoreBox
                   items={MoreBoxMenuItems}
                   top={67}
-                  left={544}
+                  left={555}
                   onClose={() => setIsMoreBoxOpen(false)}
                 />
               )}
@@ -562,15 +562,17 @@ const ReadBoard = (props: ReadBoardProps) => {
                           <MannerLevel
                             level={isPost.mannerLevel}
                             onClick={handleMannerLevelBoxOpen}
-                            position="top"
+                            position="board"
                           />
                           {isMannerLevelBoxOpen && (
                             <div ref={mannerLevelBoxRef}>
                               <MannerLevelBox
                                 memberId={isPost.memberId}
                                 level={isPost.mannerLevel}
-                                top="69%"
-                                right="-400%"
+                                top="40px"
+                                right="-780%"
+                                tail={true}
+                                tailPosition="top"
                               />
                             </div>
                           )}
