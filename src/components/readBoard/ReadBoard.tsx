@@ -777,11 +777,11 @@ const UserSection = styled.div`
 const UserLeft = styled.div`
   display: flex;
   align-items: center;
-  gap: 30px;
+  gap: 12px;
 `;
 
 const UserProfileWrapper = styled.div`
-  width: 50px;
+  width: 80px;
   height: 80px;
   position: relative;
   z-index: 100;

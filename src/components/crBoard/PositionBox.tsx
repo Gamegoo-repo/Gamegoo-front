@@ -113,8 +113,8 @@ const PositionBox = (props: PositionBoxProps) => {
                         ? positionValue.main ?? "ANY"
                         : positionValue.sub ?? "ANY"
                     )}
-                    width={!isMobile ? 55 : 22}
-                    height={!isMobile ? 40 : 22}
+                    width={!isMobile ? 48 : 22}
+                    height={!isMobile ? 48 : 22}
                     alt="포지션"
                     onClick={() => handlePosition(type)}
                   />
@@ -143,7 +143,7 @@ const PositionBox = (props: PositionBoxProps) => {
                     <Image
                       src={setPositionImg(posi)}
                       width={!isMobile ? 48 : 22}
-                      height={!isMobile ? 40 : 22}
+                      height={!isMobile ? 48 : 22}
                       alt="포지션"
                       onClick={() => handlePosition("want", index)}
                     />

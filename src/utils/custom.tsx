@@ -44,19 +44,19 @@ export function setProfileImg(profile: number) {
 export function setPositionImg(position: Position) {
   switch (position) {
     case "ANY":
-      return "/assets/images/position/position_all_purple.svg";
+      return "/assets/images/position/position_all.svg";
     case "TOP":
-      return "/assets/images/position/position_top_purple.svg";
+      return "/assets/images/position/position_top.svg";
     case "JUNGLE":
-      return "/assets/images/position/position_jungle_purple.svg";
+      return "/assets/images/position/position_jungle.svg";
     case "MID":
-      return "/assets/images/position/position_mid_purple.svg";
+      return "/assets/images/position/position_mid.svg";
     case "ADC":
-      return "/assets/images/position/position_one_deal_purple.svg";
+      return "/assets/images/position/position_one_deal.svg";
     case "SUP":
-      return "/assets/images/position/position_supporter_purple.svg";
+      return "/assets/images/position/position_supporter.svg";
     default:
-      return "/assets/images/position/position_all_purple.svg";
+      return "/assets/images/position/position_all.svg";
   }
 }
 
