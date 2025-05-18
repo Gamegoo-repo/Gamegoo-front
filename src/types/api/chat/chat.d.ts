@@ -26,10 +26,6 @@ interface Messages {
   timestamp: number;
 }
 
-interface MessageData {
-  chatMessageList: ChatMessageList;
-}
-
 // requset
 
 export interface chatRoomExitRequest {
@@ -85,7 +81,7 @@ export interface chatRoomSearchUuid {
 export interface chatRoomMessageData {
   status: number;
   message: string;
-  data: MessageData;
+  data: ChatMessageList;
 }
 
 export interface chatRoomEnterData {

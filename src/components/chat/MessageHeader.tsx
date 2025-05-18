@@ -11,6 +11,7 @@ import { RootState } from "@/redux/store";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import Alert from "../common/Alert";
 import { useState } from "react";
+import useMediaQueries from "@/hooks/useMediaQueries";
 
 interface MessageHeaderProps {
   isMoreBoxOpen: boolean;
@@ -31,6 +32,7 @@ const MessageHeader = (props: MessageHeaderProps) => {
     setIsMoreBoxOpen,
   } = props;
 
+  const isMobile = useMediaQueries({ breakpoint: 700 });
   const dispatch = useDispatch();
   const router = useRouter();
   const [showAlert, setShowAlert] = useState<boolean>(false);
@@ -79,19 +81,35 @@ const MessageHeader = (props: MessageHeaderProps) => {
         <MoreBox
           items={menuItems}
           top={35}
-          left={200}
+          right={30}
           onClose={() => setIsMoreBoxOpen(false)}
         />
       )}
-      <CloseButton>
-        <CloseImage
-          onClick={() => dispatch(closeChatRoom())}
-          src="/assets/icons/close.svg"
-          width={11}
-          height={11}
-          alt="닫기"
-        />
-      </CloseButton>
+      {!isMobile ? (
+        <CloseButton>
+          <CloseImage
+            onClick={() => dispatch(closeChatRoom())}
+            src="/assets/icons/close.svg"
+            width={11}
+            height={11}
+            alt="닫기"
+          />
+        </CloseButton>
+      ) : (
+        <TitleWrap>
+          <Title>채팅</Title>
+          <CloseButton>
+            <CloseImage
+              onClick={() => dispatch(closeChatRoom())}
+              src="/assets/icons/close_modal.svg"
+              width={11}
+              height={11}
+              alt="닫기"
+            />
+          </CloseButton>
+        </TitleWrap>
+      )}
+
       {chatEnterData && (
         <ChatHeader>
           <PrevImage
@@ -157,10 +175,26 @@ const MessageHeader = (props: MessageHeaderProps) => {
 
 export default MessageHeader;
 
+const TitleWrap = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  @media (max-width: 700px) {
+    padding: 12px 16px;
+  }
+`;
+
+const Title = styled.p`
+  ${theme.fonts.bold20}
+`;
+
 const CloseButton = styled.p`
   display: flex;
   margin-bottom: 1px;
   padding: 12px 13px 0 0;
+  @media (max-width: 700px) {
+    padding: 0;
+  }
 `;
 
 const CloseImage = styled(Image)`
@@ -172,6 +206,9 @@ const ChatHeader = styled.header`
   display: flex;
   align-items: center;
   padding: 11px 27px 20px 12px;
+  @media (max-width: 700px) {
+    padding: 12px 16px;
+  }
 `;
 
 const PrevImage = styled(Image)`
@@ -221,6 +258,9 @@ const OnlineStatus = styled.p`
   ${(props) => props.theme.fonts.medium11};
   color: ${theme.colors.gray600};
   cursor: default;
+  @media (max-width: 700px) {
+    text-align: left;
+  }
 `;
 
 const OnlineImage = styled(Image)`

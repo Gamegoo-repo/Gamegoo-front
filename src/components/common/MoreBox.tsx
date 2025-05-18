@@ -6,11 +6,12 @@ import { useEffect, useRef } from "react";
 interface MoreBoxProps {
   items: MoreBoxMenuItems[];
   top: number;
-  left: number;
+  left?: number;
+  right?: number;
   onClose?: () => void;
 }
 
-const MoreBox = ({ items, top, left, onClose }: MoreBoxProps) => {
+const MoreBox = ({ items, top, left, right, onClose }: MoreBoxProps) => {
   const moreBoxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -31,7 +32,7 @@ const MoreBox = ({ items, top, left, onClose }: MoreBoxProps) => {
   }, [onClose]);
 
   return (
-    <MenuWrapper ref={moreBoxRef} $top={top} $left={left}>
+    <MenuWrapper ref={moreBoxRef} $top={top} $left={left} $right={right}>
       {items.map((item, index) => (
         <MenuItem key={index} onClick={item.onClick}>
           {item.text}
@@ -43,11 +44,18 @@ const MoreBox = ({ items, top, left, onClose }: MoreBoxProps) => {
 
 export default MoreBox;
 
-const MenuWrapper = styled.div<{ $top: number; $left: number }>`
+const MenuWrapper = styled.div<{
+  $top: number;
+  $left?: number;
+  $right?: number;
+}>`
   width: 175px;
   position: absolute;
   top: ${(props) => props.$top}px;
-  left: ${(props) => props.$left}px;
+
+  ${(props) => props.$left !== undefined && `left: ${props.$left}px;`}
+  ${(props) => props.$right !== undefined && `right: ${props.$right}px;`}
+
   z-index: 100;
   box-shadow: 0 0 21.3px 0 #00000026;
   background: ${theme.colors.white};
@@ -63,5 +71,8 @@ const MenuItem = styled.div`
   border-bottom: 1px solid ${theme.colors.gray400};
   &:last-child {
     border-bottom: none;
+  }
+  @media (max-width: 700px) {
+    text-align: left;
   }
 `;

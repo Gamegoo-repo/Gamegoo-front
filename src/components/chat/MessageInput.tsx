@@ -21,7 +21,7 @@ const MessageInput = (props: MessageInputProps) => {
 
   const getPlaceholderText = () => {
     if (!!chatEnterData?.blocked) {
-      return "메시지를 보낼 수 없는 상대입니다.";
+      return "메세지를 보낼 수 없는 상태입니다.";
     } else if (!!chatEnterData?.blind) {
       return "탈퇴한 유저입니다.";
     }
@@ -96,12 +96,21 @@ const TextareaContainer = styled.div`
   height: 138px;
   width: 100%;
   border-radius: 0 0 20px 20px;
+  @media (max-width: 700px) {
+    border-radius: 0;
+    position: fixed;
+    bottom: 0;
+  }
 `;
 
 const Form = styled.form`
   height: 100%;
   border-radius: 0 0 20px 20px;
   box-shadow: 0 4px 46.7px 0 #0000001a;
+  @media (max-width: 700px) {
+    border-radius: 0;
+    box-shadow: none;
+  }
 `;
 
 const Textarea = styled.textarea`
@@ -133,22 +142,22 @@ const Textarea = styled.textarea`
 const Row = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
   gap: 20px;
   margin: 0 20px 20px 20px;
 `;
 
 const TextCount = styled.div<{ $color: boolean }>`
   color: ${({ $color }) => ($color ? theme.colors.violet300 : "#b5b5b5")};
-  ${theme.fonts.regular12};
+  ${theme.fonts.regular9};
 `;
 
 const SubmitButton = styled.button`
-  ${(props) => props.theme.fonts.semiBold15};
+  ${(props) => props.theme.fonts.medium16};
   color: ${theme.colors.white};
   background: ${theme.colors.violet600};
   border-radius: 25px;
-  padding: 12px 20px;
+  padding: 10px 20px;
   transition: background-color 200ms;
 
   &:disabled {
