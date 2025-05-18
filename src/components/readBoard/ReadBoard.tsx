@@ -573,6 +573,9 @@ const ReadBoard = (props: ReadBoardProps) => {
                                 right="-780%"
                                 tail={true}
                                 tailPosition="top"
+                                onClose={() =>
+                                  setIsMannerLevelBoxOpen(!isMannerLevelBoxOpen)
+                                }
                               />
                             </div>
                           )}

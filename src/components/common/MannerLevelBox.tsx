@@ -173,12 +173,19 @@ const Wrapper = styled.div<{
       }
     `}
 
-
   @media (max-width: 700px) {
-    padding: 20px;
-    top: 50%;
-    right: 50%;
-    transform: translate(50%);
+    ${({ $tail, $tailPosition, $top, $right }) =>
+      $tail && $tailPosition === "top"
+        ? css`
+            top: ${$top};
+            right: ${$right};
+            transform: none;
+          `
+        : css`
+            top: 50%;
+            right: 50%;
+            transform: translate(50%);
+          `}
   }
 `;
 

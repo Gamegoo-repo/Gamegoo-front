@@ -23,8 +23,8 @@ const CRModal = (props: BoardModalProps) => {
             <CloseImage
               onClick={onClose}
               src="/assets/icons/close.svg"
-              width={15}
-              height={15}
+              width={20}
+              height={20}
               alt="close button"
             />
           </CloseButton>
