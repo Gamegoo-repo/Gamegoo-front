@@ -94,17 +94,129 @@ const ChatFriendList = (props: FriendListProps) => {
           <FavoritesTitle>즐겨 찾기</FavoritesTitle>
           {favoriteFriends.map((friend) => {
             return (
-              <FriendItem
-                key={friend.memberId}
-                friend={friend}
-                onChatRoom={onChatRoom}
-                onlineFriends={onlineFriends}
-                onContextMenu={handleContextMenu}
-                onFavoriteToggle={onFavoriteToggle}
-                deleteMenu={deleteMenu}
-                handleCloseDeleteMenu={handleCloseDeletetMenu}
-                handleDeleteFriend={handleDeleteFriend}
-              />
+              <>
+                <FriendItem
+                  key={friend.memberId}
+                  friend={friend}
+                  onChatRoom={onChatRoom}
+                  onlineFriends={onlineFriends}
+                  onContextMenu={handleContextMenu}
+                  onFavoriteToggle={onFavoriteToggle}
+                  deleteMenu={deleteMenu}
+                  handleCloseDeleteMenu={handleCloseDeletetMenu}
+                  handleDeleteFriend={handleDeleteFriend}
+                />
+                <FriendItem
+                  key={friend.memberId}
+                  friend={friend}
+                  onChatRoom={onChatRoom}
+                  onlineFriends={onlineFriends}
+                  onContextMenu={handleContextMenu}
+                  onFavoriteToggle={onFavoriteToggle}
+                  deleteMenu={deleteMenu}
+                  handleCloseDeleteMenu={handleCloseDeletetMenu}
+                  handleDeleteFriend={handleDeleteFriend}
+                />
+                <FriendItem
+                  key={friend.memberId}
+                  friend={friend}
+                  onChatRoom={onChatRoom}
+                  onlineFriends={onlineFriends}
+                  onContextMenu={handleContextMenu}
+                  onFavoriteToggle={onFavoriteToggle}
+                  deleteMenu={deleteMenu}
+                  handleCloseDeleteMenu={handleCloseDeletetMenu}
+                  handleDeleteFriend={handleDeleteFriend}
+                />
+                <FriendItem
+                  key={friend.memberId}
+                  friend={friend}
+                  onChatRoom={onChatRoom}
+                  onlineFriends={onlineFriends}
+                  onContextMenu={handleContextMenu}
+                  onFavoriteToggle={onFavoriteToggle}
+                  deleteMenu={deleteMenu}
+                  handleCloseDeleteMenu={handleCloseDeletetMenu}
+                  handleDeleteFriend={handleDeleteFriend}
+                />
+                <FriendItem
+                  key={friend.memberId}
+                  friend={friend}
+                  onChatRoom={onChatRoom}
+                  onlineFriends={onlineFriends}
+                  onContextMenu={handleContextMenu}
+                  onFavoriteToggle={onFavoriteToggle}
+                  deleteMenu={deleteMenu}
+                  handleCloseDeleteMenu={handleCloseDeletetMenu}
+                  handleDeleteFriend={handleDeleteFriend}
+                />
+                <FriendItem
+                  key={friend.memberId}
+                  friend={friend}
+                  onChatRoom={onChatRoom}
+                  onlineFriends={onlineFriends}
+                  onContextMenu={handleContextMenu}
+                  onFavoriteToggle={onFavoriteToggle}
+                  deleteMenu={deleteMenu}
+                  handleCloseDeleteMenu={handleCloseDeletetMenu}
+                  handleDeleteFriend={handleDeleteFriend}
+                />
+                <FriendItem
+                  key={friend.memberId}
+                  friend={friend}
+                  onChatRoom={onChatRoom}
+                  onlineFriends={onlineFriends}
+                  onContextMenu={handleContextMenu}
+                  onFavoriteToggle={onFavoriteToggle}
+                  deleteMenu={deleteMenu}
+                  handleCloseDeleteMenu={handleCloseDeletetMenu}
+                  handleDeleteFriend={handleDeleteFriend}
+                />
+                <FriendItem
+                  key={friend.memberId}
+                  friend={friend}
+                  onChatRoom={onChatRoom}
+                  onlineFriends={onlineFriends}
+                  onContextMenu={handleContextMenu}
+                  onFavoriteToggle={onFavoriteToggle}
+                  deleteMenu={deleteMenu}
+                  handleCloseDeleteMenu={handleCloseDeletetMenu}
+                  handleDeleteFriend={handleDeleteFriend}
+                />
+                <FriendItem
+                  key={friend.memberId}
+                  friend={friend}
+                  onChatRoom={onChatRoom}
+                  onlineFriends={onlineFriends}
+                  onContextMenu={handleContextMenu}
+                  onFavoriteToggle={onFavoriteToggle}
+                  deleteMenu={deleteMenu}
+                  handleCloseDeleteMenu={handleCloseDeletetMenu}
+                  handleDeleteFriend={handleDeleteFriend}
+                />
+                <FriendItem
+                  key={friend.memberId}
+                  friend={friend}
+                  onChatRoom={onChatRoom}
+                  onlineFriends={onlineFriends}
+                  onContextMenu={handleContextMenu}
+                  onFavoriteToggle={onFavoriteToggle}
+                  deleteMenu={deleteMenu}
+                  handleCloseDeleteMenu={handleCloseDeletetMenu}
+                  handleDeleteFriend={handleDeleteFriend}
+                />
+                <FriendItem
+                  key={friend.memberId}
+                  friend={friend}
+                  onChatRoom={onChatRoom}
+                  onlineFriends={onlineFriends}
+                  onContextMenu={handleContextMenu}
+                  onFavoriteToggle={onFavoriteToggle}
+                  deleteMenu={deleteMenu}
+                  handleCloseDeleteMenu={handleCloseDeletetMenu}
+                  handleDeleteFriend={handleDeleteFriend}
+                />
+              </>
             );
           })}
         </FavoritesWrapper>
@@ -144,19 +256,27 @@ const FavoritesWrapper = styled.div<{ $length: number }>`
 const FriendsWrapper = styled.div<{ $length: number }>`
   border-top: ${({ $length }) =>
     $length > 0 ? `1px solid ${theme.colors.gray200}` : "unset"};
-  padding-top: 6px;
+  border-bottom: ${({ $length }) =>
+    $length > 0 ? `1px solid ${theme.colors.gray200}` : "unset"};
+  padding: 6px 0 11px 0;
 `;
 
 const FavoritesTitle = styled.p`
   ${theme.fonts.medium11};
   color: ${theme.colors.gray500};
   padding: 6px 18px 7px 18px;
+  @media (max-width: 700px) {
+    text-align: left;
+  }
 `;
 
 const FriendsTitle = styled.p`
   ${theme.fonts.medium11};
   color: ${theme.colors.gray500};
   padding: 6px 18px 7px 18px;
+  @media (max-width: 700px) {
+    text-align: left;
+  }
 `;
 
 const NoData = styled.p`

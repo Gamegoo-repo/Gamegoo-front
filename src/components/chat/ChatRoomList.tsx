@@ -282,18 +282,188 @@ const ChatRoomList = (props: ChatRoomListProps) => {
     <List onScroll={handleScroll}>
       {chatrooms?.map((room) => {
         return (
-          <ChatRoomItem
-            key={room.uuid}
-            room={room}
-            onChatRoom={(id) => {
-              onChatRoom(id);
-              dispatch(setChatEnterType(1)); // 대화방에서 채팅방 입장
-            }}
-            isMoreBoxOpen={isMoreBoxOpen}
-            handleMoreBoxOpen={handleMoreBoxOpen}
-            moreMenuItems={moreMenuItems}
-            setIsMoreBoxOpen={setIsMoreBoxOpen}
-          />
+          <>
+            <ChatRoomItem
+              key={room.uuid}
+              room={room}
+              onChatRoom={(id) => {
+                onChatRoom(id);
+                dispatch(setChatEnterType(1)); // 대화방에서 채팅방 입장
+              }}
+              isMoreBoxOpen={isMoreBoxOpen}
+              handleMoreBoxOpen={handleMoreBoxOpen}
+              moreMenuItems={moreMenuItems}
+              setIsMoreBoxOpen={setIsMoreBoxOpen}
+            />
+            <ChatRoomItem
+              key={room.uuid}
+              room={room}
+              onChatRoom={(id) => {
+                onChatRoom(id);
+                dispatch(setChatEnterType(1)); // 대화방에서 채팅방 입장
+              }}
+              isMoreBoxOpen={isMoreBoxOpen}
+              handleMoreBoxOpen={handleMoreBoxOpen}
+              moreMenuItems={moreMenuItems}
+              setIsMoreBoxOpen={setIsMoreBoxOpen}
+            />
+            <ChatRoomItem
+              key={room.uuid}
+              room={room}
+              onChatRoom={(id) => {
+                onChatRoom(id);
+                dispatch(setChatEnterType(1)); // 대화방에서 채팅방 입장
+              }}
+              isMoreBoxOpen={isMoreBoxOpen}
+              handleMoreBoxOpen={handleMoreBoxOpen}
+              moreMenuItems={moreMenuItems}
+              setIsMoreBoxOpen={setIsMoreBoxOpen}
+            />
+            <ChatRoomItem
+              key={room.uuid}
+              room={room}
+              onChatRoom={(id) => {
+                onChatRoom(id);
+                dispatch(setChatEnterType(1)); // 대화방에서 채팅방 입장
+              }}
+              isMoreBoxOpen={isMoreBoxOpen}
+              handleMoreBoxOpen={handleMoreBoxOpen}
+              moreMenuItems={moreMenuItems}
+              setIsMoreBoxOpen={setIsMoreBoxOpen}
+            />
+            <ChatRoomItem
+              key={room.uuid}
+              room={room}
+              onChatRoom={(id) => {
+                onChatRoom(id);
+                dispatch(setChatEnterType(1)); // 대화방에서 채팅방 입장
+              }}
+              isMoreBoxOpen={isMoreBoxOpen}
+              handleMoreBoxOpen={handleMoreBoxOpen}
+              moreMenuItems={moreMenuItems}
+              setIsMoreBoxOpen={setIsMoreBoxOpen}
+            />
+            <ChatRoomItem
+              key={room.uuid}
+              room={room}
+              onChatRoom={(id) => {
+                onChatRoom(id);
+                dispatch(setChatEnterType(1)); // 대화방에서 채팅방 입장
+              }}
+              isMoreBoxOpen={isMoreBoxOpen}
+              handleMoreBoxOpen={handleMoreBoxOpen}
+              moreMenuItems={moreMenuItems}
+              setIsMoreBoxOpen={setIsMoreBoxOpen}
+            />
+            <ChatRoomItem
+              key={room.uuid}
+              room={room}
+              onChatRoom={(id) => {
+                onChatRoom(id);
+                dispatch(setChatEnterType(1)); // 대화방에서 채팅방 입장
+              }}
+              isMoreBoxOpen={isMoreBoxOpen}
+              handleMoreBoxOpen={handleMoreBoxOpen}
+              moreMenuItems={moreMenuItems}
+              setIsMoreBoxOpen={setIsMoreBoxOpen}
+            />
+            <ChatRoomItem
+              key={room.uuid}
+              room={room}
+              onChatRoom={(id) => {
+                onChatRoom(id);
+                dispatch(setChatEnterType(1)); // 대화방에서 채팅방 입장
+              }}
+              isMoreBoxOpen={isMoreBoxOpen}
+              handleMoreBoxOpen={handleMoreBoxOpen}
+              moreMenuItems={moreMenuItems}
+              setIsMoreBoxOpen={setIsMoreBoxOpen}
+            />
+            <ChatRoomItem
+              key={room.uuid}
+              room={room}
+              onChatRoom={(id) => {
+                onChatRoom(id);
+                dispatch(setChatEnterType(1)); // 대화방에서 채팅방 입장
+              }}
+              isMoreBoxOpen={isMoreBoxOpen}
+              handleMoreBoxOpen={handleMoreBoxOpen}
+              moreMenuItems={moreMenuItems}
+              setIsMoreBoxOpen={setIsMoreBoxOpen}
+            />
+            <ChatRoomItem
+              key={room.uuid}
+              room={room}
+              onChatRoom={(id) => {
+                onChatRoom(id);
+                dispatch(setChatEnterType(1)); // 대화방에서 채팅방 입장
+              }}
+              isMoreBoxOpen={isMoreBoxOpen}
+              handleMoreBoxOpen={handleMoreBoxOpen}
+              moreMenuItems={moreMenuItems}
+              setIsMoreBoxOpen={setIsMoreBoxOpen}
+            />
+            <ChatRoomItem
+              key={room.uuid}
+              room={room}
+              onChatRoom={(id) => {
+                onChatRoom(id);
+                dispatch(setChatEnterType(1)); // 대화방에서 채팅방 입장
+              }}
+              isMoreBoxOpen={isMoreBoxOpen}
+              handleMoreBoxOpen={handleMoreBoxOpen}
+              moreMenuItems={moreMenuItems}
+              setIsMoreBoxOpen={setIsMoreBoxOpen}
+            />
+            <ChatRoomItem
+              key={room.uuid}
+              room={room}
+              onChatRoom={(id) => {
+                onChatRoom(id);
+                dispatch(setChatEnterType(1)); // 대화방에서 채팅방 입장
+              }}
+              isMoreBoxOpen={isMoreBoxOpen}
+              handleMoreBoxOpen={handleMoreBoxOpen}
+              moreMenuItems={moreMenuItems}
+              setIsMoreBoxOpen={setIsMoreBoxOpen}
+            />
+            <ChatRoomItem
+              key={room.uuid}
+              room={room}
+              onChatRoom={(id) => {
+                onChatRoom(id);
+                dispatch(setChatEnterType(1)); // 대화방에서 채팅방 입장
+              }}
+              isMoreBoxOpen={isMoreBoxOpen}
+              handleMoreBoxOpen={handleMoreBoxOpen}
+              moreMenuItems={moreMenuItems}
+              setIsMoreBoxOpen={setIsMoreBoxOpen}
+            />
+            <ChatRoomItem
+              key={room.uuid}
+              room={room}
+              onChatRoom={(id) => {
+                onChatRoom(id);
+                dispatch(setChatEnterType(1)); // 대화방에서 채팅방 입장
+              }}
+              isMoreBoxOpen={isMoreBoxOpen}
+              handleMoreBoxOpen={handleMoreBoxOpen}
+              moreMenuItems={moreMenuItems}
+              setIsMoreBoxOpen={setIsMoreBoxOpen}
+            />
+            <ChatRoomItem
+              key={room.uuid}
+              room={room}
+              onChatRoom={(id) => {
+                onChatRoom(id);
+                dispatch(setChatEnterType(1)); // 대화방에서 채팅방 입장
+              }}
+              isMoreBoxOpen={isMoreBoxOpen}
+              handleMoreBoxOpen={handleMoreBoxOpen}
+              moreMenuItems={moreMenuItems}
+              setIsMoreBoxOpen={setIsMoreBoxOpen}
+            />
+          </>
         );
       })}
     </List>

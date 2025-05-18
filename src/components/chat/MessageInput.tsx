@@ -96,12 +96,21 @@ const TextareaContainer = styled.div`
   height: 138px;
   width: 100%;
   border-radius: 0 0 20px 20px;
+  @media (max-width: 700px) {
+    border-radius: 0;
+    position: fixed;
+    bottom: 0;
+  }
 `;
 
 const Form = styled.form`
   height: 100%;
   border-radius: 0 0 20px 20px;
   box-shadow: 0 4px 46.7px 0 #0000001a;
+  @media (max-width: 700px) {
+    border-radius: 0;
+    box-shadow: none;
+  }
 `;
 
 const Textarea = styled.textarea`

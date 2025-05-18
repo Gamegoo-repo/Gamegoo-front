@@ -43,9 +43,12 @@ import { blockMember } from "@/api/block/block";
 import Tabs from "./Tabs";
 import { getAccessToken } from "@/utils/storage";
 import useDrag from "@/hooks/useDrag";
+import useMediaQueries from "@/hooks/useMediaQueries";
 
 const Layout = () => {
   const dispatch = useDispatch();
+  const isMobile = useMediaQueries({ breakpoint: 700 });
+
   /* 채팅창 위치 관련 상태 */
   const position = useSelector((state: RootState) => state.chatPosition);
   const activeTab = useSelector((state: RootState) => state.chat.activeTab);
@@ -476,10 +479,13 @@ const Layout = () => {
       <Overlay $top={position.top} $left={position.left}>
         <Wrapper onClick={handleOutsideModalClick}>
           {isChatRoomOpen && isChatUuid !== null ? (
-            <ChatLayout apiType={activeTab} onDragStart={handleDragStart} />
+            <ChatLayout
+              apiType={activeTab}
+              onDragStart={(e) => !isMobile && handleDragStart(e)}
+            />
           ) : (
             <>
-              <Header onMouseDown={handleDragStart}>
+              <Header onMouseDown={(e) => !isMobile && handleDragStart(e)}>
                 <HeaderTitle>채팅</HeaderTitle>
                 <CloseButton
                   onClick={(e) => {
@@ -492,7 +498,11 @@ const Layout = () => {
                   }}
                 >
                   <CloseImage
-                    src="/assets/icons/close.svg"
+                    src={
+                      isMobile
+                        ? "/assets/icons/close_modal.svg"
+                        : "/assets/icons/close.svg"
+                    }
                     width={12}
                     height={12}
                     alt="닫기"
@@ -520,13 +530,15 @@ const Layout = () => {
                       />
                     </div>
                   ) : (
-                    <ChatRoomList
-                      onChatRoom={handleGoToChatRoom}
-                      activeTab={activeTab}
-                      isMoreBoxOpen={isMoreBoxOpen}
-                      setIsMoreBoxOpen={setIsMoreBoxOpen}
-                      handleMoreBoxOpen={handleMoreBoxOpen}
-                    />
+                    <div>
+                      <ChatRoomList
+                        onChatRoom={handleGoToChatRoom}
+                        activeTab={activeTab}
+                        isMoreBoxOpen={isMoreBoxOpen}
+                        setIsMoreBoxOpen={setIsMoreBoxOpen}
+                        handleMoreBoxOpen={handleMoreBoxOpen}
+                      />
+                    </div>
                   )}
                 </Content>
               </ChatMain>
@@ -742,6 +754,11 @@ const Overlay = styled.div<{ $top: string; $left: string }>`
 
   top: calc(${(props) => props.$top});
   left: calc(${(props) => props.$left});
+
+  @media (max-width: 700px) {
+    top: 0;
+    left: 0;
+  }
 `;
 
 const Wrapper = styled.div`
@@ -751,6 +768,14 @@ const Wrapper = styled.div`
   box-shadow: 0 4px 46.7px 0 #0000001a;
   background: ${theme.colors.white};
   border-radius: 20px;
+
+  @media (max-width: 700px) {
+    width: 100vw;
+    height: 100vh;
+    box-shadow: unset;
+    border-radius: 0;
+    display: block;
+  }
 `;
 
 const Header = styled.div`
@@ -761,6 +786,10 @@ const Header = styled.div`
   margin-bottom: 10px;
   user-select: auto;
   cursor: move;
+  @media (max-width: 700px) {
+    cursor: initial;
+    padding: 16px 20px;
+  }
 `;
 
 const HeaderTitle = styled.p`
@@ -782,14 +811,29 @@ const ChatMain = styled.div`
   border-radius: 0 0 20px 20px;
   background: ${theme.colors.white};
   box-shadow: inset 0 0 4.7px 0 #00000026;
+
+  @media (max-width: 700px) {
+    border-radius: 0;
+    box-shadow: none;
+    border-top: 1px solid ${theme.colors.gray300};
+  }
 `;
 
 const Content = styled.main`
   &.friend {
     height: 508px;
+
+    @media (max-width: 700px) {
+      padding: 20px 0 30px 0;
+      height: calc(100vh - 70px - 29px - 68px);
+    }
   }
   &.chat {
     height: 590px;
+    @media (max-width: 700px) {
+      padding-bottom: 30px;
+      height: calc(100vh - 70px - 29px);
+    }
   }
 
   overflow-y: auto;

@@ -194,8 +194,8 @@ const MessageList = (props: MessageListProps) => {
       const previousScrollHeight = chatElement.scrollHeight;
 
       const data = await getChatList({ uuid: chatEnterData.uuid, cursor });
-      const { chatMessageList, nextCursor, hasNext } =
-        data.data.chatMessageList;
+
+      const { chatMessageList, nextCursor, hasNext } = data.data;
 
       // 기존 메시지 목록에 새로운 메시지 추가
       setMessageList((prevMessages) => [...chatMessageList, ...prevMessages]);
@@ -488,6 +488,11 @@ const ChatMain = styled.main`
     display: none;
   }
   scrollbar-width: none;
+  @media (max-width: 700px) {
+    padding: 10px 8px 138px;
+    height: calc(100vh - 54px - 71px);
+    border-top: none;
+  }
 `;
 
 const spin = keyframes`
