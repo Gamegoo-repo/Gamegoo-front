@@ -119,6 +119,7 @@ const MyProfilePage = () => {
             secondaryButtonText="취소"
             onPrimaryClick={handleWithdrawal}
             onSecondaryClick={() => setIsWithdrawalCaution(false)}
+            type="withDrawer"
           >
             <ModalContent>
               <div>
@@ -263,8 +264,12 @@ const P = styled.button`
 `;
 
 const ModalContent = styled.div`
-  padding: 30px 0;
+  padding: 46px 0;
   display: flex;
   flex-direction: column;
   gap: 20px;
+
+  @media (max-width: 700px) {
+    padding: 35px 0;
+  }
 `;
