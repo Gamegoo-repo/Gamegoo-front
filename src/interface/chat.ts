@@ -49,7 +49,7 @@ export interface ChatMessageDto {
 }
 
 export interface ChatMessageList {
-  chatMessageList: [];
+  chatMessageList: ChatMessageDto[] | [];
   listSize: number;
   hasNext: boolean;
   nextCursor: number | null;
