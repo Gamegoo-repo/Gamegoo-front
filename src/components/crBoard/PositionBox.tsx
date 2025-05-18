@@ -207,6 +207,7 @@ const PosiWrap = styled.div`
   @media (max-width: 700px) {
     height: 69px;
     padding: 12px 20px 8px 20px;
+    gap: 12px;
   }
 `;
 

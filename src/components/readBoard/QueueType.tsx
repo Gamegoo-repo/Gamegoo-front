@@ -31,12 +31,20 @@ export default QueueType;
 
 const Queue = styled.div`
   width: 234px;
+
+  @media (max-width: 700px) {
+    width: auto;
+  }
 `;
 
 const Title = styled.p`
   ${(props) => props.theme.fonts.semiBold14};
   color: ${theme.colors.gray800};
   margin-bottom: 6px;
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.medium11};
+  }
 `;
 
 const Type = styled.div`
@@ -46,9 +54,17 @@ const Type = styled.div`
   display: flex;
   align-items: center;
   gap: 2px;
+
+  @media (max-width: 700px) {
+    padding: 8px;
+  }
 `;
 
 const P = styled.p`
   ${(props) => props.theme.fonts.medium16};
   color: ${theme.colors.gray800};
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.bold12};
+  }
 `;

@@ -90,11 +90,19 @@ const Right = styled.div``;
 const WinningTitle = styled.p`
   ${(props) => props.theme.fonts.semiBold14};
   color: ${theme.colors.gray800};
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.medium11};
+  }
 `;
 
 const Percent = styled.p<{ $color: string }>`
   ${(props) => props.theme.fonts.bold16};
   color: ${({ $color }) => $color};
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.bold12};
+  }
 `;
 
 const History = styled.p`

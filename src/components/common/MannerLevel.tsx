@@ -164,9 +164,18 @@ const ClickArea = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  @media (max-width: 700px) {
+    width: 28px;
+    height: 14px;
+  }
 `;
 
 const Text = styled.p`
   ${(props) => props.theme.fonts.bold14};
   color: ${theme.colors.violet300};
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.bold9};
+  }
 `;

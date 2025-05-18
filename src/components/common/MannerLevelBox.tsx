@@ -6,6 +6,7 @@ import { MannerKeywords } from "@/interface/manner";
 import { getMemberMannerKeyword } from "@/api/manner/manner";
 import Image from "next/image";
 import { css } from "styled-components";
+import useMediaQueries from "@/hooks/useMediaQueries";
 
 interface MannerLevelBoxProps {
   memberId: number;
@@ -27,6 +28,8 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
     tailPosition = "center",
     onClose,
   } = props;
+
+  const isMobile = useMediaQueries({ breakpoint: 700 });
 
   const [positiveKeywords, setPositiveKeywords] = useState<MannerKeywords[]>(
     []
@@ -76,8 +79,8 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
         <Title>매너 레벨 LV. {level}</Title>
         <CloseImage
           src="/assets/icons/close_white.svg"
-          width={24}
-          height={24}
+          width={!isMobile ? 24 : 16}
+          height={!isMobile ? 24 : 16}
           alt="close"
           onClick={onClose}
         />
@@ -174,11 +177,12 @@ const Wrapper = styled.div<{
     `}
 
   @media (max-width: 700px) {
+    padding: 20px;
     ${({ $tail, $tailPosition, $top, $right }) =>
       $tail && $tailPosition === "top"
         ? css`
             top: ${$top};
-            right: ${$right};
+            left: 0px;
             transform: none;
           `
         : css`
@@ -199,6 +203,10 @@ const TitleWrap = styled.div`
 const Title = styled.div`
   ${(props) => props.theme.fonts.bold20};
   color: ${theme.colors.white};
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.bold14};
+  }
 `;
 
 const CloseImage = styled(Image)`
@@ -218,6 +226,11 @@ const SubTitle = styled.p`
   ${(props) => props.theme.fonts.semiBold13};
   color: ${theme.colors.white};
   margin-bottom: 16px;
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.medium11};
+    margin-bottom: 6px;
+  }
 `;
 
 const MannerListBox = styled.div`
@@ -228,6 +241,10 @@ const MannerListBox = styled.div`
   margin-bottom: 12px;
   &:last-child {
     margin-bottom: unset;
+  }
+  @media (max-width: 700px) {
+    width: 126px;
+    margin-bottom: 6px;
   }
 `;
 
@@ -245,6 +262,10 @@ const Value = styled.p`
   &.badEmph {
     color: ${theme.colors.red400};
   }
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.bold12};
+  }
 `;
 
 const Type = styled.p`
@@ -259,5 +280,9 @@ const Type = styled.p`
 
   &.badEmph {
     color: ${theme.colors.red400};
+  }
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.bold12};
   }
 `;

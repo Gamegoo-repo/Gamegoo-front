@@ -39,9 +39,17 @@ const Row = styled.div`
 const Account = styled.p`
   ${(props) => props.theme.fonts.bold20};
   color: ${theme.colors.gray700};
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.bold16};
+  }
 `;
 
 const Tag = styled.p`
   ${(props) => props.theme.fonts.semiBold14};
   color: ${theme.colors.gray500};
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.semiBold12};
+  }
 `;

@@ -98,6 +98,11 @@ const Wrapper = styled.div<{
   &::-webkit-scrollbar-track {
     background: transparent;
   }
+
+  @media (max-width: 700px) {
+    padding: 20.5px 20px;
+    border-radius: 8px;
+  }
 `;
 
 const Header = styled.header<{ $type: string }>`
