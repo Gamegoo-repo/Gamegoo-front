@@ -13,8 +13,8 @@ const MoreBoxButton = (props: MoreBoxButtonProps) => {
       <ThreeDotsImage
         onClick={onClick}
         src="/assets/icons/three_dots_button.svg"
-        width={3}
-        height={15}
+        width={16}
+        height={16}
         alt="더보기 버튼"
       />
     </Wrapper>
