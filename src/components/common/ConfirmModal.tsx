@@ -303,5 +303,6 @@ const Button = styled.button<{
   @media (max-width: 700px) {
     padding: 20px 0;
     ${theme.fonts.semiBold14}
+    height: unset
   }
 `;
