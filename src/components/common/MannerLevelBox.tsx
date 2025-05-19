@@ -6,6 +6,7 @@ import { MannerKeywords } from "@/interface/manner";
 import { getMemberMannerKeyword } from "@/api/manner/manner";
 import Image from "next/image";
 import { css } from "styled-components";
+import useMediaQueries from "@/hooks/useMediaQueries";
 
 interface MannerLevelBoxProps {
   memberId: number;
@@ -13,11 +14,22 @@ interface MannerLevelBoxProps {
   top: string;
   right: string;
   tail?: boolean;
+  tailPosition?: "center" | "top";
   onClose?: () => void;
 }
 
 const MannerLevelBox = (props: MannerLevelBoxProps) => {
-  const { memberId, level, top, right, tail = false, onClose } = props;
+  const {
+    memberId,
+    level,
+    top,
+    right,
+    tail = false,
+    tailPosition = "center",
+    onClose,
+  } = props;
+
+  const isMobile = useMediaQueries({ breakpoint: 700 });
 
   const [positiveKeywords, setPositiveKeywords] = useState<MannerKeywords[]>(
     []
@@ -57,13 +69,18 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
   };
 
   return (
-    <Wrapper $top={top} $right={right} $tail={tail}>
+    <Wrapper
+      $top={top}
+      $right={right}
+      $tail={tail}
+      $tailPosition={tailPosition}
+    >
       <TitleWrap>
-        <Title>매너 레벨 {level}</Title>
+        <Title>매너 레벨 LV. {level}</Title>
         <CloseImage
           src="/assets/icons/close_white.svg"
-          width={14}
-          height={14}
+          width={!isMobile ? 24 : 16}
+          height={!isMobile ? 24 : 16}
           alt="close"
           onClick={onClose}
         />
@@ -75,14 +92,14 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
           {positiveKeywords.map((positive) => {
             return (
               <MannerListBox key={positive.mannerKeywordId}>
+                <Type className={positive.count > 0 ? "mannerEmph" : "default"}>
+                  {getMannerText(positive.mannerKeywordId)}
+                </Type>
                 <Value
                   className={positive.count > 0 ? "mannerEmph" : "default"}
                 >
                   {positive.count}
                 </Value>
-                <Type className={positive.count > 0 ? "mannerEmph" : "default"}>
-                  {getMannerText(positive.mannerKeywordId)}
-                </Type>
               </MannerListBox>
             );
           })}
@@ -92,12 +109,12 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
           {negativeKeywords.map((negative) => {
             return (
               <MannerListBox key={negative.mannerKeywordId}>
-                <Value className={negative.count > 0 ? "badEmph" : "default"}>
-                  {negative.count}
-                </Value>
                 <Type className={negative.count > 0 ? "badEmph" : "default"}>
                   {getBadMannerText(negative.mannerKeywordId)}
                 </Type>
+                <Value className={negative.count > 0 ? "badEmph" : "default"}>
+                  {negative.count}
+                </Value>
               </MannerListBox>
             );
           })}
@@ -109,7 +126,12 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
 
 export default MannerLevelBox;
 
-const Wrapper = styled.div<{ $top: string; $right: string; $tail: boolean }>`
+const Wrapper = styled.div<{
+  $top: string;
+  $right: string;
+  $tail: boolean;
+  $tailPosition?: "center" | "top";
+}>`
   position: absolute;
   top: ${({ $top }) => $top};
   right: ${({ $right }) => $right};
@@ -122,15 +144,16 @@ const Wrapper = styled.div<{ $top: string; $right: string; $tail: boolean }>`
   z-index: 100;
   white-space: nowrap;
 
-  ${({ $tail }) =>
+  ${({ $tail, $tailPosition }) =>
     $tail &&
+    $tailPosition === "center" &&
     css`
-      &:after {
+      &::after {
         content: "";
         position: absolute;
         top: -15px;
         left: 50%;
-        transform: translateX(-50%); /* 정중앙으로 이동 */
+        transform: translateX(-50%);
         border-top: 0 solid transparent;
         border-left: 9px solid transparent;
         border-right: 9px solid transparent;
@@ -138,11 +161,35 @@ const Wrapper = styled.div<{ $top: string; $right: string; $tail: boolean }>`
       }
     `}
 
+  ${({ $tail, $tailPosition }) =>
+    $tail &&
+    $tailPosition === "top" &&
+    css`
+      &::after {
+        content: "";
+        position: absolute;
+        top: -9px;
+        left: 20px;
+        border-left: 7px solid transparent;
+        border-right: 7px solid transparent;
+        border-bottom: 9px solid #000000a3;
+      }
+    `}
+
   @media (max-width: 700px) {
     padding: 20px;
-    top: 50%;
-    right: 50%;
-    transform: translate(50%);
+    ${({ $tail, $tailPosition, $top, $right }) =>
+      $tail && $tailPosition === "top"
+        ? css`
+            top: ${$top};
+            left: 0px;
+            transform: none;
+          `
+        : css`
+            top: 50%;
+            right: 50%;
+            transform: translate(50%);
+          `}
   }
 `;
 
@@ -150,12 +197,16 @@ const TitleWrap = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 28px;
 `;
 
 const Title = styled.div`
-  ${(props) => props.theme.fonts.medium16};
+  ${(props) => props.theme.fonts.bold20};
   color: ${theme.colors.white};
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.bold14};
+  }
 `;
 
 const CloseImage = styled(Image)`
@@ -172,25 +223,36 @@ const MannerEvaluations = styled.div`
 const Div = styled.div``;
 
 const SubTitle = styled.p`
-  ${(props) => props.theme.fonts.regular14};
+  ${(props) => props.theme.fonts.semiBold13};
   color: ${theme.colors.white};
-  margin-bottom: 23px;
+  margin-bottom: 16px;
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.medium11};
+    margin-bottom: 6px;
+  }
 `;
 
 const MannerListBox = styled.div`
+  width: 176px;
   display: flex;
   align-items: center;
-  margin-bottom: 21px;
+  justify-content: space-between;
+  margin-bottom: 12px;
   &:last-child {
     margin-bottom: unset;
+  }
+  @media (max-width: 700px) {
+    width: 126px;
+    margin-bottom: 6px;
   }
 `;
 
 const Value = styled.p`
-  ${(props) => props.theme.fonts.medium16};
+  ${(props) => props.theme.fonts.bold16};
 
   &.default {
-    color: ${theme.colors.gray600};
+    color: ${theme.colors.gray500};
   }
 
   &.mannerEmph {
@@ -199,14 +261,17 @@ const Value = styled.p`
 
   &.badEmph {
     color: ${theme.colors.red400};
+  }
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.bold12};
   }
 `;
 
 const Type = styled.p`
-  ${(props) => props.theme.fonts.medium16};
-  margin-left: 11px;
+  ${(props) => props.theme.fonts.bold16};
   &.default {
-    color: ${theme.colors.gray600};
+    color: ${theme.colors.gray500};
   }
 
   &.mannerEmph {
@@ -215,5 +280,9 @@ const Type = styled.p`
 
   &.badEmph {
     color: ${theme.colors.red400};
+  }
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.bold12};
   }
 `;

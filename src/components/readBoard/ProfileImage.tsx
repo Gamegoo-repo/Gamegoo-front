@@ -2,6 +2,7 @@ import styled from "styled-components";
 import Image from "next/image";
 import { setProfileImg } from "@/utils/custom";
 import { getProfileBgColor } from "@/utils/profile";
+import useMediaQueries from "@/hooks/useMediaQueries";
 
 interface ProfileImageProps {
   image: number;
@@ -9,10 +10,15 @@ interface ProfileImageProps {
 
 const ProfileImage = (props: ProfileImageProps) => {
   const { image } = props;
+  const isMobile = useMediaQueries({ breakpoint: 700 });
 
   return (
     <Wrapper $bgColor={getProfileBgColor(image)}>
-      <StyledImage data={setProfileImg(image)} width={51} height={48} />
+      <StyledImage
+        data={setProfileImg(image)}
+        width={!isMobile ? 51 : 34}
+        height={!isMobile ? 48 : 34}
+      />
     </Wrapper>
   );
 };
@@ -26,7 +32,13 @@ const Wrapper = styled.div<{ $bgColor: string }>`
   background: ${(props) => props.$bgColor};
   border-radius: 50%;
   margin-right: 12px;
+
+  @media (max-width: 700px) {
+    width: 48px;
+    height: 48px;
+  }
 `;
+
 const StyledImage = styled.object`
   position: absolute;
   top: 50%;

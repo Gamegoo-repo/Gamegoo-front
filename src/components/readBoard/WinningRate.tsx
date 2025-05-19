@@ -7,28 +7,39 @@ interface WinningRateProps {
   recentGameCount?: number;
 }
 
+const getProgressColor = (completed: number) => {
+  if (completed < 50) return theme.colors.gray700;
+  if (completed < 70) return theme.colors.violet600;
+  return theme.colors.redViolet;
+};
+
 const WinningRate = (props: WinningRateProps) => {
   const { completed, recentGameCount } = props;
+  const progressColor = getProgressColor(completed);
+
   return (
     <>
       <FirstRow>
         <Left>
           <WinningTitle>승률</WinningTitle>
-          <Percent>{!completed ? 0 : completed}%</Percent>
+          <Percent $color={progressColor}>
+            {!completed ? 0 : completed}%
+          </Percent>
         </Left>
         <Right>
           {!!history && (
             <History>
-              글 작성 시점 최근 {recentGameCount === null ? 0 : recentGameCount}
+              최근 {recentGameCount === null ? 0 : recentGameCount}
               게임
             </History>
           )}
         </Right>
       </FirstRow>
-      <SecondRow $completed={completed}>
+      <SecondRow $completed={completed} $color={progressColor}>
         <ProgressBar
           completed={completed}
           maxCompleted={100}
+          height="12px"
           className="wrapper"
           barContainerClassName="container"
           completedClassName="barCompleted"
@@ -48,16 +59,18 @@ const FirstRow = styled.div`
   margin-bottom: 6px;
 `;
 
-const SecondRow = styled.div<{ $completed: number }>`
+const SecondRow = styled.div<{ $completed: number; $color: string }>`
   .wrapper {
-    height: 20px;
+    height: 12px;
   }
   .container {
-    background: linear-gradient(90deg, #ff7474 63.45%, #ff5252 100%);
+    height: 12px;
+    background: ${theme.colors.gray300};
     border-radius: 11px;
   }
   .barCompleted {
-    background: linear-gradient(90deg, #342688 0, #5a42ee 100%);
+    height: 12px;
+    background: ${({ $color }) => $color};
     border-radius: 11px;
     width: ${({ $completed }) => $completed || 0}%;
   }
@@ -69,22 +82,30 @@ const SecondRow = styled.div<{ $completed: number }>`
 const Left = styled.div`
   display: flex;
   align-items: center;
-  gap: 11px;
+  gap: 4px;
 `;
 
 const Right = styled.div``;
 
 const WinningTitle = styled.p`
   ${(props) => props.theme.fonts.semiBold14};
-  color: #222222;
+  color: ${theme.colors.gray800};
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.medium11};
+  }
 `;
 
-const Percent = styled.p`
-  ${(props) => props.theme.fonts.semiBold14};
-  color: ${theme.colors.violet600};
+const Percent = styled.p<{ $color: string }>`
+  ${(props) => props.theme.fonts.bold16};
+  color: ${({ $color }) => $color};
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.bold12};
+  }
 `;
 
 const History = styled.p`
   ${(props) => props.theme.fonts.medium11};
-  color: ${theme.colors.gray400};
+  color: ${theme.colors.gray500};
 `;

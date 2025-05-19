@@ -34,6 +34,9 @@ const colors = {
   green500: "#69D180",
   green600: "#41BF5D",
   green900: "#165524",
+
+  // 승률 progressbar
+  redViolet: "#CA1FCF",
 } as const;
 
 interface Font {

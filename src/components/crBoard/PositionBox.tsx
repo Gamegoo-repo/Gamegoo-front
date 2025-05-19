@@ -113,8 +113,8 @@ const PositionBox = (props: PositionBoxProps) => {
                         ? positionValue.main ?? "ANY"
                         : positionValue.sub ?? "ANY"
                     )}
-                    width={!isMobile ? 55 : 22}
-                    height={!isMobile ? 40 : 22}
+                    width={!isMobile ? 48 : 32}
+                    height={!isMobile ? 48 : 32}
                     alt="포지션"
                     onClick={() => handlePosition(type)}
                   />
@@ -142,8 +142,8 @@ const PositionBox = (props: PositionBoxProps) => {
                   {posi ? (
                     <Image
                       src={setPositionImg(posi)}
-                      width={!isMobile ? 48 : 22}
-                      height={!isMobile ? 40 : 22}
+                      width={!isMobile ? 48 : 32}
+                      height={!isMobile ? 48 : 32}
                       alt="포지션"
                       onClick={() => handlePosition("want", index)}
                     />
@@ -191,7 +191,7 @@ const Positions = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
-  gap: 12px;
+  gap: 8px;
 `;
 
 const PosiWrap = styled.div`
@@ -207,6 +207,7 @@ const PosiWrap = styled.div`
   @media (max-width: 700px) {
     height: 69px;
     padding: 12px 20px 8px 20px;
+    gap: 12px;
   }
 `;
 
@@ -219,7 +220,6 @@ const Posi = styled.div<{ $isWantP: boolean }>`
 
   @media (max-width: 700px) {
     font-size: ${theme.fonts.medium11};
-    gap: 9px;
     ${({ $isWantP }) =>
       $isWantP &&
       css`
@@ -238,7 +238,6 @@ const PosiRow = styled.div`
 `;
 
 const PosiItem = styled.div`
-  height: 48px;
   display: flex;
   justify-content: center;
   align-items: center;

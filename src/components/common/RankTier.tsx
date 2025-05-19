@@ -10,17 +10,19 @@ interface RankTierProps {
   tier: string;
   rank?: number;
   direct?: string;
+  color?: string;
+  tierFontSize?: string;
 }
 
 const RankTier = (props: RankTierProps) => {
-  const { type, tier, rank, direct = "column" } = props;
+  const { type, tier, rank, direct = "column", color, tierFontSize } = props;
 
   return (
     <Container $direct={direct}>
-      <RankName $direct={direct}>
+      <RankName $direct={direct} $color={color}>
         {type === "solo" ? "솔로랭크" : "자유랭크"}
       </RankName>
-      <Tier $direct={direct}>
+      <Tier $direct={direct} $color={color} $fontSize={tierFontSize}>
         <TierImage
           data={`/assets/images/tier/${
             toLowerCaseString(tier) || "unranked"
@@ -50,8 +52,8 @@ const Container = styled.div<{ $direct: string }>`
     `}
 `;
 
-const RankName = styled.div<{ $direct: string }>`
-  color: ${theme.colors.gray600};
+const RankName = styled.div<{ $direct: string; $color?: string }>`
+  color: ${({ $color, theme }) => ($color ? $color : theme.colors.gray600)};
   ${theme.fonts.semiBold14}
 
   ${({ $direct }) =>
@@ -64,12 +66,16 @@ const RankName = styled.div<{ $direct: string }>`
   }
 `;
 
-const Tier = styled.div<{ $direct: string }>`
+const Tier = styled.div<{
+  $direct: string;
+  $color?: string;
+  $fontSize?: string;
+}>`
   display: flex;
   align-items: center;
   gap: 4px;
-  color: ${theme.colors.gray700};
-  ${theme.fonts.bold25}
+  color: ${({ $color, theme }) => ($color ? $color : theme.colors.gray700)};
+  ${({ $fontSize }) => ($fontSize ? $fontSize : theme.fonts.bold25)};
 
   ${({ $direct }) =>
     $direct === "row" &&
@@ -77,7 +83,7 @@ const Tier = styled.div<{ $direct: string }>`
       color: ${theme.colors.gray600};
       ${theme.fonts.bold14}
     `}
-    @media (max-width: 700px) {
+  @media (max-width: 700px) {
     ${theme.fonts.bold14}
   }
 `;

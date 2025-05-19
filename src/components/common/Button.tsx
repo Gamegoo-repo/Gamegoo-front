@@ -111,6 +111,11 @@ const StyledButton = styled.button<{ $width?: string; $borderradius?: string }>`
     color: ${theme.colors.white};
     ${(props) => props.theme.fonts.bold14};
   }
+
+  @media (max-width: 700px) {
+    height: 45px;
+    border-radius: 6px;
+  }
 `;
 
 const Icon = styled(Image)``;

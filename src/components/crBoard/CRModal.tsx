@@ -23,8 +23,8 @@ const CRModal = (props: BoardModalProps) => {
             <CloseImage
               onClick={onClose}
               src="/assets/icons/close.svg"
-              width={15}
-              height={15}
+              width={20}
+              height={20}
               alt="close button"
             />
           </CloseButton>
@@ -97,6 +97,11 @@ const Wrapper = styled.div<{
   }
   &::-webkit-scrollbar-track {
     background: transparent;
+  }
+
+  @media (max-width: 700px) {
+    padding: 20.5px 20px;
+    border-radius: 8px;
   }
 `;
 

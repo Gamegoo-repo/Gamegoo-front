@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import { useEffect, useRef } from "react";
+import { css } from "styled-components";
 
 interface MoreBoxProps {
   items: MoreBoxMenuItems[];
@@ -60,6 +61,14 @@ const MenuWrapper = styled.div<{
   box-shadow: 0 0 21.3px 0 #00000026;
   background: ${theme.colors.white};
   border-radius: 10px;
+
+  @media (max-width: 700px) {
+    ${(props) =>
+      props.$left !== undefined &&
+      css`
+        left: ${props.$left - 300}px;
+      `}
+  }
 `;
 
 const MenuItem = styled.div`
