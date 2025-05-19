@@ -399,6 +399,7 @@ const Right = styled.div`
     grid-column: 2;
     grid-row: 1;
     justify-self: end;
+    margin-right: 20px;
   }
 `;
 
