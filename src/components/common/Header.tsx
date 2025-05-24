@@ -399,6 +399,7 @@ const Right = styled.div`
     grid-column: 2;
     grid-row: 1;
     justify-self: end;
+    margin-right: 20px;
   }
 `;
 
@@ -434,9 +435,16 @@ const HeaderProfileImg = styled.object`
 `;
 
 const Login = styled.button`
-  color: ${theme.colors.violet600};
-  ${(props) => props.theme.fonts.bold14}
+  background: ${theme.colors.violet600};
+  color: ${theme.colors.white};
+  padding: 8px 24px;
+  border-radius: 6px;
+  ${(props) => props.theme.fonts.bold18}
   @media screen and (max-width: 700px) {
+    background: none;
+    color: ${theme.colors.violet600};
+    ${(props) => props.theme.fonts.bold14}
+    padding: 0;
     margin-right: 20px;
     grid-column: 2;
     grid-row: 1;

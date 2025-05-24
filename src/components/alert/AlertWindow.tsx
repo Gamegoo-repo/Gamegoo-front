@@ -9,6 +9,7 @@ import {
   patchReadNotification,
 } from "@/api/notification/notification";
 import { Notification } from "@/types/notification/notification";
+import useMediaQueries from "@/hooks/useMediaQueries";
 
 interface AlertWindowProps {
   countFunc: () => void;
@@ -16,6 +17,8 @@ interface AlertWindowProps {
   alertButtonRef: React.RefObject<HTMLButtonElement>;
 }
 const AlertWindow = (props: AlertWindowProps) => {
+  const isMobile = useMediaQueries({ breakpoint: 700 });
+
   const router = useRouter();
   const { countFunc, onClose, alertButtonRef } = props;
 
@@ -130,19 +133,34 @@ const AlertWindow = (props: AlertWindowProps) => {
           <Header>
             <Top>
               <HeaderTitle>알림</HeaderTitle>
-              <AllButton onClick={handleShowAll}>
-                전체보기
-                <Image
-                  src="/assets/icons/move.svg"
-                  width={11}
-                  height={11}
-                  alt="move button"
-                />
-              </AllButton>
+              {isMobile ? (
+                <>
+                  <button>
+                    <Image
+                      src="/assets/icons/close_modal.svg"
+                      width={16}
+                      height={16}
+                      alt="닫기"
+                      onClick={onClose}
+                      style={{ cursor: "pointer" }}
+                    />
+                  </button>
+                </>
+              ) : (
+                <AllButton onClick={handleShowAll}>
+                  전체보기
+                  <Image
+                    src="/assets/icons/move.svg"
+                    width={11}
+                    height={11}
+                    alt="move button"
+                  />
+                </AllButton>
+              )}
             </Top>
-            <TabContainer>
+            {/* <TabContainer>
               <Tab>받은 알림</Tab>
-            </TabContainer>
+            </TabContainer> */}
           </Header>
           <Background onScroll={handleScroll}>
             {notiList.length > 0 ? (
@@ -178,6 +196,15 @@ const Overlay = styled.div`
   top: 60px;
   right: 80px;
   z-index: 100;
+  @media (max-width: 700px) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100vw;
+    height: unset;
+  }
 `;
 
 const Wrapper = styled.div`
@@ -188,19 +215,30 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   box-shadow: 0 4px 46.7px 0 #0000001a;
+  @media (max-width: 700px) {
+    width: 100%;
+    height: 100%;
+    border-radius: 0px;
+  }
 `;
 
 const Header = styled.header`
   border-radius: 20px 20px 0 0;
   background: ${theme.colors.white};
   box-shadow: 0 -1px 10.7px 0 #00000026;
+  @media (max-width: 700px) {
+    border-radius: 0px;
+    background: ${theme.colors.gray100};
+  }
 `;
 
 const Top = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 20px 23px;
-  margin-bottom: 36px;
+  padding: 25px 23px 40px;
+  @media (max-width: 700px) {
+    padding: 17px 20px;
+  }
 `;
 
 const HeaderTitle = styled.p`
@@ -242,7 +280,7 @@ const Tab = styled.button`
 `;
 
 const Background = styled.div`
-  height: 435px;
+  height: 461px;
   display: flex;
   flex-direction: column;
   gap: 11px;
@@ -262,6 +300,11 @@ const Background = styled.div`
   &::-webkit-scrollbar-track {
     border-radius: 66px;
     background: transparent;
+  }
+
+  @media (max-width: 700px) {
+    height: calc(100vh - 64px);
+    border-radius: 0;
   }
 `;
 
