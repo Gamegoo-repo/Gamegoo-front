@@ -7,6 +7,7 @@ import PasswordModal from "@/components/mypage/profile/PasswordModal";
 import { useEffect, useState } from "react";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import { setUserMike, setUserProfile } from "@/redux/slices/userSlice";
+import useMediaQueries from "@/hooks/useMediaQueries";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { formatDate } from "@/utils/custom";
@@ -16,10 +17,12 @@ import { clearTokens } from "@/utils/storage";
 import { useRouter } from "next/navigation";
 import { getMyProfile } from "@/api/user/profile/get";
 import { deleteMember } from "@/api/user/delete";
+import Image from "next/image";
 
 const passwordLength = 10;
 
 const MyProfilePage = () => {
+  const isMobile = useMediaQueries({ breakpoint: 700 });
   const router = useRouter();
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user);
@@ -79,10 +82,22 @@ const MyProfilePage = () => {
     <Wrapper>
       <MyProfileContent>
         <Profile>
-          <Title>내 프로필</Title>
+          <Title>
+            내 정보
+            <RiotInfo>
+              <Image
+                src={"/assets/icons/riot_red.svg"}
+                width={!isMobile ? 16 : 10}
+                height={!isMobile ? 16 : 9}
+                alt="riot"
+              />
+              라이엇 연동 완료
+            </RiotInfo>
+          </Title>
+
           <MyPageProfile user={user} />
         </Profile>
-        <Private>
+        {/* <Private>
           <Title>
             개인정보
             {user.updatedAt && (
@@ -109,7 +124,7 @@ const MyProfilePage = () => {
               <PasswordModal onClose={() => setIsPasswordModify(false)} />
             )}
           </PrivateContent>
-        </Private>
+        </Private> */}
         <P onClick={() => setIsWithdrawalCaution(true)}>회원탈퇴</P>
         {/* 회원탈퇴 경고 */}
         {isWithdrawalCaution && (
@@ -165,6 +180,9 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 140px;
+  @media (max-width: 700px) {
+    padding: 30px 20px;
+  }
 `;
 
 const MyProfileContent = styled.div`
@@ -172,6 +190,9 @@ const MyProfileContent = styled.div`
   max-width: 1440px;
   width: 100%;
   padding: 0 80px;
+  @media (max-width: 700px) {
+    padding: 0;
+  }
 `;
 
 const Profile = styled.header`
@@ -181,6 +202,9 @@ const Profile = styled.header`
   width: 100%;
   gap: 26px;
   margin-bottom: 53px;
+  @media (max-width: 700px) {
+    margin-bottom: 28px;
+  }
 `;
 
 const Private = styled.header`
@@ -195,72 +219,99 @@ const Private = styled.header`
 
 const Title = styled.div`
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   gap: 22px;
   ${(props) => props.theme.fonts.bold25};
   color: ${theme.colors.gray800};
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.semiBold18};
+    gap: 9px;
+  }
 `;
 
-const Small = styled.div`
-  ${(props) => props.theme.fonts.bold11};
-  color: ${theme.colors.gray400};
-  margin-bottom: 5px;
-`;
-
-const PrivateContent = styled(Private)`
-  width: 100%;
-  gap: 31px;
-`;
-
-const Box = styled.div`
-  width: 100%;
-`;
-
-const Label = styled.button`
-  color: ${theme.colors.gray600};
-  ${(props) => props.theme.fonts.bold14};
-  margin-bottom: 13px;
-`;
-
-const Email = styled.div`
-  width: 100%;
-  height: 58px;
-  border-radius: 9px;
-  padding: 15px 20px;
-  border: 1px solid ${theme.colors.gray200};
-  color: ${theme.colors.gray800};
-  ${(props) => props.theme.fonts.regular18};
-`;
-const Row = styled.div`
-  width: 100%;
+const RiotInfo = styled.span`
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 6px;
+  ${(props) => props.theme.fonts.bold13};
+  color: ${theme.colors.red600};
+  border: 1px solid ${theme.colors.red600};
+  padding: 4px 12px;
+  border-radius: 999px;
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.bold11};
+    padding: 4px 8px;
+  }
 `;
 
-const Password = styled.button`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 8px;
-`;
+// const Small = styled.div`
+//   ${(props) => props.theme.fonts.bold11};
+//   color: ${theme.colors.gray400};
+//   margin-bottom: 5px;
+// `;
 
-const Circle = styled.div`
-  width: 5px;
-  height: 5px;
-  border-radius: 10px;
-  background: ${theme.colors.gray700};
-`;
+// const PrivateContent = styled(Private)`
+//   width: 100%;
+//   gap: 31px;
+// `;
 
-const Modify = styled.button`
-  color: ${theme.colors.violet600};
-  ${(props) => props.theme.fonts.bold12};
-`;
+// const Box = styled.div`
+//   width: 100%;
+// `;
+
+// const Label = styled.button`
+//   color: ${theme.colors.gray600};
+//   ${(props) => props.theme.fonts.bold14};
+//   margin-bottom: 13px;
+// `;
+
+// const Email = styled.div`
+//   width: 100%;
+//   height: 58px;
+//   border-radius: 9px;
+//   padding: 15px 20px;
+//   border: 1px solid ${theme.colors.gray200};
+//   color: ${theme.colors.gray800};
+//   ${(props) => props.theme.fonts.regular18};
+// `;
+// const Row = styled.div`
+//   width: 100%;
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+// `;
+
+// const Password = styled.button`
+//   display: flex;
+//   justify-content: flex-start;
+//   align-items: center;
+//   gap: 8px;
+// `;
+
+// const Circle = styled.div`
+//   width: 5px;
+//   height: 5px;
+//   border-radius: 10px;
+//   background: ${theme.colors.gray700};
+// `;
+
+// const Modify = styled.button`
+//   color: ${theme.colors.violet600};
+//   ${(props) => props.theme.fonts.bold12};
+// `;
 
 const P = styled.button`
   ${(props) => props.theme.fonts.bold14};
-  color: ${theme.colors.gray500};
-  text-decoration-line: underline;
+  color: ${theme.colors.red600};
+  background: ${theme.colors.red100};
+  border-radius: 4px;
+  padding: 12px 20px;
+  @media (max-width: 700px) {
+    border-radius: 8px;
+    padding: 16px;
+  }
 `;
 
 const ModalContent = styled.div`

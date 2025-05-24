@@ -46,9 +46,11 @@ const StyledBox = styled.div<{ $shape: ShapeType; $profiletype?: profileType }>`
   ${(props) =>
     props.$profiletype === "mini" &&
     css`
-      height: 33px;
+      height: 29px;
       padding: 6px 16px;
-      ${(props) => props.theme.fonts.semiBold14}
+      ${(props) => props.theme.fonts.semiBold13}
+      background: ${theme.colors.white};
+      color: ${theme.colors.gray700};
       @media (max-width: 700px) {
         ${theme.fonts.semiBold13};
       }

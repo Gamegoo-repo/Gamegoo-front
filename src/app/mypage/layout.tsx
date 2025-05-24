@@ -3,15 +3,20 @@
 import MypageTab from "@/components/mypage/MypageTab";
 import React from "react";
 import styled from "styled-components";
+import useMediaQueries from "@/hooks/useMediaQueries";
 
 const layout = ({ children }: { children: React.ReactNode }) => {
-  return (
+  const isMobile = useMediaQueries({ breakpoint: 700 });
+
+  return !isMobile ? (
     <Section>
       <Wrapper>
         <MypageTab />
         {children}
       </Wrapper>
     </Section>
+  ) : (
+    <Section>{children}</Section>
   );
 };
 

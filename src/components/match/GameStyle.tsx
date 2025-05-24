@@ -122,7 +122,7 @@ const GameStyle = (props: GameStyleProps) => {
             />
           ))}
           {profileType !== "other" && (
-            <Div>
+            <Div $profileType={profileType}>
               <AddGameStyle
                 $profileType={profileType}
                 onClick={handleStylePopup}
@@ -177,8 +177,10 @@ export default GameStyle;
 const Style = styled.div`
   width: 100%;
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  flex-direction: column;
+  gap: 28px;
+  /* justify-content: space-between;
+  align-items: flex-start; */
 `;
 
 const LeftLabel = styled.div<{ $profileType: profileType }>`
@@ -193,6 +195,7 @@ const LeftLabel = styled.div<{ $profileType: profileType }>`
     $profileType === "mini" &&
     css`
       gap: 6px;
+      ${theme.fonts.medium14};
     `}
   @media (max-width: 700px) {
     ${theme.fonts.medium11};
@@ -218,13 +221,28 @@ const GameBox = styled.div<{ $profileType: profileType }>`
   }
 `;
 
-const Div = styled.div`
+const Div = styled.div<{ $profileType: profileType }>`
   width: 56px;
   height: 36px;
   border-radius: 25px;
+
+  ${({ $profileType }) =>
+    $profileType === "mini" &&
+    css`
+      width: fit-content;
+      height: fit-content;
+    `}
+
   @media (max-width: 700px) {
     width: 38px;
     height: 29px;
+
+    ${({ $profileType }) =>
+      $profileType === "mini" &&
+      css`
+        width: fit-content;
+        height: fit-content;
+      `}
   }
 `;
 
@@ -250,9 +268,9 @@ const AddGameStyle = styled.button<{ $profileType: profileType }>`
   ${({ $profileType }) =>
     $profileType === "mini" &&
     css`
-      width: 32px;
-      height: 25px;
-      padding: 5px 17px;
+      width: 44px;
+      height: 29px;
+      padding: 5px 15px;
       font-size: 12px;
     `}
 
