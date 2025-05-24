@@ -11,15 +11,24 @@ interface RankTierProps {
   rank?: number;
   direct?: string;
   color?: string;
+  rankFontSize?: string;
   tierFontSize?: string;
 }
 
 const RankTier = (props: RankTierProps) => {
-  const { type, tier, rank, direct = "column", color, tierFontSize } = props;
+  const {
+    type,
+    tier,
+    rank,
+    direct = "column",
+    color,
+    rankFontSize,
+    tierFontSize,
+  } = props;
 
   return (
     <Container $direct={direct}>
-      <RankName $direct={direct} $color={color}>
+      <RankName $direct={direct} $color={color} $fontSize={rankFontSize}>
         {type === "solo" ? "솔로랭크" : "자유랭크"}
       </RankName>
       <Tier $direct={direct} $color={color} $fontSize={tierFontSize}>
@@ -52,16 +61,20 @@ const Container = styled.div<{ $direct: string }>`
     `}
 `;
 
-const RankName = styled.div<{ $direct: string; $color?: string }>`
+const RankName = styled.div<{
+  $direct: string;
+  $color?: string;
+  $fontSize?: string;
+}>`
   color: ${({ $color, theme }) => ($color ? $color : theme.colors.gray600)};
-  ${theme.fonts.semiBold14}
+  ${({ $fontSize }) => ($fontSize ? $fontSize : theme.fonts.semiBold14)};
 
   ${({ $direct }) =>
     $direct === "row" &&
     css`
       ${theme.fonts.bold13}
     `}
-    @media (max-width: 700px) {
+  @media (max-width: 700px) {
     ${theme.fonts.medium11}
   }
 `;

@@ -208,10 +208,10 @@ const Header = () => {
               ref={myPageDivRef}
               className="profile"
               onClick={() => {
-                if (isMobile) {
-                  router.push("/mypage/profile");
-                  return;
-                }
+                // if (isMobile) {
+                //   router.push("/mypage/profile");
+                //   return;
+                // }
 
                 setIsMyPage(!isMyPage);
               }}
@@ -251,6 +251,22 @@ const Header = () => {
       )}
       {isMyPage && (
         <MyPageModal ref={myPageRef}>
+          {isMobile && (
+            <MyPageModalHeader>
+              <MyPageModalHeaderTitle>내정보</MyPageModalHeaderTitle>
+              <button>
+                <Image
+                  src="/assets/icons/close_modal.svg"
+                  width={16}
+                  height={16}
+                  alt="닫기"
+                  onClick={() => setIsMyPage(false)}
+                  style={{ cursor: "pointer" }}
+                />
+              </button>
+            </MyPageModalHeader>
+          )}
+
           <MyProfile>
             {profileImg && (
               <ProfileImgWrapper $bgColor={getProfileBgColor(profileImg)}>
@@ -462,6 +478,29 @@ const MyPageModal = styled.div`
   top: 60px;
   right: 80px;
   z-index: 100;
+
+  @media (max-width: 700px) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    box-shadow: none;
+  }
+`;
+
+const MyPageModalHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+`;
+
+const MyPageModalHeaderTitle = styled.div`
+  ${theme.fonts.bold20}
+  ${theme.colors.gray800}
 `;
 
 const MyProfile = styled.div`
