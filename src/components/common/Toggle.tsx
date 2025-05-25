@@ -55,9 +55,9 @@ const ToggleContainer = styled.div<{
 
   > .toggle-container {
     width: ${({ $type }) =>
-      $type === "board" ? "67px" : $type === "mini" ? "62px" : "87px"};
+      $type === "board" ? "67px" : $type === "mini" ? "60px" : "87px"};
     height: ${({ $type }) =>
-      $type === "board" ? "37px" : $type === "mini" ? "32px" : "46px"};
+      $type === "board" ? "37px" : $type === "mini" ? "34px" : "46px"};
     border-radius: 49px;
     background-color: ${theme.colors.violet400};
     /* ${({ disabled }) =>

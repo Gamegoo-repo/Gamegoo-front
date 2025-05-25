@@ -3,14 +3,19 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Post from "@/components/mypage/post/Post";
+import MoPost from "@/components/mypage/post/MoPost";
 import { useEffect, useState } from "react";
 import Pagination from "@/components/common/Pagination";
 import { deletePost, getMyPost } from "@/api/board/board";
 import { RootState } from "@/redux/store";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { MyBoardDetail } from "@/types/api/board/board";
+import useMediaQueries from "@/hooks/useMediaQueries";
+import { getMyProfile } from "@/api/user/profile/get";
+import { setUserProfile } from "@/redux/slices/userSlice";
 
 const MyPostPage = () => {
+  const isMobile = useMediaQueries({ breakpoint: 700 });
   const [currentPage, setCurrentPage] = useState(1);
   const [postList, setPostList] = useState<MyBoardDetail[]>([]);
   const [hasMoreItems, setHasMoreItems] = useState(true);
@@ -20,7 +25,9 @@ const MyPostPage = () => {
   const ITEMS_PER_PAGE = 10;
 
   const currentPost = useSelector((state: RootState) => state.post.currentPost);
+  const user = useSelector((state: RootState) => state.user);
 
+  const dispatch = useDispatch();
   useEffect(() => {
     const fetchGetMyPost = async () => {
       const response = await getMyPost(currentPage);
@@ -35,6 +42,19 @@ const MyPostPage = () => {
     fetchGetMyPost();
   }, [currentPage, currentPost]);
 
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await getMyProfile();
+        console.log("Fetched profile:", response);
+        dispatch(setUserProfile(response.data));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    isMobile && fetchProfile();
+  }, [isMobile]);
   const handleDeletePost = async (boardId: number) => {
     await deletePost(boardId);
     setPostList((prevPosts) =>
@@ -63,47 +83,80 @@ const MyPostPage = () => {
     <Wrapper>
       <MyPostContent>
         <PostPage>
-          <Top>내가 작성한 글</Top>
-          <Columns>
-            <Left>소환사명</Left>
-            <Center>티어</Center>
-            <Center>메모</Center>
-            <Center>등록일시</Center>
-          </Columns>
+          {isMobile && postList.length === 0 ? (
+            <></>
+          ) : (
+            <Top>내가 작성한 글</Top>
+          )}
+
           {postList.length > 0 ? (
-            <PostList>
-              {postList.map((item, index) => (
-                <Post
-                  key={item.boardId}
-                  boardId={item.boardId}
-                  memberId={item.memberId}
-                  profileImage={item.profileImage}
-                  gameName={item.gameName}
-                  tag={item.tag}
-                  tier={item.tier || ""}
-                  rank={item.rank || 0}
-                  contents={item.contents}
-                  createdAt={item.createdAt}
-                  bumpTime={item.bumpTime}
-                  boardNumber={index + 1}
-                  onDeletePost={handleDeletePost}
+            !isMobile ? (
+              <>
+                <Columns>
+                  <Left>소환사</Left>
+                  <Center>티어</Center>
+                  <Center>메모</Center>
+                  <Center>등록일시</Center>
+                </Columns>
+                <PostList>
+                  {postList.map((item, index) => (
+                    <Post
+                      key={item.boardId}
+                      boardId={item.boardId}
+                      memberId={item.memberId}
+                      profileImage={item.profileImage}
+                      gameName={item.gameName}
+                      tag={item.tag}
+                      tier={item.tier || ""}
+                      rank={item.rank || 0}
+                      contents={item.contents}
+                      createdAt={item.createdAt}
+                      bumpTime={item.bumpTime}
+                      boardNumber={index + 1}
+                      onDeletePost={handleDeletePost}
+                    />
+                  ))}
+                </PostList>
+
+                <Pagination
+                  currentPage={currentPage}
+                  itemsPerPage={ITEMS_PER_PAGE}
+                  hasMoreItems={hasMoreItems}
+                  pageButtonCount={pageButtonCount}
+                  totalItems={totalCount}
+                  totalPage={totalPage}
+                  onPrevPage={handlePrevPage}
+                  onNextPage={handleNextPage}
+                  onPageClick={handlePageClick}
                 />
-              ))}
-            </PostList>
+              </>
+            ) : (
+              <>
+                <MoPostList>
+                  {postList.map((item, index) => (
+                    <MoPost
+                      key={item.boardId}
+                      user={user}
+                      boardId={item.boardId}
+                      memberId={item.memberId}
+                      profileImage={item.profileImage}
+                      gameName={item.gameName}
+                      tag={item.tag}
+                      tier={item.tier || ""}
+                      rank={item.rank || 0}
+                      contents={item.contents}
+                      createdAt={item.createdAt}
+                      bumpTime={item.bumpTime}
+                      boardNumber={index + 1}
+                      onDeletePost={handleDeletePost}
+                    />
+                  ))}
+                </MoPostList>
+              </>
+            )
           ) : (
             <NoData>내가 작성한 글이 없습니다.</NoData>
           )}
-          <Pagination
-            currentPage={currentPage}
-            itemsPerPage={ITEMS_PER_PAGE}
-            hasMoreItems={hasMoreItems}
-            pageButtonCount={pageButtonCount}
-            totalItems={totalCount}
-            totalPage={totalPage}
-            onPrevPage={handlePrevPage}
-            onNextPage={handleNextPage}
-            onPageClick={handlePageClick}
-          />
         </PostPage>
       </MyPostContent>
     </Wrapper>
@@ -117,12 +170,18 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 140px;
+  @media (max-width: 700px) {
+    padding: 30px 20px;
+  }
 `;
 
 const MyPostContent = styled.div`
   max-width: 1440px;
   width: 100%;
-  padding: 0 80px;
+  padding-left: 191px;
+  @media (max-width: 700px) {
+    padding: 0;
+  }
 `;
 
 const PostPage = styled.header`
@@ -138,10 +197,12 @@ const Top = styled.div`
   display: flex;
   justify-content: space-between;
   color: ${theme.colors.gray700};
-  ${(props) => props.theme.fonts.regular25};
-  padding-bottom: 13px;
-  margin-bottom: 20px;
-  border-bottom: 1px solid ${theme.colors.gray300};
+  ${(props) => props.theme.fonts.bold25};
+  margin-bottom: 38px;
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.semiBold18}
+    margin-bottom: 13px;
+  }
 `;
 
 const Columns = styled.div`
@@ -184,4 +245,12 @@ const PostList = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 60px;
+`;
+
+const MoPostList = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 60px;
+  gap: 16px;
 `;

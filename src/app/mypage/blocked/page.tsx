@@ -7,8 +7,11 @@ import { useEffect, useState } from "react";
 import { getBlockList } from "@/api/block/get";
 import { BlockList } from "@/types/friend/blockList";
 import BlockedBox from "@/components/mypage/blocked/BlockedBox";
+import useMediaQueries from "@/hooks/useMediaQueries";
 
 const MyBlockedPage = () => {
+  const isMobile = useMediaQueries({ breakpoint: 700 });
+
   const [currentPage, setCurrentPage] = useState(1);
   const [myBlockedList, setMyBlockedList] = useState<BlockList[]>([]);
   const [totalPages, setTotalPages] = useState(0);
@@ -56,33 +59,40 @@ const MyBlockedPage = () => {
     <Wrapper>
       <MyBlockedContent>
         <Blocked>
-          <Top>차단목록</Top>
+          {isMobile && myBlockedList.length === 0 ? (
+            <></>
+          ) : (
+            <Top>차단 목록</Top>
+          )}
+
           {myBlockedList.length > 0 ? (
-            <BlockedList>
-              {myBlockedList.map((data) => (
-                <BlockedBox
-                  key={data.memberId}
-                  memberId={data.memberId}
-                  profileImg={data.profileImg}
-                  name={data.name}
-                  blind={data.blind}
-                />
-              ))}
-            </BlockedList>
+            <>
+              <BlockedList>
+                {myBlockedList.map((data) => (
+                  <BlockedBox
+                    key={data.memberId}
+                    memberId={data.memberId}
+                    profileImg={data.profileImg}
+                    name={data.name}
+                    blind={data.blind}
+                  />
+                ))}
+              </BlockedList>
+              <Pagination
+                currentPage={currentPage}
+                totalItems={totalItems}
+                totalPage={totalPages}
+                itemsPerPage={itemsPerPage}
+                pageButtonCount={pageButtonCount}
+                hasMoreItems={currentPage < totalPages}
+                onPrevPage={handlePrevPage}
+                onNextPage={handleNextPage}
+                onPageClick={handlePageClick}
+              />
+            </>
           ) : (
             <NoData>차단 친구가 없습니다.</NoData>
           )}
-          <Pagination
-            currentPage={currentPage}
-            totalItems={totalItems}
-            totalPage={totalPages}
-            itemsPerPage={itemsPerPage}
-            pageButtonCount={pageButtonCount}
-            hasMoreItems={currentPage < totalPages}
-            onPrevPage={handlePrevPage}
-            onNextPage={handleNextPage}
-            onPageClick={handlePageClick}
-          />
         </Blocked>
       </MyBlockedContent>
     </Wrapper>
@@ -96,12 +106,18 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 140px;
+  @media (max-width: 700px) {
+    padding: 30px 20px;
+  }
 `;
 
 const MyBlockedContent = styled.div`
   max-width: 1440px;
   width: 100%;
-  padding: 0 80px;
+  padding-left: 191px;
+  @media (max-width: 700px) {
+    padding: 0;
+  }
 `;
 
 const Blocked = styled.header`
@@ -117,9 +133,13 @@ const Top = styled.div`
   display: flex;
   justify-content: space-between;
   color: ${theme.colors.gray700};
-  ${(props) => props.theme.fonts.regular25};
+  ${(props) => props.theme.fonts.bold25};
   padding-bottom: 13px;
   border-bottom: 1px solid ${theme.colors.gray300};
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.semiBold18};
+  }
 `;
 
 const BlockedList = styled.div`
@@ -127,7 +147,6 @@ const BlockedList = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 32px;
-  border-top: 1px solid ${theme.colors.gray300};
 `;
 
 const NoData = styled.div`

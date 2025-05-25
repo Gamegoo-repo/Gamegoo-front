@@ -3,6 +3,9 @@ import { DefaultTheme } from "styled-components";
 const colors = {
   white: "#ffffff",
 
+  yellow100: "#FFFACC",
+  blue100: "#E6EFFE",
+
   violet100: "#F0F0FC",
   violet200: "#DFDEFF",
   violet300: "#C1B7FF",
