@@ -3,6 +3,7 @@ import { Dispatch, forwardRef, useState } from "react";
 import { theme } from "@/styles/theme";
 import styled from "styled-components";
 import { GameMode } from "@/types/game/gameMode";
+import useMediaQueries from "@/hooks/useMediaQueries";
 
 interface ListProps {
   id: number | GameMode | null;
@@ -35,6 +36,7 @@ const Dropdown = forwardRef(function Dropdown(
     defaultValue,
   } = props;
 
+  const isMobile = useMediaQueries({ breakpoint: 700 });
   const initialItem = list.find((item) => item.id === defaultValue) || list[0];
   const [selectedValue, setSelectedValue] = useState(initialItem.value);
 
@@ -59,8 +61,8 @@ const Dropdown = forwardRef(function Dropdown(
         <Title>{selectedValue}</Title>
         <Image
           src="/assets/icons/down_arrow.svg"
-          width={16}
-          height={9}
+          width={isMobile ? 7 : 16}
+          height={isMobile ? 4 : 9}
           alt="화살표"
         />
       </DropdownHeader>
@@ -102,20 +104,22 @@ const DropdownHeader = styled.div<{
   color: ${theme.colors.gray800};
   border-radius: 10px;
   padding: ${({ $padding }) => $padding};
-  background: ${({ $type }) =>
-    $type === "type1" ? `${theme.colors.gray200}` : `${theme.colors.white}`};
-  border: ${({ $type }) =>
-    $type === "type2" ? `1px solid ${theme.colors.gray400}` : "none"};
+  background: ${theme.colors.white};
+  border: 1px solid ${theme.colors.gray300};
   ${({ $type }) =>
     $type === "type1" ? `${theme.fonts.medium16}` : `${theme.fonts.regular18}`};
   cursor: pointer;
+
+  @media (max-width: 700px) {
+    ${theme.fonts.regular13}
+  }
 `;
 
 const Title = styled.p``;
 
 const DropBox = styled.div`
   position: absolute;
-  z-index: 1;
+  z-index: 101;
 `;
 
 const DropdownListContent = styled.ul<{ $type: string; $width: string }>`
@@ -161,5 +165,8 @@ const ListItem = styled.li<{ $type: string; $width: string }>`
       color: ${theme.colors.violet600};
       background: ${theme.colors.violet100};
     }
+  }
+  @media (max-width: 700px) {
+    ${theme.fonts.regular13}
   }
 `;

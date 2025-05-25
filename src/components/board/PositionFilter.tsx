@@ -68,7 +68,7 @@ const Wrapper = styled.div`
 `;
 
 const AllButton = styled.button`
-  max-width: 48px;
+  width: 46px;
   height: 56px;
   padding: 0 15px;
   border-right: 1px solid ${theme.colors.gray300};
@@ -79,16 +79,20 @@ const AllButton = styled.button`
   }
 
   &.clicked {
-    background: ${theme.colors.violet600};
+    background: ${theme.colors.gray700};
 
     path {
       stroke: ${theme.colors.white};
     }
   }
+  @media (max-width: 700px) {
+    width: 44px;
+    height: 44px;
+  }
 `;
 
 const TopButton = styled.button`
-  max-width: 48px;
+  width: 46px;
   height: 56px;
   padding: 0 15px;
   border-right: 1px solid ${theme.colors.gray300};
@@ -98,16 +102,20 @@ const TopButton = styled.button`
   }
 
   &.clicked {
-    background: ${theme.colors.violet600};
+    background: ${theme.colors.gray700};
 
     path:first-child {
       fill: ${theme.colors.white};
     }
   }
+  @media (max-width: 700px) {
+    width: 44px;
+    height: 44px;
+  }
 `;
 
 const JungleButton = styled.button`
-  max-width: 48px;
+  width: 46px;
   height: 56px;
   padding: 0 15px;
   border-right: 1px solid ${theme.colors.gray300};
@@ -117,16 +125,20 @@ const JungleButton = styled.button`
   }
 
   &.clicked {
-    background: ${theme.colors.violet600};
+    background: ${theme.colors.gray700};
 
     path {
       fill: ${theme.colors.white};
     }
   }
+  @media (max-width: 700px) {
+    width: 44px;
+    height: 44px;
+  }
 `;
 
 const MidButton = styled.button`
-  max-width: 48px;
+  width: 46px;
   height: 56px;
   padding: 0 15px;
   border-right: 1px solid ${theme.colors.gray300};
@@ -136,16 +148,20 @@ const MidButton = styled.button`
   }
 
   &.clicked {
-    background: ${theme.colors.violet600};
+    background: ${theme.colors.gray700};
 
     path:nth-child(2) {
       fill: ${theme.colors.white};
     }
+  }
+  @media (max-width: 700px) {
+    width: 44px;
+    height: 44px;
   }
 `;
 
 const OneDealButton = styled.button`
-  max-width: 48px;
+  width: 46px;
   height: 56px;
   padding: 0 15px;
   border-right: 1px solid ${theme.colors.gray300};
@@ -155,16 +171,20 @@ const OneDealButton = styled.button`
   }
 
   &.clicked {
-    background: ${theme.colors.violet600};
+    background: ${theme.colors.gray700};
 
     path:nth-child(2) {
       fill: ${theme.colors.white};
     }
   }
+  @media (max-width: 700px) {
+    width: 44px;
+    height: 44px;
+  }
 `;
 
 const SupporterButton = styled.button`
-  max-width: 48px;
+  width: 46px;
   height: 56px;
   padding: 0 15px;
   border-radius: 0 10px 10px 0;
@@ -174,10 +194,14 @@ const SupporterButton = styled.button`
   }
 
   &.clicked {
-    background: ${theme.colors.violet600};
+    background: ${theme.colors.gray700};
 
     path {
       fill: ${theme.colors.white};
     }
+  }
+  @media (max-width: 700px) {
+    width: 44px;
+    height: 44px;
   }
 `;

@@ -29,6 +29,8 @@ import { rotate } from "@/styles/animation";
 import { Position } from "@/types/position/position";
 import { Mike } from "@/types/user/mike";
 import { GameMode } from "@/types/game/gameMode";
+import useMediaQueries from "@/hooks/useMediaQueries";
+import MoPost from "@/components/board/MoPost";
 
 const ITEMS_PER_PAGE = 20;
 const BUTTONS_PER_PAGE = 5;
@@ -54,6 +56,7 @@ const BoardPage = () => {
   const tierRef = useRef<HTMLDivElement>(null);
   const micRef = useRef<HTMLDivElement>(null);
   const [isRotating, setIsRotating] = useState(false);
+  const isMobile = useMediaQueries({ breakpoint: 700 });
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -258,89 +261,192 @@ const BoardPage = () => {
       {boardList && (
         <Wrapper>
           <BoardContent>
-            <FirstRow>
-              <Title>게시판</Title>
-              <RefreshImage
-                onClick={handleRefresh}
-                src="/assets/icons/refresh.svg"
-                width={30}
-                height={27}
-                alt="새로고침"
-                $isrotating={isRotating}
-              />
-            </FirstRow>
-            <SecondRow>
-              <FirstBlock>
-                <Dropdown
-                  type="type1"
-                  width="170px"
-                  padding="18px 21px"
-                  list={GAME_MODE}
-                  ref={gameModeRef}
-                  open={isGameModeDropdownOpen}
-                  setOpen={setIsGameModeDropdownOpen}
-                  onDropValue={handleGameModeDropValue}
-                  defaultValue={boardFilters.gameMode || selectedGameMode}
-                />
-                <Dropdown
-                  type="type1"
-                  width="150px"
-                  padding="18px 21px"
-                  list={TIER}
-                  ref={tierRef}
-                  open={isTierDropdownOpen}
-                  setOpen={setIsTierDropdownOpen}
-                  onDropValue={handleTierDropValue}
-                  defaultValue={
-                    tierStringToId(boardFilters.tier) || selectedTier
-                  }
-                />
-                <PositionBox>
-                  <PositionFilter
-                    onPositionFilter={handlePositionFilter}
-                    isPosition={isPosition}
-                    // isPosition={boardFilters.mainPosition || isPosition}
+            {!isMobile ? (
+              <>
+                {/* PC */}
+                <FirstRow>
+                  <Title>게시판</Title>
+                  <RefreshImageWrap>
+                    <RefreshImage
+                      onClick={handleRefresh}
+                      src="/assets/icons/refresh.svg"
+                      width={20}
+                      height={20}
+                      alt="새로고침"
+                      $isrotating={isRotating}
+                    />
+                  </RefreshImageWrap>
+                </FirstRow>
+                <SecondRow>
+                  <FirstBlock>
+                    <Dropdown
+                      type="type1"
+                      width="170px"
+                      padding="18px 21px"
+                      list={GAME_MODE}
+                      ref={gameModeRef}
+                      open={isGameModeDropdownOpen}
+                      setOpen={setIsGameModeDropdownOpen}
+                      onDropValue={handleGameModeDropValue}
+                      defaultValue={boardFilters.gameMode || selectedGameMode}
+                    />
+                    <Dropdown
+                      type="type1"
+                      width="150px"
+                      padding="18px 21px"
+                      list={TIER}
+                      ref={tierRef}
+                      open={isTierDropdownOpen}
+                      setOpen={setIsTierDropdownOpen}
+                      onDropValue={handleTierDropValue}
+                      defaultValue={
+                        tierStringToId(boardFilters.tier) || selectedTier
+                      }
+                    />
+                    <Dropdown
+                      type="type1"
+                      width="138px"
+                      padding="18px 21px"
+                      list={MIC}
+                      ref={micRef}
+                      open={isMicDropdownOpen}
+                      setOpen={setIsMicDropdownOpen}
+                      onDropValue={handleMicDropValue}
+                      // defaultValue={2}
+                      defaultValue={
+                        mikeBooleanToId(boardFilters.mike) || selectedMic
+                      }
+                    />
+                    <PositionBox>
+                      <PositionFilter
+                        onPositionFilter={handlePositionFilter}
+                        isPosition={isPosition}
+                      />
+                    </PositionBox>
+                  </FirstBlock>
+                  <SecondBlock>
+                    <Button
+                      width="248px"
+                      onClick={handlePostingOpen}
+                      buttonType="primary"
+                      size="large"
+                      text="글 작성하기"
+                    />
+                  </SecondBlock>
+                </SecondRow>
+                <Main>
+                  <Table title={BOARD_TITLE} content={boardList} />
+                </Main>
+                {boardList?.length > 0 && (
+                  <Pagination
+                    currentPage={currentPage}
+                    totalItems={totalItems}
+                    totalPage={totalPage}
+                    itemsPerPage={ITEMS_PER_PAGE}
+                    pageButtonCount={BUTTONS_PER_PAGE}
+                    hasMoreItems={currentPage < totalPage}
+                    onPrevPage={handlePrevPage}
+                    onNextPage={handleNextPage}
+                    onPageClick={handlePageClick}
                   />
-                </PositionBox>
-                <Dropdown
-                  type="type1"
-                  width="138px"
-                  padding="18px 21px"
-                  list={MIC}
-                  ref={micRef}
-                  open={isMicDropdownOpen}
-                  setOpen={setIsMicDropdownOpen}
-                  onDropValue={handleMicDropValue}
-                  // defaultValue={2}
-                  defaultValue={
-                    mikeBooleanToId(boardFilters.mike) || selectedMic
-                  }
-                />
-              </FirstBlock>
-              <SecondBlock>
-                <Button
-                  onClick={handlePostingOpen}
-                  buttonType="primary"
-                  size="large"
-                  text="글 작성하기"
-                />
-              </SecondBlock>
-            </SecondRow>
-            <Main>
-              <Table title={BOARD_TITLE} content={boardList} />
-            </Main>
-            {boardList?.length > 0 && (
-              <Pagination
-                currentPage={currentPage}
-                totalItems={totalItems}
-                totalPage={totalPage}
-                itemsPerPage={ITEMS_PER_PAGE}
-                pageButtonCount={BUTTONS_PER_PAGE}
-                hasMoreItems={currentPage < totalPage}
-                onPrevPage={handlePrevPage}
-                onNextPage={handleNextPage}
-                onPageClick={handlePageClick}
-              />
+                )}
+              </>
+            ) : (
+              <>
+                {/* MOBILE */}
+                <FirstRow>
+                  <Title>게시판</Title>
+                  <Button
+                    width="104px"
+                    onClick={handlePostingOpen}
+                    buttonType="primary"
+                    size="large"
+                    text="글 작성하기"
+                  />
+                </FirstRow>
+                <SecondRow>
+                  <PositionBox>
+                    <PositionFilter
+                      onPositionFilter={handlePositionFilter}
+                      isPosition={isPosition}
+                      // isPosition={boardFilters.mainPosition || isPosition}
+                    />
+                  </PositionBox>
+                  <RefreshImageWrap>
+                    <RefreshImage
+                      onClick={handleRefresh}
+                      src="/assets/icons/refresh.svg"
+                      width={20}
+                      height={20}
+                      alt="새로고침"
+                      $isrotating={isRotating}
+                    />
+                  </RefreshImageWrap>
+                </SecondRow>
+                <ThirdRow>
+                  <Dropdown
+                    type="type1"
+                    width="114px"
+                    padding="8px 8px 8px 12px"
+                    list={GAME_MODE}
+                    ref={gameModeRef}
+                    open={isGameModeDropdownOpen}
+                    setOpen={setIsGameModeDropdownOpen}
+                    onDropValue={handleGameModeDropValue}
+                    defaultValue={boardFilters.gameMode || selectedGameMode}
+                  />
+                  <Dropdown
+                    type="type1"
+                    width="89px"
+                    padding="8px 8px 8px 12px"
+                    list={TIER}
+                    ref={tierRef}
+                    open={isTierDropdownOpen}
+                    setOpen={setIsTierDropdownOpen}
+                    onDropValue={handleTierDropValue}
+                    defaultValue={
+                      tierStringToId(boardFilters.tier) || selectedTier
+                    }
+                  />
+                  <Dropdown
+                    type="type1"
+                    width="89px"
+                    padding="8px 8px 8px 12px"
+                    list={MIC}
+                    ref={micRef}
+                    open={isMicDropdownOpen}
+                    setOpen={setIsMicDropdownOpen}
+                    onDropValue={handleMicDropValue}
+                    defaultValue={
+                      mikeBooleanToId(boardFilters.mike) || selectedMic
+                    }
+                  />
+                </ThirdRow>
+
+                {boardList?.length > 0 ? (
+                  <MoPostList>
+                    {boardList.map((item, index) => (
+                      <MoPost
+                        key={item.boardId}
+                        boardId={item.boardId}
+                        tag={item.tag}
+                        memberId={item.memberId}
+                        profileImage={item.profileImage}
+                        gameName={item.gameName}
+                        tier={item.tier || ""}
+                        contents={item.contents}
+                        createdAt={item.createdAt}
+                        mainP={item.mainP}
+                        subP={item.subP}
+                        wantP={item.wantP}
+                        winRate={item.winRate}
+                      />
+                    ))}
+                  </MoPostList>
+                ) : (
+                  <NoData>게시된 글이 없습니다.</NoData>
+                )}
+              </>
             )}
           </BoardContent>
         </Wrapper>
@@ -356,12 +462,18 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 140px;
+  @media (max-width: 700px) {
+    padding-top: 12px;
+  }
 `;
 
 const BoardContent = styled.div`
   max-width: 1440px;
   width: 100%;
   padding: 0 80px;
+  @media (max-width: 700px) {
+    padding: 0 20px;
+  }
 `;
 
 const FirstRow = styled.div`
@@ -370,20 +482,40 @@ const FirstRow = styled.div`
   align-items: center;
   justify-content: space-between;
   margin-bottom: 38px;
+  @media (max-width: 700px) {
+    margin-bottom: 12px;
+  }
 `;
 
 const Title = styled.p`
   color: ${theme.colors.gray700};
   ${theme.fonts.bold32};
+  @media (max-width: 700px) {
+    ${theme.fonts.bold20};
+  }
 `;
 
 interface RefreshImageProps extends ImageProps {
   $isrotating: boolean;
 }
 
+const RefreshImageWrap = styled.button`
+  position: relative;
+  width: 44px;
+  height: 44px;
+  background: ${theme.colors.violet100};
+  border-radius: 8px;
+  border: 1px solid ${theme.colors.violet200};
+`;
+
 const RefreshImage = styled(Image)<RefreshImageProps>`
-  cursor: pointer;
-  animation: ${(props) => (props.$isrotating ? rotate : "none")} 1s linear;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* cursor: pointer; */
+  /* animation: ${(props) =>
+    props.$isrotating ? rotate : "none"} 1s linear; */
 `;
 
 const SecondRow = styled.div`
@@ -391,6 +523,16 @@ const SecondRow = styled.div`
   align-items: center;
   justify-content: space-between;
   margin-bottom: 25px;
+  @media (max-width: 700px) {
+    margin-bottom: 8px;
+  }
+`;
+
+const ThirdRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
 `;
 
 const FirstBlock = styled.div`
@@ -409,4 +551,22 @@ const SecondBlock = styled.div``;
 const Main = styled.main`
   width: 100%;
   margin-bottom: 64px;
+`;
+
+const MoPostList = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 60px;
+  gap: 16px;
+`;
+
+const NoData = styled.div`
+  width: 100%;
+  margin: 40px 0 300px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: ${theme.colors.gray700};
+  ${theme.fonts.regular14}
 `;

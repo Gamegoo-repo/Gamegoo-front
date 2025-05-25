@@ -314,7 +314,7 @@ const TableHead = styled.div`
   justify-content: space-between;
   padding: 14px 21px;
   ${(props) => props.theme.fonts.bold14};
-  background: ${theme.colors.gray800};
+  background: ${theme.colors.gray700};
   color: ${theme.colors.white};
   border-radius: 8px;
 `;
@@ -339,7 +339,7 @@ const Row = styled.div`
 const First = styled.div`
   display: flex;
   align-items: center;
-  gap: 22px;
+  gap: 8px;
 `;
 
 const Second = styled.div`
