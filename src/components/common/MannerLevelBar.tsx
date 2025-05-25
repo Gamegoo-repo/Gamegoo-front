@@ -34,19 +34,23 @@ const MannerLevelBar = (props: MannerLevelBarProps) => {
           <LevelBox key={level} $isColor={recentLevel === level}>
             {recentLevel === level && (
               <Recent>
-                <Percentage>
-                  {`상위 ${
-                    mannerRank !== null &&
-                    mannerRank !== undefined &&
-                    mannerRank > 0
-                      ? Math.floor(mannerRank)
-                      : 1
-                  }%`}
-                  {!isMobile && " 의 매너레벨"}
-                </Percentage>
-                <DownIconWrapper level={level - 1}>
-                  <ChevronDownIcon />
-                </DownIconWrapper>
+                {mannerRank && (
+                  <>
+                    <Percentage>
+                      상위
+                      {mannerRank !== null &&
+                      mannerRank !== undefined &&
+                      mannerRank > 0
+                        ? Math.floor(mannerRank)
+                        : 1}
+                      %
+                    </Percentage>
+
+                    <DownIconWrapper level={level - 1}>
+                      <ChevronDownIcon />
+                    </DownIconWrapper>
+                  </>
+                )}
               </Recent>
             )}
             <Level
@@ -197,7 +201,7 @@ const Recent = styled.div`
 `;
 
 const Percentage = styled.div`
-  ${(props) => props.theme.fonts.bold11};
+  ${(props) => props.theme.fonts.bold12};
   height: 11px;
 
   @media (max-width: 700px) {
