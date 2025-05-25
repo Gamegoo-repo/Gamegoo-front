@@ -102,39 +102,42 @@ const MyAlertPage = () => {
     <Wrapper>
       <MyAlertContent>
         <Alert>
-          <Top>알림 페이지 ({notiCount})</Top>
+          {/* <Top>알림 페이지 ({notiCount})</Top> */}
+          <Top>알림</Top>
           {notiList.length > 0 ? (
-            <AlertList>
-              {notiList.map((data) => (
-                <AlertBox
-                  key={data.notificationId}
-                  notificationId={data.notificationId}
-                  notificationtType={data.notificationType}
-                  pageUrl={data.pageUrl}
-                  content={data.content}
-                  createdAt={data.createdAt}
-                  read={data.read}
-                  onClick={() => {
-                    handleClickAlert(data.notificationId, data.pageUrl);
-                    dispatch(setNotiCount(notiCount - 1));
-                  }}
-                />
-              ))}
-            </AlertList>
+            <>
+              <AlertList>
+                {notiList.map((data) => (
+                  <AlertBox
+                    key={data.notificationId}
+                    notificationId={data.notificationId}
+                    notificationtType={data.notificationType}
+                    pageUrl={data.pageUrl}
+                    content={data.content}
+                    createdAt={data.createdAt}
+                    read={data.read}
+                    onClick={() => {
+                      handleClickAlert(data.notificationId, data.pageUrl);
+                      dispatch(setNotiCount(notiCount - 1));
+                    }}
+                  />
+                ))}
+              </AlertList>
+              <Pagination
+                currentPage={currentPage}
+                totalItems={totalItems}
+                totalPage={totalPages}
+                itemsPerPage={itemsPerPage}
+                pageButtonCount={pageButtonCount}
+                hasMoreItems={currentPage < totalPages}
+                onPrevPage={handlePrevPage}
+                onNextPage={handleNextPage}
+                onPageClick={handlePageClick}
+              />
+            </>
           ) : (
             <NoData>새로운 알림이 없습니다.</NoData>
           )}
-          <Pagination
-            currentPage={currentPage}
-            totalItems={totalItems}
-            totalPage={totalPages}
-            itemsPerPage={itemsPerPage}
-            pageButtonCount={pageButtonCount}
-            hasMoreItems={currentPage < totalPages}
-            onPrevPage={handlePrevPage}
-            onNextPage={handleNextPage}
-            onPageClick={handlePageClick}
-          />
         </Alert>
       </MyAlertContent>
     </Wrapper>
@@ -158,7 +161,7 @@ const MyAlertContent = styled.div`
   width: 100%;
   padding-left: 191px;
   @media (max-width: 700px) {
-    padding: 0 80px;
+    padding: 0 20px;
   }
 `;
 
@@ -175,9 +178,14 @@ const Top = styled.div`
   display: flex;
   justify-content: space-between;
   color: ${theme.colors.gray700};
-  ${(props) => props.theme.fonts.regular25};
+  ${(props) => props.theme.fonts.bold25};
   padding-bottom: 13px;
   border-bottom: 1px solid ${theme.colors.gray300};
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.semiBold18};
+    border-bottom: none;
+    padding-bottom: 0;
+  }
 `;
 
 const AlertList = styled.div`
@@ -187,6 +195,9 @@ const AlertList = styled.div`
   gap: 11px;
   margin-top: 32px;
   margin-bottom: 60px;
+  @media (max-width: 700px) {
+    margin-top: 20px;
+  }
 `;
 
 const NoData = styled.div`

@@ -65,6 +65,10 @@ const Container = styled.div<{ $read: boolean; size: string }>`
     css`
       padding: 22px 10px;
     `}
+
+  @media (max-width: 700px) {
+    padding: 12px 20px;
+  }
 `;
 
 const AlertImage = styled.div<{ size: string }>`
@@ -139,6 +143,10 @@ const Text = styled.div<{ size: string }>`
     css`
       ${(props) => props.theme.fonts.semiBold14};
     `}
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.semiBold14};
+  }
 `;
 
 const Time = styled.div<{ size: string }>`
@@ -150,4 +158,8 @@ const Time = styled.div<{ size: string }>`
     css`
       ${(props) => props.theme.fonts.medium11};
     `}
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.medium11};
+  }
 `;
