@@ -163,7 +163,7 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
 export default MyPageProfile;
 
 const Container = styled.div`
-  width: 100%;
+  width: 620px;
   /* height: 267px; */
   box-sizing: border-box;
   border-radius: 30px;
@@ -175,6 +175,7 @@ const Container = styled.div`
   white-space: nowrap;
 
   @media (max-width: 700px) {
+    width: 100%;
     border-radius: 20px;
     padding: 20px;
     flex-direction: column;
