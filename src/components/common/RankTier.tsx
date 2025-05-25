@@ -36,8 +36,8 @@ const RankTier = (props: RankTierProps) => {
           data={`/assets/images/tier/${
             toLowerCaseString(tier) || "unranked"
           }.svg`}
-          width={32}
-          height={32}
+          width={direct === "row" ? 24 : 32}
+          height={direct === "row" ? 24 : 32}
         />
         {toCapitalizedString(tier) + (rank ? ` ${rank}` : "")}
       </Tier>
@@ -59,6 +59,14 @@ const Container = styled.div<{ $direct: string }>`
       align-items: center;
       gap: 6px;
     `}
+
+  @media (max-width: 700px) {
+    ${({ $direct }) =>
+      $direct === "row" &&
+      css`
+        gap: 3px;
+      `}
+  }
 `;
 
 const RankName = styled.div<{
@@ -76,6 +84,11 @@ const RankName = styled.div<{
     `}
   @media (max-width: 700px) {
     ${theme.fonts.medium11}
+    ${({ $direct }) =>
+      $direct === "row" &&
+      css`
+        color: ${theme.colors.gray500};
+      `}
   }
 `;
 
@@ -98,6 +111,12 @@ const Tier = styled.div<{
     `}
   @media (max-width: 700px) {
     ${theme.fonts.bold14}
+
+    ${({ $direct }) =>
+      $direct === "row" &&
+      css`
+        ${theme.fonts.bold12}
+      `}
   }
 `;
 
