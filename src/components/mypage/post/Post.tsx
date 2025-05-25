@@ -17,6 +17,7 @@ import { theme } from "@/styles/theme";
 import {
   formatTimeAgo,
   setAbbrevTier,
+  setDateFormatter,
   setChatRoomDateFormatter,
 } from "@/utils/custom";
 import { getProfileBgColor } from "@/utils/profile";
@@ -140,10 +141,14 @@ const Post: React.FC<PostProps> = ({
             {rank}
           </span>
         </Tier>
-        <Memo>{contents}</Memo>
+        <Memo>
+          <MemoWrap>
+            <MemoBox>{contents}</MemoBox>
+          </MemoWrap>
+        </Memo>
         <Date>
-          {setChatRoomDateFormatter(createdAt)}{" "}
-          <Minute>{formatTimeAgo(createdAt)}</Minute>
+          {setDateFormatter(createdAt)}
+          {/* <Minute>{formatTimeAgo(createdAt)}</Minute> */}
         </Date>
       </Content>
       <MoreContainer>
@@ -193,7 +198,7 @@ const Name = styled.div`
   display: flex;
   align-items: center;
   gap: 22px;
-  ${(props) => props.theme.fonts.medium16};
+  ${(props) => props.theme.fonts.semiBold16};
   white-space: nowrap;
 
   @media (max-width: 1400px) {
@@ -240,7 +245,7 @@ const Div = styled.div`
 
 const Tag = styled.div`
   color: ${theme.colors.gray300};
-  ${(props) => props.theme.fonts.medium16};
+  ${(props) => props.theme.fonts.semiBold14};
 `;
 
 const Tier = styled.div`
@@ -257,14 +262,25 @@ const TierImage = styled.object`
 
 const Memo = styled.div`
   width: 100%;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  word-wrap: break-word;
+  display: flex;
+  justify-content: center;
+`;
+const MemoWrap = styled.div`
+  width: 156px;
+  padding: 8px;
+  background: ${theme.colors.gray100};
+  border: 1px solid ${theme.colors.gray400};
+  border-radius: 8px;
+  ${(props) => props.theme.fonts.regular13};
+`;
+
+const MemoBox = styled.div`
   display: -webkit-box;
-  text-align: center;
+  word-wrap: break-word;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  ${(props) => props.theme.fonts.regular14};
+  text-overflow: ellipsis;
+  overflow: hidden;
 `;
 
 const Date = styled.div`
@@ -272,7 +288,7 @@ const Date = styled.div`
   flex-direction: column;
   align-items: center;
   color: ${theme.colors.gray500};
-  ${(props) => props.theme.fonts.medium11};
+  ${(props) => props.theme.fonts.medium14};
 `;
 
 const Minute = styled.div`

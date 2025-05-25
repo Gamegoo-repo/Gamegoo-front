@@ -7,10 +7,11 @@ interface MannerLevelProps {
   level: number;
   onClick: (e: React.MouseEvent) => void;
   position?: positionType;
+  isBubbleHide?: boolean;
 }
 
 const MannerLevel = (props: MannerLevelProps) => {
-  const { level, onClick, position = "top" } = props;
+  const { level, onClick, position = "top", isBubbleHide = false } = props;
 
   const [isVisible, setIsVisible] = useState(true);
 
@@ -32,14 +33,16 @@ const MannerLevel = (props: MannerLevelProps) => {
             <ClickArea onClick={onClick}>
               <Text>LV.{level}</Text>
             </ClickArea>
-            <BubbleWrapper
-              $position={position}
-              data-hide={!isVisible ? "true" : undefined}
-            >
-              <Bubble $position={position}>
-                <P>클릭해서 매너키워드 보기</P>
-              </Bubble>
-            </BubbleWrapper>
+            {!isBubbleHide && (
+              <BubbleWrapper
+                $position={position}
+                data-hide={!isVisible ? "true" : undefined}
+              >
+                <Bubble $position={position}>
+                  <P>클릭해서 매너키워드 보기</P>
+                </Bubble>
+              </BubbleWrapper>
+            )}
           </Level>
         </LevelWrapper>
       )}
