@@ -12,8 +12,11 @@ import {
   getMemberMannerKeyword,
   getMemberMannerLevel,
 } from "@/api/manner/manner";
+import Image from "next/image";
+import useMediaQueries from "@/hooks/useMediaQueries";
 
 const MyReviewPage = () => {
+  const isMobile = useMediaQueries({ breakpoint: 700 });
   const myId = useSelector((state: RootState) => state.user.id);
   const [myManner, setMyManner] = useState<Manner>();
 
@@ -30,7 +33,7 @@ const MyReviewPage = () => {
   const goodMannerEvaluations =
     myManner?.mannerKeywords
       .filter(
-        (keyword) => keyword.mannerKeywordId > 1 && keyword.mannerKeywordId <= 6
+        (keyword) => keyword.mannerKeywordId > 0 && keyword.mannerKeywordId <= 6
       )
       .map((keyword) => ({
         id: keyword.mannerKeywordId,
@@ -49,7 +52,18 @@ const MyReviewPage = () => {
     <Wrapper>
       <MyReviewContent>
         <Review>
-          <Title>내 평가</Title>
+          <Title>
+            내 평가
+            {isMobile && (
+              <Image
+                src={"/assets/icons/info.svg"}
+                width={14}
+                height={14}
+                style={{ marginLeft: "5px" }}
+                alt="info"
+              />
+            )}
+          </Title>
           <Box>
             <Top>
               나의 매너 레벨
@@ -66,19 +80,9 @@ const MyReviewPage = () => {
         <Private>
           <Row>
             <MannerKey>
-              <Small>매너 키워드</Small>
+              <MannerTitle>받은 매너 평가</MannerTitle>
               <MannerBox>
                 <MannerList>
-                  <ValueWrapper>
-                    {goodMannerEvaluations.map((item) => (
-                      <Value
-                        key={item.id}
-                        className={item.count > 0 ? "mannerEmph" : "default"}
-                      >
-                        {item.count}
-                      </Value>
-                    ))}
-                  </ValueWrapper>
                   <TypeWrapper>
                     {goodMannerEvaluations.map((type, index) => {
                       return (
@@ -95,23 +99,23 @@ const MyReviewPage = () => {
                       );
                     })}
                   </TypeWrapper>
-                </MannerList>
-              </MannerBox>
-            </MannerKey>
-            <MannerKey>
-              <Small>비매너 키워드</Small>
-              <MannerBox>
-                <MannerList>
                   <ValueWrapper>
-                    {badMannerEvaluations.map((item) => (
+                    {goodMannerEvaluations.map((item) => (
                       <Value
                         key={item.id}
-                        className={item.count > 0 ? "badEmph" : "default"}
+                        className={item.count > 0 ? "mannerEmph" : "default"}
                       >
                         {item.count}
                       </Value>
                     ))}
                   </ValueWrapper>
+                </MannerList>
+              </MannerBox>
+            </MannerKey>
+            <MannerKey>
+              <MannerTitle>받은 비매너 평가</MannerTitle>
+              <MannerBox>
+                <MannerList>
                   <TypeWrapper>
                     {badMannerEvaluations.map((type, index) => {
                       return (
@@ -128,6 +132,16 @@ const MyReviewPage = () => {
                       );
                     })}
                   </TypeWrapper>
+                  <ValueWrapper>
+                    {badMannerEvaluations.map((item) => (
+                      <Value
+                        key={item.id}
+                        className={item.count > 0 ? "badEmph" : "default"}
+                      >
+                        {item.count}
+                      </Value>
+                    ))}
+                  </ValueWrapper>
                 </MannerList>
               </MannerBox>
             </MannerKey>
@@ -181,21 +195,32 @@ const Box = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 29px 36px;
+  padding: 31px 35px;
   border-radius: 20px;
   background: ${theme.colors.gray100};
+
+  @media (max-width: 700px) {
+    border-radius: 8px;
+    padding: 24px 20px;
+  }
 `;
 
 const Top = styled.div`
   display: flex;
   align-items: center;
-  gap: 22px;
+  gap: 8px;
   color: ${theme.colors.gray800};
   ${(props) => props.theme.fonts.medium16};
+
+  @media (max-width: 700px) {
+    flex-direction: column;
+    align-items: start;
+    ${(props) => props.theme.fonts.medium14};
+  }
 `;
 
 const Gray = styled.div`
-  color: ${theme.colors.gray800};
+  color: ${theme.colors.gray700};
   ${(props) => props.theme.fonts.regular12};
 `;
 
@@ -205,9 +230,12 @@ const Title = styled.div`
   justify-content: space-between;
   color: ${theme.colors.gray800};
   ${(props) => props.theme.fonts.regular25};
-  padding-bottom: 13px;
   margin-bottom: 20px;
-  border-bottom: 1px solid ${theme.colors.gray300};
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.semiBold18};
+    justify-content: flex-start;
+    align-items: center;
+  }
 `;
 
 const Row = styled.div`
@@ -215,6 +243,9 @@ const Row = styled.div`
   display: flex;
   justify-content: space-between;
   gap: 9px;
+  @media (max-width: 700px) {
+    flex-direction: column;
+  }
 `;
 
 const MannerKey = styled.div`
@@ -224,10 +255,9 @@ const MannerKey = styled.div`
   gap: 14px;
 `;
 
-const Small = styled.div`
-  ${(props) => props.theme.fonts.bold11};
+const MannerTitle = styled.div`
+  ${(props) => props.theme.fonts.semiBold18};
   color: ${theme.colors.gray800};
-  margin-left: 11px;
 `;
 
 const MannerBox = styled.div`
@@ -235,14 +265,21 @@ const MannerBox = styled.div`
   height: 313px;
   border-radius: 20px;
   padding: 32px;
-  background: ${theme.colors.gray100};
-  box-shadow: 0px 4px 18.4px 0px rgba(0, 0, 0, 0.25);
+  background: ${theme.colors.gray800};
+
+  @media (max-width: 700px) {
+    height: unset;
+    border-radius: 8px;
+    padding: 24px 20px;
+    margin-bottom: 24px;
+  }
 `;
 
 const MannerList = styled.div`
   height: 100%;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   white-space: nowrap;
 `;
 
@@ -253,13 +290,16 @@ const ValueWrapper = styled.div`
   align-items: center;
   margin-right: 11px;
   justify-content: space-between;
+  @media (max-width: 700px) {
+    gap: 14px;
+  }
 `;
 
 const Value = styled.p`
   ${(props) => props.theme.fonts.medium16};
 
   &.default {
-    color: ${theme.colors.gray800};
+    color: ${theme.colors.gray600};
   }
 
   &.mannerEmph {
@@ -268,6 +308,10 @@ const Value = styled.p`
 
   &.badEmph {
     color: ${theme.colors.red500};
+  }
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.medium14};
   }
 `;
 
@@ -276,20 +320,27 @@ const TypeWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  @media (max-width: 700px) {
+    gap: 14px;
+  }
 `;
 
 const Type = styled.p`
   ${(props) => props.theme.fonts.medium16};
 
   &.default {
-    color: ${theme.colors.gray800};
+    color: ${theme.colors.gray600};
   }
 
   &.mannerEmph {
-    color: ${theme.colors.violet500};
+    color: ${theme.colors.gray100};
   }
 
   &.badEmph {
-    color: ${theme.colors.red500};
+    color: ${theme.colors.gray100};
+  }
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.medium14};
   }
 `;
