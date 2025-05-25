@@ -189,7 +189,7 @@ const MyProfileContent = styled.div`
   width: 100%;
   max-width: 1440px;
   width: 100%;
-  padding: 0 80px;
+  padding-left: 191px;
   @media (max-width: 700px) {
     padding: 0;
   }
