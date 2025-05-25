@@ -7,6 +7,8 @@ import React, { useState } from "react";
 import MoreBoxButton from "../../readBoard/MoreBoxButton";
 import styled, { css } from "styled-components";
 import { useRouter } from "next/navigation";
+import useMediaQueries from "@/hooks/useMediaQueries";
+
 import {
   blockMember,
   deleteBlockMember,
@@ -20,6 +22,8 @@ const BlockedBox: React.FC<BlockList> = ({
   name,
   blind,
 }) => {
+  const isMobile = useMediaQueries({ breakpoint: 700 });
+
   const router = useRouter();
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState<boolean>(false);
   const [isBlockBoxOpen, setIsBlockBoxOpen] = useState<boolean>(false);
@@ -94,7 +98,7 @@ const BlockedBox: React.FC<BlockList> = ({
               },
             ]}
             top={15}
-            left={45}
+            left={isMobile ? 130 : 45}
           />
         )}
       </MoreDiv>
@@ -167,6 +171,11 @@ const Container = styled.div<{ $isBlind: boolean }>`
     css`
       background: #f0f0f01c;
     `}
+
+    @media (max-width: 700px) {
+    padding: 10px 0;
+    ${(props) => props.theme.fonts.semiBold16}
+  }
 `;
 
 const Gap = styled.div<{ $isBlind: boolean }>`

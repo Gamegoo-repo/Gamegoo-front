@@ -229,7 +229,7 @@ const Title = styled.div`
   display: flex;
   justify-content: space-between;
   color: ${theme.colors.gray800};
-  ${(props) => props.theme.fonts.regular25};
+  ${(props) => props.theme.fonts.bold25};
   margin-bottom: 20px;
   @media (max-width: 700px) {
     ${(props) => props.theme.fonts.semiBold18};
