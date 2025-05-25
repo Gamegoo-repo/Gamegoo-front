@@ -60,12 +60,18 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 140px;
+  @media (max-width: 700px) {
+    padding: 30px 20px;
+  }
 `;
 
 const MyServiceContent = styled.div`
   max-width: 1440px;
   width: 100%;
-  padding: 0 80px;
+  padding-left: 191px;
+  @media (max-width: 700px) {
+    padding: 0;
+  }
 `;
 
 const Service = styled.header`
