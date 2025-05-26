@@ -1,7 +1,7 @@
 "use client";
 
 import styled from "styled-components";
-import Image, { ImageProps } from "next/image";
+import Image from "next/image";
 import { theme } from "@/styles/theme";
 import { useEffect, useRef, useState } from "react";
 import { BOARD_TITLE, GAME_MODE, MIC, TIER } from "@/constants/board";
@@ -260,14 +260,15 @@ const BoardPage = () => {
           <BoardContent>
             <FirstRow>
               <Title>게시판</Title>
-              <RefreshImage
-                onClick={handleRefresh}
-                src="/assets/icons/refresh.svg"
-                width={30}
-                height={27}
-                alt="새로고침"
-                $isrotating={isRotating}
-              />
+              <RefreshButton onClick={handleRefresh}>
+                <RefreshImage
+                  src="/assets/icons/redo.svg"
+                  width={20}
+                  height={20}
+                  alt="새로고침"
+                  $isrotating={isRotating}
+                />
+              </RefreshButton>
             </FirstRow>
             <SecondRow>
               <FirstBlock>
@@ -334,6 +335,7 @@ const BoardPage = () => {
                   buttonType="primary"
                   size="large"
                   text="글 작성하기"
+                  borderRadius="12px"
                   width="248px"
                 />
               </SecondBlock>
@@ -389,11 +391,20 @@ const Title = styled.p`
   ${theme.fonts.bold32};
 `;
 
-interface RefreshImageProps extends ImageProps {
-  $isrotating: boolean;
-}
+const RefreshButton = styled.button`
+  width: 44px;
+  height: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid ${theme.colors.violet200};
+  background: ${theme.colors.violet100};
+`;
 
-const RefreshImage = styled(Image)<RefreshImageProps>`
+const RefreshImage = styled(Image)<{ $isrotating: boolean }>`
   cursor: pointer;
   animation: ${(props) => (props.$isrotating ? rotate : "none")} 1s linear;
 `;
