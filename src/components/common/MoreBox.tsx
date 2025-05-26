@@ -9,7 +9,7 @@ interface MoreBoxProps {
   top: number;
   left?: number;
   right?: number;
-  onClose?: () => void;
+  onClose?: (e: MouseEvent) => void;
 }
 
 const MoreBox = ({ items, top, left, right, onClose }: MoreBoxProps) => {
@@ -22,7 +22,7 @@ const MoreBox = ({ items, top, left, right, onClose }: MoreBoxProps) => {
         moreBoxRef.current &&
         !moreBoxRef.current.contains(event.target as Node)
       ) {
-        onClose();
+        onClose(event);
       }
     };
 
@@ -35,7 +35,13 @@ const MoreBox = ({ items, top, left, right, onClose }: MoreBoxProps) => {
   return (
     <MenuWrapper ref={moreBoxRef} $top={top} $left={left} $right={right}>
       {items.map((item, index) => (
-        <MenuItem key={index} onClick={item.onClick}>
+        <MenuItem
+          key={index}
+          onClick={(e) => {
+            e.stopPropagation();
+            item.onClick(e);
+          }}
+        >
           {item.text}
         </MenuItem>
       ))}
@@ -76,7 +82,7 @@ const MenuItem = styled.div`
   color: #555555;
   white-space: nowrap;
   cursor: pointer;
-  padding: 9px 0 9px 20px;
+  padding: 9px 20px 9px 20px;
   border-bottom: 1px solid ${theme.colors.gray400};
   &:last-child {
     border-bottom: none;
