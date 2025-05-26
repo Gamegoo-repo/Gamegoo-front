@@ -182,7 +182,7 @@ const Header = () => {
               router.push("/board");
             }}
           >
-            {isMobile ? "게시판" : "매칭 게시판"}
+            {isMobile ? "게시판" : "게시판"}
           </Menu>
         </Menus>
         {accesssToken && name && profileImg ? (

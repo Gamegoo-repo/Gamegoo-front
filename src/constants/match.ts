@@ -13,7 +13,7 @@ export const MATCH_PAGE_DATA = [
     pathname: "board",
     image: "/assets/images/card/board.png",
     moImage: "/assets/images/card/board_mo.png",
-    title: "매칭 게시판에서 찾기",
+    title: "게시판에서 찾기",
     width: "580px",
     height: "285px",
   },
