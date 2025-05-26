@@ -57,6 +57,7 @@ import { blockMember, unblockMember } from "@/api/block/block";
 import { GameMode } from "@/types/game/gameMode";
 import UserAccount from "../crBoard/UserAccount";
 import RankTier from "../common/RankTier";
+import { setRefresh } from "@/redux/slices/boardSlice";
 
 interface ReadBoardProps {
   postId: number;
@@ -100,7 +101,6 @@ const ReadBoard = (props: ReadBoardProps) => {
   const isErrorMessage = useSelector(
     (state: RootState) => state.chat.errorMessage
   );
-  const isPostStatus = useSelector((state: RootState) => state.post.postStatus);
 
   /* 로그아웃 시, 비회원 접근 시 알럿 props 설정 함수 */
   const logoutMessage = "로그아웃 되었습니다. 다시 로그인 해주세요.";
@@ -387,6 +387,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     // 게시판 끌어올리기 API
     await setIsPullUpConfirmOpen(false);
     await pullUpPost(postId);
+    await dispatch(setRefresh());
     await dispatch(setCloseReadingModal());
     await notify({
       text: "끌어올리기가 완료되었습니다",
@@ -688,7 +689,10 @@ const ReadBoard = (props: ReadBoardProps) => {
                     <MemoData>{isPost.contents}</MemoData>
                   </Memo>
                   <UpdatedDate>
-                    게시일 : {setPostingDateFormatter(isPost.createdAt)}
+                    게시일 :{" "}
+                    {setPostingDateFormatter(
+                      isPost.bumpTime || isPost.createdAt
+                    )}
                   </UpdatedDate>
                 </MemoSection>
               </Wrapper>

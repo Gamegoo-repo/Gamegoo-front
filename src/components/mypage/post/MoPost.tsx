@@ -42,6 +42,7 @@ import Champion from "@/components/mypage/post/Champion";
 import ProfileImage from "@/components/mypage/post/ProfileImage";
 import { notify } from "@/hooks/notify";
 import ConfirmModal from "@/components/common/ConfirmModal";
+import { setRefresh } from "@/redux/slices/boardSlice";
 
 export interface PostProps {
   user: User;
@@ -70,6 +71,7 @@ const MoPost: React.FC<PostProps> = ({
   rank,
   contents,
   createdAt,
+  bumpTime,
   boardNumber,
   onDeletePost,
 }) => {
@@ -234,6 +236,7 @@ const MoPost: React.FC<PostProps> = ({
     // 게시판 끌어올리기 API
     await setIsPullUpConfirmOpen(false);
     await pullUpPost(boardId);
+    await dispatch(setRefresh());
     await notify({
       text: "끌어올리기가 완료되었습니다",
       icon: "👌🏼",
@@ -407,7 +410,7 @@ const MoPost: React.FC<PostProps> = ({
           <Memo>
             <MemoData>{contents}</MemoData>
           </Memo>
-          <UpdatedDate>{setDateFormatter(createdAt)}</UpdatedDate>
+          <UpdatedDate>{setDateFormatter(bumpTime || createdAt)}</UpdatedDate>
         </MemoSection>
       </Wrapper>
       {/* 끌어올리기 확인 팝업 */}
