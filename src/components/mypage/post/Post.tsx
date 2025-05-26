@@ -72,6 +72,7 @@ const Post: React.FC<PostProps> = ({
 
   /* 게시글 끌어올리기 */
   const handlePullUp = () => {
+    handleMoreBoxOpen();
     if (boardId) {
       setIsPullUpConfirmOpen(true);
     }
@@ -90,6 +91,7 @@ const Post: React.FC<PostProps> = ({
   };
 
   const handleModify = async () => {
+    handleMoreBoxOpen();
     // 수정하기 api
     dispatch(setUserId(memberId));
     const memberData = await getMemberPost(boardId);
@@ -105,6 +107,7 @@ const Post: React.FC<PostProps> = ({
   };
 
   const handleDelete = async () => {
+    handleMoreBoxOpen();
     // 삭제하기 api
     if (onDeletePost) {
       await onDeletePost(boardId);
