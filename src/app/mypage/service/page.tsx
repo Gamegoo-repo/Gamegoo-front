@@ -76,7 +76,6 @@ const Wrapper = styled.div`
 const MyServiceContent = styled.div`
   max-width: 1440px;
   width: 100%;
-  padding-left: 191px;
   @media (max-width: 700px) {
     padding: 0;
   }

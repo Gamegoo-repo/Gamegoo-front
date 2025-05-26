@@ -45,4 +45,8 @@ const Tab = styled.div<{ selected: boolean }>`
   ${({ selected, theme }) =>
     selected ? theme.fonts.bold16 : theme.fonts.regular16};
   cursor: pointer;
+
+  @media (max-width: 1000px) {
+    width: 170px;
+  }
 `;
