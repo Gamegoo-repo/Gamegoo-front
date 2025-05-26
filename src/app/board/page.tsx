@@ -273,7 +273,7 @@ const BoardPage = () => {
               <FirstBlock>
                 <Dropdown
                   type="type1"
-                  width="170px"
+                  width="138px"
                   padding="18px 21px"
                   list={GAME_MODE}
                   ref={gameModeRef}
@@ -295,13 +295,6 @@ const BoardPage = () => {
                     tierStringToId(boardFilters.tier) || selectedTier
                   }
                 />
-                <PositionBox>
-                  <PositionFilter
-                    onPositionFilter={handlePositionFilter}
-                    isPosition={isPosition}
-                    // isPosition={boardFilters.mainPosition || isPosition}
-                  />
-                </PositionBox>
                 <Dropdown
                   type="type1"
                   width="138px"
@@ -316,13 +309,32 @@ const BoardPage = () => {
                     mikeBooleanToId(boardFilters.mike) || selectedMic
                   }
                 />
+                <PositionBox>
+                  <PositionFilter
+                    onPositionFilter={handlePositionFilter}
+                    isPosition={isPosition}
+                    // isPosition={boardFilters.mainPosition || isPosition}
+                  />
+                </PositionBox>
               </FirstBlock>
               <SecondBlock>
+                {boardList?.length > 0 && isUser?.id ? (
+                  <PullUpButton>
+                    <Image
+                      src="/assets/icons/chevron_double_up.svg"
+                      width={15}
+                      height={15}
+                      alt=""
+                    />
+                    내가 쓴 글 끌어올리기
+                  </PullUpButton>
+                ) : null}
                 <Button
                   onClick={handlePostingOpen}
                   buttonType="primary"
                   size="large"
                   text="글 작성하기"
+                  width="248px"
                 />
               </SecondBlock>
             </SecondRow>
@@ -391,6 +403,7 @@ const SecondRow = styled.div`
   align-items: center;
   justify-content: space-between;
   margin-bottom: 25px;
+  gap: 30px;
 `;
 
 const FirstBlock = styled.div`
@@ -404,7 +417,22 @@ const PositionBox = styled.div`
   border-radius: 10px;
 `;
 
-const SecondBlock = styled.div``;
+const SecondBlock = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 24px;
+`;
+
+const PullUpButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 4.5px;
+  background: ${theme.colors.gradient};
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  white-space: nowrap;
+  ${theme.fonts.bold14};
+`;
 
 const Main = styled.main`
   width: 100%;

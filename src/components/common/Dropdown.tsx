@@ -58,9 +58,9 @@ const Dropdown = forwardRef(function Dropdown(
       >
         <Title>{selectedValue}</Title>
         <Image
-          src="/assets/icons/down_arrow.svg"
+          src="/assets/icons/down_arrow_gray.svg"
           width={16}
-          height={9}
+          height={16}
           alt="화살표"
         />
       </DropdownHeader>
@@ -96,6 +96,7 @@ const DropdownHeader = styled.div<{
   $width: string;
   $padding: string;
 }>`
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -103,9 +104,11 @@ const DropdownHeader = styled.div<{
   border-radius: 10px;
   padding: ${({ $padding }) => $padding};
   background: ${({ $type }) =>
-    $type === "type1" ? `${theme.colors.gray200}` : `${theme.colors.white}`};
+    $type === "type1" ? `${theme.colors.white}` : `${theme.colors.white}`};
   border: ${({ $type }) =>
-    $type === "type2" ? `1px solid ${theme.colors.gray400}` : "none"};
+    $type === "type1"
+      ? `1px solid ${theme.colors.gray300}`
+      : `1px solid ${theme.colors.gray400}`};
   ${({ $type }) =>
     $type === "type1" ? `${theme.fonts.medium16}` : `${theme.fonts.regular18}`};
   cursor: pointer;
