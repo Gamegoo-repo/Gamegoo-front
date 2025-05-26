@@ -18,22 +18,25 @@ import {
   setOpenModal,
   setOpenPostingModal,
 } from "@/redux/slices/modalSlice";
-import { getBoardList } from "@/api/board/board";
+import { getBoardList, getMyPost, pullUpPost } from "@/api/board/board";
 import { BoardListDetail } from "@/interface/board";
 import Alert from "@/components/common/Alert";
 import { useRouter } from "next/navigation";
 import { clearCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { mikeBooleanToId, tierStringToId } from "@/utils/custom";
-import { resetBoardFilters } from "@/redux/slices/boardSlice";
+import { resetBoardFilters, setRefresh } from "@/redux/slices/boardSlice";
 import { rotate } from "@/styles/animation";
 import { Position } from "@/types/position/position";
 import { Mike } from "@/types/user/mike";
 import { GameMode } from "@/types/game/gameMode";
+import ConfirmModal from "@/components/common/ConfirmModal";
+import { notify } from "@/hooks/notify";
 
 const ITEMS_PER_PAGE = 20;
 const BUTTONS_PER_PAGE = 5;
 
 const BoardPage = () => {
+  const dispatch = useDispatch();
   const [boardList, setBoardList] = useState<BoardListDetail[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
@@ -48,15 +51,17 @@ const BoardPage = () => {
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
   const [selectedMic, setSelectedMic] = useState<Mike | null>(null);
   const [showAlert, setShowAlert] = useState(false);
-  const [refresh, setRefresh] = useState(false);
+
+  // 게시판 글 새로고침
+  const boardRefresh = useSelector((state: RootState) => state.board.refresh);
 
   const gameModeRef = useRef<HTMLDivElement>(null);
   const tierRef = useRef<HTMLDivElement>(null);
   const micRef = useRef<HTMLDivElement>(null);
   const [isRotating, setIsRotating] = useState(false);
 
-  const dispatch = useDispatch();
-  const router = useRouter();
+  const [isPullUpConfirmOpen, setIsPullUpConfirmOpen] = useState(false);
+  const [myRecentPost, setMyRecentPost] = useState<number | null>(null);
 
   const isPostingModal = useSelector(
     (state: RootState) => state.modal.postingModal
@@ -191,6 +196,7 @@ const BoardPage = () => {
 
   useEffect(() => {
     getList();
+    console.log("boardRefresh", boardRefresh);
   }, [
     currentPage,
     selectedGameMode,
@@ -198,7 +204,7 @@ const BoardPage = () => {
     isPosition,
     selectedMic,
     isPostStatus,
-    refresh,
+    boardRefresh,
   ]);
 
   /* 페이지네이션 이전 클릭 */
@@ -229,11 +235,37 @@ const BoardPage = () => {
 
   const handleRefresh = () => {
     setIsRotating(true);
-    setRefresh((prevStatus) => !prevStatus);
+    dispatch(setRefresh());
 
     setTimeout(() => {
       setIsRotating(false);
     }, 1000);
+  };
+
+  /* 게시글 끌어올리기 */
+  const handlePullUp = async () => {
+    // 내가 쓴 글로부터 최신글 정보 조회
+    const myPost = await getMyPost(1);
+    if (myPost.data.totalCount > 0) {
+      setMyRecentPost(myPost.data.myBoards[0].boardId);
+      setIsPullUpConfirmOpen(true);
+    } else {
+      notify({ text: "작성한 글이 없어요", icon: "🚫", type: "error" });
+    }
+  };
+
+  const handlePullUpAction = async () => {
+    // 게시판 끌어올리기 API
+    await setIsPullUpConfirmOpen(false);
+    if (myRecentPost) {
+      await pullUpPost(myRecentPost);
+      await dispatch(setRefresh());
+    }
+    await notify({
+      text: "끌어올리기가 완료되었습니다",
+      icon: "👌🏼",
+      type: "success",
+    });
   };
 
   return (
@@ -320,7 +352,7 @@ const BoardPage = () => {
               </FirstBlock>
               <SecondBlock>
                 {boardList?.length > 0 && isUser?.id ? (
-                  <PullUpButton>
+                  <PullUpButton onClick={handlePullUp}>
                     <Image
                       src="/assets/icons/chevron_double_up.svg"
                       width={15}
@@ -358,6 +390,21 @@ const BoardPage = () => {
             )}
           </BoardContent>
         </Wrapper>
+      )}
+      {/* 끌어올리기 확인 팝업 */}
+      {isPullUpConfirmOpen && (
+        <ConfirmModal
+          width="540px"
+          primaryButtonText="아니요"
+          secondaryButtonText="예"
+          onPrimaryClick={() => {
+            setMyRecentPost(null);
+            setIsPullUpConfirmOpen(false);
+          }}
+          onSecondaryClick={handlePullUpAction}
+        >
+          <MsgConfirm>{`최근 게시글을 끌어올리시겠습니까?`}</MsgConfirm>
+        </ConfirmModal>
       )}
     </>
   );
@@ -448,4 +495,11 @@ const PullUpButton = styled.button`
 const Main = styled.main`
   width: 100%;
   margin-bottom: 64px;
+`;
+
+const MsgConfirm = styled.div`
+  text-align: center;
+  color: ${theme.colors.gray800};
+  ${(props) => props.theme.fonts.regular25};
+  margin: 80px 0;
 `;
