@@ -11,7 +11,6 @@ import {
   setCloseReadingModal,
   setOpenModal,
   setOpenPostingModal,
-  setOpenReadingModal,
 } from "@/redux/slices/modalSlice";
 import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { setUserId } from "@/redux/slices/userSlice";
@@ -49,6 +48,7 @@ const Post: React.FC<PostProps> = ({
   rank,
   contents,
   createdAt,
+  bumpTime,
   boardNumber,
   onDeletePost,
 }) => {
@@ -166,10 +166,7 @@ const Post: React.FC<PostProps> = ({
               <MemoBox>{contents}</MemoBox>
             </MemoWrap>
           </Memo>
-          <Date>
-            {setDateFormatter(createdAt)}
-            {/* <Minute>{formatTimeAgo(createdAt)}</Minute> */}
-          </Date>
+          <Date>{setDateFormatter(bumpTime || createdAt)}</Date>
         </Content>
         <MoreContainer>
           <More>

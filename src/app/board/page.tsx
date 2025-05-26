@@ -327,7 +327,7 @@ const BoardPage = () => {
                       height={15}
                       alt=""
                     />
-                    내가 쓴 글 끌어올리기
+                    최근 글 끌어올리기
                   </PullUpButton>
                 ) : null}
                 <Button

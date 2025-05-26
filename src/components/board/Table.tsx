@@ -246,7 +246,9 @@ const Table = (props: TableProps) => {
                     <Content>{data.contents}</Content>
                   </Eighth>
                   <Ninth className="table_width">
-                    <P className="gray">{setDateFormatter(data.createdAt)}</P>
+                    <P className="gray">
+                      {setDateFormatter(data.bumpTime || data.createdAt)}
+                    </P>
                   </Ninth>
                 </Row>
               );
