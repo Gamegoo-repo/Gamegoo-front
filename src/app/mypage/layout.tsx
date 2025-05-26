@@ -34,4 +34,13 @@ const Wrapper = styled.div`
   padding: 0 80px;
   display: flex;
   justify-content: center;
+  gap: 191px;
+
+  @media (max-width: 1200px) {
+    gap: 80px;
+  }
+
+  @media (max-width: 1000px) {
+    gap: 50px;
+  }
 `;

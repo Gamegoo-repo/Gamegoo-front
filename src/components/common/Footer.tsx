@@ -13,7 +13,7 @@ interface FooterProps {
 }
 
 const Footer = (props: FooterProps) => {
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const isMobile = useMediaQueries({ breakpoint: 800 });
   const { isShowChat } = props;
   const router = useRouter();
   const [showAlert, setShowAlert] = useState(false);
@@ -114,6 +114,18 @@ const LeftWrapper = styled.div`
   justify-content: flex-start;
   align-items: end;
   gap: 170px;
+
+  @media (max-width: 1200px) {
+    gap: 130px;
+  }
+
+  @media (max-width: 1000px) {
+    gap: 100px;
+  }
+
+  @media (max-width: 900px) {
+    gap: 70px;
+  }
 `;
 
 const LeftDiv = styled.div`
