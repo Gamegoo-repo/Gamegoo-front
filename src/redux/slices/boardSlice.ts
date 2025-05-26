@@ -9,7 +9,7 @@ interface BoardState {
   tier: string | null;
   mainP: Position;
   mike: Mike | null;
-  refresh: number;
+  refresh?: number;
 }
 
 const initialState: BoardState = {
@@ -26,7 +26,8 @@ const boardSlice = createSlice({
   initialState,
   reducers: {
     setBoardFilters: (state, action: PayloadAction<BoardState>) => {
-      return { ...state, ...action.payload };
+        const { refresh, ...rest } = action.payload;
+        return { ...state, ...rest };
     },
     resetBoardFilters: () => initialState,
     setRefresh: (state) => {
