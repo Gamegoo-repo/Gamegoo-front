@@ -6,6 +6,7 @@ import Report from "@/components/readBoard/MoreBoxButton";
 import { notify } from "@/hooks/notify";
 import { MemberPost } from "@/interface/board";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
+import { setRefresh } from "@/redux/slices/boardSlice";
 import {
   setClosePostingModal,
   setCloseReadingModal,
@@ -80,6 +81,7 @@ const Post: React.FC<PostProps> = ({
     // 게시판 끌어올리기 API
     await setIsPullUpConfirmOpen(false);
     await pullUpPost(boardId);
+    await dispatch(setRefresh());
     await notify({
       text: "끌어올리기가 완료되었습니다",
       icon: "👌🏼",
