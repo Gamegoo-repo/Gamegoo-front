@@ -26,6 +26,8 @@ const MyPostPage = () => {
 
   const currentPost = useSelector((state: RootState) => state.post.currentPost);
   const user = useSelector((state: RootState) => state.user);
+  // 게시판 글 새로고침
+  const boardRefresh = useSelector((state: RootState) => state.board.refresh);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -40,7 +42,7 @@ const MyPostPage = () => {
     };
 
     fetchGetMyPost();
-  }, [currentPage, currentPost]);
+  }, [currentPage, currentPost, boardRefresh]);
 
   useEffect(() => {
     const fetchProfile = async () => {
