@@ -4,6 +4,7 @@ import Axios from "..";
 import {
   BoardDeleteResponse,
   BoardEditResponse,
+  BoardPullUpResponse,
   GetBoardListResponse,
   GetMyBoardListResponse,
   MemberPostBoardResponse,
@@ -76,6 +77,28 @@ export const getNonMemberPost = async (
     return response.data;
   } catch (error) {
     console.error("로그아웃 상태 게시글 조회 실패:", error);
+    throw error;
+  }
+};
+
+/* 게시글 끌올 */
+export const pullUpPost = async (
+  postId: number,
+): Promise<BoardPullUpResponse> => {
+  try {
+    const response = await AuthAxios.post(
+      `/api/v2/posts/${postId}/bump`
+    );
+    return response.data;
+  } catch (error:any) {
+    console.error("게시글 끌올 실패:", error);
+    if (error.response.data.code === "BOARD_411") { // 끌올 1시간 제한
+      notify({
+        text: error.response.data.message,
+        icon: "🚫",
+        type: "error",
+      });
+    }
     throw error;
   }
 };

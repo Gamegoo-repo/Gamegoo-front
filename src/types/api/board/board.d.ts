@@ -119,6 +119,11 @@ export interface NotMemberBoardData
   mannerLevel: number;
 }
 
+export interface BoardPullUpData {
+  boardId: number;
+  bumpTime: string;
+}
+    
 export interface BoardEditData
   extends BasePlayerInfo,
     GameInfo,
@@ -129,6 +134,7 @@ export interface BoardDeleteData {}
 // API 응답 타입들
 export type PostsResponse = ApiResponse<PostsData>;
 export type BoardDeleteResponse = ApiResponse<BoardDeleteData>;
+export type BoardPullUpResponse = ApiResponse<BoardPullUpData>;
 export type BoardEditResponse = ApiResponse<BoardEditData>;
 export type NotMemberBoardResponse = ApiResponse<NotMemberBoardData>;
 export type MemberPostBoardResponse = ApiResponse<MemberPostBoardData>;
