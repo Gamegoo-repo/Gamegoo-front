@@ -34,6 +34,7 @@ export interface BoardListDetail {
   championStatsResponseList?: ChampionResponseDTO[];
   winRate: number;
   createdAt: string;
+  bumpTime: string;
   contents: string;
   mike: Mike;
 }
@@ -72,6 +73,7 @@ export interface MemberPost {
   isFriend?: boolean;
   friendRequestMemberId?: number;
   createdAt: string;
+  bumpTime: string;
   profileImage: number;
   gameName: string;
   tag: string;

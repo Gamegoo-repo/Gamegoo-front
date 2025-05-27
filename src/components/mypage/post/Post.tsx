@@ -1,25 +1,23 @@
-import { getMemberPost } from "@/api/board/board";
+import { getMemberPost, pullUpPost } from "@/api/board/board";
+import ConfirmModal from "@/components/common/ConfirmModal";
 import MoreBox from "@/components/common/MoreBox";
 import PostBoard from "@/components/createBoard/PostBoard";
 import Report from "@/components/readBoard/MoreBoxButton";
+import { notify } from "@/hooks/notify";
 import { MemberPost } from "@/interface/board";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
+import { setRefresh } from "@/redux/slices/boardSlice";
 import {
   setClosePostingModal,
   setCloseReadingModal,
   setOpenModal,
   setOpenPostingModal,
 } from "@/redux/slices/modalSlice";
-import { setCurrentPost } from "@/redux/slices/postSlice";
+import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { setUserId } from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-import {
-  formatTimeAgo,
-  setAbbrevTier,
-  setDateFormatter,
-  setChatRoomDateFormatter,
-} from "@/utils/custom";
+import { setAbbrevTier, setDateFormatter } from "@/utils/custom";
 import { getProfileBgColor } from "@/utils/profile";
 import { toLowerCaseString } from "@/utils/string";
 import React, { useState } from "react";
@@ -51,10 +49,12 @@ const Post: React.FC<PostProps> = ({
   rank,
   contents,
   createdAt,
+  bumpTime,
   boardNumber,
   onDeletePost,
 }) => {
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
+  const [isPullUpConfirmOpen, setIsPullUpConfirmOpen] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -70,7 +70,28 @@ const Post: React.FC<PostProps> = ({
 
   const isUser = useSelector((state: RootState) => state.user);
 
+  /* 게시글 끌어올리기 */
+  const handlePullUp = () => {
+    handleMoreBoxOpen();
+    if (boardId) {
+      setIsPullUpConfirmOpen(true);
+    }
+  };
+
+  const handlePullUpAction = async () => {
+    // 게시판 끌어올리기 API
+    await setIsPullUpConfirmOpen(false);
+    await pullUpPost(boardId);
+    await dispatch(setRefresh());
+    await notify({
+      text: "끌어올리기가 완료되었습니다",
+      icon: "👌🏼",
+      type: "success",
+    });
+  };
+
   const handleModify = async () => {
+    handleMoreBoxOpen();
     // 수정하기 api
     dispatch(setUserId(memberId));
     const memberData = await getMemberPost(boardId);
@@ -82,9 +103,11 @@ const Post: React.FC<PostProps> = ({
     dispatch(setOpenPostingModal());
     dispatch(setCloseReadingModal());
     setIsMoreBoxOpen(false);
+    dispatch(setPostStatus(""));
   };
 
   const handleDelete = async () => {
+    handleMoreBoxOpen();
     // 삭제하기 api
     if (onDeletePost) {
       await onDeletePost(boardId);
@@ -94,6 +117,7 @@ const Post: React.FC<PostProps> = ({
 
   // 더보기 버튼 메뉴
   const MoreBoxMenuItems: MoreBoxMenuItems[] = [
+    { text: "끌어올리기", onClick: handlePullUp },
     { text: "수정", onClick: handleModify },
     { text: "삭제", onClick: handleDelete },
   ];
@@ -108,64 +132,77 @@ const Post: React.FC<PostProps> = ({
   };
 
   return (
-    <Container>
-      <Content>
-        <Name>
-          <Number>{boardNumber}</Number>
-          {profileImage ? (
-            <ProfileImgWrapper $bgColor={getProfileBgColor(profileImage)}>
-              <ProfileImg
-                data={`/assets/images/profile/profile${profileImage}.svg`}
-                width={35}
-                height={35}
-              />
-            </ProfileImgWrapper>
-          ) : (
-            <ProfileImgWrapper $bgColor="#E2E2E2" />
-          )}
-          <Div>
-            {gameName}
-            <Tag>#{tag}</Tag>
-          </Div>
-        </Name>
-        <Tier>
-          <TierImage
-            data={`/assets/images/tier/${
-              toLowerCaseString(tier) || "unrank"
-            }.svg`}
-            width={26}
-            height={26}
+    <>
+      <Container>
+        <Content>
+          <Name>
+            <Number>{boardNumber}</Number>
+            {profileImage ? (
+              <ProfileImgWrapper $bgColor={getProfileBgColor(profileImage)}>
+                <ProfileImg
+                  data={`/assets/images/profile/profile${profileImage}.svg`}
+                  width={35}
+                  height={35}
+                />
+              </ProfileImgWrapper>
+            ) : (
+              <ProfileImgWrapper $bgColor="#E2E2E2" />
+            )}
+            <Div>
+              {gameName}
+              <Tag>#{tag}</Tag>
+            </Div>
+          </Name>
+          <Tier>
+            <TierImage
+              data={`/assets/images/tier/${
+                toLowerCaseString(tier) || "unrank"
+              }.svg`}
+              width={26}
+              height={26}
+            />
+            <span>
+              {setAbbrevTier(tier)}
+              {rank}
+            </span>
+          </Tier>
+          <Memo>
+            <MemoWrap>
+              <MemoBox>{contents}</MemoBox>
+            </MemoWrap>
+          </Memo>
+          <Date>{setDateFormatter(bumpTime || createdAt)}</Date>
+        </Content>
+        <MoreContainer>
+          <More>
+            <Report onClick={handleMoreBoxOpen} />
+            {isMoreBoxOpen && (
+              <MoreBox items={MoreBoxMenuItems} top={-10} left={45} />
+            )}
+          </More>
+        </MoreContainer>
+        {isPostingModal && boardId === isPost?.boardId && (
+          <PostBoard
+            onClose={handlePostingClose}
+            onCompletedPostingClose={handleModalClose}
           />
-          <span>
-            {setAbbrevTier(tier)}
-            {rank}
-          </span>
-        </Tier>
-        <Memo>
-          <MemoWrap>
-            <MemoBox>{contents}</MemoBox>
-          </MemoWrap>
-        </Memo>
-        <Date>
-          {setDateFormatter(createdAt)}
-          {/* <Minute>{formatTimeAgo(createdAt)}</Minute> */}
-        </Date>
-      </Content>
-      <MoreContainer>
-        <More>
-          <Report onClick={handleMoreBoxOpen} />
-          {isMoreBoxOpen && (
-            <MoreBox items={MoreBoxMenuItems} top={-10} left={45} />
-          )}
-        </More>
-      </MoreContainer>
-      {isPostingModal && boardId === isPost?.boardId && (
-        <PostBoard
-          onClose={handlePostingClose}
-          onCompletedPostingClose={handleModalClose}
-        />
+        )}
+      </Container>
+      {/* 끌어올리기 확인 팝업 */}
+      {isPullUpConfirmOpen && (
+        <ConfirmModal
+          width="540px"
+          primaryButtonText="아니요"
+          secondaryButtonText="예"
+          onPrimaryClick={() => {
+            setIsPullUpConfirmOpen(false);
+          }}
+          onSecondaryClick={handlePullUpAction}
+        >
+          <MsgConfirm>{`본 게시글을 끌어올리시겠습니까?`}</MsgConfirm>
+        </ConfirmModal>
       )}
-    </Container>
+    </>
   );
 };
 
@@ -215,7 +252,7 @@ const Name = styled.div`
 `;
 
 const Number = styled.span`
-  color: ${theme.colors.gray600};
+  color: ${theme.colors.gray800};
   ${(props) => props.theme.fonts.bold16};
   white-space: nowrap;
 `;
@@ -240,11 +277,13 @@ const ProfileImg = styled.object`
 const Div = styled.div`
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
+  color: ${theme.colors.gray800};
+  ${(props) => props.theme.fonts.semiBold16};
 `;
 
 const Tag = styled.div`
-  color: ${theme.colors.gray300};
+  color: ${theme.colors.gray500};
   ${(props) => props.theme.fonts.semiBold14};
 `;
 
@@ -253,6 +292,7 @@ const Tier = styled.div`
   justify-content: center;
   align-items: center;
   gap: 5px;
+  color: ${theme.colors.gray800};
   ${(props) => props.theme.fonts.regular14};
 `;
 
@@ -267,10 +307,11 @@ const Memo = styled.div`
 `;
 const MemoWrap = styled.div`
   width: 156px;
-  padding: 8px;
+  padding: 8px 10.5px;
   background: ${theme.colors.gray100};
   border: 1px solid ${theme.colors.gray400};
   border-radius: 8px;
+  color: ${theme.colors.gray800};
   ${(props) => props.theme.fonts.regular13};
 `;
 
@@ -291,11 +332,6 @@ const Date = styled.div`
   ${(props) => props.theme.fonts.medium14};
 `;
 
-const Minute = styled.div`
-  color: ${theme.colors.gray600};
-  ${(props) => props.theme.fonts.semiBold14};
-`;
-
 const MoreContainer = styled.div`
   position: absolute;
   top: 50%;
@@ -305,4 +341,11 @@ const MoreContainer = styled.div`
 
 const More = styled.div`
   position: relative;
+`;
+
+const MsgConfirm = styled.div`
+  text-align: center;
+  color: ${theme.colors.gray800};
+  ${(props) => props.theme.fonts.regular25};
+  margin: 80px 0;
 `;

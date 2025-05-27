@@ -9,6 +9,7 @@ interface BoardState {
   tier: string | null;
   mainP: Position;
   mike: Mike | null;
+  refresh?: number;
 }
 
 const initialState: BoardState = {
@@ -17,18 +18,23 @@ const initialState: BoardState = {
   tier: null,
   mainP: "ANY",
   mike: null,
+  refresh: 0,
 };
 
 const boardSlice = createSlice({
-  name: 'board',
+  name: "board",
   initialState,
   reducers: {
     setBoardFilters: (state, action: PayloadAction<BoardState>) => {
-      return { ...state, ...action.payload };
+        const { refresh, ...rest } = action.payload;
+        return { ...state, ...rest };
     },
-    resetBoardFilters: (state) => initialState,
+    resetBoardFilters: () => initialState,
+    setRefresh: (state) => {
+       state.refresh = Date.now();
+    },
   },
 });
 
-export const { setBoardFilters, resetBoardFilters } = boardSlice.actions;
+export const { setBoardFilters, resetBoardFilters, setRefresh } = boardSlice.actions;
 export default boardSlice.reducer;

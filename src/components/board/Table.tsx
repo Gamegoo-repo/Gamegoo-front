@@ -11,15 +11,30 @@ import ReadBoard from "../readBoard/ReadBoard";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { setCloseModal, setOpenReadingModal } from "@/redux/slices/modalSlice";
+import {
+  setCloseModal,
+  setCloseReadingModal,
+  setOpenPostingModal,
+  setOpenReadingModal,
+} from "@/redux/slices/modalSlice";
 import { useRouter } from "next/navigation";
 import Alert from "../common/Alert";
 import ConfirmModal from "../common/ConfirmModal";
 import Champion from "../readBoard/Champion";
-import { BoardListDetail } from "@/interface/board";
+import { BoardListDetail, MemberPost } from "@/interface/board";
 import { getProfileBgColor } from "@/utils/profile";
 import { toLowerCaseString } from "@/utils/string";
 import Layout from "../chat/Layout";
+import MoreBox from "../common/MoreBox";
+import MoreBoxButton from "../readBoard/MoreBoxButton";
+import { MoreBoxMenuItems } from "@/interface/moreBox";
+import { deletePost, getMemberPost, pullUpPost } from "@/api/board/board";
+import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
+import { setRefresh } from "@/redux/slices/boardSlice";
+import { notify } from "@/hooks/notify";
+import { deleteFriend } from "@/api/friend/delete";
+import { cancelFriendRequest, sendFriendRequest } from "@/api/friend/request";
+import { blockMember, unblockMember } from "@/api/block/block";
 
 interface TableTitleProps {
   id: number;
@@ -33,7 +48,11 @@ interface TableProps {
 
 const Table = (props: TableProps) => {
   const { title, content } = props;
+  const dispatch = useDispatch();
+  const router = useRouter();
+
   const [isBoardId, setIsBoardId] = useState(0);
+  const [isPost, setIsPost] = useState<MemberPost>();
   const [showAlert, setShowAlert] = useState(false);
   const [alertContent, setAlertContent] = useState("");
   const isChatRoomOpen = useSelector(
@@ -47,8 +66,12 @@ const Table = (props: TableProps) => {
   const isModalType = useSelector((state: RootState) => state.modal.modalType);
   const isUser = useSelector((state: RootState) => state.user);
 
-  const dispatch = useDispatch();
-  const router = useRouter();
+  const [isBlockedStatus, setIsBlockedStatus] = useState(false);
+  const [isFriendStatus, setIsFriendStatus] = useState(false);
+  const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
+  const [isBlockBoxOpen, setIsBlockBoxOpen] = useState(false);
+  const [isBlockConfirmOpen, setIsBlockConfrimOpen] = useState(false);
+  const [isPullUpConfirmOpen, setIsPullUpConfirmOpen] = useState(false);
 
   /* 게시글 열기 */
   const handlePostOpen = (boardId: number) => {
@@ -113,6 +136,178 @@ const Table = (props: TableProps) => {
   const handleModalClose = () => {
     dispatch(setCloseModal());
   };
+
+  /* 차단하기 및 차단 해제 */
+  const handleBlock = async () => {
+    setIsBlockBoxOpen(!isBlockBoxOpen);
+    setIsMoreBoxOpen(false);
+  };
+
+  const handleRunBlock = async () => {
+    // 차단하기 api
+    setIsBlockBoxOpen(false);
+    if (isPost) {
+      if (isPost.isBlocked) {
+        await unblockMember(isPost.memberId);
+        setIsBlockedStatus(false);
+      } else {
+        await blockMember(isPost.memberId);
+        setIsBlockedStatus(true);
+      }
+    }
+    setIsBlockConfrimOpen(true);
+  };
+
+  /* 친구 추가 */
+  const handleFriendAdd = async () => {
+    try {
+      if (isPost) {
+        await sendFriendRequest(isPost.memberId);
+      }
+      await handleMoreBoxClose();
+      setIsFriendStatus(true);
+    } catch (error) {
+      console.error(error);
+    }
+
+    handleMoreBoxClose();
+  };
+
+  /* 친구 요청 취소 */
+  const handleCancelFriendReq = async () => {
+    try {
+      if (isPost) {
+        await cancelFriendRequest(isPost.memberId);
+      }
+      await handleMoreBoxClose();
+      setIsFriendStatus(false);
+    } catch (error) {
+      console.error(error);
+    }
+
+    handleMoreBoxClose();
+  };
+
+  /* 친구 삭제 */
+  const handleFriendDelete = async () => {
+    try {
+      if (isPost) {
+        await deleteFriend(isPost.memberId);
+      }
+      await handleMoreBoxClose();
+      setIsFriendStatus(false);
+    } catch (error) {
+      console.error(error);
+    }
+
+    handleMoreBoxClose();
+  };
+
+  /* 게시글 끌어올리기 */
+  const handlePullUp = () => {
+    setIsMoreBoxOpen((prevState) => !prevState);
+    if (isBoardId) {
+      setIsPullUpConfirmOpen(true);
+      dispatch(setCloseReadingModal());
+    }
+  };
+
+  const handlePullUpAction = async () => {
+    // 게시판 끌어올리기 API
+    dispatch(setCloseReadingModal());
+    await setIsPullUpConfirmOpen(false);
+    await pullUpPost(isBoardId);
+    await dispatch(setRefresh());
+
+    await notify({
+      text: "끌어올리기가 완료되었습니다",
+      icon: "👌🏼",
+      type: "success",
+    });
+  };
+
+  /* 게시글 수정 */
+  const handleEdit = async () => {
+    setIsMoreBoxOpen((prevState) => !prevState);
+    if (isBoardId) {
+      await dispatch(setOpenPostingModal());
+      await dispatch(setCloseReadingModal());
+      dispatch(setPostStatus(""));
+    }
+  };
+
+  /* 게시글 삭제 */
+  const handleDelete = async () => {
+    setIsMoreBoxOpen((prevState) => !prevState);
+    try {
+      await deletePost(isBoardId);
+      await dispatch(setPostStatus("delete"));
+      await dispatch(setCloseReadingModal());
+      await dispatch(setPostStatus(""));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  /* 더보기 버튼 토글 */
+  const handleMoreBoxToggle = async (boardId: number) => {
+    setIsBoardId(boardId);
+    const response = await getMemberPost(boardId);
+    setIsPost(response.data);
+    setIsMoreBoxOpen((prevState) => !prevState);
+  };
+
+  /* 더보기 버튼 닫기 */
+  const handleMoreBoxClose = () => {
+    setIsMoreBoxOpen(false);
+  };
+
+  /* 더보기 버튼 메뉴 */
+  const MoreBoxMenuItems: MoreBoxMenuItems[] = [];
+
+  if (isUser?.id === isPost?.memberId) {
+    /* 내가 작성한 글 */
+    MoreBoxMenuItems.push(
+      { text: "끌어올리기", onClick: handlePullUp },
+      { text: "수정", onClick: handleEdit },
+      { text: "삭제", onClick: handleDelete }
+    );
+  } else {
+    /* 다른 사람이 작성한 글 */
+    //친구 삭제 - 차단되어있을 때, 친구일 때, 친구 추가 요청 중일 때
+    //친구 추가(친구 요청) - 친구가 아닐 때, 차단되어있지 않을 때, 친구 추가 요청 중이 아닐 때
+    //친구 요청 취소 - 친구 추가 요청 중일 떄
+    //차단하기 - 친구 추가 요청 중일 때, 친구 삭제된 상태일 때, 차단되어있지 않을 때
+    //차단해제 - 차단되어 있을 때,
+
+    let friendText = "";
+    let friendFunc = null;
+
+    if (!isBlockedStatus) {
+      if (isPost?.isFriend) {
+        friendText = "친구 삭제";
+        friendFunc = handleFriendDelete;
+      } else {
+        if (!isPost?.isFriend && isPost?.friendRequestMemberId !== isUser.id) {
+          friendText = "친구 추가";
+          friendFunc = handleFriendAdd;
+        }
+        if (!isPost?.isFriend && isPost?.friendRequestMemberId === isUser.id) {
+          friendText = "친구 요청 취소";
+          friendFunc = handleCancelFriendReq;
+        }
+      }
+    }
+
+    if (friendText && friendFunc) {
+      MoreBoxMenuItems.push({ text: friendText, onClick: friendFunc });
+    }
+
+    MoreBoxMenuItems.push({
+      text: isPost?.isBlocked ? "차단 해제" : "차단하기",
+      onClick: handleBlock,
+    });
+  }
 
   return (
     <>
@@ -246,7 +441,29 @@ const Table = (props: TableProps) => {
                     <Content>{data.contents}</Content>
                   </Eighth>
                   <Ninth className="table_width">
-                    <P className="gray">{setDateFormatter(data.createdAt)}</P>
+                    <P className="gray">
+                      {setDateFormatter(data.bumpTime || data.createdAt)}
+                    </P>
+                    {isUser.id ? (
+                      <More>
+                        <MoreBoxButton
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleMoreBoxToggle(data.boardId);
+                          }}
+                        />
+                        {isMoreBoxOpen && isBoardId === data.boardId && (
+                          <MoreBox
+                            items={MoreBoxMenuItems}
+                            top={0}
+                            left={-180}
+                            onClose={(e: any) => {
+                              setIsMoreBoxOpen(false);
+                            }}
+                          />
+                        )}
+                      </More>
+                    ) : null}
                   </Ninth>
                 </Row>
               );
@@ -256,7 +473,6 @@ const Table = (props: TableProps) => {
           <NoData>게시된 글이 없습니다.</NoData>
         )}
       </TableWrapper>
-
       {/* 소환사명 복사 모달 */}
       {isModalType === "copied" && (
         <ConfirmModal
@@ -266,6 +482,58 @@ const Table = (props: TableProps) => {
           onPrimaryClick={handleModalClose}
         >
           <Text>{`소환사명이 클립보드에 복사되었습니다.`}</Text>
+        </ConfirmModal>
+      )}
+      {/* 차단하기 팝업 */}
+      {isBlockBoxOpen && (
+        <ConfirmModal
+          width="540px"
+          primaryButtonText="예"
+          secondaryButtonText="아니요"
+          onPrimaryClick={() => {
+            handleRunBlock();
+          }}
+          onSecondaryClick={() => {
+            setIsBlockBoxOpen(false);
+          }}
+        >
+          {isBlockedStatus ? (
+            <MsgConfirm>{"차단을 해제 하시겠습니까?"}</MsgConfirm>
+          ) : (
+            <Msg>
+              {
+                "차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다.\n\n차단하시겠습니까?"
+              }
+            </Msg>
+          )}
+        </ConfirmModal>
+      )}
+      {/* 차단하기 확인 팝업 */}
+      {isBlockConfirmOpen && (
+        <ConfirmModal
+          width="540px"
+          primaryButtonText="확인"
+          onPrimaryClick={() => {
+            setIsBlockConfrimOpen(false);
+          }}
+        >
+          <MsgConfirm>{`${
+            isBlockedStatus ? "차단이" : "차단 해제가"
+          } 완료되었습니다.`}</MsgConfirm>
+        </ConfirmModal>
+      )}
+      {/* 끌어올리기 확인 팝업 */}
+      {isPullUpConfirmOpen && (
+        <ConfirmModal
+          width="540px"
+          primaryButtonText="아니요"
+          secondaryButtonText="예"
+          onPrimaryClick={() => {
+            setIsPullUpConfirmOpen(false);
+          }}
+          onSecondaryClick={handlePullUpAction}
+        >
+          <MsgConfirm>{`본 게시글을 끌어올리시겠습니까?`}</MsgConfirm>
         </ConfirmModal>
       )}
     </>
@@ -398,12 +666,26 @@ const Sixth = styled.div`
 `;
 
 const Seventh = styled.div``;
+
 const Eighth = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
 `;
-const Ninth = styled.div``;
+
+const Ninth = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  p {
+    width: 60px;
+  }
+`;
+
+const More = styled.div`
+  position: relative;
+`;
 
 const NameRow = styled.div`
   display: flex;
@@ -494,4 +776,16 @@ const Copied = styled.div`
   box-shadow: 0 0 25.3px 0 rgba(0, 0, 0, 0.15);
   border-radius: 10px;
   white-space: nowrap;
+`;
+
+const Msg = styled.div`
+  text-align: center;
+  color: ${theme.colors.gray800};
+  ${(props) => props.theme.fonts.regular25};
+  margin: 28px 0;
+`;
+
+const MsgConfirm = styled(Msg)`
+  ${(props) => props.theme.fonts.regular25};
+  margin: 80px 0;
 `;

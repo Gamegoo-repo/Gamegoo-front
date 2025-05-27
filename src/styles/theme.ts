@@ -40,6 +40,8 @@ const colors = {
 
   // 승률 progressbar
   redViolet: "#CA1FCF",
+
+  gradient: "linear-gradient(90deg, #5A42EE 0%, #E02FC8 100%)",
 } as const;
 
 interface Font {

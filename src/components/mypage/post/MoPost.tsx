@@ -1,11 +1,7 @@
 import MoreBox from "@/components/common/MoreBox";
 import RankTier from "@/components/common/RankTier";
-
 import MannerLevel from "@/components/common/MannerLevel";
 import MannerLevelBox from "@/components/common/MannerLevelBox";
-
-import PostBoard from "@/components/createBoard/PostBoard";
-import Report from "@/components/readBoard/MoreBoxButton";
 import { MemberPost } from "@/interface/board";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import {
@@ -13,10 +9,8 @@ import {
   setCloseReadingModal,
   setOpenModal,
   setOpenPostingModal,
+  setOpenReadingModal,
 } from "@/redux/slices/modalSlice";
-import { setPostingDateFormatter } from "@/utils/custom";
-
-import { setUserId } from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import {
@@ -27,7 +21,12 @@ import {
 } from "@/utils/custom";
 import { getProfileBgColor } from "@/utils/profile";
 import { toLowerCaseString } from "@/utils/string";
-import { deletePost, getMemberPost, getNonMemberPost } from "@/api/board/board";
+import {
+  deletePost,
+  getMemberPost,
+  getNonMemberPost,
+  pullUpPost,
+} from "@/api/board/board";
 import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { AlertProps } from "@/interface/modal";
 import { GameMode } from "@/types/game/gameMode";
@@ -41,6 +40,9 @@ import Image from "next/image";
 import PositionBox from "@/components/mypage/post/PositionBox";
 import Champion from "@/components/mypage/post/Champion";
 import ProfileImage from "@/components/mypage/post/ProfileImage";
+import { notify } from "@/hooks/notify";
+import ConfirmModal from "@/components/common/ConfirmModal";
+import { setRefresh } from "@/redux/slices/boardSlice";
 
 export interface PostProps {
   user: User;
@@ -69,6 +71,7 @@ const MoPost: React.FC<PostProps> = ({
   rank,
   contents,
   createdAt,
+  bumpTime,
   boardNumber,
   onDeletePost,
 }) => {
@@ -99,6 +102,7 @@ const MoPost: React.FC<PostProps> = ({
   });
   const [isBlockBoxOpen, setIsBlockBoxOpen] = useState(false);
   const [isBlockConfirmOpen, setIsBlockConfrimOpen] = useState(false);
+  const [isPullUpConfirmOpen, setIsPullUpConfirmOpen] = useState(false);
 
   const isModalType = useSelector((state: RootState) => state.modal.modalType);
   const isUser = useSelector((state: RootState) => state.user);
@@ -210,6 +214,36 @@ const MoPost: React.FC<PostProps> = ({
     setIsMannerLevelBoxOpen((prevState) => !prevState);
   };
 
+  /* 게시글 끌어올리기 */
+  const handlePullUp = () => {
+    if (!isUser.id) {
+      return showAlertWithContent(
+        "exclamation",
+        logoutMessage,
+        () => router.push("/login"),
+        "로그인하기"
+      );
+    }
+
+    if (isUser?.id !== isPost?.memberId) return;
+
+    if (isPost) {
+      setIsPullUpConfirmOpen(true);
+    }
+  };
+
+  const handlePullUpAction = async () => {
+    // 게시판 끌어올리기 API
+    await setIsPullUpConfirmOpen(false);
+    await pullUpPost(boardId);
+    await dispatch(setRefresh());
+    await notify({
+      text: "끌어올리기가 완료되었습니다",
+      icon: "👌🏼",
+      type: "success",
+    });
+  };
+
   /* 게시글 수정 */
   const handleEdit = async () => {
     // Todo 게시글 수정
@@ -263,6 +297,7 @@ const MoPost: React.FC<PostProps> = ({
   const MoreBoxMenuItems: MoreBoxMenuItems[] = [];
 
   MoreBoxMenuItems.push(
+    { text: "끌어올리기", onClick: handlePullUp },
     { text: "수정", onClick: handleEdit },
     { text: "삭제", onClick: handleDelete }
   );
@@ -375,9 +410,23 @@ const MoPost: React.FC<PostProps> = ({
           <Memo>
             <MemoData>{contents}</MemoData>
           </Memo>
-          <UpdatedDate>{setDateFormatter(createdAt)}</UpdatedDate>
+          <UpdatedDate>{setDateFormatter(bumpTime || createdAt)}</UpdatedDate>
         </MemoSection>
       </Wrapper>
+      {/* 끌어올리기 확인 팝업 */}
+      {isPullUpConfirmOpen && (
+        <ConfirmModal
+          width="540px"
+          primaryButtonText="아니요"
+          secondaryButtonText="예"
+          onPrimaryClick={() => {
+            setIsPullUpConfirmOpen(false);
+          }}
+          onSecondaryClick={handlePullUpAction}
+        >
+          <MsgConfirm>{`본 게시글을 끌어올리시겠습니까?`}</MsgConfirm>
+        </ConfirmModal>
+      )}
     </>
   );
 };
@@ -539,4 +588,11 @@ const UpdatedDate = styled.p`
   color: ${theme.colors.gray500};
   text-align: right;
   margin-top: 6px;
+`;
+
+const MsgConfirm = styled.div`
+  text-align: center;
+  color: ${theme.colors.gray800};
+  ${(props) => props.theme.fonts.regular25};
+  margin: 80px 0;
 `;

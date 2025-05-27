@@ -1,7 +1,7 @@
 "use client";
 
 import styled from "styled-components";
-import Image, { ImageProps } from "next/image";
+import Image from "next/image";
 import { theme } from "@/styles/theme";
 import { useEffect, useRef, useState } from "react";
 import { BOARD_TITLE, GAME_MODE, MIC, TIER } from "@/constants/board";
@@ -18,22 +18,25 @@ import {
   setOpenModal,
   setOpenPostingModal,
 } from "@/redux/slices/modalSlice";
-import { getBoardList } from "@/api/board/board";
+import { getBoardList, getMyPost, pullUpPost } from "@/api/board/board";
 import { BoardListDetail } from "@/interface/board";
 import Alert from "@/components/common/Alert";
 import { useRouter } from "next/navigation";
 import { clearCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { mikeBooleanToId, tierStringToId } from "@/utils/custom";
-import { resetBoardFilters } from "@/redux/slices/boardSlice";
+import { resetBoardFilters, setRefresh } from "@/redux/slices/boardSlice";
 import { rotate } from "@/styles/animation";
 import { Position } from "@/types/position/position";
 import { Mike } from "@/types/user/mike";
 import { GameMode } from "@/types/game/gameMode";
+import ConfirmModal from "@/components/common/ConfirmModal";
+import { notify } from "@/hooks/notify";
 
 const ITEMS_PER_PAGE = 20;
 const BUTTONS_PER_PAGE = 5;
 
 const BoardPage = () => {
+  const dispatch = useDispatch();
   const [boardList, setBoardList] = useState<BoardListDetail[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
@@ -48,15 +51,17 @@ const BoardPage = () => {
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
   const [selectedMic, setSelectedMic] = useState<Mike | null>(null);
   const [showAlert, setShowAlert] = useState(false);
-  const [refresh, setRefresh] = useState(false);
+
+  // 게시판 글 새로고침
+  const boardRefresh = useSelector((state: RootState) => state.board.refresh);
 
   const gameModeRef = useRef<HTMLDivElement>(null);
   const tierRef = useRef<HTMLDivElement>(null);
   const micRef = useRef<HTMLDivElement>(null);
   const [isRotating, setIsRotating] = useState(false);
 
-  const dispatch = useDispatch();
-  const router = useRouter();
+  const [isPullUpConfirmOpen, setIsPullUpConfirmOpen] = useState(false);
+  const [myRecentPost, setMyRecentPost] = useState<number | null>(null);
 
   const isPostingModal = useSelector(
     (state: RootState) => state.modal.postingModal
@@ -191,6 +196,7 @@ const BoardPage = () => {
 
   useEffect(() => {
     getList();
+    console.log("boardRefresh", boardRefresh);
   }, [
     currentPage,
     selectedGameMode,
@@ -198,7 +204,7 @@ const BoardPage = () => {
     isPosition,
     selectedMic,
     isPostStatus,
-    refresh,
+    boardRefresh,
   ]);
 
   /* 페이지네이션 이전 클릭 */
@@ -229,11 +235,37 @@ const BoardPage = () => {
 
   const handleRefresh = () => {
     setIsRotating(true);
-    setRefresh((prevStatus) => !prevStatus);
+    dispatch(setRefresh());
 
     setTimeout(() => {
       setIsRotating(false);
     }, 1000);
+  };
+
+  /* 게시글 끌어올리기 */
+  const handlePullUp = async () => {
+    // 내가 쓴 글로부터 최신글 정보 조회
+    const myPost = await getMyPost(1);
+    if (myPost.data.totalCount > 0) {
+      setMyRecentPost(myPost.data.myBoards[0].boardId);
+      setIsPullUpConfirmOpen(true);
+    } else {
+      notify({ text: "작성한 글이 없어요", icon: "🚫", type: "error" });
+    }
+  };
+
+  const handlePullUpAction = async () => {
+    // 게시판 끌어올리기 API
+    await setIsPullUpConfirmOpen(false);
+    if (myRecentPost) {
+      await pullUpPost(myRecentPost);
+      await dispatch(setRefresh());
+    }
+    await notify({
+      text: "끌어올리기가 완료되었습니다",
+      icon: "👌🏼",
+      type: "success",
+    });
   };
 
   return (
@@ -260,20 +292,21 @@ const BoardPage = () => {
           <BoardContent>
             <FirstRow>
               <Title>게시판</Title>
-              <RefreshImage
-                onClick={handleRefresh}
-                src="/assets/icons/refresh.svg"
-                width={30}
-                height={27}
-                alt="새로고침"
-                $isrotating={isRotating}
-              />
+              <RefreshButton onClick={handleRefresh}>
+                <RefreshImage
+                  src="/assets/icons/redo.svg"
+                  width={20}
+                  height={20}
+                  alt="새로고침"
+                  $isrotating={isRotating}
+                />
+              </RefreshButton>
             </FirstRow>
             <SecondRow>
               <FirstBlock>
                 <Dropdown
                   type="type1"
-                  width="170px"
+                  width="138px"
                   padding="18px 21px"
                   list={GAME_MODE}
                   ref={gameModeRef}
@@ -295,13 +328,6 @@ const BoardPage = () => {
                     tierStringToId(boardFilters.tier) || selectedTier
                   }
                 />
-                <PositionBox>
-                  <PositionFilter
-                    onPositionFilter={handlePositionFilter}
-                    isPosition={isPosition}
-                    // isPosition={boardFilters.mainPosition || isPosition}
-                  />
-                </PositionBox>
                 <Dropdown
                   type="type1"
                   width="138px"
@@ -316,13 +342,33 @@ const BoardPage = () => {
                     mikeBooleanToId(boardFilters.mike) || selectedMic
                   }
                 />
+                <PositionBox>
+                  <PositionFilter
+                    onPositionFilter={handlePositionFilter}
+                    isPosition={isPosition}
+                    // isPosition={boardFilters.mainPosition || isPosition}
+                  />
+                </PositionBox>
               </FirstBlock>
               <SecondBlock>
+                {boardList?.length > 0 && isUser?.id ? (
+                  <PullUpButton onClick={handlePullUp}>
+                    <Image
+                      src="/assets/icons/chevron_double_up.svg"
+                      width={15}
+                      height={15}
+                      alt=""
+                    />
+                    최근 글 끌어올리기
+                  </PullUpButton>
+                ) : null}
                 <Button
                   onClick={handlePostingOpen}
                   buttonType="primary"
                   size="large"
                   text="글 작성하기"
+                  borderRadius="12px"
+                  width="248px"
                 />
               </SecondBlock>
             </SecondRow>
@@ -344,6 +390,21 @@ const BoardPage = () => {
             )}
           </BoardContent>
         </Wrapper>
+      )}
+      {/* 끌어올리기 확인 팝업 */}
+      {isPullUpConfirmOpen && (
+        <ConfirmModal
+          width="540px"
+          primaryButtonText="아니요"
+          secondaryButtonText="예"
+          onPrimaryClick={() => {
+            setMyRecentPost(null);
+            setIsPullUpConfirmOpen(false);
+          }}
+          onSecondaryClick={handlePullUpAction}
+        >
+          <MsgConfirm>{`최근 게시글을 끌어올리시겠습니까?`}</MsgConfirm>
+        </ConfirmModal>
       )}
     </>
   );
@@ -377,11 +438,20 @@ const Title = styled.p`
   ${theme.fonts.bold32};
 `;
 
-interface RefreshImageProps extends ImageProps {
-  $isrotating: boolean;
-}
+const RefreshButton = styled.button`
+  width: 44px;
+  height: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid ${theme.colors.violet200};
+  background: ${theme.colors.violet100};
+`;
 
-const RefreshImage = styled(Image)<RefreshImageProps>`
+const RefreshImage = styled(Image)<{ $isrotating: boolean }>`
   cursor: pointer;
   animation: ${(props) => (props.$isrotating ? rotate : "none")} 1s linear;
 `;
@@ -391,6 +461,7 @@ const SecondRow = styled.div`
   align-items: center;
   justify-content: space-between;
   margin-bottom: 25px;
+  gap: 30px;
 `;
 
 const FirstBlock = styled.div`
@@ -404,9 +475,31 @@ const PositionBox = styled.div`
   border-radius: 10px;
 `;
 
-const SecondBlock = styled.div``;
+const SecondBlock = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 24px;
+`;
+
+const PullUpButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 4.5px;
+  background: ${theme.colors.gradient};
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  white-space: nowrap;
+  ${theme.fonts.bold14};
+`;
 
 const Main = styled.main`
   width: 100%;
   margin-bottom: 64px;
+`;
+
+const MsgConfirm = styled.div`
+  text-align: center;
+  color: ${theme.colors.gray800};
+  ${(props) => props.theme.fonts.regular25};
+  margin: 80px 0;
 `;

@@ -70,16 +70,20 @@ const Wrapper = styled.div`
 const AllButton = styled.button`
   max-width: 48px;
   height: 56px;
-  padding: 0 15px;
+  padding: 16px 11px;
   border-right: 1px solid ${theme.colors.gray300};
   border-radius: 10px 0 0 10px;
 
   &:hover {
     background: ${theme.colors.gray400};
+
+    path {
+      stroke: ${theme.colors.white};
+    }
   }
 
   &.clicked {
-    background: ${theme.colors.violet600};
+    background: ${theme.colors.gray700};
 
     path {
       stroke: ${theme.colors.white};
@@ -90,15 +94,25 @@ const AllButton = styled.button`
 const TopButton = styled.button`
   max-width: 48px;
   height: 56px;
-  padding: 0 15px;
+  padding: 16px 11px;
   border-right: 1px solid ${theme.colors.gray300};
 
   &:hover {
     background: ${theme.colors.gray400};
+
+    path:first-child {
+      fill: ${theme.colors.white};
+    }
+    path:nth-child(2) {
+      fill: ${theme.colors.white};
+    }
+    path:nth-child(3) {
+      fill: ${theme.colors.white};
+    }
   }
 
   &.clicked {
-    background: ${theme.colors.violet600};
+    background: ${theme.colors.gray700};
 
     path:first-child {
       fill: ${theme.colors.white};
@@ -109,15 +123,19 @@ const TopButton = styled.button`
 const JungleButton = styled.button`
   max-width: 48px;
   height: 56px;
-  padding: 0 15px;
+  padding: 16px 11px;
   border-right: 1px solid ${theme.colors.gray300};
 
   &:hover {
     background: ${theme.colors.gray400};
+
+    path {
+      fill: ${theme.colors.white};
+    }
   }
 
   &.clicked {
-    background: ${theme.colors.violet600};
+    background: ${theme.colors.gray700};
 
     path {
       fill: ${theme.colors.white};
@@ -128,15 +146,25 @@ const JungleButton = styled.button`
 const MidButton = styled.button`
   max-width: 48px;
   height: 56px;
-  padding: 0 15px;
+  padding: 16px 11px;
   border-right: 1px solid ${theme.colors.gray300};
 
   &:hover {
     background: ${theme.colors.gray400};
+
+    path:first-child {
+      fill: ${theme.colors.white};
+    }
+    path:nth-child(2) {
+      fill: ${theme.colors.white};
+    }
+    path:nth-child(3) {
+      fill: ${theme.colors.white};
+    }
   }
 
   &.clicked {
-    background: ${theme.colors.violet600};
+    background: ${theme.colors.gray700};
 
     path:nth-child(2) {
       fill: ${theme.colors.white};
@@ -147,15 +175,25 @@ const MidButton = styled.button`
 const OneDealButton = styled.button`
   max-width: 48px;
   height: 56px;
-  padding: 0 15px;
+  padding: 16px 11px;
   border-right: 1px solid ${theme.colors.gray300};
 
   &:hover {
     background: ${theme.colors.gray400};
+
+    path:first-child {
+      fill: ${theme.colors.white};
+    }
+    path:nth-child(2) {
+      fill: ${theme.colors.white};
+    }
+    path:nth-child(3) {
+      fill: ${theme.colors.white};
+    }
   }
 
   &.clicked {
-    background: ${theme.colors.violet600};
+    background: ${theme.colors.gray700};
 
     path:nth-child(2) {
       fill: ${theme.colors.white};
@@ -166,15 +204,19 @@ const OneDealButton = styled.button`
 const SupporterButton = styled.button`
   max-width: 48px;
   height: 56px;
-  padding: 0 15px;
+  padding: 16px 11px;
   border-radius: 0 10px 10px 0;
 
   &:hover {
     background: ${theme.colors.gray400};
+
+    path {
+      fill: ${theme.colors.white};
+    }
   }
 
   &.clicked {
-    background: ${theme.colors.violet600};
+    background: ${theme.colors.gray700};
 
     path {
       fill: ${theme.colors.white};

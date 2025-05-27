@@ -16,7 +16,12 @@ import GameStyle from "./GameStyle";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import MoreBox from "../common/MoreBox";
 import { MemberPost } from "@/interface/board";
-import { deletePost, getMemberPost, getNonMemberPost } from "@/api/board/board";
+import {
+  deletePost,
+  getMemberPost,
+  getNonMemberPost,
+  pullUpPost,
+} from "@/api/board/board";
 import LoadingSpinner from "../common/LoadingSpinner";
 import { setPostingDateFormatter } from "@/utils/custom";
 import { reportMember } from "@/api/report/report";
@@ -32,6 +37,7 @@ import {
   setCloseReadingModal,
   setOpenModal,
   setOpenPostingModal,
+  setOpenReadingModal,
 } from "@/redux/slices/modalSlice";
 import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import Alert from "../common/Alert";
@@ -51,6 +57,7 @@ import { blockMember, unblockMember } from "@/api/block/block";
 import { GameMode } from "@/types/game/gameMode";
 import UserAccount from "../crBoard/UserAccount";
 import RankTier from "../common/RankTier";
+import { setRefresh } from "@/redux/slices/boardSlice";
 
 interface ReadBoardProps {
   postId: number;
@@ -84,6 +91,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   });
   const [isBlockBoxOpen, setIsBlockBoxOpen] = useState(false);
   const [isBlockConfirmOpen, setIsBlockConfrimOpen] = useState(false);
+  const [isPullUpConfirmOpen, setIsPullUpConfirmOpen] = useState(false);
 
   const isModalType = useSelector((state: RootState) => state.modal.modalType);
   const isUser = useSelector((state: RootState) => state.user);
@@ -357,6 +365,37 @@ const ReadBoard = (props: ReadBoardProps) => {
     );
   };
 
+  /* 게시글 끌어올리기 */
+  const handlePullUp = () => {
+    if (!isUser.id) {
+      return showAlertWithContent(
+        "exclamation",
+        logoutMessage,
+        () => router.push("/login"),
+        "로그인하기"
+      );
+    }
+
+    if (isUser?.id !== isPost?.memberId) return;
+
+    if (isPost) {
+      setIsPullUpConfirmOpen(true);
+    }
+  };
+
+  const handlePullUpAction = async () => {
+    // 게시판 끌어올리기 API
+    await setIsPullUpConfirmOpen(false);
+    await pullUpPost(postId);
+    await dispatch(setRefresh());
+    await dispatch(setCloseReadingModal());
+    await notify({
+      text: "끌어올리기가 완료되었습니다",
+      icon: "👌🏼",
+      type: "success",
+    });
+  };
+
   /* 게시글 수정 */
   const handleEdit = async () => {
     if (!isUser.id) {
@@ -429,6 +468,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   if (isUser?.id === isPost?.memberId) {
     /* 내가 작성한 글 */
     MoreBoxMenuItems.push(
+      { text: "끌어올리기", onClick: handlePullUp },
       { text: "수정", onClick: handleEdit },
       { text: "삭제", onClick: handleDelete }
     );
@@ -649,19 +689,33 @@ const ReadBoard = (props: ReadBoardProps) => {
                     <MemoData>{isPost.contents}</MemoData>
                   </Memo>
                   <UpdatedDate>
-                    게시일 : {setPostingDateFormatter(isPost.createdAt)}
+                    게시일 :{" "}
+                    {setPostingDateFormatter(
+                      isPost.bumpTime || isPost.createdAt
+                    )}
                   </UpdatedDate>
                 </MemoSection>
               </Wrapper>
-              {isUser.gameName !== isPost.gameName && (
+              {isUser.gameName !== isPost.gameName ? (
                 <ButtonContent $gameType={gameMode}>
                   <Button
                     type="submit"
                     buttonType="primary"
-                    text="말 걸어보기"
+                    text={"말 걸어보기"}
                     onClick={handleChatStart}
                   />
                 </ButtonContent>
+              ) : (
+                // isPostStatus === "pullup" && (
+                <ButtonContent $gameType={gameMode}>
+                  <Button
+                    type="submit"
+                    buttonType="primary"
+                    text={"끌어올리기"}
+                    onClick={handlePullUpAction}
+                  />
+                </ButtonContent>
+                // )
               )}
             </>
           )
@@ -758,6 +812,20 @@ const ReadBoard = (props: ReadBoardProps) => {
           <MsgConfirm>{`${
             isBlockedStatus ? "차단이" : "차단 해제가"
           } 완료되었습니다.`}</MsgConfirm>
+        </ConfirmModal>
+      )}
+      {/* 끌어올리기 확인 팝업 */}
+      {isPullUpConfirmOpen && (
+        <ConfirmModal
+          width="540px"
+          primaryButtonText="아니요"
+          secondaryButtonText="예"
+          onPrimaryClick={() => {
+            setIsPullUpConfirmOpen(false);
+          }}
+          onSecondaryClick={handlePullUpAction}
+        >
+          <MsgConfirm>{`본 게시글을 끌어올리시겠습니까?`}</MsgConfirm>
         </ConfirmModal>
       )}
     </>
@@ -939,12 +1007,12 @@ const ReportButton = styled.div`
 
 const Msg = styled.div`
   text-align: center;
-  color: ${theme.colors.gray600};
-  ${(props) => props.theme.fonts.regular20};
+  color: ${theme.colors.gray800};
+  ${(props) => props.theme.fonts.regular25};
   margin: 28px 0;
 `;
 
 const MsgConfirm = styled(Msg)`
-  ${(props) => props.theme.fonts.regular20};
+  ${(props) => props.theme.fonts.regular25};
   margin: 80px 0;
 `;
