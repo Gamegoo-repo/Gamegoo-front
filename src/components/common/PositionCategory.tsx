@@ -18,10 +18,17 @@ interface PositionComponentProps {
   // onSelect: (selectedValues: Position | (Position | null)[]) => void;
   onSelect: (selectedValue: Position | null) => void;
   onClose: () => void;
+  usedPositions?: Position[] | null;
 }
 
 const PositionCategory = (props: PositionComponentProps) => {
-  const { selectedBox, value = [], onSelect, onClose } = props;
+  const {
+    selectedBox,
+    value = [],
+    onSelect,
+    onClose,
+    usedPositions = [],
+  } = props;
   const isMobile = useMediaQueries({ breakpoint: 700 });
   const boxRef = React.useRef<HTMLDivElement>(null);
 
@@ -105,16 +112,21 @@ const PositionCategory = (props: PositionComponentProps) => {
       </Header>
 
       <Box $isWant={selectedBox === "want"} ref={boxRef}>
-        {positionList.map((pos) => (
-          <StyledButton
-            key={pos.id}
-            $posKey={pos.key}
-            onClick={() => handlePositionCategory(pos.key)}
-            $selected={value === pos.key}
-          >
-            {getSvgComponent(pos.key)}
-          </StyledButton>
-        ))}
+        {positionList.map((pos) => {
+          const isUsed = usedPositions?.includes(pos.key) && value !== pos.key;
+          return (
+            <StyledButton
+              key={pos.id}
+              $posKey={pos.key}
+              onClick={() => handlePositionCategory(pos.key)}
+              $selected={value === pos.key}
+              disabled={isUsed}
+              $isUsed={isUsed}
+            >
+              {getSvgComponent(pos.key)}
+            </StyledButton>
+          );
+        })}
       </Box>
     </Wrapper>
   );
@@ -194,7 +206,11 @@ const Box = styled.div<{ $isWant: boolean }>`
   }
 `;
 
-const StyledButton = styled.button<{ $posKey: Position; $selected: boolean }>`
+const StyledButton = styled.button<{
+  $posKey: Position;
+  $selected: boolean;
+  $isUsed?: boolean;
+}>`
   width: 48px;
   height: 48px;
   display: flex;
@@ -205,5 +221,6 @@ const StyledButton = styled.button<{ $posKey: Position; $selected: boolean }>`
   border-radius: 6px;
   padding-top: 2px;
   padding-left: 1px;
+  opacity: ${(props) => (props.$isUsed ? 0.4 : 1)};
   cursor: pointer;
 `;

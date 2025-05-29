@@ -669,6 +669,12 @@ const Profile: React.FC<Profile> = ({
                               onSelect={(val) =>
                                 handleCategoryButtonClick(val, "want", index)
                               }
+                              usedPositions={
+                                positionValue.want?.filter(
+                                  (pos, i): pos is Position =>
+                                    i !== index && pos !== null
+                                ) ?? []
+                              }
                             />
                           )}
                         </PosiItem>
