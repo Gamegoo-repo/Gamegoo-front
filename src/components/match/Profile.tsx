@@ -94,7 +94,7 @@ const Profile: React.FC<Profile> = ({
   const [positionValue, setPositionValue] = useState<PositionState>({
     main: user.mainP,
     sub: user.subP,
-    want: [null, null],
+    want: user.wantP,
   });
   /* 선택된 현재 프로필 이미지 */
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(
@@ -107,7 +107,7 @@ const Profile: React.FC<Profile> = ({
     setPositionValue({
       main: user.mainP,
       sub: user.subP,
-      want: [null, null], // 나중에 wantP값 받아서 수정
+      want: user.wantP, // 나중에 wantP값 받아서 수정
     });
     setSelectedImageIndex(user.profileImg);
   }, [user]);
@@ -251,7 +251,11 @@ const Profile: React.FC<Profile> = ({
 
   // 포지션 선택해 변경하기
   const handlePositionChange = async (newPositionValue: PositionState) => {
-    if (profileType === "me" && newPositionValue.main && newPositionValue.sub) {
+    if (
+      profileType !== "other" &&
+      newPositionValue.main &&
+      newPositionValue.sub
+    ) {
       try {
         // 포지션 변경 API 호출
         await putPosition({
@@ -664,6 +668,12 @@ const Profile: React.FC<Profile> = ({
                               onClose={() => handlePositionClose("want", index)}
                               onSelect={(val) =>
                                 handleCategoryButtonClick(val, "want", index)
+                              }
+                              usedPositions={
+                                positionValue.want?.filter(
+                                  (pos, i): pos is Position =>
+                                    i !== index && pos !== null
+                                ) ?? []
                               }
                             />
                           )}
