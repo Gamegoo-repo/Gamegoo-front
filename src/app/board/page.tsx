@@ -21,7 +21,6 @@ import {
 import { getBoardList, getMyPost, pullUpPost } from "@/api/board/board";
 import { BoardListDetail } from "@/interface/board";
 import Alert from "@/components/common/Alert";
-import { useRouter } from "next/navigation";
 import { clearCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { mikeBooleanToId, tierStringToId } from "@/utils/custom";
 import { resetBoardFilters, setRefresh } from "@/redux/slices/boardSlice";
@@ -293,103 +292,220 @@ const BoardPage = () => {
       {boardList && (
         <Wrapper>
           <BoardContent>
-            <FirstRow>
-              <Title>게시판</Title>
-              <RefreshButton onClick={handleRefresh}>
-                <RefreshImage
-                  src="/assets/icons/redo.svg"
-                  width={20}
-                  height={20}
-                  alt="새로고침"
-                  $isrotating={isRotating}
-                />
-              </RefreshButton>
-            </FirstRow>
-            <SecondRow>
-              <FirstBlock>
-                <Dropdown
-                  type="type1"
-                  width="138px"
-                  padding="18px 21px"
-                  list={GAME_MODE}
-                  ref={gameModeRef}
-                  open={isGameModeDropdownOpen}
-                  setOpen={setIsGameModeDropdownOpen}
-                  onDropValue={handleGameModeDropValue}
-                  defaultValue={boardFilters.gameMode || selectedGameMode}
-                />
-                <Dropdown
-                  type="type1"
-                  width="150px"
-                  padding="18px 21px"
-                  list={TIER}
-                  ref={tierRef}
-                  open={isTierDropdownOpen}
-                  setOpen={setIsTierDropdownOpen}
-                  onDropValue={handleTierDropValue}
-                  defaultValue={
-                    tierStringToId(boardFilters.tier) || selectedTier
-                  }
-                />
-                <Dropdown
-                  type="type1"
-                  width="138px"
-                  padding="18px 21px"
-                  list={MIC}
-                  ref={micRef}
-                  open={isMicDropdownOpen}
-                  setOpen={setIsMicDropdownOpen}
-                  onDropValue={handleMicDropValue}
-                  // defaultValue={2}
-                  defaultValue={
-                    mikeBooleanToId(boardFilters.mike) || selectedMic
-                  }
-                />
-                <PositionBox>
-                  <PositionFilter
-                    onPositionFilter={handlePositionFilter}
-                    isPosition={isPosition}
-                    // isPosition={boardFilters.mainPosition || isPosition}
-                  />
-                </PositionBox>
-              </FirstBlock>
-              <SecondBlock>
-                {boardList?.length > 0 && isUser?.id ? (
-                  <PullUpButton onClick={handlePullUp}>
-                    <Image
-                      src="/assets/icons/chevron_double_up.svg"
-                      width={15}
-                      height={15}
-                      alt=""
+            {!isMobile ? (
+              <>
+                {/* PC */}
+                <FirstRow>
+                  <Title>게시판</Title>
+                  <RefreshButton onClick={handleRefresh}>
+                    <RefreshImage
+                      onClick={handleRefresh}
+                      src="/assets/icons/redo.svg"
+                      width={20}
+                      height={20}
+                      alt="새로고침"
+                      $isrotating={isRotating}
                     />
-                    최근 글 끌어올리기
-                  </PullUpButton>
-                ) : null}
-                <Button
-                  onClick={handlePostingOpen}
-                  buttonType="primary"
-                  size="large"
-                  text="글 작성하기"
-                  borderRadius="12px"
-                  width="248px"
-                />
-              </SecondBlock>
-            </SecondRow>
-            <Main>
-              <Table title={BOARD_TITLE} content={boardList} />
-            </Main>
-            {boardList?.length > 0 && (
-              <Pagination
-                currentPage={currentPage}
-                totalItems={totalItems}
-                totalPage={totalPage}
-                itemsPerPage={ITEMS_PER_PAGE}
-                pageButtonCount={BUTTONS_PER_PAGE}
-                hasMoreItems={currentPage < totalPage}
-                onPrevPage={handlePrevPage}
-                onNextPage={handleNextPage}
-                onPageClick={handlePageClick}
-              />
+                  </RefreshButton>
+                </FirstRow>
+                <SecondRow>
+                  <FirstBlock>
+                    <Dropdown
+                      type="type1"
+                      width="138px"
+                      padding="18px 21px"
+                      list={GAME_MODE}
+                      ref={gameModeRef}
+                      open={isGameModeDropdownOpen}
+                      setOpen={setIsGameModeDropdownOpen}
+                      onDropValue={handleGameModeDropValue}
+                      defaultValue={boardFilters.gameMode || selectedGameMode}
+                    />
+                    <Dropdown
+                      type="type1"
+                      width="150px"
+                      padding="18px 21px"
+                      list={TIER}
+                      ref={tierRef}
+                      open={isTierDropdownOpen}
+                      setOpen={setIsTierDropdownOpen}
+                      onDropValue={handleTierDropValue}
+                      defaultValue={
+                        tierStringToId(boardFilters.tier) || selectedTier
+                      }
+                    />
+                    <Dropdown
+                      type="type1"
+                      width="138px"
+                      padding="18px 21px"
+                      list={MIC}
+                      ref={micRef}
+                      open={isMicDropdownOpen}
+                      setOpen={setIsMicDropdownOpen}
+                      onDropValue={handleMicDropValue}
+                      // defaultValue={2}
+                      defaultValue={
+                        mikeBooleanToId(boardFilters.mike) || selectedMic
+                      }
+                    />
+                    <PositionBox>
+                      <PositionFilter
+                        onPositionFilter={handlePositionFilter}
+                        isPosition={isPosition}
+                        // isPosition={boardFilters.mainPosition || isPosition}
+                      />
+                    </PositionBox>
+                  </FirstBlock>
+                  <SecondBlock>
+                    {boardList?.length > 0 && isUser?.id ? (
+                      <PullUpButton onClick={handlePullUp}>
+                        <Image
+                          src="/assets/icons/chevron_double_up.svg"
+                          width={15}
+                          height={15}
+                          alt=""
+                        />
+                        최근 글 끌어올리기
+                      </PullUpButton>
+                    ) : null}
+                    <Button
+                      onClick={handlePostingOpen}
+                      buttonType="primary"
+                      size="large"
+                      text="글 작성하기"
+                      borderRadius="12px"
+                      width="248px"
+                    />
+                  </SecondBlock>
+                </SecondRow>
+                <Main>
+                  <Table title={BOARD_TITLE} content={boardList} />
+                </Main>
+                {boardList?.length > 0 && (
+                  <Pagination
+                    currentPage={currentPage}
+                    totalItems={totalItems}
+                    totalPage={totalPage}
+                    itemsPerPage={ITEMS_PER_PAGE}
+                    pageButtonCount={BUTTONS_PER_PAGE}
+                    hasMoreItems={currentPage < totalPage}
+                    onPrevPage={handlePrevPage}
+                    onNextPage={handleNextPage}
+                    onPageClick={handlePageClick}
+                  />
+                )}
+              </>
+            ) : (
+              <>
+                {/* MOBILE */}
+                <FirstRow>
+                  <Title>게시판</Title>
+
+                  <FirstRowRight>
+                    {boardList?.length > 0 && isUser?.id ? (
+                      <PullUpButton onClick={handlePullUp}>
+                        <Image
+                          src={"/assets/icons/chevron_double_up_white.svg"}
+                          width={15}
+                          height={15}
+                          alt=""
+                        />
+                      </PullUpButton>
+                    ) : null}
+
+                    <Button
+                      width="104px"
+                      height="38px"
+                      onClick={handlePostingOpen}
+                      buttonType="primary"
+                      size="large"
+                      text="글 작성하기"
+                    />
+                  </FirstRowRight>
+                </FirstRow>
+                <SecondRow>
+                  <PositionBox>
+                    <PositionFilter
+                      onPositionFilter={handlePositionFilter}
+                      isPosition={isPosition}
+                      // isPosition={boardFilters.mainPosition || isPosition}
+                    />
+                  </PositionBox>
+                  <RefreshImageWrap>
+                    <RefreshImage
+                      onClick={handleRefresh}
+                      src="/assets/icons/redo.svg"
+                      width={20}
+                      height={20}
+                      alt="새로고침"
+                      $isrotating={isRotating}
+                    />
+                  </RefreshImageWrap>
+                </SecondRow>
+                <ThirdRow>
+                  <Dropdown
+                    type="type1"
+                    width="114px"
+                    padding="8px 8px 8px 12px"
+                    list={GAME_MODE}
+                    ref={gameModeRef}
+                    open={isGameModeDropdownOpen}
+                    setOpen={setIsGameModeDropdownOpen}
+                    onDropValue={handleGameModeDropValue}
+                    defaultValue={boardFilters.gameMode || selectedGameMode}
+                  />
+                  <Dropdown
+                    type="type1"
+                    width="89px"
+                    padding="8px 8px 8px 12px"
+                    list={TIER}
+                    ref={tierRef}
+                    open={isTierDropdownOpen}
+                    setOpen={setIsTierDropdownOpen}
+                    onDropValue={handleTierDropValue}
+                    defaultValue={
+                      tierStringToId(boardFilters.tier) || selectedTier
+                    }
+                  />
+                  <Dropdown
+                    type="type1"
+                    width="89px"
+                    padding="8px 8px 8px 12px"
+                    list={MIC}
+                    ref={micRef}
+                    open={isMicDropdownOpen}
+                    setOpen={setIsMicDropdownOpen}
+                    onDropValue={handleMicDropValue}
+                    defaultValue={
+                      mikeBooleanToId(boardFilters.mike) || selectedMic
+                    }
+                  />
+                </ThirdRow>
+
+                {boardList?.length > 0 ? (
+                  <MoPostList>
+                    {boardList.map((item, index) => (
+                      <MoPost
+                        key={item.boardId}
+                        boardId={item.boardId}
+                        tag={item.tag}
+                        memberId={item.memberId}
+                        profileImage={item.profileImage}
+                        gameName={item.gameName}
+                        tier={item.tier || ""}
+                        contents={item.contents}
+                        createdAt={item.createdAt}
+                        mainP={item.mainP}
+                        subP={item.subP}
+                        wantP={item.wantP}
+                        winRate={item.winRate}
+                      />
+                    ))}
+                  </MoPostList>
+                ) : (
+                  <NoData>게시된 글이 없습니다.</NoData>
+                )}
+              </>
             )}
           </BoardContent>
         </Wrapper>
@@ -453,6 +569,11 @@ const Title = styled.p`
   }
 `;
 
+const FirstRowRight = styled.div`
+  display: flex;
+  gap: 8px;
+`;
+
 const RefreshButton = styled.button`
   width: 44px;
   height: 44px;
@@ -496,6 +617,7 @@ const SecondRow = styled.div`
   gap: 30px;
   @media (max-width: 700px) {
     margin-bottom: 8px;
+    gap: 0px;
   }
 `;
 
@@ -532,6 +654,13 @@ const PullUpButton = styled.button`
   -webkit-text-fill-color: transparent;
   white-space: nowrap;
   ${theme.fonts.bold14};
+  @media (max-width: 700px) {
+    justify-content: center;
+    background: ${theme.colors.gradientMobile};
+    width: 38px;
+    height: 38px;
+    border-radius: 6px;
+  }
 `;
 
 const Main = styled.main`

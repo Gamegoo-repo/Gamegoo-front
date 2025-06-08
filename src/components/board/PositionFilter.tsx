@@ -90,8 +90,9 @@ const AllButton = styled.button`
     }
   }
   @media (max-width: 700px) {
-    width: 44px;
+    width: 42px;
     height: 44px;
+    padding: 10px;
   }
 `;
 
@@ -123,8 +124,9 @@ const TopButton = styled.button`
     }
   }
   @media (max-width: 700px) {
-    width: 44px;
+    width: 42px;
     height: 44px;
+    padding: 10px;
   }
 `;
 
@@ -150,8 +152,9 @@ const JungleButton = styled.button`
     }
   }
   @media (max-width: 700px) {
-    width: 44px;
+    width: 42px;
     height: 44px;
+    padding: 10px;
   }
 `;
 
@@ -183,8 +186,9 @@ const MidButton = styled.button`
     }
   }
   @media (max-width: 700px) {
-    width: 44px;
+    width: 42px;
     height: 44px;
+    padding: 10px;
   }
 `;
 
@@ -216,8 +220,9 @@ const OneDealButton = styled.button`
     }
   }
   @media (max-width: 700px) {
-    width: 44px;
+    width: 42px;
     height: 44px;
+    padding: 10px;
   }
 `;
 
@@ -229,14 +234,8 @@ const SupporterButton = styled.button`
 
   &:hover {
     background: ${theme.colors.gray400};
-    <<<<<<< HEAD ======= path {
-      fill: ${theme.colors.white};
-    }
-  }
 
-  &.clicked {
-    background: ${theme.colors.gray700};
-    >>>>>>>origin/develop path {
+    path {
       fill: ${theme.colors.white};
     }
   }
@@ -249,7 +248,8 @@ const SupporterButton = styled.button`
     }
   }
   @media (max-width: 700px) {
-    width: 44px;
+    width: 42px;
     height: 44px;
+    padding: 10px;
   }
 `;
