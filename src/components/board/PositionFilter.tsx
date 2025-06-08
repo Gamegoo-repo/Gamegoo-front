@@ -229,8 +229,14 @@ const SupporterButton = styled.button`
 
   &:hover {
     background: ${theme.colors.gray400};
+    <<<<<<< HEAD ======= path {
+      fill: ${theme.colors.white};
+    }
+  }
 
-    path {
+  &.clicked {
+    background: ${theme.colors.gray700};
+    >>>>>>>origin/develop path {
       fill: ${theme.colors.white};
     }
   }
