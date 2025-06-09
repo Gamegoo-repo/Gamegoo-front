@@ -29,7 +29,7 @@ import { Position } from "@/types/position/position";
 import { Mike } from "@/types/user/mike";
 import { GameMode } from "@/types/game/gameMode";
 import useMediaQueries from "@/hooks/useMediaQueries";
-import MoPost from "@/components/board/MoPost";
+import PostList from "@/components/board/PostList";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import { notify } from "@/hooks/notify";
 
@@ -52,6 +52,7 @@ const BoardPage = () => {
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
   const [selectedMic, setSelectedMic] = useState<Mike | null>(null);
   const [showAlert, setShowAlert] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // 게시판 글 새로고침
   const boardRefresh = useSelector((state: RootState) => state.board.refresh);
@@ -131,6 +132,8 @@ const BoardPage = () => {
     document.addEventListener("mousedown", handleGameModeDropdownClickOutside);
     document.addEventListener("mousedown", handleTierDropdownClickOutside);
     document.addEventListener("mousedown", handleMicDropdownClickOutside);
+    document.addEventListener("scroll", handleScroll);
+
     return () => {
       document.removeEventListener(
         "mousedown",
@@ -138,6 +141,7 @@ const BoardPage = () => {
       );
       document.removeEventListener("mousedown", handleTierDropdownClickOutside);
       document.removeEventListener("mousedown", handleMicDropdownClickOutside);
+      document.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -180,19 +184,22 @@ const BoardPage = () => {
           : selectedMic,
     };
 
+    setIsLoading(true);
     try {
       const data = await getBoardList(params);
       if (data.status === 200) {
         if (data.data.boards) {
           setBoardList(data.data.boards);
         }
-        setTotalPage(data.data.totalPage);
+        setTotalPage(data.data.totalPages);
         setTotalItems(data.data.totalCount);
       } else {
         console.error(data.message);
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -268,6 +275,15 @@ const BoardPage = () => {
       icon: "👌🏼",
       type: "success",
     });
+  };
+
+  /* TODO: 모바일 무한스크롤 - 스크롤이 끝에 도달하면 다음 페이지 가져오기 */
+  const handleScroll = () => {
+    // const scrollBottom =
+    //   window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
+    // if (scrollBottom && !isLoading) {
+    //   setCurrentPage((prev) => prev + 1);
+    // }
   };
 
   return (
@@ -481,30 +497,9 @@ const BoardPage = () => {
                     }
                   />
                 </ThirdRow>
-
-                {boardList?.length > 0 ? (
-                  <MoPostList>
-                    {boardList.map((item, index) => (
-                      <MoPost
-                        key={item.boardId}
-                        boardId={item.boardId}
-                        tag={item.tag}
-                        memberId={item.memberId}
-                        profileImage={item.profileImage}
-                        gameName={item.gameName}
-                        tier={item.tier || ""}
-                        contents={item.contents}
-                        createdAt={item.createdAt}
-                        mainP={item.mainP}
-                        subP={item.subP}
-                        wantP={item.wantP}
-                        winRate={item.winRate}
-                      />
-                    ))}
-                  </MoPostList>
-                ) : (
-                  <NoData>게시된 글이 없습니다.</NoData>
-                )}
+                <Main>
+                  <PostList content={boardList}></PostList>
+                </Main>
               </>
             )}
           </BoardContent>
@@ -666,24 +661,6 @@ const PullUpButton = styled.button`
 const Main = styled.main`
   width: 100%;
   margin-bottom: 64px;
-`;
-
-const MoPostList = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 60px;
-  gap: 16px;
-`;
-
-const NoData = styled.div`
-  width: 100%;
-  margin: 40px 0 300px 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: ${theme.colors.gray700};
-  ${theme.fonts.regular14}
 `;
 
 const MsgConfirm = styled.div`
