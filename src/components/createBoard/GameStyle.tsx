@@ -84,6 +84,11 @@ const StylesWrapper = styled.div`
   display: grid;
   grid-gap: 11px;
   grid-template-columns: repeat(3, minmax(100px, auto));
+
+  @media (max-width: 700px) {
+    display: flex;
+    flex-wrap: wrap;
+  }
 `;
 
 const Content = styled.p`
@@ -94,6 +99,10 @@ const Content = styled.p`
   border-radius: 46px;
   white-space: nowrap;
   text-align: center;
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.bold12};
+  }
 `;
 
 const Div = styled.div`

@@ -472,7 +472,7 @@ const BoardPage = () => {
                   />
                   <Dropdown
                     type="type1"
-                    width="89px"
+                    width="100px"
                     padding="8px 8px 8px 12px"
                     list={TIER}
                     ref={tierRef}
@@ -668,4 +668,9 @@ const MsgConfirm = styled.div`
   color: ${theme.colors.gray800};
   ${(props) => props.theme.fonts.regular25};
   margin: 80px 0;
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.medium14};
+    margin: 32px 0;
+  }
 `;

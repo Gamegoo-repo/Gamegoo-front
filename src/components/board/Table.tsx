@@ -16,7 +16,9 @@ import {
   setCloseReadingModal,
   setOpenPostingModal,
   setOpenReadingModal,
+  setOpenModal,
 } from "@/redux/slices/modalSlice";
+
 import { useRouter } from "next/navigation";
 import Alert from "../common/Alert";
 import ConfirmModal from "../common/ConfirmModal";
@@ -35,6 +37,8 @@ import { notify } from "@/hooks/notify";
 import { deleteFriend } from "@/api/friend/delete";
 import { cancelFriendRequest, sendFriendRequest } from "@/api/friend/request";
 import { blockMember, unblockMember } from "@/api/block/block";
+import { AlertProps } from "@/interface/modal";
+import ReportModal from "@/components/readBoard/ReportModal";
 
 interface TableTitleProps {
   id: number;
@@ -72,6 +76,20 @@ const Table = (props: TableProps) => {
   const [isBlockBoxOpen, setIsBlockBoxOpen] = useState(false);
   const [isBlockConfirmOpen, setIsBlockConfrimOpen] = useState(false);
   const [isPullUpConfirmOpen, setIsPullUpConfirmOpen] = useState(false);
+  const [alertProps, setAlertProps] = useState<AlertProps>({
+    icon: "",
+    width: 0,
+    height: 0,
+    content: "",
+    alt: "",
+    onClose: () => {},
+    buttonText: "",
+  });
+
+  /* 로그아웃 시, 비회원 접근 시 알럿 props 설정 함수 */
+  const logoutMessage = "로그아웃 되었습니다. 다시 로그인 해주세요.";
+  const loginRequiredMessage = "로그인이 필요한 서비스입니다.";
+  const deletedMessage = "해당 글은 삭제된 글입니다.";
 
   /* 게시글 열기 */
   const handlePostOpen = (boardId: number) => {
@@ -84,6 +102,24 @@ const Table = (props: TableProps) => {
 
     dispatch(setOpenReadingModal());
     setIsBoardId(boardId);
+  };
+
+  const showAlertWithContent = (
+    icon: string,
+    content: string,
+    handleAlertClose: () => void,
+    btnText: string
+  ) => {
+    setAlertProps({
+      icon: icon,
+      width: 68,
+      height: 58,
+      content: content,
+      alt: "경고",
+      onClose: handleAlertClose,
+      buttonText: btnText,
+    });
+    setShowAlert(true);
   };
 
   useEffect(() => {
@@ -248,6 +284,21 @@ const Table = (props: TableProps) => {
       console.error(error);
     }
   };
+  /* 신고하기 모달 오픈 */
+  const handleReportModal = () => {
+    // 신고하기 버튼 클릭 시점 토큰 만료
+    if (!isUser.gameName) {
+      return showAlertWithContent(
+        "exclamation",
+        logoutMessage,
+        () => router.push("/login"),
+        "로그인하기"
+      );
+    }
+
+    dispatch(setOpenModal("report"));
+    handleMoreBoxClose();
+  };
 
   /* 더보기 버튼 토글 */
   const handleMoreBoxToggle = async (boardId: number) => {
@@ -303,10 +354,13 @@ const Table = (props: TableProps) => {
       MoreBoxMenuItems.push({ text: friendText, onClick: friendFunc });
     }
 
-    MoreBoxMenuItems.push({
-      text: isPost?.isBlocked ? "차단 해제" : "차단하기",
-      onClick: handleBlock,
-    });
+    MoreBoxMenuItems.push(
+      {
+        text: isPost?.isBlocked ? "차단 해제" : "차단하기",
+        onClick: handleBlock,
+      },
+      { text: "신고하기", onClick: handleReportModal }
+    );
   }
 
   return (
@@ -348,7 +402,10 @@ const Table = (props: TableProps) => {
               return (
                 <Row
                   key={data.boardId}
-                  onClick={() => handlePostOpen(data.boardId)}
+                  onClick={() => {
+                    setIsMoreBoxOpen(false);
+                    handlePostOpen(data.boardId);
+                  }}
                 >
                   <First className="table_width">
                     <ProfileImgWrapper
@@ -535,6 +592,10 @@ const Table = (props: TableProps) => {
         >
           <MsgConfirm>{`본 게시글을 끌어올리시겠습니까?`}</MsgConfirm>
         </ConfirmModal>
+      )}
+      {/* 신고하기 팝업 */}
+      {isModalType === "report" && (
+        <ReportModal isPost={isPost} postId={isBoardId} />
       )}
     </>
   );

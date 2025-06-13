@@ -25,10 +25,7 @@ import {
 import LoadingSpinner from "../common/LoadingSpinner";
 import { setPostingDateFormatter } from "@/utils/custom";
 import { reportMember } from "@/api/report/report";
-import FormModal from "../common/FormModal";
-import Input from "../common/Input";
-import Checkbox from "../common/Checkbox";
-import { REPORT_REASON } from "@/constants/report";
+
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { AxiosError } from "axios";
@@ -58,14 +55,15 @@ import { GameMode } from "@/types/game/gameMode";
 import UserAccount from "../crBoard/UserAccount";
 import RankTier from "../common/RankTier";
 import { setRefresh } from "@/redux/slices/boardSlice";
-
+import ReportModal from "@/components/readBoard/ReportModal";
+import useMediaQueries from "@/hooks/useMediaQueries";
 interface ReadBoardProps {
   postId: number;
 }
 
 const ReadBoard = (props: ReadBoardProps) => {
   const { postId } = props;
-
+  const isMobile = useMediaQueries({ breakpoint: 700 });
   const dispatch = useDispatch();
   const router = useRouter();
   const mannerLevelBoxRef = useRef<HTMLDivElement>(null);
@@ -76,8 +74,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   const [loading, setLoading] = useState(true);
   const [isBlockedStatus, setIsBlockedStatus] = useState(false);
   const [isFriendStatus, setIsFriendStatus] = useState(false);
-  const [checkedItems, setCheckedItems] = useState<number[]>([]);
-  const [reportDetail, setReportDetail] = useState<string>("");
+
   const [gameMode, setGameMode] = useState<GameMode>("FAST");
   const [showAlert, setShowAlert] = useState(false);
   const [alertProps, setAlertProps] = useState<AlertProps>({
@@ -356,15 +353,6 @@ const ReadBoard = (props: ReadBoardProps) => {
     setIsMannerLevelBoxOpen((prevState) => !prevState);
   };
 
-  /* 신고하기 사유 */
-  const handleCheckboxChange = (checked: number) => {
-    setCheckedItems((prev) =>
-      prev.includes(checked)
-        ? prev.filter((c) => c !== checked)
-        : [...prev, checked]
-    );
-  };
-
   /* 게시글 끌어올리기 */
   const handlePullUp = () => {
     if (!isUser.id) {
@@ -512,13 +500,6 @@ const ReadBoard = (props: ReadBoardProps) => {
     );
   }
 
-  /* 신고하기 모달 닫기 */
-  const handleModalClose = () => {
-    setCheckedItems([]);
-    setReportDetail("");
-    dispatch(setCloseModal());
-  };
-
   /* 로딩 스피너 */
   if (loading) {
     return (
@@ -588,7 +569,7 @@ const ReadBoard = (props: ReadBoardProps) => {
                 <MoreBox
                   items={MoreBoxMenuItems}
                   top={67}
-                  left={555}
+                  right={45}
                   onClose={() => setIsMoreBoxOpen(false)}
                 />
               )}
@@ -723,58 +704,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       </CRModal>
 
       {isModalType === "report" && (
-        <FormModal
-          type="checkbox"
-          title="유저 신고하기"
-          width="494px"
-          height="721px"
-          closeButtonWidth={17}
-          closeButtonHeight={17}
-          borderRadius="20px"
-          onClose={handleModalClose}
-        >
-          <div>
-            <ReportLabel>신고 사유</ReportLabel>
-            <ReportReasonContent>
-              {REPORT_REASON.map((data) => (
-                <Checkbox
-                  key={data.id}
-                  value={data.id}
-                  label={data.text}
-                  fontSize="regular18"
-                  isChecked={checkedItems.includes(data.id)}
-                  onArrayChange={handleCheckboxChange}
-                  id={`report${data.id}`}
-                />
-              ))}
-            </ReportReasonContent>
-            <ReportLabel>상세 내용</ReportLabel>
-            <ReportContent>
-              <Input
-                inputType="textarea"
-                value={reportDetail}
-                onChange={(value) => {
-                  setReportDetail(value);
-                }}
-                placeholder="내용을 입력하세요. (선택)"
-                borderRadius="8px"
-                fontSize="regular16"
-                height="134px"
-                id="report"
-                maxLeng={500}
-              />
-            </ReportContent>
-            <ReportButton>
-              <Button
-                type="submit"
-                onClick={handleReport}
-                buttonType="primary"
-                text="신고하기"
-                disabled={checkedItems.length === 0}
-              />
-            </ReportButton>
-          </div>
-        </FormModal>
+        <ReportModal isPost={isPost} postId={postId} />
       )}
       {/* 차단하기 팝업 */}
       {isBlockBoxOpen && (

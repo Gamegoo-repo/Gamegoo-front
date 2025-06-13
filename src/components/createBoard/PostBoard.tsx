@@ -1,3 +1,11 @@
+/**
+ * @component [게시판 - 게시글 작성 및 수정 모달]
+ * @description [게시글 작성 및 수정 모달 컴포넌트입니다.]
+ * @route [게시판 - 게시글 작성, 게시글 수정, 내 정보 > 내가 작성한 게시글 > 게시글 수정]
+ * @author [나원지]
+ * @created [2024-05-28]
+ */
+
 import styled from "styled-components";
 import Dropdown from "../common/Dropdown";
 import Input from "../common/Input";
@@ -309,26 +317,6 @@ const PostBoard = (props: PostBoardProps) => {
           </UserSection>
         )}
 
-        <QueueNMicSection>
-          <Div>
-            <Title className="micTitle">마이크</Title>
-            <Toggle isOn={isMicOn} onToggle={toggleMicHandler} type="board" />
-          </Div>
-          <Div>
-            <Title className="queueTitle">큐 타입</Title>
-            <Dropdown
-              ref={dropdownRef}
-              type="type2"
-              padding="11px 21px"
-              width="234px"
-              list={GAME_MODE.slice(1)}
-              open={isDropdownOpen}
-              setOpen={setIsDropdownOpen}
-              onDropValue={handleDropValue}
-              defaultValue={selectedDropOption}
-            />
-          </Div>
-        </QueueNMicSection>
         {selectedDropOption !== "ARAM" && (
           <PositionSection>
             <Title className="positionTitle">포지션</Title>
@@ -349,6 +337,23 @@ const PostBoard = (props: PostBoardProps) => {
             />
           </PositionSection>
         )}
+
+        <GameModeSection>
+          <Div>
+            <Title className="queueTitle">선호 게임 모드</Title>
+            <Dropdown
+              ref={dropdownRef}
+              type="type2"
+              padding="11px 21px"
+              width="50%"
+              list={GAME_MODE.slice(1)}
+              open={isDropdownOpen}
+              setOpen={setIsDropdownOpen}
+              onDropValue={handleDropValue}
+              defaultValue={selectedDropOption}
+            />
+          </Div>
+        </GameModeSection>
         <StyleSection>
           <Title className="gameStyleTitle">게임 스타일</Title>
           <GameStyle
@@ -356,8 +361,14 @@ const PostBoard = (props: PostBoardProps) => {
             setSelectedStyleIds={setSelectedStyleIds}
           />
         </StyleSection>
+        <MicSection>
+          <Div>
+            <Title className="micTitle">마이크</Title>
+            <Toggle isOn={isMicOn} onToggle={toggleMicHandler} type="board" />
+          </Div>
+        </MicSection>
         <MemoSection>
-          <Title className="memoTitle">메모</Title>
+          <Title className="memoTitle">한마디</Title>
           <InputWrapper>
             <Input
               height="100px"
@@ -394,7 +405,7 @@ const PostBoard = (props: PostBoardProps) => {
           <Button
             type="submit"
             buttonType="primary"
-            text="확인"
+            text="작성 완료"
             disabled={textareaValue.trim() == ""}
           />
         </ButtonContent>
@@ -424,6 +435,10 @@ const Title = styled.p`
   &.memoTitle {
     margin-bottom: 5px;
   }
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.medium11};
+  }
 `;
 
 const UserSection = styled.div`
@@ -431,15 +446,14 @@ const UserSection = styled.div`
   align-items: center;
   gap: 17px;
 `;
-const QueueNMicSection = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 187px;
+const GameModeSection = styled.div`
+  width: 100%;
   margin-top: 24px;
 `;
 
-const Div = styled.div``;
+const Div = styled.div`
+  position: relative;
+`;
 
 const PositionSection = styled.div`
   margin-top: 33px;
@@ -447,6 +461,11 @@ const PositionSection = styled.div`
 
 const StyleSection = styled.div`
   margin-top: 34px;
+`;
+
+const MicSection = styled.div`
+  width: 100%;
+  margin-top: 24px;
 `;
 
 const MemoSection = styled.div`

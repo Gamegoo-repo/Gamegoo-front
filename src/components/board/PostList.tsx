@@ -25,6 +25,7 @@ import {
   setCloseReadingModal,
   setOpenPostingModal,
   setOpenReadingModal,
+  setOpenModal,
 } from "@/redux/slices/modalSlice";
 import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { setRefresh } from "@/redux/slices/boardSlice";
@@ -39,6 +40,7 @@ import { BoardListDetail, MemberPost } from "@/interface/board";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import { GameMode } from "@/types/game/gameMode";
 import { AlertProps } from "@/interface/modal";
+import ReportModal from "@/components/readBoard/ReportModal";
 
 interface PostListProps {
   content: BoardListDetail[];
@@ -69,8 +71,6 @@ const PostList = ({ content }: PostListProps) => {
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
   const [isBlockConfirmOpen, setIsBlockConfrimOpen] = useState(false);
   const [isPullUpConfirmOpen, setIsPullUpConfirmOpen] = useState(false);
-
-  const mannerLevelBoxRef = useRef<HTMLDivElement>(null);
 
   const [isMannerLevelBoxOpen, setIsMannerLevelBoxOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -136,38 +136,6 @@ const PostList = ({ content }: PostListProps) => {
       dispatch(setCloseReadingModal());
     };
   }, []);
-
-  /* MannerLevelBox 외부 클릭 시 닫힘 */
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        mannerLevelBoxRef.current &&
-        !mannerLevelBoxRef.current.contains(event.target as Node)
-      ) {
-        setIsMannerLevelBoxOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  /* 매너레벨 박스 열기 */
-  const handleMannerLevelBoxOpen = () => {
-    if (!isUser.id) {
-      return showAlertWithContent(
-        "exclamation",
-        loginRequiredMessage,
-        () => setShowAlert(false),
-        "확인"
-      );
-    }
-
-    setIsMannerLevelBoxOpen((prevState) => !prevState);
-  };
 
   /* 다른 사람 프로필 이동 */
   const handleMoveProfilePage = (e: React.MouseEvent, memberId: number) => {
@@ -293,6 +261,22 @@ const PostList = ({ content }: PostListProps) => {
     }
   };
 
+  /* 신고하기 모달 오픈 */
+  const handleReportModal = () => {
+    // 신고하기 버튼 클릭 시점 토큰 만료
+    if (!isUser.gameName) {
+      return showAlertWithContent(
+        "exclamation",
+        logoutMessage,
+        () => router.push("/login"),
+        "로그인하기"
+      );
+    }
+
+    dispatch(setOpenModal("report"));
+    handleMoreBoxClose();
+  };
+
   /* 더보기 버튼 토글 */
   const handleMoreBoxToggle = async (boardId: number) => {
     setIsBoardId(boardId);
@@ -347,10 +331,13 @@ const PostList = ({ content }: PostListProps) => {
       MoreBoxMenuItems.push({ text: friendText, onClick: friendFunc });
     }
 
-    MoreBoxMenuItems.push({
-      text: isPost?.isBlocked ? "차단 해제" : "차단하기",
-      onClick: handleBlock,
-    });
+    MoreBoxMenuItems.push(
+      {
+        text: isPost?.isBlocked ? "차단 해제" : "차단하기",
+        onClick: handleBlock,
+      },
+      { text: "신고하기", onClick: handleReportModal }
+    );
   }
 
   return (
@@ -378,7 +365,10 @@ const PostList = ({ content }: PostListProps) => {
           content.map((data) => (
             <Wrapper
               key={data.boardId}
-              onClick={() => handlePostOpen(data.boardId)}
+              onClick={() => {
+                setIsMoreBoxOpen(false);
+                handlePostOpen(data.boardId);
+              }}
             >
               <UserSection>
                 <UserLeft>
@@ -386,28 +376,12 @@ const PostList = ({ content }: PostListProps) => {
                     <ProfileImage image={data.profileImage} />
                     <UserNManner>
                       <MannerLevelWrapper>
-                        {/* TODO : mannerlevel api 에서 작업되면 추가하기 */}
                         <MannerLevel
-                          level={1}
-                          onClick={handleMannerLevelBoxOpen}
+                          level={data.mannerLevel}
                           position="board"
                           isBubbleHide={true}
+                          onClick={() => {}}
                         />
-                        {isMannerLevelBoxOpen && (
-                          <div ref={mannerLevelBoxRef}>
-                            <MannerLevelBox
-                              memberId={data.memberId}
-                              level={1}
-                              top="30px"
-                              right="-780%"
-                              tail={true}
-                              tailPosition="top"
-                              onClose={() =>
-                                setIsMannerLevelBoxOpen(!isMannerLevelBoxOpen)
-                              }
-                            />
-                          </div>
-                        )}
                       </MannerLevelWrapper>
                     </UserNManner>
                   </UserProfileWrapper>
@@ -439,25 +413,7 @@ const PostList = ({ content }: PostListProps) => {
                   ) : null}
                 </UserRight>
               </UserSection>
-              <UserTierWrapper>
-                {/* <RankTier
-            type="solo"
-            tier={user.soloTier || ""}
-            rank={user.soloRank}
-            direct="row"
-            color={theme.colors.gray800}
-            tierFontSize={theme.fonts.bold20}
-          />
-          <Bar />
-          <RankTier
-            type="free"
-            tier={user.freeTier || ""}
-            rank={user.freeRank}
-            direct="row"
-            color={theme.colors.gray800}
-            tierFontSize={theme.fonts.bold20}
-          /> */}
-              </UserTierWrapper>
+
               {gameMode !== "ARAM" && (
                 <PositionSection>
                   <PositionBox
@@ -477,10 +433,9 @@ const PostList = ({ content }: PostListProps) => {
                   font="semiBold14"
                   list={data.championStatsResponseList}
                 />
-                {/* TODO api 추가되면 승률 작업하기 */}
                 <WinRate>
                   승률
-                  <Rate>{data.winRate}%</Rate>
+                  <Rate $rate={data.winRate}>{data.winRate}%</Rate>
                 </WinRate>
               </ChampionNWinRateSection>
 
@@ -549,6 +504,10 @@ const PostList = ({ content }: PostListProps) => {
           <MsgConfirm>{`본 게시글을 끌어올리시겠습니까?`}</MsgConfirm>
         </ConfirmModal>
       )}
+      {/* 신고하기 팝업 */}
+      {isModalType === "report" && (
+        <ReportModal isPost={isPost} postId={isBoardId} />
+      )}
     </>
   );
 };
@@ -587,6 +546,7 @@ const UserSection = styled.div`
     align-items: center;
     justify-content: space-between;
     white-space: nowrap;
+    margin-bottom: 24px;
   }
 `;
 
@@ -687,8 +647,14 @@ const WinRate = styled.div`
   color: ${theme.colors.gray800};
 `;
 
-const Rate = styled.div`
-  color: ${theme.colors.violet600};
+const Rate = styled.div<{ $rate: number }>`
+  /* 승률에 따라 색상 변경 */
+  color: ${({ $rate }) =>
+    $rate >= 70
+      ? "#CA1FCF"
+      : $rate >= 50
+      ? theme.colors.violet600
+      : theme.colors.gray700};
   ${theme.fonts.bold16};
 `;
 const PositionSection = styled.div`
@@ -744,4 +710,8 @@ const Msg = styled.div`
 const MsgConfirm = styled(Msg)`
   ${(props) => props.theme.fonts.regular25};
   margin: 80px 0;
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.medium14};
+    margin: 32px 0;
+  }
 `;
