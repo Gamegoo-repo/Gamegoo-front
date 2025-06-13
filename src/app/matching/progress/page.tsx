@@ -11,7 +11,7 @@ import ConfirmModal from "@/components/common/ConfirmModal";
 import { socket } from "@/socket";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { messagesWithN, messagesWithoutN } from "@/constants/messages";
-import { getSystemMsg } from "@/api/socket";
+// import { getSystemMsg } from "@/api/socket";
 import { getBoardList } from "@/api/board/board";
 import { setOpenPostingModal } from "@/redux/slices/modalSlice";
 import { useDispatch } from "react-redux";
@@ -20,6 +20,8 @@ import { setIsCompleted } from "@/utils/storage";
 import { Position } from "@/types/position/position";
 import { Mike } from "@/types/user/mike";
 import useMediaQueries from "@/hooks/useMediaQueries";
+import { getEffectiveTier } from "@/utils/matching/tier";
+import { GameMode } from "@/types/game/gameMode";
 interface User {
   memberId: number;
   gameName: string;
@@ -30,7 +32,7 @@ interface User {
   freeRank: number;
   mannerLevel: number;
   profileImg: number;
-  gameMode: number;
+  gameMode: GameMode;
   mainPosition: Position;
   subPosition: Position;
   wantPosition: Position;
@@ -66,7 +68,7 @@ const Progress = () => {
     freeRank: parseInt(searchParams.get("rank") || "1", 10),
     mannerLevel: parseInt(searchParams.get("mannerLevel") || "0", 10),
     profileImg: parseInt(searchParams.get("profileImg") || "0", 10),
-    gameMode: parseInt(searchParams.get("gameMode") || "1", 10),
+    gameMode: (searchParams.get("gameMode") as GameMode) || "",
     mainPosition: (searchParams.get("mainPosition") as Position) || "ANY",
     subPosition: (searchParams.get("subPosition") as Position) || "ANY",
     wantPosition: (searchParams.get("wantPosition") as Position) || "ANY",
@@ -76,56 +78,92 @@ const Progress = () => {
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
+  const [tierCounts, setTierCounts] = useState<Record<string, number>>({}); // 티어별 인원 수
   const [currentMessage, setCurrentMessage] = useState<string>("");
   const [textVisible, setTextVisible] = useState<boolean>(true);
 
   // const [showReloadModal, setShowReloadModal] = useState(false); // 새로고침 모달 상태
 
-  const showMessage = async () => {
-    /* 메세지 전환을 위해 0.5초 간 안 보이게 하기 */
-    setTextVisible(false);
-
-    setTimeout(async () => {
+  // TODO: 매칭 중 랜덤메세지에 들어갈 n명 정보 받아오기 (기존 API 로직 -> Socket Event로 변경)
+  useEffect(() => {
+    const handleMatchingCount = (data: {
+      userCount: number;
+      tierCount: Record<string, number>;
+    }) => {
+      const tierKey =
+        getEffectiveTier(
+          {
+            soloTier: user.soloTier,
+            freeTier: user.freeTier,
+          },
+          user.gameMode
+        )?.toUpperCase() || "UNRANKED";
+      const tierUserCount = data.tierCount[tierKey] ?? 0;
       const messages = Math.random() < 0.5 ? messagesWithN : messagesWithoutN;
       const randomMessage =
         messages[Math.floor(Math.random() * messages.length)];
-      /* 나와 같은 티어의 매칭 인원이 필요할 때 */
-      if (messagesWithN[1] === randomMessage) {
-        /* TODO : 기획사항에 맞게 올바른 티어 전달하기 */
-        // const response = await getSystemMsg(user.tier);
-        const response = await getSystemMsg(user.soloTier); // 임시로 솔로티어로 전달
+
+      if (messagesWithN.includes(randomMessage)) {
         setCurrentMessage(
-          randomMessage.replace(/n/g, response.result.number.toString())
+          randomMessage.replace(/n/g, tierUserCount.toString())
         );
-      } else if (messagesWithN.includes(randomMessage)) {
-        /* 시스템 메세지 API로부터 n 호출 */
-        const response = await getSystemMsg();
-        if (response && response.isSuccess) {
-          setCurrentMessage(
-            randomMessage.replace(/n/g, response.result.number.toString())
-          );
-        } else {
-          /* 에러 발생 시, messagesWithoutN에서 랜덤으로 메시지 설정 */
-          const randomMessage =
-            messagesWithoutN[
-              Math.floor(Math.random() * messagesWithoutN.length)
-            ];
-          setCurrentMessage(randomMessage);
-        }
       } else {
         setCurrentMessage(randomMessage);
       }
+    };
 
-      setTextVisible(true);
-    }, 500);
-  };
+    socket?.off("matching-count", handleMatchingCount);
 
-  useEffect(() => {
-    showMessage();
-    const interval = setInterval(showMessage, 10000); // 10초 간격으로 메시지 변경
-
-    return () => clearInterval(interval);
+    return () => {
+      socket?.off("matching-count", handleMatchingCount);
+    };
   }, []);
+
+  // const showMessage = async () => {
+  //   /* 메세지 전환을 위해 0.5초 간 안 보이게 하기 */
+  //   setTextVisible(false);
+
+  //   setTimeout(async () => {
+  //     const messages = Math.random() < 0.5 ? messagesWithN : messagesWithoutN;
+  //     const randomMessage =
+  //       messages[Math.floor(Math.random() * messages.length)];
+  //     /* 나와 같은 티어의 매칭 인원이 필요할 때 */
+  //     if (messagesWithN[1] === randomMessage) {
+  //       /* TODO : 기획사항에 맞게 올바른 티어 전달하기 */
+  //       // const response = await getSystemMsg(user.tier);
+  //       const response = await getSystemMsg(user.soloTier); // 임시로 솔로티어로 전달
+  //       setCurrentMessage(
+  //         randomMessage.replace(/n/g, response.result.number.toString())
+  //       );
+  //     } else if (messagesWithN.includes(randomMessage)) {
+  //       /* 시스템 메세지 API로부터 n 호출 */
+  //       const response = await getSystemMsg();
+  //       if (response && response.isSuccess) {
+  //         setCurrentMessage(
+  //           randomMessage.replace(/n/g, response.result.number.toString())
+  //         );
+  //       } else {
+  //         /* 에러 발생 시, messagesWithoutN에서 랜덤으로 메시지 설정 */
+  //         const randomMessage =
+  //           messagesWithoutN[
+  //             Math.floor(Math.random() * messagesWithoutN.length)
+  //           ];
+  //         setCurrentMessage(randomMessage);
+  //       }
+  //     } else {
+  //       setCurrentMessage(randomMessage);
+  //     }
+
+  //     setTextVisible(true);
+  //   }, 500);
+  // };
+
+  // useEffect(() => {
+  //   showMessage();
+  //   const interval = setInterval(showMessage, 10000); // 10초 간격으로 메시지 변경
+
+  //   return () => clearInterval(interval);
+  // }, []);
 
   /* 새로고침 및 타 사이트 이동 방지 */
   // const handleBeforeunload = (e: BeforeUnloadEvent) => {
@@ -172,7 +210,7 @@ const Progress = () => {
 
     // 매칭 상대 찾기 성공 (sender)
     socket.on("matching-found-sender", (data) => {
-      console.log("매칭 상대 발견(sender):", data);
+      console.log("매칭 상대 발견(sender):", data); // targetMatchingInfo
       clearTimers();
       router.push(
         `/matching/complete?role=sender&opponent=true&type=${type}&rank=${rank}&user=${encodeURIComponent(
@@ -183,11 +221,13 @@ const Progress = () => {
 
     // 매칭 상대 찾기 성공 (receiver)
     socket.on("matching-found-receiver", (data) => {
-      console.log("매칭 상대 발견(receiver):", data);
+      console.log("매칭 상대 발견(receiver):", data); // senderMatchingInfo, receiverMatchingUuid
       clearTimers();
       socket?.emit("matching-found-success", {
-        senderMemberId: data.data.memberId,
-        gameMode: data.data.gameMode,
+        // senderMemberId: data.data.memberId,
+        // gameMode: data.data.gameMode,
+        senderMatchingUuid: data.data.receiverMatchingUuid,
+        gameMode: data.data.senderMatchingInfo.gameMode,
       });
       router.push(
         `/matching/complete?role=receiver&opponent=true&type=${type}&rank=${rank}&user=${encodeURIComponent(
@@ -211,7 +251,7 @@ const Progress = () => {
 
     // 매칭 재시도 여부에 따라 타이머 설정
     setTimeLeft(300);
-    let priority = 51.5; // 초기 priority 값
+    let threshold = 51.5; // 초기 threshold 값
     timerRef.current = setInterval(() => {
       setTimeLeft((prevTime) => {
         if (prevTime === 1) {
@@ -220,10 +260,10 @@ const Progress = () => {
           socket?.emit("matching-not-found");
           handleRetry(); // 매칭 실패 모달 결정 함수
         } else if (prevTime < 300 && prevTime % 30 === 0) {
-          // 30초마다 priority 값을 감소시키며 매칭 재시도
-          priority -= 1.5;
-          socket?.emit("matching-retry", { priority });
-          console.log(`매칭 재시도 (priority: ${priority})`);
+          // 30초마다 threshold 값을 감소시키며 매칭 재시도
+          threshold -= 1.5;
+          socket?.emit("matching-retry", { threshold });
+          console.log(`매칭 재시도 (priority: ${threshold})`);
         }
 
         return prevTime - 1;
@@ -239,21 +279,11 @@ const Progress = () => {
     } else {
       if (type === "custom") {
         const gameRank = searchParams.get("gameRank");
-        const mode =
-          gameRank === "fast"
-            ? 1
-            : gameRank === "personal"
-            ? 2
-            : gameRank === "free"
-            ? 3
-            : gameRank === "wind"
-            ? 4
-            : null;
 
         const params = {
           page: 1,
           pageIdx: 1,
-          gameMode: mode,
+          gameMode: gameRank as GameMode,
           /* TODO : 기획사항에 맞게 올바른 티어 전달하기 */
           // tier: user.tier,
           tier: user.soloTier, // 임시로 솔로티어로 전달

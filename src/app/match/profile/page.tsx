@@ -55,9 +55,9 @@ const ProfilePage = () => {
   }, [user]);
 
   useEffect(() => {
-    if (rank === "wind" || params === "other" || params === "me") {
-      setProfileType(rank as profileType);
-    } else if (rank === "personal" || "free" || "fast") {
+    if (rank === "ARAM") {
+      setProfileType("wind");
+    } else if (rank === "FAST" || "SOLO" || "FREE") {
       setProfileType("normal");
     } else {
       setProfileType(undefined);
@@ -97,14 +97,20 @@ const ProfilePage = () => {
 
     const matchingData = {
       matchingType,
-      gameMode,
+      // gameMode,
+      threshold: 50,
+      // gameMode: rank?.toLocaleUpperCase(),
+      gameMode: "FAST",
       mike: matchInfo.mike ?? "UNAVAILABLE",
       mainP: (matchInfo.mainP ?? 0).toString(),
-      subP: (matchInfo.subP ?? 0).toString(),
-      wantP: (matchInfo.wantP ?? 0).toString(),
-      gameStyle1: matchInfo.gameStyleResponseDTOList[0] || null,
-      gameStyle2: matchInfo.gameStyleResponseDTOList[1] || null,
-      gameStyle3: matchInfo.gameStyleResponseDTOList[2] || null,
+      // subP: (matchInfo.subP ?? 0).toString(),
+      // wantP: (matchInfo.wantP ?? 0).toString(),
+      wantP: "MID",
+      // wantP: ["MID", "TOP"],
+      gameStyle: matchInfo.gameStyleResponseDTOList || null,
+      // gameStyle1: matchInfo.gameStyleResponseDTOList[0] || null,
+      // gameStyle2: matchInfo.gameStyleResponseDTOList[1] || null,
+      // gameStyle3: matchInfo.gameStyleResponseDTOList[2] || null,
     };
 
     if (socket) {
