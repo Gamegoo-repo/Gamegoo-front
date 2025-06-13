@@ -1,4 +1,5 @@
 import { GAME_STYLE } from "@/constants/profile";
+import useMediaQueries from "@/hooks/useMediaQueries";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import React from "react";
@@ -25,14 +26,20 @@ const SelectedStylePopup: React.FC<SelectedStylePopupProps> = ({
   onSelectStyle,
   position,
 }) => {
+  const isMobile = useMediaQueries({ breakpoint: 700 });
+
   return (
     <Container $position={position} $profileType={profileType}>
       <Top $position={position}>
         게임 스타일 선택 *최대 3개
         <CloseImage
           src="/assets/icons/close_white.svg"
-          width={position ? 9 : profileType === "mini" ? 10 : 14}
-          height={position ? 9 : profileType === "mini" ? 10 : 14}
+          width={
+            isMobile ? 16 : position ? 9 : profileType === "mini" ? 10 : 24
+          }
+          height={
+            isMobile ? 16 : position ? 9 : profileType === "mini" ? 10 : 24
+          }
           alt="close"
           onClick={onClose}
         />
@@ -89,6 +96,8 @@ const Container = styled.div<{
 
   @media (max-width: 700px) {
     width: 80vw;
+    padding: 20px;
+    gap: 12px;
   }
 `;
 
@@ -128,6 +137,10 @@ const Boxs = styled.div<{
     css`
       gap: 9px;
     `}
+
+  @media (max-width: 700px) {
+    gap: 8px;
+  }
 `;
 
 const Box = styled.button<{
@@ -149,6 +162,7 @@ const Box = styled.button<{
 
   @media (max-width: 700px) {
     padding: 6px 16px;
+    height: 33px;
     font-size: ${theme.fonts.semiBold14};
   }
 
