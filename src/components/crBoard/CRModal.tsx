@@ -23,8 +23,8 @@ const CRModal = (props: BoardModalProps) => {
             <CloseImage
               onClick={onClose}
               src="/assets/icons/close.svg"
-              width={20}
-              height={20}
+              width={24}
+              height={24}
               alt="close button"
             />
           </CloseButton>
@@ -76,11 +76,12 @@ const Wrapper = styled.div<{
   width: 100%;
   position: relative;
   margin: 50px;
-  padding: 24px 30px;
+  padding: 48px 32px 32px 32px;
   background: ${({ $hideContent }) =>
     $hideContent ? "unset" : `${theme.colors.gray100}`};
   box-shadow: ${({ $hideContent }) =>
     $hideContent ? "unset" : "0 4px 96.4px 0 #00000040"};
+  position: relative;
 
   /* 스크롤바 */
   &::-webkit-scrollbar {
@@ -107,6 +108,9 @@ const Header = styled.header<{ $type: string }>`
 `;
 
 const CloseButton = styled.p<{ $type: string }>`
+  position: absolute;
+  top: 17px;
+  right: 14px;
   display: flex;
   margin-bottom: ${({ $type }) => ($type === "reading" ? "1px" : "8px")};
 `;
