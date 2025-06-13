@@ -39,7 +39,7 @@ const RankTier = (props: RankTierProps) => {
           width={direct === "row" ? 24 : 32}
           height={direct === "row" ? 24 : 32}
         />
-        {toCapitalizedString(tier) + (rank ? ` ${rank}` : "")}
+        {toCapitalizedString(tier || "UNRANK") + (rank ? ` ${rank}` : "")}
       </Tier>
     </Container>
   );

@@ -1,4 +1,3 @@
-import { POSITIONS } from "@/constants/profile";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
@@ -6,13 +5,13 @@ import styled from "styled-components";
 import Mic from "../common/Mic";
 import Box from "../common/Box";
 import MannerLevelBox from "../common/MannerLevelBox";
-import { setAbbrevTier, setPositionImg } from "@/utils/custom";
 import { getProfileBgColor } from "@/utils/profile";
-import { toLowerCaseString } from "@/utils/string";
 import { Position as PositionType } from "@/types/position/position";
 import { Mike } from "@/types/user/mike";
 import useMediaQueries from "@/hooks/useMediaQueries";
 import RankTier from "../common/RankTier";
+import { GameMode } from "@/types/game/gameMode";
+import PositionBox from "../crBoard/PositionBox";
 
 interface User {
   memberId: number;
@@ -24,7 +23,7 @@ interface User {
   freeRank: number;
   mannerLevel: number;
   profileImg: number;
-  gameMode: number;
+  gameMode: GameMode;
   mainPosition: PositionType;
   subPosition: PositionType;
   wantPosition: PositionType;
@@ -150,36 +149,12 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
                   ))}
             </GameStyleContainer>
             <Row>
-              <Position $opponent={opponent}>
-                {/* 주 포지션, 부 포지션 */}
-                {POSITIONS.slice(0, 2).map((position, index) => (
-                  <Posi $opponent={opponent} key={index}>
-                    {POSITIONS[index].label}
-                    <Image
-                      src={setPositionImg(
-                        index === 0 ? user.mainPosition : user.subPosition
-                      )}
-                      width={39}
-                      height={31}
-                      alt="포지션"
-                    />
-                  </Posi>
-                ))}
-              </Position>
-              <Position $opponent={opponent}>
-                {/* 내가 찾는 포지션 */}
-                {POSITIONS.slice(-1).map((position, index) => (
-                  <Posi $opponent={opponent} key={index}>
-                    {POSITIONS[2].label}
-                    <Image
-                      src={setPositionImg(user.wantPosition)}
-                      width={39}
-                      height={31}
-                      alt="포지션"
-                    />
-                  </Posi>
-                ))}
-              </Position>
+              <PositionBox
+                status="matching"
+                main={user.mainPosition || null}
+                sub={user.subPosition || null}
+                want={[user.wantPosition || "ANY"]}
+              />
             </Row>
           </Column>
         </Container>

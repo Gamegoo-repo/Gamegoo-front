@@ -4,13 +4,12 @@ import { useState } from "react";
 import PositionCategory from "../common/PositionCategory";
 import { Position, PositionType } from "@/types/position/position";
 import { theme } from "@/styles/theme";
-import { POSITION } from "@/constants/position";
 import { POSITIONS } from "@/constants/profile";
 import useMediaQueries from "@/hooks/useMediaQueries";
 import { setPositionImg } from "@/utils/custom";
 import { css } from "styled-components";
 
-type Status = "reading" | "posting";
+type Status = "reading" | "posting" | "matching";
 
 interface PositionBoxProps {
   status?: Status;
@@ -99,7 +98,7 @@ const PositionBox = (props: PositionBoxProps) => {
     <PositionWrapper>
       <Positions>
         {/* 주 포지션 + 부 포지션 */}
-        <PosiWrap>
+        <PosiWrap $status={status}>
           {POSITIONS.slice(0, 2).map((position, index) => {
             const type = index === 0 ? "main" : "sub";
 
@@ -133,7 +132,7 @@ const PositionBox = (props: PositionBoxProps) => {
         </PosiWrap>
 
         {/* 내가 찾는 포지션 */}
-        <PosiWrap>
+        <PosiWrap $status={status}>
           <Posi key={2} $isWantP={true}>
             {POSITIONS[2].label}
             <PosiRow>
@@ -194,21 +193,24 @@ const PositionWrapper = styled.div`
 `;
 
 const Positions = styled.div`
-  display: flex;
-  align-items: center;
   width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
   gap: 8px;
 `;
 
-const PosiWrap = styled.div`
-  height: 98px;
+const PosiWrap = styled.div<{ $status: Status | undefined }>`
+  height: ${({ $status }) => ($status === "matching" ? "116px" : "98px")};
   display: flex;
   justify-content: center;
   gap: 58px;
-  background-color: ${theme.colors.white};
+  background-color: ${({ $status }) =>
+    $status === "matching" ? theme.colors.gray100 : theme.colors.white};
   width: 100%;
   border-radius: 6px;
-  padding: 16px 43px;
+  padding: ${({ $status }) =>
+    $status === "matching" ? "28px 43px" : "16px 43px"};
 
   @media (max-width: 700px) {
     height: 69px;
@@ -223,6 +225,7 @@ const Posi = styled.div<{ $isWantP: boolean }>`
   align-items: center;
   font-size: ${theme.fonts.bold12};
   color: ${theme.colors.gray700};
+  white-space: nowrap;
 
   @media (max-width: 700px) {
     font-size: ${theme.fonts.medium11};

@@ -17,7 +17,7 @@ import PositionCategory from "../common/PositionCategory";
 import MoreBox from "../common/MoreBox";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import { User } from "@/interface/profile";
-import { PositionState } from "../crBoard/PositionBox";
+import PositionBox, { PositionState } from "../crBoard/PositionBox";
 import { setPositionImg } from "@/utils/custom";
 import { useParams } from "next/navigation";
 import { reportMember } from "@/api/report/report";
@@ -594,6 +594,17 @@ const Profile: React.FC<Profile> = ({
           ) : (
             <UnderRow>
               {/* 칼바람 제외 클릭 시 */}
+              <PositionBox
+                status="matching"
+                main={positionValue.main || null}
+                sub={positionValue.sub || null}
+                want={
+                  Array.isArray(positionValue.want)
+                    ? positionValue.want.filter((v) => v !== null)
+                    : null
+                }
+              />
+
               <Positions>
                 {/* 주 포지션 + 부 포지션 */}
                 <PosiWrap>
