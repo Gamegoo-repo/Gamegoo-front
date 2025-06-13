@@ -54,11 +54,12 @@ const Dropdown = forwardRef(function Dropdown(
     <Wrapper $width={width} ref={ref}>
       <DropdownHeader onClick={toggling} $type={type} $padding={padding}>
         <Title>{selectedValue}</Title>
-        <Image
+        <ArrowImage
           src="/assets/icons/down_arrow.svg"
           width={isMobile ? 7 : 16}
           height={isMobile ? 4 : 9}
           alt="화살표"
+          className={open ? "open" : ""}
         />
       </DropdownHeader>
       {open && (
@@ -111,6 +112,14 @@ const DropdownHeader = styled.div<{
 
 const Title = styled.p``;
 
+const ArrowImage = styled(Image)`
+  cursor: pointer;
+  transition: transform 0.3s ease;
+
+  &.open {
+    transform: rotate(180deg);
+  }
+`;
 const DropBox = styled.div<{ $width: string }>`
   position: absolute;
   z-index: 101;
