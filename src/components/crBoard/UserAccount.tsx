@@ -5,7 +5,7 @@ import { Mike } from "@/types/user/mike";
 
 interface UserAccountProps {
   account: string;
-  mike: Mike;
+  mike?: Mike;
   tag: string;
 }
 
@@ -16,7 +16,7 @@ const UserAccount = (props: UserAccountProps) => {
     <Wrapper>
       <Row>
         <Account>{account}</Account>
-        <Mic status={mike} />
+        {mike && <Mic status={mike} />}
       </Row>
       {tag && <Tag>#{tag}</Tag>}
     </Wrapper>

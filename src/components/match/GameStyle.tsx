@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { Dispatch, useEffect, useState } from "react";
 import styled from "styled-components";
 import Box from "../common/Box";
 import Toggle from "../common/Toggle";
@@ -13,26 +13,31 @@ import { setUserMike } from "@/redux/slices/userSlice";
 import { putGameStyle, putMike } from "@/api/user/profile/put";
 import { Mike } from "@/types/user/mike";
 import useMediaQueries from "@/hooks/useMediaQueries";
-type profileType = "me" | "other" | "none" | "mini";
 
-interface GameStyle {
+type profileType = "me" | "other" | "none" | "mini" | "post";
+
+export interface GameStyle {
   gameStyleId: number;
   gameStyleName: string;
 }
 
 interface GameStyleProps {
   gameStyleResponseDTOList: GameStyle[];
+  setSelectedStyleIds?: Dispatch<React.SetStateAction<number[]>>;
   profileType: profileType;
-  mike: Mike;
+  mike?: Mike;
   handleMike?: () => void;
+  label?: boolean;
 }
 
 const GameStyle = (props: GameStyleProps) => {
   const {
     gameStyleResponseDTOList,
+    setSelectedStyleIds,
     profileType = "none",
     mike,
     handleMike,
+    label = true,
   } = props;
 
   const isMobile = useMediaQueries({ breakpoint: 700 });
@@ -85,6 +90,8 @@ const GameStyle = (props: GameStyleProps) => {
       await putGameStyle(updatedStyles);
     } else if (profileType === "none") {
       dispatch(updateGameStyles(updatedStyles));
+    } else if (profileType === "post") {
+      setSelectedStyleIds?.(updatedStyles);
     }
   };
 
@@ -95,7 +102,7 @@ const GameStyle = (props: GameStyleProps) => {
 
   const selectedStyleObjects = selectedStyles
     .map((styleId) => GAME_STYLE.find((style) => style.gameStyleId === styleId))
-    .filter(Boolean);
+    .filter((style): style is GameStyle => Boolean(style));
 
   const handleChangeMike = async () => {
     const newMikeValue =
@@ -111,14 +118,14 @@ const GameStyle = (props: GameStyleProps) => {
   return (
     <Style>
       <LeftLabel $profileType={profileType}>
-        게임 스타일
+        {label && "게임 스타일"}
         <GameBox $profileType={profileType}>
           {selectedStyleObjects.map((style) => (
             <Box
               key={style!.gameStyleId}
               text={style!.gameStyleName}
               shape="round"
-              profileType={profileType}
+              profileType={profileType === "post" ? "none" : profileType}
             />
           ))}
           {profileType !== "other" && (
@@ -132,14 +139,14 @@ const GameStyle = (props: GameStyleProps) => {
                   width={
                     profileType === "mini"
                       ? 11
-                      : profileType === "none"
+                      : profileType === "none" || profileType === "post"
                       ? 14
                       : 21
                   }
                   height={
                     profileType === "mini"
                       ? 11
-                      : profileType === "none"
+                      : profileType === "none" || profileType === "post"
                       ? 14
                       : 21
                   }
@@ -150,7 +157,7 @@ const GameStyle = (props: GameStyleProps) => {
           )}
           {styledPopup && (
             <SelectedStylePopup
-              profileType={profileType}
+              profileType={profileType === "post" ? "none" : profileType}
               onClose={handleClosePopup}
               selectedStyles={selectedStyles}
               onSelectStyle={handleSelectStyle}
@@ -162,7 +169,7 @@ const GameStyle = (props: GameStyleProps) => {
         <LeftLabel $profileType={profileType}>
           마이크
           <Toggle
-            isOn={mike}
+            isOn={mike ? mike : "UNAVAILABLE"}
             onToggle={handleMike || handleChangeMike}
             type={profileType}
           />
@@ -179,8 +186,6 @@ const Style = styled.div`
   display: flex;
   flex-direction: column;
   gap: 28px;
-  /* justify-content: space-between;
-  align-items: flex-start; */
 `;
 
 const LeftLabel = styled.div<{ $profileType: profileType }>`
@@ -258,7 +263,7 @@ const AddGameStyle = styled.button<{ $profileType: profileType }>`
   outline: none;
 
   ${({ $profileType }) =>
-    $profileType === "none" &&
+    ($profileType === "none" || $profileType === "post") &&
     css`
       width: 56px;
       height: 36px;
