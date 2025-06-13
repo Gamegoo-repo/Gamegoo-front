@@ -605,6 +605,7 @@ const ReadBoard = (props: ReadBoardProps) => {
                     </UserProfileWrapper>
                     <UserAccount
                       account={isPost.gameName}
+                      memberId={isPost.memberId}
                       mike={isPost.mike}
                       tag={isPost.tag}
                     />
