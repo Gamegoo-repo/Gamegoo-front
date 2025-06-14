@@ -89,7 +89,7 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
         (isMobile && !isToggleUI) ||
         !isMobile) && (
         <Container $opponent={opponent}>
-          <Column>
+          <AccountInfo>
             <FirstRow>
               {user.gameName}
               <SpanTag>#{user.tag}</SpanTag>
@@ -109,6 +109,8 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
                 direct="row"
               />
             </SecondRow>
+          </AccountInfo>
+          <Column>
             <ImageContainer>
               <ProfileImgWrapper $bgColor={getProfileBgColor(user.profileImg)}>
                 <ProfileImg
@@ -132,8 +134,7 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
                 <Bubble>클릭해서 매너키워드 보기</Bubble>
               </ProfileImgWrapper>
             </ImageContainer>
-            <Mic status={user.mike} />
-            {/* TODO 게임 스타일 UI 확인 필요 */}
+            <Mic variant="icon" status={user.mike} />
             <GameStyleContainer>
               {user.gameStyleList &&
                 user.gameStyleList.length > 0 &&
@@ -179,7 +180,7 @@ const ContainerWrap = styled.div<{ $opponent: boolean; $isOpened: boolean }>`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  gap: 18px;
+  gap: 24px;
 
   /* 그림자 */
   box-shadow: 0px 0px 21.3px 0px rgba(0, 0, 0, 0.15);
@@ -188,6 +189,7 @@ const ContainerWrap = styled.div<{ $opponent: boolean; $isOpened: boolean }>`
       $isOpened ? `10px 20px 28px 20px` : `10px 20px`};
     border-radius: 8px;
     height: unset;
+    gap: 20px;
   }
 `;
 
@@ -212,9 +214,20 @@ const Column = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  gap: 18px;
+  gap: 24px;
   @media (max-width: 700px) {
     gap: 15px;
+  }
+`;
+
+const AccountInfo = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  @media (max-width: 700px) {
+    /* gap: 15px; */
   }
 `;
 
@@ -224,7 +237,6 @@ const ImageContainer = styled.div`
   justify-content: center;
   position: relative;
   overflow-x: visible;
-  margin-bottom: 10px;
 `;
 
 const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
@@ -246,7 +258,7 @@ const ProfileImg = styled.object`
   transform: translate(-50%, -50%);
 `;
 
-const LevelTag = styled.span`
+const LevelTag = styled.button`
   position: absolute;
   bottom: -12.5px;
   left: 50%;
@@ -281,7 +293,7 @@ const Bubble = styled.div`
   color: ${theme.colors.gray800};
   ${theme.fonts.medium11};
   position: absolute;
-  top: -15px;
+  top: -10px;
   left: 20%;
 
   animation: fadeInOut 2s infinite;
@@ -328,6 +340,7 @@ const Bubble = styled.div`
 const FirstRow = styled.div`
   ${theme.fonts.bold25}
   color: ${theme.colors.gray800};
+  margin-bottom: 2px;
 `;
 
 const SpanTag = styled.span`
@@ -344,6 +357,7 @@ const SecondRow = styled.div`
   gap: 16px;
   color: ${theme.colors.gray800};
   ${(props) => props.theme.fonts.bold25};
+  margin-bottom: 16px;
 
   @media (max-width: 700px) {
     flex-direction: row;
@@ -360,10 +374,6 @@ const Bar = styled.div`
 
 const Row = styled.div`
   width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 9px;
 `;
 
 const GameStyleContainer = styled.div`
