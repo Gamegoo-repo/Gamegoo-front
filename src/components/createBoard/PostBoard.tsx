@@ -8,7 +8,6 @@ import UpdateProfileImage from "./UpdateProfileImage";
 import UserAccount from "../crBoard/UserAccount";
 import Toggle from "../common/Toggle";
 import PositionBox, { PositionState } from "../crBoard/PositionBox";
-import GameStyle from "./GameStyle";
 import ConfirmModal from "../common/ConfirmModal";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -30,7 +29,9 @@ import { Mike } from "@/types/user/mike";
 import { GAME_MODE } from "@/constants/board";
 import { GameMode } from "@/types/game/gameMode";
 import { Position } from "@/types/position/position";
-import { notify } from "@/hooks/notify";
+import GameStyle from "../match/GameStyle";
+import { GAME_STYLE } from "@/constants/profile";
+import { GameStyle as GameStyleInterface } from "@/interface/profile";
 
 interface PostBoardProps {
   onClose: () => void;
@@ -63,7 +64,7 @@ const PostBoard = (props: PostBoardProps) => {
     {
       main: currentPost?.mainP || user?.mainP || "ANY",
       sub: currentPost?.subP || user?.subP || "ANY",
-      want: currentPost?.wantP || user?.wantP || ["ANY", "ANY"],
+      want: currentPost?.wantP || [],
     }
   );
   const [isMicOn, setIsMicOn] = useState<Mike>(
@@ -107,13 +108,12 @@ const PostBoard = (props: PostBoardProps) => {
         sub: currentPost.subP || "ANY",
         want: currentPost.wantP || [],
       });
-
       setSelectedImageIndex(currentPost.profileImage);
       setIsMicOn(currentPost.mike);
       setSelectedStyleIds(currentPost.gameStyles);
       setTextareaValue(currentPost.contents);
     }
-  }, [currentPost]);
+  }, []);
 
   /* userInfo가 업데이트된 후 상태 업데이트 */
   useEffect(() => {
@@ -301,34 +301,9 @@ const PostBoard = (props: PostBoardProps) => {
               isProfileListOpen={isProfileListOpen}
               onImageClick={handleImageClick}
             />
-            <UserAccount
-              account={user.gameName}
-              tag={user.tag}
-              mike={user.mike}
-            />
+            <UserAccount account={user.gameName} tag={user.tag} />
           </UserSection>
         )}
-
-        <QueueNMicSection>
-          <Div>
-            <Title className="micTitle">마이크</Title>
-            <Toggle isOn={isMicOn} onToggle={toggleMicHandler} type="board" />
-          </Div>
-          <Div>
-            <Title className="queueTitle">큐 타입</Title>
-            <Dropdown
-              ref={dropdownRef}
-              type="type2"
-              padding="11px 21px"
-              width="234px"
-              list={GAME_MODE.slice(1)}
-              open={isDropdownOpen}
-              setOpen={setIsDropdownOpen}
-              onDropValue={handleDropValue}
-              defaultValue={selectedDropOption}
-            />
-          </Div>
-        </QueueNMicSection>
         {selectedDropOption !== "ARAM" && (
           <PositionSection>
             <Title className="positionTitle">포지션</Title>
@@ -349,15 +324,43 @@ const PostBoard = (props: PostBoardProps) => {
             />
           </PositionSection>
         )}
+        <QueueNMicSection>
+          <Div>
+            <Title className="queueTitle">선호 게임 모드</Title>
+            <Dropdown
+              ref={dropdownRef}
+              type="type2"
+              padding="11px 21px"
+              width="234px"
+              list={GAME_MODE.slice(1)}
+              open={isDropdownOpen}
+              setOpen={setIsDropdownOpen}
+              onDropValue={handleDropValue}
+              defaultValue={selectedDropOption}
+            />
+          </Div>
+        </QueueNMicSection>
         <StyleSection>
           <Title className="gameStyleTitle">게임 스타일</Title>
           <GameStyle
-            selectedStyleIds={selectedStyleIds}
+            profileType="post"
+            gameStyleResponseDTOList={selectedStyleIds
+              .map((id) => GAME_STYLE.find((style) => style.gameStyleId === id))
+              .filter(
+                (style): style is GameStyleInterface => style !== undefined
+              )}
             setSelectedStyleIds={setSelectedStyleIds}
+            label={false}
           />
         </StyleSection>
+        <QueueNMicSection>
+          <Div>
+            <Title className="micTitle">마이크</Title>
+            <Toggle isOn={isMicOn} onToggle={toggleMicHandler} type="board" />
+          </Div>
+        </QueueNMicSection>
         <MemoSection>
-          <Title className="memoTitle">메모</Title>
+          <Title className="memoTitle">한마디</Title>
           <InputWrapper>
             <Input
               height="100px"

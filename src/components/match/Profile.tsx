@@ -717,16 +717,14 @@ const Profile: React.FC<Profile> = ({
               handleMike={handleMike}
             />
           )}
-          {!isMobile && (
-            <Mike>
-              마이크
-              <Toggle
-                isOn={isMike}
-                onToggle={handleMike}
-                disabled={profileType === "other"}
-              />
-            </Mike>
-          )}
+          <Mike>
+            마이크
+            <Toggle
+              isOn={isMike}
+              onToggle={handleMike}
+              disabled={profileType === "other"}
+            />
+          </Mike>
           {isMobile &&
             (profileType === "other" || profileType === "me") &&
             user.championResponseList && (
@@ -1271,6 +1269,8 @@ const Mike = styled.div`
   align-items: flex-start;
   gap: 12px;
   font-size: ${theme.fonts.semiBold14};
+  color: ${theme.colors.gray600};
+
   @media (max-width: 700px) {
     font-size: ${theme.fonts.medium11};
   }

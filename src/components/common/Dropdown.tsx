@@ -44,6 +44,7 @@ const Dropdown = forwardRef(function Dropdown(
     const selectedItem = list.find((item) => item.id === id);
     if (selectedItem) {
       setSelectedValue(selectedItem.value);
+      setOpen((prev) => !prev);
       onDropValue(id);
     }
   };
