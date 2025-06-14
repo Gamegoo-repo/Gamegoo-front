@@ -23,6 +23,7 @@ import useMediaQueries from "@/hooks/useMediaQueries";
 import { getEffectiveTier } from "@/utils/matching/tier";
 import { GameMode } from "@/types/game/gameMode";
 import { GameStyleList } from "@/interface/profile";
+import WaitingBox from "@/components/match/WaitingBox";
 
 interface User {
   memberId: number;
@@ -320,13 +321,6 @@ const Progress = () => {
     }
   };
 
-  // 남은 시간을 MM:SS 형식으로 변환
-  const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
-  };
-
   return (
     <Suspense>
       {/* 새로고침 모달 */}
@@ -354,20 +348,12 @@ const Progress = () => {
           </Header>
           <Main>
             <SquareProfile user={user} isToggleUI={true} />
-            <Waiting>
-              <AnimatedImage
-                src="/assets/images/wait_heart.svg"
-                width={!isMobile ? 225 : 120}
-                height={!isMobile ? 225 : 120}
-                alt="heart"
-              />
-              <AnimatedText $visible={textVisible}>
-                {currentMessage}
-              </AnimatedText>
-              <Time>
-                <Span>{formatTime(timeLeft)}&nbsp;</Span>/ 5:00
-              </Time>
-            </Waiting>
+            <WaitingBox
+              isMobile={isMobile}
+              textVisible={textVisible}
+              currentMessage={currentMessage}
+              timeLeft={timeLeft}
+            />
           </Main>
           {/* 즐겜모드, 빡겜모드 매칭 실패 */}
           {isFirstRetry && (
@@ -448,32 +434,6 @@ export default function ProgressPaging() {
     </Suspense>
   );
 }
-const fadeIn = keyframes`
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-`;
-
-const fadeOut = keyframes`
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-`;
-
-const growShrink = keyframes`
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-`;
 
 const Wrapper = styled.div`
   width: 100%;
@@ -503,19 +463,19 @@ const Header = styled.div`
   white-space: nowrap;
 `;
 
-const Time = styled.div`
-  color: ${theme.colors.gray700};
-  ${(props) => props.theme.fonts.light32}
-  margin-bottom: 32px;
-`;
+// const Time = styled.div`
+//   color: ${theme.colors.gray700};
+//   ${(props) => props.theme.fonts.light32}
+//   margin-bottom: 32px;
+// `;
 
-const Span = styled.span`
-  color: ${theme.colors.violet600};
-  ${(props) => props.theme.fonts.bold32}
-  @media (max-width: 700px) {
-    ${(props) => props.theme.fonts.bold32}
-  }
-`;
+// const Span = styled.span`
+//   color: ${theme.colors.violet600};
+//   ${(props) => props.theme.fonts.bold32}
+//   @media (max-width: 700px) {
+//     ${(props) => props.theme.fonts.bold32}
+//   }
+// `;
 
 const Main = styled.main`
   display: grid;
@@ -528,49 +488,5 @@ const Main = styled.main`
     display: flex;
     flex-direction: column;
     gap: 8px;
-  }
-`;
-
-const Waiting = styled.div`
-  width: 100%;
-  height: 580px;
-  border-radius: 30px;
-  background: ${theme.colors.gray100};
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 42px;
-  color: ${theme.colors.gray800};
-  ${(props) => props.theme.fonts.regular25};
-
-  animation: ${fadeIn} 0.5s ease-in forwards;
-  transition: opacity 0.5s ease-in-out;
-
-  @media (max-width: 700px) {
-    height: 376px;
-    padding: 80px 20px;
-    border-radius: 8px;
-    gap: 0px;
-  }
-`;
-
-const AnimatedImage = styled(Image)`
-  animation: ${growShrink} 1.8s ease-in-out infinite;
-
-  @media (max-width: 700px) {
-    margin-bottom: 20px;
-  }
-`;
-
-const AnimatedText = styled.div<{ $visible: boolean }>`
-  opacity: ${({ $visible }) => ($visible ? 1 : 0)};
-  transition: opacity 0.3s ease-in-out;
-  animation: ${({ $visible }) => ($visible ? fadeIn : fadeOut)} 1s ease-in-out
-    forwards;
-
-  @media (max-width: 700px) {
-    ${(props) => props.theme.fonts.medium16};
-    margin-bottom: 6px;
   }
 `;
