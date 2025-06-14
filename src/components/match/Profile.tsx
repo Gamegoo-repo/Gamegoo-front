@@ -63,6 +63,7 @@ const Profile: React.FC<Profile> = ({
   backgroundColor,
   isDefault = false,
 }) => {
+  const isMobileButton = useMediaQueries({ breakpoint: 950 });
   const isMobile = useMediaQueries({ breakpoint: 700 });
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -745,6 +746,9 @@ const Profile: React.FC<Profile> = ({
               handleMike={handleMike}
             />
           )}
+          {isMobileButton && !isMobile && (
+            <Admit>{renderFriendsButton()}</Admit>
+          )}
           {(profileType === "normal" || profileType === "wind") && (
             <Mike>
               마이크
@@ -766,7 +770,9 @@ const Profile: React.FC<Profile> = ({
 
       {profileType === "other" && (
         <More>
-          {!isDefault && !isMobile && <Admit>{renderFriendsButton()}</Admit>}
+          {!isDefault && !isMobileButton && (
+            <Admit>{renderFriendsButton()}</Admit>
+          )}
           {/* 더보기 버튼 */}
           {memberId !== myId && (
             <MoreDiv ref={moreBoxRef}>
@@ -879,7 +885,6 @@ export default Profile;
 
 const Container = styled.div<{ $backgroundColor?: string }>`
   width: 100%;
-  min-width: 980px;
   box-sizing: border-box;
   border-radius: 30px;
   padding: 45px;
@@ -890,10 +895,15 @@ const Container = styled.div<{ $backgroundColor?: string }>`
   align-items: flex-start;
   justify-content: flex-start;
   gap: 15px;
+  box-sizing: border-box;
   position: relative;
 
   &.other {
     padding: 42px 41px;
+
+    @media (max-width: 980px) {
+      overflow-x: auto;
+    }
 
     @media (max-width: 700px) {
       min-width: 300px;
@@ -939,10 +949,16 @@ const UnderRow = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   gap: 60px;
+
+  @media (max-width: 1140px) {
+    flex-direction: column;
+    gap: 24px;
+  }
 `;
 
 const ImageContainer = styled.div`
   position: relative;
+
   @media (max-width: 700px) {
     display: flex;
   }
