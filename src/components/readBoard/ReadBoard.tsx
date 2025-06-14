@@ -202,36 +202,6 @@ const ReadBoard = (props: ReadBoardProps) => {
     handleMoreBoxClose();
   };
 
-  /* 신고하기 */
-  const handleReport = async () => {
-    if (!isUser.gameName) {
-      return showAlertWithContent(
-        "exclamation",
-        logoutMessage,
-        () => router.push("/login"),
-        "로그인하기"
-      );
-    }
-
-    if (!isPost || isUser.id === isPost?.memberId) return;
-
-    const params = {
-      memberId: isPost.memberId,
-      reportCodeList: checkedItems,
-      contents: reportDetail,
-      pathCode: 1, // BOARD
-      boardId: postId,
-    };
-
-    try {
-      await reportMember(params);
-      await handleModalClose();
-      await getPostData();
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   /* 차단하기 및 차단 해제 */
   const handleBlock = async () => {
     setIsBlockBoxOpen(!isBlockBoxOpen);
