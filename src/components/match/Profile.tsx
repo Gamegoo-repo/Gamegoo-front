@@ -36,7 +36,7 @@ import {
 import { deleteFriend } from "@/api/friend/delete";
 import { blockMember, unblockMember } from "@/api/block/block";
 import { Mike as MikeType } from "@/types/user/mike";
-import { Position, PositionType } from "@/types/position/position";
+import { Position } from "@/types/position/position";
 import RankTier from "../common/RankTier";
 import Alert from "../common/Alert";
 import useMediaQueries from "@/hooks/useMediaQueries";
@@ -706,14 +706,12 @@ const Profile: React.FC<Profile> = ({
               handleMike={handleMike}
             />
           )}
-          <Mike>
-            마이크
-            <Toggle
-              isOn={isMike}
-              onToggle={handleMike}
-              disabled={profileType === "other"}
-            />
-          </Mike>
+          {(profileType === "normal" || profileType === "wind") && (
+            <Mike>
+              마이크
+              <Toggle isOn={isMike} onToggle={handleMike} />
+            </Mike>
+          )}
           {isMobile &&
             (profileType === "other" || profileType === "me") &&
             user.championResponseList && (
