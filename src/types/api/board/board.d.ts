@@ -56,6 +56,11 @@ interface BoardListStructure {
   totalCount: number;
 }
 
+interface MyBoardListStructure {
+  totalPage: number;
+  totalCount: number;
+}
+
 // 구체적인 인터페이스들
 export interface PostsData extends BasePlayerInfo, GameInfo, BaseBoardInfo {
   tier: string;
@@ -66,7 +71,7 @@ export interface GetBoardListData extends BoardListStructure {
   boards: Array<BoardDetail>;
 }
 
-export interface GetMyBoardListData extends BoardListStructure {
+export interface GetMyBoardListData extends MyBoardListStructure {
   myBoards: Array<MyBoardDetail>;
 }
 
