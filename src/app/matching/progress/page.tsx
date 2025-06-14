@@ -10,7 +10,11 @@ import { useEffect, useRef, useState } from "react";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import { socket } from "@/socket";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { messagesWithN, messagesWithoutN } from "@/constants/messages";
+import {
+  messagesWithoutN,
+  messagesWithTierN,
+  messagesWithTotalN,
+} from "@/constants/messages";
 // import { getSystemMsg } from "@/api/socket";
 import { getBoardList } from "@/api/board/board";
 import { setOpenPostingModal } from "@/redux/slices/modalSlice";
@@ -92,86 +96,59 @@ const Progress = () => {
 
   // const [showReloadModal, setShowReloadModal] = useState(false); // 새로고침 모달 상태
 
-  // TODO: 매칭 중 랜덤메세지에 들어갈 n명 정보 받아오기 (기존 API 로직 -> Socket Event로 변경)
   useEffect(() => {
-    const handleMatchingCount = (data: {
-      userCount: number;
-      tierCount: Record<string, number>;
-    }) => {
-      const tierKey =
-        getEffectiveTier(
-          {
-            soloTier: user.soloTier,
-            freeTier: user.freeTier,
-          },
-          user.gameMode
-        )?.toUpperCase() || "UNRANKED";
-      const tierUserCount = data.tierCount[tierKey] ?? 0;
-      const messages = Math.random() < 0.5 ? messagesWithN : messagesWithoutN;
-      const randomMessage =
-        messages[Math.floor(Math.random() * messages.length)];
-
-      if (messagesWithN.includes(randomMessage)) {
-        setCurrentMessage(
-          randomMessage.replace(/n/g, tierUserCount.toString())
-        );
-      } else {
-        setCurrentMessage(randomMessage);
-      }
+    const handleMatchingCount = (data: any) => {
+      setTierCounts({ ...data.tierCount, total: data.userCount });
     };
 
-    socket?.off("matching-count", handleMatchingCount);
-
+    socket?.on("matching-count", handleMatchingCount);
     return () => {
       socket?.off("matching-count", handleMatchingCount);
     };
   }, []);
 
-  // const showMessage = async () => {
-  //   /* 메세지 전환을 위해 0.5초 간 안 보이게 하기 */
-  //   setTextVisible(false);
+  const showMessage = () => {
+    setTextVisible(false);
 
-  //   setTimeout(async () => {
-  //     const messages = Math.random() < 0.5 ? messagesWithN : messagesWithoutN;
-  //     const randomMessage =
-  //       messages[Math.floor(Math.random() * messages.length)];
-  //     /* 나와 같은 티어의 매칭 인원이 필요할 때 */
-  //     if (messagesWithN[1] === randomMessage) {
-  //       /* TODO : 기획사항에 맞게 올바른 티어 전달하기 */
-  //       // const response = await getSystemMsg(user.tier);
-  //       const response = await getSystemMsg(user.soloTier); // 임시로 솔로티어로 전달
-  //       setCurrentMessage(
-  //         randomMessage.replace(/n/g, response.result.number.toString())
-  //       );
-  //     } else if (messagesWithN.includes(randomMessage)) {
-  //       /* 시스템 메세지 API로부터 n 호출 */
-  //       const response = await getSystemMsg();
-  //       if (response && response.isSuccess) {
-  //         setCurrentMessage(
-  //           randomMessage.replace(/n/g, response.result.number.toString())
-  //         );
-  //       } else {
-  //         /* 에러 발생 시, messagesWithoutN에서 랜덤으로 메시지 설정 */
-  //         const randomMessage =
-  //           messagesWithoutN[
-  //             Math.floor(Math.random() * messagesWithoutN.length)
-  //           ];
-  //         setCurrentMessage(randomMessage);
-  //       }
-  //     } else {
-  //       setCurrentMessage(randomMessage);
-  //     }
+    setTimeout(() => {
+      const totalMessages = [
+        ...messagesWithTierN,
+        ...messagesWithTotalN,
+        ...messagesWithoutN,
+      ];
+      const randomMessage =
+        totalMessages[Math.floor(Math.random() * totalMessages.length)];
 
-  //     setTextVisible(true);
-  //   }, 500);
-  // };
+      const tierKey =
+        getEffectiveTier(
+          { soloTier: user.soloTier, freeTier: user.freeTier },
+          user.gameMode
+        )?.toUpperCase() || "UNRANKED";
 
-  // useEffect(() => {
-  //   showMessage();
-  //   const interval = setInterval(showMessage, 10000); // 10초 간격으로 메시지 변경
+      const tierUserCount = tierCounts[tierKey] ?? 0;
+      const totalUserCount = tierCounts["total"] ?? 0;
 
-  //   return () => clearInterval(interval);
-  // }, []);
+      if (messagesWithTierN.includes(randomMessage)) {
+        setCurrentMessage(
+          randomMessage.replace(/n/g, tierUserCount.toString())
+        );
+      } else if (messagesWithTotalN.includes(randomMessage)) {
+        setCurrentMessage(
+          randomMessage.replace(/n/g, totalUserCount.toString())
+        );
+      } else {
+        setCurrentMessage(randomMessage);
+      }
+
+      setTextVisible(true);
+    }, 500);
+  };
+
+  useEffect(() => {
+    showMessage();
+    const interval = setInterval(showMessage, 5000); // 5초 간격으로 랜덤 메세지 변경
+    return () => clearInterval(interval);
+  }, []);
 
   /* 새로고침 및 타 사이트 이동 방지 */
   // const handleBeforeunload = (e: BeforeUnloadEvent) => {

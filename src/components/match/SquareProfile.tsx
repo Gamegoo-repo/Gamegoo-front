@@ -338,6 +338,8 @@ const Bubble = styled.div`
 `;
 
 const FirstRow = styled.div`
+  display: flex;
+  align-items: center;
   ${theme.fonts.bold25}
   color: ${theme.colors.gray800};
   margin-bottom: 2px;
