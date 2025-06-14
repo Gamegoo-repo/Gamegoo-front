@@ -40,6 +40,7 @@ export default WaitingBox;
 const Waiting = styled.div`
   width: 100%;
   height: 580px;
+  padding: 30px 80px;
   border-radius: 30px;
   background: ${theme.colors.gray100};
   display: flex;
