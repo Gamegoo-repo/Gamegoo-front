@@ -23,7 +23,6 @@ import {
   pullUpPost,
 } from "@/api/board/board";
 import LoadingSpinner from "../common/LoadingSpinner";
-import { setPostingDateFormatter } from "@/utils/custom";
 import { reportMember } from "@/api/report/report";
 import FormModal from "../common/FormModal";
 import Input from "../common/Input";
@@ -58,6 +57,7 @@ import { GameMode } from "@/types/game/gameMode";
 import UserAccount from "../crBoard/UserAccount";
 import RankTier from "../common/RankTier";
 import { setRefresh } from "@/redux/slices/boardSlice";
+import { setPostingDateFormatter } from "@/utils/timeFormat";
 
 interface ReadBoardProps {
   postId: number;

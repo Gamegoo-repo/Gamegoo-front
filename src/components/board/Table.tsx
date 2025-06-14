@@ -1,12 +1,7 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import {
-  setAbbrevTier,
-  setDateFormatter,
-  setPositionImg,
-  setProfileImg,
-} from "@/utils/custom";
+import { setAbbrevTier, setPositionImg, setProfileImg } from "@/utils/custom";
 import ReadBoard from "../readBoard/ReadBoard";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -35,6 +30,7 @@ import { notify } from "@/hooks/notify";
 import { deleteFriend } from "@/api/friend/delete";
 import { cancelFriendRequest, sendFriendRequest } from "@/api/friend/request";
 import { blockMember, unblockMember } from "@/api/block/block";
+import { setDateFormatter } from "@/utils/timeFormat";
 
 interface TableTitleProps {
   id: number;
