@@ -10,8 +10,12 @@ import { useEffect, useRef, useState } from "react";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import { socket } from "@/socket";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { messagesWithN, messagesWithoutN } from "@/constants/messages";
-import { getSystemMsg } from "@/api/socket";
+import {
+  messagesWithoutN,
+  messagesWithTierN,
+  messagesWithTotalN,
+} from "@/constants/messages";
+// import { getSystemMsg } from "@/api/socket";
 import { getBoardList } from "@/api/board/board";
 import { setOpenPostingModal } from "@/redux/slices/modalSlice";
 import { useDispatch } from "react-redux";
@@ -20,6 +24,11 @@ import { setIsCompleted } from "@/utils/storage";
 import { Position } from "@/types/position/position";
 import { Mike } from "@/types/user/mike";
 import useMediaQueries from "@/hooks/useMediaQueries";
+import { getEffectiveTier } from "@/utils/matching/tier";
+import { GameMode } from "@/types/game/gameMode";
+import { GameStyleList } from "@/interface/profile";
+import WaitingBox from "@/components/match/WaitingBox";
+
 interface User {
   memberId: number;
   gameName: string;
@@ -30,10 +39,10 @@ interface User {
   freeRank: number;
   mannerLevel: number;
   profileImg: number;
-  gameMode: number;
-  mainPosition: Position;
-  subPosition: Position;
-  wantPosition: Position;
+  gameMode: GameMode;
+  mainP: Position;
+  subP: Position;
+  wantP: Position;
   mike: Mike;
   gameStyleList: string[];
 }
@@ -55,6 +64,7 @@ const Progress = () => {
   const rank = searchParams.get("gameRank");
   const retry = searchParams.get("retry");
 
+  const gameStyleRaw = searchParams.get("gameStyleResponseList");
   const user: User = {
     memberId: parseInt(searchParams.get("memberId") || "0", 10),
     gameName: searchParams.get("gameName") || "",
@@ -66,52 +76,66 @@ const Progress = () => {
     freeRank: parseInt(searchParams.get("rank") || "1", 10),
     mannerLevel: parseInt(searchParams.get("mannerLevel") || "0", 10),
     profileImg: parseInt(searchParams.get("profileImg") || "0", 10),
-    gameMode: parseInt(searchParams.get("gameMode") || "1", 10),
-    mainPosition: (searchParams.get("mainPosition") as Position) || "ANY",
-    subPosition: (searchParams.get("subPosition") as Position) || "ANY",
-    wantPosition: (searchParams.get("wantPosition") as Position) || "ANY",
+    gameMode: (searchParams.get("gameMode") as GameMode) || "",
+    mainP: (searchParams.get("mainP") as Position) || "ANY",
+    subP: (searchParams.get("subP") as Position) || "ANY",
+    wantP: (searchParams.get("wantP") as Position) || "ANY",
     mike: (searchParams.get("mike") as Mike) || "AVAILABLE",
-    gameStyleList: (searchParams.get("gameStyleList") || "").split(","),
+    gameStyleList: gameStyleRaw
+      ? (JSON.parse(gameStyleRaw) as GameStyleList[]).map(
+          (style) => style.gameStyleName
+        )
+      : [],
   };
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
+  const [tierCounts, setTierCounts] = useState<Record<string, number>>({}); // 티어별 인원 수
   const [currentMessage, setCurrentMessage] = useState<string>("");
   const [textVisible, setTextVisible] = useState<boolean>(true);
 
   // const [showReloadModal, setShowReloadModal] = useState(false); // 새로고침 모달 상태
 
-  const showMessage = async () => {
-    /* 메세지 전환을 위해 0.5초 간 안 보이게 하기 */
+  useEffect(() => {
+    const handleMatchingCount = (data: any) => {
+      setTierCounts({ ...data.tierCount, total: data.userCount });
+    };
+
+    socket?.on("matching-count", handleMatchingCount);
+    return () => {
+      socket?.off("matching-count", handleMatchingCount);
+    };
+  }, []);
+
+  const showMessage = () => {
     setTextVisible(false);
 
-    setTimeout(async () => {
-      const messages = Math.random() < 0.5 ? messagesWithN : messagesWithoutN;
+    setTimeout(() => {
+      const totalMessages = [
+        ...messagesWithTierN,
+        ...messagesWithTotalN,
+        ...messagesWithoutN,
+      ];
       const randomMessage =
-        messages[Math.floor(Math.random() * messages.length)];
-      /* 나와 같은 티어의 매칭 인원이 필요할 때 */
-      if (messagesWithN[1] === randomMessage) {
-        /* TODO : 기획사항에 맞게 올바른 티어 전달하기 */
-        // const response = await getSystemMsg(user.tier);
-        const response = await getSystemMsg(user.soloTier); // 임시로 솔로티어로 전달
+        totalMessages[Math.floor(Math.random() * totalMessages.length)];
+
+      const tierKey =
+        getEffectiveTier(
+          { soloTier: user.soloTier, freeTier: user.freeTier },
+          user.gameMode
+        )?.toUpperCase() || "UNRANKED";
+
+      const tierUserCount = tierCounts[tierKey] ?? 0;
+      const totalUserCount = tierCounts["total"] ?? 0;
+
+      if (messagesWithTierN.includes(randomMessage)) {
         setCurrentMessage(
-          randomMessage.replace(/n/g, response.result.number.toString())
+          randomMessage.replace(/n/g, tierUserCount.toString())
         );
-      } else if (messagesWithN.includes(randomMessage)) {
-        /* 시스템 메세지 API로부터 n 호출 */
-        const response = await getSystemMsg();
-        if (response && response.isSuccess) {
-          setCurrentMessage(
-            randomMessage.replace(/n/g, response.result.number.toString())
-          );
-        } else {
-          /* 에러 발생 시, messagesWithoutN에서 랜덤으로 메시지 설정 */
-          const randomMessage =
-            messagesWithoutN[
-              Math.floor(Math.random() * messagesWithoutN.length)
-            ];
-          setCurrentMessage(randomMessage);
-        }
+      } else if (messagesWithTotalN.includes(randomMessage)) {
+        setCurrentMessage(
+          randomMessage.replace(/n/g, totalUserCount.toString())
+        );
       } else {
         setCurrentMessage(randomMessage);
       }
@@ -122,8 +146,7 @@ const Progress = () => {
 
   useEffect(() => {
     showMessage();
-    const interval = setInterval(showMessage, 10000); // 10초 간격으로 메시지 변경
-
+    const interval = setInterval(showMessage, 5000); // 5초 간격으로 랜덤 메세지 변경
     return () => clearInterval(interval);
   }, []);
 
@@ -172,7 +195,7 @@ const Progress = () => {
 
     // 매칭 상대 찾기 성공 (sender)
     socket.on("matching-found-sender", (data) => {
-      console.log("매칭 상대 발견(sender):", data);
+      console.log("매칭 상대 발견(sender):", data); // targetMatchingInfo
       clearTimers();
       router.push(
         `/matching/complete?role=sender&opponent=true&type=${type}&rank=${rank}&user=${encodeURIComponent(
@@ -183,11 +206,13 @@ const Progress = () => {
 
     // 매칭 상대 찾기 성공 (receiver)
     socket.on("matching-found-receiver", (data) => {
-      console.log("매칭 상대 발견(receiver):", data);
+      console.log("매칭 상대 발견(receiver):", data); // senderMatchingInfo, receiverMatchingUuid
       clearTimers();
       socket?.emit("matching-found-success", {
-        senderMemberId: data.data.memberId,
-        gameMode: data.data.gameMode,
+        // senderMemberId: data.data.memberId,
+        // gameMode: data.data.gameMode,
+        senderMatchingUuid: data.data.receiverMatchingUuid,
+        gameMode: data.data.senderMatchingInfo.gameMode,
       });
       router.push(
         `/matching/complete?role=receiver&opponent=true&type=${type}&rank=${rank}&user=${encodeURIComponent(
@@ -211,7 +236,7 @@ const Progress = () => {
 
     // 매칭 재시도 여부에 따라 타이머 설정
     setTimeLeft(300);
-    let priority = 51.5; // 초기 priority 값
+    let threshold = 51.5; // 초기 threshold 값
     timerRef.current = setInterval(() => {
       setTimeLeft((prevTime) => {
         if (prevTime === 1) {
@@ -220,10 +245,10 @@ const Progress = () => {
           socket?.emit("matching-not-found");
           handleRetry(); // 매칭 실패 모달 결정 함수
         } else if (prevTime < 300 && prevTime % 30 === 0) {
-          // 30초마다 priority 값을 감소시키며 매칭 재시도
-          priority -= 1.5;
-          socket?.emit("matching-retry", { priority });
-          console.log(`매칭 재시도 (priority: ${priority})`);
+          // 30초마다 threshold 값을 감소시키며 매칭 재시도
+          threshold -= 1.5;
+          socket?.emit("matching-retry", { threshold });
+          console.log(`매칭 재시도 (priority: ${threshold})`);
         }
 
         return prevTime - 1;
@@ -239,25 +264,15 @@ const Progress = () => {
     } else {
       if (type === "custom") {
         const gameRank = searchParams.get("gameRank");
-        const mode =
-          gameRank === "fast"
-            ? 1
-            : gameRank === "personal"
-            ? 2
-            : gameRank === "free"
-            ? 3
-            : gameRank === "wind"
-            ? 4
-            : null;
 
         const params = {
           page: 1,
           pageIdx: 1,
-          gameMode: mode,
+          gameMode: gameRank as GameMode,
           /* TODO : 기획사항에 맞게 올바른 티어 전달하기 */
           // tier: user.tier,
           tier: user.soloTier, // 임시로 솔로티어로 전달
-          mainP: user.mainPosition,
+          mainP: user.mainP,
           mike: user.mike,
         };
         try {
@@ -281,13 +296,6 @@ const Progress = () => {
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
-  };
-
-  // 남은 시간을 MM:SS 형식으로 변환
-  const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
   };
 
   return (
@@ -317,20 +325,12 @@ const Progress = () => {
           </Header>
           <Main>
             <SquareProfile user={user} isToggleUI={true} />
-            <Waiting>
-              <AnimatedImage
-                src="/assets/images/wait_heart.svg"
-                width={!isMobile ? 225 : 120}
-                height={!isMobile ? 225 : 120}
-                alt="heart"
-              />
-              <AnimatedText $visible={textVisible}>
-                {currentMessage}
-              </AnimatedText>
-              <Time>
-                <Span>{formatTime(timeLeft)}&nbsp;</Span>/ 5:00
-              </Time>
-            </Waiting>
+            <WaitingBox
+              isMobile={isMobile}
+              textVisible={textVisible}
+              currentMessage={currentMessage}
+              timeLeft={timeLeft}
+            />
           </Main>
           {/* 즐겜모드, 빡겜모드 매칭 실패 */}
           {isFirstRetry && (
@@ -411,32 +411,6 @@ export default function ProgressPaging() {
     </Suspense>
   );
 }
-const fadeIn = keyframes`
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-`;
-
-const fadeOut = keyframes`
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-`;
-
-const growShrink = keyframes`
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-`;
 
 const Wrapper = styled.div`
   width: 100%;
@@ -466,19 +440,19 @@ const Header = styled.div`
   white-space: nowrap;
 `;
 
-const Time = styled.div`
-  color: ${theme.colors.gray700};
-  ${(props) => props.theme.fonts.light32}
-  margin-bottom: 32px;
-`;
+// const Time = styled.div`
+//   color: ${theme.colors.gray700};
+//   ${(props) => props.theme.fonts.light32}
+//   margin-bottom: 32px;
+// `;
 
-const Span = styled.span`
-  color: ${theme.colors.violet600};
-  ${(props) => props.theme.fonts.bold32}
-  @media (max-width: 700px) {
-    ${(props) => props.theme.fonts.bold32}
-  }
-`;
+// const Span = styled.span`
+//   color: ${theme.colors.violet600};
+//   ${(props) => props.theme.fonts.bold32}
+//   @media (max-width: 700px) {
+//     ${(props) => props.theme.fonts.bold32}
+//   }
+// `;
 
 const Main = styled.main`
   display: grid;
@@ -491,49 +465,5 @@ const Main = styled.main`
     display: flex;
     flex-direction: column;
     gap: 8px;
-  }
-`;
-
-const Waiting = styled.div`
-  width: 100%;
-  height: 580px;
-  border-radius: 30px;
-  background: ${theme.colors.gray100};
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 42px;
-  color: ${theme.colors.gray800};
-  ${(props) => props.theme.fonts.regular25};
-
-  animation: ${fadeIn} 0.5s ease-in forwards;
-  transition: opacity 0.5s ease-in-out;
-
-  @media (max-width: 700px) {
-    height: 376px;
-    padding: 80px 20px;
-    border-radius: 8px;
-    gap: 0px;
-  }
-`;
-
-const AnimatedImage = styled(Image)`
-  animation: ${growShrink} 1.8s ease-in-out infinite;
-
-  @media (max-width: 700px) {
-    margin-bottom: 20px;
-  }
-`;
-
-const AnimatedText = styled.div<{ $visible: boolean }>`
-  opacity: ${({ $visible }) => ($visible ? 1 : 0)};
-  transition: opacity 0.3s ease-in-out;
-  animation: ${({ $visible }) => ($visible ? fadeIn : fadeOut)} 1s ease-in-out
-    forwards;
-
-  @media (max-width: 700px) {
-    ${(props) => props.theme.fonts.medium16};
-    margin-bottom: 6px;
   }
 `;

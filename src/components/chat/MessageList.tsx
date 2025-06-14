@@ -20,7 +20,7 @@ import ReadBoard from "../readBoard/ReadBoard";
 import { getChatList, markChatAsRead } from "@/api/chat/chat";
 import useChatMessage from "@/hooks/useChatMessage";
 import dayjs from "dayjs";
-import { setChatDateFormatter, setChatTimeFormatter } from "@/utils/custom";
+import { setChatDateFormatter, setChatTimeFormatter } from "@/utils/timeFormat";
 import { getProfileBgColor } from "@/utils/profile";
 import ConfirmModal from "../common/ConfirmModal";
 import { useRouter } from "next/navigation";

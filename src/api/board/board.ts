@@ -18,7 +18,7 @@ import { BOARD } from "@/constants/messages";
 
 interface ListInterface {
   page: number;
-  gameMode: number | GameMode | null;
+  gameMode: GameMode | null;
   tier: string | null;
   mainP: Position
   mike: string | boolean | null;

@@ -13,12 +13,12 @@ import {
 } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
+import { setAbbrevTier } from "@/utils/custom";
 import {
   formatTimeAgo,
-  setAbbrevTier,
   setDateFormatter,
   setChatRoomDateFormatter,
-} from "@/utils/custom";
+} from "@/utils/timeFormat";
 import { getProfileBgColor } from "@/utils/profile";
 import { toLowerCaseString } from "@/utils/string";
 import {

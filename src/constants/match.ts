@@ -1,3 +1,5 @@
+import { GameMode } from "@/types/game/gameMode";
+
 export const MATCH_PAGE_DATA = [
   {
     id: 1,
@@ -83,7 +85,7 @@ export const MO_MATCH_TYPE_PAGE_DATA = [
 export const GAME_MODE_PAGE_DATA = [
   {
     id: 1,
-    rank: "personal",
+    rank: "FAST" as GameMode,
     pathname: "profile",
     width: "296px",
     height: "156px",
@@ -93,7 +95,7 @@ export const GAME_MODE_PAGE_DATA = [
   },
   {
     id: 2,
-    rank: "free",
+    rank: "SOLO" as GameMode,
     pathname: "profile",
     width: "296px",
     height: "156px",
@@ -103,7 +105,7 @@ export const GAME_MODE_PAGE_DATA = [
   },
   {
     id: 3,
-    rank: "fast",
+    rank: "FREE" as GameMode,
     pathname: "profile",
     width: "296px",
     height: "156px",
@@ -113,7 +115,7 @@ export const GAME_MODE_PAGE_DATA = [
   },
   {
     id: 4,
-    rank: "wind",
+    rank: "ARAM" as GameMode,
     pathname: "profile",
     width: "296px",
     height: "156px",

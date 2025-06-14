@@ -4,7 +4,7 @@ import Image from "next/image";
 import { getProfileBgColor } from "@/utils/profile";
 import { ChatroomList } from "@/interface/chat";
 import MoreBox from "../common/MoreBox";
-import { setChatRoomDateFormatter } from "@/utils/custom";
+import { setChatRoomDateFormatter } from "@/utils/timeFormat";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import useMediaQueries from "@/hooks/useMediaQueries";
 
