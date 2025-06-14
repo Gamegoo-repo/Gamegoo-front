@@ -3,6 +3,7 @@ import { Dispatch, forwardRef, useState } from "react";
 import { theme } from "@/styles/theme";
 import styled from "styled-components";
 import { GameMode } from "@/types/game/gameMode";
+import useMediaQueries from "@/hooks/useMediaQueries";
 
 interface ListProps {
   id: number | GameMode | null;
@@ -35,6 +36,7 @@ const Dropdown = forwardRef(function Dropdown(
     defaultValue,
   } = props;
 
+  const isMobile = useMediaQueries({ breakpoint: 700 });
   const initialItem = list.find((item) => item.id === defaultValue) || list[0];
   const [selectedValue, setSelectedValue] = useState(initialItem.value);
 
@@ -51,30 +53,25 @@ const Dropdown = forwardRef(function Dropdown(
 
   return (
     <Wrapper $width={width} ref={ref}>
-      <DropdownHeader
-        onClick={toggling}
-        $type={type}
-        $width={width}
-        $padding={padding}
-      >
+      <DropdownHeader onClick={toggling} $type={type} $padding={padding}>
         <Title>{selectedValue}</Title>
-        <Image
-          src="/assets/icons/down_arrow_gray.svg"
-          width={16}
-          height={16}
+        <ArrowImage
+          src="/assets/icons/down_arrow.svg"
+          width={isMobile ? 7 : 16}
+          height={isMobile ? 4 : 9}
           alt="화살표"
+          className={open ? "open" : ""}
         />
       </DropdownHeader>
       {open && (
-        <DropBox>
-          <DropdownListContent $type={type} $width={width}>
+        <DropBox $width={width}>
+          <DropdownListContent $type={type}>
             {list.map((data) => (
               <ListItem
                 key={data.id !== null ? data.id : "null"}
                 onClick={() => handleItemClick(data.id as number | null)}
                 className={type}
                 $type={type}
-                $width={width}
               >
                 {data.value}
               </ListItem>
@@ -94,35 +91,43 @@ const Wrapper = styled.div<{ $width: string }>`
 
 const DropdownHeader = styled.div<{
   $type: string;
-  $width: string;
   $padding: string;
 }>`
-  height: 56px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   color: ${theme.colors.gray800};
   border-radius: 10px;
   padding: ${({ $padding }) => $padding};
-  background: ${({ $type }) =>
-    $type === "type1" ? `${theme.colors.white}` : `${theme.colors.white}`};
-  border: ${({ $type }) =>
-    $type === "type1"
-      ? `1px solid ${theme.colors.gray300}`
-      : `1px solid ${theme.colors.gray400}`};
+  background: ${theme.colors.white};
+  border: 1px solid ${theme.colors.gray300};
   ${({ $type }) =>
     $type === "type1" ? `${theme.fonts.medium16}` : `${theme.fonts.regular18}`};
   cursor: pointer;
+
+  width: 100%;
+  @media (max-width: 700px) {
+    ${theme.fonts.regular13}
+  }
 `;
 
 const Title = styled.p``;
 
-const DropBox = styled.div`
+const ArrowImage = styled(Image)`
+  cursor: pointer;
+  transition: transform 0.3s ease;
+
+  &.open {
+    transform: rotate(180deg);
+  }
+`;
+const DropBox = styled.div<{ $width: string }>`
   position: absolute;
-  z-index: 1;
+  z-index: 101;
+  width: ${({ $width }) => $width};
 `;
 
-const DropdownListContent = styled.ul<{ $type: string; $width: string }>`
+const DropdownListContent = styled.ul<{ $type: string }>`
   padding: 0;
   margin: 0;
   border-radius: 10px;
@@ -131,16 +136,18 @@ const DropdownListContent = styled.ul<{ $type: string; $width: string }>`
   border: ${({ $type }) =>
     $type === "type2" ? `1px solid ${theme.colors.gray400}` : "none"};
   box-sizing: border-box;
-  width: ${(props) => props.$width};
+  width: 100%;
 `;
 
-const ListItem = styled.li<{ $type: string; $width: string }>`
+const ListItem = styled.li<{ $type: string }>`
   list-style: none;
   color: ${theme.colors.gray900};
   ${({ $type }) =>
     $type === "type1" ? `${theme.fonts.medium16}` : `${theme.fonts.regular18}`};
   padding: 10px 16px;
   cursor: pointer;
+  width: 100%;
+
   &.type1 {
     &:hover {
       &:first-child {
@@ -165,5 +172,8 @@ const ListItem = styled.li<{ $type: string; $width: string }>`
       color: ${theme.colors.violet600};
       background: ${theme.colors.violet100};
     }
+  }
+  @media (max-width: 700px) {
+    ${theme.fonts.regular13}
   }
 `;

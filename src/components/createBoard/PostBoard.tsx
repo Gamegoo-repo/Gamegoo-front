@@ -1,3 +1,11 @@
+/**
+ * @component [게시판 - 게시글 작성 및 수정 모달]
+ * @description [게시글 작성 및 수정 모달 컴포넌트입니다.]
+ * @route [게시판 - 게시글 작성, 게시글 수정, 내 정보 > 내가 작성한 게시글 > 게시글 수정]
+ * @author [나원지]
+ * @created [2024-05-28]
+ */
+
 import styled from "styled-components";
 import Dropdown from "../common/Dropdown";
 import Input from "../common/Input";
@@ -8,6 +16,7 @@ import UpdateProfileImage from "./UpdateProfileImage";
 import UserAccount from "../crBoard/UserAccount";
 import Toggle from "../common/Toggle";
 import PositionBox, { PositionState } from "../crBoard/PositionBox";
+import GameStyle from "./GameStyle";
 import ConfirmModal from "../common/ConfirmModal";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -29,9 +38,7 @@ import { Mike } from "@/types/user/mike";
 import { GAME_MODE } from "@/constants/board";
 import { GameMode } from "@/types/game/gameMode";
 import { Position } from "@/types/position/position";
-import GameStyle from "../match/GameStyle";
-import { GAME_STYLE } from "@/constants/profile";
-import { GameStyle as GameStyleInterface } from "@/interface/profile";
+import { notify } from "@/hooks/notify";
 
 interface PostBoardProps {
   onClose: () => void;
@@ -64,7 +71,7 @@ const PostBoard = (props: PostBoardProps) => {
     {
       main: currentPost?.mainP || user?.mainP || "ANY",
       sub: currentPost?.subP || user?.subP || "ANY",
-      want: currentPost?.wantP || [],
+      want: currentPost?.wantP || user?.wantP || ["ANY", "ANY"],
     }
   );
   const [isMicOn, setIsMicOn] = useState<Mike>(
@@ -108,12 +115,13 @@ const PostBoard = (props: PostBoardProps) => {
         sub: currentPost.subP || "ANY",
         want: currentPost.wantP || [],
       });
+
       setSelectedImageIndex(currentPost.profileImage);
       setIsMicOn(currentPost.mike);
       setSelectedStyleIds(currentPost.gameStyles);
       setTextareaValue(currentPost.contents);
     }
-  }, []);
+  }, [currentPost]);
 
   /* userInfo가 업데이트된 후 상태 업데이트 */
   useEffect(() => {
@@ -301,9 +309,14 @@ const PostBoard = (props: PostBoardProps) => {
               isProfileListOpen={isProfileListOpen}
               onImageClick={handleImageClick}
             />
-            <UserAccount account={user.gameName} tag={user.tag} />
+            <UserAccount
+              account={user.gameName}
+              tag={user.tag}
+              // mike={user.mike}
+            />
           </UserSection>
         )}
+
         {selectedDropOption !== "ARAM" && (
           <PositionSection>
             <Title className="positionTitle">포지션</Title>
@@ -324,14 +337,15 @@ const PostBoard = (props: PostBoardProps) => {
             />
           </PositionSection>
         )}
-        <QueueNMicSection>
+
+        <GameModeSection>
           <Div>
             <Title className="queueTitle">선호 게임 모드</Title>
             <Dropdown
               ref={dropdownRef}
               type="type2"
               padding="11px 21px"
-              width="234px"
+              width="50%"
               list={GAME_MODE.slice(1)}
               open={isDropdownOpen}
               setOpen={setIsDropdownOpen}
@@ -339,26 +353,20 @@ const PostBoard = (props: PostBoardProps) => {
               defaultValue={selectedDropOption}
             />
           </Div>
-        </QueueNMicSection>
+        </GameModeSection>
         <StyleSection>
           <Title className="gameStyleTitle">게임 스타일</Title>
           <GameStyle
-            profileType="post"
-            gameStyleResponseDTOList={selectedStyleIds
-              .map((id) => GAME_STYLE.find((style) => style.gameStyleId === id))
-              .filter(
-                (style): style is GameStyleInterface => style !== undefined
-              )}
+            selectedStyleIds={selectedStyleIds}
             setSelectedStyleIds={setSelectedStyleIds}
-            label={false}
           />
         </StyleSection>
-        <QueueNMicSection>
+        <MicSection>
           <Div>
             <Title className="micTitle">마이크</Title>
             <Toggle isOn={isMicOn} onToggle={toggleMicHandler} type="board" />
           </Div>
-        </QueueNMicSection>
+        </MicSection>
         <MemoSection>
           <Title className="memoTitle">한마디</Title>
           <InputWrapper>
@@ -397,7 +405,7 @@ const PostBoard = (props: PostBoardProps) => {
           <Button
             type="submit"
             buttonType="primary"
-            text="확인"
+            text="작성 완료"
             disabled={textareaValue.trim() == ""}
           />
         </ButtonContent>
@@ -427,6 +435,10 @@ const Title = styled.p`
   &.memoTitle {
     margin-bottom: 5px;
   }
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.medium11};
+  }
 `;
 
 const UserSection = styled.div`
@@ -434,15 +446,14 @@ const UserSection = styled.div`
   align-items: center;
   gap: 17px;
 `;
-const QueueNMicSection = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 187px;
+const GameModeSection = styled.div`
+  width: 100%;
   margin-top: 24px;
 `;
 
-const Div = styled.div``;
+const Div = styled.div`
+  position: relative;
+`;
 
 const PositionSection = styled.div`
   margin-top: 33px;
@@ -450,6 +461,11 @@ const PositionSection = styled.div`
 
 const StyleSection = styled.div`
   margin-top: 34px;
+`;
+
+const MicSection = styled.div`
+  width: 100%;
+  margin-top: 24px;
 `;
 
 const MemoSection = styled.div`
@@ -466,7 +482,6 @@ const InputWrapper = styled.div`
 `;
 
 const TextCount = styled.div<{ $isFocused: boolean }>`
-  margin-left: 15px;
   color: ${({ $isFocused, theme }) =>
     $isFocused ? theme.colors.violet300 : theme.colors.gray400};
   ${theme.fonts.regular12};

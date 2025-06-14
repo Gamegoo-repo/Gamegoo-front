@@ -52,6 +52,11 @@ interface BaseBoardInfo {
 
 // 게시글 목록의 기본 구조
 interface BoardListStructure {
+  totalPages: number;
+  totalCount: number;
+}
+
+interface MyBoardListStructure {
   totalPage: number;
   totalCount: number;
 }
@@ -66,7 +71,7 @@ export interface GetBoardListData extends BoardListStructure {
   boards: Array<BoardDetail>;
 }
 
-export interface GetMyBoardListData extends BoardListStructure {
+export interface GetMyBoardListData extends MyBoardListStructure {
   myBoards: Array<MyBoardDetail>;
 }
 
@@ -125,7 +130,7 @@ export interface BoardPullUpData {
   boardId: number;
   bumpTime: string;
 }
-    
+
 export interface BoardEditData
   extends BasePlayerInfo,
     GameInfo,

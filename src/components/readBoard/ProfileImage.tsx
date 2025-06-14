@@ -36,6 +36,7 @@ const Wrapper = styled.div<{ $bgColor: string }>`
   @media (max-width: 700px) {
     width: 48px;
     height: 48px;
+    margin-right: 0px;
   }
 `;
 

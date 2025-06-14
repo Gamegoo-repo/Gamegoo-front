@@ -37,6 +37,9 @@ const Champion = (props: ChampionProps) => {
               key={key}
               onMouseEnter={() => setHoveredIndex(key)}
               onMouseLeave={() => setHoveredIndex(null)}
+              onMouseDown={() => {
+                isMobile && setHoveredIndex(key);
+              }}
             >
               <ImageWrapper>
                 <Image

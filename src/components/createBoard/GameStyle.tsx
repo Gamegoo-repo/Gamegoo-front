@@ -58,7 +58,7 @@ const GameStyle = (props: GameStyleProps) => {
       <Div>
         <AddGameStyle onClick={handleStylePopup}>
           <Image
-            src="/assets/icons/plus.svg"
+            src="/assets/icons/plus_violet.svg"
             width={14}
             height={14}
             alt="추가"
@@ -84,16 +84,26 @@ const StylesWrapper = styled.div`
   display: grid;
   grid-gap: 11px;
   grid-template-columns: repeat(3, minmax(100px, auto));
+
+  @media (max-width: 700px) {
+    display: flex;
+    flex-wrap: wrap;
+  }
 `;
 
 const Content = styled.p`
   padding: 6px 21px;
-  background: ${theme.colors.violet600};
-  color: ${theme.colors.white};
+  background: ${theme.colors.white};
+  color: ${theme.colors.gray700};
   ${(props) => props.theme.fonts.medium14};
   border-radius: 46px;
   white-space: nowrap;
   text-align: center;
+
+  @media (max-width: 700px) {
+    padding: 4px 12px;
+    ${(props) => props.theme.fonts.bold12};
+  }
 `;
 
 const Div = styled.div`
@@ -108,9 +118,9 @@ const AddGameStyle = styled.p`
   align-items: center;
   width: 39px;
   height: 30px;
-  padding: 8px 12px;
+  padding: 4px 12px;
   margin-top: 15px;
   border-radius: 17px;
-  background: ${theme.colors.violet300};
+  background: ${theme.colors.white};
   cursor: pointer;
 `;

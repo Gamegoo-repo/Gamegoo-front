@@ -68,7 +68,7 @@ const Wrapper = styled.div`
 `;
 
 const AllButton = styled.button`
-  max-width: 48px;
+  width: 46px;
   height: 56px;
   padding: 16px 11px;
   border-right: 1px solid ${theme.colors.gray300};
@@ -89,10 +89,15 @@ const AllButton = styled.button`
       stroke: ${theme.colors.white};
     }
   }
+  @media (max-width: 700px) {
+    width: 42px;
+    height: 44px;
+    padding: 10px;
+  }
 `;
 
 const TopButton = styled.button`
-  max-width: 48px;
+  width: 46px;
   height: 56px;
   padding: 16px 11px;
   border-right: 1px solid ${theme.colors.gray300};
@@ -117,11 +122,16 @@ const TopButton = styled.button`
     path:first-child {
       fill: ${theme.colors.white};
     }
+  }
+  @media (max-width: 700px) {
+    width: 42px;
+    height: 44px;
+    padding: 10px;
   }
 `;
 
 const JungleButton = styled.button`
-  max-width: 48px;
+  width: 46px;
   height: 56px;
   padding: 16px 11px;
   border-right: 1px solid ${theme.colors.gray300};
@@ -140,11 +150,16 @@ const JungleButton = styled.button`
     path {
       fill: ${theme.colors.white};
     }
+  }
+  @media (max-width: 700px) {
+    width: 42px;
+    height: 44px;
+    padding: 10px;
   }
 `;
 
 const MidButton = styled.button`
-  max-width: 48px;
+  width: 46px;
   height: 56px;
   padding: 16px 11px;
   border-right: 1px solid ${theme.colors.gray300};
@@ -169,11 +184,16 @@ const MidButton = styled.button`
     path:nth-child(2) {
       fill: ${theme.colors.white};
     }
+  }
+  @media (max-width: 700px) {
+    width: 42px;
+    height: 44px;
+    padding: 10px;
   }
 `;
 
 const OneDealButton = styled.button`
-  max-width: 48px;
+  width: 46px;
   height: 56px;
   padding: 16px 11px;
   border-right: 1px solid ${theme.colors.gray300};
@@ -199,10 +219,15 @@ const OneDealButton = styled.button`
       fill: ${theme.colors.white};
     }
   }
+  @media (max-width: 700px) {
+    width: 42px;
+    height: 44px;
+    padding: 10px;
+  }
 `;
 
 const SupporterButton = styled.button`
-  max-width: 48px;
+  width: 46px;
   height: 56px;
   padding: 16px 11px;
   border-radius: 0 10px 10px 0;
@@ -221,5 +246,10 @@ const SupporterButton = styled.button`
     path {
       fill: ${theme.colors.white};
     }
+  }
+  @media (max-width: 700px) {
+    width: 42px;
+    height: 44px;
+    padding: 10px;
   }
 `;

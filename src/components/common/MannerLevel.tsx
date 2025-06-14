@@ -92,6 +92,17 @@ const BubbleWrapper = styled.div<{
       hide === "true" ? fadeOutDown : fadeInUp}
     0.5s ease-out;
   animation-fill-mode: forwards;
+
+  @media (max-width: 700px) {
+    bottom: ${({ $position }) =>
+      $position === "top" ? "45px" : $position === "board" ? "50px" : "10px"};
+    right: ${({ $position }) =>
+      $position === "top"
+        ? "-6px"
+        : $position === "board"
+        ? "-90px"
+        : "-150px"};
+  }
 `;
 
 const Bubble = styled.div<{
