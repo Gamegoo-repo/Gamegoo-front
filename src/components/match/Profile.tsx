@@ -375,7 +375,7 @@ const Profile: React.FC<Profile> = ({
       return (
         <Button
           buttonType="secondary"
-          width="218px"
+          width={isMobile ? "100%" : "218px"}
           text="친구 삭제"
           onClick={() => handleFriendState("delete")}
         />
@@ -387,13 +387,13 @@ const Profile: React.FC<Profile> = ({
             <FriendRow>
               <Button
                 buttonType="secondary"
-                width="163px"
+                width={isMobile ? "100%" : "163px"}
                 text="친구 거절"
                 onClick={() => handleFriendState("reject")}
               />
               <Button
                 buttonType="primary"
-                width="163px"
+                width={isMobile ? "100%" : "163px"}
                 text="친구 수락"
                 onClick={() => handleFriendState("accept")}
               />
@@ -403,7 +403,7 @@ const Profile: React.FC<Profile> = ({
           return (
             <Button
               buttonType="secondary"
-              width="218px"
+              width={isMobile ? "100%" : "218px"}
               text="친구 요청 취소"
               onClick={() => handleFriendState("cancel")}
             />
@@ -415,7 +415,7 @@ const Profile: React.FC<Profile> = ({
       return (
         <Button
           buttonType="secondary"
-          width="218px"
+          width={isMobile ? "100%" : "218px"}
           text="친구 추가"
           onClick={() => handleFriendState("add")}
         />
@@ -722,11 +722,12 @@ const Profile: React.FC<Profile> = ({
               />
             )}
         </StyledBox>
+        {isMobile && <Admit>{renderFriendsButton()}</Admit>}
       </Row>
 
       {profileType === "other" && (
         <More>
-          {!isDefault && <Admit>{renderFriendsButton()}</Admit>}
+          {!isDefault && !isMobile && <Admit>{renderFriendsButton()}</Admit>}
           {/* 더보기 버튼 */}
           {memberId !== myId && (
             <MoreDiv ref={moreBoxRef}>
@@ -839,6 +840,7 @@ export default Profile;
 
 const Container = styled.div<{ $backgroundColor?: string }>`
   width: 100%;
+  min-width: 980px;
   box-sizing: border-box;
   border-radius: 30px;
   padding: 45px;
@@ -855,6 +857,7 @@ const Container = styled.div<{ $backgroundColor?: string }>`
     padding: 42px 41px;
 
     @media (max-width: 700px) {
+      min-width: 300px;
       padding: 20px;
       border-radius: 8px;
     }
@@ -875,11 +878,7 @@ const Row = styled.div<{ $profileType: string }>`
   display: flex;
   justify-content: flex-start;
   gap: 62px;
-  ${({ $profileType }) =>
-    $profileType === "other" &&
-    css`
-      margin-bottom: 20px;
-    `}
+
   @media (max-width: 700px) {
     flex-direction: column;
     align-items: flex-start;
@@ -1131,7 +1130,9 @@ const More = styled.div`
   right: 30px;
 `;
 
-const Admit = styled.div``;
+const Admit = styled.div`
+  width: 100%;
+`;
 
 const MoreDiv = styled.div`
   display: flex;
