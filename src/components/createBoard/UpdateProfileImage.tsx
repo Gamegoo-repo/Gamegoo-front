@@ -26,13 +26,17 @@ const UpdateProfileImage = (props: FileInputProps) => {
         <ImageWrapper $bgColor={getProfileBgColor(selectedImageIndex)}>
           <ProfileImage
             data={`/assets/images/profile/profile${selectedImageIndex}.svg`}
-            width={52}
-            height={52}
+            width={isMobile ? 34 : 52}
+            height={isMobile ? 34 : 52}
           />
         </ImageWrapper>
       )}
       <CameraImgBg onClick={() => setIsProfileListOpen(!isProfileListOpen)}>
-        <CameraImage data="/assets/icons/pencil.svg" width={26} height={26} />
+        <CameraImage
+          data="/assets/icons/edit_pencil.svg"
+          width={isMobile ? 10 : 13}
+          height={isMobile ? 10 : 13}
+        />
       </CameraImgBg>
       {/* 프로필 이미지 선택 팝업 */}
       {isProfileListOpen && (
@@ -143,7 +147,7 @@ const ProfileListBox = styled.div`
   align-items: flex-end;
   border-radius: 13px;
   background: rgba(0, 0, 0, 0.64);
-  top: 134px;
+  top: 164px;
   left: 253px;
 `;
 
