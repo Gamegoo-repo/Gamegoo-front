@@ -92,25 +92,16 @@ const ProfilePage = () => {
 
   const handleMatchStart = async () => {
     const matchingType = params === "gamegoo" ? "BASIC" : "PRECISE";
-    const gameModeMap = { personal: "1", free: "2", fast: "3", wind: "4" };
-    const gameMode = gameModeMap[rank as keyof typeof gameModeMap] || "1";
 
     const matchingData = {
       matchingType,
-      // gameMode,
+      gameMode: rank,
       threshold: 50,
-      // gameMode: rank?.toLocaleUpperCase(),
-      gameMode: "FAST",
       mike: matchInfo.mike ?? "UNAVAILABLE",
       mainP: (matchInfo.mainP ?? 0).toString(),
-      // subP: (matchInfo.subP ?? 0).toString(),
-      // wantP: (matchInfo.wantP ?? 0).toString(),
-      wantP: "MID",
-      // wantP: ["MID", "TOP"],
-      gameStyle: matchInfo.gameStyleResponseDTOList || null,
-      // gameStyle1: matchInfo.gameStyleResponseDTOList[0] || null,
-      // gameStyle2: matchInfo.gameStyleResponseDTOList[1] || null,
-      // gameStyle3: matchInfo.gameStyleResponseDTOList[2] || null,
+      subP: (matchInfo.subP ?? 0).toString(),
+      wantP: (matchInfo.wantP ?? 0).toString(), // TODO: wantP 1개(string) 전달 or 2개(string 배열) 전달 결정 필요(대기사항)
+      gameStyleIdList: matchInfo.gameStyleResponseDTOList || null,
     };
 
     if (socket) {
@@ -122,15 +113,34 @@ const ProfilePage = () => {
       socket.on("matching-started", (data) => {
         console.log("매칭 시작됨:", data);
 
-        const urlParams = new URLSearchParams({
-          ...data.data,
-          matchingType: params || "", // 기존 type 파라미터 추가
-          gameRank: rank || "", // 기존 rank 파라미터 추가
-        });
+        const baseParams: Record<string, string> = {
+          matchingType: params || "",
+          gameRank: rank || "",
+        };
 
         if (retry) {
-          urlParams.append("retry", "true");
+          baseParams.retry = "true";
         }
+
+        const rawData = data.data ?? {};
+        const formattedData: Record<string, string> = {};
+
+        // 각 필드를 순회하면서 문자열로 변환
+        for (const key in rawData) {
+          const value = rawData[key];
+          if (typeof value === "object") {
+            formattedData[key] = JSON.stringify(value); // 객체/배열은 JSON 문자열로
+          } else {
+            formattedData[key] = String(value); // 나머지는 그냥 문자열로
+          }
+        }
+
+        const combinedParams = {
+          ...formattedData,
+          ...baseParams,
+        };
+
+        const urlParams = new URLSearchParams(combinedParams);
 
         router.push(`/matching/progress?${urlParams.toString()}`);
       });

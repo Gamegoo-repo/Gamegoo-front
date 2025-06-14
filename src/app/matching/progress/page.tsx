@@ -22,6 +22,8 @@ import { Mike } from "@/types/user/mike";
 import useMediaQueries from "@/hooks/useMediaQueries";
 import { getEffectiveTier } from "@/utils/matching/tier";
 import { GameMode } from "@/types/game/gameMode";
+import { GameStyleList } from "@/interface/profile";
+
 interface User {
   memberId: number;
   gameName: string;
@@ -57,6 +59,7 @@ const Progress = () => {
   const rank = searchParams.get("gameRank");
   const retry = searchParams.get("retry");
 
+  const gameStyleRaw = searchParams.get("gameStyleResponseList");
   const user: User = {
     memberId: parseInt(searchParams.get("memberId") || "0", 10),
     gameName: searchParams.get("gameName") || "",
@@ -73,7 +76,11 @@ const Progress = () => {
     subPosition: (searchParams.get("subPosition") as Position) || "ANY",
     wantPosition: (searchParams.get("wantPosition") as Position) || "ANY",
     mike: (searchParams.get("mike") as Mike) || "AVAILABLE",
-    gameStyleList: (searchParams.get("gameStyleList") || "").split(","),
+    gameStyleList: gameStyleRaw
+      ? (JSON.parse(gameStyleRaw) as GameStyleList[]).map(
+          (style) => style.gameStyleName
+        )
+      : [],
   };
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
