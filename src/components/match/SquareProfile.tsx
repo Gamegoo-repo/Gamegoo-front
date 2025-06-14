@@ -24,9 +24,9 @@ interface User {
   mannerLevel: number;
   profileImg: number;
   gameMode: GameMode;
-  mainPosition: PositionType;
-  subPosition: PositionType;
-  wantPosition: PositionType;
+  mainP: PositionType;
+  subP: PositionType;
+  wantP: PositionType;
   mike: Mike;
   gameStyleList?: string[];
 }
@@ -152,9 +152,9 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
             <Row>
               <PositionBox
                 status="matching"
-                main={user.mainPosition || null}
-                sub={user.subPosition || null}
-                want={[user.wantPosition || "ANY"]}
+                main={user.mainP || null}
+                sub={user.subP || null}
+                want={[user.wantP || "ANY"]}
               />
             </Row>
           </Column>

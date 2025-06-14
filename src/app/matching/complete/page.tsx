@@ -26,6 +26,7 @@ import { getMyProfile } from "@/api/user/profile/get";
 import { Position } from "@/types/position/position";
 import { Mike } from "@/types/user/mike";
 import Layout from "@/components/chat/Layout";
+import { GameMode } from "@/types/game/gameMode";
 
 interface User {
   memberId: number;
@@ -37,10 +38,10 @@ interface User {
   freeRank: number;
   mannerLevel: number;
   profileImg: number;
-  gameMode: number;
-  mainPosition: Position;
-  subPosition: Position;
-  wantPosition: Position;
+  gameMode: GameMode;
+  mainP: Position;
+  subP: Position;
+  wantP: Position;
   mike: Mike;
   gameStyleList: string[];
 }
@@ -68,10 +69,10 @@ const Complete = () => {
     freeRank: 0,
     mannerLevel: 0,
     profileImg: 0,
-    gameMode: 0,
-    mainPosition: "ANY",
-    subPosition: "ANY",
-    wantPosition: "ANY",
+    gameMode: "FAST" as GameMode,
+    mainP: "ANY",
+    subP: "ANY",
+    wantP: "ANY",
     mike: "UNAVAILABLE",
     gameStyleList: [],
   });
@@ -86,10 +87,10 @@ const Complete = () => {
     freeRank: 0,
     mannerLevel: 0,
     profileImg: 0,
-    gameMode: 0,
-    mainPosition: "ANY",
-    subPosition: "ANY",
-    wantPosition: "ANY",
+    gameMode: "FAST" as GameMode,
+    mainP: "ANY",
+    subP: "ANY",
+    wantP: "ANY",
     mike: "UNAVAILABLE",
     gameStyleList: [],
   });
@@ -200,10 +201,10 @@ const Complete = () => {
           freeRank: profileData.gameRank,
           mannerLevel: profileData.mannerLevel,
           profileImg: profileData.profileImg,
-          gameMode: 0,
-          mainPosition: profileData.mainP,
-          subPosition: profileData.subP,
-          wantPosition: "ANY",
+          gameMode: "FAST",
+          mainP: profileData.mainP,
+          subP: profileData.subP,
+          wantP: profileData.wantP,
           mike: profileData.mike,
           gameStyleList: profileData.gameStyleResponseList.map(
             (style: { gameStyleName: string }) => style.gameStyleName

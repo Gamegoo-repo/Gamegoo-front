@@ -40,9 +40,9 @@ interface User {
   mannerLevel: number;
   profileImg: number;
   gameMode: GameMode;
-  mainPosition: Position;
-  subPosition: Position;
-  wantPosition: Position;
+  mainP: Position;
+  subP: Position;
+  wantP: Position;
   mike: Mike;
   gameStyleList: string[];
 }
@@ -77,9 +77,9 @@ const Progress = () => {
     mannerLevel: parseInt(searchParams.get("mannerLevel") || "0", 10),
     profileImg: parseInt(searchParams.get("profileImg") || "0", 10),
     gameMode: (searchParams.get("gameMode") as GameMode) || "",
-    mainPosition: (searchParams.get("mainPosition") as Position) || "ANY",
-    subPosition: (searchParams.get("subPosition") as Position) || "ANY",
-    wantPosition: (searchParams.get("wantPosition") as Position) || "ANY",
+    mainP: (searchParams.get("mainP") as Position) || "ANY",
+    subP: (searchParams.get("subP") as Position) || "ANY",
+    wantP: (searchParams.get("wantP") as Position) || "ANY",
     mike: (searchParams.get("mike") as Mike) || "AVAILABLE",
     gameStyleList: gameStyleRaw
       ? (JSON.parse(gameStyleRaw) as GameStyleList[]).map(
@@ -272,7 +272,7 @@ const Progress = () => {
           /* TODO : 기획사항에 맞게 올바른 티어 전달하기 */
           // tier: user.tier,
           tier: user.soloTier, // 임시로 솔로티어로 전달
-          mainP: user.mainPosition,
+          mainP: user.mainP,
           mike: user.mike,
         };
         try {

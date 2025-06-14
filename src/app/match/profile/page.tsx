@@ -100,7 +100,7 @@ const ProfilePage = () => {
       mike: matchInfo.mike ?? "UNAVAILABLE",
       mainP: (matchInfo.mainP ?? 0).toString(),
       subP: (matchInfo.subP ?? 0).toString(),
-      wantP: (matchInfo.wantP ?? 0).toString(), // TODO: wantP 1개(string) 전달 or 2개(string 배열) 전달 결정 필요(대기사항)
+      wantP: (matchInfo.wantP ?? 0).toString() || "ANY", // TODO: wantP 1개(string) 전달 or 2개(string 배열) 전달 결정 필요(대기사항)
       gameStyleIdList: matchInfo.gameStyleResponseDTOList || null,
     };
 
