@@ -234,6 +234,10 @@ const GameBox = styled.div<{ $profileType: profileType }>`
 const NoGameStyle = styled.div`
   color: ${theme.colors.gray500};
   ${theme.fonts.medium14};
+
+  @media (max-width: 700px) {
+    ${theme.fonts.medium11};
+  }
 `;
 
 const Div = styled.div<{ $profileType: profileType }>`
