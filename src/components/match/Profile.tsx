@@ -685,7 +685,8 @@ const Profile: React.FC<Profile> = ({
                             )}
                           </PosiItem>
                         ))
-                      ) : (
+                      ) : // 매칭 프로필 - 포지션 선택, 조회 프로필 - ANY(*) 지정
+                      ["wind", "normal"].includes(profileType) ? (
                         <PosiItem key="default-plus">
                           <Plus onClick={() => handlePosition("want", 0)}>
                             <Image
@@ -695,7 +696,6 @@ const Profile: React.FC<Profile> = ({
                               alt=""
                             />
                           </Plus>
-
                           {isPositionOpen.want[0] && (
                             <PositionCategory
                               selectedBox="want"
@@ -707,6 +707,15 @@ const Profile: React.FC<Profile> = ({
                               usedPositions={[]}
                             />
                           )}
+                        </PosiItem>
+                      ) : (
+                        <PosiItem key="any-position">
+                          <Image
+                            src={setPositionImg("ANY")}
+                            width={!isMobile ? 48 : 22}
+                            height={!isMobile ? 40 : 22}
+                            alt="포지션"
+                          />
                         </PosiItem>
                       )}
                     </PosiRow>
