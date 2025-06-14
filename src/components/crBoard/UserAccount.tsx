@@ -5,6 +5,7 @@ import { Mike } from "@/types/user/mike";
 import { useRouter } from "next/navigation";
 import useMediaQueries from "@/hooks/useMediaQueries";
 import { useState } from "react";
+import { formatTextOverNumber } from "@/utils/string";
 
 interface UserAccountProps {
   account: string;
@@ -25,12 +26,7 @@ const UserAccount = (props: UserAccountProps) => {
       router.push(`/user/${memberId}`);
     }
   };
-  const formatTextOverNumber = (text: string, maxLength: number) => {
-    if (text.length >= maxLength) {
-      return text.slice(0, maxLength) + "...";
-    }
-    return text;
-  };
+
   return (
     <Wrapper>
       <Row>
