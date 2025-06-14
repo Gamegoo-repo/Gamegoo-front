@@ -5,7 +5,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface BoardState {
   pageIdx: number;
-  gameMode: number | GameMode | null;
+  gameMode: GameMode | null;
   tier: string | null;
   mainP: Position;
   mike: Mike | null;
