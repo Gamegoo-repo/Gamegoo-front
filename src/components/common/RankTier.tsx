@@ -1,4 +1,6 @@
+import useMediaQueries from "@/hooks/useMediaQueries";
 import { theme } from "@/styles/theme";
+import { setAbbrevTier } from "@/utils/custom";
 import { toCapitalizedString, toLowerCaseString } from "@/utils/string";
 import React from "react";
 import styled, { css } from "styled-components";
@@ -26,6 +28,8 @@ const RankTier = (props: RankTierProps) => {
     tierFontSize,
   } = props;
 
+  const isMobile = useMediaQueries({ breakpoint: 700 });
+
   return (
     <Container $direct={direct}>
       <RankName $direct={direct} $color={color} $fontSize={rankFontSize}>
@@ -39,7 +43,9 @@ const RankTier = (props: RankTierProps) => {
           width={direct === "row" ? 24 : 32}
           height={direct === "row" ? 24 : 32}
         />
-        {toCapitalizedString(tier || "UNRANK") + (rank ? ` ${rank}` : "")}
+        {isMobile
+          ? setAbbrevTier(tier) + (rank ? `${rank}` : "")
+          : toCapitalizedString(tier || "UNRANK") + (rank ? ` ${rank}` : "")}
       </Tier>
     </Container>
   );
