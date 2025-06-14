@@ -53,7 +53,7 @@ const Checkbox = (props: CheckboxProps) => {
     <StyledCheckbox
       fontSize={fontSize || "semiBold16"}
       color={color || "gray800"}
-      gap={gap || "1.7rem"}
+      $gap={gap || "1.7rem"}
     >
       <Check
         id={id}
@@ -73,11 +73,11 @@ export default Checkbox;
 const StyledCheckbox = styled.div<{
   fontSize: string;
   color: string;
-  gap: string;
+  $gap: string;
 }>`
   display: flex;
   align-items: center;
-  gap: ${({ gap }) => (gap ? gap : "1.7rem")};
+  gap: ${({ $gap }) => ($gap ? $gap : "1.7rem")};
   row-gap: 20rem;
   cursor: pointer;
   ${(props) =>

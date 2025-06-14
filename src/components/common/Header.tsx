@@ -323,7 +323,7 @@ const Header = () => {
                   />
                   {data.menu}
                 </Line>
-                {index === 2 && <Divider />}
+                {index === 3 && <Divider />}
               </TabItemWrapper>
             ))}
           </TabMenu>

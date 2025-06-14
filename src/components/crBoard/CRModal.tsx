@@ -103,11 +103,15 @@ const Wrapper = styled.div<{
   @media (max-width: 700px) {
     padding: 20.5px 20px;
     border-radius: 8px;
+    max-width: 336px;
+    margin: 50px 0;
   }
 `;
 
 const Header = styled.header<{ $type: string }>`
-  /* padding: 26px 0px 0 0; */
+  @media (max-width: 700px) {
+    padding-top: 26px;
+  }
 `;
 
 const CloseButton = styled.p<{ $type: string }>`

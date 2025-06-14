@@ -7,6 +7,7 @@ interface ButtonProps {
   type?: "submit" | "reset" | "button" | undefined;
   size?: "small" | "medium" | "large";
   width?: string;
+  height?: string;
   text: string;
   icon?: string;
   borderRadius?: string;
@@ -19,6 +20,7 @@ const Button = (props: ButtonProps) => {
     buttonType = "default",
     size,
     width,
+    height,
     text,
     icon,
     borderRadius,
@@ -38,6 +40,7 @@ const Button = (props: ButtonProps) => {
       onClick={onClick}
       disabled={disabled}
       $width={width}
+      $height={height}
       $borderradius={borderRadius}
     >
       {icon && <Icon src={icon} width={24} height={24} alt="" />}
@@ -48,8 +51,13 @@ const Button = (props: ButtonProps) => {
 
 export default Button;
 
-const StyledButton = styled.button<{ $width?: string; $borderradius?: string }>`
+const StyledButton = styled.button<{
+  $width?: string;
+  $height?: string;
+  $borderradius?: string;
+}>`
   width: ${({ $width }) => $width || "100%"};
+  height: ${({ $height }) => $height || "auto"};
   padding: 19px 30px;
   border-radius: ${({ $borderradius }) => $borderradius || "15px"};
   color: ${theme.colors.white};
@@ -113,7 +121,7 @@ const StyledButton = styled.button<{ $width?: string; $borderradius?: string }>`
   }
 
   @media (max-width: 700px) {
-    height: 45px;
+    height: ${({ $height }) => $height || "45px"};
     border-radius: 6px;
   }
 `;

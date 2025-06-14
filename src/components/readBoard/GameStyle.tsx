@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import { GAME_STYLE } from "@/constants/profile";
 import { gameStyleResponseDTOList } from "@/interface/board";
-import Box from "../common/Box";
 
 interface GameStyleProps {
   styles: number[] | gameStyleResponseDTOList[];
@@ -22,15 +21,7 @@ const GameStyle = (props: GameStyleProps) => {
         styles.length > 0 &&
         styles.map((data, index) => {
           const styleId = typeof data === "number" ? data : data.gameStyleId;
-          return (
-            <Box
-              key={index}
-              text={getTextById(styleId)}
-              shape="round"
-              profileType="none"
-            />
-          );
-          // return <Content key={index}>{getTextById(styleId)}</Content>;
+          return <Content key={index}>{getTextById(styleId)}</Content>;
         })}
     </Div>
   );
@@ -42,14 +33,23 @@ const Div = styled.div`
   display: grid;
   grid-gap: 11px;
   grid-template-columns: repeat(3, minmax(100px, auto));
+  @media (max-width: 700px) {
+    display: flex;
+    flex-wrap: wrap;
+  }
 `;
 
 const Content = styled.p`
   padding: 6px 21px;
-  background: ${theme.colors.violet600};
-  color: ${theme.colors.white};
+  background: ${theme.colors.white};
+  color: ${theme.colors.gray700};
   ${(props) => props.theme.fonts.medium14};
   border-radius: 46px;
   white-space: nowrap;
   text-align: center;
+
+  @media (max-width: 700px) {
+    padding: 4px 12px;
+    ${(props) => props.theme.fonts.bold12};
+  }
 `;
