@@ -10,7 +10,7 @@ import { setUserMike, setUserProfile } from "@/redux/slices/userSlice";
 import useMediaQueries from "@/hooks/useMediaQueries";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { formatDate } from "@/utils/custom";
+import { formatDate } from "@/utils/timeFormat";
 // import Input from "@/components/common/Input";
 // import { checkPassword } from "@/api/password/password";
 import { clearTokens } from "@/utils/storage";

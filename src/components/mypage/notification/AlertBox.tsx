@@ -1,5 +1,5 @@
 import { theme } from "@/styles/theme";
-import { formatTimeAgo } from "@/utils/custom";
+import { formatTimeAgo } from "@/utils/timeFormat";
 import Image from "next/image";
 import React from "react";
 import styled, { css } from "styled-components";

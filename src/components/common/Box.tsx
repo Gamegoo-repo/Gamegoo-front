@@ -64,8 +64,11 @@ const StyledBox = styled.div<{ $shape: ShapeType; $profiletype?: profileType }>`
       background: ${theme.colors.violet200};
       color: ${theme.colors.gray800};
       ${(props) => props.theme.fonts.semiBold14}
+
       @media (max-width: 700px) {
         ${theme.fonts.semiBold13};
+        height: 29px;
+        padding: 8px 12px;
       }
     `}
 

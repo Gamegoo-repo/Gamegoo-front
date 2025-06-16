@@ -23,7 +23,6 @@ import {
   pullUpPost,
 } from "@/api/board/board";
 import LoadingSpinner from "../common/LoadingSpinner";
-import { setPostingDateFormatter } from "@/utils/custom";
 import { reportMember } from "@/api/report/report";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -55,8 +54,10 @@ import { GameMode } from "@/types/game/gameMode";
 import UserAccount from "../crBoard/UserAccount";
 import RankTier from "../common/RankTier";
 import { setRefresh } from "@/redux/slices/boardSlice";
+import { setPostingDateFormatter } from "@/utils/timeFormat";
 import ReportModal from "@/components/readBoard/ReportModal";
 import useMediaQueries from "@/hooks/useMediaQueries";
+
 interface ReadBoardProps {
   postId: number;
 }

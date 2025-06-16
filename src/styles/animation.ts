@@ -25,3 +25,12 @@ export const fadeOut = keyframes`
     opacity: 0;
   }
 `;
+
+export const growShrink = keyframes`
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+`;

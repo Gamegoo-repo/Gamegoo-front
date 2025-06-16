@@ -17,7 +17,7 @@ import Alert from "@/components/common/Alert";
 import Layout from "@/components/chat/Layout";
 import ReadBoard from "@/components/readBoard/ReadBoard";
 
-import { setDateFormatter } from "@/utils/custom";
+import { setDateFormatter } from "@/utils/timeFormat";
 
 import { RootState } from "@/redux/store";
 import {
