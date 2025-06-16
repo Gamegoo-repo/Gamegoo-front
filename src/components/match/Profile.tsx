@@ -36,7 +36,7 @@ import {
 import { deleteFriend } from "@/api/friend/delete";
 import { blockMember, unblockMember } from "@/api/block/block";
 import { Mike as MikeType } from "@/types/user/mike";
-import { Position, PositionType } from "@/types/position/position";
+import { Position } from "@/types/position/position";
 import RankTier from "../common/RankTier";
 import Alert from "../common/Alert";
 import useMediaQueries from "@/hooks/useMediaQueries";
@@ -63,6 +63,7 @@ const Profile: React.FC<Profile> = ({
   backgroundColor,
   isDefault = false,
 }) => {
+  const isMobileButton = useMediaQueries({ breakpoint: 950 });
   const isMobile = useMediaQueries({ breakpoint: 700 });
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -375,7 +376,7 @@ const Profile: React.FC<Profile> = ({
       return (
         <Button
           buttonType="secondary"
-          width="218px"
+          width={isMobile ? "100%" : "218px"}
           text="친구 삭제"
           onClick={() => handleFriendState("delete")}
         />
@@ -387,13 +388,13 @@ const Profile: React.FC<Profile> = ({
             <FriendRow>
               <Button
                 buttonType="secondary"
-                width="163px"
+                width={isMobile ? "100%" : "163px"}
                 text="친구 거절"
                 onClick={() => handleFriendState("reject")}
               />
               <Button
                 buttonType="primary"
-                width="163px"
+                width={isMobile ? "100%" : "163px"}
                 text="친구 수락"
                 onClick={() => handleFriendState("accept")}
               />
@@ -403,7 +404,7 @@ const Profile: React.FC<Profile> = ({
           return (
             <Button
               buttonType="secondary"
-              width="218px"
+              width={isMobile ? "100%" : "218px"}
               text="친구 요청 취소"
               onClick={() => handleFriendState("cancel")}
             />
@@ -415,7 +416,7 @@ const Profile: React.FC<Profile> = ({
       return (
         <Button
           buttonType="secondary"
-          width="218px"
+          width={isMobile ? "100%" : "218px"}
           text="친구 추가"
           onClick={() => handleFriendState("add")}
         />
@@ -685,7 +686,8 @@ const Profile: React.FC<Profile> = ({
                             )}
                           </PosiItem>
                         ))
-                      ) : (
+                      ) : // 매칭 프로필 - 포지션 선택, 조회 프로필 - ANY(*) 지정
+                      ["wind", "normal"].includes(profileType) ? (
                         <PosiItem key="default-plus">
                           <Plus onClick={() => handlePosition("want", 0)}>
                             <Image
@@ -695,7 +697,6 @@ const Profile: React.FC<Profile> = ({
                               alt=""
                             />
                           </Plus>
-
                           {isPositionOpen.want[0] && (
                             <PositionCategory
                               selectedBox="want"
@@ -707,6 +708,15 @@ const Profile: React.FC<Profile> = ({
                               usedPositions={[]}
                             />
                           )}
+                        </PosiItem>
+                      ) : (
+                        <PosiItem key="any-position">
+                          <Image
+                            src={setPositionImg("ANY")}
+                            width={!isMobile ? 48 : 22}
+                            height={!isMobile ? 40 : 22}
+                            alt="포지션"
+                          />
                         </PosiItem>
                       )}
                     </PosiRow>
@@ -736,14 +746,15 @@ const Profile: React.FC<Profile> = ({
               handleMike={handleMike}
             />
           )}
-          <Mike>
-            마이크
-            <Toggle
-              isOn={isMike}
-              onToggle={handleMike}
-              disabled={profileType === "other"}
-            />
-          </Mike>
+          {isMobileButton && !isMobile && (
+            <Admit>{renderFriendsButton()}</Admit>
+          )}
+          {(profileType === "normal" || profileType === "wind") && (
+            <Mike>
+              마이크
+              <Toggle isOn={isMike} onToggle={handleMike} />
+            </Mike>
+          )}
           {isMobile &&
             (profileType === "other" || profileType === "me") &&
             user.championResponseList && (
@@ -754,11 +765,14 @@ const Profile: React.FC<Profile> = ({
               />
             )}
         </StyledBox>
+        {isMobile && <Admit>{renderFriendsButton()}</Admit>}
       </Row>
 
       {profileType === "other" && (
         <More>
-          {!isDefault && <Admit>{renderFriendsButton()}</Admit>}
+          {!isDefault && !isMobileButton && (
+            <Admit>{renderFriendsButton()}</Admit>
+          )}
           {/* 더보기 버튼 */}
           {memberId !== myId && (
             <MoreDiv ref={moreBoxRef}>
@@ -881,12 +895,18 @@ const Container = styled.div<{ $backgroundColor?: string }>`
   align-items: flex-start;
   justify-content: flex-start;
   gap: 15px;
+  box-sizing: border-box;
   position: relative;
 
   &.other {
     padding: 42px 41px;
 
+    @media (max-width: 980px) {
+      overflow-x: auto;
+    }
+
     @media (max-width: 700px) {
+      min-width: 300px;
       padding: 20px;
       border-radius: 8px;
     }
@@ -907,11 +927,7 @@ const Row = styled.div<{ $profileType: string }>`
   display: flex;
   justify-content: flex-start;
   gap: 62px;
-  ${({ $profileType }) =>
-    $profileType === "other" &&
-    css`
-      margin-bottom: 20px;
-    `}
+
   @media (max-width: 700px) {
     flex-direction: column;
     align-items: flex-start;
@@ -933,10 +949,16 @@ const UnderRow = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   gap: 60px;
+
+  @media (max-width: 1140px) {
+    flex-direction: column;
+    gap: 24px;
+  }
 `;
 
 const ImageContainer = styled.div`
   position: relative;
+
   @media (max-width: 700px) {
     display: flex;
   }
@@ -1163,7 +1185,9 @@ const More = styled.div`
   right: 30px;
 `;
 
-const Admit = styled.div``;
+const Admit = styled.div`
+  width: 100%;
+`;
 
 const MoreDiv = styled.div`
   display: flex;

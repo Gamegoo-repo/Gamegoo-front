@@ -208,8 +208,10 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 62px;
+  overflow-x: scroll;
 
   @media (max-width: 700px) {
+    min-width: 0px;
     padding-top: 24px;
   }
 `;

@@ -120,14 +120,19 @@ const GameStyle = (props: GameStyleProps) => {
       <LeftLabel $profileType={profileType}>
         {label && "게임 스타일"}
         <GameBox $profileType={profileType}>
-          {selectedStyleObjects.map((style) => (
-            <Box
-              key={style!.gameStyleId}
-              text={style!.gameStyleName}
-              shape="round"
-              profileType={profileType === "post" ? "none" : profileType}
-            />
-          ))}
+          {selectedStyleObjects.length > 0
+            ? selectedStyleObjects.map((style) => (
+                <Box
+                  key={style!.gameStyleId}
+                  text={style!.gameStyleName}
+                  shape="round"
+                  profileType={profileType === "post" ? "none" : profileType}
+                />
+              ))
+            : profileType !== "mini" &&
+              profileType !== "post" && (
+                <NoGameStyle>선택한 게임 스타일이 없어요</NoGameStyle>
+              )}
           {profileType !== "other" && (
             <Div $profileType={profileType}>
               <AddGameStyle
@@ -223,6 +228,15 @@ const GameBox = styled.div<{ $profileType: profileType }>`
 
   @media (max-width: 700px) {
     gap: 4px;
+  }
+`;
+
+const NoGameStyle = styled.div`
+  color: ${theme.colors.gray500};
+  ${theme.fonts.medium14};
+
+  @media (max-width: 700px) {
+    ${theme.fonts.medium11};
   }
 `;
 

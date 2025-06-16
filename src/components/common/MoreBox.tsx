@@ -72,7 +72,7 @@ const MenuWrapper = styled.div<{
     ${(props) =>
       props.$left !== undefined &&
       css`
-        left: ${props.$left - 300}px;
+        left: ${props.$left - 215}px;
       `}
   }
 `;
