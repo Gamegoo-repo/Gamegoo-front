@@ -24,6 +24,7 @@ import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 import { PersistGate } from "redux-persist/integration/react";
 import { store as createStore } from "@/redux/store";
 import { persistStore } from "redux-persist";
+import { pretendard, timeForSalad } from "@/styles/fonts";
 
 export default function RootLayout({
   children,
@@ -95,7 +96,10 @@ export default function RootLayout({
   }, [pathname]);
 
   return (
-    <html>
+    <html
+      lang="ko"
+      className={`${pretendard.variable} ${timeForSalad.variable}`}
+    >
       <head>
         <title>롤 실시간 듀오 매칭 - GAMEGOO</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />

@@ -61,11 +61,10 @@ const Description = styled.p`
 const Logo = styled.div`
   font-size: 72px;
   font-weight: bold;
-  font-family: "TimeForSalad", sans-serif;
+  font-family: var(--font-timeforsalad), sans-serif;
   color: ${theme.colors.violet300};
   opacity: 0.3;
   position: absolute;
   right: 40px;
-
   letter-spacing: 5px;
 `;
