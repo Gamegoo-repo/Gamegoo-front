@@ -15,7 +15,6 @@ import {
   messagesWithTierN,
   messagesWithTotalN,
 } from "@/constants/messages";
-// import { getSystemMsg } from "@/api/socket";
 import { getBoardList } from "@/api/board/board";
 import { setOpenPostingModal } from "@/redux/slices/modalSlice";
 import { useDispatch } from "react-redux";
@@ -211,14 +210,13 @@ const Progress = () => {
       console.log("매칭 상대 발견(receiver):", data); // senderMatchingInfo, receiverMatchingUuid
       clearTimers();
       socket?.emit("matching-found-success", {
-        // senderMemberId: data.data.memberId,
-        // gameMode: data.data.gameMode,
-        senderMatchingUuid: data.data.receiverMatchingUuid,
-        gameMode: data.data.senderMatchingInfo.gameMode,
+        // senderMatchingUuid: data.data.receiverMatchingUuid,
+        senderMatchingUuid: data.data.senderMatchingInfo.matchingUuid,
       });
       router.push(
         `/matching/complete?role=receiver&opponent=true&type=${type}&rank=${rank}&user=${encodeURIComponent(
-          JSON.stringify(data.data)
+          JSON.stringify(data.data.senderMatchingInfo)
+        )}&uuid=${encodeURIComponent(data.data.senderMatchingInfo.matchingUuid)}
         )}`
       );
     });
@@ -440,20 +438,6 @@ const Header = styled.div`
   align-items: center;
   white-space: nowrap;
 `;
-
-// const Time = styled.div`
-//   color: ${theme.colors.gray700};
-//   ${(props) => props.theme.fonts.light32}
-//   margin-bottom: 32px;
-// `;
-
-// const Span = styled.span`
-//   color: ${theme.colors.violet600};
-//   ${(props) => props.theme.fonts.bold32}
-//   @media (max-width: 700px) {
-//     ${(props) => props.theme.fonts.bold32}
-//   }
-// `;
 
 const Main = styled.main`
   display: grid;
