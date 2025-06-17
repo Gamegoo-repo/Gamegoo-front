@@ -41,6 +41,7 @@ import RankTier from "../common/RankTier";
 import Alert from "../common/Alert";
 import useMediaQueries from "@/hooks/useMediaQueries";
 import Mic from "../common/Mic";
+import { profile } from "console";
 
 type profileType = "normal" | "wind" | "other" | "me";
 
@@ -765,7 +766,9 @@ const Profile: React.FC<Profile> = ({
               />
             )}
         </StyledBox>
-        {isMobile && <Admit>{renderFriendsButton()}</Admit>}
+        {isMobile && (profileType === "me" || profileType === "other") && (
+          <Admit>{renderFriendsButton()}</Admit>
+        )}
       </Row>
 
       {profileType === "other" && (
