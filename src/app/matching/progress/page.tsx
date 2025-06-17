@@ -94,6 +94,8 @@ const Progress = () => {
   const [currentMessage, setCurrentMessage] = useState<string>("");
   const [textVisible, setTextVisible] = useState<boolean>(true);
 
+  const thresholdRef = useRef(51.5);
+
   // const [showReloadModal, setShowReloadModal] = useState(false); // 새로고침 모달 상태
 
   useEffect(() => {
@@ -235,8 +237,8 @@ const Progress = () => {
     if (timerRef.current) return; // 이미 타이머가 실행 중이면 추가로 설정하지 않음
 
     // 매칭 재시도 여부에 따라 타이머 설정
-    setTimeLeft(300);
-    let threshold = 51.5; // 초기 threshold 값
+    thresholdRef.current = 51.5; // 초기 threshold 값
+
     timerRef.current = setInterval(() => {
       setTimeLeft((prevTime) => {
         if (prevTime === 1) {
@@ -246,11 +248,10 @@ const Progress = () => {
           handleRetry(); // 매칭 실패 모달 결정 함수
         } else if (prevTime < 300 && prevTime % 30 === 0) {
           // 30초마다 threshold 값을 감소시키며 매칭 재시도
-          threshold -= 1.5;
-          socket?.emit("matching-retry", { threshold });
-          console.log(`매칭 재시도 (priority: ${threshold})`);
+          thresholdRef.current -= 1.5;
+          socket?.emit("matching-retry", { threshold: thresholdRef.current });
+          console.log(`매칭 재시도 (priority: ${thresholdRef.current})`);
         }
-
         return prevTime - 1;
       });
     }, 1000);
