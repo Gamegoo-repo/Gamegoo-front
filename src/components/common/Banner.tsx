@@ -23,7 +23,7 @@ export default Banner;
 const BannerWrapper = styled.div`
   width: 100%;
   height: 128px;
-  background: #f0f0fc;
+  background: ${theme.colors.violet100};
   border-radius: 20px;
   display: flex;
   align-items: center;
@@ -33,6 +33,7 @@ const BannerWrapper = styled.div`
   @media (max-width: 700px) {
     height: unset;
     padding: 20px;
+    border-radius: 8px;
   }
 `;
 
@@ -60,11 +61,10 @@ const Description = styled.p`
 const Logo = styled.div`
   font-size: 72px;
   font-weight: bold;
-  font-family: "TimeForSalad", sans-serif;
-  color: #c1b7ff;
+  font-family: var(--font-timeforsalad), sans-serif;
+  color: ${theme.colors.violet300};
   opacity: 0.3;
   position: absolute;
   right: 40px;
-
   letter-spacing: 5px;
 `;

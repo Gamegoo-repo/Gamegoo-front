@@ -11,8 +11,7 @@ const GlobalStyles = createGlobalStyle`
 html,
 body {
   width: 100%;
-  /* min-width: 1200px; */
-  font-family: "Pretendard", sans-serif;
+  font-family: var(--font-pretendard), sans-serif;
   white-space: pre-line;
   &::-webkit-scrollbar {
     width: 20px;
@@ -46,19 +45,9 @@ button {
   cursor:pointer;
 }
 
-
-@font-face {
-    font-family: "Pretendard";
-    src: url("/public/assets/fonts/PretendardVariable.woff2") format('font-woff2'),
-    url("/assets/fonts/PretendardVariable.ttf") format('truetype'); 
-  }
-/* 새로 추가한 Time For Salad */
-@font-face {
-  font-family: "TimeForSalad";
-  src: url("/assets/fonts/TimeForSalad.woff2") format("woff2"),
-       url("/assets/fonts/TimeForSalad.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
+img {
+  -webkit-user-drag: none;
+  user-select: none;
 }
 `;
 

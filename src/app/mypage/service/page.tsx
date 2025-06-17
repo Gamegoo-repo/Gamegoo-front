@@ -20,11 +20,10 @@ const MyServicePage = () => {
           가능한 한 빠르게 도움을 드릴 수 있도록 노력하겠습니다.
           <BoxWrap>
             <Box $bgColor={theme.colors.yellow100}>
-              <Image
-                src="/assets/images/social/kakaoChanel.svg"
+              <KakaoImage
+                data="/assets/images/social/kakaoChanel.svg"
                 width={isMobile ? 52 : 80}
                 height={isMobile ? 52 : 80}
-                alt="카카오 채널"
               />
               <StyledLink
                 href="https://pf.kakao.com/_Rrxiqn"
@@ -153,6 +152,10 @@ const Box = styled.button<{ $bgColor: string }>`
     gap: 30px;
     ${theme.fonts.bold20};
   }
+`;
+
+const KakaoImage = styled.object`
+  pointer-events: none;
 `;
 
 const GmailLogoWrapper = styled.div`
