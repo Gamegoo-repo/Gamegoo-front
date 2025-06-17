@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Profile from "@/components/match/Profile";
+import Profile from "@/components/profile/Profile";
 import HeaderTitle from "@/components/common/HeaderTitle";
 import { theme } from "@/styles/theme";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants/mannerLevel";

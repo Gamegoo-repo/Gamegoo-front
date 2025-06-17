@@ -12,7 +12,7 @@ import Input from "../common/Input";
 import { useEffect, useRef, useState } from "react";
 import Button from "../common/Button";
 import CRModal from "../crBoard/CRModal";
-import UpdateProfileImage from "./UpdateProfileImage";
+import UpdateProfileImage from "../profile/UpdateProfileImage";
 import UserAccount from "../crBoard/UserAccount";
 import Toggle from "../common/Toggle";
 import PositionBox, { PositionState } from "../crBoard/PositionBox";

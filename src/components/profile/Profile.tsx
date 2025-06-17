@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import styled, { css } from "styled-components";
-import GameStyle from "./GameStyle";
+import GameStyle from "../match/GameStyle";
 import { POSITIONS } from "@/constants/profile";
 import Champion from "../readBoard/Champion";
 import Toggle from "../common/Toggle";
@@ -41,7 +41,7 @@ import Alert from "../common/Alert";
 import useMediaQueries from "@/hooks/useMediaQueries";
 import Mic from "../common/Mic";
 import { profile } from "console";
-import UpdateProfileImage from "../createBoard/UpdateProfileImage";
+import UpdateProfileImage from "./UpdateProfileImage";
 
 type profileType = "normal" | "wind" | "other" | "me";
 

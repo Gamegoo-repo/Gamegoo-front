@@ -10,7 +10,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import useMediaQueries from "@/hooks/useMediaQueries";
-import UpdateProfileImage from "@/components/createBoard/UpdateProfileImage";
+import UpdateProfileImage from "@/components/profile/UpdateProfileImage";
 
 const MyPageProfile: React.FC<Profile> = ({ user }) => {
   const dispatch = useDispatch();
