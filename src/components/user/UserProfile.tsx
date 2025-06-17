@@ -8,6 +8,7 @@ import { profileType, User } from "@/interface/profile";
 import { getUserId } from "@/utils/storage";
 import Champion from "../readBoard/Champion";
 import useMediaQueries from "@/hooks/useMediaQueries";
+import Tooltip from "../common/Tooltip";
 
 export interface Manner {
   memberId?: number;
@@ -87,7 +88,15 @@ const UserProfile = ({
           />
           <Content>
             <div>
-              <Title>{`${profile.gameName}님의 매너레벨`}</Title>
+              <Title>
+                {`${profile.gameName}님의 매너레벨`}{" "}
+                <Tooltip
+                  title="매너레벨"
+                  content={`매너 레벨은 겜구 사용자로부터 받은 매너평가, 비매
+너평가를 반영한 지표예요. `}
+                  width="319px"
+                />
+              </Title>
               <LevelBox>
                 <Text>
                   {/* {!isMobile &&

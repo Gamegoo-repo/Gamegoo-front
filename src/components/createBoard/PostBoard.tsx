@@ -310,11 +310,7 @@ const PostBoard = (props: PostBoardProps) => {
               isProfileListOpen={isProfileListOpen}
               onImageClick={handleImageClick}
             />
-            <UserAccount
-              account={user.gameName}
-              tag={user.tag}
-              // mike={user.mike}
-            />
+            <UserAccount account={user.gameName} tag={user.tag} />
           </UserSection>
         )}
 
