@@ -4,8 +4,8 @@ export const MATCH_PAGE_DATA = [
   {
     id: 1,
     pathname: "match",
-    image: "/assets/images/card/matching.png",
-    moImage: "/assets/images/card/matching_mo.png",
+    image: "/assets/images/card/matching.svg",
+    moImage: "/assets/images/card/matching_mo.svg",
     title: "바로 매칭하기",
     width: "580px",
     height: "285px",
@@ -13,8 +13,8 @@ export const MATCH_PAGE_DATA = [
   {
     id: 2,
     pathname: "board",
-    image: "/assets/images/card/board.png",
-    moImage: "/assets/images/card/board_mo.png",
+    image: "/assets/images/card/board.svg",
+    moImage: "/assets/images/card/board_mo.svg",
     title: "게시판에서 찾기",
     width: "580px",
     height: "285px",

@@ -85,11 +85,10 @@ const MyProfilePage = () => {
           <Title>
             내 정보
             <RiotInfo>
-              <Image
-                src={"/assets/icons/riot_red.svg"}
+              <RiotObject
+                data={"/assets/icons/riot_red.svg"}
                 width={!isMobile ? 16 : 10}
                 height={!isMobile ? 16 : 9}
-                alt="riot"
               />
               라이엇 연동 완료
             </RiotInfo>
@@ -243,6 +242,10 @@ const RiotInfo = styled.span`
     ${(props) => props.theme.fonts.bold11};
     padding: 4px 8px;
   }
+`;
+
+const RiotObject = styled.object`
+  pointer-events: none;
 `;
 
 // const Small = styled.div`
