@@ -140,7 +140,7 @@ const PostBoard = (props: PostBoardProps) => {
 
   /* 프로필 이미지 리스트 중 클릭시 */
   const handleImageClick = (index: number) => {
-    setSelectedImageIndex(index + 1);
+    setSelectedImageIndex(index);
     setTimeout(() => {
       setIsProfileListOpen(false);
     }, 300); // 300ms 후에 창이 닫히도록 설정
@@ -304,6 +304,7 @@ const PostBoard = (props: PostBoardProps) => {
         {user.gameName && (
           <UserSection>
             <UpdateProfileImage
+              type="board"
               selectedImageIndex={selectedImageIndex}
               setIsProfileListOpen={setIsProfileListOpen}
               isProfileListOpen={isProfileListOpen}
