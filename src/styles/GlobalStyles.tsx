@@ -46,6 +46,11 @@ button {
   cursor:pointer;
 }
 
+img {
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
 
 @font-face {
     font-family: "Pretendard";
