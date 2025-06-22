@@ -59,6 +59,7 @@ const Complete = () => {
   );
   const type = searchParams.get("type");
   const rank = searchParams.get("rank");
+  const matchingUuid = searchParams.get("uuid");
   const [userMe, setUserMe] = useState<User>({
     memberId: 0,
     gameName: "",
@@ -258,7 +259,9 @@ const Complete = () => {
   // 타임아웃 처리
   const handleTimeout = () => {
     if (role === "receiver") {
-      socket?.emit("matching-success-receiver");
+      socket?.emit("matching-success-receiver", {
+        senderMatchingUuid: matchingUuid,
+      });
       startSecondaryTimer();
     }
   };

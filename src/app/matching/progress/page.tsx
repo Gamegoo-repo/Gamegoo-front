@@ -15,7 +15,6 @@ import {
   messagesWithTierN,
   messagesWithTotalN,
 } from "@/constants/messages";
-// import { getSystemMsg } from "@/api/socket";
 import { getBoardList } from "@/api/board/board";
 import { setOpenPostingModal } from "@/redux/slices/modalSlice";
 import { useDispatch } from "react-redux";
@@ -28,6 +27,7 @@ import { getEffectiveTier } from "@/utils/matching/tier";
 import { GameMode } from "@/types/game/gameMode";
 import { GameStyleList } from "@/interface/profile";
 import WaitingBox from "@/components/match/WaitingBox";
+import { GAME_STYLE } from "@/constants/profile";
 
 interface User {
   memberId: number;
@@ -64,7 +64,7 @@ const Progress = () => {
   const rank = searchParams.get("gameRank");
   const retry = searchParams.get("retry");
 
-  const gameStyleRaw = searchParams.get("gameStyleResponseList");
+  const gameStyleRaw = searchParams.get("gameStyleIdList");
   const user: User = {
     memberId: parseInt(searchParams.get("memberId") || "0", 10),
     gameName: searchParams.get("gameName") || "",
@@ -82,30 +82,59 @@ const Progress = () => {
     wantP: (searchParams.get("wantP") as Position) || "ANY",
     mike: (searchParams.get("mike") as Mike) || "AVAILABLE",
     gameStyleList: gameStyleRaw
-      ? (JSON.parse(gameStyleRaw) as GameStyleList[]).map(
-          (style) => style.gameStyleName
-        )
+      ? (JSON.parse(gameStyleRaw) as number[]).map((id) => {
+          const found = GAME_STYLE.find((style) => style.gameStyleId === id);
+          return found ? found.gameStyleName : "";
+        })
       : [],
   };
 
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  // 파라미터에서 tierCounts 가져오기
+  const tierCountsRaw = searchParams.get("tierCounts");
 
-  const [tierCounts, setTierCounts] = useState<Record<string, number>>({}); // 티어별 인원 수
+  // 안전하게 파싱 tierCount + userCount
+  const parsedTierCounts = (() => {
+    try {
+      if (!tierCountsRaw) return {};
+      const parsed = JSON.parse(tierCountsRaw);
+      if (parsed && parsed.tierCount && parsed.userCount !== undefined) {
+        return {
+          ...parsed.tierCount,
+          total: parsed.userCount,
+        };
+      }
+      return {};
+    } catch (e) {
+      console.error("tierCounts 파싱 실패:", e);
+      return {};
+    }
+  })();
+
+  // 초기값으로 바로 사용
+  const [tierCounts, setTierCounts] =
+    useState<Record<string, number>>(parsedTierCounts); // 티어별 인원 수
+
   const [currentMessage, setCurrentMessage] = useState<string>("");
   const [textVisible, setTextVisible] = useState<boolean>(true);
+
+  const tierCountsRef = useRef(tierCountsRaw);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const thresholdRef = useRef(51.5);
 
   // const [showReloadModal, setShowReloadModal] = useState(false); // 새로고침 모달 상태
 
   useEffect(() => {
+    if (!socket) return;
+
     const handleMatchingCount = (data: any) => {
-      setTierCounts({ ...data.tierCount, total: data.userCount });
+      setTierCounts({ ...data.data.tierCount, total: data.data.userCount });
     };
 
-    socket?.on("matching-count", handleMatchingCount);
+    socket.on("matching-count", handleMatchingCount);
     return () => {
       socket?.off("matching-count", handleMatchingCount);
     };
-  }, []);
+  }, [socket]);
 
   const showMessage = () => {
     setTextVisible(false);
@@ -127,6 +156,10 @@ const Progress = () => {
 
       const tierUserCount = tierCounts[tierKey] ?? 0;
       const totalUserCount = tierCounts["total"] ?? 0;
+
+      console.log("tierCounts", tierCounts);
+      console.log("tierUserCount", tierUserCount);
+      console.log("totalUserCount", totalUserCount);
 
       if (messagesWithTierN.includes(randomMessage)) {
         setCurrentMessage(
@@ -209,14 +242,13 @@ const Progress = () => {
       console.log("매칭 상대 발견(receiver):", data); // senderMatchingInfo, receiverMatchingUuid
       clearTimers();
       socket?.emit("matching-found-success", {
-        // senderMemberId: data.data.memberId,
-        // gameMode: data.data.gameMode,
-        senderMatchingUuid: data.data.receiverMatchingUuid,
-        gameMode: data.data.senderMatchingInfo.gameMode,
+        // senderMatchingUuid: data.data.receiverMatchingUuid,
+        senderMatchingUuid: data.data.senderMatchingInfo.matchingUuid,
       });
       router.push(
         `/matching/complete?role=receiver&opponent=true&type=${type}&rank=${rank}&user=${encodeURIComponent(
-          JSON.stringify(data.data)
+          JSON.stringify(data.data.senderMatchingInfo)
+        )}&uuid=${encodeURIComponent(data.data.senderMatchingInfo.matchingUuid)}
         )}`
       );
     });
@@ -235,8 +267,8 @@ const Progress = () => {
     if (timerRef.current) return; // 이미 타이머가 실행 중이면 추가로 설정하지 않음
 
     // 매칭 재시도 여부에 따라 타이머 설정
-    setTimeLeft(300);
-    let threshold = 51.5; // 초기 threshold 값
+    thresholdRef.current = 51.5; // 초기 threshold 값
+
     timerRef.current = setInterval(() => {
       setTimeLeft((prevTime) => {
         if (prevTime === 1) {
@@ -246,11 +278,10 @@ const Progress = () => {
           handleRetry(); // 매칭 실패 모달 결정 함수
         } else if (prevTime < 300 && prevTime % 30 === 0) {
           // 30초마다 threshold 값을 감소시키며 매칭 재시도
-          threshold -= 1.5;
-          socket?.emit("matching-retry", { threshold });
-          console.log(`매칭 재시도 (priority: ${threshold})`);
+          thresholdRef.current -= 1.5;
+          socket?.emit("matching-retry", { threshold: thresholdRef.current });
+          console.log(`매칭 재시도 (priority: ${thresholdRef.current})`);
         }
-
         return prevTime - 1;
       });
     }, 1000);
@@ -439,20 +470,6 @@ const Header = styled.div`
   align-items: center;
   white-space: nowrap;
 `;
-
-// const Time = styled.div`
-//   color: ${theme.colors.gray700};
-//   ${(props) => props.theme.fonts.light32}
-//   margin-bottom: 32px;
-// `;
-
-// const Span = styled.span`
-//   color: ${theme.colors.violet600};
-//   ${(props) => props.theme.fonts.bold32}
-//   @media (max-width: 700px) {
-//     ${(props) => props.theme.fonts.bold32}
-//   }
-// `;
 
 const Main = styled.main`
   display: grid;
