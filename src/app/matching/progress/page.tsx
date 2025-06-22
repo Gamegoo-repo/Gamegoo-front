@@ -28,6 +28,7 @@ import { GameMode } from "@/types/game/gameMode";
 import { GameStyleList } from "@/interface/profile";
 import WaitingBox from "@/components/match/WaitingBox";
 import { GAME_STYLE } from "@/constants/profile";
+import { getThresholdByGameMode } from "@/utils/matching/threshold";
 
 interface User {
   memberId: number;
@@ -57,11 +58,10 @@ const Progress = () => {
   const [isRetrying, setIsRetrying] = useState<boolean>(false); // 매칭 재시도 여부
   const router = useRouter();
   const dispatch = useDispatch();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
   const isMobile = useMediaQueries({ breakpoint: 700 });
   const type = searchParams.get("matchingType");
-  const rank = searchParams.get("gameRank");
+  const rank = searchParams.get("gameRank") as GameMode;
   const retry = searchParams.get("retry");
 
   const gameStyleRaw = searchParams.get("gameStyleIdList");
@@ -267,7 +267,7 @@ const Progress = () => {
     if (timerRef.current) return; // 이미 타이머가 실행 중이면 추가로 설정하지 않음
 
     // 매칭 재시도 여부에 따라 타이머 설정
-    thresholdRef.current = 51.5; // 초기 threshold 값
+    thresholdRef.current = getThresholdByGameMode(rank) + 1.5; // 초기 threshold 값
 
     timerRef.current = setInterval(() => {
       setTimeLeft((prevTime) => {

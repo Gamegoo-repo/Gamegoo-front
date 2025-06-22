@@ -17,6 +17,8 @@ import { theme } from "@/styles/theme";
 import { closeChatRoom } from "@/redux/slices/chatSlice";
 import { getMyProfile } from "@/api/user/profile/get";
 import useMediaQueries from "@/hooks/useMediaQueries";
+import { getThresholdByGameMode } from "@/utils/matching/threshold";
+import { GameMode } from "@/types/game/gameMode";
 
 const ProfilePage = () => {
   const isMobile = useMediaQueries({ breakpoint: 700 });
@@ -25,7 +27,7 @@ const ProfilePage = () => {
   const [isClient, setIsClient] = useState(false);
   const searchParams = useSearchParams();
   const params = searchParams.get("type");
-  const rank = searchParams.get("rank");
+  const rank = searchParams.get("rank") as GameMode;
   const retry = searchParams.get("retry");
 
   /* 모달창 */
@@ -118,7 +120,7 @@ const ProfilePage = () => {
     const matchingData = {
       matchingType,
       gameMode: rank,
-      threshold: 50,
+      threshold: getThresholdByGameMode(rank),
       mike: matchInfo.mike ?? "UNAVAILABLE",
       mainP: (matchInfo.mainP ?? 0).toString(),
       subP: (matchInfo.subP ?? 0).toString(),
