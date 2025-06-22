@@ -43,7 +43,7 @@ interface User {
   gameMode: GameMode;
   mainP: Position;
   subP: Position;
-  wantP: Position;
+  wantP: Position[];
   mike: Mike;
   gameStyleList: string[];
 }
@@ -78,7 +78,10 @@ const Progress = () => {
     gameMode: (searchParams.get("gameMode") as GameMode) || "",
     mainP: (searchParams.get("mainP") as Position) || "ANY",
     subP: (searchParams.get("subP") as Position) || "ANY",
-    wantP: (searchParams.get("wantP") as Position) || "ANY",
+    // wantP: (searchParams.get("wantP") as Position) || "ANY",
+    wantP: searchParams.get("wantP")
+      ? (searchParams.get("wantP")!.split(",") as Position[])
+      : ["ANY"],
     mike: (searchParams.get("mike") as Mike) || "AVAILABLE",
     gameStyleList: gameStyleRaw
       ? (JSON.parse(gameStyleRaw) as number[]).map((id) => {
