@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Profile from "@/components/match/Profile";
 import Button from "@/components/common/Button";
 import HeaderTitle from "@/components/common/HeaderTitle";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { profileType } from "@/interface/profile";
 import { Suspense } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -34,6 +34,10 @@ const ProfilePage = () => {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user);
   const matchInfo = useSelector((state: RootState) => state.matchInfo);
+
+  const [tier, setTier] = useState<string>("UNRANK");
+  const [tierCounts, setTierCounts] = useState<Record<string, number>>({});
+  const tierCountsRef = useRef(tierCounts);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -90,6 +94,24 @@ const ProfilePage = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleMatchingCount = (data: any) => {
+      setTierCounts({ ...data.data.tierCount, total: data.data.userCount });
+    };
+
+    socket.on("matching-count", handleMatchingCount);
+    return () => {
+      socket?.off("matching-count", handleMatchingCount); // 메모리 누수 방지
+    };
+  }, [socket]);
+
+  useEffect(() => {
+    console.log("프로필 페이지에서 matching-count 수신", tierCounts);
+    tierCountsRef.current = tierCounts; // 항상 최신값 저장
+  }, [tierCounts]);
+
   const handleMatchStart = async () => {
     const matchingType = params === "gamegoo" ? "BASIC" : "PRECISE";
 
@@ -109,40 +131,55 @@ const ProfilePage = () => {
       socket.emit("matching-request", matchingData);
       console.log("매칭 요청 이벤트 발생:", matchingData);
 
+      let matchingStartedData: any = null;
+
       /* 매칭 시작 이벤트 */
       socket.on("matching-started", (data) => {
         console.log("매칭 시작됨:", data);
+        matchingStartedData = data.data;
 
-        const baseParams: Record<string, string> = {
-          matchingType: params || "",
-          gameRank: rank || "",
-        };
+        const handleMatchingCount = (data: any) => {
+          setTierCounts({
+            ...data.data.tierCount,
+            total: data.data.userCount,
+          });
 
-        if (retry) {
-          baseParams.retry = "true";
-        }
+          const baseParams: Record<string, string> = {
+            matchingType: params || "",
+            gameRank: rank || "",
+            tier: tier,
+            tierCounts: JSON.stringify(data.data),
+            ...matchingStartedData,
+          };
 
-        const rawData = data.data ?? {};
-        const formattedData: Record<string, string> = {};
-
-        // 각 필드를 순회하면서 문자열로 변환
-        for (const key in rawData) {
-          const value = rawData[key];
-          if (typeof value === "object") {
-            formattedData[key] = JSON.stringify(value); // 객체/배열은 JSON 문자열로
-          } else {
-            formattedData[key] = String(value); // 나머지는 그냥 문자열로
+          if (retry) {
+            baseParams.retry = "true";
           }
-        }
 
-        const combinedParams = {
-          ...formattedData,
-          ...baseParams,
+          const rawData = data.data ?? {};
+          const formattedData: Record<string, string> = {};
+
+          // 각 필드를 순회하면서 문자열로 변환
+          for (const key in rawData) {
+            const value = rawData[key];
+            if (typeof value === "object") {
+              formattedData[key] = JSON.stringify(value); // 객체/배열은 JSON 문자열로
+            } else {
+              formattedData[key] = String(value); // 나머지는 그냥 문자열로
+            }
+          }
+
+          const combinedParams = {
+            ...formattedData,
+            ...baseParams,
+          };
+
+          const urlParams = new URLSearchParams(combinedParams);
+
+          router.push(`/matching/progress?${urlParams.toString()}`);
         };
 
-        const urlParams = new URLSearchParams(combinedParams);
-
-        router.push(`/matching/progress?${urlParams.toString()}`);
+        socket?.on("matching-count", handleMatchingCount);
       });
 
       /* sender 입장에서 바로 매칭 상대 찾을 경우 처리 */
