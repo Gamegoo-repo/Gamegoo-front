@@ -52,7 +52,7 @@ const MyProfilePage = () => {
       setIsWithdrawalComplete(true);
       clearTokens();
       setTimeout(() => {
-        router.push("/login");
+        router.push("/riot");
       }, 2000);
     } catch (error) {
       // setIsPasswordValid(false);

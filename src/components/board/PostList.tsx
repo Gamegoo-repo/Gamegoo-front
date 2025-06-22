@@ -268,7 +268,7 @@ const PostList = ({ content }: PostListProps) => {
       return showAlertWithContent(
         "exclamation",
         logoutMessage,
-        () => router.push("/login"),
+        () => router.push("/riot"),
         "로그인하기"
       );
     }

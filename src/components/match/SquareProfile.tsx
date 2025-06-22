@@ -26,7 +26,7 @@ interface User {
   gameMode: GameMode;
   mainP: PositionType;
   subP: PositionType;
-  wantP: PositionType;
+  wantP: PositionType[];
   mike: Mike;
   gameStyleList?: string[];
 }
@@ -154,7 +154,8 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
                 status="matching"
                 main={user.mainP || null}
                 sub={user.subP || null}
-                want={[user.wantP || "ANY"]}
+                want={user.wantP || ["ANY"]}
+                isEditable={false}
               />
             </Row>
           </Column>

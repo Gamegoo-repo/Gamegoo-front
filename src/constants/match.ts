@@ -126,3 +126,10 @@ export const GAME_MODE_PAGE_DATA = [
 ];
 
 export const STEPS = ["매칭 종류 선택", "게임모드 선택", "프로필 등록"];
+
+export const GAME_MODE_THRESHOLD: Record<GameMode, number> = {
+  FAST: 25, // 빠른 대전
+  SOLO: 67, // 개인 랭크
+  FREE: 65, // 자유 랭크
+  ARAM: 19, // 칼바람
+};

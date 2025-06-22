@@ -17,6 +17,7 @@ interface PositionBoxProps {
   main: Position | null;
   sub: Position | null;
   want: (Position | null)[] | null;
+  isEditable?: boolean;
 }
 
 export interface PositionState {
@@ -26,7 +27,14 @@ export interface PositionState {
 }
 
 const PositionBox = (props: PositionBoxProps) => {
-  const { status, onPositionChange, main, sub, want } = props;
+  const {
+    status,
+    onPositionChange,
+    main,
+    sub,
+    want,
+    isEditable = true,
+  } = props;
 
   const isMobile = useMediaQueries({ breakpoint: 700 });
   const [positionValue, setPositionValue] = useState<PositionState>({
@@ -117,7 +125,7 @@ const PositionBox = (props: PositionBoxProps) => {
                     alt="포지션"
                     onClick={() => handlePosition(type)}
                   />
-                  {isPositionOpen[type] && (
+                  {isEditable && isPositionOpen[type] && (
                     <PositionCategory
                       selectedBox={type}
                       value={positionValue[type] ?? "ANY"}
@@ -157,7 +165,7 @@ const PositionBox = (props: PositionBoxProps) => {
                     </Plus>
                   )}
                   {/* PositionCategory 열기 조건 */}
-                  {isPositionOpen.want[index] && (
+                  {isEditable && isPositionOpen.want[index] && (
                     <PositionCategory
                       selectedBox="want"
                       value={posi}

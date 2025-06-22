@@ -25,9 +25,9 @@ import { Mike } from "@/types/user/mike";
 import useMediaQueries from "@/hooks/useMediaQueries";
 import { getEffectiveTier } from "@/utils/matching/tier";
 import { GameMode } from "@/types/game/gameMode";
-import { GameStyleList } from "@/interface/profile";
 import WaitingBox from "@/components/match/WaitingBox";
 import { GAME_STYLE } from "@/constants/profile";
+import { getThresholdByGameMode } from "@/utils/matching/threshold";
 
 interface User {
   memberId: number;
@@ -42,7 +42,7 @@ interface User {
   gameMode: GameMode;
   mainP: Position;
   subP: Position;
-  wantP: Position;
+  wantP: Position[];
   mike: Mike;
   gameStyleList: string[];
 }
@@ -57,11 +57,10 @@ const Progress = () => {
   const [isRetrying, setIsRetrying] = useState<boolean>(false); // 매칭 재시도 여부
   const router = useRouter();
   const dispatch = useDispatch();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
   const isMobile = useMediaQueries({ breakpoint: 700 });
   const type = searchParams.get("matchingType");
-  const rank = searchParams.get("gameRank");
+  const rank = searchParams.get("gameRank") as GameMode;
   const retry = searchParams.get("retry");
 
   const gameStyleRaw = searchParams.get("gameStyleIdList");
@@ -69,17 +68,18 @@ const Progress = () => {
     memberId: parseInt(searchParams.get("memberId") || "0", 10),
     gameName: searchParams.get("gameName") || "",
     tag: searchParams.get("tag") || "",
-    /* TODO : 솔랭, 자랭 값으로 정보 얻어오도록 수정 */
-    soloTier: searchParams.get("tier") || "",
-    freeTier: searchParams.get("tier") || "",
-    soloRank: parseInt(searchParams.get("rank") || "1", 10),
-    freeRank: parseInt(searchParams.get("rank") || "1", 10),
+    soloTier: searchParams.get("soloTier") || "",
+    freeTier: searchParams.get("freeTier") || "",
+    soloRank: parseInt(searchParams.get("soloRank") || "1", 10),
+    freeRank: parseInt(searchParams.get("freeRank") || "1", 10),
     mannerLevel: parseInt(searchParams.get("mannerLevel") || "0", 10),
     profileImg: parseInt(searchParams.get("profileImg") || "0", 10),
     gameMode: (searchParams.get("gameMode") as GameMode) || "",
     mainP: (searchParams.get("mainP") as Position) || "ANY",
     subP: (searchParams.get("subP") as Position) || "ANY",
-    wantP: (searchParams.get("wantP") as Position) || "ANY",
+    wantP: searchParams.get("wantP")
+      ? (searchParams.get("wantP")!.split(",") as Position[])
+      : ["ANY"],
     mike: (searchParams.get("mike") as Mike) || "AVAILABLE",
     gameStyleList: gameStyleRaw
       ? (JSON.parse(gameStyleRaw) as number[]).map((id) => {
@@ -267,7 +267,7 @@ const Progress = () => {
     if (timerRef.current) return; // 이미 타이머가 실행 중이면 추가로 설정하지 않음
 
     // 매칭 재시도 여부에 따라 타이머 설정
-    thresholdRef.current = 51.5; // 초기 threshold 값
+    thresholdRef.current = getThresholdByGameMode(rank) + 1.5; // 초기 threshold 값
 
     timerRef.current = setInterval(() => {
       setTimeLeft((prevTime) => {

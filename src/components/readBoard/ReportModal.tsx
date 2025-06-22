@@ -82,7 +82,7 @@ const ReportModal = ({
       return showAlertWithContent(
         "exclamation",
         logoutMessage,
-        () => router.push("/login"),
+        () => router.push("/riot"),
         "로그인하기"
       );
     }
