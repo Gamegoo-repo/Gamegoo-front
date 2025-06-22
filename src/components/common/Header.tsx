@@ -239,7 +239,7 @@ const Header = () => {
             </Profile>
           </Right>
         ) : (
-          <Login onClick={() => router.push("/login")}>로그인</Login>
+          <Login onClick={() => router.push("/riot")}>로그인</Login>
         )}
       </HeaderBar>
       {isAlertWindow && (
@@ -308,7 +308,7 @@ const Header = () => {
                         dispatch(clearUserProfile());
                         sessionStorage.removeItem("unreadChatUuids");
                         dispatch(closeChat());
-                        router.push("/login");
+                        router.push("/riot");
                       } catch {
                         console.error("소켓 로그아웃 오류");
                       }

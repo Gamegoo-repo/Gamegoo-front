@@ -15,7 +15,7 @@ const Layout = (props: any) => {
       <Box>
         <Logo
           onClick={() => {
-            router.push("/login");
+            router.push("/riot");
           }}
         >
           <Image src="/assets/icons/logo.svg" fill alt="logo" />

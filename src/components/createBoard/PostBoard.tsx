@@ -283,7 +283,7 @@ const PostBoard = (props: PostBoardProps) => {
           height={58}
           content="로그아웃 되었습니다. 다시 로그인 해주세요."
           alt="로그인 필요"
-          onClose={() => router.push("/login")}
+          onClose={() => router.push("/riot")}
           buttonText="로그인하기"
         />
       )}
