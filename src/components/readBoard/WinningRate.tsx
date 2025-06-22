@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import ProgressBar from "@ramonak/react-progress-bar";
+import Image from "next/image";
+import Tooltip from "../common/Tooltip";
 
 interface WinningRateProps {
   completed: number;
@@ -27,12 +29,14 @@ const WinningRate = (props: WinningRateProps) => {
           </Percent>
         </Left>
         <Right>
-          {!!history && (
-            <History>
-              최근 {recentGameCount === null ? 0 : recentGameCount}
-              게임
-            </History>
-          )}
+          {/* 최근 {recentGameCount === null ? 0 : recentGameCount}
+              게임 */}
+          현 시즌 성적 통계
+          <Tooltip
+            title="현 시즌 성적 통계"
+            content={`선택한 게임 모드의 이번 시즌 승률을 보여줘요.\n최대 30게임 승률(0~30게임)`}
+            width="299px"
+          />
         </Right>
       </FirstRow>
       <SecondRow $completed={completed} $color={progressColor}>
@@ -85,7 +89,13 @@ const Left = styled.div`
   gap: 4px;
 `;
 
-const Right = styled.div``;
+const Right = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  ${(props) => props.theme.fonts.medium11};
+  color: ${theme.colors.gray500};
+`;
 
 const WinningTitle = styled.p`
   ${(props) => props.theme.fonts.semiBold14};
@@ -108,4 +118,34 @@ const Percent = styled.p<{ $color: string }>`
 const History = styled.p`
   ${(props) => props.theme.fonts.medium11};
   color: ${theme.colors.gray500};
+`;
+
+const InfoIcon = styled(Image)``;
+
+const TextModal = styled.div`
+  color: ${theme.colors.white};
+  ${(props) => props.theme.fonts.semiBold14};
+  position: absolute;
+  z-index: 1;
+  top: 100%;
+  left: 0;
+  border-radius: 10px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.7);
+  /* Background Blur */
+  box-shadow: 0 4px 8.9px 0 rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(7.5px);
+
+  &::after {
+    /* tail css */
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-top: 0 solid transparent;
+    border-left: 4.5px solid transparent;
+    border-right: 4.5px solid transparent;
+    border-bottom: 10px solid rgba(0, 0, 0, 0.64);
+  }
 `;

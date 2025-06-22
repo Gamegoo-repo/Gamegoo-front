@@ -18,7 +18,7 @@ const UserAccount = (props: UserAccountProps) => {
   const { account, memberId, mike, tag } = props;
   const router = useRouter();
   const isMobile = useMediaQueries({ breakpoint: 700 });
-  const [isAccountTouch, setIsAccountTouch] = useState(false);
+  // const [isAccountTouch, setIsAccountTouch] = useState(false);
   const [isTagTouch, setIsTagTouch] = useState(false);
 
   const handleRouteProfile = () => {
@@ -34,18 +34,21 @@ const UserAccount = (props: UserAccountProps) => {
           {isMobile && account.length >= 14 ? (
             <Text
               onMouseDown={() => {
-                setIsAccountTouch((prev) => !prev);
+                // setIsAccountTouch((prev) => !prev);
                 setIsTagTouch(false);
               }}
             >
-              {formatTextOverNumber(account, 14)}
-              {isAccountTouch && <TextModal>{account}</TextModal>}
+              {account}
             </Text>
           ) : (
             account
           )}
         </Account>
-        {mike && <Mic status={mike} />}
+        {mike && (
+          <MicWrapper>
+            <Mic status={mike} />
+          </MicWrapper>
+        )}
       </Row>
       {tag && (
         <Tag>
@@ -53,7 +56,7 @@ const UserAccount = (props: UserAccountProps) => {
             <Text
               onMouseDown={() => {
                 setIsTagTouch((prev) => !prev);
-                setIsAccountTouch(false);
+                // setIsAccountTouch(false);
               }}
             >
               {`#${formatTextOverNumber(tag, 20)}`}
@@ -76,8 +79,9 @@ const Wrapper = styled.div`
 `;
 
 const Row = styled.div`
+  width: 100%;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
 `;
 
@@ -92,6 +96,11 @@ const Account = styled.button`
 
 const Text = styled.p`
   position: relative;
+  width: 100%;
+  max-width: 160px;
+  text-align: left;
+  word-break: break-word; // 긴 단어도 줄바꿈
+  white-space: normal;
 `;
 
 const TextModal = styled.div`
@@ -120,6 +129,10 @@ const TextModal = styled.div`
     border-right: 4.5px solid transparent;
     border-bottom: 10px solid rgba(0, 0, 0, 0.64);
   }
+`;
+
+const MicWrapper = styled.div`
+  margin: 2px 0;
 `;
 
 const Tag = styled.p`

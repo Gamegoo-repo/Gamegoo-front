@@ -14,6 +14,7 @@ import {
 } from "@/api/manner/manner";
 import Image from "next/image";
 import useMediaQueries from "@/hooks/useMediaQueries";
+import Tooltip from "@/components/common/Tooltip";
 
 const MyReviewPage = () => {
   const isMobile = useMediaQueries({ breakpoint: 700 });
@@ -54,15 +55,12 @@ const MyReviewPage = () => {
         <Review>
           <Title>
             내 평가
-            {isMobile && (
-              <Image
-                src={"/assets/icons/info.svg"}
-                width={14}
-                height={14}
-                style={{ marginLeft: "5px" }}
-                alt="info"
-              />
-            )}
+            <Tooltip
+              title="매너레벨"
+              content={`매너 레벨은 겜구 사용자로부터 받은 매너평가, 비매
+너평가를 반영한 지표예요. `}
+              width="319px"
+            />
           </Title>
           <Box>
             <Top>
@@ -226,7 +224,8 @@ const Gray = styled.div`
 const Title = styled.div`
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
   color: ${theme.colors.gray800};
   ${(props) => props.theme.fonts.bold25};
   margin-bottom: 20px;
