@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useCallback } from "react";
+import { Suspense, useCallback, useMemo } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import HeaderTitle from "@/components/common/HeaderTitle";
@@ -27,6 +27,8 @@ import { Position } from "@/types/position/position";
 import { Mike } from "@/types/user/mike";
 import Layout from "@/components/chat/Layout";
 import { GameMode } from "@/types/game/gameMode";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import { getMemberMannerLevel } from "@/api/manner/manner";
 
 interface User {
   memberId: number;
@@ -58,7 +60,7 @@ const Complete = () => {
     (state: RootState) => state.chat.isChatRoomOpen
   );
   const type = searchParams.get("type");
-  const rank = searchParams.get("rank");
+  const rank = searchParams.get("rank") as GameMode;
   const matchingUuid = searchParams.get("uuid");
   const [userMe, setUserMe] = useState<User>({
     memberId: 0,
@@ -188,21 +190,22 @@ const Complete = () => {
   useEffect(() => {
     const fetchUserMe = async () => {
       try {
-        const response = await getMyProfile();
-        const profileData = response.data;
+        const response1 = await getMyProfile();
+        const profileData = response1.data;
+        const response2 = await getMemberMannerLevel(profileData.id);
+        const mannerData = response2.data;
 
         const transformedUserMe: User = {
           memberId: profileData.id,
           gameName: profileData.gameName,
           tag: profileData.tag,
-          // TODO: profileData로부터 solo & free 티어 및 랭크 받아오기
-          soloTier: profileData.tier,
-          freeTier: profileData.tier,
-          soloRank: profileData.gameRank,
-          freeRank: profileData.gameRank,
-          mannerLevel: profileData.mannerLevel,
+          soloTier: profileData.soloTier,
+          freeTier: profileData.freeTier,
+          soloRank: profileData.soloRank,
+          freeRank: profileData.freeRank,
+          mannerLevel: mannerData.mannerLevel,
           profileImg: profileData.profileImg,
-          gameMode: "FAST",
+          gameMode: rank,
           mainP: profileData.mainP,
           subP: profileData.subP,
           wantP: profileData.wantP,
@@ -382,7 +385,13 @@ const Complete = () => {
           <Main>
             <SquareProfile isToggleUI={true} user={userMe} />
             <Oppnent>
-              <SquareProfile opponent={true} user={user} />
+              {user.memberId !== 0 ? (
+                <SquareProfile opponent={true} user={user} />
+              ) : (
+                <div>
+                  <LoadingSpinner />
+                </div>
+              )}
               {timeLeft > 0 &&
                 (!isMobile ? (
                   <>
