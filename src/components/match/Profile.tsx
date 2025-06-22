@@ -641,51 +641,57 @@ const Profile: React.FC<Profile> = ({
                   <Posi key={2} className={profileType} $isWantP={true}>
                     {POSITIONS[2].label}
                     <PosiRow>
-                      {positionValue?.want &&
-                      positionValue?.want?.length > 0 ? (
-                        positionValue.want.map((posi, index) => (
-                          <PosiItem key={index}>
-                            {posi ? (
-                              <Image
-                                src={setPositionImg(posi)}
-                                width={!isMobile ? 48 : 22}
-                                height={!isMobile ? 40 : 22}
-                                alt="포지션"
-                                onClick={() => handlePosition("want", index)}
-                              />
-                            ) : (
-                              <Plus
-                                onClick={() => handlePosition("want", index)}
-                              >
+                      {positionValue?.want && positionValue?.want.length > 0 ? (
+                        positionValue.want
+                          .concat(Array(2).fill(null))
+                          .slice(0, 2)
+                          .map((posi, index) => (
+                            <PosiItem key={index}>
+                              {posi ? (
                                 <Image
-                                  src="/assets/icons/plus_violet.svg"
-                                  width={!isMobile ? 16 : 14}
-                                  height={!isMobile ? 16 : 14}
-                                  alt=""
+                                  src={setPositionImg(posi)}
+                                  width={!isMobile ? 48 : 22}
+                                  height={!isMobile ? 40 : 22}
+                                  alt="포지션"
+                                  onClick={() => handlePosition("want", index)}
                                 />
-                              </Plus>
-                            )}
-                            {/* PositionCategory 열기 조건 */}
-                            {isPositionOpen.want[index] && (
-                              <PositionCategory
-                                selectedBox="want"
-                                value={posi}
-                                onClose={() =>
-                                  handlePositionClose("want", index)
-                                }
-                                onSelect={(val) =>
-                                  handleCategoryButtonClick(val, "want", index)
-                                }
-                                usedPositions={
-                                  positionValue.want?.filter(
-                                    (pos, i): pos is Position =>
-                                      i !== index && pos !== null
-                                  ) ?? []
-                                }
-                              />
-                            )}
-                          </PosiItem>
-                        ))
+                              ) : (
+                                <Plus
+                                  onClick={() => handlePosition("want", index)}
+                                >
+                                  <Image
+                                    src="/assets/icons/plus_violet.svg"
+                                    width={!isMobile ? 16 : 14}
+                                    height={!isMobile ? 16 : 14}
+                                    alt=""
+                                  />
+                                </Plus>
+                              )}
+                              {/* PositionCategory 열기 조건 */}
+                              {isPositionOpen.want[index] && (
+                                <PositionCategory
+                                  selectedBox="want"
+                                  value={posi}
+                                  onClose={() =>
+                                    handlePositionClose("want", index)
+                                  }
+                                  onSelect={(val) =>
+                                    handleCategoryButtonClick(
+                                      val,
+                                      "want",
+                                      index
+                                    )
+                                  }
+                                  usedPositions={
+                                    positionValue.want?.filter(
+                                      (pos, i): pos is Position =>
+                                        i !== index && pos !== null
+                                    ) ?? []
+                                  }
+                                />
+                              )}
+                            </PosiItem>
+                          ))
                       ) : // 매칭 프로필 - 포지션 선택, 조회 프로필 - ANY(*) 지정
                       ["wind", "normal"].includes(profileType) ? (
                         <PosiItem key="default-plus">
