@@ -12,7 +12,7 @@ import Input from "../common/Input";
 import { useEffect, useRef, useState } from "react";
 import Button from "../common/Button";
 import CRModal from "../crBoard/CRModal";
-import UpdateProfileImage from "./UpdateProfileImage";
+import UpdateProfileImage from "../profile/UpdateProfileImage";
 import UserAccount from "../crBoard/UserAccount";
 import Toggle from "../common/Toggle";
 import PositionBox, { PositionState } from "../crBoard/PositionBox";
@@ -140,7 +140,7 @@ const PostBoard = (props: PostBoardProps) => {
 
   /* 프로필 이미지 리스트 중 클릭시 */
   const handleImageClick = (index: number) => {
-    setSelectedImageIndex(index + 1);
+    setSelectedImageIndex(index);
     setTimeout(() => {
       setIsProfileListOpen(false);
     }, 300); // 300ms 후에 창이 닫히도록 설정
@@ -304,16 +304,13 @@ const PostBoard = (props: PostBoardProps) => {
         {user.gameName && (
           <UserSection>
             <UpdateProfileImage
+              type="board"
               selectedImageIndex={selectedImageIndex}
               setIsProfileListOpen={setIsProfileListOpen}
               isProfileListOpen={isProfileListOpen}
               onImageClick={handleImageClick}
             />
-            <UserAccount
-              account={user.gameName}
-              tag={user.tag}
-              // mike={user.mike}
-            />
+            <UserAccount account={user.gameName} tag={user.tag} />
           </UserSection>
         )}
 

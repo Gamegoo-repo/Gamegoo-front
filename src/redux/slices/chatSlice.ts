@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 export interface ChatState {
   isChatOpen: boolean;
   isChatRoomOpen: boolean;
-  isChatRoomUuid: string | number;
+  isChatRoomUuid: string | number | null;
   activeTab: number; // 친구 목록, 채팅방
   chatEnterType: number | null;
   memberId: number;
@@ -48,7 +48,7 @@ const chatSlice = createSlice({
     setActiveTab(state, action: PayloadAction<number>) {
       state.activeTab = action.payload;
     },
-    setChatRoomUuid(state, action: PayloadAction<string | number>) {
+    setChatRoomUuid(state, action: PayloadAction<string | number | null>) {
       state.isChatRoomUuid = action.payload;
     },
     setChatEnterType(state, action: PayloadAction<number | null>) {

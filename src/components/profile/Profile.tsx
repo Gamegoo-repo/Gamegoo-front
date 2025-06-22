@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import styled, { css } from "styled-components";
-import GameStyle from "./GameStyle";
+import GameStyle from "../match/GameStyle";
 import { POSITIONS } from "@/constants/profile";
 import Champion from "../readBoard/Champion";
 import Toggle from "../common/Toggle";
@@ -17,13 +17,12 @@ import PositionCategory from "../common/PositionCategory";
 import MoreBox from "../common/MoreBox";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import { User } from "@/interface/profile";
-import PositionBox, { PositionState } from "../crBoard/PositionBox";
+import { PositionState } from "../crBoard/PositionBox";
 import { setPositionImg } from "@/utils/custom";
 import { useParams } from "next/navigation";
 import { reportMember } from "@/api/report/report";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { getProfileBgColor } from "@/utils/profile";
 import { setMatchInfo, updateMike } from "@/redux/slices/matchInfo";
 import { setUserProfileImg } from "@/redux/slices/userSlice";
 import { putPosition, putProfileImage } from "@/api/user/profile/put";
@@ -41,6 +40,8 @@ import RankTier from "../common/RankTier";
 import Alert from "../common/Alert";
 import useMediaQueries from "@/hooks/useMediaQueries";
 import Mic from "../common/Mic";
+import { profile } from "console";
+import UpdateProfileImage from "./UpdateProfileImage";
 
 type profileType = "normal" | "wind" | "other" | "me";
 
@@ -491,66 +492,13 @@ const Profile: React.FC<Profile> = ({
       )}
       <Row $profileType={profileType}>
         <ImageContainer>
-          <ProfileImgWrapper>
-            <PersonImgWrapper $bgColor={getProfileBgColor(selectedImageIndex)}>
-              <PersonImage
-                data={`/assets/images/profile/profile${selectedImageIndex}.svg`}
-                width={136}
-                height={136}
-              />
-            </PersonImgWrapper>
-            {profileType !== "other" && (
-              <CameraImgBg
-                onClick={() => setIsProfileListOpen(!isProfileListOpen)}
-              >
-                <CameraImage
-                  data="/assets/icons/edit_pencil.svg"
-                  width={35}
-                  height={30}
-                />
-              </CameraImgBg>
-            )}
-          </ProfileImgWrapper>
-          {/* 프로필 이미지 선택 팝업 */}
-          {isProfileListOpen && (
-            <ProfileListBox>
-              <ProfileListBoxTop>
-                프로필 이미지 선택
-                <Image
-                  src="/assets/icons/close_white.svg"
-                  width={14}
-                  height={14}
-                  alt="닫기"
-                  onClick={() => setIsProfileListOpen(false)}
-                />
-              </ProfileListBoxTop>
-              <ProfileList>
-                {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
-                  <SelectProfileImgWrapper
-                    key={item}
-                    $bgColor={getProfileBgColor(item)}
-                    $isSelected={item === selectedImageIndex}
-                    onClick={() => handleImageClick(item)}
-                  >
-                    {item === selectedImageIndex && (
-                      <CheckIcon
-                        width={22}
-                        height={22}
-                        data={`/assets/icons/check_white.svg`}
-                      />
-                    )}
-                    <ProfileListImage
-                      key={item}
-                      data={`/assets/images/profile/profile${item}.svg`}
-                      width={isMobile ? 40 : 70}
-                      height={isMobile ? 40 : 70}
-                    />
-                  </SelectProfileImgWrapper>
-                ))}
-              </ProfileList>
-            </ProfileListBox>
-          )}
-
+          <UpdateProfileImage
+            type="matching"
+            selectedImageIndex={selectedImageIndex}
+            setIsProfileListOpen={setIsProfileListOpen}
+            isProfileListOpen={isProfileListOpen}
+            onImageClick={handleImageClick}
+          />
           {isMobile && (
             <TopContainer
               $isMatching={profileType === "wind" || profileType === "normal"}
@@ -765,7 +713,9 @@ const Profile: React.FC<Profile> = ({
               />
             )}
         </StyledBox>
-        {isMobile && <Admit>{renderFriendsButton()}</Admit>}
+        {isMobile && (profileType === "me" || profileType === "other") && (
+          <Admit>{renderFriendsButton()}</Admit>
+        )}
       </Row>
 
       {profileType === "other" && (
@@ -962,149 +912,6 @@ const ImageContainer = styled.div`
   @media (max-width: 700px) {
     display: flex;
   }
-`;
-const ProfileImgWrapper = styled.div`
-  @media (max-width: 700px) {
-    display: flex;
-    position: relative;
-  }
-`;
-
-const PersonImgWrapper = styled.div<{ $bgColor: string }>`
-  width: 186px;
-  height: 186px;
-  border-radius: 50%;
-  background: ${(props) => props.$bgColor};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  @media (max-width: 700px) {
-    width: 52px;
-    height: 52px;
-  }
-`;
-
-const PersonImage = styled.object`
-  margin-top: 5px;
-  filter: drop-shadow(-4px 10px 10px rgba(63, 53, 78, 0.582));
-  pointer-events: none;
-  @media (max-width: 700px) {
-    width: 35px;
-    margin-top: 0;
-  }
-`;
-
-const CameraImgBg = styled.div`
-  position: relative;
-  width: 56px;
-  height: 56px;
-  background: #000000a1;
-  box-shadow: 0 0 3.06px 0 #00000040;
-  border-radius: 50%;
-  top: -51px;
-  @media (max-width: 700px) {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    top: 35px;
-  }
-`;
-
-const CameraImage = styled.object`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  @media (max-width: 700px) {
-    width: 10px;
-    height: 10px;
-  }
-`;
-
-const ProfileListBox = styled.div`
-  width: 527px;
-  height: 335px;
-  display: flex;
-  flex-direction: column;
-  padding: 32px;
-  gap: 10px;
-  justify-content: center;
-  align-items: flex-end;
-  border-radius: 20px;
-  background: rgba(0, 0, 0, 0.64);
-  position: absolute;
-  top: 205px;
-  left: 10px;
-  z-index: 100;
-  /* Background Blur */
-  box-shadow: 0 4px 8.9px 0 rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(7.5px);
-`;
-
-const ProfileListBoxTop = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: ${theme.colors.white};
-  ${theme.fonts.bold20};
-  margin-bottom: 20px;
-`;
-
-const ProfileList = styled.div`
-  width: 100%;
-  height: 100%;
-  row-gap: 30px;
-  column-gap: 30px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  justify-content: center;
-  align-items: center;
-  justify-items: center;
-`;
-
-const SelectProfileImgWrapper = styled.div<{
-  $bgColor: string;
-  $isSelected: boolean;
-}>`
-  position: relative;
-  width: 96px;
-  height: 96px;
-  background: ${(props) => props.$bgColor};
-  border-radius: 50%;
-  ${({ $isSelected }) =>
-    $isSelected &&
-    css`
-      border: 3.41px solid ${theme.colors.white};
-    `}
-
-  &:hover {
-    filter: drop-shadow(0px 4px 10px rgba(138, 117, 255, 0.7));
-    transition: box-shadow 0.3s ease-in-out;
-  }
-`;
-
-const CheckIcon = styled.object`
-  position: absolute;
-  top: 15px;
-  left: 10px;
-  z-index: 10;
-  transform: translate(-50%, -50%);
-  width: 36px;
-  height: 36px;
-  background: ${theme.colors.violet600};
-  border-radius: 50%;
-  border: 3.41px solid ${theme.colors.white};
-`;
-
-const ProfileListImage = styled.object`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
 `;
 
 const StyledBox = styled.div`

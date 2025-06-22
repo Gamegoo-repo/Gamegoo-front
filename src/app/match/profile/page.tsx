@@ -2,7 +2,7 @@
 
 import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
-import Profile from "@/components/match/Profile";
+import Profile from "@/components/profile/Profile";
 import Button from "@/components/common/Button";
 import HeaderTitle from "@/components/common/HeaderTitle";
 import { useEffect, useState } from "react";
