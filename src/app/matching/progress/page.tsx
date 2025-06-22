@@ -25,7 +25,6 @@ import { Mike } from "@/types/user/mike";
 import useMediaQueries from "@/hooks/useMediaQueries";
 import { getEffectiveTier } from "@/utils/matching/tier";
 import { GameMode } from "@/types/game/gameMode";
-import { GameStyleList } from "@/interface/profile";
 import WaitingBox from "@/components/match/WaitingBox";
 import { GAME_STYLE } from "@/constants/profile";
 import { getThresholdByGameMode } from "@/utils/matching/threshold";
@@ -78,7 +77,6 @@ const Progress = () => {
     gameMode: (searchParams.get("gameMode") as GameMode) || "",
     mainP: (searchParams.get("mainP") as Position) || "ANY",
     subP: (searchParams.get("subP") as Position) || "ANY",
-    // wantP: (searchParams.get("wantP") as Position) || "ANY",
     wantP: searchParams.get("wantP")
       ? (searchParams.get("wantP")!.split(",") as Position[])
       : ["ANY"],

@@ -41,7 +41,7 @@ interface User {
   gameMode: GameMode;
   mainP: Position;
   subP: Position;
-  wantP: Position;
+  wantP: Position[];
   mike: Mike;
   gameStyleList: string[];
 }
@@ -73,7 +73,7 @@ const Complete = () => {
     gameMode: "FAST" as GameMode,
     mainP: "ANY",
     subP: "ANY",
-    wantP: "ANY",
+    wantP: ["ANY"],
     mike: "UNAVAILABLE",
     gameStyleList: [],
   });
@@ -91,7 +91,7 @@ const Complete = () => {
     gameMode: "FAST" as GameMode,
     mainP: "ANY",
     subP: "ANY",
-    wantP: "ANY",
+    wantP: ["ANY"],
     mike: "UNAVAILABLE",
     gameStyleList: [],
   });
