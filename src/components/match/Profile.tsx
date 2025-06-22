@@ -41,6 +41,7 @@ import RankTier from "../common/RankTier";
 import Alert from "../common/Alert";
 import useMediaQueries from "@/hooks/useMediaQueries";
 import Mic from "../common/Mic";
+import { STORAGE_KEY } from "@/constants/storage";
 
 type profileType = "normal" | "wind" | "other" | "me";
 
@@ -136,7 +137,7 @@ const Profile: React.FC<Profile> = ({
     await putProfileImage(index);
     // const newUserData = await getProfile();
     dispatch(setUserProfileImg(index));
-    localStorage.setItem("profileImg", index + "");
+    localStorage.setItem(STORAGE_KEY.profileImg, index + "");
 
     setTimeout(() => {
       setIsProfileListOpen(false);
@@ -642,7 +643,7 @@ const Profile: React.FC<Profile> = ({
                     {POSITIONS[2].label}
                     <PosiRow>
                       {positionValue?.want &&
-                      positionValue?.want?.length > 0 ? (
+                        positionValue?.want?.length > 0 ? (
                         positionValue.want.map((posi, index) => (
                           <PosiItem key={index}>
                             {posi ? (
@@ -687,38 +688,38 @@ const Profile: React.FC<Profile> = ({
                           </PosiItem>
                         ))
                       ) : // 매칭 프로필 - 포지션 선택, 조회 프로필 - ANY(*) 지정
-                      ["wind", "normal"].includes(profileType) ? (
-                        <PosiItem key="default-plus">
-                          <Plus onClick={() => handlePosition("want", 0)}>
+                        ["wind", "normal"].includes(profileType) ? (
+                          <PosiItem key="default-plus">
+                            <Plus onClick={() => handlePosition("want", 0)}>
+                              <Image
+                                src="/assets/icons/plus_violet.svg"
+                                width={!isMobile ? 16 : 14}
+                                height={!isMobile ? 16 : 14}
+                                alt=""
+                              />
+                            </Plus>
+                            {isPositionOpen.want[0] && (
+                              <PositionCategory
+                                selectedBox="want"
+                                value={null}
+                                onClose={() => handlePositionClose("want", 0)}
+                                onSelect={(val) =>
+                                  handleCategoryButtonClick(val, "want", 0)
+                                }
+                                usedPositions={[]}
+                              />
+                            )}
+                          </PosiItem>
+                        ) : (
+                          <PosiItem key="any-position">
                             <Image
-                              src="/assets/icons/plus_violet.svg"
-                              width={!isMobile ? 16 : 14}
-                              height={!isMobile ? 16 : 14}
-                              alt=""
+                              src={setPositionImg("ANY")}
+                              width={!isMobile ? 48 : 22}
+                              height={!isMobile ? 40 : 22}
+                              alt="포지션"
                             />
-                          </Plus>
-                          {isPositionOpen.want[0] && (
-                            <PositionCategory
-                              selectedBox="want"
-                              value={null}
-                              onClose={() => handlePositionClose("want", 0)}
-                              onSelect={(val) =>
-                                handleCategoryButtonClick(val, "want", 0)
-                              }
-                              usedPositions={[]}
-                            />
-                          )}
-                        </PosiItem>
-                      ) : (
-                        <PosiItem key="any-position">
-                          <Image
-                            src={setPositionImg("ANY")}
-                            width={!isMobile ? 48 : 22}
-                            height={!isMobile ? 40 : 22}
-                            alt="포지션"
-                          />
-                        </PosiItem>
-                      )}
+                          </PosiItem>
+                        )}
                     </PosiRow>
                   </Posi>
                 </PosiWrap>
@@ -739,13 +740,13 @@ const Profile: React.FC<Profile> = ({
             profileType === "other" ||
             (profileType === "me" &&
               user.gameStyleResponseList.length > 0)) && (
-            <GameStyle
-              profileType={profileType === "normal" ? "none" : profileType}
-              gameStyleResponseDTOList={user.gameStyleResponseList}
-              mike={isMike}
-              handleMike={handleMike}
-            />
-          )}
+              <GameStyle
+                profileType={profileType === "normal" ? "none" : profileType}
+                gameStyleResponseDTOList={user.gameStyleResponseList}
+                mike={isMike}
+                handleMike={handleMike}
+              />
+            )}
           {isMobileButton && !isMobile && (
             <Admit>{renderFriendsButton()}</Admit>
           )}
@@ -870,9 +871,8 @@ const Profile: React.FC<Profile> = ({
                 setIsBlockConfrimOpen(false);
               }}
             >
-              <MsgConfirm>{`${
-                user.blocked ? "차단이" : "차단 해제가"
-              } 완료되었습니다.`}</MsgConfirm>
+              <MsgConfirm>{`${user.blocked ? "차단이" : "차단 해제가"
+                } 완료되었습니다.`}</MsgConfirm>
             </ConfirmModal>
           )}
         </More>
@@ -1268,8 +1268,8 @@ const Posi = styled.div<{ $isWantP: boolean }>`
     font-size: ${theme.fonts.medium11};
     gap: 9px;
     ${({ $isWantP }) =>
-      $isWantP &&
-      css`
+    $isWantP &&
+    css`
         margin-left: 0px;
       `};
   }

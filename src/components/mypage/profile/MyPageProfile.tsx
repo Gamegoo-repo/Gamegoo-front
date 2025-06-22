@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { css } from "styled-components";
 import useMediaQueries from "@/hooks/useMediaQueries";
+import { STORAGE_KEY } from "@/constants/storage";
 
 const MyPageProfile: React.FC<Profile> = ({ user }) => {
   const dispatch = useDispatch();
@@ -33,7 +34,7 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
     await putProfileImage(index);
     const newUserData = await getMyProfile();
     dispatch(setUserProfileImg(index));
-    localStorage.setItem("profileImg", index + "");
+    localStorage.setItem(STORAGE_KEY.profileImg, index + "");
     dispatch(setUserProfile(newUserData.data));
 
     setTimeout(() => {

@@ -13,6 +13,7 @@ import {
 } from "@/redux/slices/userSlice";
 import { notify } from "@/hooks/notify";
 import { LOGIN } from "@/constants/messages";
+import { STORAGE_KEY } from "@/constants/storage";
 
 const RsoCallback = () => {
   const router = useRouter();
@@ -20,9 +21,9 @@ const RsoCallback = () => {
 
   useEffect(() => {
     const url = new URL(window.location.href);
-    const accessToken = url.searchParams.get("accessToken");
-    const refreshToken = url.searchParams.get("refreshToken");
-    const name = url.searchParams.get("name");
+    const accessToken = url.searchParams.get(STORAGE_KEY.accessToken);
+    const refreshToken = url.searchParams.get(STORAGE_KEY.refreshToken);
+    const name = url.searchParams.get(STORAGE_KEY.name);
     const profileImage = url.searchParams.get("profileImage");
     const id = url.searchParams.get("id");
     const puuid = url.searchParams.get("puuid");

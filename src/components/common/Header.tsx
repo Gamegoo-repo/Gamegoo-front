@@ -30,6 +30,7 @@ import { closeChat } from "@/redux/slices/chatSlice";
 import { postLogout } from "@/api/login/logout";
 import { getUnreadNotificationCount } from "@/api/notification/notification";
 import useMediaQueries from "@/hooks/useMediaQueries";
+import { STORAGE_KEY } from "@/constants/storage";
 
 interface HeaderProps {
   selected: boolean;
@@ -121,7 +122,7 @@ const Header = () => {
     }
   }, [storedName]);
 
-  useEffect(() => {}, [notiCount]);
+  useEffect(() => { }, [notiCount]);
 
   return (
     <Head>
@@ -299,14 +300,14 @@ const Header = () => {
                     if (data.id !== 6) {
                       router.push(`${data.url}`);
                     } else {
-                      sessionStorage.setItem("logout", "true");
+                      sessionStorage.setItem(STORAGE_KEY.logout, "true");
                       try {
                         await postLogout();
                         await clearTokens();
                         await socketLogout();
-                        localStorage.removeItem("gamegooSocketId");
+                        localStorage.removeItem(STORAGE_KEY.gamegooSocketId);
                         dispatch(clearUserProfile());
-                        sessionStorage.removeItem("unreadChatUuids");
+                        sessionStorage.removeItem(STORAGE_KEY.unreadChatUuids);
                         dispatch(closeChat());
                         router.push("/login");
                       } catch {
@@ -403,7 +404,7 @@ const Menu = styled.button<HeaderProps>`
     ${(props) => props.theme.fonts.semiBold14};
     padding: 10px 0;
     border-bottom: ${({ selected }) =>
-      selected ? `3px solid ${theme.colors.gray800}` : "none"};
+    selected ? `3px solid ${theme.colors.gray800}` : "none"};
   }
 `;
 

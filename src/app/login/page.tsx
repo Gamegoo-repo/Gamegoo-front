@@ -7,6 +7,7 @@ import Button from "@/components/common/Button";
 import Checkbox from "@/components/common/Checkbox";
 import Input from "@/components/common/Input";
 import { emailRegEx } from "@/constants/regEx";
+import { STORAGE_KEY } from "@/constants/storage";
 import { setUnreadUuid } from "@/redux/slices/chatSlice";
 import { clearSignIn } from "@/redux/slices/signInSlice";
 import {
@@ -102,7 +103,7 @@ const Login = () => {
         dispatch(setUnreadUuid(data.data.data));
         // 새로고침시 채팅방 수 가져오기 위함
         sessionStorage.setItem(
-          "unreadChatUuids",
+          STORAGE_KEY.unreadChatUuids,
           JSON.stringify(data.data.data)
         );
       }

@@ -25,6 +25,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { store as createStore } from "@/redux/store";
 import { persistStore } from "redux-persist";
 import { pretendard, timeForSalad } from "@/styles/fonts";
+import { STORAGE_KEY } from "@/constants/storage";
 
 export default function RootLayout({
   children,
@@ -60,7 +61,7 @@ export default function RootLayout({
   useEffect(() => {
     if (!socket) {
       connectSocket();
-      sessionStorage.removeItem("logout");
+      sessionStorage.removeItem(STORAGE_KEY.logout);
     }
   }, []);
 

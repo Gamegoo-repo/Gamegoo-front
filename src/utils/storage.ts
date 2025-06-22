@@ -1,9 +1,11 @@
+import { STORAGE_KEY } from "@/constants/storage";
+
 /* 토큰 저장 */
 export const setToken = (accessToken: string, refreshToken: string, autoLogin: boolean) => {
     if (typeof window !== 'undefined') {
         const storage = autoLogin ? localStorage : sessionStorage;
-        storage.setItem('accessToken', accessToken);
-        storage.setItem('refreshToken', refreshToken);
+        storage.setItem(STORAGE_KEY.accessToken, accessToken);
+        storage.setItem(STORAGE_KEY.refreshToken, refreshToken);
     }
 };
 
@@ -11,7 +13,7 @@ export const setToken = (accessToken: string, refreshToken: string, autoLogin: b
 export const setName = (name: string, autoLogin: boolean) => {
     if (typeof window !== 'undefined') {
         const storage = autoLogin ? localStorage : sessionStorage;
-        storage.setItem('name', name);
+        storage.setItem(STORAGE_KEY.name, name);
     }
     return null;
 };
@@ -20,7 +22,7 @@ export const setName = (name: string, autoLogin: boolean) => {
 export const setProfileImg = (profileImg: number, autoLogin: boolean) => {
     if (typeof window !== 'undefined') {
         const storage = autoLogin ? localStorage : sessionStorage;
-        storage.setItem('profileImg', profileImg.toString());
+        storage.setItem(STORAGE_KEY.profileImg, profileImg.toString());
     }
     return null;
 };
@@ -28,7 +30,7 @@ export const setProfileImg = (profileImg: number, autoLogin: boolean) => {
 export const setId = (id: number, autoLogin: boolean) => {
     if (typeof window !== 'undefined') {
         const storage = autoLogin ? localStorage : sessionStorage;
-        storage.setItem('userId', id.toString());
+        storage.setItem(STORAGE_KEY.userId, id.toString());
     }
     return null;
 };
@@ -36,14 +38,14 @@ export const setId = (id: number, autoLogin: boolean) => {
 /* 토큰 사용 */
 export const getAccessToken = () => {
     if (typeof window !== 'undefined') {
-        return localStorage.getItem('accessToken') || sessionStorage.getItem('accessToken');
+        return localStorage.getItem(STORAGE_KEY.accessToken) || sessionStorage.getItem(STORAGE_KEY.accessToken);
     }
     return null;
 };
 
 export const getRefreshToken = () => {
     if (typeof window !== 'undefined') {
-        return localStorage.getItem('refreshToken') || sessionStorage.getItem('refreshToken');
+        return localStorage.getItem(STORAGE_KEY.refreshToken) || sessionStorage.getItem(STORAGE_KEY.refreshToken);
     }
     return null;
 };
@@ -51,7 +53,7 @@ export const getRefreshToken = () => {
 /* 닉네임 사용 */
 export const getName = () => {
     if (typeof window !== 'undefined') {
-        return localStorage.getItem('name') || sessionStorage.getItem('name');
+        return localStorage.getItem(STORAGE_KEY.name) || sessionStorage.getItem(STORAGE_KEY.name);
     }
     return null;
 };
@@ -59,7 +61,7 @@ export const getName = () => {
 /* 프로필 이미지 사용 */
 export const getProfileImg = () => {
     if (typeof window !== 'undefined') {
-        return localStorage.getItem('profileImg') || sessionStorage.getItem('profileImg');
+        return localStorage.getItem(STORAGE_KEY.profileImg) || sessionStorage.getItem(STORAGE_KEY.profileImg);
     }
     return null;
 };
@@ -67,52 +69,52 @@ export const getProfileImg = () => {
 /* 유저 id 사용 */
 export const getUserId = () => {
     if (typeof window !== 'undefined') {
-        return localStorage.getItem('userId') || sessionStorage.getItem('userId');
+        return localStorage.getItem(STORAGE_KEY.userId) || sessionStorage.getItem(STORAGE_KEY.userId);
     }
     return null;
 };
 
 /* 토큰 제거 */
 export const clearTokens = () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('name');
-    localStorage.removeItem('profileImg');
-    localStorage.removeItem('userId');
-    sessionStorage.removeItem('accessToken');
-    sessionStorage.removeItem('refreshToken');
-    sessionStorage.removeItem('name');
-    sessionStorage.removeItem('profileImg');
-    sessionStorage.removeItem('userId');
-    sessionStorage.removeItem("chatPosition");
+    localStorage.removeItem(STORAGE_KEY.accessToken);
+    localStorage.removeItem(STORAGE_KEY.refreshToken);
+    localStorage.removeItem(STORAGE_KEY.name);
+    localStorage.removeItem(STORAGE_KEY.profileImg);
+    localStorage.removeItem(STORAGE_KEY.userId);
+    sessionStorage.removeItem(STORAGE_KEY.accessToken);
+    sessionStorage.removeItem(STORAGE_KEY.refreshToken);
+    sessionStorage.removeItem(STORAGE_KEY.name);
+    sessionStorage.removeItem(STORAGE_KEY.profileImg);
+    sessionStorage.removeItem(STORAGE_KEY.userId);
+    sessionStorage.removeItem(STORAGE_KEY.chatPosition);
 };
 
 /* 매칭 완료 여부 */
 export const setIsCompleted = (isCompleted: string) => {
     if (typeof window !== 'undefined') {
-        sessionStorage.setItem("isCompleted", isCompleted);
+        sessionStorage.setItem(STORAGE_KEY.isCompleted, isCompleted);
     }
     return null;
 };
 
 export const getIsCompleted = () => {
     if (typeof window !== 'undefined') {
-        return sessionStorage.getItem('isCompleted');
+        return sessionStorage.getItem(STORAGE_KEY.isCompleted);
     }
     return null;
 };
 
 /* 이메일 인증코드 사용 */
 export const setVerifyCode = (verifyCode: string) => {
-  if (typeof window !== "undefined") {
-    sessionStorage.setItem("verifyCode", verifyCode);
-  }
-  return null;
+    if (typeof window !== "undefined") {
+        sessionStorage.setItem(STORAGE_KEY.verifyCode, verifyCode);
+    }
+    return null;
 };
 
 export const getVerifyCode = () => {
-  if (typeof window !== "undefined") {
-    return sessionStorage.getItem("verifyCode");
-  }
-  return null;
+    if (typeof window !== "undefined") {
+        return sessionStorage.getItem(STORAGE_KEY.verifyCode);
+    }
+    return null;
 };

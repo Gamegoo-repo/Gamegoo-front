@@ -1,0 +1,14 @@
+export const STORAGE_KEY = {
+    accessToken: "@GAMEGOO_ACCESS_TOKEN",
+    refreshToken: "@GAMEGOO_REFRESH_TOKEN",
+    name: "@GAMEGOO_NAME",
+    profileImg: "@GAMEGOO_PROFILE_IMG",
+    userId: "@GAMEGOO_USER_ID",
+    chatPosition: "@GAMEGOO_CHAT_POSITION",
+    isCompleted: "@GAMEGOO_IS_COMPLETED",
+    verifyCode: "@GAMEGOO_VERIFY_CODE",
+    gamegooSocketId: "@GAMEGOO_SOCKET_ID",
+    unreadChatUuids: "@GAMEGOO_UNREAD_CHAT_UUIDS",
+    csrfToken: "@GAMEGOO_CSRF_TOKEN",
+    logout: "@GAMEGOO_LOGOUT",
+};

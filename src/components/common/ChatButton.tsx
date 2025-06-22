@@ -9,6 +9,7 @@ import { toggleChat } from "@/redux/slices/chatSlice";
 import Layout from "../chat/Layout";
 import { resetPosition } from "@/redux/slices/chatPositionSlice";
 import useMediaQueries from "@/hooks/useMediaQueries";
+import { STORAGE_KEY } from "@/constants/storage";
 
 const ChatButton = () => {
   const isMobile = useMediaQueries({ breakpoint: 700 });
@@ -22,7 +23,7 @@ const ChatButton = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const localUnreadChatUuids = sessionStorage.getItem("unreadChatUuids");
+    const localUnreadChatUuids = sessionStorage.getItem(STORAGE_KEY.unreadChatUuids);
     if (localUnreadChatUuids && localUnreadChatUuids !== "undefined") {
       setUnreadChatUuids(JSON?.parse(localUnreadChatUuids));
     }
@@ -35,7 +36,7 @@ const ChatButton = () => {
   /* sessionStorage가 변경되면 상태 업데이트 */
   useEffect(() => {
     const handleStorageChange = (event: StorageEvent) => {
-      if (event.key === "unreadChatUuids") {
+      if (event.key === STORAGE_KEY.unreadChatUuids) {
         const updatedUnreadUuids = event.newValue
           ? JSON.parse(event.newValue)
           : [];
