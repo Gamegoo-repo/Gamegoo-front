@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate": "tsx scripts/generate-api.mts"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
