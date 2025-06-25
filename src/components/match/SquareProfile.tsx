@@ -12,6 +12,7 @@ import useMediaQueries from "@/hooks/useMediaQueries";
 import RankTier from "../common/RankTier";
 import { GameMode } from "@/types/game/gameMode";
 import PositionBox from "../crBoard/PositionBox";
+import { setAbbrevTier } from "@/utils/custom";
 
 interface User {
   memberId: number;
@@ -100,6 +101,7 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
                 tier={user.soloTier}
                 rank={user.soloRank}
                 direct="row"
+                isAbbre={isMobile}
               />
               <Bar />
               <RankTier
@@ -107,6 +109,7 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
                 tier={user.freeTier}
                 rank={user.freeRank}
                 direct="row"
+                isAbbre={isMobile}
               />
             </SecondRow>
           </AccountInfo>
