@@ -853,15 +853,13 @@ const Container = styled.div<{ $backgroundColor?: string }>`
   gap: 15px;
   box-sizing: border-box;
   position: relative;
+  min-width: 768px;
 
   &.other {
     padding: 42px 41px;
 
-    @media (max-width: 980px) {
-      overflow-x: auto;
-    }
-
     @media (max-width: 700px) {
+      min-width: 0px;
       min-width: 300px;
       padding: 20px;
       border-radius: 8px;
