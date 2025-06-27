@@ -56,6 +56,12 @@ interface BoardListStructure {
   totalCount: number;
 }
 
+interface BoardListCursorStructure {
+  cursorId: number;
+  hasNext: boolean;
+  nextCursor: string;
+}
+
 interface MyBoardListStructure {
   totalPage: number;
   totalCount: number;
@@ -68,6 +74,10 @@ export interface PostsData extends BasePlayerInfo, GameInfo, BaseBoardInfo {
 }
 
 export interface GetBoardListData extends BoardListStructure {
+  boards: Array<BoardDetail>;
+}
+
+export interface GetBoardListCursorData extends BoardListCursorStructure {
   boards: Array<BoardDetail>;
 }
 
@@ -147,3 +157,4 @@ export type NotMemberBoardResponse = ApiResponse<NotMemberBoardData>;
 export type MemberPostBoardResponse = ApiResponse<MemberPostBoardData>;
 export type GetBoardListResponse = ApiResponse<GetBoardListData>;
 export type GetMyBoardListResponse = ApiResponse<GetMyBoardListData>;
+export type GetBoardListCursorResponse = ApiResponse<GetBoardListCursorData>;

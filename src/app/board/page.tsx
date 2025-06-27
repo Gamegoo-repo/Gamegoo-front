@@ -18,7 +18,12 @@ import {
   setOpenModal,
   setOpenPostingModal,
 } from "@/redux/slices/modalSlice";
-import { getBoardList, getMyPost, pullUpPost } from "@/api/board/board";
+import {
+  getBoardList,
+  getBoardListCursor,
+  getMyPost,
+  pullUpPost,
+} from "@/api/board/board";
 import { BoardListDetail } from "@/interface/board";
 import Alert from "@/components/common/Alert";
 import { clearCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
@@ -71,6 +76,9 @@ const BoardPage = () => {
   );
   const isPostStatus = useSelector((state: RootState) => state.post.postStatus);
   const isUser = useSelector((state: RootState) => state.user);
+  const [cursor, setCursor] = useState<string | null>(null);
+  const [hasNext, setHasNext] = useState<boolean>(true);
+  const sentinelRef = useRef(null);
 
   /* redux 필터 상태 가져오기 */
   const boardFilters = useSelector((state: RootState) => state.board);
@@ -132,7 +140,6 @@ const BoardPage = () => {
     document.addEventListener("mousedown", handleGameModeDropdownClickOutside);
     document.addEventListener("mousedown", handleTierDropdownClickOutside);
     document.addEventListener("mousedown", handleMicDropdownClickOutside);
-    document.addEventListener("scroll", handleScroll);
 
     return () => {
       document.removeEventListener(
@@ -141,7 +148,6 @@ const BoardPage = () => {
       );
       document.removeEventListener("mousedown", handleTierDropdownClickOutside);
       document.removeEventListener("mousedown", handleMicDropdownClickOutside);
-      document.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -203,9 +209,90 @@ const BoardPage = () => {
     }
   };
 
+  /* 게시글 목록 조회 init (커서 기반) */
+  const getInitialListByCursor = async () => {
+    if (isLoading) return;
+    const params = {
+      cursor: null,
+      cursorId: null,
+      gameMode:
+        boardFilters.gameMode && boardFilters.gameMode !== null
+          ? boardFilters.gameMode
+          : selectedGameMode,
+      tier:
+        boardFilters.tier && boardFilters.tier !== null
+          ? boardFilters.tier
+          : selectedTier,
+      position1: isPosition,
+    };
+
+    setIsLoading(true);
+    try {
+      const data = await getBoardListCursor(params);
+      if (data.status === 200) {
+        if (data.data.boards) {
+          setBoardList(data.data.boards);
+        }
+        setCursor(data.data.nextCursor);
+        setHasNext(data.data.hasNext);
+      } else {
+        console.error(data.message);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  /* 게시글 목록 조회 (커서 기반) */
+  const getListByCursor = async (cursor: string | null) => {
+    if (isLoading || !hasNext) return;
+    const params = {
+      cursor,
+      cursorId: null,
+      gameMode:
+        boardFilters.gameMode && boardFilters.gameMode !== null
+          ? boardFilters.gameMode
+          : selectedGameMode,
+      tier:
+        boardFilters.tier && boardFilters.tier !== null
+          ? boardFilters.tier
+          : selectedTier,
+      position1: isPosition,
+    };
+
+    setIsLoading(true);
+    try {
+      const data = await getBoardListCursor(params);
+      if (data.status === 200) {
+        if (data.data.boards) {
+          setBoardList((prevBoardList) => [
+            ...prevBoardList,
+            ...data.data.boards,
+          ]);
+        }
+        setCursor(data.data.nextCursor);
+        setHasNext(data.data.hasNext);
+      } else {
+        console.error(data.message);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    getList();
+    if (isMobile === undefined) return;
     console.log("boardRefresh", boardRefresh);
+
+    if (isMobile) {
+      getInitialListByCursor();
+    } else {
+      getList();
+    }
   }, [
     currentPage,
     selectedGameMode,
@@ -214,7 +301,34 @@ const BoardPage = () => {
     selectedMic,
     isPostStatus,
     boardRefresh,
+    isMobile,
   ]);
+
+  /* mobile 무한스크롤 페이지네이션 */
+  useEffect(() => {
+    if (!isMobile || !cursor) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && hasNext && !isLoading) {
+            getListByCursor(cursor);
+          }
+        });
+      },
+      {
+        rootMargin: "100px", // 미리 로드
+      }
+    );
+
+    if (sentinelRef.current) {
+      observer.observe(sentinelRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [cursor, isMobile, hasNext, isLoading]);
 
   /* 페이지네이션 이전 클릭 */
   const handlePrevPage = () => {
@@ -275,15 +389,6 @@ const BoardPage = () => {
       icon: "👌🏼",
       type: "success",
     });
-  };
-
-  /* TODO: 모바일 무한스크롤 - 스크롤이 끝에 도달하면 다음 페이지 가져오기 */
-  const handleScroll = () => {
-    // const scrollBottom =
-    //   window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
-    // if (scrollBottom && !isLoading) {
-    //   setCurrentPage((prev) => prev + 1);
-    // }
   };
 
   return (
@@ -500,6 +605,8 @@ const BoardPage = () => {
                 <Main>
                   <PostList content={boardList}></PostList>
                 </Main>
+                <div ref={sentinelRef}></div>{" "}
+                {/* IntersectionObserver 를 위한 감지용 element */}
               </>
             )}
           </BoardContent>
