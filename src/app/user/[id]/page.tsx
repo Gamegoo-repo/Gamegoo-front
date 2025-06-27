@@ -52,7 +52,14 @@ const UserProfilePage = () => {
       const fetchOtherProfile = async () => {
         try {
           const response = await getOtherProfile(Number(id));
-          setOtherProfile(response.data);
+          const data = response.data;
+
+          const mappedData: User = {
+            ...data,
+            championResponseList: data.championStatsResponseList, // 필드명 매핑
+          };
+
+          setOtherProfile(mappedData);
           console.log(response);
         } catch (error) {
           console.error(error);
