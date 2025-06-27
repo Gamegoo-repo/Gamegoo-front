@@ -12,6 +12,7 @@ interface FileInputProps {
   type: ProfileType;
   setIsProfileListOpen: Dispatch<React.SetStateAction<boolean>>;
   isProfileListOpen: boolean;
+  isEditable?: boolean;
   onImageClick: (index: number) => void;
   selectedImageIndex: number | undefined;
 }
@@ -22,6 +23,7 @@ const UpdateProfileImage = (props: FileInputProps) => {
     type,
     setIsProfileListOpen,
     isProfileListOpen,
+    isEditable = true,
     onImageClick,
     selectedImageIndex,
   } = props;
@@ -67,32 +69,34 @@ const UpdateProfileImage = (props: FileInputProps) => {
           />
         </ImageWrapper>
       )}
-      <EditButton
-        $size={size}
-        onClick={() => setIsProfileListOpen(!isProfileListOpen)}
-      >
-        <EditIcon
-          data="/assets/icons/edit_pencil.svg"
-          width={
-            size === "large"
-              ? 35
-              : size === "medium"
-              ? 18
-              : size === "semiMedium"
-              ? 13
-              : 10
-          }
-          height={
-            size === "large"
-              ? 30
-              : size === "medium"
-              ? 18
-              : size === "semiMedium"
-              ? 13
-              : 10
-          }
-        />
-      </EditButton>
+      {isEditable && (
+        <EditButton
+          $size={size}
+          onClick={() => setIsProfileListOpen(!isProfileListOpen)}
+        >
+          <EditIcon
+            data="/assets/icons/edit_pencil.svg"
+            width={
+              size === "large"
+                ? 35
+                : size === "medium"
+                ? 18
+                : size === "semiMedium"
+                ? 13
+                : 10
+            }
+            height={
+              size === "large"
+                ? 30
+                : size === "medium"
+                ? 18
+                : size === "semiMedium"
+                ? 13
+                : 10
+            }
+          />
+        </EditButton>
+      )}
 
       {isProfileListOpen && (
         <ProfileListBox $isLarge={isLarge}>

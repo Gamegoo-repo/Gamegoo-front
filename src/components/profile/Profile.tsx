@@ -497,6 +497,7 @@ const Profile: React.FC<Profile> = ({
             selectedImageIndex={selectedImageIndex}
             setIsProfileListOpen={setIsProfileListOpen}
             isProfileListOpen={isProfileListOpen}
+            isEditable={false}
             onImageClick={handleImageClick}
           />
           {isMobile && (
@@ -700,7 +701,7 @@ const Profile: React.FC<Profile> = ({
               handleMike={handleMike}
             />
           )}
-          {isMobileButton && !isMobile && (
+          {!isDefault && isMobileButton && !isMobile && (
             <Admit>{renderFriendsButton()}</Admit>
           )}
           {(profileType === "normal" || profileType === "wind") && (
@@ -719,9 +720,11 @@ const Profile: React.FC<Profile> = ({
               />
             )}
         </StyledBox>
-        {isMobile && (profileType === "me" || profileType === "other") && (
-          <Admit>{renderFriendsButton()}</Admit>
-        )}
+        {!isDefault &&
+          isMobile &&
+          (profileType === "me" || profileType === "other") && (
+            <Admit>{renderFriendsButton()}</Admit>
+          )}
       </Row>
 
       {profileType === "other" && (
