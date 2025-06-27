@@ -32,7 +32,7 @@ export interface User {
   freeWinrate: number;
   gameStyleResponseList: GameStyle[];
   championResponseList: ChampionResponseDTO[];
-  memberRecentStats: MemberRecentStats;
+  memberRecentStats?: MemberRecentStats;
   friend: boolean;
   friendRequestMemberId: number | null;
 }
