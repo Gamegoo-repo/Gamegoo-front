@@ -26,7 +26,10 @@ const UpdateProfileImage = (props: FileInputProps) => {
     selectedImageIndex,
   } = props;
 
-  const getSizeByContext = (type: ProfileType, isMobile: boolean): SizeType => {
+  const getSizeByContext = (
+    type: ProfileType,
+    isMobile: boolean | undefined
+  ): SizeType => {
     if (type === "matching" && !isMobile) return "large";
     if (type === "mypage" && !isMobile) return "medium";
     if (type === "board" && !isMobile) return "semiMedium";
