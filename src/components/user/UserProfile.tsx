@@ -187,11 +187,11 @@ const UserProfile = ({
             <RecentBox>
               <Column>
                 <RecentInfo>
-                  {profile.memberRecentStats.recTotalWins || "0"}승{" "}
-                  {profile.memberRecentStats.recTotalLosses || "0"}패
+                  {profile.memberRecentStats?.recTotalWins || "0"}승{" "}
+                  {profile.memberRecentStats?.recTotalLosses || "0"}패
                 </RecentInfo>
                 <DetailInfo>
-                  {formatDecimal(profile.memberRecentStats.recWinRate)}%
+                  {formatDecimal(profile.memberRecentStats?.recWinRate || 0)}%
                 </DetailInfo>
               </Column>
               <Column>
@@ -206,17 +206,19 @@ const UserProfile = ({
                   6.0 / <Emph>5.4</Emph> / 6.5
                 </RecentInfo>
                 <DetailInfo>
-                  KDA {formatDecimal(profile.memberRecentStats.recAvgKDA)}
+                  KDA {formatDecimal(profile.memberRecentStats?.recAvgKDA || 0)}
                 </DetailInfo>
               </Column>
 
               <Column>
                 <RecentInfo>
                   평균 CS{" "}
-                  {formatDecimal(profile.memberRecentStats.recAvgCsPerMinute)}
+                  {formatDecimal(
+                    profile.memberRecentStats?.recAvgCsPerMinute || 0
+                  )}
                 </RecentInfo>
                 <DetailInfo>
-                  CS {profile.memberRecentStats.recTotalCs}
+                  CS {profile.memberRecentStats?.recTotalCs || 0}
                 </DetailInfo>
               </Column>
               <Champion
