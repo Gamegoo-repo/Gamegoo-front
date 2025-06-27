@@ -32,6 +32,7 @@ export interface User {
   freeWinrate: number;
   gameStyleResponseList: GameStyle[];
   championResponseList: ChampionResponseDTO[];
+  memberRecentStats: MemberRecentStats;
   friend: boolean;
   friendRequestMemberId: number | null;
 }
@@ -44,6 +45,15 @@ export interface Profile {
 export interface GameStyleList {
   gameStyleId: number;
   gameStyleName: string;
+}
+
+export interface MemberRecentStats {
+  recTotalWins: number;
+  recTotalLosses: number;
+  recWinRate: number;
+  recAvgKDA: number;
+  recAvgCsPerMinute: number;
+  recTotalCs: number;
 }
 
 export interface UserInfo {

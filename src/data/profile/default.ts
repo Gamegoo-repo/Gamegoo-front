@@ -73,6 +73,14 @@ export const DEFAULT_PROFILE = {
       assists: 0,
     },
   ],
+  memberRecentStats: {
+      recTotalWins: 0,
+      recTotalLosses: 0,
+      recWinRate: 0,
+      recAvgKDA: 0,
+      recAvgCsPerMinute: 0,
+      recTotalCs: 0
+    },
   friend: false,
   friendRequestMemberId: null,
 };

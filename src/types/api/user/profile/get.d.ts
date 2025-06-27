@@ -23,6 +23,7 @@ interface BaseProfileData {
   freeWinrate: number;
   gameStyleResponseList: GameStyleList[];
   championResponseList: ChampionList[];
+  memberRecentStats: MemberRecentStats;
 }
 
 export interface GetMyProfileData extends BaseProfileData {
