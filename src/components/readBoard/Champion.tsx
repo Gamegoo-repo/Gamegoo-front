@@ -249,7 +249,6 @@ const Tooltip = styled.div`
   position: absolute;
   bottom: -170px;
   left: 50%;
-  width: 223px;
   height: 154px;
   display: flex;
   flex-direction: column;
