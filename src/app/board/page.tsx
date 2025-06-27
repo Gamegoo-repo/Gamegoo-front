@@ -148,7 +148,6 @@ const BoardPage = () => {
       );
       document.removeEventListener("mousedown", handleTierDropdownClickOutside);
       document.removeEventListener("mousedown", handleMicDropdownClickOutside);
-      document.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
