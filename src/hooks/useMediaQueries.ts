@@ -5,7 +5,7 @@ export interface UseMediaQueriesProps {
 }
 
 const useMediaQueries = ({ breakpoint }: UseMediaQueriesProps) => {
-  const [matches, setMatches] = useState(false);
+  const [matches, setMatches] = useState<boolean | undefined>(undefined);
 
   useEffect(() => {
     // SSR 환경에서는 window가 없으므로, useEffect 내부에서만 사용해야 안전함
