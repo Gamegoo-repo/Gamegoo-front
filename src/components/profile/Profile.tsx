@@ -497,7 +497,7 @@ const Profile: React.FC<Profile> = ({
             selectedImageIndex={selectedImageIndex}
             setIsProfileListOpen={setIsProfileListOpen}
             isProfileListOpen={isProfileListOpen}
-            isEditable={false}
+            isEditable={profileType === "wind" || profileType === "normal"}
             onImageClick={handleImageClick}
           />
           {isMobile && (
@@ -605,16 +605,20 @@ const Profile: React.FC<Profile> = ({
                                   onClick={() => handlePosition("want", index)}
                                 />
                               ) : (
-                                <Plus
-                                  onClick={() => handlePosition("want", index)}
-                                >
-                                  <Image
-                                    src="/assets/icons/plus_violet.svg"
-                                    width={!isMobile ? 16 : 14}
-                                    height={!isMobile ? 16 : 14}
-                                    alt=""
-                                  />
-                                </Plus>
+                                ["wind", "normal"].includes(profileType) && (
+                                  <Plus
+                                    onClick={() =>
+                                      handlePosition("want", index)
+                                    }
+                                  >
+                                    <Image
+                                      src="/assets/icons/plus_violet.svg"
+                                      width={!isMobile ? 16 : 14}
+                                      height={!isMobile ? 16 : 14}
+                                      alt=""
+                                    />
+                                  </Plus>
+                                )
                               )}
                               {/* PositionCategory 열기 조건 */}
                               {isPositionOpen.want[index] && (
@@ -856,13 +860,11 @@ const Container = styled.div<{ $backgroundColor?: string }>`
   gap: 15px;
   box-sizing: border-box;
   position: relative;
-  min-width: 768px;
 
   &.other {
     padding: 42px 41px;
 
     @media (max-width: 700px) {
-      min-width: 0px;
       min-width: 300px;
       padding: 20px;
       border-radius: 8px;
