@@ -7,7 +7,7 @@ import Image from "next/image";
 import styled from "styled-components";
 
 interface WaitingBoxProps {
-  isMobile: boolean;
+  isMobile: boolean | undefined;
   textVisible: boolean;
   currentMessage: string;
   timeLeft: number;

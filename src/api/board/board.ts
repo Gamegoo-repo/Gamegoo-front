@@ -7,6 +7,7 @@ import {
   BoardPullUpResponse,
   GetBoardListResponse,
   GetMyBoardListResponse,
+  GetBoardListCursorResponse,
   MemberPostBoardResponse,
   NotMemberBoardResponse,
   PostsResponse,
@@ -20,8 +21,16 @@ interface ListInterface {
   page: number;
   gameMode: GameMode | null;
   tier: string | null;
-  mainP: Position
+  mainP: Position;
   mike: string | boolean | null;
+}
+
+interface CursorListInterface {
+  cursor: string | null;
+  cursorId: number | null;
+  gameMode: GameMode | null;
+  tier: string | null;
+  position1: Position;
 }
 
 /* 글쓰기 */
@@ -29,17 +38,17 @@ export const postBoard = async (params: PostReq): Promise<PostsResponse> => {
   try {
     const response = await AuthAxios.post("/api/v2/posts", params);
     return response.data;
-} catch (error: any) {
-      console.error("글쓰기 실패:", error);
-      if (error.response.data.code === "BOARD_412") {
-        notify({
-          text: BOARD.MESSAGE.COOLTIME,
-          icon: "🚫",
-          type: "error",
-        });
-      }
-      throw error;
+  } catch (error: any) {
+    console.error("글쓰기 실패:", error);
+    if (error.response.data.code === "BOARD_412") {
+      notify({
+        text: BOARD.MESSAGE.COOLTIME,
+        icon: "🚫",
+        type: "error",
+      });
     }
+    throw error;
+  }
 };
 
 /* 게시글 목록 조회 */
@@ -51,6 +60,21 @@ export const getBoardList = async (
     return response.data;
   } catch (error) {
     console.error("게시판 목록 불러오기 실패:", error);
+    throw error;
+  }
+};
+
+/* 커서 기반 게시글 목록 조회 */
+export const getBoardListCursor = async (
+  params: CursorListInterface
+): Promise<GetBoardListCursorResponse> => {
+  try {
+    const response = await AuthAxios.get("/api/v2/posts/cursor", {
+      params,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("커서 기반 게시판 목록 불러오기 실패:", error);
     throw error;
   }
 };
@@ -83,16 +107,15 @@ export const getNonMemberPost = async (
 
 /* 게시글 끌올 */
 export const pullUpPost = async (
-  postId: number,
+  postId: number
 ): Promise<BoardPullUpResponse> => {
   try {
-    const response = await AuthAxios.post(
-      `/api/v2/posts/${postId}/bump`
-    );
+    const response = await AuthAxios.post(`/api/v2/posts/${postId}/bump`);
     return response.data;
-  } catch (error:any) {
+  } catch (error: any) {
     console.error("게시글 끌올 실패:", error);
-    if (error.response.data.code === "BOARD_411") { // 끌올 1시간 제한
+    if (error.response.data.code === "BOARD_411") {
+      // 끌올 1시간 제한
       notify({
         text: error.response.data.message,
         icon: "🚫",
@@ -131,7 +154,9 @@ export const deletePost = async (
 };
 
 /* 내가 쓴 글 목록 조회 */
-export const getMyPost = async (page: number): Promise<GetMyBoardListResponse> => {
+export const getMyPost = async (
+  page: number
+): Promise<GetMyBoardListResponse> => {
   const endpoint = `/api/v2/posts/my?page=${page}`;
   try {
     const response = await AuthAxios.get(endpoint);
