@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "generate": "tsx scripts/generate-api.ts",
+    "generate": "tsx scripts/generate-api.ts && prettier --write src/@generated",
     "format": "prettier --write ."
   },
   "dependencies": {
