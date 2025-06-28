@@ -52,19 +52,19 @@ const UpdateProfileImage = (props: FileInputProps) => {
               size === "large"
                 ? 120
                 : size === "medium"
-                ? 80
-                : size === "semiMedium"
-                ? 50
-                : 35
+                  ? 80
+                  : size === "semiMedium"
+                    ? 50
+                    : 35
             }
             height={
               size === "large"
                 ? 120
                 : size === "medium"
-                ? 80
-                : size === "semiMedium"
-                ? 50
-                : 35
+                  ? 80
+                  : size === "semiMedium"
+                    ? 50
+                    : 35
             }
             $isFilter={type !== "board"}
           />
@@ -80,19 +80,19 @@ const UpdateProfileImage = (props: FileInputProps) => {
             size === "large"
               ? 35
               : size === "medium"
-              ? 18
-              : size === "semiMedium"
-              ? 13
-              : 10
+                ? 18
+                : size === "semiMedium"
+                  ? 13
+                  : 10
           }
           height={
             size === "large"
               ? 30
               : size === "medium"
-              ? 18
-              : size === "semiMedium"
-              ? 13
-              : 10
+                ? 18
+                : size === "semiMedium"
+                  ? 13
+                  : 10
           }
         />
       </EditButton>
@@ -151,18 +151,18 @@ const Wrapper = styled.div<{ $size: SizeType }>`
     props.$size === "large"
       ? "186px"
       : props.$size === "medium"
-      ? "120px"
-      : props.$size === "semiMedium"
-      ? "75px"
-      : "52px"};
+        ? "120px"
+        : props.$size === "semiMedium"
+          ? "75px"
+          : "52px"};
   height: ${(props) =>
     props.$size === "large"
       ? "186px"
       : props.$size === "medium"
-      ? "120px"
-      : props.$size === "semiMedium"
-      ? "75px"
-      : "52px"};
+        ? "120px"
+        : props.$size === "semiMedium"
+          ? "75px"
+          : "52px"};
   z-index: 100;
 `;
 
@@ -196,18 +196,18 @@ const EditButton = styled.button<{ $size: SizeType }>`
     props.$size === "large"
       ? "56px"
       : props.$size === "medium"
-      ? "36px"
-      : props.$size === "semiMedium"
-      ? "26px"
-      : "20px"};
+        ? "36px"
+        : props.$size === "semiMedium"
+          ? "26px"
+          : "20px"};
   height: ${(props) =>
     props.$size === "large"
       ? "56px"
       : props.$size === "medium"
-      ? "36px"
-      : props.$size === "semiMedium"
-      ? "26px"
-      : "20px"};
+        ? "36px"
+        : props.$size === "semiMedium"
+          ? "26px"
+          : "20px"};
   background: #000000a1;
   box-shadow: 0 0 3.06px 0 #00000040;
   border-radius: 50%;

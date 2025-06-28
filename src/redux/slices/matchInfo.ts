@@ -1,13 +1,13 @@
-import { Position } from '@/types/position/position';
-import { Mike } from '@/types/user/mike';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Position } from "@/types/position/position";
+import { Mike } from "@/types/user/mike";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface MatchInfoState {
-  mike: Mike | null;                        // 마이크 사용 여부
-  mainP: Position;                             // 주 포지션
-  subP: Position;                              // 부 포지션
-  wantP: (Position|null)[];                             // 원하는 포지션
-  gameStyleResponseDTOList: number[];          // 게임 스타일 목록
+  mike: Mike | null; // 마이크 사용 여부
+  mainP: Position; // 주 포지션
+  subP: Position; // 부 포지션
+  wantP: (Position | null)[]; // 원하는 포지션
+  gameStyleResponseDTOList: number[]; // 게임 스타일 목록
 }
 
 const initialState: MatchInfoState = {
@@ -19,7 +19,7 @@ const initialState: MatchInfoState = {
 };
 
 const matchInfoSlice = createSlice({
-  name: 'matchInfo',
+  name: "matchInfo",
   initialState,
   reducers: {
     // MatchInfo 업데이트
@@ -30,14 +30,17 @@ const matchInfoSlice = createSlice({
       state.wantP = action.payload.wantP;
       state.gameStyleResponseDTOList = action.payload.gameStyleResponseDTOList;
     },
-    
-    updateMatchInfo: (state, action: PayloadAction<Partial<MatchInfoState>>) => {
+
+    updateMatchInfo: (
+      state,
+      action: PayloadAction<Partial<MatchInfoState>>
+    ) => {
       const updates = action.payload;
       if (updates.mike !== undefined) state.mike = updates.mike;
       if (updates.mainP !== undefined) state.mainP = updates.mainP;
       if (updates.subP !== undefined) state.subP = updates.subP;
       if (updates.wantP !== undefined) state.wantP = updates.wantP;
-      if (updates.gameStyleResponseDTOList !== undefined) 
+      if (updates.gameStyleResponseDTOList !== undefined)
         state.gameStyleResponseDTOList = updates.gameStyleResponseDTOList;
     },
 
@@ -46,12 +49,13 @@ const matchInfoSlice = createSlice({
       state.gameStyleResponseDTOList = action.payload;
     },
 
-     // 마이크만 업데이트
+    // 마이크만 업데이트
     updateMike: (state, action: PayloadAction<Mike>) => {
       state.mike = action.payload;
     },
   },
 });
 
-export const { setMatchInfo, updateMatchInfo, updateGameStyles, updateMike } = matchInfoSlice.actions;
+export const { setMatchInfo, updateMatchInfo, updateGameStyles, updateMike } =
+  matchInfoSlice.actions;
 export default matchInfoSlice.reducer;

@@ -65,10 +65,10 @@ const MannerLevelBar = (props: MannerLevelBarProps) => {
                       ? "/assets/icons/check_level_blind.svg"
                       : "/assets/icons/check_level_blind_ring.svg"
                     : level === recentLevel
-                    ? `/assets/icons/check_level.svg`
-                    : level < recentLevel
-                    ? `/assets/icons/check_level_ring${level}.svg`
-                    : `/assets/icons/check_level_ring.svg`
+                      ? `/assets/icons/check_level.svg`
+                      : level < recentLevel
+                        ? `/assets/icons/check_level_ring${level}.svg`
+                        : `/assets/icons/check_level_ring.svg`
                 }
                 alt={`check_level${level}`}
                 width={
@@ -76,26 +76,26 @@ const MannerLevelBar = (props: MannerLevelBarProps) => {
                     ? level > 1
                       ? 17
                       : !isMobile
-                      ? 39
-                      : 20
+                        ? 39
+                        : 20
                     : level !== recentLevel
-                    ? 17
-                    : !isMobile
-                    ? 39
-                    : 20
+                      ? 17
+                      : !isMobile
+                        ? 39
+                        : 20
                 }
                 height={
                   isBlind
                     ? level > 1
                       ? 17
                       : !isMobile
-                      ? 39
-                      : 20
+                        ? 39
+                        : 20
                     : level !== recentLevel
-                    ? 17
-                    : !isMobile
-                    ? 39
-                    : 20
+                      ? 17
+                      : !isMobile
+                        ? 39
+                        : 20
                 }
                 style={{
                   ...(isBlind === false && {

@@ -2,14 +2,16 @@ import { BlockStatusResponse } from "@/types/api/block/status";
 import { AuthAxios } from "../auth";
 
 /* 차단하기 */
-export const blockMember = async (memberId: number): Promise<BlockStatusResponse> => {
-    const endpoint = `/api/v2/block/${memberId}`;
-    try {
-        const response = await AuthAxios.post(endpoint);
-        return response.data;
-    } catch (error) {
-        throw error;
-    }
+export const blockMember = async (
+  memberId: number
+): Promise<BlockStatusResponse> => {
+  const endpoint = `/api/v2/block/${memberId}`;
+  try {
+    const response = await AuthAxios.post(endpoint);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 };
 
 /* 차단 해제 */

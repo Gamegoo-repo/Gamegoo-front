@@ -653,8 +653,8 @@ const Rate = styled.div<{ $rate: number }>`
     $rate >= 70
       ? "#CA1FCF"
       : $rate >= 50
-      ? theme.colors.violet600
-      : theme.colors.gray700};
+        ? theme.colors.violet600
+        : theme.colors.gray700};
   ${theme.fonts.bold16};
 `;
 const PositionSection = styled.div`

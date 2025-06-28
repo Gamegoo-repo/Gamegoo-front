@@ -1,10 +1,10 @@
-import 'dotenv/config'
-import { ApiGenerationOrchestrator } from './lib/orchestrator'
+import "dotenv/config";
+import { ApiGenerationOrchestrator } from "./lib/orchestrator";
 
 const orchestrator = new ApiGenerationOrchestrator({
   serverCheck: true,
   forceDownload: false,
-  keepTempFiles: false
-})
+  keepTempFiles: false,
+});
 
-orchestrator.run()
+orchestrator.run();

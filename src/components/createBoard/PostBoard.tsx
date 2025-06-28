@@ -242,10 +242,11 @@ const PostBoard = (props: PostBoardProps) => {
       wantP: isARAM
         ? ["ANY"]
         : Array.isArray(positionValue?.want)
-        ? positionValue.want.filter((p): p is Position => p !== null).length > 0
-          ? positionValue.want.filter((p): p is Position => p !== null)
-          : ["ANY"]
-        : ["ANY"],
+          ? positionValue.want.filter((p): p is Position => p !== null).length >
+            0
+            ? positionValue.want.filter((p): p is Position => p !== null)
+            : ["ANY"]
+          : ["ANY"],
     };
 
     console.log("params", params);
@@ -327,9 +328,9 @@ const PostBoard = (props: PostBoardProps) => {
                 positionValue?.want.length === 2
                   ? positionValue?.want
                   : Array.isArray(positionValue?.want) &&
-                    positionValue?.want.length === 1
-                  ? [positionValue?.want[0], null]
-                  : [null, null]
+                      positionValue?.want.length === 1
+                    ? [positionValue?.want[0], null]
+                    : [null, null]
               }
             />
           </PositionSection>
@@ -393,10 +394,10 @@ const PostBoard = (props: PostBoardProps) => {
     selectedStyleIds.length === 0 && selectedDropOption === "ARAM"
       ? "margin-1"
       : selectedStyleIds.length !== 0 && selectedDropOption === "ARAM"
-      ? "margin-2"
-      : selectedStyleIds.length !== 0 && selectedDropOption !== "ARAM"
-      ? "margin-3"
-      : "baseMargin"
+        ? "margin-2"
+        : selectedStyleIds.length !== 0 && selectedDropOption !== "ARAM"
+          ? "margin-3"
+          : "baseMargin"
   }`}
         >
           <Button

@@ -4,7 +4,7 @@ import { ApiResponse } from "../../api";
 interface PutPositionRequest {
   mainP: Position;
   subP: Position;
-  wantP: (Position|null)[];
+  wantP: (Position | null)[];
 }
 
 export interface PutProfileData {

@@ -1,4 +1,8 @@
-import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosInstance } from "axios";
+import axios, {
+  InternalAxiosRequestConfig,
+  AxiosResponse,
+  AxiosInstance,
+} from "axios";
 
 export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL as string;
 export const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL as string;
@@ -14,7 +18,7 @@ export const SocketAxios: AxiosInstance = axios.create({
 const Axios: AxiosInstance = axios.create({
   baseURL: BASE_URL,
   headers: {
-    'Content-Type': 'application/json;charset=UTF-8',
+    "Content-Type": "application/json;charset=UTF-8",
   },
 });
 

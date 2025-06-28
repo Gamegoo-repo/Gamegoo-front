@@ -110,8 +110,8 @@ const PositionBox = (props: PositionBoxProps) => {
                   <Image
                     src={setPositionImg(
                       type === "main"
-                        ? positionValue.main ?? "ANY"
-                        : positionValue.sub ?? "ANY"
+                        ? (positionValue.main ?? "ANY")
+                        : (positionValue.sub ?? "ANY")
                     )}
                     width={!isMobile ? 48 : 32}
                     height={!isMobile ? 48 : 32}

@@ -2,8 +2,8 @@ import Axios from "..";
 import { RiotJoinRequest } from "@/types/api/riot/join";
 
 export const postRiotJoin = async ({
-    puuid,
-    isAgree
+  puuid,
+  isAgree,
 }: RiotJoinRequest): Promise<RiotJoinRequest> => {
   const endpoint = "/api/v2/riot/join";
 

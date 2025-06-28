@@ -1,7 +1,13 @@
-import { EmailResponse, SendEmailRequest, VerifyEmailRequest } from "@/types/api/email/email";
+import {
+  EmailResponse,
+  SendEmailRequest,
+  VerifyEmailRequest,
+} from "@/types/api/email/email";
 import Axios from "..";
 
-export const sendJoinEmail = async ({ email }: SendEmailRequest): Promise<EmailResponse> => {
+export const sendJoinEmail = async ({
+  email,
+}: SendEmailRequest): Promise<EmailResponse> => {
   const endpoint = "/api/v2/email/send/join";
 
   try {

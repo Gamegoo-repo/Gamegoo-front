@@ -63,7 +63,9 @@ const StyledButton = styled.button<{
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.bold14};
   white-space: nowrap;
-  transition: color 200ms, background-color 200ms;
+  transition:
+    color 200ms,
+    background-color 200ms;
   display: flex;
   justify-content: center;
   align-items: center;

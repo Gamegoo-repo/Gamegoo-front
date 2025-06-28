@@ -261,8 +261,8 @@ const Button = styled.button<{
     $type === "manner"
       ? theme.colors.gray600
       : $isRed
-      ? theme.colors.red600
-      : theme.colors.gray700};
+        ? theme.colors.red600
+        : theme.colors.gray700};
   width: 100%;
   height: ${({ $type }) => ($type ? "none" : "79px")};
   padding: 30px 0;

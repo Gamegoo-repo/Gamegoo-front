@@ -1,5 +1,5 @@
 interface ErrorResponse {
-    isSuccess: boolean;
-    code: string;
-    message: string;
-  }
+  isSuccess: boolean;
+  code: string;
+  message: string;
+}

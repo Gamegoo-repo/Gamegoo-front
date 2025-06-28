@@ -15,7 +15,6 @@ type UseDragHook = {
   handleDragStart: (e: DragEvent) => void;
 };
 
-
 const useDrag = (
   _initialPosition: Position,
   adjustPositionCallback: AdjustPositionCallback
