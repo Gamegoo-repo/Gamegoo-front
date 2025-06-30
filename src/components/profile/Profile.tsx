@@ -884,7 +884,7 @@ const Row = styled.div<{ $profileType: string }>`
   justify-content: flex-start;
   gap: 62px;
 
-  @media (max-width: 700px) {
+  @media (max-width: 900px) {
     flex-direction: column;
     align-items: flex-start;
     gap: 24px;
