@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface MatchingState {
   isComplete: boolean;
@@ -9,7 +9,7 @@ const initialState: MatchingState = {
 };
 
 const matchingSlice = createSlice({
-  name: 'matching',
+  name: "matching",
   initialState,
   reducers: {
     setComplete(state, action: PayloadAction<boolean>) {

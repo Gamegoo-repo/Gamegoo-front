@@ -91,7 +91,9 @@ const TooltipContent = styled.div<{
     -50%,
     ${({ position }) => (position === "bottom" ? "5px" : "-5px")}
   );
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
 
   ${({ $visible }) =>
     $visible &&

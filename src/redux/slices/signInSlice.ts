@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface SignInState {
   terms: boolean[];
@@ -9,22 +9,21 @@ interface SignInState {
   summonerName: string;
   summonerTag: string;
   socketId: string | undefined;
-};
+}
 
 const initialState: SignInState = {
   terms: [false, false, false],
-  email: '',
-  emailAuth: '',
-  password: '',
+  email: "",
+  emailAuth: "",
+  password: "",
   authStatus: false,
-  summonerName: '',
-  summonerTag: '',
-  socketId: '' || undefined,
-
+  summonerName: "",
+  summonerTag: "",
+  socketId: "" || undefined,
 };
 
 export const signInSlice = createSlice({
-  name: 'signIn',
+  name: "signIn",
   initialState,
   reducers: {
     updateTerms: (state, action: PayloadAction<boolean[]>) => {
@@ -47,18 +46,25 @@ export const signInSlice = createSlice({
       state.summonerTag = action.payload;
     },
     clearSignIn(state) {
-      state.terms= [false, false, false];
-      state.email= '';
-      state.emailAuth='';
-      state.password='';
-      state.authStatus= false;
-      state.summonerName= '';
-      state.summonerTag= '';
-      state.socketId ='';
-    }
+      state.terms = [false, false, false];
+      state.email = "";
+      state.emailAuth = "";
+      state.password = "";
+      state.authStatus = false;
+      state.summonerName = "";
+      state.summonerTag = "";
+      state.socketId = "";
+    },
   },
 });
 
-export const { updateTerms, updateEmail, updateEmailAuth, updatePassword, updateAuthStatus,clearSignIn } = signInSlice.actions;
+export const {
+  updateTerms,
+  updateEmail,
+  updateEmailAuth,
+  updatePassword,
+  updateAuthStatus,
+  clearSignIn,
+} = signInSlice.actions;
 
 export default signInSlice.reducer;

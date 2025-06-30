@@ -1,1 +1,1 @@
-export * from './blocked-member'
+export * from "./blocked-member";

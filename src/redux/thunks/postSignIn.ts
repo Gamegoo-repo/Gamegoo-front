@@ -1,9 +1,8 @@
-
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import { RootState } from '../store';
-import { updateEmail, updatePassword } from '../slices/signInSlice';
-import { AxiosError } from 'axios';
-import { postJoin } from '@/api/join/join';
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { RootState } from "../store";
+import { updateEmail, updatePassword } from "../slices/signInSlice";
+import { AxiosError } from "axios";
+import { postJoin } from "@/api/join/join";
 
 interface SignInData {
   isAgree: boolean;
@@ -14,34 +13,34 @@ interface SignInData {
 }
 
 export const postSignIn = createAsyncThunk(
-  'signIn/postSignIn',
+  "signIn/postSignIn",
   async (_, { getState, dispatch }) => {
     try {
       /* 현재 스토어에서 회원가입 정보 가져오기 */
       const signInState = (getState() as RootState).signIn;
 
-       /* API 호출을 위한 요청 데이터 준비 */
-      const joinData:SignInData = {
+      /* API 호출을 위한 요청 데이터 준비 */
+      const joinData: SignInData = {
         isAgree: signInState.terms[2],
         email: signInState.email,
         password: signInState.password,
         gameName: signInState.summonerName,
         tag: signInState.summonerTag,
       };
-      
+
       if (signInState.authStatus === true) {
         const response = await postJoin(joinData);
 
         /* 성공적으로 회원가입 완료 후, Redux 상태 초기화 */
-        dispatch(updateEmail(''));
-        dispatch(updatePassword(''));
+        dispatch(updateEmail(""));
+        dispatch(updatePassword(""));
 
         return response;
       } else {
-        throw new Error('인증 상태가 올바르지 않습니다.');
+        throw new Error("인증 상태가 올바르지 않습니다.");
       }
     } catch (error) {
-      throw new Error('회원가입 실패: ' +  (error as AxiosError).message);
+      throw new Error("회원가입 실패: " + (error as AxiosError).message);
     }
   }
 );

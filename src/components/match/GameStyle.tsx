@@ -145,15 +145,15 @@ const GameStyle = (props: GameStyleProps) => {
                     profileType === "mini"
                       ? 11
                       : profileType === "none" || profileType === "post"
-                      ? 14
-                      : 21
+                        ? 14
+                        : 21
                   }
                   height={
                     profileType === "mini"
                       ? 11
                       : profileType === "none" || profileType === "post"
-                      ? 14
-                      : 21
+                        ? 14
+                        : 21
                   }
                   alt="추가"
                 />

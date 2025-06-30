@@ -8,8 +8,6 @@ let socket: Socket | null = null;
 let socketId: string | null = null;
 
 export const connectSocket = (): void => {
-
-
   if (socket?.connected) {
     return;
   }
@@ -17,7 +15,7 @@ export const connectSocket = (): void => {
   // 클라이언트 사이드에서만 실행
   if (typeof window !== "undefined") {
     const token = getAccessToken();
-    
+
     const options = token ? { auth: { token } } : {};
 
     socket = io(SOCKET_URL, options);

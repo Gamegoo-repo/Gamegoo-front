@@ -10,7 +10,7 @@ interface TotalNotificationData {
       pageUrl: string;
       read: boolean;
       createdAt: string;
-    }
+    },
   ];
   listSize: number;
   totalPage: number;
@@ -20,7 +20,7 @@ interface TotalNotificationData {
 }
 
 interface ReadNotificationData {
-    notificationId: number;
+  notificationId: number;
   message: string;
 }
 

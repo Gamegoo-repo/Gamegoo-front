@@ -97,8 +97,8 @@ const PositionCategory = (props: PositionComponentProps) => {
           {selectedBox === "main"
             ? "주"
             : selectedBox === "sub"
-            ? "부"
-            : "내가 찾는"}{" "}
+              ? "부"
+              : "내가 찾는"}{" "}
           포지션 선택
         </Title>
         <CloseButton onClick={() => handleClose()}>

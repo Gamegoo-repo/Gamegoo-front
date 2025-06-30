@@ -30,8 +30,8 @@ const Pagination = (props: PaginationProps) => {
   const totalPages = totalPage
     ? totalPage
     : hasMoreItems
-    ? currentPage + 1
-    : currentPage;
+      ? currentPage + 1
+      : currentPage;
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (

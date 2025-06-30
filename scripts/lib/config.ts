@@ -1,11 +1,11 @@
-import yaml from 'js-yaml'
-import { GENERATOR_CONFIG } from './constants'
+import yaml from "js-yaml";
+import { GENERATOR_CONFIG } from "./constants";
 
 export interface GeneratorConfig {
-  inputSpec: string
-  outputDir: string
-  generatorName?: string
-  additionalProperties?: Record<string, any>
+  inputSpec: string;
+  outputDir: string;
+  generatorName?: string;
+  additionalProperties?: Record<string, any>;
 }
 
 export class ConfigManager {
@@ -21,23 +21,23 @@ export class ConfigManager {
         supportsES6: true,
         useSingleRequestParameter: false,
         withoutPrefixEnums: true,
-        enumPropertyNaming: 'original',
+        enumPropertyNaming: "original",
         stringEnums: true,
         removeOperationIdPrefix: true,
-        ...config.additionalProperties
-      }
-    }
+        ...config.additionalProperties,
+      },
+    };
 
     return yaml.dump(fullConfig, {
       indent: 2,
       lineWidth: 120,
-      noRefs: true
-    })
+      noRefs: true,
+    });
   }
 
   static validate(config: GeneratorConfig): void {
     if (!config.inputSpec || !config.outputDir) {
-      throw new Error('Missing required configuration fields')
+      throw new Error("Missing required configuration fields");
     }
   }
 }

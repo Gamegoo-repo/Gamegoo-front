@@ -1,7 +1,7 @@
-import { GameMode } from '@/types/game/gameMode';
-import { Position } from '@/types/position/position';
-import { Mike } from '@/types/user/mike';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { GameMode } from "@/types/game/gameMode";
+import { Position } from "@/types/position/position";
+import { Mike } from "@/types/user/mike";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface BoardState {
   pageIdx: number;
@@ -26,15 +26,16 @@ const boardSlice = createSlice({
   initialState,
   reducers: {
     setBoardFilters: (state, action: PayloadAction<BoardState>) => {
-        const { refresh, ...rest } = action.payload;
-        return { ...state, ...rest };
+      const { refresh, ...rest } = action.payload;
+      return { ...state, ...rest };
     },
     resetBoardFilters: () => initialState,
     setRefresh: (state) => {
-       state.refresh = Date.now();
+      state.refresh = Date.now();
     },
   },
 });
 
-export const { setBoardFilters, resetBoardFilters, setRefresh } = boardSlice.actions;
+export const { setBoardFilters, resetBoardFilters, setRefresh } =
+  boardSlice.actions;
 export default boardSlice.reducer;

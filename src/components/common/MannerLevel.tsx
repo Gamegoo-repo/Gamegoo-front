@@ -100,8 +100,8 @@ const BubbleWrapper = styled.div<{
       $position === "top"
         ? "-6px"
         : $position === "board"
-        ? "-90px"
-        : "-150px"};
+          ? "-90px"
+          : "-150px"};
   }
 `;
 

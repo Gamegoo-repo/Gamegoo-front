@@ -1,21 +1,21 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface PasswordState {
-    email: string;
-    emailAuth: string;
-    authStatus: boolean;
-    password: string;
-};
+  email: string;
+  emailAuth: string;
+  authStatus: boolean;
+  password: string;
+}
 
 const initialState: PasswordState = {
-    email: '',
-    emailAuth: '',
-    authStatus: false,
-    password: '',
+  email: "",
+  emailAuth: "",
+  authStatus: false,
+  password: "",
 };
 
 export const passwordSlice = createSlice({
-  name: 'password',
+  name: "password",
   initialState,
   reducers: {
     updateEmail: (state, action: PayloadAction<string>) => {
@@ -25,14 +25,19 @@ export const passwordSlice = createSlice({
       state.emailAuth = action.payload;
     },
     updateAuthStatus: (state, action: PayloadAction<boolean>) => {
-        state.authStatus = action.payload;
-      },
+      state.authStatus = action.payload;
+    },
     updatePassword: (state, action: PayloadAction<string>) => {
       state.password = action.payload;
     },
   },
 });
 
-export const {updateEmail, updateEmailAuth, updateAuthStatus, updatePassword } = passwordSlice.actions;
+export const {
+  updateEmail,
+  updateEmailAuth,
+  updateAuthStatus,
+  updatePassword,
+} = passwordSlice.actions;
 
 export default passwordSlice.reducer;

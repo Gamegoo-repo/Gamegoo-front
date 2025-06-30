@@ -1,17 +1,18 @@
 export const LOGIN = {
-    MESSAGE: {
-      EXPIRED: "세션이 만료되었습니다. 다시 로그인 해주세요.",
-      ETC: "문제가 발생했습니다. 다시 시도해주세요.",
-      RIOT_ERROR: "소환사명이 확인되지 않았습니다.\n리그 오브 레전드에서 소환사명을 생성한 후 다시 시도해주세요.",
-    },
-  };
+  MESSAGE: {
+    EXPIRED: "세션이 만료되었습니다. 다시 로그인 해주세요.",
+    ETC: "문제가 발생했습니다. 다시 시도해주세요.",
+    RIOT_ERROR:
+      "소환사명이 확인되지 않았습니다.\n리그 오브 레전드에서 소환사명을 생성한 후 다시 시도해주세요.",
+  },
+};
 
 export const BOARD = {
-    MESSAGE: {
-      COOLTIME: "게시글 작성 쿨타임이 적용되었습니다.\n5분 후 다시 시도해주세요.",
-    },
-  };
-  
+  MESSAGE: {
+    COOLTIME: "게시글 작성 쿨타임이 적용되었습니다.\n5분 후 다시 시도해주세요.",
+  },
+};
+
 export const messagesWithTierN = ["나와 같은 티어의 n명이 매칭 중이에요!"];
 
 export const messagesWithTotalN = [

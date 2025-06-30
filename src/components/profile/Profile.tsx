@@ -561,8 +561,8 @@ const Profile: React.FC<Profile> = ({
                           <Image
                             src={setPositionImg(
                               type === "main"
-                                ? positionValue.main ?? "ANY"
-                                : positionValue.sub ?? "ANY"
+                                ? (positionValue.main ?? "ANY")
+                                : (positionValue.sub ?? "ANY")
                             )}
                             width={!isMobile ? 55 : 22}
                             height={!isMobile ? 40 : 22}

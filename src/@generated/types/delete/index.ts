@@ -1,1 +1,1 @@
-export * from './delete-friend'
+export * from "./delete-friend";
