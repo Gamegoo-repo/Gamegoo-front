@@ -19,7 +19,6 @@ import {
 import { theme } from "@/styles/theme";
 import {
   clearTokens,
-  setProfileImg,
   setId,
 } from "@/utils/storage";
 import Image from "next/image";
@@ -89,7 +88,7 @@ const Login = () => {
       dispatch(setUserProfileImg(response.data.profileImage));
       dispatch(setUserId(response.data.id));
       storage.setItem(STORAGE_KEY.name, response.data.name);
-      setProfileImg(response.data.profileImage, autoLogin);
+      storage.setItem(STORAGE_KEY.profileImg, response.data.profileImage.toString());
       setId(response.data.id, autoLogin);
 
       router.push("/");

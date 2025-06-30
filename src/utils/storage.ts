@@ -1,15 +1,5 @@
 import { STORAGE_KEY } from "@/constants/storage";
 
-
-/* 프로필 이미지 저장 */
-export const setProfileImg = (profileImg: number, autoLogin: boolean) => {
-    if (typeof window !== 'undefined') {
-        const storage = autoLogin ? localStorage : sessionStorage;
-        storage.setItem(STORAGE_KEY.profileImg, profileImg.toString());
-    }
-    return null;
-};
-
 export const setId = (id: number, autoLogin: boolean) => {
     if (typeof window !== 'undefined') {
         const storage = autoLogin ? localStorage : sessionStorage;
