@@ -19,7 +19,6 @@ import {
 import { theme } from "@/styles/theme";
 import {
   clearTokens,
-  setName,
   setProfileImg,
   setId,
 } from "@/utils/storage";
@@ -89,7 +88,7 @@ const Login = () => {
       dispatch(setUserName(response.data.name));
       dispatch(setUserProfileImg(response.data.profileImage));
       dispatch(setUserId(response.data.id));
-      setName(response.data.name, autoLogin);
+      storage.setItem(STORAGE_KEY.name, response.data.name);
       setProfileImg(response.data.profileImage, autoLogin);
       setId(response.data.id, autoLogin);
 
