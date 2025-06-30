@@ -168,5 +168,4 @@ export type MemberPostBoardResponse = ApiResponse<MemberPostBoardData>;
 export type GetBoardListResponse = ApiResponse<GetBoardListData>;
 export type GetMyBoardListResponse = ApiResponse<GetMyBoardListData>;
 export type GetBoardListCursorResponse = ApiResponse<GetBoardListCursorData>;
-export type GetMyBoardListCursorResponse =
-  ApiResponse<GetMyBoardListCursorData>;
+export type GetMyBoardListCursorResponse = ApiResponse<GetMyBoardListCursorData>;
