@@ -43,6 +43,10 @@ export const DEFAULT_PROFILE = {
       games: 0,
       winRate: 0,
       wins: 0,
+      kda: 0,
+      kills: 0,
+      deaths: 0,
+      assists: 0,
     },
     {
       championId: 777,
@@ -51,6 +55,10 @@ export const DEFAULT_PROFILE = {
       games: 0,
       winRate: 0,
       wins: 0,
+      kda: 0,
+      kills: 0,
+      deaths: 0,
+      assists: 0,
     },
     {
       championId: 64,
@@ -59,8 +67,20 @@ export const DEFAULT_PROFILE = {
       games: 0,
       winRate: 0,
       wins: 0,
+      kda: 0,
+      kills: 0,
+      deaths: 0,
+      assists: 0,
     },
   ],
+  memberRecentStats: {
+      recTotalWins: 0,
+      recTotalLosses: 0,
+      recWinRate: 0,
+      recAvgKDA: 0,
+      recAvgCsPerMinute: 0,
+      recTotalCs: 0
+    },
   friend: false,
   friendRequestMemberId: null,
 };

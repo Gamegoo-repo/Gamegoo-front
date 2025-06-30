@@ -497,6 +497,7 @@ const Profile: React.FC<Profile> = ({
             selectedImageIndex={selectedImageIndex}
             setIsProfileListOpen={setIsProfileListOpen}
             isProfileListOpen={isProfileListOpen}
+            isEditable={profileType === "wind" || profileType === "normal"}
             onImageClick={handleImageClick}
           />
           {isMobile && (
@@ -604,16 +605,20 @@ const Profile: React.FC<Profile> = ({
                                   onClick={() => handlePosition("want", index)}
                                 />
                               ) : (
-                                <Plus
-                                  onClick={() => handlePosition("want", index)}
-                                >
-                                  <Image
-                                    src="/assets/icons/plus_violet.svg"
-                                    width={!isMobile ? 16 : 14}
-                                    height={!isMobile ? 16 : 14}
-                                    alt=""
-                                  />
-                                </Plus>
+                                ["wind", "normal"].includes(profileType) && (
+                                  <Plus
+                                    onClick={() =>
+                                      handlePosition("want", index)
+                                    }
+                                  >
+                                    <Image
+                                      src="/assets/icons/plus_violet.svg"
+                                      width={!isMobile ? 16 : 14}
+                                      height={!isMobile ? 16 : 14}
+                                      alt=""
+                                    />
+                                  </Plus>
+                                )
                               )}
                               {/* PositionCategory 열기 조건 */}
                               {isPositionOpen.want[index] && (
@@ -700,7 +705,7 @@ const Profile: React.FC<Profile> = ({
               handleMike={handleMike}
             />
           )}
-          {isMobileButton && !isMobile && (
+          {!isDefault && isMobileButton && !isMobile && (
             <Admit>{renderFriendsButton()}</Admit>
           )}
           {(profileType === "normal" || profileType === "wind") && (
@@ -719,9 +724,11 @@ const Profile: React.FC<Profile> = ({
               />
             )}
         </StyledBox>
-        {isMobile && (profileType === "me" || profileType === "other") && (
-          <Admit>{renderFriendsButton()}</Admit>
-        )}
+        {!isDefault &&
+          isMobile &&
+          (profileType === "me" || profileType === "other") && (
+            <Admit>{renderFriendsButton()}</Admit>
+          )}
       </Row>
 
       {profileType === "other" && (
@@ -856,10 +863,6 @@ const Container = styled.div<{ $backgroundColor?: string }>`
 
   &.other {
     padding: 42px 41px;
-
-    @media (max-width: 980px) {
-      overflow-x: auto;
-    }
 
     @media (max-width: 700px) {
       min-width: 300px;

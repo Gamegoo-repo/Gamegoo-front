@@ -9,6 +9,7 @@ import { getUserId } from "@/utils/storage";
 import Champion from "../readBoard/Champion";
 import useMediaQueries from "@/hooks/useMediaQueries";
 import Tooltip from "../common/Tooltip";
+import { formatDecimal } from "@/utils/decimalFormat";
 
 export interface Manner {
   memberId?: number;
@@ -185,16 +186,40 @@ const UserProfile = ({
             <Title>최근 30게임</Title>
             <RecentBox>
               <Column>
-                <RecentInfo>14승 16패</RecentInfo>
-                <DetailInfo>46.7%</DetailInfo>
+                <RecentInfo>
+                  {profile.memberRecentStats?.recTotalWins || "0"}승{" "}
+                  {profile.memberRecentStats?.recTotalLosses || "0"}패
+                </RecentInfo>
+                <DetailInfo>
+                  {formatDecimal(profile.memberRecentStats?.recWinRate || 0)}%
+                </DetailInfo>
               </Column>
               <Column>
-                <RecentInfo>6.0 / 5.4 / 6.5</RecentInfo>
-                <DetailInfo>KDA 2.33</DetailInfo>
+                {/* <RecentInfo>
+                  {formatDecimal(profile.memberRecentStats.recAvgKill || 0)} /{" "}
+                  <Emph>
+                    {formatDecimal(profile.memberRecentStats.recAvgDeath)}
+                  </Emph>{" "}
+                  / {formatDecimal(profile.memberRecentStats.recAvgAssist)}
+                </RecentInfo> */}
+                <RecentInfo>
+                  6.0 / <Emph>5.4</Emph> / 6.5
+                </RecentInfo>
+                <DetailInfo>
+                  KDA {formatDecimal(profile.memberRecentStats?.recAvgKDA || 0)}
+                </DetailInfo>
               </Column>
+
               <Column>
-                <RecentInfo>평균 CS 7.6</RecentInfo>
-                <DetailInfo>CS 226</DetailInfo>
+                <RecentInfo>
+                  평균 CS{" "}
+                  {formatDecimal(
+                    profile.memberRecentStats?.recAvgCsPerMinute || 0
+                  )}
+                </RecentInfo>
+                <DetailInfo>
+                  CS {profile.memberRecentStats?.recTotalCs || 0}
+                </DetailInfo>
               </Column>
               <Champion
                 title={true}
@@ -217,7 +242,6 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 62px;
-  overflow-x: scroll;
 
   @media (max-width: 700px) {
     min-width: 0px;
@@ -392,6 +416,7 @@ const RecentContent = styled.div`
 `;
 
 const RecentBox = styled.div`
+  height: 121px;
   max-width: 756px;
   border-radius: 20px;
   padding: 16px 32px;
@@ -434,4 +459,8 @@ const DetailInfo = styled.div`
   @media (max-width: 700px) {
     ${theme.fonts.bold12};
   }
+`;
+
+const Emph = styled.span`
+  color: ${theme.colors.red500};
 `;
