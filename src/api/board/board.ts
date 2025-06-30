@@ -8,6 +8,7 @@ import {
   GetBoardListResponse,
   GetMyBoardListResponse,
   GetBoardListCursorResponse,
+  GetMyBoardListCursorResponse,
   MemberPostBoardResponse,
   NotMemberBoardResponse,
   PostsResponse,
@@ -163,6 +164,19 @@ export const getMyPost = async (
     return response.data;
   } catch (error) {
     console.error("내가 작성한 글 목록 조회 실패:", error);
+    throw error;
+  }
+};
+
+export const getMyPostCursor = async (
+  cursor: string | null
+): Promise<GetMyBoardListCursorResponse> => {
+  const endpoint = `/api/v2/posts/my/cursor`;
+  try {
+    const response = await AuthAxios.get(endpoint, { params: { cursor } });
+    return response.data;
+  } catch (error) {
+    console.error("내가 작성한 글 목록 커서 조회 실패:", error);
     throw error;
   }
 };
