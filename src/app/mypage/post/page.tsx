@@ -4,9 +4,9 @@ import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Post from "@/components/mypage/post/Post";
 import MoPost from "@/components/mypage/post/MoPost";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Pagination from "@/components/common/Pagination";
-import { deletePost, getMyPost } from "@/api/board/board";
+import { deletePost, getMyPost, getMyPostCursor } from "@/api/board/board";
 import { RootState } from "@/redux/store";
 import { useSelector, useDispatch } from "react-redux";
 import { MyBoardDetail } from "@/types/api/board/board";
@@ -23,6 +23,10 @@ const MyPostPage = () => {
   const [totalCount, setTotalCount] = useState<number>(1);
   const pageButtonCount = 5;
   const ITEMS_PER_PAGE = 10;
+  const [cursor, setCursor] = useState<string | null>(null);
+  const [hasNext, setHasNext] = useState<boolean>(true);
+  const sentinelRef = useRef(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const currentPost = useSelector((state: RootState) => state.post.currentPost);
   const user = useSelector((state: RootState) => state.user);
@@ -30,25 +34,74 @@ const MyPostPage = () => {
   const boardRefresh = useSelector((state: RootState) => state.board.refresh);
 
   const dispatch = useDispatch();
+
+  const fetchGetMyPost = async () => {
+    const response = await getMyPost(currentPage);
+
+    const { totalPage, totalCount } = response.data;
+    setPostList(response.data.myBoards);
+    setTotalPage(totalPage);
+    setTotalCount(totalCount);
+    setHasMoreItems(response.data.myBoards.length === ITEMS_PER_PAGE);
+  };
+
+  const fetchGetMyPostCursor = async (cursor: string | null) => {
+    if (isLoading || !hasNext) return;
+
+    setIsLoading(true);
+
+    try {
+      const response = await getMyPostCursor(cursor);
+      setPostList((prevPosts) => [...prevPosts, ...response.data.myBoards]);
+      setCursor(response.data.nextCursor);
+      setHasNext(response.data.hasNext);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchGetMyPost = async () => {
-      const response = await getMyPost(currentPage);
+    if (isMobile === undefined) return;
 
-      const { totalPage, totalCount } = response.data;
-      setPostList(response.data.myBoards);
-      setTotalPage(totalPage);
-      setTotalCount(totalCount);
-      setHasMoreItems(response.data.myBoards.length === ITEMS_PER_PAGE);
+    if (isMobile) {
+      fetchGetMyPostCursor(cursor);
+    } else {
+      fetchGetMyPost();
+    }
+  }, [currentPage, currentPost, boardRefresh, isMobile]);
+
+  /* mobile 무한스크롤 페이지네이션 */
+  useEffect(() => {
+    if (!isMobile || !cursor) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && hasNext && !isLoading) {
+            fetchGetMyPostCursor(cursor);
+          }
+        });
+      },
+      {
+        rootMargin: "100px", // 미리 로드
+      }
+    );
+
+    if (sentinelRef.current) {
+      observer.observe(sentinelRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
     };
-
-    fetchGetMyPost();
-  }, [currentPage, currentPost, boardRefresh]);
+  }, [cursor, isMobile, hasNext, isLoading]);
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const response = await getMyProfile();
-        console.log("Fetched profile:", response);
         dispatch(setUserProfile(response.data));
       } catch (error) {
         console.error(error);
@@ -154,6 +207,8 @@ const MyPostPage = () => {
                     />
                   ))}
                 </MoPostList>
+                <div ref={sentinelRef}></div>
+                {/* IntersectionObserver 를 위한 감지용 element */}
               </>
             )
           ) : (

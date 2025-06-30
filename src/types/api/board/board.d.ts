@@ -67,6 +67,12 @@ interface MyBoardListStructure {
   totalCount: number;
 }
 
+interface MyBoardListCursorStructure {
+  size: number;
+  hasNext: boolean;
+  nextCursor: string;
+}
+
 // 구체적인 인터페이스들
 export interface PostsData extends BasePlayerInfo, GameInfo, BaseBoardInfo {
   tier: string;
@@ -82,6 +88,10 @@ export interface GetBoardListCursorData extends BoardListCursorStructure {
 }
 
 export interface GetMyBoardListData extends MyBoardListStructure {
+  myBoards: Array<MyBoardDetail>;
+}
+
+export interface GetMyBoardListCursorData extends MyBoardListCursorStructure {
   myBoards: Array<MyBoardDetail>;
 }
 
@@ -158,3 +168,4 @@ export type MemberPostBoardResponse = ApiResponse<MemberPostBoardData>;
 export type GetBoardListResponse = ApiResponse<GetBoardListData>;
 export type GetMyBoardListResponse = ApiResponse<GetMyBoardListData>;
 export type GetBoardListCursorResponse = ApiResponse<GetBoardListCursorData>;
+export type GetMyBoardListCursorResponse = ApiResponse<GetMyBoardListCursorData>;

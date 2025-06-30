@@ -605,7 +605,7 @@ const BoardPage = () => {
                 <Main>
                   <PostList content={boardList}></PostList>
                 </Main>
-                <div ref={sentinelRef}></div>{" "}
+                <div ref={sentinelRef}></div>
                 {/* IntersectionObserver 를 위한 감지용 element */}
               </>
             )}
