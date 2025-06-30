@@ -56,6 +56,10 @@ const Wrapper = styled.div`
   padding: 80px;
   display: flex;
   flex-direction: column;
+
+  @media (max-width: 700px) {
+    padding: 24px 20px;
+  }
 `;
 
 const Title = styled.div`

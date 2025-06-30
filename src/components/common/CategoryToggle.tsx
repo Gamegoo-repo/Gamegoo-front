@@ -48,5 +48,4 @@ const CategoryToggleButton = styled.button<{ isSelected: boolean }>`
       ? `1px solid ${theme.colors.violet600}`
       : `1px solid ${theme.colors.gray200}`};
   transition: all 0.3s;
-  margin-right: -1px;
 `;
