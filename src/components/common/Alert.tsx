@@ -47,6 +47,14 @@ const Wrapper = styled.div`
   bottom: 28px;
   width: 640px;
   overflow: hidden;
+
+  @media (max-width: 700px) {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    bottom: unset;
+  }
 `;
 
 const TextWrapper = styled.div`
@@ -55,12 +63,19 @@ const TextWrapper = styled.div`
   margin-bottom: 10px;
   text-align: center;
   padding: 17px 0 25px;
+
+  @media (max-width: 700px) {
+    border-radius: 14px;
+  }
 `;
 
 const Text = styled.p`
   ${(props) => props.theme.fonts.bold20};
   color: ${theme.colors.gray700};
   margin-top: 18px;
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.medium14};
+  }
 `;
 
 const ButtonWrapper = styled.div`
@@ -69,9 +84,17 @@ const ButtonWrapper = styled.div`
   text-align: center;
   padding: 17px 0;
   cursor: pointer;
+
+  @media (max-width: 700px) {
+    border-radius: 14px;
+  }
 `;
 
 const Button = styled.p`
   ${(props) => props.theme.fonts.regular20};
   color: ${theme.colors.gray700};
+
+  @media (max-width: 700px) {
+    ${(props) => props.theme.fonts.semiBold14};
+  }
 `;
