@@ -1,13 +1,5 @@
 import { STORAGE_KEY } from "@/constants/storage";
 
-/* 토큰 저장 */
-export const setToken = (accessToken: string, refreshToken: string, autoLogin: boolean) => {
-    if (typeof window !== 'undefined') {
-        const storage = autoLogin ? localStorage : sessionStorage;
-        storage.setItem(STORAGE_KEY.accessToken, accessToken);
-        storage.setItem(STORAGE_KEY.refreshToken, refreshToken);
-    }
-};
 
 /* 닉네임 저장 */
 export const setName = (name: string, autoLogin: boolean) => {

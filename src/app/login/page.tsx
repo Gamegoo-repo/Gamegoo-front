@@ -21,7 +21,6 @@ import {
   clearTokens,
   setName,
   setProfileImg,
-  setToken,
   setId,
 } from "@/utils/storage";
 import Image from "next/image";
@@ -83,7 +82,9 @@ const Login = () => {
       const refreshToken = response.data.refreshToken;
 
       /* 자동 로그인 체크 여부에 따라 토큰 저장 위치 결정 */
-      setToken(accessToken, refreshToken, autoLogin);
+      const storage = autoLogin ? localStorage : sessionStorage;
+      storage.setItem(STORAGE_KEY.accessToken, accessToken);
+      storage.setItem(STORAGE_KEY.refreshToken, refreshToken);
 
       dispatch(setUserName(response.data.name));
       dispatch(setUserProfileImg(response.data.profileImage));

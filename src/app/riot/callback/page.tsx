@@ -2,7 +2,6 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { setToken } from "@/utils/storage";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
@@ -42,7 +41,8 @@ const RsoCallback = () => {
 
     if (accessToken && refreshToken && name && profileImage && id) {
       // 로그인 완료 처리
-      setToken(accessToken, refreshToken, true);
+      localStorage.setItem(STORAGE_KEY.accessToken, accessToken);
+      localStorage.setItem(STORAGE_KEY.refreshToken, refreshToken);
       dispatch(setUserName(name));
       dispatch(setUserProfileImg(Number(profileImage)));
       dispatch(setUserId(Number(id)));
