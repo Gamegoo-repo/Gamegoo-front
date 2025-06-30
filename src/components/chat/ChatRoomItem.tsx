@@ -98,7 +98,7 @@ const ChatRoomItem = (props: ChatRoomItemProps) => {
       >
         <MoreImage
           src="/assets/icons/three_dots_button.svg"
-          width={3}
+          width={10}
           height={15}
           alt="상세보기"
         />

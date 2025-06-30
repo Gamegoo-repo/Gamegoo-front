@@ -65,6 +65,7 @@ const MessageList = (props: MessageListProps) => {
   const [isSystemMessageShown, setIsSystemMessageShown] = useState(false);
   const [isUnregisterAlert, setIsUnregisterAlert] = useState(false);
   const [isBlockedAlert, setIsBlockedAlert] = useState(false);
+  const [isMyMsgSent, setIsMyMsgSent] = useState(false);
 
   const chatRef = useRef<HTMLDivElement>(null);
   const isReadingModal = useSelector(
@@ -233,6 +234,7 @@ const MessageList = (props: MessageListProps) => {
   useEffect(() => {
     if (newMessage) {
       setMessageList((prevMessages) => [...prevMessages, newMessage]);
+      setIsMyMsgSent(true);
     }
   }, [newMessage]);
 
@@ -444,7 +446,12 @@ const MessageList = (props: MessageListProps) => {
                               {setChatTimeFormatter(message.createdAt)}
                             </MyDate>
                           ) : null}
-                          <MyMessage>{message.message}</MyMessage>
+                          <MyMessage
+                            $animation={isMyMsgSent}
+                            $isLast={index === messageList.length - 1}
+                          >
+                            {message.message}
+                          </MyMessage>
                         </MyDiv>
                       </MyMessageContainer>
                     )
@@ -589,7 +596,7 @@ const MyDiv = styled.div`
   align-items: end;
 `;
 
-const MyMessage = styled.div`
+const MyMessage = styled.div<{ $animation?: boolean; $isLast?: boolean }>`
   ${(props) => props.theme.fonts.regular14};
   color: ${theme.colors.gray800};
   background: ${theme.colors.violet300};
@@ -598,6 +605,23 @@ const MyMessage = styled.div`
   max-width: 196px;
   word-break: keep-all;
   overflow-wrap: break-word;
+  transition: all 0.3s ease-in-out;
+  ${({ $animation, $isLast }) =>
+    $animation &&
+    $isLast &&
+    `
+      animation: slideDown 0.3s ease-out;
+    `}
+  @keyframes slideDown {
+    0% {
+      margin-top: -3px;
+      opacity: 0;
+    }
+    100% {
+      margin-top: 0;
+      opacity: 1;
+    }
+  }
 `;
 
 const MyDate = styled.p`
