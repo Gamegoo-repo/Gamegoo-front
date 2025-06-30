@@ -36,6 +36,7 @@ interface MemberPositiveNegativeMannerData extends BaseMannerData {
 // Response 타입 정의
 export type MannerResponse = ApiResponse<BaseMannerData>;
 export type MemberMannerLevelResponse = ApiResponse<MemberMannerLevelData>;
-export type MemberMannerKeywordsResponse = ApiResponse<MemberMannerKeywordsData>;
+export type MemberMannerKeywordsResponse =
+  ApiResponse<MemberMannerKeywordsData>;
 export type MemberPositiveNegativeMannerResponse =
   ApiResponse<MemberPositiveNegativeMannerData>;

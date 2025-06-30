@@ -1,8 +1,8 @@
-import { GameStyleList } from '@/interface/profile';
-import { ChampionResponseDTO } from '@/types/api/champion/champion';
-import { Position } from '@/types/position/position';
-import { Mike } from '@/types/user/mike';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { GameStyleList } from "@/interface/profile";
+import { ChampionResponseDTO } from "@/types/api/champion/champion";
+import { Position } from "@/types/position/position";
+import { Mike } from "@/types/user/mike";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface UserState {
   id?: number | undefined;
@@ -31,7 +31,7 @@ interface UserState {
   blocked: boolean;
   friend: boolean;
   friendRequestMemberId: number | null;
-};
+}
 
 const initialState: UserState = {
   id: 0,
@@ -63,7 +63,7 @@ const initialState: UserState = {
 };
 
 export const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState,
   reducers: {
     setUserId: (state, action: PayloadAction<number>) => {
@@ -85,22 +85,22 @@ export const userSlice = createSlice({
       state.id = 0;
       state.profileImg = 1;
       state.mike = "UNAVAILABLE";
-      state.email = '';
-      state.gameName = '';
-      state.tag = '';
-      state.soloTier = '';
-      state.freeTier = '';
+      state.email = "";
+      state.gameName = "";
+      state.tag = "";
+      state.soloTier = "";
+      state.freeTier = "";
       state.soloRank = 0;
       state.freeRank = 0;
       // state.mannerRank = 0;
       // state.mannerLevel = 0;
-      state.updatedAt = '';
+      state.updatedAt = "";
       state.mainP = "ANY";
       state.subP = "ANY";
       state.wantP = [];
       state.isAgree = false;
       state.isBlind = false;
-      state.loginType = '';
+      state.loginType = "";
       state.soloWinrate = 0;
       state.freeWinrate = 0;
       state.gameStyleResponseList = [];
@@ -112,6 +112,13 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setUserId, setUserName, setUserProfileImg, setUserMike, setUserProfile, clearUserProfile } = userSlice.actions;
+export const {
+  setUserId,
+  setUserName,
+  setUserProfileImg,
+  setUserMike,
+  setUserProfile,
+  clearUserProfile,
+} = userSlice.actions;
 
 export default userSlice.reducer;

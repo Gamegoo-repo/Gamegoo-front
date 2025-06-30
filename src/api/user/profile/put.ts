@@ -1,4 +1,7 @@
-import { PutPositionRequest, PutProfileResponse } from "@/types/api/user/profile/put";
+import {
+  PutPositionRequest,
+  PutProfileResponse,
+} from "@/types/api/user/profile/put";
 import { AuthAxios } from "../../auth";
 import { Mike } from "@/types/user/mike";
 

@@ -1,1 +1,1 @@
-export * from './system-flag'
+export * from "./system-flag";

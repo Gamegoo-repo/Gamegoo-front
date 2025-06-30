@@ -57,7 +57,9 @@ const Required = styled.span<{ $isRequired: boolean }>`
 
 const Span = styled.span`
   text-decoration: underline;
-  transition: color 200ms, text-decoration 500ms;
+  transition:
+    color 200ms,
+    text-decoration 500ms;
 
   &:hover {
     color: ${theme.colors.violet600};

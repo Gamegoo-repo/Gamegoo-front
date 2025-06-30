@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "generate": "tsx scripts/generate-api.ts"
+    "generate": "tsx scripts/generate-api.ts && prettier --write src/@generated",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
@@ -48,6 +49,7 @@
     "eslint-config-next": "14.2.3",
     "fs-extra": "^11.3.0",
     "js-yaml": "^4.1.0",
+    "prettier": "^3.6.2",
     "tsx": "^4.20.3",
     "typescript": "^5"
   }

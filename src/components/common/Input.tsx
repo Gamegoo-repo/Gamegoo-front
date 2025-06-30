@@ -139,8 +139,8 @@ const StyledInput = styled.input<InputProps>`
     isvalid === undefined
       ? `1px solid ${theme.colors.gray400}`
       : isvalid === true
-      ? `1px solid ${theme.colors.violet300}`
-      : `1px solid ${theme.colors.red600}`};
+        ? `1px solid ${theme.colors.violet300}`
+        : `1px solid ${theme.colors.red600}`};
   color: ${theme.colors.gray900};
   ${(props) => props.theme.fonts.regular16}
 

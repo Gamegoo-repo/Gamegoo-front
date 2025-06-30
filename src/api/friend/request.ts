@@ -1,4 +1,3 @@
-
 import { FriendStatusResponse } from "@/types/api/friend/status";
 import { AuthAxios } from "../auth";
 import { notify } from "@/hooks/notify";

@@ -1,5 +1,10 @@
 import { AuthAxios } from "../auth";
-import { PopupNotificationResponse, ReadNotificationResponse, TotalNotificationResponse, UnreadNotificationCountResponse } from "@/types/api/notification/notification";
+import {
+  PopupNotificationResponse,
+  ReadNotificationResponse,
+  TotalNotificationResponse,
+  UnreadNotificationCountResponse,
+} from "@/types/api/notification/notification";
 
 /* 알림 전체 목록 조회 */
 export const getTotalNotification = async (
@@ -15,7 +20,9 @@ export const getTotalNotification = async (
 };
 
 /* 알림 읽음 처리 */
-export const patchReadNotification = async (notificationId: number): Promise<ReadNotificationResponse> => {
+export const patchReadNotification = async (
+  notificationId: number
+): Promise<ReadNotificationResponse> => {
   const endpoint = `/api/v2/notification/${notificationId}`;
   try {
     const response = await AuthAxios.patch(endpoint);

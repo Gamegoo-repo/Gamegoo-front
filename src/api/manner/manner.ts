@@ -72,7 +72,7 @@ export const postMannerValue = async (
     const response = await AuthAxios.post(
       `/api/v2/manner/positive/${params.memberId}`,
       {
-        mannerKeywordIdList: params.mannerKeywordIdList
+        mannerKeywordIdList: params.mannerKeywordIdList,
       }
     );
     return response.data;
@@ -89,7 +89,7 @@ export const postBadMannerValue = async (
     const response = await AuthAxios.post(
       `/api/v2/manner/negative/${params.memberId}`,
       {
-        mannerKeywordIdList: params.mannerKeywordIdList
+        mannerKeywordIdList: params.mannerKeywordIdList,
       }
     );
     return response.data;
@@ -104,12 +104,9 @@ export const editManners = async ({
   mannerKeywordIdList,
 }: MannerReqInterface): Promise<MemberPositiveNegativeMannerResponse> => {
   try {
-    const response = await AuthAxios.put(
-      `/api/v2/manner/${mannerId}`,
-      {
-        mannerKeywordIdList: mannerKeywordIdList
-      }
-    );
+    const response = await AuthAxios.put(`/api/v2/manner/${mannerId}`, {
+      mannerKeywordIdList: mannerKeywordIdList,
+    });
     return response.data;
   } catch (error) {
     throw error;

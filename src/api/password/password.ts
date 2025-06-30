@@ -1,4 +1,8 @@
-import { CheckPasswordResponse, PasswordResponse, ResetPasswordRequest } from "@/types/api/password/password";
+import {
+  CheckPasswordResponse,
+  PasswordResponse,
+  ResetPasswordRequest,
+} from "@/types/api/password/password";
 import Axios from "..";
 import { AuthAxios } from "../auth";
 
@@ -22,7 +26,9 @@ export const resetPassword = async ({
 };
 
 /* 비밀번호 재설정 */
-export const checkPassword = async (password: string): Promise<CheckPasswordResponse> => {
+export const checkPassword = async (
+  password: string
+): Promise<CheckPasswordResponse> => {
   const endpoint = "/api/v2/password/check";
   try {
     const response = await AuthAxios.post(endpoint, { password });

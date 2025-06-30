@@ -1,2 +1,2 @@
-export * from './email'
-export * from './email-code'
+export * from "./email";
+export * from "./email-code";

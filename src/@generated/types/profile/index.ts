@@ -1,2 +1,2 @@
-export * from './my-profile'
-export * from './profile-image'
+export * from "./my-profile";
+export * from "./profile-image";
