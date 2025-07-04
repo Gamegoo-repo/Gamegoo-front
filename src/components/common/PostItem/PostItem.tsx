@@ -1,40 +1,28 @@
-import { FC, useState, useRef, useEffect } from "react";
+import { FC, useState } from "react";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
-import { useDispatch, useSelector } from "react-redux";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
+import { useSelector } from "react-redux";
 
 import UserSection from "./UserSection/UserSection";
 import UserTierSection from "./UserTierSection";
 import PositionSection from "./PositionSection";
 import ChampionSection from "./ChampionSection";
 import MemoSection from "./MemoSection";
-import MoreBox from "../MoreBox";
-import MoreBoxButton from "../../readBoard/MoreBoxButton";
 import ConfirmModal from "../ConfirmModal";
 import Alert from "../Alert";
 
-import { BoardDetail, BoardListDetail, MemberPost } from "@/interface/board";
-import { MoreBoxMenuItems } from "@/interface/moreBox";
-import { GameMode } from "@/types/game/gameMode";
-import { AlertProps } from "@/interface/modal";
-import { Position } from "@/types/position/position";
-import { RootState } from "@/redux/store";
+// 커스텀 훅 imports
 import {
-  setOpenReadingModal,
-  setCloseReadingModal,
-  setOpenPostingModal,
-  setOpenModal,
-} from "@/redux/slices/modalSlice";
-import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
-import { setRefresh } from "@/redux/slices/boardSlice";
-import { notify } from "@/hooks/notify";
+  useAlert,
+  usePostActions,
+  useFriendActions,
+  useBlockActions,
+  useMoreBoxMenu,
+  useUIHandlers,
+} from "./hooks";
 
-import { deletePost, getMemberPost, pullUpPost } from "@/api/board/board";
-import { deleteFriend } from "@/api/friend/delete";
-import { cancelFriendRequest, sendFriendRequest } from "@/api/friend/request";
-import { blockMember, unblockMember } from "@/api/block/block";
+import { BoardDetail, BoardListDetail, MemberPost } from "@/interface/board";
+import { RootState } from "@/redux/store";
 
 export type PostItemData = Pick<
   BoardListDetail,
@@ -79,319 +67,82 @@ const PostItem: FC<PostItemProps> = ({
   onDeletePost,
   onProfileClick,
 }) => {
-  const dispatch = useDispatch();
-  const router = useRouter();
-  const mannerLevelBoxRef = useRef<HTMLDivElement>(null);
-
+  const isUser = useSelector((state: RootState) => state.user);
   const [isPost, setIsPost] = useState<MemberPost>();
-  const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
-  const [isMannerLevelBoxOpen, setIsMannerLevelBoxOpen] = useState(false);
-  const [isBlockedStatus, setIsBlockedStatus] = useState(false);
-  const [isBlockBoxOpen, setIsBlockBoxOpen] = useState(false);
-  const [isBlockConfirmOpen, setIsBlockConfirmOpen] = useState(false);
-  const [isPullUpConfirmOpen, setIsPullUpConfirmOpen] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
-  const [alertProps, setAlertProps] = useState<AlertProps>({
-    icon: "",
-    width: 0,
-    height: 0,
-    content: "",
-    alt: "",
-    onClose: () => {},
-    buttonText: "",
+
+  const { showAlert, alertProps, showAlertWithContent } =
+    useAlert();
+
+  const {
+    mannerLevelBoxRef,
+    isMannerLevelBoxOpen,
+    handlePostClick,
+    handleProfileClick,
+    handleMannerLevelBoxToggle,
+  } = useUIHandlers({
+    data,
+    isClickable,
+    onPostClick,
+    onProfileClick,
+    showAlertWithContent,
   });
 
-  const isUser = useSelector((state: RootState) => state.user);
+  const {
+    isPullUpConfirmOpen,
+    setIsPullUpConfirmOpen,
+    handlePullUp,
+    handlePullUpAction,
+    handleEdit,
+    handleDelete,
+  } = usePostActions({
+    data,
+    variant,
+    isPost,
+    onDeletePost,
+    showAlertWithContent,
+  });
 
-  const logoutMessage = "로그아웃 되었습니다. 다시 로그인 해주세요.";
-  const loginRequiredMessage = "로그인이 필요한 서비스입니다.";
-
-  const showAlertWithContent = (
-    icon: string,
-    content: string,
-    handleAlertClose: () => void,
-    btnText: string
-  ) => {
-    setAlertProps({
-      icon: icon,
-      width: 68,
-      height: 58,
-      content: content,
-      alt: "경고",
-      onClose: handleAlertClose,
-      buttonText: btnText,
+  const { handleFriendAdd, handleCancelFriendReq, handleFriendDelete } =
+    useFriendActions({
+      isPost,
+      onCloseMoreBox: () => setIsMoreBoxOpen(false),
     });
-    setShowAlert(true);
-  };
 
-  /* MannerLevelBox 외부 클릭 시 닫힘 */
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        mannerLevelBoxRef.current &&
-        !mannerLevelBoxRef.current.contains(event.target as Node)
-      ) {
-        setIsMannerLevelBoxOpen(false);
-      }
-    };
+  const {
+    isBlockedStatus,
+    setIsBlockedStatus,
+    isBlockBoxOpen,
+    setIsBlockBoxOpen,
+    isBlockConfirmOpen,
+    setIsBlockConfirmOpen,
+    handleBlock,
+    handleRunBlock,
+  } = useBlockActions({
+    isPost,
+    onCloseMoreBox: () => setIsMoreBoxOpen(false),
+  });
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  /* 게시글 클릭 */
-  const handlePostClick = () => {
-    if (isClickable && onPostClick) {
-      onPostClick(data.boardId);
-    }
-  };
-
-  /* 프로필 클릭 */
-  const handleProfileClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (onProfileClick) {
-      onProfileClick(e, data.memberId);
-    }
-  };
-
-  /* 매너레벨 박스 토글 */
-  const handleMannerLevelBoxToggle = () => {
-    if (!isUser.id) {
-      return showAlertWithContent(
-        "exclamation",
-        loginRequiredMessage,
-        () => setShowAlert(false),
-        "확인"
-      );
-    }
-    setIsMannerLevelBoxOpen((prevState) => !prevState);
-  };
-
-  /* 더보기 버튼 토글 */
-  const handleMoreBoxToggle = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-
-    if (variant === "list") {
-      const response = await getMemberPost(data.boardId);
-      setIsPost(response.data);
-      setIsBlockedStatus(response.data.isBlocked || false);
-    }
-
-    setIsMoreBoxOpen((prevState) => !prevState);
-  };
-
-  /* 더보기 박스 닫기 */
-  const handleMoreBoxClose = () => {
-    setIsMoreBoxOpen(false);
-  };
-
-  /* 차단하기 */
-  const handleBlock = async () => {
-    setIsBlockBoxOpen(true);
-    setIsMoreBoxOpen(false);
-  };
-
-  const handleRunBlock = async () => {
-    setIsBlockBoxOpen(false);
-    if (isPost) {
-      if (isPost.isBlocked) {
-        await unblockMember(isPost.memberId);
-        setIsBlockedStatus(false);
-      } else {
-        await blockMember(isPost.memberId);
-        setIsBlockedStatus(true);
-      }
-    }
-    setIsBlockConfirmOpen(true);
-  };
-
-  /* 친구 추가 */
-  const handleFriendAdd = async () => {
-    try {
-      if (isPost) {
-        await sendFriendRequest(isPost.memberId);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-    handleMoreBoxClose();
-  };
-
-  /* 친구 요청 취소 */
-  const handleCancelFriendReq = async () => {
-    try {
-      if (isPost) {
-        await cancelFriendRequest(isPost.memberId);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-    handleMoreBoxClose();
-  };
-
-  /* 친구 삭제 */
-  const handleFriendDelete = async () => {
-    try {
-      if (isPost) {
-        await deleteFriend(isPost.memberId);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-    handleMoreBoxClose();
-  };
-
-  /* 게시글 끌어올리기 */
-  const handlePullUp = () => {
-    if (!isUser.id) {
-      return showAlertWithContent(
-        "exclamation",
-        logoutMessage,
-        () => router.push("/riot"),
-        "로그인하기"
-      );
-    }
-    setIsPullUpConfirmOpen(true);
-    setIsMoreBoxOpen(false);
-    if (variant === "list") {
-      dispatch(setCloseReadingModal());
-    }
-  };
-
-  const handlePullUpAction = async () => {
-    if (variant === "list") {
-      dispatch(setCloseReadingModal());
-    }
-    setIsPullUpConfirmOpen(false);
-    await pullUpPost(data.boardId);
-    dispatch(setRefresh());
-
-    await notify({
-      text: "끌어올리기가 완료되었습니다",
-      icon: "👌🏼",
-      type: "success",
-    });
-  };
-
-  /* 게시글 수정 */
-  const handleEdit = async () => {
-    if (!isUser.id) {
-      return showAlertWithContent(
-        "exclamation",
-        logoutMessage,
-        () => router.push("/riot"),
-        "로그인하기"
-      );
-    }
-
-    setIsMoreBoxOpen(false);
-
-    if (variant === "mypage" && isPost) {
-      await dispatch(
-        setCurrentPost({ currentPost: isPost, currentPostId: data.boardId })
-      );
-    }
-
-    dispatch(setOpenPostingModal());
-
-    if (variant === "list") {
-      dispatch(setCloseReadingModal());
-    }
-
-    dispatch(setPostStatus(""));
-  };
-
-  /* 게시글 삭제 */
-  const handleDelete = async () => {
-    if (!isUser.id) {
-      return showAlertWithContent(
-        "exclamation",
-        logoutMessage,
-        () => router.push("/riot"),
-        "로그인하기"
-      );
-    }
-
-    setIsMoreBoxOpen(false);
-
-    try {
-      await deletePost(data.boardId);
-      dispatch(setPostStatus("delete"));
-
-      if (variant === "list") {
-        dispatch(setCloseReadingModal());
-      }
-
-      if (onDeletePost) {
-        onDeletePost(data.boardId);
-      }
-
-      dispatch(setPostStatus(""));
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  /* 신고하기 */
-  const handleReportModal = () => {
-    if (!isUser.gameName) {
-      return showAlertWithContent(
-        "exclamation",
-        logoutMessage,
-        () => router.push("/riot"),
-        "로그인하기"
-      );
-    }
-
-    dispatch(setOpenModal("report"));
-    handleMoreBoxClose();
-  };
-
-  /* 더보기 메뉴 아이템 구성 */
-  const MoreBoxMenuItems: MoreBoxMenuItems[] = [];
-
-  if (isUser?.id === data.memberId) {
-    // 내가 작성한 글
-    MoreBoxMenuItems.push(
-      { text: "끌어올리기", onClick: handlePullUp },
-      { text: "수정", onClick: handleEdit },
-      { text: "삭제", onClick: handleDelete }
-    );
-  } else if (variant === "list") {
-    // 다른 사람이 작성한 글 (PostList에서만)
-    let friendText = "";
-    let friendFunc = null;
-
-    if (!isBlockedStatus) {
-      if (isPost?.isFriend) {
-        friendText = "친구 삭제";
-        friendFunc = handleFriendDelete;
-      } else {
-        if (!isPost?.isFriend && isPost?.friendRequestMemberId !== isUser.id) {
-          friendText = "친구 추가";
-          friendFunc = handleFriendAdd;
-        }
-        if (!isPost?.isFriend && isPost?.friendRequestMemberId === isUser.id) {
-          friendText = "친구 요청 취소";
-          friendFunc = handleCancelFriendReq;
-        }
-      }
-    }
-
-    if (friendText && friendFunc) {
-      MoreBoxMenuItems.push({ text: friendText, onClick: friendFunc });
-    }
-
-    MoreBoxMenuItems.push(
-      {
-        text: isPost?.isBlocked ? "차단 해제" : "차단하기",
-        onClick: handleBlock,
-      },
-      { text: "신고하기", onClick: handleReportModal }
-    );
-  }
+  const {
+    isMoreBoxOpen,
+    setIsMoreBoxOpen,
+    handleMoreBoxToggle,
+    handleMoreBoxClose,
+    MoreBoxMenuItems,
+  } = useMoreBoxMenu({
+    data,
+    variant,
+    isPost,
+    setIsPost,
+    setIsBlockedStatus,
+    showAlertWithContent,
+    handlePullUp,
+    handleEdit,
+    handleDelete,
+    handleFriendAdd,
+    handleCancelFriendReq,
+    handleFriendDelete,
+    handleBlock,
+  });
 
   return (
     <>
