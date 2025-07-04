@@ -4,7 +4,7 @@ import Image from "next/image";
 import styled, { css } from "styled-components";
 import GameStyle from "../match/GameStyle";
 import { POSITIONS } from "@/constants/profile";
-import Champion from "../readBoard/Champion";
+import Champion from "../common/Champion";
 import Toggle from "../common/Toggle";
 import Button from "../common/Button";
 import MoreBoxButton from "../readBoard/MoreBoxButton";
