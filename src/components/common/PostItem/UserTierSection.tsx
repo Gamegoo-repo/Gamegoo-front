@@ -6,9 +6,17 @@ import { PostItemData } from "./PostItem";
 
 interface UserTierSectionProps {
   data: PostItemData;
+  showTierSection: boolean;
 }
 
-const UserTierSection: FC<UserTierSectionProps> = ({ data }) => {
+const UserTierSection: FC<UserTierSectionProps> = ({
+  data,
+  showTierSection,
+}) => {
+  if (!showTierSection) {
+    return null;
+  }
+
   return (
     <UserTierWrapper>
       <RankTier
@@ -23,7 +31,7 @@ const UserTierSection: FC<UserTierSectionProps> = ({ data }) => {
       <RankTier
         type="free"
         tier={data.freeTier || ""}
-        rank={data.freeRank}
+        rank={data.freeRanks}
         direct="row"
         color={theme.colors.gray800}
         tierFontSize={theme.fonts.bold20}

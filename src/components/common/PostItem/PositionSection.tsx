@@ -5,9 +5,17 @@ import { PostItemData } from "./PostItem";
 
 interface PositionSectionProps {
   data: PostItemData;
+  showPositionSection: boolean;
 }
 
-const PositionSection: FC<PositionSectionProps> = ({ data }) => {
+const PositionSection: FC<PositionSectionProps> = ({
+  data,
+  showPositionSection,
+}) => {
+  if (!showPositionSection) {
+    return null;
+  }
+
   return (
     <Wrapper>
       <PositionBox
