@@ -1,16 +1,13 @@
 import { getMemberPost, pullUpPost } from "@/api/board/board";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import MoreBox from "@/components/common/MoreBox";
-import PostBoard from "@/components/createBoard/PostBoard";
 import Report from "@/components/readBoard/MoreBoxButton";
 import { notify } from "@/hooks/notify";
 import { MemberPost } from "@/interface/board";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import { setRefresh } from "@/redux/slices/boardSlice";
 import {
-  setClosePostingModal,
   setCloseReadingModal,
-  setOpenModal,
   setOpenPostingModal,
 } from "@/redux/slices/modalSlice";
 import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
@@ -64,10 +61,6 @@ const Post: React.FC<PostProps> = ({
   };
 
   const [isPost, setIsPost] = useState<MemberPost>();
-
-  const isPostingModal = useSelector(
-    (state: RootState) => state.modal.postingModal
-  );
 
   const isUser = useSelector((state: RootState) => state.user);
 
@@ -123,15 +116,6 @@ const Post: React.FC<PostProps> = ({
     { text: "삭제", onClick: handleDelete },
   ];
 
-  const handlePostingClose = () => {
-    dispatch(setClosePostingModal());
-  };
-
-  const handleModalClose = () => {
-    handlePostingClose();
-    dispatch(setOpenModal(""));
-  };
-
   return (
     <>
       <Container>
@@ -182,12 +166,6 @@ const Post: React.FC<PostProps> = ({
             )}
           </More>
         </MoreContainer>
-        {isPostingModal && boardId === isPost?.boardId && (
-          <PostBoard
-            onClose={handlePostingClose}
-            onCompletedPostingClose={handleModalClose}
-          />
-        )}
       </Container>
       {/* 끌어올리기 확인 팝업 */}
       {isPullUpConfirmOpen && (

@@ -1,10 +1,9 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import { useSelector } from "react-redux";
 import { BoardDetail, BoardListDetail, MemberPost } from "@/interface/board";
 import { RootState } from "@/redux/store";
-
 
 import Alert from "../Alert";
 import UserSection from "./UserSection/UserSection";
@@ -50,6 +49,7 @@ export interface PostItemProps {
   isClickable?: boolean;
   showTierSection?: boolean;
   showMoreButton?: boolean;
+  memberPost?: MemberPost; // MoPost에서 전달받는 전체 게시글 데이터
   onPostClick?: (boardId: number) => void;
   onDeletePost?: (boardId: number) => void;
   onProfileClick?: (e: React.MouseEvent, memberId: number) => void;
@@ -61,12 +61,18 @@ const PostItem: FC<PostItemProps> = ({
   isClickable = true,
   showTierSection = false,
   showMoreButton = true,
+  memberPost,
   onPostClick,
   onDeletePost,
   onProfileClick,
 }) => {
   const isUser = useSelector((state: RootState) => state.user);
-  const [isPost, setIsPost] = useState<MemberPost>();
+  const [isPost, setIsPost] = useState<MemberPost | undefined>(memberPost);
+
+  // memberPost prop이 변경될 때 isPost 상태 업데이트
+  useEffect(() => {
+    setIsPost(memberPost);
+  }, [memberPost]);
 
   const { showAlert, alertProps, showAlertWithContent } = useAlert();
 
@@ -143,8 +149,6 @@ const PostItem: FC<PostItemProps> = ({
 
   return (
     <>
-      {showAlert ? <Alert {...alertProps} /> : null}
-
       <Wrapper data-clickable={isClickable} onClick={handlePostClick}>
         <UserSection
           data={data}

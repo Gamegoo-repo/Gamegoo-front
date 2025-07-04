@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AxiosError } from "axios";
 
 import PostItem, { PostItemData } from "@/components/common/PostItem";
+import Alert from "@/components/common/Alert";
 import { MemberPost } from "@/interface/board";
 import { AlertProps } from "@/interface/modal";
 import { RootState } from "@/redux/store";
@@ -145,14 +146,19 @@ const MoPost: React.FC<PostProps> = ({
   }
 
   return (
-    <PostItem
-      data={postItemData}
-      variant="mypage"
-      isClickable={false}
-      showTierSection={true}
-      showMoreButton={true}
-      onDeletePost={onDeletePost}
-    />
+    <>
+      {showAlert ? <Alert {...alertProps} /> : null}
+
+      <PostItem
+        data={postItemData}
+        variant="mypage"
+        isClickable={false}
+        showTierSection={true}
+        showMoreButton={true}
+        memberPost={isPost}
+        onDeletePost={onDeletePost}
+      />
+    </>
   );
 };
 
