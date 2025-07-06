@@ -37,7 +37,7 @@ import {
 } from "@/redux/slices/modalSlice";
 import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import Alert from "../common/Alert";
-import { AlertProps } from "@/interface/modal";
+import { AlertProps } from "@/types/modal/modal";
 import { useRouter } from "next/navigation";
 import {
   openChatRoom,

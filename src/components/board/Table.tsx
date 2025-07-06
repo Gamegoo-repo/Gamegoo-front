@@ -33,7 +33,7 @@ import { deleteFriend } from "@/api/friend/delete";
 import { cancelFriendRequest, sendFriendRequest } from "@/api/friend/request";
 import { blockMember, unblockMember } from "@/api/block/block";
 import { setDateFormatter } from "@/utils/timeFormat";
-import { AlertProps } from "@/interface/modal";
+import { AlertProps } from "@/types/modal/modal";
 import ReportModal from "@/components/readBoard/ReportModal";
 
 interface TableTitleProps {

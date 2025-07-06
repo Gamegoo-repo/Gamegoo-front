@@ -12,7 +12,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { MemberPost } from "@/types/api/board/board";
 import { RootState } from "@/redux/store";
-import { AlertProps } from "@/interface/modal";
+import { AlertProps } from "@/types/modal/modal";
 import { reportMember } from "@/api/report/report";
 
 const ReportModal = ({

@@ -17,7 +17,7 @@ import {
 } from "@/redux/slices/modalSlice";
 
 import { BoardListDetail } from "@/types/api/board/board";
-import { AlertProps } from "@/interface/modal";
+import { AlertProps } from "@/types/modal/modal";
 
 interface PostListProps {
   content: BoardListDetail[];
