@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 import styled from "styled-components";
 
-import useMediaQueries from "@/hooks/useMediaQueries";
+import { useMediaQueries } from "@/hooks";
 import { theme } from "@/styles/theme";
 
 import Alert from "./Alert";

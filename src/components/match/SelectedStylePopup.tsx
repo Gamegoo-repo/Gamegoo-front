@@ -4,8 +4,8 @@ import Image from "next/image";
 
 import styled, { css } from "styled-components";
 
-import { GAME_STYLE } from "@/constants/profile";
-import useMediaQueries from "@/hooks/useMediaQueries";
+import { GAME_STYLE } from "@/constants";
+import { useMediaQueries } from "@/hooks";
 import { theme } from "@/styles/theme";
 
 type profileType = "me" | "other" | "none" | "mini";

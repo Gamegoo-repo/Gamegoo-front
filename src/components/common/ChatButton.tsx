@@ -5,8 +5,7 @@ import Image from "next/image";
 
 import styled from "styled-components";
 
-import useMediaQueries from "@/hooks/useMediaQueries";
-import { resetPosition } from "@/redux/slices/chatPositionSlice";
+import { useMediaQueries } from "@/hooks";
 import { toggleChat } from "@/redux/slices/chatSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";

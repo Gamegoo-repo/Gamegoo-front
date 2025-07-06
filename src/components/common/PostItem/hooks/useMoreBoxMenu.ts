@@ -3,11 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { useRouter } from "next/navigation";
 
-import { getMemberPost } from "@/api/board/board";
+import { getMemberPost } from "@/api";
 import { setOpenModal } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
-import { MemberPost } from "@/types/api/board/board";
-import { MoreBoxMenuItems } from "@/types/modal/moreBox";
+import type { MemberPost, MoreBoxMenuItems } from "@/types";
 
 import { PostItemData } from "../PostItem";
 

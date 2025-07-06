@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 import { useRouter } from "next/navigation";
 
-import { getAccessToken } from "@/utils/storage";
+import { getAccessToken } from "@/utils";
 
 const ProtectRoute: React.FC<{ children: React.ReactNode }> = ({
   children,

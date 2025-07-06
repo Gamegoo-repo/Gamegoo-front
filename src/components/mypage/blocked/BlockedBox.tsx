@@ -1,21 +1,15 @@
 import React, { useState } from "react";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import styled, { css } from "styled-components";
 
-import {
-  blockMember,
-  deleteBlockMember,
-  unblockMember,
-} from "@/api/block/block";
-import ConfirmModal from "@/components/common/ConfirmModal";
-import MoreBox from "@/components/common/MoreBox";
-import useMediaQueries from "@/hooks/useMediaQueries";
+import { blockMember, deleteBlockMember, unblockMember } from "@/api";
+import { ConfirmModal, MoreBox } from "@/components/common";
+import { useMediaQueries } from "@/hooks";
 import { theme } from "@/styles/theme";
-import { BlockList } from "@/types/friend/blockList";
-import { getProfileBgColor } from "@/utils/profile";
+import type { BlockList } from "@/types";
+import { getProfileBgColor } from "@/utils";
 
 import MoreBoxButton from "../../readBoard/MoreBoxButton";
 

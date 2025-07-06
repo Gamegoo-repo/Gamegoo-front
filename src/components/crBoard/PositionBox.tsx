@@ -5,11 +5,11 @@ import Image from "next/image";
 import styled from "styled-components";
 import { css } from "styled-components";
 
-import { POSITIONS } from "@/constants/profile";
-import useMediaQueries from "@/hooks/useMediaQueries";
+import { POSITIONS } from "@/constants";
+import { useMediaQueries } from "@/hooks";
 import { theme } from "@/styles/theme";
-import { Position, PositionType } from "@/types/position/position";
-import { setPositionImg } from "@/utils/custom";
+import type { Position, PositionType } from "@/types";
+import { setPositionImg } from "@/utils";
 
 import PositionCategory from "../common/PositionCategory";
 

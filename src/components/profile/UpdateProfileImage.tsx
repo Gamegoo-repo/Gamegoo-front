@@ -4,9 +4,9 @@ import Image from "next/image";
 
 import styled, { css } from "styled-components";
 
-import useMediaQueries from "@/hooks/useMediaQueries";
+import { useMediaQueries } from "@/hooks";
 import { theme } from "@/styles/theme";
-import { getProfileBgColor } from "@/utils/profile";
+import { getProfileBgColor } from "@/utils";
 
 type ProfileType = "matching" | "mypage" | "board";
 type SizeType = "large" | "medium" | "semiMedium" | "small";

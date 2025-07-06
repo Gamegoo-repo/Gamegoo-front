@@ -1,10 +1,7 @@
-import Image from "next/image";
-
 import styled from "styled-components";
 
-import useMediaQueries from "@/hooks/useMediaQueries";
-import { setCustomProfileImg } from "@/utils/custom";
-import { getProfileBgColor } from "@/utils/profile";
+import { useMediaQueries } from "@/hooks";
+import { getProfileBgColor, setCustomProfileImg } from "@/utils";
 
 interface ProfileImageProps {
   image: number;

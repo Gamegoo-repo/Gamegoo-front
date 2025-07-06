@@ -4,9 +4,9 @@ import Image from "next/image";
 
 import styled from "styled-components";
 
-import { getSearchFriend } from "@/api/friend/get";
+import { getSearchFriend } from "@/api";
 import { theme } from "@/styles/theme";
-import { FriendList } from "@/types/friend/friendList";
+import type { FriendList } from "@/types";
 
 interface SearchBarProps {
   onSearch: (friends: FriendList[] | null) => void;

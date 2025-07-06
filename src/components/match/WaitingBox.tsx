@@ -6,7 +6,7 @@ import styled from "styled-components";
 
 import { fadeIn, fadeOut, growShrink } from "@/styles/animation";
 import { theme } from "@/styles/theme";
-import { formatTime } from "@/utils/timeFormat";
+import { formatTime } from "@/utils";
 
 interface WaitingBoxProps {
   isMobile: boolean | undefined;

@@ -5,13 +5,10 @@ import { useRouter } from "next/navigation";
 
 import styled from "styled-components";
 
-import {
-  getPopupNotification,
-  patchReadNotification,
-} from "@/api/notification/notification";
-import useMediaQueries from "@/hooks/useMediaQueries";
+import { getPopupNotification, patchReadNotification } from "@/api";
+import { useMediaQueries } from "@/hooks";
 import { theme } from "@/styles/theme";
-import { Notification } from "@/types/notification/notification";
+import type { Notification } from "@/types";
 
 import AlertBox from "../mypage/notification/AlertBox";
 

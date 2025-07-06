@@ -5,23 +5,20 @@ import Image from "next/image";
 
 import styled from "styled-components";
 
-import { blockMember } from "@/api/block/block";
-import { leaveChatroom } from "@/api/chat/chat";
-import { getFriendsList } from "@/api/friend/get";
-import { patchFriendStar } from "@/api/friend/star";
 import {
+  blockMember,
   editManners,
   getBadMannerValues,
+  getFriendsList,
   getMannerValues,
+  leaveChatroom,
+  patchFriendStar,
   postBadMannerValue,
   postMannerValue,
-} from "@/api/manner/manner";
-import { reportMember } from "@/api/report/report";
-import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants/mannerLevel";
-import { REPORT_REASON } from "@/constants/report";
-import { notify } from "@/hooks/notify";
-import useDrag from "@/hooks/useDrag";
-import useMediaQueries from "@/hooks/useMediaQueries";
+  reportMember,
+} from "@/api";
+import { BAD_MANNER_TYPES, MANNER_TYPES, REPORT_REASON } from "@/constants";
+import { notify, useDrag, useMediaQueries } from "@/hooks";
 import {
   closeChat,
   closeChatRoom,
@@ -33,21 +30,11 @@ import { setCloseModal, setOpenModal } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
 import { socket } from "@/socket";
 import { theme } from "@/styles/theme";
-import { ChatroomList } from "@/types/api/chat/chat";
-import { BaseMannerData } from "@/types/api/manner/manner";
-import { FriendList } from "@/types/friend/friendList";
-import { getAccessToken } from "@/utils/storage";
+import type { BaseMannerData, ChatroomList, FriendList } from "@/types";
+import { getAccessToken } from "@/utils";
 
-import Button from "../common/Button";
-import Checkbox from "../common/Checkbox";
-import ConfirmModal from "../common/ConfirmModal";
-import FormModal from "../common/FormModal";
-import Input from "../common/Input";
-import ChatFriendList from "./ChatFriendList";
-import ChatLayout from "./ChatLayout";
-import ChatRoomList from "./ChatRoomList";
-import SearchBar from "./SearchBar";
-import Tabs from "./Tabs";
+import { Button, Checkbox, ConfirmModal, FormModal, Input } from "../common";
+import { ChatFriendList, ChatLayout, ChatRoomList, SearchBar, Tabs } from "./";
 
 const Layout = () => {
   const dispatch = useDispatch();

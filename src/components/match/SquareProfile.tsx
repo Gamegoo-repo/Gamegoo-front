@@ -4,19 +4,13 @@ import Image from "next/image";
 
 import styled from "styled-components";
 
-import useMediaQueries from "@/hooks/useMediaQueries";
+import { useMediaQueries } from "@/hooks";
 import { theme } from "@/styles/theme";
-import { GameMode } from "@/types/game/gameMode";
-import { Position as PositionType } from "@/types/position/position";
-import { Mike } from "@/types/user/mike";
-import { setAbbrevTier } from "@/utils/custom";
-import { getProfileBgColor } from "@/utils/profile";
+import type { GameMode, Mike, Position as PositionType } from "@/types";
+import { getProfileBgColor } from "@/utils";
 
-import Box from "../common/Box";
-import MannerLevelBox from "../common/MannerLevelBox";
-import Mic from "../common/Mic";
-import RankTier from "../common/RankTier";
-import PositionBox from "../crBoard/PositionBox";
+import { Box, MannerLevelBox, Mic, RankTier } from "../common";
+import { PositionBox } from "../crBoard";
 
 interface User {
   memberId: number;

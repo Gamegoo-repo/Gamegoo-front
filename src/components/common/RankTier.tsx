@@ -3,8 +3,7 @@ import React from "react";
 import styled, { css } from "styled-components";
 
 import { theme } from "@/styles/theme";
-import { setAbbrevTier } from "@/utils/custom";
-import { toCapitalizedString, toLowerCaseString } from "@/utils/string";
+import { setAbbrevTier, toCapitalizedString, toLowerCaseString } from "@/utils";
 
 type RankType = "solo" | "free";
 

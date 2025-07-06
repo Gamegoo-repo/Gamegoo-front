@@ -5,17 +5,13 @@ import { useRouter } from "next/navigation";
 
 import styled from "styled-components";
 
-import { reportMember } from "@/api/report/report";
-import Button from "@/components/common/Button";
-import Checkbox from "@/components/common/Checkbox";
-import FormModal from "@/components/common/FormModal";
-import Input from "@/components/common/Input";
+import { reportMember } from "@/api";
+import { Button, Checkbox, FormModal, Input } from "@/components/common";
 import { REPORT_REASON } from "@/constants/report";
-import { setCloseModal, setOpenReadingModal } from "@/redux/slices/modalSlice";
+import { setCloseModal } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-import { MemberPost } from "@/types/api/board/board";
-import { AlertProps } from "@/types/modal/modal";
+import type { AlertProps, MemberPost } from "@/types";
 
 const ReportModal = ({
   isPost,

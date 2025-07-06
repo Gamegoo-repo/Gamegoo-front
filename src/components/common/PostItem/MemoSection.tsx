@@ -3,8 +3,8 @@ import { FC } from "react";
 import styled from "styled-components";
 
 import { theme } from "@/styles/theme";
-import { GameMode } from "@/types/game/gameMode";
-import { setDateFormatter } from "@/utils/timeFormat";
+import type { GameMode } from "@/types";
+import { setDateFormatter } from "@/utils";
 
 import { PostItemData } from "./PostItem";
 

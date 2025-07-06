@@ -1,17 +1,13 @@
 import styled from "styled-components";
 
-import HeaderTitle from "@/components/common/HeaderTitle";
-import MannerLevelBar from "@/components/common/MannerLevelBar";
-import Profile from "@/components/profile/Profile";
-import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants/mannerLevel";
-import useMediaQueries from "@/hooks/useMediaQueries";
+import { HeaderTitle, MannerLevelBar } from "@/components/common";
+import { Champion, Tooltip } from "@/components/common";
+import { Profile } from "@/components/profile";
+import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants";
+import { useMediaQueries } from "@/hooks";
 import { theme } from "@/styles/theme";
-import { User, profileType } from "@/types/api/user/profile/profile";
-import { formatDecimal } from "@/utils/decimalFormat";
-import { getUserId } from "@/utils/storage";
-
-import Champion from "../common/Champion";
-import Tooltip from "../common/Tooltip";
+import type { User, profileType } from "@/types";
+import { formatDecimal, getUserId } from "@/utils";
 
 export interface Manner {
   memberId?: number;

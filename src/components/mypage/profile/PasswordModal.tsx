@@ -4,11 +4,9 @@ import Image from "next/image";
 
 import styled from "styled-components";
 
-import { changePassword, checkPassword } from "@/api/password/password";
-import Button from "@/components/common/Button";
-import FormModal from "@/components/common/FormModal";
-import Input from "@/components/common/Input";
-import { notify } from "@/hooks/notify";
+import { changePassword, checkPassword } from "@/api";
+import { Button, FormModal, Input } from "@/components/common";
+import { notify } from "@/hooks";
 import { theme } from "@/styles/theme";
 
 interface PasswordModalProps {

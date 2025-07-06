@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 
-import { profile } from "console";
 import styled, { css } from "styled-components";
 
 import {

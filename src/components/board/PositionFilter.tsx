@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 import { theme } from "@/styles/theme";
-import { Position } from "@/types/position/position";
+import type { Position } from "@/types";
 
 import All from "../../../public/assets/images/position/default/default_all.svg";
 import Jungle from "../../../public/assets/images/position/default/default_jungle.svg";

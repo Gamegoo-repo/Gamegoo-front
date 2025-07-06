@@ -3,9 +3,8 @@ import Image from "next/image";
 import ProgressBar from "@ramonak/react-progress-bar";
 import styled from "styled-components";
 
+import { Tooltip } from "@/components/common";
 import { theme } from "@/styles/theme";
-
-import Tooltip from "../common/Tooltip";
 
 interface WinningRateProps {
   completed: number;

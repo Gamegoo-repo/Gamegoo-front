@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { useRouter } from "next/navigation";
 
-import { deletePost, pullUpPost } from "@/api/board/board";
-import { notify } from "@/hooks/notify";
+import { deletePost, pullUpPost } from "@/api";
+import { notify } from "@/hooks";
 import { setRefresh } from "@/redux/slices/boardSlice";
 import {
   setCloseReadingModal,
@@ -12,7 +12,7 @@ import {
 } from "@/redux/slices/modalSlice";
 import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { RootState } from "@/redux/store";
-import { MemberPost } from "@/types/api/board/board";
+import type { MemberPost } from "@/types";
 
 import { PostItemData } from "../PostItem";
 

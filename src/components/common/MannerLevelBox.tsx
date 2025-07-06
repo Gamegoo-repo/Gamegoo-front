@@ -5,11 +5,11 @@ import Image from "next/image";
 import styled from "styled-components";
 import { css } from "styled-components";
 
-import { getMemberMannerKeyword } from "@/api/manner/manner";
-import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants/mannerLevel";
-import useMediaQueries from "@/hooks/useMediaQueries";
+import { getMemberMannerKeyword } from "@/api";
+import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants";
+import { useMediaQueries } from "@/hooks";
 import { theme } from "@/styles/theme";
-import { MannerKeyword } from "@/types/api/manner/manner";
+import type { MannerKeyword } from "@/types";
 
 interface MannerLevelBoxProps {
   memberId: number;

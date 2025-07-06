@@ -12,10 +12,8 @@ import { useRouter } from "next/navigation";
 
 import styled from "styled-components";
 
-import { editPost, postBoard } from "@/api/board/board";
-import { getMyProfile } from "@/api/user/profile/get";
-import { GAME_MODE } from "@/constants/board";
-import { notify } from "@/hooks/notify";
+import { editPost, getMyProfile, postBoard } from "@/api";
+import { GAME_MODE } from "@/constants";
 import { setClosePostingModal } from "@/redux/slices/modalSlice";
 import {
   PostUpdate,
@@ -26,21 +24,19 @@ import {
 import { setUserProfile } from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-import { PostReq } from "@/types/api/board/board";
-import { GameMode } from "@/types/game/gameMode";
-import { Position } from "@/types/position/position";
-import { Mike } from "@/types/user/mike";
+import type { GameMode, Mike, Position, PostReq } from "@/types";
 
-import Alert from "../common/Alert";
-import Button from "../common/Button";
-import ConfirmModal from "../common/ConfirmModal";
-import Dropdown from "../common/Dropdown";
-import Input from "../common/Input";
-import Toggle from "../common/Toggle";
-import CRModal from "../crBoard/CRModal";
-import PositionBox, { PositionState } from "../crBoard/PositionBox";
-import UserAccount from "../crBoard/UserAccount";
-import UpdateProfileImage from "../profile/UpdateProfileImage";
+import {
+  Alert,
+  Button,
+  ConfirmModal,
+  Dropdown,
+  Input,
+  Toggle,
+} from "../common";
+import { CRModal, PositionBox, UserAccount } from "../crBoard";
+import type { PositionState } from "../crBoard/PositionBox";
+import { UpdateProfileImage } from "../profile";
 import GameStyle from "./GameStyle";
 
 interface PostBoardProps {

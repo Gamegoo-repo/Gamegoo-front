@@ -5,20 +5,17 @@ import { useRouter } from "next/navigation";
 
 import styled from "styled-components";
 
-import Layout from "@/components/chat/Layout";
-import Alert from "@/components/common/Alert";
-import ReadBoard from "@/components/readBoard/ReadBoard";
-import ReportModal from "@/components/readBoard/ReportModal";
+import { Alert, Layout, ReadBoard, ReportModal } from "@/components";
 import {
   setCloseReadingModal,
   setOpenReadingModal,
 } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-import { BoardListDetail } from "@/types/api/board/board";
-import { AlertProps } from "@/types/modal/modal";
+import { AlertProps } from "@/types";
+import { BoardListDetail } from "@/types/api";
 
-import PostItem from "../common/PostItem";
+import { PostItem } from "../common";
 
 interface PostListProps {
   content: BoardListDetail[];

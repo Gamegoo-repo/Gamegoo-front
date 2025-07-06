@@ -2,7 +2,7 @@ import { FC } from "react";
 
 import styled from "styled-components";
 
-import PositionBox from "../../crBoard/PositionBox";
+import { PositionBox } from "../../crBoard";
 import { PostItemData } from "./PostItem";
 
 interface PositionSectionProps {

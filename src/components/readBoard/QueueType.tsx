@@ -3,8 +3,8 @@ import Image from "next/image";
 import styled from "styled-components";
 
 import { theme } from "@/styles/theme";
-import { GameMode } from "@/types/game/gameMode";
-import { setQueueType } from "@/utils/custom";
+import type { GameMode } from "@/types";
+import { setQueueType } from "@/utils";
 
 interface QueueTypeProps {
   value: GameMode;

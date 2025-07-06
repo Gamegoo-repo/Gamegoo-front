@@ -3,7 +3,7 @@ import Image from "next/image";
 import styled from "styled-components";
 
 import { theme } from "@/styles/theme";
-import { AlertProps } from "@/types/modal/modal";
+import type { AlertProps } from "@/types";
 
 const Alert = (props: AlertProps) => {
   const { icon, width, height, content, alt, onClose, buttonText } = props;

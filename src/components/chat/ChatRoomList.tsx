@@ -3,22 +3,20 @@ import { useDispatch, useSelector } from "react-redux";
 
 import styled from "styled-components";
 
-import { getChatrooms } from "@/api/chat/chat";
-import { deleteFriend } from "@/api/friend/delete";
 import {
   acceptFriendRequest,
   cancelFriendRequest,
+  deleteFriend,
+  getChatrooms,
   rejectFriendRequest,
   sendFriendRequest,
-} from "@/api/friend/request";
-import useChatList from "@/hooks/useChatList";
-import useChatMessage from "@/hooks/useChatMessage";
+} from "@/api";
+import { useChatList, useChatMessage } from "@/hooks";
 import { setChatEnterType, setCurrentChatUuid } from "@/redux/slices/chatSlice";
 import { setOpenModal } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-import { ChatroomList } from "@/types/api/chat/chat";
-import { MoreBoxMenuItems } from "@/types/modal/moreBox";
+import type { ChatroomList, MoreBoxMenuItems } from "@/types";
 
 import ChatRoomItem from "./ChatRoomItem";
 

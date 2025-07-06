@@ -6,7 +6,7 @@ import emailjs from "@emailjs/browser";
 import { motion } from "framer-motion";
 import styled from "styled-components";
 
-import { notify } from "@/hooks/notify";
+import { notify } from "@/hooks";
 import { theme } from "@/styles/theme";
 
 import Input from "./Input";

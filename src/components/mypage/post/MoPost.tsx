@@ -5,13 +5,10 @@ import { useRouter } from "next/navigation";
 
 import { AxiosError } from "axios";
 
-import { getMemberPost, getNonMemberPost } from "@/api/board/board";
-import Alert from "@/components/common/Alert";
-import PostItem, { PostItemData } from "@/components/common/PostItem";
+import { getMemberPost, getNonMemberPost } from "@/api";
+import { Alert, PostItem, PostItemData } from "@/components/common";
 import { RootState } from "@/redux/store";
-import { MemberPost } from "@/types/api/board/board";
-import { User } from "@/types/api/user/profile/profile";
-import { AlertProps } from "@/types/modal/modal";
+import type { AlertProps, MemberPost, User } from "@/types";
 
 export interface PostProps {
   user: User;

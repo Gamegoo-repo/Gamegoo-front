@@ -2,7 +2,7 @@ import { usePathname, useRouter } from "next/navigation";
 
 import styled from "styled-components";
 
-import { MYPAGE_TAB } from "@/constants/tab";
+import { MYPAGE_TAB } from "@/constants";
 import { theme } from "@/styles/theme";
 
 const MypageTab = () => {

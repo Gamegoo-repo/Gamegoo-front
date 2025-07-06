@@ -4,8 +4,7 @@ import styled from "styled-components";
 
 import useMediaQueries from "@/hooks/useMediaQueries";
 import { theme } from "@/styles/theme";
-import { ChatroomList } from "@/types/api/chat/chat";
-import { MoreBoxMenuItems } from "@/types/modal/moreBox";
+import type { ChatroomList, MoreBoxMenuItems } from "@/types";
 import { getProfileBgColor } from "@/utils/profile";
 import { setChatRoomDateFormatter } from "@/utils/timeFormat";
 

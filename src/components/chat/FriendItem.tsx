@@ -6,8 +6,8 @@ import styled from "styled-components";
 
 import { setChatEnterType } from "@/redux/slices/chatSlice";
 import { theme } from "@/styles/theme";
-import { FriendList } from "@/types/friend/friendList";
-import { getProfileBgColor } from "@/utils/profile";
+import type { FriendList } from "@/types";
+import { getProfileBgColor } from "@/utils";
 
 import DeleteFriend from "./DeleteFriend";
 

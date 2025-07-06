@@ -2,7 +2,7 @@ import Image from "next/image";
 
 import styled, { css } from "styled-components";
 
-import useMediaQueries from "@/hooks/useMediaQueries";
+import { useMediaQueries } from "@/hooks";
 import { theme } from "@/styles/theme";
 
 import ChevronDownIcon from "../../../public/assets/icons/chevron_down.svg";

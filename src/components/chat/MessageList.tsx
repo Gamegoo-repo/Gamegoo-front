@@ -13,8 +13,8 @@ import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 import styled, { keyframes } from "styled-components";
 
-import { getChatList, markChatAsRead } from "@/api/chat/chat";
-import useChatMessage from "@/hooks/useChatMessage";
+import { getChatList, markChatAsRead } from "@/api";
+import { useChatMessage } from "@/hooks";
 import { closeChat, closeChatRoom } from "@/redux/slices/chatSlice";
 import {
   setCloseMannerStatusModal,
@@ -23,16 +23,12 @@ import {
 } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-import {
-  Chat,
-  ChatMessageDto,
-  DesignedSystemMessage,
-} from "@/types/api/chat/chat";
-import { getProfileBgColor } from "@/utils/profile";
-import { setChatDateFormatter, setChatTimeFormatter } from "@/utils/timeFormat";
+import type { Chat, ChatMessageDto, DesignedSystemMessage } from "@/types";
+import { getProfileBgColor } from "@/utils";
+import { setChatDateFormatter, setChatTimeFormatter } from "@/utils";
 
-import ConfirmModal from "../common/ConfirmModal";
-import ReadBoard from "../readBoard/ReadBoard";
+import { ConfirmModal } from "../common";
+import { ReadBoard } from "../readBoard";
 
 interface MessageListProps {
   chatEnterData: Chat;

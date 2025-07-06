@@ -4,10 +4,10 @@ import Image from "next/image";
 
 import styled, { css } from "styled-components";
 
-import { POSITION } from "@/constants/position";
-import useMediaQueries from "@/hooks/useMediaQueries";
+import { POSITION } from "@/constants";
+import { useMediaQueries } from "@/hooks";
 import { theme } from "@/styles/theme";
-import { Position, PositionType } from "@/types/position/position";
+import type { Position, PositionType } from "@/types";
 
 import All from "../../../public/assets/images/position/position_all_unclicked.svg";
 import Jungle from "../../../public/assets/images/position/position_jungle_unclicked.svg";

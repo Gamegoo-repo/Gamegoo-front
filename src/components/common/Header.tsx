@@ -7,11 +7,9 @@ import { usePathname, useRouter } from "next/navigation";
 
 import styled from "styled-components";
 
-import { postLogout } from "@/api/login/logout";
-import { getUnreadNotificationCount } from "@/api/notification/notification";
-import { socketLogout } from "@/api/socket";
-import { HEADER_MODAL_TAB } from "@/constants/tab";
-import useMediaQueries from "@/hooks/useMediaQueries";
+import { getUnreadNotificationCount, postLogout, socketLogout } from "@/api";
+import { HEADER_MODAL_TAB } from "@/constants";
+import { useMediaQueries } from "@/hooks";
 import { closeChat } from "@/redux/slices/chatSlice";
 import { setNotiCount } from "@/redux/slices/notiSlice";
 import {
@@ -22,14 +20,14 @@ import {
 } from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-import { getProfileBgColor } from "@/utils/profile";
+import { getProfileBgColor } from "@/utils";
 import {
   clearTokens,
   getAccessToken,
   getName,
   getProfileImg,
   getUserId,
-} from "@/utils/storage";
+} from "@/utils";
 
 import AlertWindow from "../alert/AlertWindow";
 import Alert from "./Alert";

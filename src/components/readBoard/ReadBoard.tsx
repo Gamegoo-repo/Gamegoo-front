@@ -6,19 +6,29 @@ import { useRouter } from "next/navigation";
 import { AxiosError } from "axios";
 import styled from "styled-components";
 
-import { blockMember, unblockMember } from "@/api/block/block";
+import { blockMember, unblockMember } from "@/api";
+import { deletePost, getMemberPost, getNonMemberPost, pullUpPost } from "@/api";
+import { cancelFriendRequest, deleteFriend, sendFriendRequest } from "@/api";
 import {
-  deletePost,
-  getMemberPost,
-  getNonMemberPost,
-  pullUpPost,
-} from "@/api/board/board";
-import { deleteFriend } from "@/api/friend/delete";
-import { cancelFriendRequest, sendFriendRequest } from "@/api/friend/request";
-import { reportMember } from "@/api/report/report";
-import ReportModal from "@/components/readBoard/ReportModal";
-import { notify } from "@/hooks/notify";
-import useMediaQueries from "@/hooks/useMediaQueries";
+  Alert,
+  Button,
+  Champion,
+  ConfirmModal,
+  LoadingSpinner,
+  MannerLevel,
+  MannerLevelBox,
+  MoreBox,
+  RankTier,
+} from "@/components/common";
+import { CRModal, PositionBox, UserAccount } from "@/components/crBoard";
+import {
+  MoreBoxButton,
+  ProfileImage,
+  QueueType,
+  ReportModal,
+  WinningRate,
+} from "@/components/readBoard";
+import { notify, useMediaQueries } from "@/hooks";
 import { setRefresh } from "@/redux/slices/boardSlice";
 import {
   openChatRoom,
@@ -27,39 +37,22 @@ import {
   setErrorMessage,
 } from "@/redux/slices/chatSlice";
 import {
-  setCloseModal,
   setCloseReadingModal,
   setOpenModal,
   setOpenPostingModal,
-  setOpenReadingModal,
 } from "@/redux/slices/modalSlice";
 import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-import { MemberPost } from "@/types/api/board/board";
-import { GameMode } from "@/types/game/gameMode";
-import { AlertProps } from "@/types/modal/modal";
-import { MoreBoxMenuItems } from "@/types/modal/moreBox";
-import { setPostingDateFormatter } from "@/utils/timeFormat";
+import type {
+  AlertProps,
+  GameMode,
+  MemberPost,
+  MoreBoxMenuItems,
+} from "@/types";
+import { setPostingDateFormatter } from "@/utils";
 
-import Alert from "../common/Alert";
-import Button from "../common/Button";
-import Champion from "../common/Champion";
-import ConfirmModal from "../common/ConfirmModal";
-import LoadingSpinner from "../common/LoadingSpinner";
-import MannerLevel from "../common/MannerLevel";
-import MannerLevelBox from "../common/MannerLevelBox";
-import Mic from "../common/Mic";
-import MoreBox from "../common/MoreBox";
-import RankTier from "../common/RankTier";
-import CRModal from "../crBoard/CRModal";
-import PositionBox from "../crBoard/PositionBox";
-import UserAccount from "../crBoard/UserAccount";
 import GameStyle from "./GameStyle";
-import MoreBoxButton from "./MoreBoxButton";
-import ProfileImage from "./ProfileImage";
-import QueueType from "./QueueType";
-import WinningRate from "./WinningRate";
 
 interface ReadBoardProps {
   postId: number;

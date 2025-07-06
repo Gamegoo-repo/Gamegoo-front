@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 import styled from "styled-components";
 
-import useMediaQueries from "@/hooks/useMediaQueries";
+import { useMediaQueries } from "@/hooks";
 import {
   closeChat,
   closeChatRoom,
@@ -15,12 +15,10 @@ import {
 } from "@/redux/slices/chatSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-import { Chat } from "@/types/api/chat/chat";
-import { MoreBoxMenuItems } from "@/types/modal/moreBox";
-import { getProfileBgColor } from "@/utils/profile";
+import type { Chat, MoreBoxMenuItems } from "@/types";
+import { getProfileBgColor } from "@/utils";
 
-import Alert from "../common/Alert";
-import MoreBox from "../common/MoreBox";
+import { Alert, MoreBox } from "../common";
 
 interface MessageHeaderProps {
   isMoreBoxOpen: boolean;
