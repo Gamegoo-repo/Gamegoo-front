@@ -95,18 +95,22 @@ const ProfilePage = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (!socket) return;
+  useEffect(
+    () => {
+      if (!socket) return;
 
-    const handleMatchingCount = (data: any) => {
-      setTierCounts({ ...data.data.tierCount, total: data.data.userCount });
-    };
+      const handleMatchingCount = (data: any) => {
+        setTierCounts({ ...data.data.tierCount, total: data.data.userCount });
+      };
 
-    socket.on("matching-count", handleMatchingCount);
-    return () => {
-      socket?.off("matching-count", handleMatchingCount); // 메모리 누수 방지
-    };
-  }, [socket]);
+      socket.on("matching-count", handleMatchingCount);
+      return () => {
+        socket?.off("matching-count", handleMatchingCount); // 메모리 누수 방지
+      };
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [socket]
+  );
 
   useEffect(() => {
     console.log("프로필 페이지에서 matching-count 수신", tierCounts);

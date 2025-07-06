@@ -7,17 +7,15 @@ import { useRouter } from "next/navigation";
 
 import styled from "styled-components";
 
-import { postRiotJoin } from "@/api/riot/join";
-import Button from "@/components/common/Button";
-import Checkbox from "@/components/common/Checkbox";
-import TermModal from "@/components/common/TermModal";
+import { postRiotJoin } from "@/api";
+import { Button, Checkbox, TermModal } from "@/components";
 import {
   MARKETING_TERMS,
   PRIVATE_TERMS,
   SERVICE_TERMS,
 } from "@/constants/terms";
 import { createTerms } from "@/data/terms";
-import { notify } from "@/hooks/notify";
+import { notify } from "@/hooks";
 import { clearSignIn, updateTerms } from "@/redux/slices/signInSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";

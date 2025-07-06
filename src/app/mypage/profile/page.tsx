@@ -3,24 +3,17 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import styled from "styled-components";
 
-import { deleteMember } from "@/api/user/delete";
-import { getMyProfile } from "@/api/user/profile/get";
-import ConfirmModal from "@/components/common/ConfirmModal";
-import MyPageProfile from "@/components/mypage/profile/MyPageProfile";
-import PasswordModal from "@/components/mypage/profile/PasswordModal";
-import useMediaQueries from "@/hooks/useMediaQueries";
+import { deleteMember, getMyProfile } from "@/api";
+import { ConfirmModal, MyPageProfile } from "@/components";
+import { useMediaQueries } from "@/hooks";
 import { setUserMike, setUserProfile } from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-// import Input from "@/components/common/Input";
-// import { checkPassword } from "@/api/password/password";
-import { clearTokens } from "@/utils/storage";
-import { formatDate } from "@/utils/timeFormat";
+import { clearTokens } from "@/utils";
 
 const passwordLength = 10;
 
@@ -62,19 +55,23 @@ const MyProfilePage = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await getMyProfile();
-        dispatch(setUserProfile(response.data));
-        dispatch(setUserMike(response.data.mike));
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  useEffect(
+    () => {
+      const fetchProfile = async () => {
+        try {
+          const response = await getMyProfile();
+          dispatch(setUserProfile(response.data));
+          dispatch(setUserMike(response.data.mike));
+        } catch (error) {
+          console.error(error);
+        }
+      };
 
-    fetchProfile();
-  }, []);
+      fetchProfile();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   /* user 업데이트 값 가져오기 */
   useEffect(() => {

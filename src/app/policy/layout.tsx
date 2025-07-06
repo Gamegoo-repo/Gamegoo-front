@@ -6,8 +6,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import styled from "styled-components";
 
-import CategoryToggle from "@/components/common/CategoryToggle";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
+import { CategoryToggle, LoadingSpinner } from "@/components";
 import { theme } from "@/styles/theme";
 
 const PolicyLayout = ({ children }: { children?: React.ReactNode }) => {

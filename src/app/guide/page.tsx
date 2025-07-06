@@ -4,12 +4,8 @@ import { useState } from "react";
 
 import styled from "styled-components";
 
-import Button from "@/components/common/Button";
-import ConfirmModal from "@/components/common/ConfirmModal";
-import Input from "@/components/common/Input";
-import RadioCard from "@/components/common/RadioCard";
-import Toggle from "@/components/common/Toggle";
-import { Mike } from "@/types/user/mike";
+import { Button, ConfirmModal, Input, RadioCard, Toggle } from "@/components";
+import type { Mike } from "@/types";
 
 const Guide = () => {
   /* Input State */

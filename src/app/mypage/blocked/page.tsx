@@ -4,12 +4,11 @@ import { useEffect, useState } from "react";
 
 import styled from "styled-components";
 
-import { getBlockList } from "@/api/block/get";
-import Pagination from "@/components/common/Pagination";
-import BlockedBox from "@/components/mypage/blocked/BlockedBox";
-import useMediaQueries from "@/hooks/useMediaQueries";
+import { getBlockList } from "@/api";
+import { BlockedBox, Pagination } from "@/components";
+import { useMediaQueries } from "@/hooks";
 import { theme } from "@/styles/theme";
-import { BlockList } from "@/types/friend/blockList";
+import type { BlockList } from "@/types";
 
 const MyBlockedPage = () => {
   const isMobile = useMediaQueries({ breakpoint: 700 });

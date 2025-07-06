@@ -190,77 +190,85 @@ const Complete = () => {
     }
   }, [searchParams]);
 
-  useEffect(() => {
-    const fetchUserMe = async () => {
-      try {
-        const response1 = await getMyProfile();
-        const profileData = response1.data;
-        const response2 = await getMemberMannerLevel(profileData.id);
-        const mannerData = response2.data;
+  useEffect(
+    () => {
+      const fetchUserMe = async () => {
+        try {
+          const response1 = await getMyProfile();
+          const profileData = response1.data;
+          const response2 = await getMemberMannerLevel(profileData.id);
+          const mannerData = response2.data;
 
-        const transformedUserMe: User = {
-          memberId: profileData.id,
-          gameName: profileData.gameName,
-          tag: profileData.tag,
-          soloTier: profileData.soloTier,
-          freeTier: profileData.freeTier,
-          soloRank: profileData.soloRank,
-          freeRank: profileData.freeRank,
-          mannerLevel: mannerData.mannerLevel,
-          profileImg: profileData.profileImg,
-          gameMode: rank,
-          mainP: profileData.mainP,
-          subP: profileData.subP,
-          wantP: profileData.wantP,
-          mike: profileData.mike,
-          gameStyleList: profileData.gameStyleResponseList.map(
-            (style: { gameStyleName: string }) => style.gameStyleName
-          ),
-        };
+          const transformedUserMe: User = {
+            memberId: profileData.id,
+            gameName: profileData.gameName,
+            tag: profileData.tag,
+            soloTier: profileData.soloTier,
+            freeTier: profileData.freeTier,
+            soloRank: profileData.soloRank,
+            freeRank: profileData.freeRank,
+            mannerLevel: mannerData.mannerLevel,
+            profileImg: profileData.profileImg,
+            gameMode: rank,
+            mainP: profileData.mainP,
+            subP: profileData.subP,
+            wantP: profileData.wantP,
+            mike: profileData.mike,
+            gameStyleList: profileData.gameStyleResponseList.map(
+              (style: { gameStyleName: string }) => style.gameStyleName
+            ),
+          };
 
-        setUserMe(transformedUserMe);
-      } catch (error) {
-        console.error("Failed to fetch user profile:", error);
-      }
-    };
+          setUserMe(transformedUserMe);
+        } catch (error) {
+          console.error("Failed to fetch user profile:", error);
+        }
+      };
 
-    fetchUserMe();
-  }, []);
+      fetchUserMe();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   const role = searchParams.get("role") || "";
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const secondaryTimerRef = useRef<NodeJS.Timeout | null>(null);
   const finalTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    // 10초 타이머 시작
-    timerRef.current = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        if (prevTime === 1) {
-          clearInterval(timerRef.current!);
-          handleTimeout();
-        }
-        return prevTime > 0 ? prevTime - 1 : 0;
+  useEffect(
+    () => {
+      // 10초 타이머 시작
+      timerRef.current = setInterval(() => {
+        setTimeLeft((prevTime) => {
+          if (prevTime === 1) {
+            clearInterval(timerRef.current!);
+            handleTimeout();
+          }
+          return prevTime > 0 ? prevTime - 1 : 0;
+        });
+      }, 1000);
+
+      // 언제든 10초 내 matching-fail이 오면 실패 처리
+      socket?.on("matching-fail", () => {
+        handleMatchingFailWithTimerClear(); // 매칭 실패 처리
       });
-    }, 1000);
 
-    // 언제든 10초 내 matching-fail이 오면 실패 처리
-    socket?.on("matching-fail", () => {
-      handleMatchingFailWithTimerClear(); // 매칭 실패 처리
-    });
-
-    // 소켓 이벤트 설정
-    if (role === "sender") {
-      socket?.on("matching-success-sender", handleMatchingSuccessSender);
-    }
-
-    return () => {
-      clearInterval(timerRef.current!);
+      // 소켓 이벤트 설정
       if (role === "sender") {
-        socket?.off("matching-success-sender", handleMatchingSuccessSender);
+        socket?.on("matching-success-sender", handleMatchingSuccessSender);
       }
-    };
-  }, []);
+
+      return () => {
+        clearInterval(timerRef.current!);
+        if (role === "sender") {
+          socket?.off("matching-success-sender", handleMatchingSuccessSender);
+        }
+      };
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   // 타임아웃 처리
   const handleTimeout = () => {

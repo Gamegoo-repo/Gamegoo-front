@@ -8,8 +8,7 @@ import { useRouter } from "next/navigation";
 
 import styled from "styled-components";
 
-import Button from "@/components/common/Button";
-import Input from "@/components/common/Input";
+import { Button, Input } from "@/components";
 import { updatePassword } from "@/redux/slices/signInSlice";
 import { RootState } from "@/redux/store";
 

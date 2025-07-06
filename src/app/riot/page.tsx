@@ -11,23 +11,26 @@ import crypto from "crypto-js";
 import { encode as base64urlEncode } from "js-base64";
 import styled from "styled-components";
 
-import Button from "@/components/common/Button";
-import Checkbox from "@/components/common/Checkbox";
+import { Button, Checkbox } from "@/components";
 import { clearSignIn } from "@/redux/slices/signInSlice";
 import { clearUserProfile } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
-import { clearTokens } from "@/utils/storage";
+import { clearTokens } from "@/utils";
 
 const RiotLogin = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const [autoLogin, setAutoLogin] = useState(false);
 
-  useEffect(() => {
-    dispatch(clearSignIn());
-    dispatch(clearUserProfile());
-    clearTokens();
-  }, []);
+  useEffect(
+    () => {
+      dispatch(clearSignIn());
+      dispatch(clearUserProfile());
+      clearTokens();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   /* 로그인 */
   const handleLogin = async () => {

@@ -7,7 +7,7 @@ import styled from "styled-components";
 
 import { Banner } from "@/components";
 import { MATCH_PAGE_DATA } from "@/constants";
-import useMediaQueries from "@/hooks/useMediaQueries";
+import { useMediaQueries } from "@/hooks";
 import { theme } from "@/styles/theme";
 
 const HomePage = () => {

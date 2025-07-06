@@ -9,14 +9,13 @@ import styled from "styled-components";
 import {
   getMemberMannerKeyword,
   getMemberMannerLevel,
-} from "@/api/manner/manner";
-import { getOtherProfile } from "@/api/user/profile/get";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
-import BlindProfile from "@/components/user/BlindProfile";
-import UserProfile, { Manner } from "@/components/user/UserProfile";
+  getOtherProfile,
+} from "@/api";
+import { BlindProfile, LoadingSpinner, UserProfile } from "@/components";
+import type { Manner } from "@/components/user/UserProfile";
 import { DEFAULT_MANNER, DEFAULT_PROFILE } from "@/data/profile/default";
-import { User } from "@/types/api/user/profile/profile";
-import { getAccessToken } from "@/utils/storage";
+import type { User } from "@/types";
+import { getAccessToken } from "@/utils";
 
 const UserProfilePage = () => {
   const { id } = useParams();

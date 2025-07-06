@@ -76,15 +76,13 @@ const ChatRoomList = (props: ChatRoomListProps) => {
     }
   };
 
-  useEffect(() => {
-    handleFetchChatrooms();
-  }, [
-    isModalType,
-    reloadChatrooms,
-    activeTab,
-    mannerSystemMessage,
-    newMessage,
-  ]);
+  useEffect(
+    () => {
+      handleFetchChatrooms();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isModalType, reloadChatrooms, activeTab, mannerSystemMessage, newMessage]
+  );
 
   /* 대화 목록 페이지 - 스크롤이 끝에 도달하면 다음 페이지 가져오기 */
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {

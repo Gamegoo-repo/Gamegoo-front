@@ -1,4 +1,4 @@
-import { use, useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -43,6 +43,7 @@ const AlertWindow = (props: AlertWindowProps) => {
         onClose();
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [onClose]
   );
 
@@ -94,9 +95,13 @@ const AlertWindow = (props: AlertWindowProps) => {
   };
 
   /* 초기 호출 */
-  useEffect(() => {
-    fetchNotiList(cursor);
-  }, []);
+  useEffect(
+    () => {
+      fetchNotiList(cursor);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   /* 알림 읽음으로 상태 변경 */
   const handleClickAlert = async (

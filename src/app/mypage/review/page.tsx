@@ -3,24 +3,16 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-import Image from "next/image";
-
 import styled from "styled-components";
 
-import {
-  getMemberMannerKeyword,
-  getMemberMannerLevel,
-} from "@/api/manner/manner";
-import MannerLevelBar from "@/components/common/MannerLevelBar";
-import Tooltip from "@/components/common/Tooltip";
-import { Manner } from "@/components/user/UserProfile";
-import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants/mannerLevel";
-import useMediaQueries from "@/hooks/useMediaQueries";
+import { getMemberMannerKeyword, getMemberMannerLevel } from "@/api";
+import { MannerLevelBar, Tooltip } from "@/components";
+import type { Manner } from "@/components/user/UserProfile";
+import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
 
 const MyReviewPage = () => {
-  const isMobile = useMediaQueries({ breakpoint: 700 });
   const myId = useSelector((state: RootState) => state.user.id);
   const [myManner, setMyManner] = useState<Manner>();
 
@@ -32,7 +24,7 @@ const MyReviewPage = () => {
     };
 
     fetchGetMyManner();
-  }, []);
+  }, [myId]);
 
   const goodMannerEvaluations =
     myManner?.mannerKeywords

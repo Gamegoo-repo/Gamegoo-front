@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 
 import styled from "styled-components";
 
-import Button from "@/components/common/Button";
+import { Button } from "@/components";
 import { theme } from "@/styles/theme";
 
 const NotFoundPage = () => {

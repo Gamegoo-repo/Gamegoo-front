@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 
 import styled from "styled-components";
 
-import LoadingSpinner from "@/components/common/LoadingSpinner";
+import { LoadingSpinner } from "@/components";
 import { PRIVATE_TERMS, SERVICE_TERMS } from "@/constants/terms";
 import { theme } from "@/styles/theme";
 

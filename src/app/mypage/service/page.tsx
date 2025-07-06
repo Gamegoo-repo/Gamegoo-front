@@ -1,10 +1,8 @@
 "use client";
 
-import Image from "next/image";
-
 import styled from "styled-components";
 
-import useMediaQueries from "@/hooks/useMediaQueries";
+import { useMediaQueries } from "@/hooks";
 import { theme } from "@/styles/theme";
 
 const MyServicePage = () => {

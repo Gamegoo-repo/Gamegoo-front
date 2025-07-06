@@ -5,18 +5,14 @@ import { useDispatch, useSelector } from "react-redux";
 
 import styled from "styled-components";
 
-import { deletePost, getMyPost, getMyPostCursor } from "@/api/board/board";
-import { getMyProfile } from "@/api/user/profile/get";
-import Pagination from "@/components/common/Pagination";
-import PostBoard from "@/components/createBoard/PostBoard";
-import MoPost from "@/components/mypage/post/MoPost";
-import Post from "@/components/mypage/post/Post";
-import useMediaQueries from "@/hooks/useMediaQueries";
+import { deletePost, getMyPost, getMyPostCursor, getMyProfile } from "@/api";
+import { MoPost, Pagination, Post, PostBoard } from "@/components";
+import { useMediaQueries } from "@/hooks";
 import { setClosePostingModal } from "@/redux/slices/modalSlice";
 import { setUserProfile } from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-import { MyBoardDetail } from "@/types/api/board/board";
+import { MyBoardDetail } from "@/types";
 
 const MyPostPage = () => {
   const isMobile = useMediaQueries({ breakpoint: 700 });
@@ -69,54 +65,66 @@ const MyPostPage = () => {
     }
   };
 
-  useEffect(() => {
-    if (isMobile === undefined) return;
+  useEffect(
+    () => {
+      if (isMobile === undefined) return;
 
-    if (isMobile) {
-      fetchGetMyPostCursor(cursor);
-    } else {
-      fetchGetMyPost();
-    }
-  }, [currentPage, currentPost, boardRefresh, isMobile]);
+      if (isMobile) {
+        fetchGetMyPostCursor(cursor);
+      } else {
+        fetchGetMyPost();
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentPage, currentPost, boardRefresh, isMobile]
+  );
 
   /* mobile 무한스크롤 페이지네이션 */
-  useEffect(() => {
-    if (!isMobile || !cursor) return;
+  useEffect(
+    () => {
+      if (!isMobile || !cursor) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && hasNext && !isLoading) {
-            fetchGetMyPostCursor(cursor);
-          }
-        });
-      },
-      {
-        rootMargin: "100px", // 미리 로드
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && hasNext && !isLoading) {
+              fetchGetMyPostCursor(cursor);
+            }
+          });
+        },
+        {
+          rootMargin: "100px", // 미리 로드
+        }
+      );
+
+      if (sentinelRef.current) {
+        observer.observe(sentinelRef.current);
       }
-    );
 
-    if (sentinelRef.current) {
-      observer.observe(sentinelRef.current);
-    }
+      return () => {
+        observer.disconnect();
+      };
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [cursor, isMobile, hasNext, isLoading]
+  );
 
-    return () => {
-      observer.disconnect();
-    };
-  }, [cursor, isMobile, hasNext, isLoading]);
+  useEffect(
+    () => {
+      const fetchProfile = async () => {
+        try {
+          const response = await getMyProfile();
+          dispatch(setUserProfile(response.data));
+        } catch (error) {
+          console.error(error);
+        }
+      };
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await getMyProfile();
-        dispatch(setUserProfile(response.data));
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    isMobile && fetchProfile();
-  }, [isMobile]);
+      isMobile && fetchProfile();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isMobile]
+  );
   const handleDeletePost = async (boardId: number) => {
     await deletePost(boardId);
     setPostList((prevPosts) =>

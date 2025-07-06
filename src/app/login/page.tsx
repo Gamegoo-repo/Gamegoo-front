@@ -41,11 +41,15 @@ const Login = () => {
   );
   const [autoLogin, setAutoLogin] = useState(false);
 
-  useEffect(() => {
-    dispatch(clearSignIn());
-    dispatch(clearUserProfile());
-    clearTokens();
-  }, []);
+  useEffect(
+    () => {
+      dispatch(clearSignIn());
+      dispatch(clearUserProfile());
+      clearTokens();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   const validateEmail = (email: string) => {
     setEmailValid(emailRegEx.test(email));

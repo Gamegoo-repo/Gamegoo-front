@@ -62,17 +62,21 @@ const Header = () => {
 
   const isFirstRender = useRef(true);
 
-  useEffect(() => {
-    if (storedName) {
-      dispatch(setUserName(storedName));
-    }
-    if (storedProfileImg) {
-      dispatch(setUserProfileImg(storedProfileImg));
-    }
-    if (storedUserId) {
-      dispatch(setUserId(storedUserId));
-    }
-  }, []);
+  useEffect(
+    () => {
+      if (storedName) {
+        dispatch(setUserName(storedName));
+      }
+      if (storedProfileImg) {
+        dispatch(setUserProfileImg(storedProfileImg));
+      }
+      if (storedUserId) {
+        dispatch(setUserId(storedUserId));
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   /* 알림창 열고 닫는 함수 */
   const handleAlertWindow = (event: React.MouseEvent) => {
@@ -115,13 +119,17 @@ const Header = () => {
     }
   };
 
-  useEffect(() => {
-    // 첫 렌더에서만 API 호출
-    if (isFirstRender.current && storedName) {
-      fetchNotiCount();
-      isFirstRender.current = false;
-    }
-  }, [storedName]);
+  useEffect(
+    () => {
+      // 첫 렌더에서만 API 호출
+      if (isFirstRender.current && storedName) {
+        fetchNotiCount();
+        isFirstRender.current = false;
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [storedName]
+  );
 
   useEffect(() => {}, [notiCount]);
 

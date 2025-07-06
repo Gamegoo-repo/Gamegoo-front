@@ -221,11 +221,15 @@ const ChatLayout = (props: ChatLayoutProps) => {
     }
   };
 
-  useEffect(() => {
-    if (isChatUuid) {
-      handleChatEnter();
-    }
-  }, [isChatUuid]);
+  useEffect(
+    () => {
+      if (isChatUuid) {
+        handleChatEnter();
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isChatUuid]
+  );
 
   /* 읽은 채팅 채팅 버튼에 실시간으로 반영 */
   const removeUnreadUuid = (uuidToRemove: string) => {

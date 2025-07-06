@@ -4,33 +4,30 @@ import { Suspense } from "react";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 
-import Image from "next/image";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 
-import { getBoardList } from "@/api/board/board";
-import ConfirmModal from "@/components/common/ConfirmModal";
-import HeaderTitle from "@/components/common/HeaderTitle";
-import SquareProfile from "@/components/match/SquareProfile";
-import WaitingBox from "@/components/match/WaitingBox";
+import { getBoardList } from "@/api";
 import {
+  ConfirmModal,
+  HeaderTitle,
+  SquareProfile,
+  WaitingBox,
+} from "@/components";
+import {
+  GAME_STYLE,
   messagesWithTierN,
   messagesWithTotalN,
   messagesWithoutN,
-} from "@/constants/messages";
-import { GAME_STYLE } from "@/constants/profile";
-import useMediaQueries from "@/hooks/useMediaQueries";
+} from "@/constants";
+import { useMediaQueries } from "@/hooks";
 import { setBoardFilters } from "@/redux/slices/boardSlice";
 import { setOpenPostingModal } from "@/redux/slices/modalSlice";
 import { socket } from "@/socket";
-import { theme } from "@/styles/theme";
-import { GameMode } from "@/types/game/gameMode";
-import { Position } from "@/types/position/position";
-import { Mike } from "@/types/user/mike";
-import { getThresholdByGameMode } from "@/utils/matching/threshold";
-import { getEffectiveTier } from "@/utils/matching/tier";
-import { setIsCompleted } from "@/utils/storage";
+import type { GameMode, Mike, Position } from "@/types";
+import { getEffectiveTier, getThresholdByGameMode } from "@/utils";
+import { setIsCompleted } from "@/utils";
 
 interface User {
   memberId: number;
@@ -126,18 +123,22 @@ const Progress = () => {
 
   // const [showReloadModal, setShowReloadModal] = useState(false); // 새로고침 모달 상태
 
-  useEffect(() => {
-    if (!socket) return;
+  useEffect(
+    () => {
+      if (!socket) return;
 
-    const handleMatchingCount = (data: any) => {
-      setTierCounts({ ...data.data.tierCount, total: data.data.userCount });
-    };
+      const handleMatchingCount = (data: any) => {
+        setTierCounts({ ...data.data.tierCount, total: data.data.userCount });
+      };
 
-    socket.on("matching-count", handleMatchingCount);
-    return () => {
-      socket?.off("matching-count", handleMatchingCount);
-    };
-  }, [socket]);
+      socket.on("matching-count", handleMatchingCount);
+      return () => {
+        socket?.off("matching-count", handleMatchingCount);
+      };
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [socket]
+  );
 
   const showMessage = () => {
     setTextVisible(false);
@@ -180,11 +181,15 @@ const Progress = () => {
     }, 500);
   };
 
-  useEffect(() => {
-    showMessage();
-    const interval = setInterval(showMessage, 5000); // 5초 간격으로 랜덤 메세지 변경
-    return () => clearInterval(interval);
-  }, []);
+  useEffect(
+    () => {
+      showMessage();
+      const interval = setInterval(showMessage, 5000); // 5초 간격으로 랜덤 메세지 변경
+      return () => clearInterval(interval);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   /* 새로고침 및 타 사이트 이동 방지 */
   // const handleBeforeunload = (e: BeforeUnloadEvent) => {
@@ -219,52 +224,56 @@ const Progress = () => {
   //   setShowReloadModal(false);
   // };
 
-  useEffect(() => {
-    if (!socket) {
-      console.error("Socket is not initialized.");
-      return;
-    }
+  useEffect(
+    () => {
+      if (!socket) {
+        console.error("Socket is not initialized.");
+        return;
+      }
 
-    // 기존 리스너 제거
-    socket.off("matching-found-sender");
-    socket.off("matching-found-receiver");
+      // 기존 리스너 제거
+      socket.off("matching-found-sender");
+      socket.off("matching-found-receiver");
 
-    // 매칭 상대 찾기 성공 (sender)
-    socket.on("matching-found-sender", (data) => {
-      console.log("매칭 상대 발견(sender):", data); // targetMatchingInfo
-      clearTimers();
-      router.push(
-        `/matching/complete?role=sender&opponent=true&type=${type}&rank=${rank}&user=${encodeURIComponent(
-          JSON.stringify(data.data)
-        )}`
-      );
-    });
-
-    // 매칭 상대 찾기 성공 (receiver)
-    socket.on("matching-found-receiver", (data) => {
-      console.log("매칭 상대 발견(receiver):", data); // senderMatchingInfo, receiverMatchingUuid
-      clearTimers();
-      socket?.emit("matching-found-success", {
-        // senderMatchingUuid: data.data.receiverMatchingUuid,
-        senderMatchingUuid: data.data.senderMatchingInfo.matchingUuid,
+      // 매칭 상대 찾기 성공 (sender)
+      socket.on("matching-found-sender", (data) => {
+        console.log("매칭 상대 발견(sender):", data); // targetMatchingInfo
+        clearTimers();
+        router.push(
+          `/matching/complete?role=sender&opponent=true&type=${type}&rank=${rank}&user=${encodeURIComponent(
+            JSON.stringify(data.data)
+          )}`
+        );
       });
-      router.push(
-        `/matching/complete?role=receiver&opponent=true&type=${type}&rank=${rank}&user=${encodeURIComponent(
-          JSON.stringify(data.data.senderMatchingInfo)
-        )}&uuid=${encodeURIComponent(data.data.senderMatchingInfo.matchingUuid)}
+
+      // 매칭 상대 찾기 성공 (receiver)
+      socket.on("matching-found-receiver", (data) => {
+        console.log("매칭 상대 발견(receiver):", data); // senderMatchingInfo, receiverMatchingUuid
+        clearTimers();
+        socket?.emit("matching-found-success", {
+          // senderMatchingUuid: data.data.receiverMatchingUuid,
+          senderMatchingUuid: data.data.senderMatchingInfo.matchingUuid,
+        });
+        router.push(
+          `/matching/complete?role=receiver&opponent=true&type=${type}&rank=${rank}&user=${encodeURIComponent(
+            JSON.stringify(data.data.senderMatchingInfo)
+          )}&uuid=${encodeURIComponent(data.data.senderMatchingInfo.matchingUuid)}
         )}`
-      );
-    });
+        );
+      });
 
-    // 5분 타이머
-    startMatchingProcess();
+      // 5분 타이머
+      startMatchingProcess();
 
-    return () => {
-      socket?.off("matching-found-sender");
-      socket?.off("matching-found-receiver");
-      clearTimers();
-    };
-  }, []);
+      return () => {
+        socket?.off("matching-found-sender");
+        socket?.off("matching-found-receiver");
+        clearTimers();
+      };
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   const startMatchingProcess = async () => {
     if (timerRef.current) return; // 이미 타이머가 실행 중이면 추가로 설정하지 않음

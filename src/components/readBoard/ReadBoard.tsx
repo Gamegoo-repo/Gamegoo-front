@@ -155,15 +155,23 @@ const ReadBoard = (props: ReadBoardProps) => {
     }
   };
 
-  useEffect(() => {
-    getPostData();
-  }, [isBlockedStatus, isFriendStatus, isUser, postId]);
+  useEffect(
+    () => {
+      getPostData();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isBlockedStatus, isFriendStatus, isUser, postId]
+  );
 
-  useEffect(() => {
-    return () => {
-      dispatch(setCloseReadingModal());
-    };
-  }, []);
+  useEffect(
+    () => {
+      return () => {
+        dispatch(setCloseReadingModal());
+      };
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   /* MannerLevelBox 외부 클릭 시 닫힘 */
   useEffect(() => {

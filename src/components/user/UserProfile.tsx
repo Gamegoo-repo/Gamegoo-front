@@ -1,7 +1,11 @@
 import styled from "styled-components";
 
-import { HeaderTitle, MannerLevelBar } from "@/components/common";
-import { Champion, Tooltip } from "@/components/common";
+import {
+  Champion,
+  HeaderTitle,
+  MannerLevelBar,
+  Tooltip,
+} from "@/components/common";
 import { Profile } from "@/components/profile";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants";
 import { useMediaQueries } from "@/hooks";

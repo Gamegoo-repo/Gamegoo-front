@@ -96,13 +96,17 @@ const PostBoard = (props: PostBoardProps) => {
     }
   };
 
-  useEffect(() => {
-    fetchProfile();
+  useEffect(
+    () => {
+      fetchProfile();
 
-    return () => {
-      dispatch(setClosePostingModal());
-    };
-  }, []);
+      return () => {
+        dispatch(setClosePostingModal());
+      };
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   /* 유저가 게시판에 올린 글에 대한 데이터 */
   useEffect(() => {

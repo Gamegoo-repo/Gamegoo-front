@@ -8,10 +8,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import styled from "styled-components";
 
-import HeaderTitle from "@/components/common/HeaderTitle";
-import GraphicBox from "@/components/match/GraphicBox";
-import { GAME_MODE_PAGE_DATA } from "@/constants/match";
-import useMediaQueries from "@/hooks/useMediaQueries";
+import { GraphicBox, HeaderTitle } from "@/components";
+import { GAME_MODE_PAGE_DATA } from "@/constants";
+import { useMediaQueries } from "@/hooks";
 
 const GameModePage = () => {
   const isMobile = useMediaQueries({ breakpoint: 700 });
