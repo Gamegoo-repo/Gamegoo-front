@@ -6,10 +6,10 @@ import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants/mannerLevel";
 import MannerLevelBar from "@/components/common/MannerLevelBar";
 import { profileType, User } from "@/interface/profile";
 import { getUserId } from "@/utils/storage";
-import Champion from "../readBoard/Champion";
 import useMediaQueries from "@/hooks/useMediaQueries";
 import Tooltip from "../common/Tooltip";
 import { formatDecimal } from "@/utils/decimalFormat";
+import Champion from "../common/Champion";
 
 export interface Manner {
   memberId?: number;

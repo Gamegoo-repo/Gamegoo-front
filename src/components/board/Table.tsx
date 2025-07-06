@@ -17,7 +17,7 @@ import {
 import { useRouter } from "next/navigation";
 import Alert from "../common/Alert";
 import ConfirmModal from "../common/ConfirmModal";
-import Champion from "../readBoard/Champion";
+import Champion from "../common/Champion";
 import { BoardListDetail, MemberPost } from "@/interface/board";
 import { getProfileBgColor } from "@/utils/profile";
 import { toLowerCaseString } from "@/utils/string";

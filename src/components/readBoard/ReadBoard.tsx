@@ -8,7 +8,7 @@ import ProfileImage from "./ProfileImage";
 import MannerLevel from "../common/MannerLevel";
 import Mic from "../common/Mic";
 import MoreBoxButton from "./MoreBoxButton";
-import Champion from "./Champion";
+import Champion from "../common/Champion";
 import QueueType from "./QueueType";
 import WinningRate from "./WinningRate";
 import MannerLevelBox from "../common/MannerLevelBox";
