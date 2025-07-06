@@ -15,7 +15,7 @@ import ChatRoomList from "./ChatRoomList";
 import { RootState } from "@/redux/store";
 import ChatLayout from "./ChatLayout";
 import { ChatroomList } from "@/types/api/chat/chat";
-import { Mannerstatus } from "@/interface/manner";
+import { Mannerstatus } from "@/types/api/manner/manner";
 import {
   editManners,
   getBadMannerValues,

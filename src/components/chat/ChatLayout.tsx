@@ -28,7 +28,7 @@ import {
   postBadMannerValue,
   postMannerValue,
 } from "@/api/manner/manner";
-import { Mannerstatus } from "@/interface/manner";
+import { Mannerstatus } from "@/types/api/manner/manner";
 import ConfirmModal from "../common/ConfirmModal";
 import FormModal from "../common/FormModal";
 import Input from "../common/Input";

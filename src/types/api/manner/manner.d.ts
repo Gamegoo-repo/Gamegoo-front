@@ -33,6 +33,29 @@ interface MemberPositiveNegativeMannerData extends BaseMannerData {
   targetMemberId: MannerId;
 }
 
+export interface MannerList {
+  isPositive: boolean;
+  isExist: boolean;
+  mannerRatingKeywordList: number[];
+}
+
+export interface MannerKeywords {
+  mannerKeywordId: number;
+  count: number;
+}
+
+export interface OthersManner {
+  memberId: number;
+  mannerLevel: number;
+  mannerKeywords: MannerKeywords[];
+}
+
+export interface Mannerstatus {
+  mannerRatingId: MannerId;
+  mannerKeywordIdList: MannerId[];
+}
+
+
 // Response 타입 정의
 export type MannerResponse = ApiResponse<BaseMannerData>;
 export type MemberMannerLevelResponse = ApiResponse<MemberMannerLevelData>;

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants/mannerLevel";
 import { useEffect, useState } from "react";
-import { MannerKeywords } from "@/interface/manner";
+import { MannerKeywords } from "@/types/api/manner/manner";
 import { getMemberMannerKeyword } from "@/api/manner/manner";
 import Image from "next/image";
 import { css } from "styled-components";
