@@ -2,9 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import { useRouter } from "next/navigation";
-
 import styled from "styled-components";
 
 import {
@@ -16,6 +14,7 @@ import { AlertBox, Pagination } from "@/components";
 import { setNotiCount } from "@/redux/slices/notiSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
+
 import type { Notification } from "@/types";
 
 const MyAlertPage = () => {

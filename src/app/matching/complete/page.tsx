@@ -1,12 +1,16 @@
 "use client";
 
-import { Suspense, useCallback, useMemo } from "react";
-import { useEffect, useRef, useState } from "react";
+import {
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-
 import styled from "styled-components";
 
 import { getMemberMannerLevel } from "@/api/manner/manner";

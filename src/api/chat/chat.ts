@@ -1,6 +1,5 @@
 import {
   ChatRoomBoardRequest,
-  ChatRoomGetRequest,
   chatRoomBoardResponse,
   chatRoomEnterFriendRequest,
   chatRoomEnterRequest,
@@ -8,6 +7,7 @@ import {
   chatRoomExitRequest,
   chatRoomExitResponse,
   chatRoomFriendResponse,
+  ChatRoomGetRequest,
   chatRoomGetResponse,
   chatRoomMessageData,
   chatRoomMessageRequest,

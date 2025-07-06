@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import styled from "styled-components";
 
 import {
@@ -16,9 +15,10 @@ import { setChatEnterType, setCurrentChatUuid } from "@/redux/slices/chatSlice";
 import { setOpenModal } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-import type { ChatroomList, MoreBoxMenuItems } from "@/types";
 
 import ChatRoomItem from "./ChatRoomItem";
+
+import type { ChatroomList, MoreBoxMenuItems } from "@/types";
 
 interface ChatRoomListProps {
   onChatRoom: (id: string) => void;

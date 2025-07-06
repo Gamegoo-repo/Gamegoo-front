@@ -1,7 +1,5 @@
 import React from "react";
-
 import Image from "next/image";
-
 import styled, { css } from "styled-components";
 
 import { GAME_STYLE } from "@/constants";

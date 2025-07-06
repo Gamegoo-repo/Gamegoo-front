@@ -1,6 +1,6 @@
-import fs from "fs-extra";
 import { execSync } from "node:child_process";
 import path from "node:path";
+import fs from "fs-extra";
 
 import { ConfigManager } from "./config";
 import { API_CONSTANTS } from "./constants";

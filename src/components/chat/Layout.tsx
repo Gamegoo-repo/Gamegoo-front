@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import Image from "next/image";
-
 import styled from "styled-components";
 
 import {
@@ -30,11 +28,12 @@ import { setCloseModal, setOpenModal } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
 import { socket } from "@/socket";
 import { theme } from "@/styles/theme";
-import type { BaseMannerData, ChatroomList, FriendList } from "@/types";
 import { getAccessToken } from "@/utils";
 
 import { Button, Checkbox, ConfirmModal, FormModal, Input } from "../common";
 import { ChatFriendList, ChatLayout, ChatRoomList, SearchBar, Tabs } from "./";
+
+import type { BaseMannerData, ChatroomList, FriendList } from "@/types";
 
 const Layout = () => {
   const dispatch = useDispatch();

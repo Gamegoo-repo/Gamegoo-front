@@ -1,5 +1,4 @@
 import Image from "next/image";
-
 import ProgressBar from "@ramonak/react-progress-bar";
 import styled from "styled-components";
 

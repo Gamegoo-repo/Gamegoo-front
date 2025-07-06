@@ -1,11 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { Suspense } from "react";
-
+import { Suspense, useState } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-
 import styled from "styled-components";
 
 import { GraphicBox, HeaderTitle } from "@/components";

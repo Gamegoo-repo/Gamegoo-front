@@ -1,4 +1,4 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { GameMode } from "@/types/game/gameMode";
 import { Position } from "@/types/position/position";

@@ -1,11 +1,10 @@
 import { Dispatch, forwardRef, useState } from "react";
-
 import Image from "next/image";
-
 import styled from "styled-components";
 
 import { useMediaQueries } from "@/hooks";
 import { theme } from "@/styles/theme";
+
 import type { GameMode } from "@/types";
 
 interface ListProps {

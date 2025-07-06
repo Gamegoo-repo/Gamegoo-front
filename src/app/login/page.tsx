@@ -2,11 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
 import styled from "styled-components";
 
 import { getUnreadUuid, postLogin, socketLogin } from "@/api";

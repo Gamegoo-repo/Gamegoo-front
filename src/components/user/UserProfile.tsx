@@ -10,8 +10,9 @@ import { Profile } from "@/components/profile";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants";
 import { useMediaQueries } from "@/hooks";
 import { theme } from "@/styles/theme";
-import type { User, profileType } from "@/types";
 import { formatDecimal, getUserId } from "@/utils";
+
+import type { profileType, User } from "@/types";
 
 export interface Manner {
   memberId?: number;

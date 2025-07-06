@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 import { theme } from "@/styles/theme";
+
 import type { Chat } from "@/types";
 
 interface MessageInputProps {

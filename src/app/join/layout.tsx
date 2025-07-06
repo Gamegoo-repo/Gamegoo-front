@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-
 import styled from "styled-components";
 
 import { theme } from "@/styles/theme";

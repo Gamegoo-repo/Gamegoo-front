@@ -2,9 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import { useRouter } from "next/navigation";
-
 import { AxiosError } from "axios";
 import styled from "styled-components";
 

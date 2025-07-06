@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import { useRouter } from "next/navigation";
-
 import styled from "styled-components";
 
 import { reportMember } from "@/api";
@@ -11,6 +9,7 @@ import { REPORT_REASON } from "@/constants/report";
 import { setCloseModal } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
+
 import type { AlertProps, MemberPost } from "@/types";
 
 const ReportModal = ({

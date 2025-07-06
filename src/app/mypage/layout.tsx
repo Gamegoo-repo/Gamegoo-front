@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-
 import styled from "styled-components";
 
 import MypageTab from "@/components/mypage/MypageTab";

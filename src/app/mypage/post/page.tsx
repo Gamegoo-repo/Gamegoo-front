@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import styled from "styled-components";
 
 import { deletePost, getMyPost, getMyPostCursor, getMyProfile } from "@/api";

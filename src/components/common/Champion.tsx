@@ -1,12 +1,11 @@
 import { useState } from "react";
-
 import Image from "next/image";
-
 import styled from "styled-components";
 
 import { useMediaQueries } from "@/hooks";
 import { fadeIn, fadeOut } from "@/styles/animation";
 import { theme } from "@/styles/theme";
+
 import type { ChampionResponseDTO } from "@/types";
 
 interface ChampionProps {

@@ -1,11 +1,8 @@
 "use client";
 
-import { Suspense } from "react";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-
 import { useRouter, useSearchParams } from "next/navigation";
-
 import styled from "styled-components";
 
 import { getBoardList } from "@/api";
@@ -17,17 +14,21 @@ import {
 } from "@/components";
 import {
   GAME_STYLE,
+  messagesWithoutN,
   messagesWithTierN,
   messagesWithTotalN,
-  messagesWithoutN,
 } from "@/constants";
 import { useMediaQueries } from "@/hooks";
 import { setBoardFilters } from "@/redux/slices/boardSlice";
 import { setOpenPostingModal } from "@/redux/slices/modalSlice";
 import { socket } from "@/socket";
+import {
+  getEffectiveTier,
+  getThresholdByGameMode,
+  setIsCompleted,
+} from "@/utils";
+
 import type { GameMode, Mike, Position } from "@/types";
-import { getEffectiveTier, getThresholdByGameMode } from "@/utils";
-import { setIsCompleted } from "@/utils";
 
 interface User {
   memberId: number;

@@ -1,10 +1,7 @@
 import { Dispatch, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-
 import Image from "next/image";
-
-import styled from "styled-components";
-import { css } from "styled-components";
+import styled, { css } from "styled-components";
 
 import { putGameStyle, putMike } from "@/api";
 import { GAME_STYLE } from "@/constants";
@@ -12,10 +9,11 @@ import { useMediaQueries } from "@/hooks";
 import { updateGameStyles } from "@/redux/slices/matchInfo";
 import { setUserMike } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
-import type { Mike } from "@/types";
 
 import { Box, Toggle } from "../common";
 import SelectedStylePopup from "./SelectedStylePopup";
+
+import type { Mike } from "@/types";
 
 type profileType = "me" | "other" | "none" | "mini" | "post";
 

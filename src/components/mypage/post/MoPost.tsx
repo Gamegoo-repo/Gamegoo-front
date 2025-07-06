@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import { useRouter } from "next/navigation";
-
 import { AxiosError } from "axios";
 
 import { getMemberPost, getNonMemberPost } from "@/api";
 import { Alert, PostItem, PostItemData } from "@/components/common";
 import { RootState } from "@/redux/store";
+
 import type { AlertProps, MemberPost, User } from "@/types";
 
 export interface PostProps {

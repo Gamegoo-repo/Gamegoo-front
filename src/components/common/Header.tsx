@@ -1,10 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-
 import styled from "styled-components";
 
 import { getUnreadNotificationCount, postLogout, socketLogout } from "@/api";
@@ -20,11 +18,11 @@ import {
 } from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-import { getProfileBgColor } from "@/utils";
 import {
   clearTokens,
   getAccessToken,
   getName,
+  getProfileBgColor,
   getProfileImg,
   getUserId,
 } from "@/utils";

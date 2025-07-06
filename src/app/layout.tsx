@@ -4,9 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { Toaster } from "react-hot-toast";
 import { Provider } from "react-redux";
-
 import { usePathname } from "next/navigation";
-
 import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 import { persistStore } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
@@ -15,11 +13,10 @@ import styled, { ThemeProvider } from "styled-components";
 import { Footer, Header, SocketConnection } from "@/components";
 import { notify } from "@/hooks";
 import StyledComponentsRegistry from "@/libs/registry";
-import { AppStore } from "@/redux/store";
-import { store as createStore } from "@/redux/store";
+import { AppStore, store as createStore } from "@/redux/store";
 import { connectSocket, sendMatchingQuitEvent, socket } from "@/socket";
-import GlobalStyles from "@/styles/GlobalStyles";
 import { pretendard, timeForSalad } from "@/styles/fonts";
+import GlobalStyles from "@/styles/GlobalStyles";
 import { theme } from "@/styles/theme";
 import {
   getAccessToken,

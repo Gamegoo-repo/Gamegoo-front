@@ -1,9 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import Image from "next/image";
 import { useParams } from "next/navigation";
-
 import styled, { css } from "styled-components";
 
 import {
@@ -34,15 +32,18 @@ import {
   Toggle,
   UpdateProfileImage,
 } from "@/components";
-import { POSITIONS } from "@/constants";
-import { REPORT_REASON } from "@/constants";
+import { POSITIONS, REPORT_REASON } from "@/constants";
 import useMediaQueries from "@/hooks/useMediaQueries";
 import { setMatchInfo, updateMike } from "@/redux/slices/matchInfo";
 import { setUserProfileImg } from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-import { MoreBoxMenuItems, Position as PositionType, User } from "@/types";
-import { Mike as MikeType } from "@/types";
+import {
+  Mike as MikeType,
+  MoreBoxMenuItems,
+  Position as PositionType,
+  User,
+} from "@/types";
 import { setPositionImg } from "@/utils/custom";
 
 import { PositionState } from "../crBoard/PositionBox";

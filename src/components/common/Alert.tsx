@@ -1,8 +1,8 @@
 import Image from "next/image";
-
 import styled from "styled-components";
 
 import { theme } from "@/styles/theme";
+
 import type { AlertProps } from "@/types";
 
 const Alert = (props: AlertProps) => {

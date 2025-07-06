@@ -1,11 +1,10 @@
 import { useState } from "react";
-
 import Image from "next/image";
-
 import styled from "styled-components";
 
 import { getSearchFriend } from "@/api";
 import { theme } from "@/styles/theme";
+
 import type { FriendList } from "@/types";
 
 interface SearchBarProps {

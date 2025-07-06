@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-
 import Image from "next/image";
-
 import styled from "styled-components";
 
 import { STEPS } from "@/constants";

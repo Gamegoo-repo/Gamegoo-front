@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import Image from "next/image";
-
 import styled from "styled-components";
 
 import { useMediaQueries } from "@/hooks";

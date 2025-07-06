@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import styled from "styled-components";
 
 import { getMemberPost, pullUpPost } from "@/api";
@@ -16,13 +15,14 @@ import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { setUserId } from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-import type { MemberPost, MoreBoxMenuItems } from "@/types";
 import {
-  setAbbrevTier,
   getProfileBgColor,
-  toLowerCaseString,
+  setAbbrevTier,
   setDateFormatter,
+  toLowerCaseString,
 } from "@/utils";
+
+import type { MemberPost, MoreBoxMenuItems } from "@/types";
 
 export interface PostProps {
   boardId: number;

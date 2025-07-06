@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import { setCustomProfileImg, getProfileBgColor } from "@/utils";
+import { getProfileBgColor, setCustomProfileImg } from "@/utils";
 
 interface ProfileImageProps {
   image: number;

@@ -1,6 +1,5 @@
 import { BOARD } from "@/constants/messages";
 import { notify } from "@/hooks/notify";
-import { PostReq } from "@/types/api/board/board";
 import {
   BoardDeleteResponse,
   BoardEditResponse,
@@ -11,6 +10,7 @@ import {
   GetMyBoardListResponse,
   MemberPostBoardResponse,
   NotMemberBoardResponse,
+  PostReq,
   PostsResponse,
 } from "@/types/api/board/board";
 import { GameMode } from "@/types/game/gameMode";

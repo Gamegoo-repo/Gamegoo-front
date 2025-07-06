@@ -1,6 +1,5 @@
 import { FC, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-
 import styled from "styled-components";
 
 import { RootState } from "@/redux/store";
@@ -13,11 +12,6 @@ import {
 
 import Alert from "../Alert";
 import ChampionSection from "./ChampionSection";
-import MemoSection from "./MemoSection";
-import PositionSection from "./PositionSection";
-import PostItemModal from "./PostItemModal";
-import UserSection from "./UserSection/UserSection";
-import UserTierSection from "./UserTierSection";
 import {
   useAlert,
   useBlockActions,
@@ -26,6 +20,11 @@ import {
   usePostActions,
   useUIHandlers,
 } from "./hooks";
+import MemoSection from "./MemoSection";
+import PositionSection from "./PositionSection";
+import PostItemModal from "./PostItemModal";
+import UserSection from "./UserSection/UserSection";
+import UserTierSection from "./UserTierSection";
 
 export type PostItemData = Pick<
   BoardListDetail,

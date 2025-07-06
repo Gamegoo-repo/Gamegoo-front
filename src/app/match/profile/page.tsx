@@ -1,11 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { Suspense } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import { useRouter, useSearchParams } from "next/navigation";
-
 import styled from "styled-components";
 
 import { getMyProfile } from "@/api";

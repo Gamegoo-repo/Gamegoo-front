@@ -2,9 +2,7 @@
 
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-
 import { useRouter } from "next/navigation";
-
 import styled from "styled-components";
 
 import { LoadingSpinner } from "@/components";

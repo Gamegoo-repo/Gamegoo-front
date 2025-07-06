@@ -1,15 +1,14 @@
 import { useState } from "react";
-
 import Image from "next/image";
-
 import styled, { css } from "styled-components";
 
 import { PositionCategory } from "@/components/common";
 import { POSITIONS } from "@/constants";
 import { useMediaQueries } from "@/hooks";
 import { theme } from "@/styles/theme";
-import type { Position } from "@/types";
 import { setPositionImg } from "@/utils";
+
+import type { Position } from "@/types";
 
 type Status = "reading" | "posting";
 

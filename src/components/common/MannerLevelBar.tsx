@@ -1,5 +1,4 @@
 import Image from "next/image";
-
 import styled, { css } from "styled-components";
 
 import { useMediaQueries } from "@/hooks";

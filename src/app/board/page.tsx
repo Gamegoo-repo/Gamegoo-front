@@ -2,9 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import Image from "next/image";
-
 import styled from "styled-components";
 
 import { getBoardList, getBoardListCursor, getMyPost, pullUpPost } from "@/api";
@@ -31,8 +29,9 @@ import { clearCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { RootState } from "@/redux/store";
 import { rotate } from "@/styles/animation";
 import { theme } from "@/styles/theme";
-import type { BoardListDetail, GameMode, Mike, Position } from "@/types";
 import { mikeBooleanToId, tierStringToId } from "@/utils";
+
+import type { BoardListDetail, GameMode, Mike, Position } from "@/types";
 
 const ITEMS_PER_PAGE = 20;
 const BUTTONS_PER_PAGE = 5;

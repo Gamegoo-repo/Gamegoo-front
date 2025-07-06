@@ -3,10 +3,10 @@ import {
   FLUSH,
   PAUSE,
   PERSIST,
+  persistReducer,
   PURGE,
   REGISTER,
   REHYDRATE,
-  persistReducer,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 

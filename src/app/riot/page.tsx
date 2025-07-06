@@ -2,11 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
 import crypto from "crypto-js";
 import { encode as base64urlEncode } from "js-base64";
 import styled from "styled-components";

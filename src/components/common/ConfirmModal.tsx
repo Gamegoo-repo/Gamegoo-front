@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-
 import Image from "next/image";
-
 import styled from "styled-components";
 
 import {

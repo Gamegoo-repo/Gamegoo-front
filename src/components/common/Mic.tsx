@@ -1,9 +1,9 @@
 import Image from "next/image";
-
 import styled from "styled-components";
 
 import { useMediaQueries } from "@/hooks";
 import { theme } from "@/styles/theme";
+
 import type { Mike } from "@/types";
 
 interface MicProps {

@@ -6,10 +6,8 @@ import {
   useState,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-
 import dayjs from "dayjs";
 import styled, { keyframes } from "styled-components";
 
@@ -23,12 +21,16 @@ import {
 } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-import type { Chat, ChatMessageDto, DesignedSystemMessage } from "@/types";
-import { getProfileBgColor } from "@/utils";
-import { setChatDateFormatter, setChatTimeFormatter } from "@/utils";
+import {
+  getProfileBgColor,
+  setChatDateFormatter,
+  setChatTimeFormatter,
+} from "@/utils";
 
 import { ConfirmModal } from "../common";
 import { ReadBoard } from "../readBoard";
+
+import type { Chat, ChatMessageDto, DesignedSystemMessage } from "@/types";
 
 interface MessageListProps {
   chatEnterData: Chat;

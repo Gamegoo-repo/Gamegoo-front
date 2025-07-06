@@ -1,14 +1,20 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import { useRouter } from "next/navigation";
-
 import { AxiosError } from "axios";
 import styled from "styled-components";
 
-import { blockMember, unblockMember } from "@/api";
-import { deletePost, getMemberPost, getNonMemberPost, pullUpPost } from "@/api";
-import { cancelFriendRequest, deleteFriend, sendFriendRequest } from "@/api";
+import {
+  blockMember,
+  cancelFriendRequest,
+  deleteFriend,
+  deletePost,
+  getMemberPost,
+  getNonMemberPost,
+  pullUpPost,
+  sendFriendRequest,
+  unblockMember,
+} from "@/api";
 import {
   Alert,
   Button,
@@ -44,15 +50,16 @@ import {
 import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
+import { setPostingDateFormatter } from "@/utils";
+
+import GameStyle from "./GameStyle";
+
 import type {
   AlertProps,
   GameMode,
   MemberPost,
   MoreBoxMenuItems,
 } from "@/types";
-import { setPostingDateFormatter } from "@/utils";
-
-import GameStyle from "./GameStyle";
 
 interface ReadBoardProps {
   postId: number;

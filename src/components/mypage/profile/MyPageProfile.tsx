@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import styled from "styled-components";
 
 import { getMyProfile, putProfileImage } from "@/api";
@@ -11,6 +10,7 @@ import { useMediaQueries } from "@/hooks";
 import { setUserProfile, setUserProfileImg } from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
+
 import type { Profile } from "@/types";
 
 const MyPageProfile: React.FC<Profile> = ({ user }) => {

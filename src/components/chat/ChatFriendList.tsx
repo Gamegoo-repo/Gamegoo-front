@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-
 import styled from "styled-components";
 
 import { deleteFriend } from "@/api";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-import type { FriendList } from "@/types";
 
 import FriendItem from "./FriendItem";
+
+import type { FriendList } from "@/types";
 
 interface FriendListProps {
   onChatRoom: (id: number) => void;

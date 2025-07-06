@@ -1,6 +1,7 @@
 import { useCallback, useRef } from "react";
 
 import { cancelFriendRequest, deleteFriend, sendFriendRequest } from "@/api";
+
 import type { MemberPost } from "@/types";
 
 interface UseFriendActionsProps {

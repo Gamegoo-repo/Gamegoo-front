@@ -1,14 +1,14 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import { useRouter } from "next/navigation";
 
 import { getMemberPost } from "@/api";
 import { setOpenModal } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
-import type { MemberPost, MoreBoxMenuItems } from "@/types";
 
 import { PostItemData } from "../PostItem";
+
+import type { MemberPost, MoreBoxMenuItems } from "@/types";
 
 interface UseMoreBoxMenuProps {
   data: PostItemData;

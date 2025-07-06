@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
-
 import Image from "next/image";
-
-import styled from "styled-components";
-import { css } from "styled-components";
+import styled, { css } from "styled-components";
 
 import { getMemberMannerKeyword } from "@/api";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants";
 import { useMediaQueries } from "@/hooks";
 import { theme } from "@/styles/theme";
+
 import type { MannerKeyword } from "@/types";
 
 interface MannerLevelBoxProps {

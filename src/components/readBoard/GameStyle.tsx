@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 import { GAME_STYLE } from "@/constants";
 import { theme } from "@/styles/theme";
+
 import type { gameStyleResponseDTOList } from "@/types";
 
 interface GameStyleProps {

@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-
 import styled, { css } from "styled-components";
 
 import { theme } from "@/styles/theme";

@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-
 import styled from "styled-components";
 
 import { useMediaQueries } from "@/hooks";
@@ -15,10 +13,11 @@ import {
 } from "@/redux/slices/chatSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-import type { Chat, MoreBoxMenuItems } from "@/types";
 import { getProfileBgColor } from "@/utils";
 
 import { Alert, MoreBox } from "../common";
+
+import type { Chat, MoreBoxMenuItems } from "@/types";
 
 interface MessageHeaderProps {
   isMoreBoxOpen: boolean;

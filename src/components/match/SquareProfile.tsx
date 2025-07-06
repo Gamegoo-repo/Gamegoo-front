@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
-
 import Image from "next/image";
-
 import styled from "styled-components";
 
 import { useMediaQueries } from "@/hooks";
 import { theme } from "@/styles/theme";
-import type { GameMode, Mike, Position as PositionType } from "@/types";
 import { getProfileBgColor } from "@/utils";
 
 import { Box, MannerLevelBox, Mic, RankTier } from "../common";
 import { PositionBox } from "../crBoard";
+
+import type { GameMode, Mike, Position as PositionType } from "@/types";
 
 interface User {
   memberId: number;

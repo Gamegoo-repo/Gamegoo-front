@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
 import styled from "styled-components";
 
 import { getBlockList } from "@/api";
 import { BlockedBox, Pagination } from "@/components";
 import { useMediaQueries } from "@/hooks";
 import { theme } from "@/styles/theme";
+
 import type { BlockList } from "@/types";
 
 const MyBlockedPage = () => {

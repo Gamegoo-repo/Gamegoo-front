@@ -1,15 +1,14 @@
 import { useState } from "react";
-
 import { useRouter } from "next/navigation";
-
 import styled from "styled-components";
 
 import { useMediaQueries } from "@/hooks";
 import { theme } from "@/styles/theme";
-import type { Mike } from "@/types";
 import { formatTextOverNumber } from "@/utils";
 
 import Mic from "../common/Mic";
+
+import type { Mike } from "@/types";
 
 interface UserAccountProps {
   account: string;

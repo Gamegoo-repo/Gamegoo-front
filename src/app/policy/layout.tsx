@@ -1,9 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
-
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-
 import styled from "styled-components";
 
 import { CategoryToggle, LoadingSpinner } from "@/components";

@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
 import { theme } from "@/styles/theme";
-import type { Position } from "@/types";
 
 import All from "../../../public/assets/images/position/default/default_all.svg";
 import Jungle from "../../../public/assets/images/position/default/default_jungle.svg";
@@ -9,6 +8,8 @@ import Mid from "../../../public/assets/images/position/default/default_mid.svg"
 import OneDeal from "../../../public/assets/images/position/default/default_one_deal.svg";
 import Supporter from "../../../public/assets/images/position/default/default_supporter.svg";
 import Top from "../../../public/assets/images/position/default/default_top.svg";
+
+import type { Position } from "@/types";
 
 interface SvgProps {
   onPositionFilter: (position: Position) => void;

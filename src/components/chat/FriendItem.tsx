@@ -1,15 +1,14 @@
 import { useDispatch } from "react-redux";
-
 import Image from "next/image";
-
 import styled from "styled-components";
 
 import { setChatEnterType } from "@/redux/slices/chatSlice";
 import { theme } from "@/styles/theme";
-import type { FriendList } from "@/types";
 import { getProfileBgColor } from "@/utils";
 
 import DeleteFriend from "./DeleteFriend";
+
+import type { FriendList } from "@/types";
 
 interface FriendItemProps {
   friend: FriendList;

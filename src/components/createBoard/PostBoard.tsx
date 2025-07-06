@@ -7,24 +7,21 @@
  */
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import { useRouter } from "next/navigation";
-
 import styled from "styled-components";
 
 import { editPost, getMyProfile, postBoard } from "@/api";
 import { GAME_MODE } from "@/constants";
 import { setClosePostingModal } from "@/redux/slices/modalSlice";
 import {
-  PostUpdate,
   clearCurrentPost,
+  PostUpdate,
   setPostStatus,
   updateCurrentPost,
 } from "@/redux/slices/postSlice";
 import { setUserProfile } from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-import type { GameMode, Mike, Position, PostReq } from "@/types";
 
 import {
   Alert,
@@ -35,9 +32,11 @@ import {
   Toggle,
 } from "../common";
 import { CRModal, PositionBox, UserAccount } from "../crBoard";
-import type { PositionState } from "../crBoard/PositionBox";
 import { UpdateProfileImage } from "../profile";
 import GameStyle from "./GameStyle";
+
+import type { GameMode, Mike, Position, PostReq } from "@/types";
+import type { PositionState } from "../crBoard/PositionBox";
 
 interface PostBoardProps {
   onClose: () => void;

@@ -1,6 +1,5 @@
 import { useCallback, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import { useRouter } from "next/navigation";
 
 import { deletePost, pullUpPost } from "@/api";
@@ -12,9 +11,10 @@ import {
 } from "@/redux/slices/modalSlice";
 import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { RootState } from "@/redux/store";
-import type { MemberPost } from "@/types";
 
 import { PostItemData } from "../PostItem";
+
+import type { MemberPost } from "@/types";
 
 interface UsePostActionsProps {
   data: PostItemData;

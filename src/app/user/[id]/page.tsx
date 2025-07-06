@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
 import { useParams } from "next/navigation";
-
 import styled from "styled-components";
 
 import {
@@ -12,10 +10,11 @@ import {
   getOtherProfile,
 } from "@/api";
 import { BlindProfile, LoadingSpinner, UserProfile } from "@/components";
-import type { Manner } from "@/components/user/UserProfile";
 import { DEFAULT_MANNER, DEFAULT_PROFILE } from "@/data/profile/default";
-import type { User } from "@/types";
 import { getAccessToken } from "@/utils";
+
+import type { Manner } from "@/components/user/UserProfile";
+import type { User } from "@/types";
 
 const UserProfilePage = () => {
   const { id } = useParams();
