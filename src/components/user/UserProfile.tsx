@@ -4,7 +4,7 @@ import HeaderTitle from "@/components/common/HeaderTitle";
 import { theme } from "@/styles/theme";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants/mannerLevel";
 import MannerLevelBar from "@/components/common/MannerLevelBar";
-import { profileType, User } from "@/interface/profile";
+import { profileType, User } from "@/types/api/user/profile/profile";
 import { getUserId } from "@/utils/storage";
 import useMediaQueries from "@/hooks/useMediaQueries";
 import Tooltip from "../common/Tooltip";

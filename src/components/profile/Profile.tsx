@@ -16,7 +16,7 @@ import ConfirmModal from "../common/ConfirmModal";
 import PositionCategory from "../common/PositionCategory";
 import MoreBox from "../common/MoreBox";
 import { MoreBoxMenuItems } from "@/types/modal/moreBox";
-import { User } from "@/interface/profile";
+import { User } from "@/types/api/user/profile/profile";
 import { PositionState } from "../crBoard/PositionBox";
 import { setPositionImg } from "@/utils/custom";
 import { useParams } from "next/navigation";

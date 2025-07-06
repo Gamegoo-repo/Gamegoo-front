@@ -8,7 +8,7 @@ import Alert from "@/components/common/Alert";
 import { MemberPost } from "@/types/api/board/board";
 import { AlertProps } from "@/types/modal/modal";
 import { RootState } from "@/redux/store";
-import { User } from "@/interface/profile";
+import { User } from "@/types/api/user/profile/profile";
 import { getMemberPost, getNonMemberPost } from "@/api/board/board";
 
 export interface PostProps {

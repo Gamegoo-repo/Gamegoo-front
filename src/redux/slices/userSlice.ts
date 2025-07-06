@@ -1,4 +1,4 @@
-import { GameStyleList } from "@/interface/profile";
+import { GameStyleList } from "@/types/api/user/profile/profile";
 import { ChampionResponseDTO } from "@/types/api/champion/champion";
 import { Position } from "@/types/position/position";
 import { Mike } from "@/types/user/mike";

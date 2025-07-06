@@ -6,7 +6,7 @@ import Profile from "@/components/profile/Profile";
 import Button from "@/components/common/Button";
 import HeaderTitle from "@/components/common/HeaderTitle";
 import { useEffect, useRef, useState } from "react";
-import { profileType } from "@/interface/profile";
+import { profileType } from "@/types/api/user/profile/profile";
 import { Suspense } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserProfile } from "@/redux/slices/userSlice";

@@ -2,7 +2,7 @@ import { getMyProfile } from "@/api/user/profile/get";
 import { putProfileImage } from "@/api/user/profile/put";
 import RankTier from "@/components/common/RankTier";
 import GameStyle from "@/components/match/GameStyle";
-import { Profile } from "@/interface/profile";
+import { Profile } from "@/types/api/user/profile/profile";
 import { setUserProfile, setUserProfileImg } from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
