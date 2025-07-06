@@ -168,7 +168,7 @@ const MessageHeader = (props: MessageHeaderProps) => {
           <ThreeDotsButton onClick={handleMoreBoxOpen}>
             <ThreeDotsImage
               src="/assets/icons/three_dots_button.svg"
-              width={3}
+              width={30}
               height={15}
               alt="상세보기"
             />
