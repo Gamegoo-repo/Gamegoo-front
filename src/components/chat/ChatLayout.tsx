@@ -49,6 +49,7 @@ import {
 import { blockMember } from "@/api/block/block";
 import { reportMember } from "@/api/report/report";
 import { getAccessToken } from "@/utils/storage";
+import { ErrorResponse } from "@/types/api/api";
 
 interface System {
   flag: number;
