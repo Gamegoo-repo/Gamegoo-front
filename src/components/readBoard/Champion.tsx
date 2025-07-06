@@ -139,7 +139,11 @@ const Champion = (props: ChampionProps) => {
                           ? champion.csPerMinute.toFixed(1)
                           : "-"}
                       </Rate>
-                      <More>190.6</More>
+                      <More>
+                        {champion.averageCs !== undefined
+                          ? champion.averageCs.toFixed(1)
+                          : "-"}
+                      </More>
                     </ChampionTable>
                   </Tooltip>
                 </TooltipWrapper>

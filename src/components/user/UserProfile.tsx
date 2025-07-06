@@ -195,15 +195,12 @@ const UserProfile = ({
                 </DetailInfo>
               </Column>
               <Column>
-                {/* <RecentInfo>
-                  {formatDecimal(profile.memberRecentStats.recAvgKill || 0)} /{" "}
-                  <Emph>
-                    {formatDecimal(profile.memberRecentStats.recAvgDeath)}
-                  </Emph>{" "}
-                  / {formatDecimal(profile.memberRecentStats.recAvgAssist)}
-                </RecentInfo> */}
                 <RecentInfo>
-                  6.0 / <Emph>5.4</Emph> / 6.5
+                  {formatDecimal(profile.memberRecentStats?.recAvgKills || 0)} /{" "}
+                  <Emph>
+                    {formatDecimal(profile.memberRecentStats?.recAvgDeaths || 0)}
+                  </Emph>{" "}
+                  / {formatDecimal(profile.memberRecentStats?.recAvgAssists || 0)}
                 </RecentInfo>
                 <DetailInfo>
                   KDA {formatDecimal(profile.memberRecentStats?.recAvgKDA || 0)}

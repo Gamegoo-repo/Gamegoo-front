@@ -52,6 +52,9 @@ export interface MemberRecentStats {
   recTotalLosses: number;
   recWinRate: number;
   recAvgKDA: number;
+  recAvgKills: number;
+  recAvgDeaths: number;
+  recAvgAssists: number;
   recAvgCsPerMinute: number;
   recTotalCs: number;
 }
