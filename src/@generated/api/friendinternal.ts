@@ -1,4 +1,4 @@
-import { AuthAxios } from "@/api/auth";
+import { AuthAxios } from "@/api";
 
 import type { ApiResponse } from "../types";
 

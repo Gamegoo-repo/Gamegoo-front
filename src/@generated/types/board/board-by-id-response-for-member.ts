@@ -13,6 +13,7 @@
  */
 // May contain unused imports in some cases
 // @ts-ignore
+import type { ChampionStatsResponse } from "../champion/champion-stats";
 import {
   FreeTierEnum,
   GameModeEnum,
@@ -23,7 +24,6 @@ import {
   TierEnum,
   WantPEnum,
 } from "../common";
-import type { ChampionStatsResponse } from "./champion-stats-response";
 
 /**
  *

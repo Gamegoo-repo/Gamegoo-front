@@ -24,7 +24,7 @@ import {
   TierEnum,
   WantPEnum,
 } from "../common";
-import type { GameStyleResponse } from "./game-style-response";
+import type { GameStyleResponse } from "../game/game-style";
 
 /**
  *

@@ -1,4 +1,4 @@
-import Axios from "@/api";
+import { Axios } from "@/api";
 
 import type { ApiResponse, EmailCodeRequest, EmailRequest } from "../types";
 

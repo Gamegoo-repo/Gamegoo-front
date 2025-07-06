@@ -14,7 +14,7 @@
  */
 // May contain unused imports in some cases
 // @ts-ignore
-import type { BoardListResponse } from "./board-list-response";
+import type { BoardListResponse } from "../board/board-list";
 
 /**
  *

@@ -1,4 +1,4 @@
-import Axios from "@/api";
+import { Axios } from "@/api";
 
 import type {
   ApiResponse,

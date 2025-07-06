@@ -1,3 +1,4 @@
+export { default as Axios } from "./api";
 export * from "./auth";
 export * from "./socket";
 

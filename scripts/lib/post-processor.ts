@@ -89,6 +89,9 @@ export class PostProcessor {
     // Update main index file
     await this.updateMainIndexFile(typesDir, mergedFileInfo);
 
+    // Update import paths in all files
+    await this.updateImportPaths(typesDir, mergedFileInfo);
+
     // Clean up old files
     await this.cleanupOldFiles(typesDir, typeFiles);
 
@@ -389,6 +392,95 @@ export class PostProcessor {
       path.join(typesDir, "index.ts"),
       exports.join("\n") + "\n"
     );
+  }
+
+  private async updateImportPaths(
+    typesDir: string,
+    domainFileMap: Map<string, string[]>
+  ): Promise<void> {
+    // Update all files in domain directories
+    for (const [domain] of Array.from(domainFileMap.entries())) {
+      const domainDir = path.join(typesDir, domain);
+      if (await fs.pathExists(domainDir)) {
+        await this.updateImportsInDirectory(domainDir);
+      }
+    }
+
+    console.info(chalk.gray("  ✓ Updated import paths"));
+  }
+
+  private async updateImportsInDirectory(dir: string): Promise<void> {
+    const files = await fs.readdir(dir);
+
+    for (const file of files) {
+      if (file.endsWith(".ts") && file !== "index.ts") {
+        const filePath = path.join(dir, file);
+        await this.updateImportsInFile(filePath);
+      }
+    }
+  }
+
+  private async updateImportsInFile(filePath: string): Promise<void> {
+    let content = await fs.readFile(filePath, "utf8");
+    let hasChanges = false;
+
+    // Remove -response or -request suffixes from import paths
+    const importRegex = /from ["']\.\/([^"']+)(-response|-request)["']/g;
+    const matches = content.match(importRegex);
+
+    if (matches) {
+      for (const match of matches) {
+        const importMatch = match.match(
+          /from ["']\.\/([^"']+)(-response|-request)["']/
+        );
+        if (importMatch) {
+          const [fullMatch, baseName, suffix] = importMatch;
+          // Find the correct domain and path
+          const newPath = await this.findCorrectImportPath(baseName, filePath);
+          if (newPath) {
+            const newImport = `from "${newPath}"`;
+            content = content.replace(fullMatch, newImport);
+            hasChanges = true;
+          }
+        }
+      }
+    }
+
+    if (hasChanges) {
+      await fs.writeFile(filePath, content);
+    }
+  }
+
+  private async findCorrectImportPath(
+    baseName: string,
+    currentFilePath: string
+  ): Promise<string | null> {
+    const currentDir = path.dirname(currentFilePath);
+    const typesDir = path.join(this.outputDir, "types");
+
+    // Common mappings for known files
+    const commonMappings: Record<string, string> = {
+      "champion-stats": "../champion/champion-stats",
+      "game-style": "../game/game-style",
+    };
+
+    if (commonMappings[baseName]) {
+      return commonMappings[baseName];
+    }
+
+    // Try to find the file in other domains
+    const domains = await fs.readdir(typesDir);
+    for (const domain of domains) {
+      const domainPath = path.join(typesDir, domain);
+      if ((await fs.stat(domainPath)).isDirectory()) {
+        const targetFile = path.join(domainPath, `${baseName}.ts`);
+        if (await fs.pathExists(targetFile)) {
+          return `../${domain}/${baseName}`;
+        }
+      }
+    }
+
+    return null;
   }
 
   private async cleanupOldFiles(

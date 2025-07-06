@@ -14,7 +14,7 @@
  */
 // May contain unused imports in some cases
 // @ts-ignore
-import type { BlockedMemberResponse } from "./blocked-member-response";
+import type { BlockedMemberResponse } from "../blocked/blocked-member";
 
 /**
  *

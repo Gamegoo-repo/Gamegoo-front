@@ -440,11 +440,11 @@ export class ApiServiceGenerator {
     }
 
     if (hasAuth) {
-      imports.push(`import { AuthAxios } from '@/api/auth'`);
+      imports.push(`import { AuthAxios } from '@/api'`);
     }
 
     if (hasNonAuth) {
-      imports.push(`import Axios from '@/api'`);
+      imports.push(`import { Axios } from '@/api'`);
     }
 
     return imports.join("\n");

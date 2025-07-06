@@ -14,7 +14,7 @@
  */
 // May contain unused imports in some cases
 // @ts-ignore
-import type { ChatMessageResponse } from "./chat-message-response";
+import type { ChatMessageResponse } from "../chat/chat-message";
 
 /**
  *

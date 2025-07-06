@@ -14,7 +14,7 @@
  */
 // May contain unused imports in some cases
 // @ts-ignore
-import type { NotificationResponse } from "./notification-response";
+import type { NotificationResponse } from "../notification/notification";
 
 /**
  *
