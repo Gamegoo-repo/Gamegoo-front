@@ -1,5 +1,6 @@
 import { TIER } from "@/constants/board";
-import { GameMode } from "@/types/game/gameMode";
+
+import type { GameMode } from "@/types/game/gameMode";
 
 // 티어 문자열 -> id 매핑
 const getTierId = (tierKey: string | null | undefined): number => {

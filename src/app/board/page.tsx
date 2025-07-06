@@ -1,42 +1,37 @@
 "use client";
 
-import styled from "styled-components";
-import Image from "next/image";
-import { theme } from "@/styles/theme";
 import { useEffect, useRef, useState } from "react";
-import { BOARD_TITLE, GAME_MODE, MIC, TIER } from "@/constants/board";
-import Button from "@/components/common/Button";
-import Dropdown from "@/components/common/Dropdown";
-import Table from "@/components/board/Table";
-import Pagination from "@/components/common/Pagination";
-import PositionFilter from "@/components/board/PositionFilter";
-import PostBoard from "@/components/createBoard/PostBoard";
-import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
+import Image from "next/image";
+import styled from "styled-components";
+
+import { getBoardList, getBoardListCursor, getMyPost, pullUpPost } from "@/api";
+import {
+  Alert,
+  Button,
+  ConfirmModal,
+  Dropdown,
+  Pagination,
+  PositionFilter,
+  PostBoard,
+  PostList,
+  Table,
+} from "@/components";
+import { BOARD_TITLE, GAME_MODE, MIC, TIER } from "@/constants";
+import { notify, useMediaQueries } from "@/hooks";
+import { resetBoardFilters, setRefresh } from "@/redux/slices/boardSlice";
 import {
   setClosePostingModal,
   setOpenModal,
   setOpenPostingModal,
 } from "@/redux/slices/modalSlice";
-import {
-  getBoardList,
-  getBoardListCursor,
-  getMyPost,
-  pullUpPost,
-} from "@/api/board/board";
-import { BoardListDetail } from "@/types/api/board/board";
-import Alert from "@/components/common/Alert";
 import { clearCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
-import { mikeBooleanToId, tierStringToId } from "@/utils/custom";
-import { resetBoardFilters, setRefresh } from "@/redux/slices/boardSlice";
 import { rotate } from "@/styles/animation";
-import { Position } from "@/types/position/position";
-import { Mike } from "@/types/user/mike";
-import { GameMode } from "@/types/game/gameMode";
-import useMediaQueries from "@/hooks/useMediaQueries";
-import PostList from "@/components/board/PostList";
-import ConfirmModal from "@/components/common/ConfirmModal";
-import { notify } from "@/hooks/notify";
+import { theme } from "@/styles/theme";
+import { mikeBooleanToId, tierStringToId } from "@/utils";
+
+import type { RootState } from "@/redux/store";
+import type { BoardListDetail, GameMode, Mike, Position } from "@/types";
 
 const ITEMS_PER_PAGE = 20;
 const BUTTONS_PER_PAGE = 5;
@@ -284,51 +279,59 @@ const BoardPage = () => {
     }
   };
 
-  useEffect(() => {
-    if (isMobile === undefined) return;
-    console.log("boardRefresh", boardRefresh);
+  useEffect(
+    () => {
+      if (isMobile === undefined) return;
+      console.log("boardRefresh", boardRefresh);
 
-    if (isMobile) {
-      getInitialListByCursor();
-    } else {
-      getList();
-    }
-  }, [
-    currentPage,
-    selectedGameMode,
-    selectedTier,
-    isPosition,
-    selectedMic,
-    isPostStatus,
-    boardRefresh,
-    isMobile,
-  ]);
+      if (isMobile) {
+        getInitialListByCursor();
+      } else {
+        getList();
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [
+      currentPage,
+      selectedGameMode,
+      selectedTier,
+      isPosition,
+      selectedMic,
+      isPostStatus,
+      boardRefresh,
+      isMobile,
+    ]
+  );
 
   /* mobile 무한스크롤 페이지네이션 */
-  useEffect(() => {
-    if (!isMobile || !cursor) return;
+  useEffect(
+    () => {
+      if (!isMobile || !cursor) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && hasNext && !isLoading) {
-            getListByCursor(cursor);
-          }
-        });
-      },
-      {
-        rootMargin: "100px", // 미리 로드
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && hasNext && !isLoading) {
+              getListByCursor(cursor);
+            }
+          });
+        },
+        {
+          rootMargin: "100px", // 미리 로드
+        }
+      );
+
+      if (sentinelRef.current) {
+        observer.observe(sentinelRef.current);
       }
-    );
 
-    if (sentinelRef.current) {
-      observer.observe(sentinelRef.current);
-    }
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [cursor, isMobile, hasNext, isLoading]);
+      return () => {
+        observer.disconnect();
+      };
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [cursor, isMobile, hasNext, isLoading]
+  );
 
   /* 페이지네이션 이전 클릭 */
   const handlePrevPage = () => {

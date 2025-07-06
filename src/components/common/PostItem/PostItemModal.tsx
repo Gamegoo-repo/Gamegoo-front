@@ -1,7 +1,10 @@
-import { FC } from "react";
 import styled from "styled-components";
+
 import { theme } from "@/styles/theme";
+
 import ConfirmModal from "../ConfirmModal";
+
+import type { FC } from "react";
 
 interface PostItemModalProps {
   // 차단 관련

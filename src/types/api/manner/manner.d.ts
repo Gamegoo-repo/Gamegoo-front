@@ -1,4 +1,4 @@
-import { ApiResponse } from "../api";
+import type { ApiResponse } from "../api";
 
 // 기본 타입 정의
 type MannerId = number;

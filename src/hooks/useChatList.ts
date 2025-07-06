@@ -1,7 +1,9 @@
 import { useEffect } from "react";
-import { connectSocket, socket } from "@/socket";
+
 import { getChatrooms } from "@/api/chat/chat";
-import { ChatroomList } from "@/types/api/chat/chat";
+import { connectSocket, socket } from "@/socket";
+
+import type { ChatroomList } from "@/types/api/chat/chat";
 
 const useChatList = (setChatrooms: (chatrooms: ChatroomList[]) => void) => {
   useEffect(() => {

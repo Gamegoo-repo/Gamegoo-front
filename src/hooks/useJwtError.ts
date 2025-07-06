@@ -1,6 +1,7 @@
 import { useEffect } from "react";
-import { connectSocket, socket } from "@/socket";
+
 import { reissueToken } from "@/api/reissue/reissue";
+import { connectSocket, socket } from "@/socket";
 
 const useJwtError = () => {
   useEffect(() => {

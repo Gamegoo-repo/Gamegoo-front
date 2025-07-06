@@ -12,10 +12,9 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-
 // May contain unused imports in some cases
 // @ts-ignore
-import type { ChatroomResponse } from "./chatroom-response";
+import type { ChatroomResponse } from "../chatroom/chatroom";
 
 /**
  *

@@ -1,4 +1,4 @@
-import { Position } from "@/types/position/position";
+import type { Position } from "@/types/position/position";
 
 export const POSITION = [
   { id: 1, key: "ANY" as Position, image: "all" },

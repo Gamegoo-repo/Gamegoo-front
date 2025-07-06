@@ -1,10 +1,12 @@
-import styled from "styled-components";
-import Image from "next/image";
-import { theme } from "@/styles/theme";
 import { useState } from "react";
+import Image from "next/image";
+import styled from "styled-components";
+
+import { useMediaQueries } from "@/hooks";
 import { fadeIn, fadeOut } from "@/styles/animation";
-import { ChampionResponseDTO } from "@/types/api/champion/champion";
-import useMediaQueries from "@/hooks/useMediaQueries";
+import { theme } from "@/styles/theme";
+
+import type { ChampionResponseDTO } from "@/types";
 
 interface ChampionProps {
   title?: boolean;

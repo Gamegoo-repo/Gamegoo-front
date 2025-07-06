@@ -1,10 +1,11 @@
-import {
+import { AuthAxios } from "../auth";
+
+import type {
   MannerResponse,
   MemberMannerKeywordsResponse,
   MemberMannerLevelResponse,
   MemberPositiveNegativeMannerResponse,
 } from "@/types/api/manner/manner";
-import { AuthAxios } from "../auth";
 
 interface MannerInterface {
   memberId: number;

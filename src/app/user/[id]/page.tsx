@@ -1,19 +1,20 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import styled from "styled-components";
+
 import {
   getMemberMannerKeyword,
   getMemberMannerLevel,
-} from "@/api/manner/manner";
-import { getOtherProfile } from "@/api/user/profile/get";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
-import BlindProfile from "@/components/user/BlindProfile";
-import UserProfile, { Manner } from "@/components/user/UserProfile";
+  getOtherProfile,
+} from "@/api";
+import { BlindProfile, LoadingSpinner, UserProfile } from "@/components";
 import { DEFAULT_MANNER, DEFAULT_PROFILE } from "@/data/profile/default";
-import { User } from "@/types/api/user/profile/profile";
-import { getAccessToken } from "@/utils/storage";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import styled from "styled-components";
+import { getAccessToken } from "@/utils";
+
+import type { Manner } from "@/components/user/UserProfile";
+import type { User } from "@/types";
 
 const UserProfilePage = () => {
   const { id } = useParams();

@@ -1,19 +1,16 @@
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import FormModal from "@/components/common/FormModal";
-import Input from "@/components/common/Input";
-import Checkbox from "@/components/common/Checkbox";
-import Button from "@/components/common/Button";
-
-import { REPORT_REASON } from "@/constants/report";
-import { setOpenReadingModal, setCloseModal } from "@/redux/slices/modalSlice";
-import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
-import { MemberPost } from "@/types/api/board/board";
-import { RootState } from "@/redux/store";
-import { AlertProps } from "@/types/modal/modal";
-import { reportMember } from "@/api/report/report";
+import styled from "styled-components";
+
+import { reportMember } from "@/api";
+import { Button, Checkbox, FormModal, Input } from "@/components/common";
+import { REPORT_REASON } from "@/constants/report";
+import { setCloseModal } from "@/redux/slices/modalSlice";
+import { theme } from "@/styles/theme";
+
+import type { RootState } from "@/redux/store";
+import type { AlertProps, MemberPost } from "@/types";
 
 const ReportModal = ({
   isPost,

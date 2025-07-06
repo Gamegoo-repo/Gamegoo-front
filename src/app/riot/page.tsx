@@ -1,30 +1,34 @@
 "use client";
 
-import Button from "@/components/common/Button";
-import Checkbox from "@/components/common/Checkbox";
-import { clearSignIn } from "@/redux/slices/signInSlice";
-import { clearUserProfile } from "@/redux/slices/userSlice";
-import { theme } from "@/styles/theme";
-import { clearTokens } from "@/utils/storage";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import styled from "styled-components";
 import crypto from "crypto-js";
 import { encode as base64urlEncode } from "js-base64";
+import styled from "styled-components";
+
+import { Button, Checkbox } from "@/components";
+import { clearSignIn } from "@/redux/slices/signInSlice";
+import { clearUserProfile } from "@/redux/slices/userSlice";
+import { theme } from "@/styles/theme";
+import { clearTokens } from "@/utils";
 
 const RiotLogin = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const [autoLogin, setAutoLogin] = useState(false);
 
-  useEffect(() => {
-    dispatch(clearSignIn());
-    dispatch(clearUserProfile());
-    clearTokens();
-  }, []);
+  useEffect(
+    () => {
+      dispatch(clearSignIn());
+      dispatch(clearUserProfile());
+      clearTokens();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   /* 로그인 */
   const handleLogin = async () => {

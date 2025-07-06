@@ -1,8 +1,9 @@
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import ProgressBar from "@ramonak/react-progress-bar";
 import Image from "next/image";
-import Tooltip from "../common/Tooltip";
+import ProgressBar from "@ramonak/react-progress-bar";
+import styled from "styled-components";
+
+import { Tooltip } from "@/components/common";
+import { theme } from "@/styles/theme";
 
 interface WinningRateProps {
   completed: number;

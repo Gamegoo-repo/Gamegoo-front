@@ -1,29 +1,32 @@
-import { FC, useState, useEffect } from "react";
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import styled from "styled-components";
+
+import { theme } from "@/styles/theme";
+
+import Alert from "../Alert";
+import ChampionSection from "./ChampionSection";
 import {
+  useAlert,
+  useBlockActions,
+  useFriendActions,
+  useMoreBoxMenu,
+  usePostActions,
+  useUIHandlers,
+} from "./hooks";
+import MemoSection from "./MemoSection";
+import PositionSection from "./PositionSection";
+import PostItemModal from "./PostItemModal";
+import UserSection from "./UserSection/UserSection";
+import UserTierSection from "./UserTierSection";
+
+import type { FC } from "react";
+import type { RootState } from "@/redux/store";
+import type {
   BoardDetail,
   BoardListDetail,
   MemberPost,
 } from "@/types/api/board/board";
-import { RootState } from "@/redux/store";
-
-import Alert from "../Alert";
-import UserSection from "./UserSection/UserSection";
-import UserTierSection from "./UserTierSection";
-import PositionSection from "./PositionSection";
-import ChampionSection from "./ChampionSection";
-import MemoSection from "./MemoSection";
-import PostItemModal from "./PostItemModal";
-import {
-  useAlert,
-  usePostActions,
-  useFriendActions,
-  useBlockActions,
-  useMoreBoxMenu,
-  useUIHandlers,
-} from "./hooks";
 
 export type PostItemData = Pick<
   BoardListDetail,

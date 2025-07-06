@@ -1,7 +1,8 @@
-import { useRef, useCallback } from "react";
-import { deleteFriend } from "@/api/friend/delete";
-import { cancelFriendRequest, sendFriendRequest } from "@/api/friend/request";
-import { MemberPost } from "@/types/api/board/board";
+import { useCallback, useRef } from "react";
+
+import { cancelFriendRequest, deleteFriend, sendFriendRequest } from "@/api";
+
+import type { MemberPost } from "@/types";
 
 interface UseFriendActionsProps {
   isPost: MemberPost | undefined;

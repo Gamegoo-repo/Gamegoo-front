@@ -1,8 +1,9 @@
-import { BOTTOM_MODAL } from "@/constants/modal";
-import { theme } from "@/styles/theme";
-import Image from "next/image";
 import React from "react";
+import Image from "next/image";
 import styled from "styled-components";
+
+import { BOTTOM_MODAL } from "@/constants";
+import { theme } from "@/styles/theme";
 
 type bottomModalType = "login" | "logout" | "delete";
 

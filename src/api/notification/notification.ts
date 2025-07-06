@@ -1,5 +1,6 @@
 import { AuthAxios } from "../auth";
-import {
+
+import type {
   PopupNotificationResponse,
   ReadNotificationResponse,
   TotalNotificationResponse,

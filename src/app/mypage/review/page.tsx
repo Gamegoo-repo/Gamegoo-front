@@ -1,23 +1,18 @@
 "use client";
 
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import MannerLevelBar from "@/components/common/MannerLevelBar";
-import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants/mannerLevel";
 import { useEffect, useState } from "react";
-import { Manner } from "@/components/user/UserProfile";
 import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-import {
-  getMemberMannerKeyword,
-  getMemberMannerLevel,
-} from "@/api/manner/manner";
-import Image from "next/image";
-import useMediaQueries from "@/hooks/useMediaQueries";
-import Tooltip from "@/components/common/Tooltip";
+import styled from "styled-components";
+
+import { getMemberMannerKeyword, getMemberMannerLevel } from "@/api";
+import { MannerLevelBar, Tooltip } from "@/components";
+import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants";
+import { theme } from "@/styles/theme";
+
+import type { Manner } from "@/components/user/UserProfile";
+import type { RootState } from "@/redux/store";
 
 const MyReviewPage = () => {
-  const isMobile = useMediaQueries({ breakpoint: 700 });
   const myId = useSelector((state: RootState) => state.user.id);
   const [myManner, setMyManner] = useState<Manner>();
 
@@ -29,7 +24,7 @@ const MyReviewPage = () => {
     };
 
     fetchGetMyManner();
-  }, []);
+  }, [myId]);
 
   const goodMannerEvaluations =
     myManner?.mannerKeywords

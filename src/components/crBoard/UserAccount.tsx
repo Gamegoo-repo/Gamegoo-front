@@ -1,11 +1,14 @@
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import Mic from "../common/Mic";
-import { Mike } from "@/types/user/mike";
-import { useRouter } from "next/navigation";
-import useMediaQueries from "@/hooks/useMediaQueries";
 import { useState } from "react";
-import { formatTextOverNumber } from "@/utils/string";
+import { useRouter } from "next/navigation";
+import styled from "styled-components";
+
+import { useMediaQueries } from "@/hooks";
+import { theme } from "@/styles/theme";
+import { formatTextOverNumber } from "@/utils";
+
+import Mic from "../common/Mic";
+
+import type { Mike } from "@/types";
 
 interface UserAccountProps {
   account: string;

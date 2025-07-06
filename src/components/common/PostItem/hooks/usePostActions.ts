@@ -1,17 +1,19 @@
-import { useState, useRef, useCallback } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
-import { RootState } from "@/redux/store";
+
+import { deletePost, pullUpPost } from "@/api";
+import { notify } from "@/hooks";
+import { setRefresh } from "@/redux/slices/boardSlice";
 import {
   setCloseReadingModal,
   setOpenPostingModal,
 } from "@/redux/slices/modalSlice";
 import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
-import { setRefresh } from "@/redux/slices/boardSlice";
-import { notify } from "@/hooks/notify";
-import { deletePost, pullUpPost } from "@/api/board/board";
-import { MemberPost } from "@/types/api/board/board";
-import { PostItemData } from "../PostItem";
+
+import type { RootState } from "@/redux/store";
+import type { MemberPost } from "@/types";
+import type { PostItemData } from "../PostItem";
 
 interface UsePostActionsProps {
   data: PostItemData;

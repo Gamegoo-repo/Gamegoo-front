@@ -1,35 +1,36 @@
-import { HEADER_MODAL_TAB } from "@/constants/tab";
-import { theme } from "@/styles/theme";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import AlertWindow from "../alert/AlertWindow";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  clearTokens,
-  getAccessToken,
-  getName,
-  getProfileImg,
-  getUserId,
-} from "@/utils/storage";
-import { getProfileBgColor } from "@/utils/profile";
+
+import { getUnreadNotificationCount, postLogout, socketLogout } from "@/api";
+import { HEADER_MODAL_TAB } from "@/constants";
+import { useMediaQueries } from "@/hooks";
+import { closeChat } from "@/redux/slices/chatSlice";
+import { setNotiCount } from "@/redux/slices/notiSlice";
 import {
   clearUserProfile,
   setUserId,
   setUserName,
   setUserProfileImg,
 } from "@/redux/slices/userSlice";
-import { RootState } from "@/redux/store";
+import { theme } from "@/styles/theme";
+import {
+  clearTokens,
+  getAccessToken,
+  getName,
+  getProfileBgColor,
+  getProfileImg,
+  getUserId,
+} from "@/utils";
+
+import AlertWindow from "../alert/AlertWindow";
 import Alert from "./Alert";
 import ChatButton from "./ChatButton";
-import { setNotiCount } from "@/redux/slices/notiSlice";
-import { socketLogout } from "@/api/socket";
-import { closeChat } from "@/redux/slices/chatSlice";
-import { postLogout } from "@/api/login/logout";
-import { getUnreadNotificationCount } from "@/api/notification/notification";
-import useMediaQueries from "@/hooks/useMediaQueries";
+
+import type { RootState } from "@/redux/store";
 
 interface HeaderProps {
   selected: boolean;
@@ -60,17 +61,21 @@ const Header = () => {
 
   const isFirstRender = useRef(true);
 
-  useEffect(() => {
-    if (storedName) {
-      dispatch(setUserName(storedName));
-    }
-    if (storedProfileImg) {
-      dispatch(setUserProfileImg(storedProfileImg));
-    }
-    if (storedUserId) {
-      dispatch(setUserId(storedUserId));
-    }
-  }, []);
+  useEffect(
+    () => {
+      if (storedName) {
+        dispatch(setUserName(storedName));
+      }
+      if (storedProfileImg) {
+        dispatch(setUserProfileImg(storedProfileImg));
+      }
+      if (storedUserId) {
+        dispatch(setUserId(storedUserId));
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   /* 알림창 열고 닫는 함수 */
   const handleAlertWindow = (event: React.MouseEvent) => {
@@ -113,13 +118,17 @@ const Header = () => {
     }
   };
 
-  useEffect(() => {
-    // 첫 렌더에서만 API 호출
-    if (isFirstRender.current && storedName) {
-      fetchNotiCount();
-      isFirstRender.current = false;
-    }
-  }, [storedName]);
+  useEffect(
+    () => {
+      // 첫 렌더에서만 API 호출
+      if (isFirstRender.current && storedName) {
+        fetchNotiCount();
+        isFirstRender.current = false;
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [storedName]
+  );
 
   useEffect(() => {}, [notiCount]);
 

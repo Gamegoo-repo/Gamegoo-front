@@ -1,10 +1,11 @@
-import { theme } from "@/styles/theme";
+import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+
+import { theme } from "@/styles/theme";
+
 import StepNavigation from "./StepNavigation";
-import { css } from "styled-components";
 
 type fontSize = "bold" | "regular";
 

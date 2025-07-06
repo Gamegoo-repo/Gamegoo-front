@@ -1,23 +1,24 @@
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
 import { useEffect, useState } from "react";
-import { ChatroomList } from "@/types/api/chat/chat";
-import { MoreBoxMenuItems } from "@/types/modal/moreBox";
 import { useDispatch, useSelector } from "react-redux";
-import { setOpenModal } from "@/redux/slices/modalSlice";
-import { RootState } from "@/redux/store";
-import { getChatrooms } from "@/api/chat/chat";
-import ChatRoomItem from "./ChatRoomItem";
-import useChatMessage from "@/hooks/useChatMessage";
-import { setChatEnterType, setCurrentChatUuid } from "@/redux/slices/chatSlice";
-import useChatList from "@/hooks/useChatList";
+import styled from "styled-components";
+
 import {
   acceptFriendRequest,
   cancelFriendRequest,
+  deleteFriend,
+  getChatrooms,
   rejectFriendRequest,
   sendFriendRequest,
-} from "@/api/friend/request";
-import { deleteFriend } from "@/api/friend/delete";
+} from "@/api";
+import { useChatList, useChatMessage } from "@/hooks";
+import { setChatEnterType, setCurrentChatUuid } from "@/redux/slices/chatSlice";
+import { setOpenModal } from "@/redux/slices/modalSlice";
+import { theme } from "@/styles/theme";
+
+import ChatRoomItem from "./ChatRoomItem";
+
+import type { RootState } from "@/redux/store";
+import type { ChatroomList, MoreBoxMenuItems } from "@/types";
 
 interface ChatRoomListProps {
   onChatRoom: (id: string) => void;
@@ -75,15 +76,13 @@ const ChatRoomList = (props: ChatRoomListProps) => {
     }
   };
 
-  useEffect(() => {
-    handleFetchChatrooms();
-  }, [
-    isModalType,
-    reloadChatrooms,
-    activeTab,
-    mannerSystemMessage,
-    newMessage,
-  ]);
+  useEffect(
+    () => {
+      handleFetchChatrooms();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isModalType, reloadChatrooms, activeTab, mannerSystemMessage, newMessage]
+  );
 
   /* 대화 목록 페이지 - 스크롤이 끝에 도달하면 다음 페이지 가져오기 */
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {

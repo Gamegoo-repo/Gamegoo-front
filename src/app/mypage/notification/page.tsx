@@ -1,20 +1,21 @@
 "use client";
 
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import AlertBox from "@/components/mypage/notification/AlertBox";
-import Pagination from "@/components/common/Pagination";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { setNotiCount } from "@/redux/slices/notiSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
+import { useRouter } from "next/navigation";
+import styled from "styled-components";
+
 import {
   getTotalNotification,
   getUnreadNotificationCount,
   patchReadNotification,
-} from "@/api/notification/notification";
-import { Notification } from "@/types/notification/notification";
+} from "@/api";
+import { AlertBox, Pagination } from "@/components";
+import { setNotiCount } from "@/redux/slices/notiSlice";
+import { theme } from "@/styles/theme";
+
+import type { RootState } from "@/redux/store";
+import type { Notification } from "@/types";
 
 const MyAlertPage = () => {
   const router = useRouter();
@@ -28,35 +29,40 @@ const MyAlertPage = () => {
 
   const notiCount = useSelector((state: RootState) => state.noti.count);
 
-  useEffect(() => {
-    const fetchNotiList = async () => {
-      try {
-        const response = await getTotalNotification(currentPage);
-        if (response.data) {
-          const { notificationList, totalPage, totalElements } = response.data;
-          setNotiList(notificationList);
-          setTotalPages(totalPage);
-          setTotalItems(totalElements);
-        } else {
-          console.error(response.message);
+  useEffect(
+    () => {
+      const fetchNotiList = async () => {
+        try {
+          const response = await getTotalNotification(currentPage);
+          if (response.data) {
+            const { notificationList, totalPage, totalElements } =
+              response.data;
+            setNotiList(notificationList);
+            setTotalPages(totalPage);
+            setTotalItems(totalElements);
+          } else {
+            console.error(response.message);
+          }
+        } catch (error) {
+          console.error(error);
         }
-      } catch (error) {
-        console.error(error);
-      }
-    };
+      };
 
-    const fetchNotiCount = async () => {
-      try {
-        const response = await getUnreadNotificationCount();
-        dispatch(setNotiCount(response.data));
-      } catch (error) {
-        console.error(error);
-      }
-    };
+      const fetchNotiCount = async () => {
+        try {
+          const response = await getUnreadNotificationCount();
+          dispatch(setNotiCount(response.data));
+        } catch (error) {
+          console.error(error);
+        }
+      };
 
-    fetchNotiList();
-    fetchNotiCount();
-  }, [currentPage]);
+      fetchNotiList();
+      fetchNotiCount();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentPage]
+  );
 
   useEffect(() => {}, [totalPages, totalItems, notiCount]);
 

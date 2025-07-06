@@ -5,40 +5,38 @@
  * @author [나원지]
  * @created [2024-05-28]
  */
-
-import styled from "styled-components";
-import Dropdown from "../common/Dropdown";
-import Input from "../common/Input";
 import { useEffect, useRef, useState } from "react";
-import Button from "../common/Button";
-import CRModal from "../crBoard/CRModal";
-import UpdateProfileImage from "../profile/UpdateProfileImage";
-import UserAccount from "../crBoard/UserAccount";
-import Toggle from "../common/Toggle";
-import PositionBox, { PositionState } from "../crBoard/PositionBox";
-import GameStyle from "./GameStyle";
-import ConfirmModal from "../common/ConfirmModal";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-import { editPost, postBoard } from "@/api/board/board";
+import { useRouter } from "next/navigation";
+import styled from "styled-components";
+
+import { editPost, getMyProfile, postBoard } from "@/api";
+import { GAME_MODE } from "@/constants";
+import { setClosePostingModal } from "@/redux/slices/modalSlice";
 import {
   clearCurrentPost,
-  PostUpdate,
   setPostStatus,
   updateCurrentPost,
 } from "@/redux/slices/postSlice";
-import { PostReq } from "@/types/api/board/board";
-import Alert from "../common/Alert";
-import { useRouter } from "next/navigation";
 import { setUserProfile } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
-import { setClosePostingModal } from "@/redux/slices/modalSlice";
-import { getMyProfile } from "@/api/user/profile/get";
-import { Mike } from "@/types/user/mike";
-import { GAME_MODE } from "@/constants/board";
-import { GameMode } from "@/types/game/gameMode";
-import { Position } from "@/types/position/position";
-import { notify } from "@/hooks/notify";
+
+import {
+  Alert,
+  Button,
+  ConfirmModal,
+  Dropdown,
+  Input,
+  Toggle,
+} from "../common";
+import { CRModal, PositionBox, UserAccount } from "../crBoard";
+import { UpdateProfileImage } from "../profile";
+import GameStyle from "./GameStyle";
+
+import type { PostUpdate } from "@/redux/slices/postSlice";
+import type { RootState } from "@/redux/store";
+import type { GameMode, Mike, Position, PostReq } from "@/types";
+import type { PositionState } from "../crBoard/PositionBox";
 
 interface PostBoardProps {
   onClose: () => void;
@@ -97,13 +95,17 @@ const PostBoard = (props: PostBoardProps) => {
     }
   };
 
-  useEffect(() => {
-    fetchProfile();
+  useEffect(
+    () => {
+      fetchProfile();
 
-    return () => {
-      dispatch(setClosePostingModal());
-    };
-  }, []);
+      return () => {
+        dispatch(setClosePostingModal());
+      };
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   /* 유저가 게시판에 올린 글에 대한 데이터 */
   useEffect(() => {

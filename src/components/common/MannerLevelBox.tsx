@@ -1,12 +1,13 @@
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants/mannerLevel";
 import { useEffect, useState } from "react";
-import { MannerKeyword } from "@/types/api/manner/manner";
-import { getMemberMannerKeyword } from "@/api/manner/manner";
 import Image from "next/image";
-import { css } from "styled-components";
-import useMediaQueries from "@/hooks/useMediaQueries";
+import styled, { css } from "styled-components";
+
+import { getMemberMannerKeyword } from "@/api";
+import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants";
+import { useMediaQueries } from "@/hooks";
+import { theme } from "@/styles/theme";
+
+import type { MannerKeyword } from "@/types";
 
 interface MannerLevelBoxProps {
   memberId: number;

@@ -1,24 +1,21 @@
 "use client";
 
-import styled from "styled-components";
-import { useRouter, useSearchParams } from "next/navigation";
-import Profile from "@/components/profile/Profile";
-import Button from "@/components/common/Button";
-import HeaderTitle from "@/components/common/HeaderTitle";
-import { useEffect, useRef, useState } from "react";
-import { profileType } from "@/types/api/user/profile/profile";
-import { Suspense } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setUserProfile } from "@/redux/slices/userSlice";
-import { RootState } from "@/redux/store";
-import { sendMatchingQuitEvent, socket } from "@/socket";
-import ConfirmModal from "@/components/common/ConfirmModal";
-import { theme } from "@/styles/theme";
-import { closeChatRoom } from "@/redux/slices/chatSlice";
-import { getMyProfile } from "@/api/user/profile/get";
+import { useRouter, useSearchParams } from "next/navigation";
+import styled from "styled-components";
+
+import { getMyProfile } from "@/api";
+import { Button, ConfirmModal, HeaderTitle, Profile } from "@/components";
 import useMediaQueries from "@/hooks/useMediaQueries";
+import { closeChatRoom } from "@/redux/slices/chatSlice";
+import { setUserProfile } from "@/redux/slices/userSlice";
+import { sendMatchingQuitEvent, socket } from "@/socket";
+import { theme } from "@/styles/theme";
 import { getThresholdByGameMode } from "@/utils/matching/threshold";
-import { GameMode } from "@/types/game/gameMode";
+
+import type { RootState } from "@/redux/store";
+import type { GameMode, profileType } from "@/types";
 
 const ProfilePage = () => {
   const isMobile = useMediaQueries({ breakpoint: 700 });
@@ -96,18 +93,22 @@ const ProfilePage = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (!socket) return;
+  useEffect(
+    () => {
+      if (!socket) return;
 
-    const handleMatchingCount = (data: any) => {
-      setTierCounts({ ...data.data.tierCount, total: data.data.userCount });
-    };
+      const handleMatchingCount = (data: any) => {
+        setTierCounts({ ...data.data.tierCount, total: data.data.userCount });
+      };
 
-    socket.on("matching-count", handleMatchingCount);
-    return () => {
-      socket?.off("matching-count", handleMatchingCount); // 메모리 누수 방지
-    };
-  }, [socket]);
+      socket.on("matching-count", handleMatchingCount);
+      return () => {
+        socket?.off("matching-count", handleMatchingCount); // 메모리 누수 방지
+      };
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [socket]
+  );
 
   useEffect(() => {
     console.log("프로필 페이지에서 matching-count 수신", tierCounts);
