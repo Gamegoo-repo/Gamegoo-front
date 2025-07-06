@@ -1,10 +1,11 @@
-import { getMemberPost, pullUpPost } from "@/api/board/board";
-import ConfirmModal from "@/components/common/ConfirmModal";
-import MoreBox from "@/components/common/MoreBox";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import styled from "styled-components";
+
+import { getMemberPost, pullUpPost } from "@/api";
+import { ConfirmModal, MoreBox } from "@/components/common";
 import Report from "@/components/readBoard/MoreBoxButton";
-import { notify } from "@/hooks/notify";
-import { MemberPost } from "@/interface/board";
-import { MoreBoxMenuItems } from "@/interface/moreBox";
+import { notify } from "@/hooks";
 import { setRefresh } from "@/redux/slices/boardSlice";
 import {
   setCloseReadingModal,
@@ -12,15 +13,16 @@ import {
 } from "@/redux/slices/modalSlice";
 import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { setUserId } from "@/redux/slices/userSlice";
-import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-import { setAbbrevTier } from "@/utils/custom";
-import { setDateFormatter } from "@/utils/timeFormat";
-import { getProfileBgColor } from "@/utils/profile";
-import { toLowerCaseString } from "@/utils/string";
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components";
+import {
+  getProfileBgColor,
+  setAbbrevTier,
+  setDateFormatter,
+  toLowerCaseString,
+} from "@/utils";
+
+import type { RootState } from "@/redux/store";
+import type { MemberPost, MoreBoxMenuItems } from "@/types";
 
 export interface PostProps {
   boardId: number;

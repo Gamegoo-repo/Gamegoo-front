@@ -1,8 +1,9 @@
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import { MoreBoxMenuItems } from "@/interface/moreBox";
 import { useEffect, useRef } from "react";
-import { css } from "styled-components";
+import styled, { css } from "styled-components";
+
+import { theme } from "@/styles/theme";
+
+import type { MoreBoxMenuItems } from "@/types";
 
 interface MoreBoxProps {
   items: MoreBoxMenuItems[];

@@ -1,18 +1,19 @@
+import { AuthAxios } from "@/api";
+
 import type {
   ApiResponse,
-  BoardUpdateRequest,
-  BoardUpdateResponse,
+  BoardBumpResponse,
+  BoardByIdResponse,
+  BoardByIdResponseForMember,
+  BoardCursorResponse,
   BoardInsertRequest,
   BoardInsertResponse,
-  BoardBumpResponse,
-  MyBoardResponse,
-  MyBoardCursorResponse,
-  BoardByIdResponseForMember,
   BoardResponse,
-  BoardByIdResponse,
-  BoardCursorResponse,
+  BoardUpdateRequest,
+  BoardUpdateResponse,
+  MyBoardCursorResponse,
+  MyBoardResponse,
 } from "../types";
-import { AuthAxios } from "@/api/auth";
 
 /* putPostsBoardId - 수정 */
 export const putPostsBoardId = async (

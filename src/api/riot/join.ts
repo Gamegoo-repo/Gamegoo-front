@@ -1,5 +1,6 @@
-import Axios from "..";
-import { RiotJoinRequest } from "@/types/api/riot/join";
+import Axios from "../api";
+
+import type { RiotJoinRequest } from "@/types/api/riot/join";
 
 export const postRiotJoin = async ({
   puuid,

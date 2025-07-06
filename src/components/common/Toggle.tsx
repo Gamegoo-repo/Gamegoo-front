@@ -1,7 +1,8 @@
+import styled, { css } from "styled-components";
+
 import { theme } from "@/styles/theme";
-import { Mike } from "@/types/user/mike";
-import styled from "styled-components";
-import { css } from "styled-components";
+
+import type { Mike } from "@/types";
 
 interface ToggleProps {
   isOn: Mike;

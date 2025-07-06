@@ -1,6 +1,7 @@
-import { ChampionList, GameStyleList } from "@/interface/profile";
-import { ApiResponse } from "../api";
-import { FriendList } from "@/types/friend/friendList";
+import { ChampionList, GameStyleList } from "@/types/api/user/profile/profile";
+
+import type { FriendList } from "@/types/friend/friendList";
+import type { ApiResponse } from "../api";
 
 interface GetFriendListData {
   friendInfoList: FriendList[];

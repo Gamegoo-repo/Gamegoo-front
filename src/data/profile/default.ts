@@ -1,5 +1,5 @@
-import { Position } from "@/types/position/position";
-import { Mike } from "@/types/user/mike";
+import type { Position } from "@/types/position/position";
+import type { Mike } from "@/types/user/mike";
 
 export const DEFAULT_PROFILE = {
   profileImg: 3,
@@ -74,13 +74,13 @@ export const DEFAULT_PROFILE = {
     },
   ],
   memberRecentStats: {
-      recTotalWins: 0,
-      recTotalLosses: 0,
-      recWinRate: 0,
-      recAvgKDA: 0,
-      recAvgCsPerMinute: 0,
-      recTotalCs: 0
-    },
+    recTotalWins: 0,
+    recTotalLosses: 0,
+    recWinRate: 0,
+    recAvgKDA: 0,
+    recAvgCsPerMinute: 0,
+    recTotalCs: 0,
+  },
   friend: false,
   friendRequestMemberId: null,
 };

@@ -1,7 +1,8 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-import { PostItemData } from "../PostItem";
+
+import type { RootState } from "@/redux/store";
+import type { PostItemData } from "../PostItem";
 
 interface UseUIHandlersProps {
   data: PostItemData;

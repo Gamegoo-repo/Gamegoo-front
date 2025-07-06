@@ -1,4 +1,4 @@
-import { MikeEnum } from "../common";
+import type { MikeEnum } from "../common";
 
 // Request types
 /* tslint:disable */

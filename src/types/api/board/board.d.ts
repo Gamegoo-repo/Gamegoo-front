@@ -1,8 +1,8 @@
-import { Position } from "@/types/position/position";
-import { ApiResponse } from "../api";
-import { Mike } from "@/types/user/mike";
-import { GameMode } from "@/types/game/gameMode";
-import { ChampionResponseDTO } from "../champion/champion";
+import type { GameMode } from "@/types/game/gameMode";
+import type { Position } from "@/types/position/position";
+import type { Mike } from "@/types/user/mike";
+import type { ApiResponse } from "../api";
+import type { ChampionResponseDTO } from "../champion/champion";
 
 // 기본 DTO 인터페이스들
 export interface MannerKeywordDTO {
@@ -80,11 +80,11 @@ export interface PostsData extends BasePlayerInfo, GameInfo, BaseBoardInfo {
 }
 
 export interface GetBoardListData extends BoardListStructure {
-  boards: Array<BoardDetail>;
+  boards: Array<_BoardDetail>;
 }
 
 export interface GetBoardListCursorData extends BoardListCursorStructure {
-  boards: Array<BoardDetail>;
+  boards: Array<_BoardDetail>;
 }
 
 export interface GetMyBoardListData extends MyBoardListStructure {
@@ -95,7 +95,7 @@ export interface GetMyBoardListCursorData extends MyBoardListCursorStructure {
   myBoards: Array<MyBoardDetail>;
 }
 
-interface BoardDetail
+interface _BoardDetail
   extends BasePlayerInfo,
     GameInfo,
     BaseBoardInfo,
@@ -158,6 +158,99 @@ export interface BoardEditData
 
 export interface BoardDeleteData {}
 
+export interface gameStyleResponseDTOList {
+  gameStyleId: number;
+  gameStyleName: string;
+}
+
+export interface BoardListDetail {
+  boardId: number;
+  memberId: number;
+  profileImage: number;
+  gameName: string;
+  mannerLevel: number;
+  tag: string;
+  tier: string;
+  rank: number;
+  gameMode: GameMode;
+  mainP: Position;
+  subP: Position;
+  wantP: (Position | null)[];
+  championStatsResponseList?: ChampionResponseDTO[];
+  winRate: number;
+  createdAt: string;
+  bumpTime: string;
+  contents: string;
+  mike: Mike;
+}
+
+export interface BoardDetail {
+  boardId: number;
+  memberId: number;
+  profileImage: number;
+  gameName: string;
+  mannerLevel: number;
+  tag: string;
+  soloTier: string;
+  freeTier: string;
+  soloRank: number;
+  freeRanks: number;
+  gameMode: GameMode;
+  mainP: Position;
+  subP: Position;
+  wantP: Position[];
+  championResponseList?: ChampionResponseDTO[];
+  winRate: number;
+  createdAt: string;
+  mike: Mike;
+}
+
+export interface BoardList {
+  totalPage: number;
+  totalCount: number;
+  boards: BoardListDetail[];
+}
+
+export interface MemberPost {
+  boardId: number;
+  memberId: number;
+  isBlocked?: boolean;
+  isFriend?: boolean;
+  friendRequestMemberId?: number;
+  createdAt: string;
+  bumpTime: string;
+  profileImage: number;
+  gameName: string;
+  tag: string;
+  mannerLevel: number;
+  mannerKeywords?: MannerKeywordDTO[];
+  soloTier?: string;
+  freeTier?: string;
+  mike: Mike;
+  championStatsResponseList?: ChampionResponseDTO[];
+  gameMode: GameMode;
+  mainP?: Position;
+  subP?: Position;
+  wantP?: Position[];
+  recentGameCount?: number;
+  winRate: number;
+  gameStyles: number[];
+  contents: string;
+  soloRank?: number;
+  freeRank?: number;
+}
+
+export interface PostReq {
+  boardProfileImage: number;
+  gameMode: GameMode;
+  mainP: Position;
+  subP: Position;
+  wantP: Position[];
+  mike: Mike;
+  gameStyles: number[];
+  contents: string;
+}
+
 // API 응답 타입들
 export type PostsResponse = ApiResponse<PostsData>;
 export type BoardDeleteResponse = ApiResponse<BoardDeleteData>;
@@ -168,4 +261,5 @@ export type MemberPostBoardResponse = ApiResponse<MemberPostBoardData>;
 export type GetBoardListResponse = ApiResponse<GetBoardListData>;
 export type GetMyBoardListResponse = ApiResponse<GetMyBoardListData>;
 export type GetBoardListCursorResponse = ApiResponse<GetBoardListCursorData>;
-export type GetMyBoardListCursorResponse = ApiResponse<GetMyBoardListCursorData>;
+export type GetMyBoardListCursorResponse =
+  ApiResponse<GetMyBoardListCursorData>;

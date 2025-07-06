@@ -1,9 +1,11 @@
-import styled, { css } from "styled-components";
 import Image from "next/image";
-import { Dispatch } from "react";
-import { getProfileBgColor } from "@/utils/profile";
+import styled, { css } from "styled-components";
+
+import { useMediaQueries } from "@/hooks";
 import { theme } from "@/styles/theme";
-import useMediaQueries from "@/hooks/useMediaQueries";
+import { getProfileBgColor } from "@/utils";
+
+import type { Dispatch } from "react";
 
 type ProfileType = "matching" | "mypage" | "board";
 type SizeType = "large" | "medium" | "semiMedium" | "small";
@@ -84,24 +86,23 @@ const UpdateProfileImage = (props: FileInputProps) => {
               size === "large"
                 ? 35
                 : size === "medium"
-                ? 18
-                : size === "semiMedium"
-                ? 13
-                : 10
+                  ? 18
+                  : size === "semiMedium"
+                    ? 13
+                    : 10
             }
             height={
               size === "large"
                 ? 30
                 : size === "medium"
-                ? 18
-                : size === "semiMedium"
-                ? 13
-                : 10
+                  ? 18
+                  : size === "semiMedium"
+                    ? 13
+                    : 10
             }
           />
         </EditButton>
       )}
-
 
       {isProfileListOpen && (
         <ProfileListBox $isLarge={isLarge}>

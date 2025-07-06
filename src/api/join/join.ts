@@ -1,5 +1,6 @@
-import { JoinRequest, JoinResponse } from "@/types/api/join/join";
-import Axios from "..";
+import Axios from "../api";
+
+import type { JoinRequest, JoinResponse } from "@/types/api/join/join";
 
 export const postJoin = async ({
   isAgree,

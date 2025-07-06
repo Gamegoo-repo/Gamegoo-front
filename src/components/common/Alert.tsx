@@ -1,7 +1,9 @@
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
 import Image from "next/image";
-import { AlertProps } from "@/interface/modal";
+import styled from "styled-components";
+
+import { theme } from "@/styles/theme";
+
+import type { AlertProps } from "@/types";
 
 const Alert = (props: AlertProps) => {
   const { icon, width, height, content, alt, onClose, buttonText } = props;

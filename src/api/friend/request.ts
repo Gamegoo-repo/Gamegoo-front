@@ -1,6 +1,8 @@
-import { FriendStatusResponse } from "@/types/api/friend/status";
-import { AuthAxios } from "../auth";
 import { notify } from "@/hooks/notify";
+
+import { AuthAxios } from "../auth";
+
+import type { FriendStatusResponse } from "@/types/api/friend/status";
 
 /* 친구 요청 전송 */
 export const sendFriendRequest = async (

@@ -1,10 +1,11 @@
-import {
+import Axios from "../api";
+import { AuthAxios } from "../auth";
+
+import type {
   CheckPasswordResponse,
   PasswordResponse,
   ResetPasswordRequest,
 } from "@/types/api/password/password";
-import Axios from "..";
-import { AuthAxios } from "../auth";
 
 /* 비밀번호 찾기 */
 export const resetPassword = async ({

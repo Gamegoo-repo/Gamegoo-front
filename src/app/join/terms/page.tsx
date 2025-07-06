@@ -1,23 +1,23 @@
 "use client";
 
-import { postRiotJoin } from "@/api/riot/join";
-import Button from "@/components/common/Button";
-import Checkbox from "@/components/common/Checkbox";
-import TermModal from "@/components/common/TermModal";
-import {
-  MARKETING_TERMS,
-  SERVICE_TERMS,
-  PRIVATE_TERMS,
-} from "@/constants/terms";
-import { createTerms } from "@/data/terms";
-import { notify } from "@/hooks/notify";
-import { clearSignIn, updateTerms } from "@/redux/slices/signInSlice";
-import { RootState } from "@/redux/store";
-import { theme } from "@/styles/theme";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
 import styled from "styled-components";
+
+import { postRiotJoin } from "@/api";
+import { Button, Checkbox, TermModal } from "@/components";
+import {
+  MARKETING_TERMS,
+  PRIVATE_TERMS,
+  SERVICE_TERMS,
+} from "@/constants/terms";
+import { createTerms } from "@/data/terms";
+import { notify } from "@/hooks";
+import { clearSignIn, updateTerms } from "@/redux/slices/signInSlice";
+import { theme } from "@/styles/theme";
+
+import type { RootState } from "@/redux/store";
 
 const Terms = () => {
   const router = useRouter();

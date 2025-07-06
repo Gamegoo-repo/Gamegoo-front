@@ -1,22 +1,24 @@
-import { PostReq } from "@/interface/board";
+import { BOARD } from "@/constants/messages";
+import { notify } from "@/hooks/notify";
+
+import Axios from "../api";
 import { AuthAxios } from "../auth";
-import Axios from "..";
-import {
+
+import type {
   BoardDeleteResponse,
   BoardEditResponse,
   BoardPullUpResponse,
-  GetBoardListResponse,
-  GetMyBoardListResponse,
   GetBoardListCursorResponse,
+  GetBoardListResponse,
   GetMyBoardListCursorResponse,
+  GetMyBoardListResponse,
   MemberPostBoardResponse,
   NotMemberBoardResponse,
+  PostReq,
   PostsResponse,
 } from "@/types/api/board/board";
-import { Position } from "@/types/position/position";
-import { GameMode } from "@/types/game/gameMode";
-import { notify } from "@/hooks/notify";
-import { BOARD } from "@/constants/messages";
+import type { GameMode } from "@/types/game/gameMode";
+import type { Position } from "@/types/position/position";
 
 interface ListInterface {
   page: number;

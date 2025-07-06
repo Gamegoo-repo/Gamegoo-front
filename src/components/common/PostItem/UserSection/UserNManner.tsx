@@ -1,7 +1,8 @@
 import styled from "styled-components";
-import { FC } from "react";
-import MannerLevel from "../../MannerLevel";
-import MannerLevelBox from "../../MannerLevelBox";
+
+import { MannerLevel, MannerLevelBox } from "@/components/common";
+
+import type { FC } from "react";
 
 interface UserNMannerProps {
   mannerLevel: number;

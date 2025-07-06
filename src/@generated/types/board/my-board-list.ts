@@ -1,4 +1,4 @@
-import { TierEnum } from "../common";
+import type { TierEnum } from "../common";
 
 // Response types
 /* tslint:disable */

@@ -1,6 +1,10 @@
-import { ChampionList, GameStyleList } from "@/interface/profile";
-import { ApiResponse } from "../api";
-import { Mike } from "@/types/user/mike";
+import type { ApiResponse } from "@/types/api/api";
+import type {
+  ChampionList,
+  GameStyleList,
+} from "@/types/api/user/profile/profile";
+import type { Position } from "@/types/position/position";
+import type { Mike } from "@/types/user/mike";
 
 interface BaseProfileData {
   id: number;
@@ -22,7 +26,7 @@ interface BaseProfileData {
   soloWinrate: number;
   freeWinrate: number;
   gameStyleResponseList: GameStyleList[];
-  championResponseList: ChampionList[];
+  championStatsResponseList: ChampionList[];
   memberRecentStats: MemberRecentStats;
 }
 

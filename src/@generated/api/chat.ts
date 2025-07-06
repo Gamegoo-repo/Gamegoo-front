@@ -1,10 +1,11 @@
+import { AuthAxios } from "@/api";
+
 import type {
   ApiResponse,
-  ChatroomListResponse,
   ChatMessageListResponse,
+  ChatroomListResponse,
   EnterChatroomResponse,
 } from "../types";
-import { AuthAxios } from "@/api/auth";
 
 /* patchChatChatroomUuidRead - 업데이트 */
 export const patchChatChatroomUuidRead = async (

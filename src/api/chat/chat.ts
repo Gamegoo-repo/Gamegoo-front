@@ -1,21 +1,22 @@
-import {
-  chatRoomExitResponse,
-  chatRoomReadRequest,
-  chatRoomSearchResponse,
-  chatRoomExitRequest,
-  chatRoomReadData,
-  chatRoomMessageRequest,
-  chatRoomMessageData,
-  chatRoomEnterRequest,
-  chatRoomEnterResponse,
-  ChatRoomGetRequest,
-  chatRoomGetResponse,
+import { AuthAxios } from "../auth";
+
+import type {
   ChatRoomBoardRequest,
   chatRoomBoardResponse,
   chatRoomEnterFriendRequest,
+  chatRoomEnterRequest,
+  chatRoomEnterResponse,
+  chatRoomExitRequest,
+  chatRoomExitResponse,
   chatRoomFriendResponse,
+  ChatRoomGetRequest,
+  chatRoomGetResponse,
+  chatRoomMessageData,
+  chatRoomMessageRequest,
+  chatRoomReadData,
+  chatRoomReadRequest,
+  chatRoomSearchResponse,
 } from "@/types/api/chat/chat";
-import { AuthAxios } from "../auth";
 
 /* 채팅방 목록 조회 */
 export const getChatrooms = async ({
