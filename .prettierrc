@@ -6,14 +6,21 @@
   "printWidth": 80,
   "bracketSpacing": true,
   "arrowParens": "always",
-  "plugins": ["@trivago/prettier-plugin-sort-imports"],
+  "plugins": ["@ianvs/prettier-plugin-sort-imports"],
   "importOrder": [
     "^react",
     "^next",
     "<THIRD_PARTY_MODULES>",
+    "",
     "^@/(.*)$",
-    "^[./]"
+    "",
+    "^[./]",
+    "",
+    "<TYPES>",
+    "<TYPES>^@/(.*)$",
+    "<TYPES>^[./]"
   ],
-  "importOrderSeparation": true,
-  "importOrderSortSpecifiers": true
+  "importOrderTypeScriptVersion": "5.0.0",
+  "importOrderParserPlugins": ["typescript", "jsx", "decorators-legacy"],
+  "importOrderCaseSensitive": false
 }
