@@ -1,5 +1,6 @@
+import Axios from "@/api/api";
+
 import type { ApiResponse, EmailCodeRequest, EmailRequest } from "../types";
-import Axios from "@/api";
 
 /* postEmailVerify - 생성 */
 export const postEmailVerify = async (

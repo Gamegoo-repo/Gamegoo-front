@@ -17,7 +17,7 @@ export function setQueueType(gameMode: GameMode) {
   }
 }
 
-export function setProfileImg(profile: number) {
+export function setCustomProfileImg(profile: number) {
   switch (profile) {
     case 1:
       return "/assets/images/profile/profile1.svg";

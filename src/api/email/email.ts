@@ -3,7 +3,8 @@ import {
   SendEmailRequest,
   VerifyEmailRequest,
 } from "@/types/api/email/email";
-import Axios from "..";
+
+import Axios from "../api";
 
 export const sendJoinEmail = async ({
   email,

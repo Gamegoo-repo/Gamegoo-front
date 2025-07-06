@@ -1,8 +1,10 @@
-import styled from "styled-components";
 import Image from "next/image";
-import { setProfileImg } from "@/utils/custom";
-import { getProfileBgColor } from "@/utils/profile";
+
+import styled from "styled-components";
+
 import useMediaQueries from "@/hooks/useMediaQueries";
+import { setCustomProfileImg } from "@/utils/custom";
+import { getProfileBgColor } from "@/utils/profile";
 
 interface ProfileImageProps {
   image: number;
@@ -15,7 +17,7 @@ const ProfileImage = (props: ProfileImageProps) => {
   return (
     <Wrapper $bgColor={getProfileBgColor(image)}>
       <StyledImage
-        data={setProfileImg(image)}
+        data={setCustomProfileImg(image)}
         width={!isMobile ? 51 : 34}
         height={!isMobile ? 48 : 34}
       />

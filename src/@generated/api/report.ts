@@ -1,10 +1,11 @@
+import Axios from "@/api/api";
+
 import type {
   ApiResponse,
-  ReportRequest,
   ReportInsertResponse,
   ReportListResponse,
+  ReportRequest,
 } from "../types";
-import Axios from "@/api";
 
 /* postReportMemberId - 생성 */
 export const postReportMemberId = async (

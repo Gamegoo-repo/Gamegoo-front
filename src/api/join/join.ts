@@ -1,5 +1,6 @@
 import { JoinRequest, JoinResponse } from "@/types/api/join/join";
-import Axios from "..";
+
+import Axios from "../api";
 
 export const postJoin = async ({
   isAgree,

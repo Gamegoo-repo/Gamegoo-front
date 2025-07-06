@@ -1,7 +1,9 @@
 import axios from "axios";
-import { SocketAxios } from ".";
-import { getAccessToken } from "@/utils/storage";
+
 import { connectSocket } from "@/socket";
+import { getAccessToken } from "@/utils/storage";
+
+import { SocketAxios } from "./api";
 
 /* 소켓 로그인 */
 export const socketLogin = async () => {

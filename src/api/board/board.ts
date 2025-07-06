@@ -1,22 +1,23 @@
+import { BOARD } from "@/constants/messages";
+import { notify } from "@/hooks/notify";
 import { PostReq } from "@/types/api/board/board";
-import { AuthAxios } from "../auth";
-import Axios from "..";
 import {
   BoardDeleteResponse,
   BoardEditResponse,
   BoardPullUpResponse,
-  GetBoardListResponse,
-  GetMyBoardListResponse,
   GetBoardListCursorResponse,
+  GetBoardListResponse,
   GetMyBoardListCursorResponse,
+  GetMyBoardListResponse,
   MemberPostBoardResponse,
   NotMemberBoardResponse,
   PostsResponse,
 } from "@/types/api/board/board";
-import { Position } from "@/types/position/position";
 import { GameMode } from "@/types/game/gameMode";
-import { notify } from "@/hooks/notify";
-import { BOARD } from "@/constants/messages";
+import { Position } from "@/types/position/position";
+
+import Axios from "../api";
+import { AuthAxios } from "../auth";
 
 interface ListInterface {
   page: number;

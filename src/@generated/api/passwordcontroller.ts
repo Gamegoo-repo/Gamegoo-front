@@ -1,11 +1,12 @@
+import Axios from "@/api/api";
+
 import type {
   ApiResponse,
-  PasswordResetRequest,
-  PasswordResetWithVerifyRequest,
   PasswordCheckRequest,
   PasswordCheckResponse,
+  PasswordResetRequest,
+  PasswordResetWithVerifyRequest,
 } from "../types";
-import Axios from "@/api";
 
 /* putPasswordChange - 수정 */
 export const putPasswordChange = async (

@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import { setProfileImg } from "@/utils/custom";
+
+import { setCustomProfileImg } from "@/utils/custom";
 import { getProfileBgColor } from "@/utils/profile";
 
 interface ProfileImageProps {
@@ -11,7 +12,7 @@ const ProfileImage = (props: ProfileImageProps) => {
 
   return (
     <Wrapper $bgColor={getProfileBgColor(image)}>
-      <StyledImage data={setProfileImg(image)} width={32} height={32} />
+      <StyledImage data={setCustomProfileImg(image)} width={32} height={32} />
     </Wrapper>
   );
 };

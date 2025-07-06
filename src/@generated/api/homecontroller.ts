@@ -1,5 +1,6 @@
+import Axios from "@/api/api";
+
 import type { ApiResponse } from "../types";
-import Axios from "@/api";
 
 /* getHome - 조회 */
 export const getHome = async (): Promise<ApiResponse<string>> => {

@@ -3,7 +3,8 @@ import {
   PasswordResponse,
   ResetPasswordRequest,
 } from "@/types/api/password/password";
-import Axios from "..";
+
+import Axios from "../api";
 import { AuthAxios } from "../auth";
 
 /* 비밀번호 찾기 */
