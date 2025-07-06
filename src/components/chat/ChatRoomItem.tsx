@@ -5,7 +5,7 @@ import { getProfileBgColor } from "@/utils/profile";
 import { ChatroomList } from "@/types/api/chat/chat";
 import MoreBox from "../common/MoreBox";
 import { setChatRoomDateFormatter } from "@/utils/timeFormat";
-import { MoreBoxMenuItems } from "@/interface/moreBox";
+import { MoreBoxMenuItems } from "@/types/modal/moreBox";
 import useMediaQueries from "@/hooks/useMediaQueries";
 
 interface ChatRoomItemProps {

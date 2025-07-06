@@ -13,7 +13,7 @@ import {
 import { getProfileBgColor } from "@/utils/profile";
 import { useRouter } from "next/navigation";
 import { RootState } from "@/redux/store";
-import { MoreBoxMenuItems } from "@/interface/moreBox";
+import { MoreBoxMenuItems } from "@/types/modal/moreBox";
 import Alert from "../common/Alert";
 import { useState } from "react";
 import useMediaQueries from "@/hooks/useMediaQueries";

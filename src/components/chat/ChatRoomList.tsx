@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import { useEffect, useState } from "react";
 import { ChatroomList } from "@/types/api/chat/chat";
-import { MoreBoxMenuItems } from "@/interface/moreBox";
+import { MoreBoxMenuItems } from "@/types/modal/moreBox";
 import { useDispatch, useSelector } from "react-redux";
 import { setOpenModal } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";

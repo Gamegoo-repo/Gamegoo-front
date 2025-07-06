@@ -5,7 +5,7 @@ import { RootState } from "@/redux/store";
 import { setOpenModal } from "@/redux/slices/modalSlice";
 import { getMemberPost } from "@/api/board/board";
 import { MemberPost } from "@/types/api/board/board";
-import { MoreBoxMenuItems } from "@/interface/moreBox";
+import { MoreBoxMenuItems } from "@/types/modal/moreBox";
 import { PostItemData } from "../PostItem";
 
 interface UseMoreBoxMenuProps {

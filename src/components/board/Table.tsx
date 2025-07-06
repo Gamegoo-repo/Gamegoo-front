@@ -24,7 +24,7 @@ import { toLowerCaseString } from "@/utils/string";
 import Layout from "../chat/Layout";
 import MoreBox from "../common/MoreBox";
 import MoreBoxButton from "../readBoard/MoreBoxButton";
-import { MoreBoxMenuItems } from "@/interface/moreBox";
+import { MoreBoxMenuItems } from "@/types/modal/moreBox";
 import { deletePost, getMemberPost, pullUpPost } from "@/api/board/board";
 import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { setRefresh } from "@/redux/slices/boardSlice";

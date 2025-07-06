@@ -13,7 +13,7 @@ import QueueType from "./QueueType";
 import WinningRate from "./WinningRate";
 import MannerLevelBox from "../common/MannerLevelBox";
 import GameStyle from "./GameStyle";
-import { MoreBoxMenuItems } from "@/interface/moreBox";
+import { MoreBoxMenuItems } from "@/types/modal/moreBox";
 import MoreBox from "../common/MoreBox";
 import { MemberPost } from "@/types/api/board/board";
 import {

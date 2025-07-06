@@ -37,7 +37,7 @@ import Checkbox from "../common/Checkbox";
 import { setCloseModal, setOpenModal } from "@/redux/slices/modalSlice";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants/mannerLevel";
 import { REPORT_REASON } from "@/constants/report";
-import { MoreBoxMenuItems } from "@/interface/moreBox";
+import { MoreBoxMenuItems } from "@/types/modal/moreBox";
 import { notify } from "@/hooks/notify";
 import { deleteFriend } from "@/api/friend/delete";
 import {

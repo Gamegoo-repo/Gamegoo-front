@@ -8,7 +8,7 @@ import UserNManner from "./UserNManner";
 import MoreBox from "../../MoreBox";
 import MoreBoxButton from "../../../readBoard/MoreBoxButton";
 import { PostItemData } from "../PostItem";
-import { MoreBoxMenuItems } from "@/interface/moreBox";
+import { MoreBoxMenuItems } from "@/types/modal/moreBox";
 
 interface UserSectionProps {
   data: PostItemData;

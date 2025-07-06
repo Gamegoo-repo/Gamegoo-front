@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
-import { MoreBoxMenuItems } from "@/interface/moreBox";
+import { MoreBoxMenuItems } from "@/types/modal/moreBox";
 import { useEffect, useRef } from "react";
 import { css } from "styled-components";
 

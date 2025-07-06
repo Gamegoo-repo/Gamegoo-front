@@ -4,7 +4,7 @@ import MoreBox from "@/components/common/MoreBox";
 import Report from "@/components/readBoard/MoreBoxButton";
 import { notify } from "@/hooks/notify";
 import { MemberPost } from "@/types/api/board/board";
-import { MoreBoxMenuItems } from "@/interface/moreBox";
+import { MoreBoxMenuItems } from "@/types/modal/moreBox";
 import { setRefresh } from "@/redux/slices/boardSlice";
 import {
   setCloseReadingModal,
