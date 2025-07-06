@@ -24,7 +24,7 @@ import {
   getMyPost,
   pullUpPost,
 } from "@/api/board/board";
-import { BoardListDetail } from "@/interface/board";
+import { BoardListDetail } from "@/types/api/board/board";
 import Alert from "@/components/common/Alert";
 import { clearCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { mikeBooleanToId, tierStringToId } from "@/utils/custom";

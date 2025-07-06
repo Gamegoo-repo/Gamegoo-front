@@ -16,7 +16,7 @@ import {
   setOpenReadingModal,
 } from "@/redux/slices/modalSlice";
 
-import { BoardListDetail } from "@/interface/board";
+import { BoardListDetail } from "@/types/api/board/board";
 import { AlertProps } from "@/interface/modal";
 
 interface PostListProps {

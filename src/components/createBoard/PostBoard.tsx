@@ -27,7 +27,7 @@ import {
   setPostStatus,
   updateCurrentPost,
 } from "@/redux/slices/postSlice";
-import { PostReq } from "@/interface/board";
+import { PostReq } from "@/types/api/board/board";
 import Alert from "../common/Alert";
 import { useRouter } from "next/navigation";
 import { setUserProfile } from "@/redux/slices/userSlice";

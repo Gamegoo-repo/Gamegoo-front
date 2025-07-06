@@ -2,7 +2,11 @@ import { FC, useState, useEffect } from "react";
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import { useSelector } from "react-redux";
-import { BoardDetail, BoardListDetail, MemberPost } from "@/interface/board";
+import {
+  BoardDetail,
+  BoardListDetail,
+  MemberPost,
+} from "@/types/api/board/board";
 import { RootState } from "@/redux/store";
 
 import Alert from "../Alert";

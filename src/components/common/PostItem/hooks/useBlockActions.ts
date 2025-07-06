@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from "react";
 import { blockMember, unblockMember } from "@/api/block/block";
-import { MemberPost } from "@/interface/board";
+import { MemberPost } from "@/types/api/board/board";
 
 interface UseBlockActionsProps {
   isPost: MemberPost | undefined;

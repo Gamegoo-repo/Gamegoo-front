@@ -10,7 +10,7 @@ import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { setRefresh } from "@/redux/slices/boardSlice";
 import { notify } from "@/hooks/notify";
 import { deletePost, pullUpPost } from "@/api/board/board";
-import { MemberPost } from "@/interface/board";
+import { MemberPost } from "@/types/api/board/board";
 import { PostItemData } from "../PostItem";
 
 interface UsePostActionsProps {

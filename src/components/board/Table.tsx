@@ -18,7 +18,7 @@ import { useRouter } from "next/navigation";
 import Alert from "../common/Alert";
 import ConfirmModal from "../common/ConfirmModal";
 import Champion from "../common/Champion";
-import { BoardListDetail, MemberPost } from "@/interface/board";
+import { BoardListDetail, MemberPost } from "@/types/api/board/board";
 import { getProfileBgColor } from "@/utils/profile";
 import { toLowerCaseString } from "@/utils/string";
 import Layout from "../chat/Layout";

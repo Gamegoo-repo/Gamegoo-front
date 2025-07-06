@@ -10,7 +10,7 @@ import { setOpenReadingModal, setCloseModal } from "@/redux/slices/modalSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { MemberPost } from "@/interface/board";
+import { MemberPost } from "@/types/api/board/board";
 import { RootState } from "@/redux/store";
 import { AlertProps } from "@/interface/modal";
 import { reportMember } from "@/api/report/report";

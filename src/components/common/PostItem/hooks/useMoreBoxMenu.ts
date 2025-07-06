@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { RootState } from "@/redux/store";
 import { setOpenModal } from "@/redux/slices/modalSlice";
 import { getMemberPost } from "@/api/board/board";
-import { MemberPost } from "@/interface/board";
+import { MemberPost } from "@/types/api/board/board";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
 import { PostItemData } from "../PostItem";
 

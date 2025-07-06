@@ -1,4 +1,4 @@
-import { PostReq } from "@/interface/board";
+import { PostReq } from "@/types/api/board/board";
 import { AuthAxios } from "../auth";
 import Axios from "..";
 import {

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { MemberPost } from "@/interface/board";
+import { MemberPost } from "@/types/api/board/board";
 
 export interface PostUpdate {
   boardId?: number;

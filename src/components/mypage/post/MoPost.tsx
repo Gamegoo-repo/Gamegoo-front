@@ -5,7 +5,7 @@ import { AxiosError } from "axios";
 
 import PostItem, { PostItemData } from "@/components/common/PostItem";
 import Alert from "@/components/common/Alert";
-import { MemberPost } from "@/interface/board";
+import { MemberPost } from "@/types/api/board/board";
 import { AlertProps } from "@/interface/modal";
 import { RootState } from "@/redux/store";
 import { User } from "@/interface/profile";
