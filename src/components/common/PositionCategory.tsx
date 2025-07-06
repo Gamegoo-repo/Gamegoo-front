@@ -150,10 +150,13 @@ const Wrapper = styled.div<{ $isWant: boolean }>`
 
   @media (max-width: 700px) {
     width: 224px;
+    padding: 20px;
+    border-radius: 10px;
+    top: 50px;
     ${({ $isWant }) =>
       $isWant &&
       css`
-        left: calc(50% - 165px);
+        left: calc(50% - 158px);
       `};
   }
 `;
@@ -168,6 +171,10 @@ const Header = styled.div`
 const Title = styled.div`
   ${theme.fonts.bold20}
   color: ${theme.colors.white};
+
+  @media (max-width: 700px) {
+    ${theme.fonts.bold16}
+  }
 `;
 
 const CloseButton = styled.button``;
@@ -202,7 +209,7 @@ const Box = styled.div<{ $isWant: boolean }>`
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     row-gap: 20px;
-    column-gap: 0px;
+    column-gap: 20px;
   }
 `;
 
