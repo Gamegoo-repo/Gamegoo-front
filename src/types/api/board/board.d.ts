@@ -80,11 +80,11 @@ export interface PostsData extends BasePlayerInfo, GameInfo, BaseBoardInfo {
 }
 
 export interface GetBoardListData extends BoardListStructure {
-  boards: Array<BoardDetail>;
+  boards: Array<_BoardDetail>;
 }
 
 export interface GetBoardListCursorData extends BoardListCursorStructure {
-  boards: Array<BoardDetail>;
+  boards: Array<_BoardDetail>;
 }
 
 export interface GetMyBoardListData extends MyBoardListStructure {
@@ -95,7 +95,7 @@ export interface GetMyBoardListCursorData extends MyBoardListCursorStructure {
   myBoards: Array<MyBoardDetail>;
 }
 
-interface BoardDetail
+interface _BoardDetail
   extends BasePlayerInfo,
     GameInfo,
     BaseBoardInfo,

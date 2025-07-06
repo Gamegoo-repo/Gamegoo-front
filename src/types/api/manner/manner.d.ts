@@ -5,13 +5,13 @@ type MannerId = number;
 type MemberCount = number;
 
 // 매너 키워드 관련 인터페이스
-interface MannerKeyWord {
+export interface MannerKeyword {
   mannerKeywordId: MannerId;
   count: MemberCount;
 }
 
 // 공통으로 사용되는 베이스 인터페이스
-interface BaseMannerData {
+export interface BaseMannerData {
   mannerRatingId: MannerId;
   mannerKeywordIdList: MannerId[];
 }
@@ -25,7 +25,7 @@ interface MemberMannerLevelData {
 
 // 사용자 매너 키워드 데이터
 interface MemberMannerKeywordsData {
-  mannerKeywords: MannerKeyWord[];
+  mannerKeywords: MannerKeyword[];
 }
 
 // 멤버 긍정/부정 매너 데이터
@@ -39,22 +39,11 @@ export interface MannerList {
   mannerRatingKeywordList: number[];
 }
 
-export interface MannerKeywords {
-  mannerKeywordId: number;
-  count: number;
-}
-
 export interface OthersManner {
   memberId: number;
   mannerLevel: number;
-  mannerKeywords: MannerKeywords[];
+  mannerKeywords: MannerKeyword[];
 }
-
-export interface Mannerstatus {
-  mannerRatingId: MannerId;
-  mannerKeywordIdList: MannerId[];
-}
-
 
 // Response 타입 정의
 export type MannerResponse = ApiResponse<BaseMannerData>;

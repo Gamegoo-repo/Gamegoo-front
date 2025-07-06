@@ -28,7 +28,7 @@ import {
   postBadMannerValue,
   postMannerValue,
 } from "@/api/manner/manner";
-import { Mannerstatus } from "@/types/api/manner/manner";
+import { BaseMannerData } from "@/types/api/manner/manner";
 import ConfirmModal from "../common/ConfirmModal";
 import FormModal from "../common/FormModal";
 import Input from "../common/Input";
@@ -80,10 +80,10 @@ const ChatLayout = (props: ChatLayoutProps) => {
   const [reportDetail, setReportDetail] = useState<string>("");
   const [isEditMode, setIsEditMode] = useState(false);
   const [isMannerValue, setIsMannerValue] = useState<
-    Mannerstatus | undefined
+    BaseMannerData | undefined
   >();
   const [isBadMannerValue, setIsBadMannerValue] = useState<
-    Mannerstatus | undefined
+    BaseMannerData | undefined
   >();
 
   const isChatRoomOpen = useSelector(

@@ -15,7 +15,7 @@ import ChatRoomList from "./ChatRoomList";
 import { RootState } from "@/redux/store";
 import ChatLayout from "./ChatLayout";
 import { ChatroomList } from "@/types/api/chat/chat";
-import { Mannerstatus } from "@/types/api/manner/manner";
+import { BaseMannerData } from "@/types/api/manner/manner";
 import {
   editManners,
   getBadMannerValues,
@@ -70,8 +70,8 @@ const Layout = () => {
     []
   );
   const [reportDetail, setReportDetail] = useState<string>("");
-  const [isMannerValue, setIsMannerValue] = useState<Mannerstatus>();
-  const [isBadMannerValue, setIsBadMannerValue] = useState<Mannerstatus>();
+  const [isMannerValue, setIsMannerValue] = useState<BaseMannerData>();
+  const [isBadMannerValue, setIsBadMannerValue] = useState<BaseMannerData>();
   const [isEditMode, setIsEditMode] = useState(false);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);

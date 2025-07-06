@@ -1,29 +1,21 @@
-import { ApiResponse } from "../../api";
-import { ChatMessageList, System } from "../../../interface/chat";
+import { ApiResponse } from "../api";
 
-interface chatMessage {
+export interface ChatMessageDto {
   senderId: number;
-  senderName: string;
-  senderProfileImg: number;
+  senderName: string | null;
+  senderProfileImg: number | null;
   message: string;
   createdAt: string;
   timestamp: number;
+  systemType?: number;
+  boardId?: number | null;
 }
 
-interface ChatMessageList {
-  chatMessageList: Array<chatMessage>;
-  list_size: number;
-  has_next: boolean;
-  next_cursor: null;
-}
-
-interface Messages {
-  senderId: number;
-  senderName: string;
-  senderProfileImg: number;
-  message: string;
-  createdAt: string;
-  timestamp: number;
+export interface ChatMessageList {
+  chatMessageList: ChatMessageDto[] | [];
+  listSize: number;
+  hasNext: boolean;
+  nextCursor: number | null;
 }
 
 // requset
@@ -190,24 +182,6 @@ export interface DesignedSystemMessage {
   boardId: number;
 }
 
-export interface ChatMessageDto {
-  senderId: number;
-  senderName: string | null;
-  senderProfileImg: number | null;
-  message: string;
-  createdAt: string;
-  timestamp: number;
-  systemType?: number;
-  boardId?: number | null;
-}
-
-export interface ChatMessageList {
-  chatMessageList: ChatMessageDto[] | [];
-  listSize: number;
-  hasNext: boolean;
-  nextCursor: number | null;
-}
-
 interface System {
   flag: number;
   boardId: number;
@@ -259,7 +233,6 @@ export interface UnreadResponse {
   message: string;
   result: string[];
 }
-
 
 // response
 export type chatRoomExitResponse = ApiResponse<LoginData>;
