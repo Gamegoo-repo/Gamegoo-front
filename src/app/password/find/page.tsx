@@ -12,8 +12,9 @@ import {
   updateEmail,
   updateEmailAuth,
 } from "@/redux/slices/passwordSlice";
-import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
+
+import type { RootState } from "@/redux/store";
 
 const Find = () => {
   const router = useRouter();

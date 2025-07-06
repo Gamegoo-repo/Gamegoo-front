@@ -1,8 +1,10 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import { useChatFriend, useChatMessage, useJwtError } from "@/hooks";
 import { socket } from "@/socket";
+
+import type React from "react";
 
 const SocketConnection: React.FC = () => {
   const dispatch = useDispatch();

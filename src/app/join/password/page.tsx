@@ -8,7 +8,8 @@ import styled from "styled-components";
 
 import { Button, Input } from "@/components";
 import { updatePassword } from "@/redux/slices/signInSlice";
-import { RootState } from "@/redux/store";
+
+import type { RootState } from "@/redux/store";
 
 interface StyledValid {
   isLengthValid?: boolean;

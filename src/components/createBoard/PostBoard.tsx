@@ -15,12 +15,10 @@ import { GAME_MODE } from "@/constants";
 import { setClosePostingModal } from "@/redux/slices/modalSlice";
 import {
   clearCurrentPost,
-  PostUpdate,
   setPostStatus,
   updateCurrentPost,
 } from "@/redux/slices/postSlice";
 import { setUserProfile } from "@/redux/slices/userSlice";
-import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
 
 import {
@@ -35,6 +33,8 @@ import { CRModal, PositionBox, UserAccount } from "../crBoard";
 import { UpdateProfileImage } from "../profile";
 import GameStyle from "./GameStyle";
 
+import type { PostUpdate } from "@/redux/slices/postSlice";
+import type { RootState } from "@/redux/store";
 import type { GameMode, Mike, Position, PostReq } from "@/types";
 import type { PositionState } from "../crBoard/PositionBox";
 

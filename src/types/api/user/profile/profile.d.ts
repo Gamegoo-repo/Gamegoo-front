@@ -1,6 +1,6 @@
-import { ChampionResponseDTO } from "@/types/api/champion/champion";
-import { Position } from "@/types/position/position";
-import { Mike } from "@/types/user/mike";
+import type { ChampionResponseDTO } from "@/types/api/champion/champion";
+import type { Position } from "@/types/position/position";
+import type { Mike } from "@/types/user/mike";
 
 export type profileType = "normal" | "wind" | "other" | "me";
 

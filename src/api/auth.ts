@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, InternalAxiosRequestConfig } from "axios";
+import axios from "axios";
 
 import { LOGIN } from "@/constants/messages";
 import { notify } from "@/hooks/notify";
@@ -7,6 +7,8 @@ import { clearTokens, getAccessToken, getRefreshToken } from "@/utils/storage";
 
 import { BASE_URL } from "./api";
 import { reissueToken } from "./reissue/reissue";
+
+import type { AxiosInstance, InternalAxiosRequestConfig } from "axios";
 
 /* AuthAxios 인스턴스 생성 */
 export const AuthAxios: AxiosInstance = axios.create({

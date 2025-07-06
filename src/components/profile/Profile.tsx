@@ -36,18 +36,19 @@ import { POSITIONS, REPORT_REASON } from "@/constants";
 import useMediaQueries from "@/hooks/useMediaQueries";
 import { setMatchInfo, updateMike } from "@/redux/slices/matchInfo";
 import { setUserProfileImg } from "@/redux/slices/userSlice";
-import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-import {
+import { setPositionImg } from "@/utils/custom";
+
+import GameStyle from "../match/GameStyle";
+
+import type { RootState } from "@/redux/store";
+import type {
   Mike as MikeType,
   MoreBoxMenuItems,
   Position as PositionType,
   User,
 } from "@/types";
-import { setPositionImg } from "@/utils/custom";
-
-import { PositionState } from "../crBoard/PositionBox";
-import GameStyle from "../match/GameStyle";
+import type { PositionState } from "../crBoard/PositionBox";
 
 type profileType = "normal" | "wind" | "other" | "me";
 

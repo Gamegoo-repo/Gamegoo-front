@@ -1,4 +1,6 @@
-import {
+import { AuthAxios } from "../auth";
+
+import type {
   ChatRoomBoardRequest,
   chatRoomBoardResponse,
   chatRoomEnterFriendRequest,
@@ -15,8 +17,6 @@ import {
   chatRoomReadRequest,
   chatRoomSearchResponse,
 } from "@/types/api/chat/chat";
-
-import { AuthAxios } from "../auth";
 
 /* 채팅방 목록 조회 */
 export const getChatrooms = async ({

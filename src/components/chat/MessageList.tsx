@@ -19,7 +19,6 @@ import {
   setOpenMannerStatusModal,
   setOpenReadingModal,
 } from "@/redux/slices/modalSlice";
-import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import {
   getProfileBgColor,
@@ -30,6 +29,7 @@ import {
 import { ConfirmModal } from "../common";
 import { ReadBoard } from "../readBoard";
 
+import type { RootState } from "@/redux/store";
 import type { Chat, ChatMessageDto, DesignedSystemMessage } from "@/types";
 
 interface MessageListProps {

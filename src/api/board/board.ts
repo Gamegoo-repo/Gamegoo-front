@@ -1,6 +1,10 @@
 import { BOARD } from "@/constants/messages";
 import { notify } from "@/hooks/notify";
-import {
+
+import Axios from "../api";
+import { AuthAxios } from "../auth";
+
+import type {
   BoardDeleteResponse,
   BoardEditResponse,
   BoardPullUpResponse,
@@ -13,11 +17,8 @@ import {
   PostReq,
   PostsResponse,
 } from "@/types/api/board/board";
-import { GameMode } from "@/types/game/gameMode";
-import { Position } from "@/types/position/position";
-
-import Axios from "../api";
-import { AuthAxios } from "../auth";
+import type { GameMode } from "@/types/game/gameMode";
+import type { Position } from "@/types/position/position";
 
 interface ListInterface {
   page: number;

@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
-import { AxiosError } from "axios";
 import styled from "styled-components";
 
 import {
@@ -48,12 +47,13 @@ import {
   setOpenPostingModal,
 } from "@/redux/slices/modalSlice";
 import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
-import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import { setPostingDateFormatter } from "@/utils";
 
 import GameStyle from "./GameStyle";
 
+import type { AxiosError } from "axios";
+import type { RootState } from "@/redux/store";
 import type {
   AlertProps,
   GameMode,

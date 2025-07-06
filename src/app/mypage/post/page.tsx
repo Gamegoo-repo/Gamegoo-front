@@ -9,9 +9,10 @@ import { MoPost, Pagination, Post, PostBoard } from "@/components";
 import { useMediaQueries } from "@/hooks";
 import { setClosePostingModal } from "@/redux/slices/modalSlice";
 import { setUserProfile } from "@/redux/slices/userSlice";
-import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-import { MyBoardDetail } from "@/types";
+
+import type { RootState } from "@/redux/store";
+import type { MyBoardDetail } from "@/types";
 
 const MyPostPage = () => {
   const isMobile = useMediaQueries({ breakpoint: 700 });

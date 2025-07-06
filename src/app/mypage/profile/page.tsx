@@ -9,9 +9,10 @@ import { deleteMember, getMyProfile } from "@/api";
 import { ConfirmModal, MyPageProfile } from "@/components";
 import { useMediaQueries } from "@/hooks";
 import { setUserMike, setUserProfile } from "@/redux/slices/userSlice";
-import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import { clearTokens } from "@/utils";
+
+import type { RootState } from "@/redux/store";
 
 const passwordLength = 10;
 

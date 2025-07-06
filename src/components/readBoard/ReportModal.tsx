@@ -7,9 +7,9 @@ import { reportMember } from "@/api";
 import { Button, Checkbox, FormModal, Input } from "@/components/common";
 import { REPORT_REASON } from "@/constants/report";
 import { setCloseModal } from "@/redux/slices/modalSlice";
-import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
 
+import type { RootState } from "@/redux/store";
 import type { AlertProps, MemberPost } from "@/types";
 
 const ReportModal = ({

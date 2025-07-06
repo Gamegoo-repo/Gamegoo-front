@@ -1,6 +1,5 @@
-import { Position } from "@/types/position/position";
-
-import { ApiResponse } from "../../api";
+import type { Position } from "@/types/position/position";
+import type { ApiResponse } from "../../api";
 
 interface PutPositionRequest {
   mainP: Position;

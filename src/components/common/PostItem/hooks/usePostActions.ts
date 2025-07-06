@@ -10,11 +10,10 @@ import {
   setOpenPostingModal,
 } from "@/redux/slices/modalSlice";
 import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
-import { RootState } from "@/redux/store";
 
-import { PostItemData } from "../PostItem";
-
+import type { RootState } from "@/redux/store";
 import type { MemberPost } from "@/types";
+import type { PostItemData } from "../PostItem";
 
 interface UsePostActionsProps {
   data: PostItemData;

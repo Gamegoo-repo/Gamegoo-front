@@ -8,9 +8,9 @@ import GameStyle from "@/components/match/GameStyle";
 import { UpdateProfileImage } from "@/components/profile";
 import { useMediaQueries } from "@/hooks";
 import { setUserProfile, setUserProfileImg } from "@/redux/slices/userSlice";
-import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
 
+import type { RootState } from "@/redux/store";
 import type { Profile } from "@/types";
 
 const MyPageProfile: React.FC<Profile> = ({ user }) => {

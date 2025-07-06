@@ -13,11 +13,11 @@ import {
 import { useChatList, useChatMessage } from "@/hooks";
 import { setChatEnterType, setCurrentChatUuid } from "@/redux/slices/chatSlice";
 import { setOpenModal } from "@/redux/slices/modalSlice";
-import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
 
 import ChatRoomItem from "./ChatRoomItem";
 
+import type { RootState } from "@/redux/store";
 import type { ChatroomList, MoreBoxMenuItems } from "@/types";
 
 interface ChatRoomListProps {

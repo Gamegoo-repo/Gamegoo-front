@@ -1,5 +1,5 @@
-import { Position } from "@/types/position/position";
-import { Mike } from "@/types/user/mike";
+import type { Position } from "@/types/position/position";
+import type { Mike } from "@/types/user/mike";
 
 export const DEFAULT_PROFILE = {
   profileImg: 3,

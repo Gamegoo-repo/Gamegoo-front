@@ -1,15 +1,16 @@
-import { FC } from "react";
 import Image from "next/image";
 import styled from "styled-components";
 
 import { theme } from "@/styles/theme";
-import { MoreBoxMenuItems } from "@/types/modal/moreBox";
 
 import MoreBoxButton from "../../../readBoard/MoreBoxButton";
 import MoreBox from "../../MoreBox";
-import { PostItemData } from "../PostItem";
 import ProfileImage from "./ProfileImage";
 import UserNManner from "./UserNManner";
+
+import type { FC } from "react";
+import type { MoreBoxMenuItems } from "@/types/modal/moreBox";
+import type { PostItemData } from "../PostItem";
 
 interface UserSectionProps {
   data: PostItemData;

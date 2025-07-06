@@ -1,14 +1,8 @@
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 
-import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-import {
-  BoardDetail,
-  BoardListDetail,
-  MemberPost,
-} from "@/types/api/board/board";
 
 import Alert from "../Alert";
 import ChampionSection from "./ChampionSection";
@@ -25,6 +19,14 @@ import PositionSection from "./PositionSection";
 import PostItemModal from "./PostItemModal";
 import UserSection from "./UserSection/UserSection";
 import UserTierSection from "./UserTierSection";
+
+import type { FC } from "react";
+import type { RootState } from "@/redux/store";
+import type {
+  BoardDetail,
+  BoardListDetail,
+  MemberPost,
+} from "@/types/api/board/board";
 
 export type PostItemData = Pick<
   BoardListDetail,

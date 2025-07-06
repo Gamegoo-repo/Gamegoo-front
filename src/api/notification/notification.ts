@@ -1,11 +1,11 @@
-import {
+import { AuthAxios } from "../auth";
+
+import type {
   PopupNotificationResponse,
   ReadNotificationResponse,
   TotalNotificationResponse,
   UnreadNotificationCountResponse,
 } from "@/types/api/notification/notification";
-
-import { AuthAxios } from "../auth";
 
 /* 알림 전체 목록 조회 */
 export const getTotalNotification = async (

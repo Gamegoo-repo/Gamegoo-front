@@ -3,14 +3,15 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
-import { AxiosError } from "axios";
 import styled from "styled-components";
 
 import { postJoin, verifyRiot } from "@/api";
 import { Button, ConfirmModal, Input } from "@/components";
 import { clearSignIn } from "@/redux/slices/signInSlice";
-import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
+
+import type { AxiosError } from "axios";
+import type { RootState } from "@/redux/store";
 
 interface RiotErrorResponse {
   isSuccess: boolean;

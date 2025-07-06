@@ -12,9 +12,9 @@ import {
 } from "@/api";
 import { AlertBox, Pagination } from "@/components";
 import { setNotiCount } from "@/redux/slices/notiSlice";
-import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
 
+import type { RootState } from "@/redux/store";
 import type { Notification } from "@/types";
 
 const MyAlertPage = () => {

@@ -8,12 +8,13 @@ import {
   setCloseReadingModal,
   setOpenReadingModal,
 } from "@/redux/slices/modalSlice";
-import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-import { AlertProps } from "@/types";
-import { BoardListDetail } from "@/types/api";
 
 import { PostItem } from "../common";
+
+import type { RootState } from "@/redux/store";
+import type { AlertProps } from "@/types";
+import type { BoardListDetail } from "@/types/api";
 
 interface PostListProps {
   content: BoardListDetail[];

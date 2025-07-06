@@ -26,11 +26,11 @@ import {
   setOpenPostingModal,
 } from "@/redux/slices/modalSlice";
 import { clearCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
-import { RootState } from "@/redux/store";
 import { rotate } from "@/styles/animation";
 import { theme } from "@/styles/theme";
 import { mikeBooleanToId, tierStringToId } from "@/utils";
 
+import type { RootState } from "@/redux/store";
 import type { BoardListDetail, GameMode, Mike, Position } from "@/types";
 
 const ITEMS_PER_PAGE = 20;

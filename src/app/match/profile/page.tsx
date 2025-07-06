@@ -10,11 +10,12 @@ import { Button, ConfirmModal, HeaderTitle, Profile } from "@/components";
 import useMediaQueries from "@/hooks/useMediaQueries";
 import { closeChatRoom } from "@/redux/slices/chatSlice";
 import { setUserProfile } from "@/redux/slices/userSlice";
-import { RootState } from "@/redux/store";
 import { sendMatchingQuitEvent, socket } from "@/socket";
 import { theme } from "@/styles/theme";
-import { GameMode, profileType } from "@/types";
 import { getThresholdByGameMode } from "@/utils/matching/threshold";
+
+import type { RootState } from "@/redux/store";
+import type { GameMode, profileType } from "@/types";
 
 const ProfilePage = () => {
   const isMobile = useMediaQueries({ breakpoint: 700 });

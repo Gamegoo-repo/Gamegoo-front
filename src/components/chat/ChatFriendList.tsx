@@ -3,11 +3,11 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 
 import { deleteFriend } from "@/api";
-import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
 
 import FriendItem from "./FriendItem";
 
+import type { RootState } from "@/redux/store";
 import type { FriendList } from "@/types";
 
 interface FriendListProps {

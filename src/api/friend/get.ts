@@ -1,9 +1,9 @@
-import {
+import { AuthAxios } from "../auth";
+
+import type {
   GetFriendListResponse,
   GetSearchFriendResponse,
 } from "@/types/api/friend/get";
-
-import { AuthAxios } from "../auth";
 
 /* 친구 목록 조회 */
 export const getFriendsList = async (): Promise<GetFriendListResponse> => {

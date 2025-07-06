@@ -34,14 +34,7 @@ import {
   setOpenReadingModal,
 } from "@/redux/slices/modalSlice";
 import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
-import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-import {
-  AlertProps,
-  BoardListDetail,
-  MemberPost,
-  MoreBoxMenuItems,
-} from "@/types";
 import {
   setAbbrevTier,
   setCustomProfileImg,
@@ -50,6 +43,14 @@ import {
 import { getProfileBgColor } from "@/utils/profile";
 import { toLowerCaseString } from "@/utils/string";
 import { setDateFormatter } from "@/utils/timeFormat";
+
+import type { RootState } from "@/redux/store";
+import type {
+  AlertProps,
+  BoardListDetail,
+  MemberPost,
+  MoreBoxMenuItems,
+} from "@/types";
 
 interface TableTitleProps {
   id: number;

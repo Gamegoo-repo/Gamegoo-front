@@ -13,7 +13,7 @@ import styled, { ThemeProvider } from "styled-components";
 import { Footer, Header, SocketConnection } from "@/components";
 import { notify } from "@/hooks";
 import StyledComponentsRegistry from "@/libs/registry";
-import { AppStore, store as createStore } from "@/redux/store";
+import { store as createStore } from "@/redux/store";
 import { connectSocket, sendMatchingQuitEvent, socket } from "@/socket";
 import { pretendard, timeForSalad } from "@/styles/fonts";
 import GlobalStyles from "@/styles/GlobalStyles";
@@ -23,6 +23,8 @@ import {
   getIsCompleted,
   setIsCompleted,
 } from "@/utils/storage";
+
+import type { AppStore } from "@/redux/store";
 
 export default function RootLayout({
   children,

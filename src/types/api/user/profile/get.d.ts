@@ -1,7 +1,10 @@
-import { ApiResponse } from "@/types/api/api";
-import { ChampionList, GameStyleList } from "@/types/api/user/profile/profile";
-import { Position } from "@/types/position/position";
-import { Mike } from "@/types/user/mike";
+import type { ApiResponse } from "@/types/api/api";
+import type {
+  ChampionList,
+  GameStyleList,
+} from "@/types/api/user/profile/profile";
+import type { Position } from "@/types/position/position";
+import type { Mike } from "@/types/user/mike";
 
 interface BaseProfileData {
   id: number;

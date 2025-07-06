@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AxiosError } from "axios";
 import styled from "styled-components";
 
 import { blockMember } from "@/api/block/block";
@@ -35,23 +34,21 @@ import {
   setUnreadUuid,
 } from "@/redux/slices/chatSlice";
 import { setCloseModal, setOpenModal } from "@/redux/slices/modalSlice";
-import { RootState } from "@/redux/store";
 import { socket } from "@/socket";
 import { theme } from "@/styles/theme";
-import { ErrorResponse } from "@/types/api/api";
-import { Chat, DesignedSystemMessage } from "@/types/api/chat/chat";
-import { BaseMannerData } from "@/types/api/manner/manner";
-import { MoreBoxMenuItems } from "@/types/modal/moreBox";
 import { getAccessToken } from "@/utils/storage";
 
-import Button from "../common/Button";
-import Checkbox from "../common/Checkbox";
-import ConfirmModal from "../common/ConfirmModal";
-import FormModal from "../common/FormModal";
-import Input from "../common/Input";
+import { Button, Checkbox, ConfirmModal, FormModal, Input } from "../common";
 import MessageHeader from "./MessageHeader";
 import MessageInput from "./MessageInput";
 import MessageList from "./MessageList";
+
+import type { AxiosError } from "axios";
+import type { RootState } from "@/redux/store";
+import type { ErrorResponse } from "@/types/api/api";
+import type { Chat, DesignedSystemMessage } from "@/types/api/chat/chat";
+import type { BaseMannerData } from "@/types/api/manner/manner";
+import type { MoreBoxMenuItems } from "@/types/modal/moreBox";
 
 interface System {
   flag: number;

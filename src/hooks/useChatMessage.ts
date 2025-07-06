@@ -3,9 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { markChatAsRead } from "@/api/chat/chat";
 import { setUnreadUuid } from "@/redux/slices/chatSlice";
-import { RootState } from "@/redux/store";
 import { connectSocket, socket } from "@/socket";
-import { ChatMessageDto, SystemMessage } from "@/types/api/chat/chat";
+
+import type { RootState } from "@/redux/store";
+import type { ChatMessageDto, SystemMessage } from "@/types/api/chat/chat";
 
 const useChatMessage = () => {
   const dispatch = useDispatch();

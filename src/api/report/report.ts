@@ -1,6 +1,6 @@
-import { ReportRequest, ReportResponse } from "@/types/api/report/report";
-
 import { AuthAxios } from "../auth";
+
+import type { ReportRequest, ReportResponse } from "@/types/api/report/report";
 
 /* 신고하기 */
 export const reportMember = async ({

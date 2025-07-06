@@ -1,12 +1,11 @@
-import { FC } from "react";
 import styled from "styled-components";
 
 import { theme } from "@/styles/theme";
 import { setDateFormatter } from "@/utils";
 
-import { PostItemData } from "./PostItem";
-
+import type { FC } from "react";
 import type { GameMode } from "@/types";
+import type { PostItemData } from "./PostItem";
 
 interface MemoSectionProps {
   data: PostItemData;

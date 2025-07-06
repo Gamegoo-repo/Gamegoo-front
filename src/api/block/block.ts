@@ -1,6 +1,6 @@
-import { BlockStatusResponse } from "@/types/api/block/status";
-
 import { AuthAxios } from "../auth";
+
+import type { BlockStatusResponse } from "@/types/api/block/status";
 
 /* 차단하기 */
 export const blockMember = async (

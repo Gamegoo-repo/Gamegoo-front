@@ -1,4 +1,4 @@
-import { Dispatch, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import styled from "styled-components";
 
@@ -6,6 +6,8 @@ import { GAME_STYLE } from "@/constants";
 import { theme } from "@/styles/theme";
 
 import SelectedStylePopup from "../match/SelectedStylePopup";
+
+import type { Dispatch } from "react";
 
 interface GameStyleProps {
   selectedStyleIds: number[];

@@ -7,10 +7,10 @@ import styled from "styled-components";
 import { getMemberMannerKeyword, getMemberMannerLevel } from "@/api";
 import { MannerLevelBar, Tooltip } from "@/components";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants";
-import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
 
 import type { Manner } from "@/components/user/UserProfile";
+import type { RootState } from "@/redux/store";
 
 const MyReviewPage = () => {
   const myId = useSelector((state: RootState) => state.user.id);

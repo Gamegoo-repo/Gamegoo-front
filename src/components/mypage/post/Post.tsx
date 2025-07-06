@@ -13,7 +13,6 @@ import {
 } from "@/redux/slices/modalSlice";
 import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { setUserId } from "@/redux/slices/userSlice";
-import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import {
   getProfileBgColor,
@@ -22,6 +21,7 @@ import {
   toLowerCaseString,
 } from "@/utils";
 
+import type { RootState } from "@/redux/store";
 import type { MemberPost, MoreBoxMenuItems } from "@/types";
 
 export interface PostProps {

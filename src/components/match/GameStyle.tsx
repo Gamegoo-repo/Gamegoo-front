@@ -1,4 +1,4 @@
-import { Dispatch, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import Image from "next/image";
 import styled, { css } from "styled-components";
@@ -13,6 +13,7 @@ import { theme } from "@/styles/theme";
 import { Box, Toggle } from "../common";
 import SelectedStylePopup from "./SelectedStylePopup";
 
+import type { Dispatch } from "react";
 import type { Mike } from "@/types";
 
 type profileType = "me" | "other" | "none" | "mini" | "post";

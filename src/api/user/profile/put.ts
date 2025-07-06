@@ -1,10 +1,10 @@
-import {
+import { AuthAxios } from "../../auth";
+
+import type {
   PutPositionRequest,
   PutProfileResponse,
 } from "@/types/api/user/profile/put";
-import { Mike } from "@/types/user/mike";
-
-import { AuthAxios } from "../../auth";
+import type { Mike } from "@/types/user/mike";
 
 export const putProfileImage = async (
   profileImage: number

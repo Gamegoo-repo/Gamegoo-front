@@ -15,8 +15,9 @@ import {
 import { createTerms } from "@/data/terms";
 import { notify } from "@/hooks";
 import { clearSignIn, updateTerms } from "@/redux/slices/signInSlice";
-import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
+
+import type { RootState } from "@/redux/store";
 
 const Terms = () => {
   const router = useRouter();

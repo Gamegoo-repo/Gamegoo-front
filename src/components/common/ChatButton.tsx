@@ -5,11 +5,12 @@ import styled from "styled-components";
 
 import { useMediaQueries } from "@/hooks";
 import { toggleChat } from "@/redux/slices/chatSlice";
-import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
 
 import Layout from "../chat/Layout";
 import Alert from "./Alert";
+
+import type { RootState } from "@/redux/store";
 
 const ChatButton = () => {
   const isMobile = useMediaQueries({ breakpoint: 700 });

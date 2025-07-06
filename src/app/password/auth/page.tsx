@@ -12,9 +12,10 @@ import {
   updateAuthStatus,
   updateEmailAuth,
 } from "@/redux/slices/passwordSlice";
-import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import { setVerifyCode } from "@/utils/storage";
+
+import type { RootState } from "@/redux/store";
 
 const Auth = () => {
   const router = useRouter();

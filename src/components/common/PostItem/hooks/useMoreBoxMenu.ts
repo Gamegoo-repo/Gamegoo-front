@@ -4,11 +4,10 @@ import { useRouter } from "next/navigation";
 
 import { getMemberPost } from "@/api";
 import { setOpenModal } from "@/redux/slices/modalSlice";
-import { RootState } from "@/redux/store";
 
-import { PostItemData } from "../PostItem";
-
+import type { RootState } from "@/redux/store";
 import type { MemberPost, MoreBoxMenuItems } from "@/types";
+import type { PostItemData } from "../PostItem";
 
 interface UseMoreBoxMenuProps {
   data: PostItemData;

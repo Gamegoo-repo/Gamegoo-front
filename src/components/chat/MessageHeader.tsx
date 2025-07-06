@@ -11,12 +11,12 @@ import {
   openChat,
   setChatRoomUuid,
 } from "@/redux/slices/chatSlice";
-import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import { getProfileBgColor } from "@/utils";
 
 import { Alert, MoreBox } from "../common";
 
+import type { RootState } from "@/redux/store";
 import type { Chat, MoreBoxMenuItems } from "@/types";
 
 interface MessageHeaderProps {

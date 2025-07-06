@@ -8,8 +8,9 @@ import styled from "styled-components";
 
 import { resetPassword } from "@/api";
 import { Button, Input } from "@/components";
-import { RootState } from "@/redux/store";
 import { getVerifyCode } from "@/utils";
+
+import type { RootState } from "@/redux/store";
 
 interface StyledValid {
   isLengthValid?: boolean;

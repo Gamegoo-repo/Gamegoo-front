@@ -1,10 +1,11 @@
-import { Dispatch } from "react";
 import Image from "next/image";
 import styled, { css } from "styled-components";
 
 import { useMediaQueries } from "@/hooks";
 import { theme } from "@/styles/theme";
 import { getProfileBgColor } from "@/utils";
+
+import type { Dispatch } from "react";
 
 type ProfileType = "matching" | "mypage" | "board";
 type SizeType = "large" | "medium" | "semiMedium" | "small";

@@ -1,10 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { AxiosError } from "axios";
 
 import { postJoin } from "@/api/join/join";
 
 import { updateEmail, updatePassword } from "../slices/signInSlice";
-import { RootState } from "../store";
+
+import type { AxiosError } from "axios";
+import type { RootState } from "../store";
 
 interface SignInData {
   isAgree: boolean;

@@ -16,7 +16,6 @@ import {
   setUserName,
   setUserProfileImg,
 } from "@/redux/slices/userSlice";
-import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
 import {
   clearTokens,
@@ -30,6 +29,8 @@ import {
 import AlertWindow from "../alert/AlertWindow";
 import Alert from "./Alert";
 import ChatButton from "./ChatButton";
+
+import type { RootState } from "@/redux/store";
 
 interface HeaderProps {
   selected: boolean;

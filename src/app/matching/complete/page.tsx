@@ -29,13 +29,14 @@ import {
   setChatRoomUuid,
 } from "@/redux/slices/chatSlice";
 import { setComplete } from "@/redux/slices/matchingSlice";
-import { RootState } from "@/redux/store";
 import { sendMatchingQuitEvent, socket } from "@/socket";
 import { theme } from "@/styles/theme";
-import { GameMode } from "@/types/game/gameMode";
-import { Position } from "@/types/position/position";
-import { Mike } from "@/types/user/mike";
 import { setIsCompleted } from "@/utils/storage";
+
+import type { RootState } from "@/redux/store";
+import type { GameMode } from "@/types/game/gameMode";
+import type { Position } from "@/types/position/position";
+import type { Mike } from "@/types/user/mike";
 
 interface User {
   memberId: number;
