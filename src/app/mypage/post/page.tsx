@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Post from "@/components/mypage/post/Post";
 import MoPost from "@/components/mypage/post/MoPost";
+import PostBoard from "@/components/createBoard/PostBoard";
 import { useEffect, useState, useRef } from "react";
 import Pagination from "@/components/common/Pagination";
 import { deletePost, getMyPost, getMyPostCursor } from "@/api/board/board";
@@ -13,6 +14,7 @@ import { MyBoardDetail } from "@/types/api/board/board";
 import useMediaQueries from "@/hooks/useMediaQueries";
 import { getMyProfile } from "@/api/user/profile/get";
 import { setUserProfile } from "@/redux/slices/userSlice";
+import { setClosePostingModal } from "@/redux/slices/modalSlice";
 
 const MyPostPage = () => {
   const isMobile = useMediaQueries({ breakpoint: 700 });
@@ -30,6 +32,9 @@ const MyPostPage = () => {
 
   const currentPost = useSelector((state: RootState) => state.post.currentPost);
   const user = useSelector((state: RootState) => state.user);
+  const isPostingModal = useSelector(
+    (state: RootState) => state.modal.postingModal
+  );
   // 게시판 글 새로고침
   const boardRefresh = useSelector((state: RootState) => state.board.refresh);
 
@@ -134,6 +139,15 @@ const MyPostPage = () => {
     setCurrentPage(page);
   };
 
+  /* PostBoard 모달 닫기 */
+  const handlePostingClose = () => {
+    dispatch(setClosePostingModal());
+  };
+
+  const handleModalClose = () => {
+    handlePostingClose();
+  };
+
   return (
     <Wrapper>
       <MyPostContent>
@@ -216,6 +230,13 @@ const MyPostPage = () => {
           )}
         </PostPage>
       </MyPostContent>
+
+      {isPostingModal && (
+        <PostBoard
+          onClose={handlePostingClose}
+          onCompletedPostingClose={handleModalClose}
+        />
+      )}
     </Wrapper>
   );
 };

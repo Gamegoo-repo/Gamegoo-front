@@ -60,21 +60,40 @@ const Champion = (props: ChampionProps) => {
                   <ChampionTable>
                     <Head>승률</Head>
                     <Rate>{Math.round(champion.winRate)}%</Rate>
-                    {/* TODO: 추후 wins 값 들어오면 수정 */}
                     <More>
                       {champion.wins || "0"}승{" "}
                       {champion.wins ? champion.games - champion.wins : "0"}패
                     </More>
                     <Head>KDA</Head>
-                    <Rate>1.98</Rate>
-                    <More>0 / 0 / 0</More>
+                    <Rate>
+                      {champion.kda ? Number(champion.kda).toFixed(2) : "0.00"}
+                    </Rate>
+                    <More>
+                      {`${
+                        champion.kills
+                          ? Number(champion.kills).toFixed(1)
+                          : "0.0"
+                      } / ${
+                        champion.deaths
+                          ? Number(champion.deaths).toFixed(1)
+                          : "0.0"
+                      } / ${
+                        champion.assists
+                          ? Number(champion.assists).toFixed(1)
+                          : "0.0"
+                      }`}
+                    </More>
                     <Head>CS</Head>
                     <Rate>
                       {champion.csPerMinute !== undefined
                         ? champion.csPerMinute.toFixed(1)
                         : "-"}
                     </Rate>
-                    <More>190.6</More>
+                    <More>
+                      {champion.averageCs !== undefined
+                        ? champion.averageCs.toFixed(1)
+                        : "-"}
+                    </More>
                   </ChampionTable>
                 </Tooltip>
               )}
