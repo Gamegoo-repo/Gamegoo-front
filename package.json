@@ -8,8 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "generate": "tsx scripts/generate-api.ts && prettier --write src/@generated",
-    "format": "prettier --write ."
+    "generate": "tsx scripts/generate-api.ts && eslint --fix src/@generated && prettier --write src/@generated",
+    "format": "eslint --fix src && prettier --write ."
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
@@ -43,6 +43,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/redux-persist": "^4.3.1",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
     "babel-plugin-styled-components": "^2.1.4",
     "chalk": "^5.4.1",
     "dotenv": "^16.5.0",
