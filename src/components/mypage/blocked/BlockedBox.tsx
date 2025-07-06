@@ -1,20 +1,23 @@
-import ConfirmModal from "@/components/common/ConfirmModal";
-import MoreBox from "@/components/common/MoreBox";
-import { theme } from "@/styles/theme";
-import { getProfileBgColor } from "@/utils/profile";
-import Image from "next/image";
 import React, { useState } from "react";
-import MoreBoxButton from "../../readBoard/MoreBoxButton";
-import styled, { css } from "styled-components";
+
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import useMediaQueries from "@/hooks/useMediaQueries";
+
+import styled, { css } from "styled-components";
 
 import {
   blockMember,
   deleteBlockMember,
   unblockMember,
 } from "@/api/block/block";
+import ConfirmModal from "@/components/common/ConfirmModal";
+import MoreBox from "@/components/common/MoreBox";
+import useMediaQueries from "@/hooks/useMediaQueries";
+import { theme } from "@/styles/theme";
 import { BlockList } from "@/types/friend/blockList";
+import { getProfileBgColor } from "@/utils/profile";
+
+import MoreBoxButton from "../../readBoard/MoreBoxButton";
 
 const BlockedBox: React.FC<BlockList> = ({
   memberId,

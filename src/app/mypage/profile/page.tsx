@@ -1,23 +1,26 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+
 import styled from "styled-components";
-import { theme } from "@/styles/theme";
+
+import { deleteMember } from "@/api/user/delete";
+import { getMyProfile } from "@/api/user/profile/get";
+import ConfirmModal from "@/components/common/ConfirmModal";
 import MyPageProfile from "@/components/mypage/profile/MyPageProfile";
 import PasswordModal from "@/components/mypage/profile/PasswordModal";
-import { useEffect, useState } from "react";
-import ConfirmModal from "@/components/common/ConfirmModal";
-import { setUserMike, setUserProfile } from "@/redux/slices/userSlice";
 import useMediaQueries from "@/hooks/useMediaQueries";
-import { useDispatch, useSelector } from "react-redux";
+import { setUserMike, setUserProfile } from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
-import { formatDate } from "@/utils/timeFormat";
+import { theme } from "@/styles/theme";
 // import Input from "@/components/common/Input";
 // import { checkPassword } from "@/api/password/password";
 import { clearTokens } from "@/utils/storage";
-import { useRouter } from "next/navigation";
-import { getMyProfile } from "@/api/user/profile/get";
-import { deleteMember } from "@/api/user/delete";
-import Image from "next/image";
+import { formatDate } from "@/utils/timeFormat";
 
 const passwordLength = 10;
 

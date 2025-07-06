@@ -1,5 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
+import { useParams } from "next/navigation";
+
+import styled from "styled-components";
+
 import {
   getMemberMannerKeyword,
   getMemberMannerLevel,
@@ -11,9 +17,6 @@ import UserProfile, { Manner } from "@/components/user/UserProfile";
 import { DEFAULT_MANNER, DEFAULT_PROFILE } from "@/data/profile/default";
 import { User } from "@/types/api/user/profile/profile";
 import { getAccessToken } from "@/utils/storage";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import styled from "styled-components";
 
 const UserProfilePage = () => {
   const { id } = useParams();

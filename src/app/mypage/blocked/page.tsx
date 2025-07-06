@@ -1,13 +1,15 @@
 "use client";
 
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import Pagination from "@/components/common/Pagination";
 import { useEffect, useState } from "react";
+
+import styled from "styled-components";
+
 import { getBlockList } from "@/api/block/get";
-import { BlockList } from "@/types/friend/blockList";
+import Pagination from "@/components/common/Pagination";
 import BlockedBox from "@/components/mypage/blocked/BlockedBox";
 import useMediaQueries from "@/hooks/useMediaQueries";
+import { theme } from "@/styles/theme";
+import { BlockList } from "@/types/friend/blockList";
 
 const MyBlockedPage = () => {
   const isMobile = useMediaQueries({ breakpoint: 700 });

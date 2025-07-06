@@ -1,11 +1,14 @@
 "use client";
 
+import React, { Suspense } from "react";
+
+import { useSearchParams } from "next/navigation";
+
+import styled from "styled-components";
+
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import { PRIVATE_TERMS, SERVICE_TERMS } from "@/constants/terms";
 import { theme } from "@/styles/theme";
-import { useSearchParams } from "next/navigation";
-import React, { Suspense } from "react";
-import styled from "styled-components";
 
 const PolicyPage = () => {
   const searchParams = useSearchParams();

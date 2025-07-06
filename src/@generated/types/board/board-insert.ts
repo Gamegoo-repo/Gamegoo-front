@@ -1,10 +1,10 @@
 import {
-  MikeEnum,
   GameModeEnum,
   MainPEnum,
+  MikeEnum,
   SubPEnum,
-  WantPEnum,
   TierEnum,
+  WantPEnum,
 } from "../common";
 
 // Request types

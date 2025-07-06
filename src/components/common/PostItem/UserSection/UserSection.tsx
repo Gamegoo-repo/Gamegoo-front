@@ -1,14 +1,17 @@
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import Image from "next/image";
 import { FC } from "react";
 
+import Image from "next/image";
+
+import styled from "styled-components";
+
+import { theme } from "@/styles/theme";
+import { MoreBoxMenuItems } from "@/types/modal/moreBox";
+
+import MoreBoxButton from "../../../readBoard/MoreBoxButton";
+import MoreBox from "../../MoreBox";
+import { PostItemData } from "../PostItem";
 import ProfileImage from "./ProfileImage";
 import UserNManner from "./UserNManner";
-import MoreBox from "../../MoreBox";
-import MoreBoxButton from "../../../readBoard/MoreBoxButton";
-import { PostItemData } from "../PostItem";
-import { MoreBoxMenuItems } from "@/types/modal/moreBox";
 
 interface UserSectionProps {
   data: PostItemData;

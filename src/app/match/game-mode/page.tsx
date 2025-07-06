@@ -1,14 +1,18 @@
 "use client";
 
-import GraphicBox from "@/components/match/GraphicBox";
-import styled from "styled-components";
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { GAME_MODE_PAGE_DATA } from "@/constants/match";
-import HeaderTitle from "@/components/common/HeaderTitle";
 import { Suspense } from "react";
-import useMediaQueries from "@/hooks/useMediaQueries";
+
 import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
+
+import styled from "styled-components";
+
+import HeaderTitle from "@/components/common/HeaderTitle";
+import GraphicBox from "@/components/match/GraphicBox";
+import { GAME_MODE_PAGE_DATA } from "@/constants/match";
+import useMediaQueries from "@/hooks/useMediaQueries";
+
 const GameModePage = () => {
   const isMobile = useMediaQueries({ breakpoint: 700 });
   const router = useRouter();

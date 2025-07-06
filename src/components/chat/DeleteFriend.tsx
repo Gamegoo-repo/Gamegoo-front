@@ -1,7 +1,9 @@
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+
+import styled from "styled-components";
+
+import { theme } from "@/styles/theme";
 
 interface ContextMenuProps {
   x: number;

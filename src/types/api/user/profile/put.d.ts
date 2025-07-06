@@ -1,4 +1,5 @@
 import { Position } from "@/types/position/position";
+
 import { ApiResponse } from "../../api";
 
 interface PutPositionRequest {

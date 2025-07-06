@@ -1,33 +1,31 @@
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import CRModal from "../crBoard/CRModal";
-import Button from "../common/Button";
-import PositionBox from "../crBoard/PositionBox";
 import { useEffect, useRef, useState } from "react";
-import ProfileImage from "./ProfileImage";
-import MannerLevel from "../common/MannerLevel";
-import Mic from "../common/Mic";
-import MoreBoxButton from "./MoreBoxButton";
-import Champion from "../common/Champion";
-import QueueType from "./QueueType";
-import WinningRate from "./WinningRate";
-import MannerLevelBox from "../common/MannerLevelBox";
-import GameStyle from "./GameStyle";
-import { MoreBoxMenuItems } from "@/types/modal/moreBox";
-import MoreBox from "../common/MoreBox";
-import { MemberPost } from "@/types/api/board/board";
+import { useDispatch, useSelector } from "react-redux";
+
+import { useRouter } from "next/navigation";
+
+import { AxiosError } from "axios";
+import styled from "styled-components";
+
+import { blockMember, unblockMember } from "@/api/block/block";
 import {
   deletePost,
   getMemberPost,
   getNonMemberPost,
   pullUpPost,
 } from "@/api/board/board";
-import LoadingSpinner from "../common/LoadingSpinner";
+import { deleteFriend } from "@/api/friend/delete";
+import { cancelFriendRequest, sendFriendRequest } from "@/api/friend/request";
 import { reportMember } from "@/api/report/report";
-
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-import { AxiosError } from "axios";
+import ReportModal from "@/components/readBoard/ReportModal";
+import { notify } from "@/hooks/notify";
+import useMediaQueries from "@/hooks/useMediaQueries";
+import { setRefresh } from "@/redux/slices/boardSlice";
+import {
+  openChatRoom,
+  setChatEnterType,
+  setChatRoomUuid,
+  setErrorMessage,
+} from "@/redux/slices/chatSlice";
 import {
   setCloseModal,
   setCloseReadingModal,
@@ -36,27 +34,32 @@ import {
   setOpenReadingModal,
 } from "@/redux/slices/modalSlice";
 import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
-import Alert from "../common/Alert";
-import { AlertProps } from "@/types/modal/modal";
-import { useRouter } from "next/navigation";
-import {
-  openChatRoom,
-  setChatEnterType,
-  setChatRoomUuid,
-  setErrorMessage,
-} from "@/redux/slices/chatSlice";
-import { notify } from "@/hooks/notify";
-import ConfirmModal from "../common/ConfirmModal";
-import { cancelFriendRequest, sendFriendRequest } from "@/api/friend/request";
-import { deleteFriend } from "@/api/friend/delete";
-import { blockMember, unblockMember } from "@/api/block/block";
+import { RootState } from "@/redux/store";
+import { theme } from "@/styles/theme";
+import { MemberPost } from "@/types/api/board/board";
 import { GameMode } from "@/types/game/gameMode";
-import UserAccount from "../crBoard/UserAccount";
-import RankTier from "../common/RankTier";
-import { setRefresh } from "@/redux/slices/boardSlice";
+import { AlertProps } from "@/types/modal/modal";
+import { MoreBoxMenuItems } from "@/types/modal/moreBox";
 import { setPostingDateFormatter } from "@/utils/timeFormat";
-import ReportModal from "@/components/readBoard/ReportModal";
-import useMediaQueries from "@/hooks/useMediaQueries";
+
+import Alert from "../common/Alert";
+import Button from "../common/Button";
+import Champion from "../common/Champion";
+import ConfirmModal from "../common/ConfirmModal";
+import LoadingSpinner from "../common/LoadingSpinner";
+import MannerLevel from "../common/MannerLevel";
+import MannerLevelBox from "../common/MannerLevelBox";
+import Mic from "../common/Mic";
+import MoreBox from "../common/MoreBox";
+import RankTier from "../common/RankTier";
+import CRModal from "../crBoard/CRModal";
+import PositionBox from "../crBoard/PositionBox";
+import UserAccount from "../crBoard/UserAccount";
+import GameStyle from "./GameStyle";
+import MoreBoxButton from "./MoreBoxButton";
+import ProfileImage from "./ProfileImage";
+import QueueType from "./QueueType";
+import WinningRate from "./WinningRate";
 
 interface ReadBoardProps {
   postId: number;

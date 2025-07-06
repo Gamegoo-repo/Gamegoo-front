@@ -1,5 +1,12 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import { useRouter } from "next/navigation";
+
+import styled from "styled-components";
+
 import { sendPasswordEmail } from "@/api/email/email";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
@@ -10,10 +17,6 @@ import {
 } from "@/redux/slices/passwordSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components";
 
 const Find = () => {
   const router = useRouter();

@@ -1,9 +1,12 @@
+import React from "react";
+
+import Image from "next/image";
+
+import styled, { css } from "styled-components";
+
 import { GAME_STYLE } from "@/constants/profile";
 import useMediaQueries from "@/hooks/useMediaQueries";
 import { theme } from "@/styles/theme";
-import Image from "next/image";
-import React from "react";
-import styled, { css } from "styled-components";
 
 type profileType = "me" | "other" | "none" | "mini";
 type positionType = "board";

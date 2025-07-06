@@ -6,11 +6,26 @@ import { useRouter } from "next/navigation";
 
 import styled from "styled-components";
 
-import { blockMember, unblockMember } from "@/api/block/block";
-import { deletePost, getMemberPost, pullUpPost } from "@/api/board/board";
-import { deleteFriend } from "@/api/friend/delete";
-import { cancelFriendRequest, sendFriendRequest } from "@/api/friend/request";
-import ReportModal from "@/components/readBoard/ReportModal";
+import {
+  blockMember,
+  cancelFriendRequest,
+  deleteFriend,
+  deletePost,
+  getMemberPost,
+  pullUpPost,
+  sendFriendRequest,
+  unblockMember,
+} from "@/api";
+import {
+  Alert,
+  Champion,
+  ConfirmModal,
+  Layout,
+  MoreBox,
+  MoreBoxButton,
+  ReadBoard,
+  ReportModal,
+} from "@/components";
 import { notify } from "@/hooks/notify";
 import { setRefresh } from "@/redux/slices/boardSlice";
 import {
@@ -23,9 +38,12 @@ import {
 import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-import { BoardListDetail, MemberPost } from "@/types/api/board/board";
-import { AlertProps } from "@/types/modal/modal";
-import { MoreBoxMenuItems } from "@/types/modal/moreBox";
+import {
+  AlertProps,
+  BoardListDetail,
+  MemberPost,
+  MoreBoxMenuItems,
+} from "@/types";
 import {
   setAbbrevTier,
   setCustomProfileImg,
@@ -34,14 +52,6 @@ import {
 import { getProfileBgColor } from "@/utils/profile";
 import { toLowerCaseString } from "@/utils/string";
 import { setDateFormatter } from "@/utils/timeFormat";
-
-import Layout from "../chat/Layout";
-import Alert from "../common/Alert";
-import Champion from "../common/Champion";
-import ConfirmModal from "../common/ConfirmModal";
-import MoreBox from "../common/MoreBox";
-import MoreBoxButton from "../readBoard/MoreBoxButton";
-import ReadBoard from "../readBoard/ReadBoard";
 
 interface TableTitleProps {
   id: number;

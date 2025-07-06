@@ -1,27 +1,29 @@
-import { FC, useState, useEffect } from "react";
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
+import { FC, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+
+import styled from "styled-components";
+
+import { RootState } from "@/redux/store";
+import { theme } from "@/styles/theme";
 import {
   BoardDetail,
   BoardListDetail,
   MemberPost,
 } from "@/types/api/board/board";
-import { RootState } from "@/redux/store";
 
 import Alert from "../Alert";
-import UserSection from "./UserSection/UserSection";
-import UserTierSection from "./UserTierSection";
-import PositionSection from "./PositionSection";
 import ChampionSection from "./ChampionSection";
 import MemoSection from "./MemoSection";
+import PositionSection from "./PositionSection";
 import PostItemModal from "./PostItemModal";
+import UserSection from "./UserSection/UserSection";
+import UserTierSection from "./UserTierSection";
 import {
   useAlert,
-  usePostActions,
-  useFriendActions,
   useBlockActions,
+  useFriendActions,
   useMoreBoxMenu,
+  usePostActions,
   useUIHandlers,
 } from "./hooks";
 

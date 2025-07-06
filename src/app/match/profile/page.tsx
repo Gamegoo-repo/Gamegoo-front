@@ -1,24 +1,23 @@
 "use client";
 
-import styled from "styled-components";
-import { useRouter, useSearchParams } from "next/navigation";
-import Profile from "@/components/profile/Profile";
-import Button from "@/components/common/Button";
-import HeaderTitle from "@/components/common/HeaderTitle";
 import { useEffect, useRef, useState } from "react";
-import { profileType } from "@/types/api/user/profile/profile";
 import { Suspense } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
+import { useRouter, useSearchParams } from "next/navigation";
+
+import styled from "styled-components";
+
+import { getMyProfile } from "@/api";
+import { Button, ConfirmModal, HeaderTitle, Profile } from "@/components";
+import useMediaQueries from "@/hooks/useMediaQueries";
+import { closeChatRoom } from "@/redux/slices/chatSlice";
 import { setUserProfile } from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
 import { sendMatchingQuitEvent, socket } from "@/socket";
-import ConfirmModal from "@/components/common/ConfirmModal";
 import { theme } from "@/styles/theme";
-import { closeChatRoom } from "@/redux/slices/chatSlice";
-import { getMyProfile } from "@/api/user/profile/get";
-import useMediaQueries from "@/hooks/useMediaQueries";
+import { GameMode, profileType } from "@/types";
 import { getThresholdByGameMode } from "@/utils/matching/threshold";
-import { GameMode } from "@/types/game/gameMode";
 
 const ProfilePage = () => {
   const isMobile = useMediaQueries({ breakpoint: 700 });

@@ -1,16 +1,18 @@
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import styled from "styled-components";
+
 import { getMyProfile } from "@/api/user/profile/get";
 import { putProfileImage } from "@/api/user/profile/put";
 import RankTier from "@/components/common/RankTier";
 import GameStyle from "@/components/match/GameStyle";
-import { Profile } from "@/types/api/user/profile/profile";
+import UpdateProfileImage from "@/components/profile/UpdateProfileImage";
+import useMediaQueries from "@/hooks/useMediaQueries";
 import { setUserProfile, setUserProfileImg } from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components";
-import useMediaQueries from "@/hooks/useMediaQueries";
-import UpdateProfileImage from "@/components/profile/UpdateProfileImage";
+import { Profile } from "@/types/api/user/profile/profile";
 
 const MyPageProfile: React.FC<Profile> = ({ user }) => {
   const dispatch = useDispatch();

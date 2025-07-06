@@ -1,12 +1,16 @@
-import { theme } from "@/styles/theme";
-import Image from "next/image";
 import React, { useState } from "react";
-import styled from "styled-components";
-import Alert from "./Alert";
-import FeedBackInput from "./FeedbackInput";
+
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import ChatButton from "./ChatButton";
+
+import styled from "styled-components";
+
 import useMediaQueries from "@/hooks/useMediaQueries";
+import { theme } from "@/styles/theme";
+
+import Alert from "./Alert";
+import ChatButton from "./ChatButton";
+import FeedBackInput from "./FeedbackInput";
 
 interface FooterProps {
   isShowChat: boolean;

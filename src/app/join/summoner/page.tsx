@@ -1,18 +1,18 @@
 "use client";
 
-import { postJoin } from "@/api/join/join";
-import { verifyRiot } from "@/api/join/riot";
-import Button from "@/components/common/Button";
-import ConfirmModal from "@/components/common/ConfirmModal";
-import Input from "@/components/common/Input";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import { useRouter } from "next/navigation";
+
+import { AxiosError } from "axios";
+import styled from "styled-components";
+
+import { postJoin, verifyRiot } from "@/api";
+import { Button, ConfirmModal, Input } from "@/components";
 import { clearSignIn } from "@/redux/slices/signInSlice";
 import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-import { AxiosError } from "axios";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components";
 
 interface RiotErrorResponse {
   isSuccess: boolean;

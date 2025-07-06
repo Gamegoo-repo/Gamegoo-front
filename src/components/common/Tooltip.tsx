@@ -1,8 +1,11 @@
 import React, { useState } from "react";
-import styled, { css } from "styled-components";
+
 import Image from "next/image";
-import { theme } from "@/styles/theme";
+
+import styled, { css } from "styled-components";
+
 import useMediaQueries from "@/hooks/useMediaQueries";
+import { theme } from "@/styles/theme";
 
 interface TooltipProps {
   title?: string;

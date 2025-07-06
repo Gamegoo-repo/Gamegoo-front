@@ -1,7 +1,8 @@
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+
 import { GameMode } from "@/types/game/gameMode";
 import { Position } from "@/types/position/position";
 import { Mike } from "@/types/user/mike";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface BoardState {
   pageIdx: number;

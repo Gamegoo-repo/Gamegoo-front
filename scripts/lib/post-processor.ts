@@ -1,6 +1,6 @@
+import chalk from "chalk";
 import fs from "fs-extra";
 import path from "node:path";
-import chalk from "chalk";
 
 interface DomainGroup {
   domain: string;

@@ -1,13 +1,14 @@
+import { AuthAxios } from "@/api/auth";
+
 import type {
   ApiResponse,
-  ProfileImageRequest,
-  PositionRequest,
-  IsMikeRequest,
   GameStyleRequest,
+  IsMikeRequest,
   MyProfileResponse,
   OtherProfileResponse,
+  PositionRequest,
+  ProfileImageRequest,
 } from "../types";
-import { AuthAxios } from "@/api/auth";
 
 /* putProfileProfileImage - 수정 */
 export const putProfileProfileImage = async (

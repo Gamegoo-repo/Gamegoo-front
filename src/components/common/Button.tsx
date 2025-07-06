@@ -1,6 +1,8 @@
-import { theme } from "@/styles/theme";
 import Image from "next/image";
+
 import styled from "styled-components";
+
+import { theme } from "@/styles/theme";
 
 interface ButtonProps {
   buttonType?: "primary" | "secondary" | "default" | "light" | "riot";

@@ -1,5 +1,6 @@
-import type { ApiResponse } from "../types";
 import { AuthAxios } from "@/api/auth";
+
+import type { ApiResponse } from "../types";
 
 /* getInternalMemberIdFriendIds - 조회 */
 export const getInternalMemberIdFriendIds = async (

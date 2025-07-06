@@ -1,5 +1,7 @@
-import styled from "styled-components";
 import { FC } from "react";
+
+import styled from "styled-components";
+
 import PositionBox from "../../crBoard/PositionBox";
 import { PostItemData } from "./PostItem";
 

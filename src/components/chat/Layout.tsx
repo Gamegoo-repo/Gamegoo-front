@@ -1,21 +1,14 @@
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  closeChat,
-  closeChatRoom,
-  openChatRoom,
-  setChatRoomUuid,
-  setActiveTab,
-} from "@/redux/slices/chatSlice";
-import SearchBar from "./SearchBar";
-import ChatRoomList from "./ChatRoomList";
-import { RootState } from "@/redux/store";
-import ChatLayout from "./ChatLayout";
-import { ChatroomList } from "@/types/api/chat/chat";
-import { BaseMannerData } from "@/types/api/manner/manner";
+
+import Image from "next/image";
+
+import styled from "styled-components";
+
+import { blockMember } from "@/api/block/block";
+import { leaveChatroom } from "@/api/chat/chat";
+import { getFriendsList } from "@/api/friend/get";
+import { patchFriendStar } from "@/api/friend/star";
 import {
   editManners,
   getBadMannerValues,
@@ -23,27 +16,38 @@ import {
   postBadMannerValue,
   postMannerValue,
 } from "@/api/manner/manner";
-import ConfirmModal from "../common/ConfirmModal";
-import { leaveChatroom } from "@/api/chat/chat";
-import { setCloseModal, setOpenModal } from "@/redux/slices/modalSlice";
-import { socket } from "@/socket";
-import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants/mannerLevel";
-import Button from "../common/Button";
-import FormModal from "../common/FormModal";
-import Checkbox from "../common/Checkbox";
-import Input from "../common/Input";
-import { REPORT_REASON } from "@/constants/report";
 import { reportMember } from "@/api/report/report";
+import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants/mannerLevel";
+import { REPORT_REASON } from "@/constants/report";
 import { notify } from "@/hooks/notify";
-import { FriendList } from "@/types/friend/friendList";
-import { getFriendsList } from "@/api/friend/get";
-import ChatFriendList from "./ChatFriendList";
-import { patchFriendStar } from "@/api/friend/star";
-import { blockMember } from "@/api/block/block";
-import Tabs from "./Tabs";
-import { getAccessToken } from "@/utils/storage";
 import useDrag from "@/hooks/useDrag";
 import useMediaQueries from "@/hooks/useMediaQueries";
+import {
+  closeChat,
+  closeChatRoom,
+  openChatRoom,
+  setActiveTab,
+  setChatRoomUuid,
+} from "@/redux/slices/chatSlice";
+import { setCloseModal, setOpenModal } from "@/redux/slices/modalSlice";
+import { RootState } from "@/redux/store";
+import { socket } from "@/socket";
+import { theme } from "@/styles/theme";
+import { ChatroomList } from "@/types/api/chat/chat";
+import { BaseMannerData } from "@/types/api/manner/manner";
+import { FriendList } from "@/types/friend/friendList";
+import { getAccessToken } from "@/utils/storage";
+
+import Button from "../common/Button";
+import Checkbox from "../common/Checkbox";
+import ConfirmModal from "../common/ConfirmModal";
+import FormModal from "../common/FormModal";
+import Input from "../common/Input";
+import ChatFriendList from "./ChatFriendList";
+import ChatLayout from "./ChatLayout";
+import ChatRoomList from "./ChatRoomList";
+import SearchBar from "./SearchBar";
+import Tabs from "./Tabs";
 
 const Layout = () => {
   const dispatch = useDispatch();

@@ -1,7 +1,8 @@
-import { Position } from "@/types/position/position";
-import { ApiResponse } from "../api";
-import { Mike } from "@/types/user/mike";
 import { GameMode } from "@/types/game/gameMode";
+import { Position } from "@/types/position/position";
+import { Mike } from "@/types/user/mike";
+
+import { ApiResponse } from "../api";
 import { ChampionResponseDTO } from "../champion/champion";
 
 // 기본 DTO 인터페이스들

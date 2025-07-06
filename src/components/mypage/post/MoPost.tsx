@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
+import { useRouter } from "next/navigation";
+
 import { AxiosError } from "axios";
 
-import PostItem, { PostItemData } from "@/components/common/PostItem";
-import Alert from "@/components/common/Alert";
-import { MemberPost } from "@/types/api/board/board";
-import { AlertProps } from "@/types/modal/modal";
-import { RootState } from "@/redux/store";
-import { User } from "@/types/api/user/profile/profile";
 import { getMemberPost, getNonMemberPost } from "@/api/board/board";
+import Alert from "@/components/common/Alert";
+import PostItem, { PostItemData } from "@/components/common/PostItem";
+import { RootState } from "@/redux/store";
+import { MemberPost } from "@/types/api/board/board";
+import { User } from "@/types/api/user/profile/profile";
+import { AlertProps } from "@/types/modal/modal";
 
 export interface PostProps {
   user: User;

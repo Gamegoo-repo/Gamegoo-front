@@ -1,8 +1,11 @@
-import { theme } from "@/styles/theme";
 import Image from "next/image";
+
 import styled, { css } from "styled-components";
-import ChevronDownIcon from "../../../public/assets/icons/chevron_down.svg";
+
 import useMediaQueries from "@/hooks/useMediaQueries";
+import { theme } from "@/styles/theme";
+
+import ChevronDownIcon from "../../../public/assets/icons/chevron_down.svg";
 
 const levelColors = [
   theme.colors.violet400,

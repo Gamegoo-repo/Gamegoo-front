@@ -6,5 +6,6 @@ export * from "./modal";
 export * from "./position";
 export * from "./profile";
 export * from "./regEx";
+export * from "./report";
 export * from "./tab";
 export * from "./terms";

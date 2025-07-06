@@ -1,4 +1,5 @@
 import { ReportRequest, ReportResponse } from "@/types/api/report/report";
+
 import { AuthAxios } from "../auth";
 
 /* 신고하기 */

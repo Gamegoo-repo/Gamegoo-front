@@ -1,6 +1,8 @@
-import { theme } from "@/styles/theme";
 import React from "react";
+
 import styled, { css } from "styled-components";
+
+import { theme } from "@/styles/theme";
 
 type ShapeType = "round" | "square";
 type profileType = "me" | "other" | "none" | "mini" | "square";

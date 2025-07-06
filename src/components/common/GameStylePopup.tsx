@@ -1,8 +1,11 @@
-import { GAME_STYLE } from "@/constants/profile";
-import styled from "styled-components";
-import Box from "./Box";
-import { theme } from "@/styles/theme";
 import Image from "next/image";
+
+import styled from "styled-components";
+
+import { GAME_STYLE } from "@/constants/profile";
+import { theme } from "@/styles/theme";
+
+import Box from "./Box";
 
 interface GameStylePopupProps {
   onClose: () => void;

@@ -1,4 +1,3 @@
-export { default as GameStyle } from "./GameStyle";
 export { default as MoreBoxButton } from "./MoreBoxButton";
 export { default as ProfileImage } from "./ProfileImage";
 export { default as QueueType } from "./QueueType";

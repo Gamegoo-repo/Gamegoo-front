@@ -1,6 +1,7 @@
 import styled from "styled-components";
-import { theme } from "@/styles/theme";
+
 import { GAME_STYLE } from "@/constants/profile";
+import { theme } from "@/styles/theme";
 import { gameStyleResponseDTOList } from "@/types/api/board/board";
 
 interface GameStyleProps {

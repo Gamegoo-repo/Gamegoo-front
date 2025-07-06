@@ -1,33 +1,36 @@
 "use client";
 
 import { Suspense } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+
+import Image from "next/image";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+
 import styled, { keyframes } from "styled-components";
+
+import { getBoardList } from "@/api/board/board";
+import ConfirmModal from "@/components/common/ConfirmModal";
 import HeaderTitle from "@/components/common/HeaderTitle";
 import SquareProfile from "@/components/match/SquareProfile";
-import Image from "next/image";
-import { theme } from "@/styles/theme";
-import { useEffect, useRef, useState } from "react";
-import ConfirmModal from "@/components/common/ConfirmModal";
-import { socket } from "@/socket";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import WaitingBox from "@/components/match/WaitingBox";
 import {
-  messagesWithoutN,
   messagesWithTierN,
   messagesWithTotalN,
+  messagesWithoutN,
 } from "@/constants/messages";
-import { getBoardList } from "@/api/board/board";
-import { setOpenPostingModal } from "@/redux/slices/modalSlice";
-import { useDispatch } from "react-redux";
+import { GAME_STYLE } from "@/constants/profile";
+import useMediaQueries from "@/hooks/useMediaQueries";
 import { setBoardFilters } from "@/redux/slices/boardSlice";
-import { setIsCompleted } from "@/utils/storage";
+import { setOpenPostingModal } from "@/redux/slices/modalSlice";
+import { socket } from "@/socket";
+import { theme } from "@/styles/theme";
+import { GameMode } from "@/types/game/gameMode";
 import { Position } from "@/types/position/position";
 import { Mike } from "@/types/user/mike";
-import useMediaQueries from "@/hooks/useMediaQueries";
-import { getEffectiveTier } from "@/utils/matching/tier";
-import { GameMode } from "@/types/game/gameMode";
-import WaitingBox from "@/components/match/WaitingBox";
-import { GAME_STYLE } from "@/constants/profile";
 import { getThresholdByGameMode } from "@/utils/matching/threshold";
+import { getEffectiveTier } from "@/utils/matching/tier";
+import { setIsCompleted } from "@/utils/storage";
 
 interface User {
   memberId: number;

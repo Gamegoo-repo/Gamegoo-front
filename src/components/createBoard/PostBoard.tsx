@@ -5,40 +5,43 @@
  * @author [나원지]
  * @created [2024-05-28]
  */
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import { useRouter } from "next/navigation";
 
 import styled from "styled-components";
-import Dropdown from "../common/Dropdown";
-import Input from "../common/Input";
-import { useEffect, useRef, useState } from "react";
-import Button from "../common/Button";
-import CRModal from "../crBoard/CRModal";
-import UpdateProfileImage from "../profile/UpdateProfileImage";
-import UserAccount from "../crBoard/UserAccount";
-import Toggle from "../common/Toggle";
-import PositionBox, { PositionState } from "../crBoard/PositionBox";
-import GameStyle from "./GameStyle";
-import ConfirmModal from "../common/ConfirmModal";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
+
 import { editPost, postBoard } from "@/api/board/board";
+import { getMyProfile } from "@/api/user/profile/get";
+import { GAME_MODE } from "@/constants/board";
+import { notify } from "@/hooks/notify";
+import { setClosePostingModal } from "@/redux/slices/modalSlice";
 import {
-  clearCurrentPost,
   PostUpdate,
+  clearCurrentPost,
   setPostStatus,
   updateCurrentPost,
 } from "@/redux/slices/postSlice";
-import { PostReq } from "@/types/api/board/board";
-import Alert from "../common/Alert";
-import { useRouter } from "next/navigation";
 import { setUserProfile } from "@/redux/slices/userSlice";
+import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-import { setClosePostingModal } from "@/redux/slices/modalSlice";
-import { getMyProfile } from "@/api/user/profile/get";
-import { Mike } from "@/types/user/mike";
-import { GAME_MODE } from "@/constants/board";
+import { PostReq } from "@/types/api/board/board";
 import { GameMode } from "@/types/game/gameMode";
 import { Position } from "@/types/position/position";
-import { notify } from "@/hooks/notify";
+import { Mike } from "@/types/user/mike";
+
+import Alert from "../common/Alert";
+import Button from "../common/Button";
+import ConfirmModal from "../common/ConfirmModal";
+import Dropdown from "../common/Dropdown";
+import Input from "../common/Input";
+import Toggle from "../common/Toggle";
+import CRModal from "../crBoard/CRModal";
+import PositionBox, { PositionState } from "../crBoard/PositionBox";
+import UserAccount from "../crBoard/UserAccount";
+import UpdateProfileImage from "../profile/UpdateProfileImage";
+import GameStyle from "./GameStyle";
 
 interface PostBoardProps {
   onClose: () => void;

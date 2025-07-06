@@ -1,10 +1,12 @@
 "use client";
 
+import Image from "next/image";
+
+import styled from "styled-components";
+
 import { fadeIn, fadeOut, growShrink } from "@/styles/animation";
 import { theme } from "@/styles/theme";
 import { formatTime } from "@/utils/timeFormat";
-import Image from "next/image";
-import styled from "styled-components";
 
 interface WaitingBoxProps {
   isMobile: boolean | undefined;

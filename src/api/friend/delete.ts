@@ -1,4 +1,5 @@
 import { FriendStatusResponse } from "@/types/api/friend/status";
+
 import { AuthAxios } from "../auth";
 
 /* 친구 삭제 */

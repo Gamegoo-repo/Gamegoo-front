@@ -1,9 +1,13 @@
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import SelectedStylePopup from "../match/SelectedStylePopup";
-import Image from "next/image";
 import { Dispatch, useEffect, useState } from "react";
+
+import Image from "next/image";
+
+import styled from "styled-components";
+
 import { GAME_STYLE } from "@/constants/profile";
+import { theme } from "@/styles/theme";
+
+import SelectedStylePopup from "../match/SelectedStylePopup";
 
 interface GameStyleProps {
   selectedStyleIds: number[];

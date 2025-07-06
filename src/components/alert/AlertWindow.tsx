@@ -1,15 +1,19 @@
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import Image from "next/image";
 import { use, useCallback, useEffect, useRef, useState } from "react";
-import AlertBox from "../mypage/notification/AlertBox";
+
+import Image from "next/image";
 import { useRouter } from "next/navigation";
+
+import styled from "styled-components";
+
 import {
   getPopupNotification,
   patchReadNotification,
 } from "@/api/notification/notification";
-import { Notification } from "@/types/notification/notification";
 import useMediaQueries from "@/hooks/useMediaQueries";
+import { theme } from "@/styles/theme";
+import { Notification } from "@/types/notification/notification";
+
+import AlertBox from "../mypage/notification/AlertBox";
 
 interface AlertWindowProps {
   countFunc: () => void;

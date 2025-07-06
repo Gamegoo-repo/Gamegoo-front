@@ -1,20 +1,19 @@
-import { HEADER_MODAL_TAB } from "@/constants/tab";
-import { theme } from "@/styles/theme";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+
 import styled from "styled-components";
-import AlertWindow from "../alert/AlertWindow";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  clearTokens,
-  getAccessToken,
-  getName,
-  getProfileImg,
-  getUserId,
-} from "@/utils/storage";
-import { getProfileBgColor } from "@/utils/profile";
+
+import { postLogout } from "@/api/login/logout";
+import { getUnreadNotificationCount } from "@/api/notification/notification";
+import { socketLogout } from "@/api/socket";
+import { HEADER_MODAL_TAB } from "@/constants/tab";
+import useMediaQueries from "@/hooks/useMediaQueries";
+import { closeChat } from "@/redux/slices/chatSlice";
+import { setNotiCount } from "@/redux/slices/notiSlice";
 import {
   clearUserProfile,
   setUserId,
@@ -22,14 +21,19 @@ import {
   setUserProfileImg,
 } from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
+import { theme } from "@/styles/theme";
+import { getProfileBgColor } from "@/utils/profile";
+import {
+  clearTokens,
+  getAccessToken,
+  getName,
+  getProfileImg,
+  getUserId,
+} from "@/utils/storage";
+
+import AlertWindow from "../alert/AlertWindow";
 import Alert from "./Alert";
 import ChatButton from "./ChatButton";
-import { setNotiCount } from "@/redux/slices/notiSlice";
-import { socketLogout } from "@/api/socket";
-import { closeChat } from "@/redux/slices/chatSlice";
-import { postLogout } from "@/api/login/logout";
-import { getUnreadNotificationCount } from "@/api/notification/notification";
-import useMediaQueries from "@/hooks/useMediaQueries";
 
 interface HeaderProps {
   selected: boolean;

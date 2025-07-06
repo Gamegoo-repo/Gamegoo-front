@@ -1,7 +1,8 @@
 import dayjs from "dayjs";
+import "dayjs/locale/ko";
 import relativeTime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
-import "dayjs/locale/ko";
+
 dayjs.locale("ko");
 
 dayjs.extend(updateLocale);

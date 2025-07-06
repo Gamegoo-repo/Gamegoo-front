@@ -1,8 +1,9 @@
-import { execSync } from "node:child_process";
 import fs from "fs-extra";
+import { execSync } from "node:child_process";
 import path from "node:path";
-import { API_CONSTANTS } from "./constants";
+
 import { ConfigManager } from "./config";
+import { API_CONSTANTS } from "./constants";
 
 export class ApiGenerator {
   async generateTypesOnly(): Promise<void> {

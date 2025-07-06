@@ -1,12 +1,15 @@
-import { theme } from "@/styles/theme";
-import styled from "styled-components";
 import { useState } from "react";
+
 import Image from "next/image";
-import Input from "@/components/common/Input";
-import FormModal from "@/components/common/FormModal";
-import Button from "@/components/common/Button";
-import { notify } from "@/hooks/notify";
+
+import styled from "styled-components";
+
 import { changePassword, checkPassword } from "@/api/password/password";
+import Button from "@/components/common/Button";
+import FormModal from "@/components/common/FormModal";
+import Input from "@/components/common/Input";
+import { notify } from "@/hooks/notify";
+import { theme } from "@/styles/theme";
 
 interface PasswordModalProps {
   onClose: () => void;

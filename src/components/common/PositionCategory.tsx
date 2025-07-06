@@ -1,16 +1,20 @@
-import { theme } from "@/styles/theme";
-import styled, { css } from "styled-components";
 import React, { useEffect } from "react";
-import { Position, PositionType } from "@/types/position/position";
+
 import Image from "next/image";
+
+import styled, { css } from "styled-components";
+
 import { POSITION } from "@/constants/position";
+import useMediaQueries from "@/hooks/useMediaQueries";
+import { theme } from "@/styles/theme";
+import { Position, PositionType } from "@/types/position/position";
+
 import All from "../../../public/assets/images/position/position_all_unclicked.svg";
-import Top from "../../../public/assets/images/position/position_top_unclicked.svg";
 import Jungle from "../../../public/assets/images/position/position_jungle_unclicked.svg";
 import Mid from "../../../public/assets/images/position/position_mid_unclicked.svg";
 import OneDeal from "../../../public/assets/images/position/position_one_deal_unclicked.svg";
 import Supporter from "../../../public/assets/images/position/position_supporter_unclicked.svg";
-import useMediaQueries from "@/hooks/useMediaQueries";
+import Top from "../../../public/assets/images/position/position_top_unclicked.svg";
 
 interface PositionComponentProps {
   selectedBox?: PositionType | null;

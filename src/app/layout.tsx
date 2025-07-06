@@ -1,30 +1,31 @@
 "use client";
 
-import GlobalStyles from "@/styles/GlobalStyles";
-import styled, { ThemeProvider } from "styled-components";
-import { theme } from "@/styles/theme";
-import Header from "@/components/common/Header";
-import StyledComponentsRegistry from "@/libs/registry";
 import { useEffect, useRef, useState } from "react";
-import { Provider } from "react-redux";
-import { AppStore } from "@/redux/store";
-import { usePathname } from "next/navigation";
-import SocketConnection from "@/components/socket/SocketConnection";
+import { Helmet, HelmetProvider } from "react-helmet-async";
 import { Toaster } from "react-hot-toast";
-import { connectSocket, socket, sendMatchingQuitEvent } from "@/socket";
-import { HelmetProvider, Helmet } from "react-helmet-async";
-import Footer from "@/components/common/Footer";
+import { Provider } from "react-redux";
+
+import { usePathname } from "next/navigation";
+
+import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
+import { persistStore } from "redux-persist";
+import { PersistGate } from "redux-persist/integration/react";
+import styled, { ThemeProvider } from "styled-components";
+
+import { Footer, Header, SocketConnection } from "@/components";
+import { notify } from "@/hooks/notify";
+import StyledComponentsRegistry from "@/libs/registry";
+import { AppStore } from "@/redux/store";
+import { store as createStore } from "@/redux/store";
+import { connectSocket, sendMatchingQuitEvent, socket } from "@/socket";
+import GlobalStyles from "@/styles/GlobalStyles";
+import { pretendard, timeForSalad } from "@/styles/fonts";
+import { theme } from "@/styles/theme";
 import {
   getAccessToken,
   getIsCompleted,
   setIsCompleted,
 } from "@/utils/storage";
-import { notify } from "@/hooks/notify";
-import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
-import { PersistGate } from "redux-persist/integration/react";
-import { store as createStore } from "@/redux/store";
-import { persistStore } from "redux-persist";
-import { pretendard, timeForSalad } from "@/styles/fonts";
 
 export default function RootLayout({
   children,

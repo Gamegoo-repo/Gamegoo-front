@@ -1,4 +1,5 @@
 import { Notification } from "@/types/notification/notification";
+
 import { ApiResponse } from "../api";
 
 interface TotalNotificationData {

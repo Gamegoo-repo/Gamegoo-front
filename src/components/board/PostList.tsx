@@ -1,23 +1,24 @@
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
 import { useRouter } from "next/navigation";
 
-import PostItem from "../common/PostItem";
-import Alert from "@/components/common/Alert";
+import styled from "styled-components";
+
 import Layout from "@/components/chat/Layout";
+import Alert from "@/components/common/Alert";
 import ReadBoard from "@/components/readBoard/ReadBoard";
 import ReportModal from "@/components/readBoard/ReportModal";
-
-import { RootState } from "@/redux/store";
 import {
   setCloseReadingModal,
   setOpenReadingModal,
 } from "@/redux/slices/modalSlice";
-
+import { RootState } from "@/redux/store";
+import { theme } from "@/styles/theme";
 import { BoardListDetail } from "@/types/api/board/board";
 import { AlertProps } from "@/types/modal/modal";
+
+import PostItem from "../common/PostItem";
 
 interface PostListProps {
   content: BoardListDetail[];

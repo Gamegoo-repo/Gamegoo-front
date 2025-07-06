@@ -1,8 +1,11 @@
+import React from "react";
+
+import Image from "next/image";
+
+import styled, { css } from "styled-components";
+
 import { theme } from "@/styles/theme";
 import { formatTimeAgo } from "@/utils/timeFormat";
-import Image from "next/image";
-import React from "react";
-import styled, { css } from "styled-components";
 
 interface AlertBoxProps {
   notificationId: number;

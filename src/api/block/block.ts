@@ -1,4 +1,5 @@
 import { BlockStatusResponse } from "@/types/api/block/status";
+
 import { AuthAxios } from "../auth";
 
 /* 차단하기 */

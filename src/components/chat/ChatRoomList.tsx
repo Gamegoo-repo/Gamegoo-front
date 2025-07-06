@@ -1,23 +1,26 @@
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
 import { useEffect, useState } from "react";
-import { ChatroomList } from "@/types/api/chat/chat";
-import { MoreBoxMenuItems } from "@/types/modal/moreBox";
 import { useDispatch, useSelector } from "react-redux";
-import { setOpenModal } from "@/redux/slices/modalSlice";
-import { RootState } from "@/redux/store";
+
+import styled from "styled-components";
+
 import { getChatrooms } from "@/api/chat/chat";
-import ChatRoomItem from "./ChatRoomItem";
-import useChatMessage from "@/hooks/useChatMessage";
-import { setChatEnterType, setCurrentChatUuid } from "@/redux/slices/chatSlice";
-import useChatList from "@/hooks/useChatList";
+import { deleteFriend } from "@/api/friend/delete";
 import {
   acceptFriendRequest,
   cancelFriendRequest,
   rejectFriendRequest,
   sendFriendRequest,
 } from "@/api/friend/request";
-import { deleteFriend } from "@/api/friend/delete";
+import useChatList from "@/hooks/useChatList";
+import useChatMessage from "@/hooks/useChatMessage";
+import { setChatEnterType, setCurrentChatUuid } from "@/redux/slices/chatSlice";
+import { setOpenModal } from "@/redux/slices/modalSlice";
+import { RootState } from "@/redux/store";
+import { theme } from "@/styles/theme";
+import { ChatroomList } from "@/types/api/chat/chat";
+import { MoreBoxMenuItems } from "@/types/modal/moreBox";
+
+import ChatRoomItem from "./ChatRoomItem";
 
 interface ChatRoomListProps {
   onChatRoom: (id: string) => void;

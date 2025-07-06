@@ -1,11 +1,15 @@
 import { useState } from "react";
-import styled from "styled-components";
+
+import Image from "next/image";
+
 import emailjs from "@emailjs/browser";
 import { motion } from "framer-motion";
+import styled from "styled-components";
+
 import { notify } from "@/hooks/notify";
-import Input from "./Input";
-import Image from "next/image";
 import { theme } from "@/styles/theme";
+
+import Input from "./Input";
 
 function FeedBackInput() {
   const [disabled, setDisabled] = useState(false);

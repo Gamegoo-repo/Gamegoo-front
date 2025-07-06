@@ -1,6 +1,8 @@
-import { theme } from "@/styles/theme";
 import React from "react";
+
 import styled from "styled-components";
+
+import { theme } from "@/styles/theme";
 
 export const createTerms = (
   openModal: (type: string, index: number) => void

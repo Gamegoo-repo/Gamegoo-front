@@ -1,9 +1,12 @@
-import Image from "next/image";
 import { Dispatch, forwardRef, useState } from "react";
-import { theme } from "@/styles/theme";
+
+import Image from "next/image";
+
 import styled from "styled-components";
-import { GameMode } from "@/types/game/gameMode";
+
 import useMediaQueries from "@/hooks/useMediaQueries";
+import { theme } from "@/styles/theme";
+import { GameMode } from "@/types/game/gameMode";
 
 interface ListProps {
   id: number | GameMode | null;

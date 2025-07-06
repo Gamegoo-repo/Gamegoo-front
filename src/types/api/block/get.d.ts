@@ -1,4 +1,5 @@
 import { BlockList } from "@/types/friend/blockList";
+
 import { ApiResponse } from "../api";
 
 interface GetBlockListData {

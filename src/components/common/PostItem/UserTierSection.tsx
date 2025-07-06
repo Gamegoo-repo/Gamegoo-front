@@ -1,6 +1,9 @@
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
 import { FC } from "react";
+
+import styled from "styled-components";
+
+import { theme } from "@/styles/theme";
+
 import RankTier from "../RankTier";
 import { PostItemData } from "./PostItem";
 

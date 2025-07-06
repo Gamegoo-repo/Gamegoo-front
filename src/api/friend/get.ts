@@ -2,6 +2,7 @@ import {
   GetFriendListResponse,
   GetSearchFriendResponse,
 } from "@/types/api/friend/get";
+
 import { AuthAxios } from "../auth";
 
 /* 친구 목록 조회 */

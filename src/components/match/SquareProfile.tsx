@@ -1,18 +1,22 @@
-import { theme } from "@/styles/theme";
-import Image from "next/image";
 import React, { useEffect, useState } from "react";
+
+import Image from "next/image";
+
 import styled from "styled-components";
-import Mic from "../common/Mic";
-import Box from "../common/Box";
-import MannerLevelBox from "../common/MannerLevelBox";
-import { getProfileBgColor } from "@/utils/profile";
+
+import useMediaQueries from "@/hooks/useMediaQueries";
+import { theme } from "@/styles/theme";
+import { GameMode } from "@/types/game/gameMode";
 import { Position as PositionType } from "@/types/position/position";
 import { Mike } from "@/types/user/mike";
-import useMediaQueries from "@/hooks/useMediaQueries";
-import RankTier from "../common/RankTier";
-import { GameMode } from "@/types/game/gameMode";
-import PositionBox from "../crBoard/PositionBox";
 import { setAbbrevTier } from "@/utils/custom";
+import { getProfileBgColor } from "@/utils/profile";
+
+import Box from "../common/Box";
+import MannerLevelBox from "../common/MannerLevelBox";
+import Mic from "../common/Mic";
+import RankTier from "../common/RankTier";
+import PositionBox from "../crBoard/PositionBox";
 
 interface User {
   memberId: number;

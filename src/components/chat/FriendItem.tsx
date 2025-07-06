@@ -1,11 +1,15 @@
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import Image from "next/image";
-import DeleteFriend from "./DeleteFriend";
-import { getProfileBgColor } from "@/utils/profile";
-import { FriendList } from "@/types/friend/friendList";
-import { setChatEnterType } from "@/redux/slices/chatSlice";
 import { useDispatch } from "react-redux";
+
+import Image from "next/image";
+
+import styled from "styled-components";
+
+import { setChatEnterType } from "@/redux/slices/chatSlice";
+import { theme } from "@/styles/theme";
+import { FriendList } from "@/types/friend/friendList";
+import { getProfileBgColor } from "@/utils/profile";
+
+import DeleteFriend from "./DeleteFriend";
 
 interface FriendItemProps {
   friend: FriendList;

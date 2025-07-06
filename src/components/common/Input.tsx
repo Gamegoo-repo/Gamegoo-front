@@ -1,7 +1,10 @@
-import { theme } from "@/styles/theme";
-import Image from "next/image";
 import React, { useEffect, useState } from "react";
+
+import Image from "next/image";
+
 import styled from "styled-components";
+
+import { theme } from "@/styles/theme";
 
 interface InputProps {
   inputType?: "input" | "password" | "textarea";

@@ -1,6 +1,7 @@
+import chalk from "chalk";
 import fs from "fs-extra";
 import path from "node:path";
-import chalk from "chalk";
+
 import { SwaggerSchema } from "./types";
 
 interface ApiMethod {

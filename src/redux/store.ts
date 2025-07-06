@@ -1,27 +1,27 @@
 import { configureStore } from "@reduxjs/toolkit";
-import signInReducer from "./slices/signInSlice";
-import userReducer from "./slices/userSlice";
-import modalReducer from "./slices/modalSlice";
-import mannerStatusReducer from "./slices/mannerStatusSlice";
-import postReducer from "./slices/postSlice";
-import passwordReducer from "./slices/passwordSlice";
-import matchInfoReducer from "./slices/matchInfo";
-import chatReducer from "./slices/chatSlice";
-import notiReducer from "./slices/notiSlice";
-import matchingReducer from "./slices/matchingSlice";
-import boardReducer from "./slices/boardSlice";
-import chatPositionReducer from "./slices/chatPositionSlice";
-import storage from "redux-persist/lib/storage";
-
 import {
-  persistReducer,
   FLUSH,
-  REHYDRATE,
   PAUSE,
   PERSIST,
   PURGE,
   REGISTER,
+  REHYDRATE,
+  persistReducer,
 } from "redux-persist";
+import storage from "redux-persist/lib/storage";
+
+import boardReducer from "./slices/boardSlice";
+import chatPositionReducer from "./slices/chatPositionSlice";
+import chatReducer from "./slices/chatSlice";
+import mannerStatusReducer from "./slices/mannerStatusSlice";
+import matchInfoReducer from "./slices/matchInfo";
+import matchingReducer from "./slices/matchingSlice";
+import modalReducer from "./slices/modalSlice";
+import notiReducer from "./slices/notiSlice";
+import passwordReducer from "./slices/passwordSlice";
+import postReducer from "./slices/postSlice";
+import signInReducer from "./slices/signInSlice";
+import userReducer from "./slices/userSlice";
 
 // chat reducer만 persist 적용
 const chatPersistConfig = {

@@ -1,42 +1,39 @@
 "use client";
 
-import styled from "styled-components";
-import Image from "next/image";
-import { theme } from "@/styles/theme";
 import { useEffect, useRef, useState } from "react";
-import { BOARD_TITLE, GAME_MODE, MIC, TIER } from "@/constants/board";
-import Button from "@/components/common/Button";
-import Dropdown from "@/components/common/Dropdown";
-import Table from "@/components/board/Table";
-import Pagination from "@/components/common/Pagination";
-import PositionFilter from "@/components/board/PositionFilter";
-import PostBoard from "@/components/createBoard/PostBoard";
-import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
+
+import Image from "next/image";
+
+import styled from "styled-components";
+
+import { getBoardList, getBoardListCursor, getMyPost, pullUpPost } from "@/api";
+import {
+  Alert,
+  Button,
+  ConfirmModal,
+  Dropdown,
+  Pagination,
+  PositionFilter,
+  PostBoard,
+  PostList,
+  Table,
+} from "@/components";
+import { BOARD_TITLE, GAME_MODE, MIC, TIER } from "@/constants";
+import { notify } from "@/hooks/notify";
+import useMediaQueries from "@/hooks/useMediaQueries";
+import { resetBoardFilters, setRefresh } from "@/redux/slices/boardSlice";
 import {
   setClosePostingModal,
   setOpenModal,
   setOpenPostingModal,
 } from "@/redux/slices/modalSlice";
-import {
-  getBoardList,
-  getBoardListCursor,
-  getMyPost,
-  pullUpPost,
-} from "@/api/board/board";
-import { BoardListDetail } from "@/types/api/board/board";
-import Alert from "@/components/common/Alert";
 import { clearCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
-import { mikeBooleanToId, tierStringToId } from "@/utils/custom";
-import { resetBoardFilters, setRefresh } from "@/redux/slices/boardSlice";
+import { RootState } from "@/redux/store";
 import { rotate } from "@/styles/animation";
-import { Position } from "@/types/position/position";
-import { Mike } from "@/types/user/mike";
-import { GameMode } from "@/types/game/gameMode";
-import useMediaQueries from "@/hooks/useMediaQueries";
-import PostList from "@/components/board/PostList";
-import ConfirmModal from "@/components/common/ConfirmModal";
-import { notify } from "@/hooks/notify";
+import { theme } from "@/styles/theme";
+import { BoardListDetail, GameMode, Mike, Position } from "@/types";
+import { mikeBooleanToId, tierStringToId } from "@/utils/custom";
 
 const ITEMS_PER_PAGE = 20;
 const BUTTONS_PER_PAGE = 5;

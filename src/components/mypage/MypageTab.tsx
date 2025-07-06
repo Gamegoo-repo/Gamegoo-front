@@ -1,7 +1,9 @@
+import { usePathname, useRouter } from "next/navigation";
+
+import styled from "styled-components";
+
 import { MYPAGE_TAB } from "@/constants/tab";
 import { theme } from "@/styles/theme";
-import { usePathname, useRouter } from "next/navigation";
-import styled from "styled-components";
 
 const MypageTab = () => {
   const router = useRouter();

@@ -1,9 +1,11 @@
 "use client";
 
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
 import Image from "next/image";
+
+import styled from "styled-components";
+
 import useMediaQueries from "@/hooks/useMediaQueries";
+import { theme } from "@/styles/theme";
 
 const MyServicePage = () => {
   const isMobile = useMediaQueries({ breakpoint: 700 });

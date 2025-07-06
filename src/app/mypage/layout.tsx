@@ -1,8 +1,10 @@
 "use client";
 
-import MypageTab from "@/components/mypage/MypageTab";
 import React from "react";
+
 import styled from "styled-components";
+
+import MypageTab from "@/components/mypage/MypageTab";
 import useMediaQueries from "@/hooks/useMediaQueries";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {

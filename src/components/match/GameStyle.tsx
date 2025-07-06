@@ -1,18 +1,22 @@
-import Image from "next/image";
 import { Dispatch, useEffect, useState } from "react";
-import styled from "styled-components";
-import Box from "../common/Box";
-import Toggle from "../common/Toggle";
-import { theme } from "@/styles/theme";
-import SelectedStylePopup from "./SelectedStylePopup";
-import { css } from "styled-components";
-import { GAME_STYLE } from "@/constants/profile";
 import { useDispatch } from "react-redux";
+
+import Image from "next/image";
+
+import styled from "styled-components";
+import { css } from "styled-components";
+
+import { putGameStyle, putMike } from "@/api/user/profile/put";
+import { GAME_STYLE } from "@/constants/profile";
+import useMediaQueries from "@/hooks/useMediaQueries";
 import { updateGameStyles } from "@/redux/slices/matchInfo";
 import { setUserMike } from "@/redux/slices/userSlice";
-import { putGameStyle, putMike } from "@/api/user/profile/put";
+import { theme } from "@/styles/theme";
 import { Mike } from "@/types/user/mike";
-import useMediaQueries from "@/hooks/useMediaQueries";
+
+import Box from "../common/Box";
+import Toggle from "../common/Toggle";
+import SelectedStylePopup from "./SelectedStylePopup";
 
 type profileType = "me" | "other" | "none" | "mini" | "post";
 

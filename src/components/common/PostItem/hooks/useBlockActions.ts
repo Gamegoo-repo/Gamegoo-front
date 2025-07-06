@@ -1,4 +1,5 @@
-import { useState, useRef, useCallback } from "react";
+import { useCallback, useRef, useState } from "react";
+
 import { blockMember, unblockMember } from "@/api/block/block";
 import { MemberPost } from "@/types/api/board/board";
 

@@ -1,22 +1,26 @@
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import Image from "next/image";
-import { Chat } from "@/types/api/chat/chat";
-import MoreBox from "../common/MoreBox";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+
+import styled from "styled-components";
+
+import useMediaQueries from "@/hooks/useMediaQueries";
 import {
   closeChat,
   closeChatRoom,
   openChat,
   setChatRoomUuid,
 } from "@/redux/slices/chatSlice";
-import { getProfileBgColor } from "@/utils/profile";
-import { useRouter } from "next/navigation";
 import { RootState } from "@/redux/store";
+import { theme } from "@/styles/theme";
+import { Chat } from "@/types/api/chat/chat";
 import { MoreBoxMenuItems } from "@/types/modal/moreBox";
+import { getProfileBgColor } from "@/utils/profile";
+
 import Alert from "../common/Alert";
-import { useState } from "react";
-import useMediaQueries from "@/hooks/useMediaQueries";
+import MoreBox from "../common/MoreBox";
 
 interface MessageHeaderProps {
   isMoreBoxOpen: boolean;

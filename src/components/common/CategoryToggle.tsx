@@ -1,6 +1,8 @@
-import { theme } from "@/styles/theme";
 import React, { Fragment } from "react";
+
 import styled from "styled-components";
+
+import { theme } from "@/styles/theme";
 
 interface CategoryToggleProps {
   categories: { name: string; path: string }[];

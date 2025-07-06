@@ -1,20 +1,21 @@
 import {
-  chatRoomExitResponse,
-  chatRoomReadRequest,
-  chatRoomSearchResponse,
-  chatRoomExitRequest,
-  chatRoomReadData,
-  chatRoomMessageRequest,
-  chatRoomMessageData,
-  chatRoomEnterRequest,
-  chatRoomEnterResponse,
-  ChatRoomGetRequest,
-  chatRoomGetResponse,
   ChatRoomBoardRequest,
+  ChatRoomGetRequest,
   chatRoomBoardResponse,
   chatRoomEnterFriendRequest,
+  chatRoomEnterRequest,
+  chatRoomEnterResponse,
+  chatRoomExitRequest,
+  chatRoomExitResponse,
   chatRoomFriendResponse,
+  chatRoomGetResponse,
+  chatRoomMessageData,
+  chatRoomMessageRequest,
+  chatRoomReadData,
+  chatRoomReadRequest,
+  chatRoomSearchResponse,
 } from "@/types/api/chat/chat";
+
 import { AuthAxios } from "../auth";
 
 /* 채팅방 목록 조회 */

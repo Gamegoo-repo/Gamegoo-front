@@ -1,4 +1,5 @@
 import { LogoutResponse } from "@/types/api/login/login";
+
 import { AuthAxios } from "../auth";
 
 export const postLogout = async (): Promise<LogoutResponse> => {

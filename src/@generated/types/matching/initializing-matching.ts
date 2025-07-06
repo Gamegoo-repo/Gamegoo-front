@@ -1,7 +1,7 @@
 import {
-  MikeEnum,
   GameModeEnum,
   MainPEnum,
+  MikeEnum,
   SubPEnum,
   WantPEnum,
 } from "../common";

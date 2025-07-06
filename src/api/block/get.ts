@@ -1,4 +1,5 @@
 import { GetBlockListResponse } from "@/types/api/block/get";
+
 import { AuthAxios } from "../auth";
 
 /* 차단 목록 조회 */

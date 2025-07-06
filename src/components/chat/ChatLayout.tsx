@@ -1,44 +1,16 @@
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import MessageHeader from "./MessageHeader";
-import MessageList from "./MessageList";
-import MessageInput from "./MessageInput";
 import { useEffect, useState } from "react";
-import { AxiosError } from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  closeChatRoom,
-  setCurrentChatUuid,
-  setErrorMessage,
-  setUnreadUuid,
-} from "@/redux/slices/chatSlice";
-import { Chat, DesignedSystemMessage } from "@/types/api/chat/chat";
+
+import { AxiosError } from "axios";
+import styled from "styled-components";
+
+import { blockMember } from "@/api/block/block";
 import {
   enterUsingBoardId,
   enterUsingMemberId,
   enterUsingUuid,
   leaveChatroom,
 } from "@/api/chat/chat";
-import { RootState } from "@/redux/store";
-import { socket } from "@/socket";
-import {
-  editManners,
-  getBadMannerValues,
-  getMannerValues,
-  postBadMannerValue,
-  postMannerValue,
-} from "@/api/manner/manner";
-import { BaseMannerData } from "@/types/api/manner/manner";
-import ConfirmModal from "../common/ConfirmModal";
-import FormModal from "../common/FormModal";
-import Input from "../common/Input";
-import Button from "../common/Button";
-import Checkbox from "../common/Checkbox";
-import { setCloseModal, setOpenModal } from "@/redux/slices/modalSlice";
-import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants/mannerLevel";
-import { REPORT_REASON } from "@/constants/report";
-import { MoreBoxMenuItems } from "@/types/modal/moreBox";
-import { notify } from "@/hooks/notify";
 import { deleteFriend } from "@/api/friend/delete";
 import {
   acceptFriendRequest,
@@ -46,10 +18,41 @@ import {
   rejectFriendRequest,
   sendFriendRequest,
 } from "@/api/friend/request";
-import { blockMember } from "@/api/block/block";
+import {
+  editManners,
+  getBadMannerValues,
+  getMannerValues,
+  postBadMannerValue,
+  postMannerValue,
+} from "@/api/manner/manner";
 import { reportMember } from "@/api/report/report";
-import { getAccessToken } from "@/utils/storage";
+import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants/mannerLevel";
+import { REPORT_REASON } from "@/constants/report";
+import { notify } from "@/hooks/notify";
+import {
+  closeChatRoom,
+  setCurrentChatUuid,
+  setErrorMessage,
+  setUnreadUuid,
+} from "@/redux/slices/chatSlice";
+import { setCloseModal, setOpenModal } from "@/redux/slices/modalSlice";
+import { RootState } from "@/redux/store";
+import { socket } from "@/socket";
+import { theme } from "@/styles/theme";
 import { ErrorResponse } from "@/types/api/api";
+import { Chat, DesignedSystemMessage } from "@/types/api/chat/chat";
+import { BaseMannerData } from "@/types/api/manner/manner";
+import { MoreBoxMenuItems } from "@/types/modal/moreBox";
+import { getAccessToken } from "@/utils/storage";
+
+import Button from "../common/Button";
+import Checkbox from "../common/Checkbox";
+import ConfirmModal from "../common/ConfirmModal";
+import FormModal from "../common/FormModal";
+import Input from "../common/Input";
+import MessageHeader from "./MessageHeader";
+import MessageInput from "./MessageInput";
+import MessageList from "./MessageList";
 
 interface System {
   flag: number;

@@ -1,5 +1,7 @@
-import styled from "styled-components";
 import { FC } from "react";
+
+import styled from "styled-components";
+
 import MannerLevel from "../../MannerLevel";
 import MannerLevelBox from "../../MannerLevelBox";
 
