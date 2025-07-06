@@ -70,7 +70,7 @@ export const getBoardListCursor = async (
   params: CursorListInterface
 ): Promise<GetBoardListCursorResponse> => {
   try {
-    const response = await AuthAxios.get("/api/v2/posts/cursor", {
+    const response = await Axios.get("/api/v2/posts/cursor", {
       params,
     });
     return response.data;
