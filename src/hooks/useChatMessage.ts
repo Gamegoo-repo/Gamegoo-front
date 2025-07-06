@@ -4,7 +4,7 @@ import { RootState } from "@/redux/store";
 import { connectSocket, socket } from "@/socket";
 import { setUnreadUuid } from "@/redux/slices/chatSlice";
 import { markChatAsRead } from "@/api/chat/chat";
-import { SystemMessage, ChatMessageDto } from "@/interface/chat";
+import { SystemMessage, ChatMessageDto } from "@/types/api/chat/chat";
 
 const useChatMessage = () => {
   const dispatch = useDispatch();

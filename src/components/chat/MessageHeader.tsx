@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
-import { Chat } from "@/interface/chat";
+import { Chat } from "@/types/api/chat/chat";
 import MoreBox from "../common/MoreBox";
 import { useDispatch, useSelector } from "react-redux";
 import {

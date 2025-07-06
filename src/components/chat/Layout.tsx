@@ -14,7 +14,7 @@ import SearchBar from "./SearchBar";
 import ChatRoomList from "./ChatRoomList";
 import { RootState } from "@/redux/store";
 import ChatLayout from "./ChatLayout";
-import { ChatroomList } from "@/interface/chat";
+import { ChatroomList } from "@/types/api/chat/chat";
 import { Mannerstatus } from "@/interface/manner";
 import {
   editManners,

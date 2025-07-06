@@ -8,7 +8,11 @@ import {
   useRef,
   useState,
 } from "react";
-import { Chat, DesignedSystemMessage, ChatMessageDto } from "@/interface/chat";
+import {
+  Chat,
+  DesignedSystemMessage,
+  ChatMessageDto,
+} from "@/types/api/chat/chat";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setCloseMannerStatusModal,

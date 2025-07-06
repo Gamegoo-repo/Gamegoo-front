@@ -12,7 +12,7 @@ import {
   setErrorMessage,
   setUnreadUuid,
 } from "@/redux/slices/chatSlice";
-import { Chat, DesignedSystemMessage } from "@/interface/chat";
+import { Chat, DesignedSystemMessage } from "@/types/api/chat/chat";
 import {
   enterUsingBoardId,
   enterUsingMemberId,

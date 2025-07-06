@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { getProfileBgColor } from "@/utils/profile";
-import { ChatroomList } from "@/interface/chat";
+import { ChatroomList } from "@/types/api/chat/chat";
 import MoreBox from "../common/MoreBox";
 import { setChatRoomDateFormatter } from "@/utils/timeFormat";
 import { MoreBoxMenuItems } from "@/interface/moreBox";
