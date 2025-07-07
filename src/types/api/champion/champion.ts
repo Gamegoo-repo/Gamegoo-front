@@ -9,4 +9,5 @@ export interface ChampionResponseDTO {
   kills: number;
   deaths: number;
   assists: number;
+  averageCs: number;
 }

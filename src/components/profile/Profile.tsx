@@ -682,7 +682,6 @@ const Profile: React.FC<Profile> = ({
                   </Posi>
                 </PosiWrap>
               </Positions>
-              {/* TODO 최근 선호 챔피언 */}
               {!isMobile &&
                 (profileType === "other" || profileType === "me") &&
                 user.championResponseList && (

@@ -13,7 +13,7 @@ const Banner = () => {
         </p>
         <Description>게임 친구를 쉽고 빠르게 구해줄게요!</Description>
       </TextContainer>
-      {!isMobile && <Logo>GAMGOO</Logo>}
+      {!isMobile && <Logo>GAMEGOO</Logo>}
     </BannerWrapper>
   );
 };
