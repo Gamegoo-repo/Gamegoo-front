@@ -70,10 +70,10 @@ const SelectedStylePopup: React.FC<SelectedStylePopupProps> = ({
         <CloseImage
           src="/assets/icons/close_white.svg"
           width={
-            isMobile ? 16 : position ? 9 : profileType === "mini" ? 10 : 24
+            isMobile ? 16 : position ? 9 : profileType === "mini" ? 20 : 24
           }
           height={
-            isMobile ? 16 : position ? 9 : profileType === "mini" ? 10 : 24
+            isMobile ? 16 : position ? 9 : profileType === "mini" ? 20 : 24
           }
           alt="close"
           onClick={onClose}
@@ -113,7 +113,7 @@ const Container = styled.div<{
   border-radius: 20px;
   background: rgba(0, 0, 0, 0.64);
   top: ${({ $containerTop }) => `${$containerTop + 18}px`};
-  left: 0;
+  left: -5px;
   z-index: 100;
 
   /* Background Blur */
@@ -127,8 +127,8 @@ const Container = styled.div<{
     css`
       width: 555px;
       height: auto;
-      padding: 13px 22px;
-      gap: 12px;
+      padding: 28px;
+      gap: 15px;
     `}
 
   /* 꼬리표 스타일 */
@@ -139,8 +139,8 @@ const Container = styled.div<{
     border-bottom: 18px solid rgba(0, 0, 0, 0.64);
     content: "";
     position: absolute;
-    top: -17px;
-    left: ${({ $tailLeft }) => $tailLeft}px;
+    top: -18px;
+    left: ${({ $tailLeft }) => $tailLeft+5}px;
   }
 
   @media (max-width: 1200px) {
