@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import Image from "next/image";
 import styled, { css } from "styled-components";
@@ -42,13 +42,14 @@ const GameStyle = (props: GameStyleProps) => {
     label = true,
   } = props;
 
-  const isMobile = useMediaQueries({ breakpoint: 700 });
   const dispatch = useDispatch();
   const [styledPopup, setStyledPopup] = useState(false);
   const [selectedStyles, setSelectedStyles] = useState<number[]>(
     gameStyleResponseDTOList.map((style) => style.gameStyleId)
   );
   const [mikeState, setMikeState] = useState(mike);
+  const gameBoxRef = useRef<HTMLDivElement>(null);
+  const addGameStyleRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (gameStyleResponseDTOList.length > 0) {
@@ -121,7 +122,7 @@ const GameStyle = (props: GameStyleProps) => {
     <Style>
       <LeftLabel $profileType={profileType}>
         {label && "게임 스타일"}
-        <GameBox $profileType={profileType}>
+        <GameBox ref={gameBoxRef} $profileType={profileType}>
           {selectedStyleObjects.length > 0
             ? selectedStyleObjects.map((style) => (
                 <Box
@@ -136,7 +137,7 @@ const GameStyle = (props: GameStyleProps) => {
                 <NoGameStyle>선택한 게임 스타일이 없어요</NoGameStyle>
               )}
           {profileType !== "other" && (
-            <Div $profileType={profileType}>
+            <Div ref={addGameStyleRef} $profileType={profileType}>
               <AddGameStyle
                 $profileType={profileType}
                 onClick={handleStylePopup}
@@ -168,6 +169,8 @@ const GameStyle = (props: GameStyleProps) => {
               onClose={handleClosePopup}
               selectedStyles={selectedStyles}
               onSelectStyle={handleSelectStyle}
+              gameBoxRef={gameBoxRef}
+              addGameStyleRef={addGameStyleRef}
             />
           )}
         </GameBox>

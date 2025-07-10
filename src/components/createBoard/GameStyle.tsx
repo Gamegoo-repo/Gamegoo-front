@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import styled from "styled-components";
 
@@ -9,6 +9,10 @@ import SelectedStylePopup from "../match/SelectedStylePopup";
 
 import type { Dispatch } from "react";
 
+export interface GameStyle {
+  gameStyleId: number;
+  gameStyleName: string;
+}
 interface GameStyleProps {
   selectedStyleIds: number[];
   setSelectedStyleIds: Dispatch<React.SetStateAction<number[]>>;
@@ -16,9 +20,10 @@ interface GameStyleProps {
 
 const GameStyle = (props: GameStyleProps) => {
   const { selectedStyleIds, setSelectedStyleIds } = props;
-
+  const gameBoxRef = useRef<HTMLDivElement>(null);
+  const addGameStyleRef = useRef<HTMLDivElement>(null);
   const [styledPopup, setStyledPopup] = useState(false);
-  const [selectedStyles, setSelectedStyles] = useState<number[] | []>(
+  const [selectedStyles, setSelectedStyles] = useState<number[]>(
     selectedStyleIds
   );
   const handleStylePopup = () => {
@@ -48,18 +53,20 @@ const GameStyle = (props: GameStyleProps) => {
   useEffect(() => {
     setSelectedStyleIds(selectedStyles);
   }, [selectedStyles, setSelectedStyleIds]);
-  const selectedGameStyles = GAME_STYLE.filter((style) =>
-    selectedStyleIds.includes(style.gameStyleId)
-  ).map((style) => style.gameStyleName);
+
+    const selectedGameStyles = selectedStyles
+      .map((styleId) => GAME_STYLE.find((style) => style.gameStyleId === styleId))
+      .filter((style): style is GameStyle => Boolean(style));
+
 
   return (
     <>
-      <StylesWrapper>
-        {selectedGameStyles.map((styleName, index) => (
-          <Content key={index}>{styleName}</Content>
+      <StylesWrapper ref={gameBoxRef}>
+        {selectedGameStyles.map((style, index) => (
+          <Content key={index}>{style.gameStyleName}</Content>
         ))}
-      </StylesWrapper>
-      <Div>
+
+      <Div ref={addGameStyleRef}>
         <AddGameStyle onClick={handleStylePopup}>
           <Image
             src="/assets/icons/plus_violet.svg"
@@ -68,16 +75,22 @@ const GameStyle = (props: GameStyleProps) => {
             alt="추가"
           />
         </AddGameStyle>
-        {styledPopup && (
+        
+      </Div>
+      {styledPopup && (
           <SelectedStylePopup
             profileType="none"
             onClose={handleClosePopup}
             selectedStyles={selectedStyles}
             onSelectStyle={handleSelectStyle}
             position="board"
+            gameBoxRef={gameBoxRef}
+            addGameStyleRef={addGameStyleRef}
           />
         )}
-      </Div>
+
+      </StylesWrapper>
+      
     </>
   );
 };
@@ -85,14 +98,12 @@ const GameStyle = (props: GameStyleProps) => {
 export default GameStyle;
 
 const StylesWrapper = styled.div`
-  display: grid;
-  grid-gap: 11px;
-  grid-template-columns: repeat(3, minmax(100px, auto));
+  display: flex;
+  flex-wrap: wrap;
+  gap: 11px;
+  align-items: center;
+position: relative;
 
-  @media (max-width: 700px) {
-    display: flex;
-    flex-wrap: wrap;
-  }
 `;
 
 const Content = styled.p`
@@ -111,7 +122,6 @@ const Content = styled.p`
 `;
 
 const Div = styled.div`
-  width: 62px;
   border-radius: 25px;
   position: relative;
 `;
@@ -123,7 +133,6 @@ const AddGameStyle = styled.p`
   width: 39px;
   height: 30px;
   padding: 4px 12px;
-  margin-top: 15px;
   border-radius: 17px;
   background: ${theme.colors.white};
   cursor: pointer;
