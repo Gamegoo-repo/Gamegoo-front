@@ -7,6 +7,7 @@ import styled from "styled-components";
 
 import { postRiotJoin } from "@/api";
 import { Button, Checkbox, TermModal } from "@/components";
+import ko from "@/constants/ko.json";
 import {
   MARKETING_TERMS,
   PRIVATE_TERMS,
@@ -69,7 +70,7 @@ const Terms = () => {
         router.push("/riot");
       } catch (err) {
         notify({
-          text: "회원가입에 실패했습니다. 다시 시도해주세요.",
+          text: ko["join.riot.error.retry"],
           icon: "🚫",
           type: "error",
         });
@@ -78,7 +79,7 @@ const Terms = () => {
       }
     } else {
       notify({
-        text: "Riot 로그인으로 회원가입을 진행해주세요.",
+        text: ko["join.riot.error"],
         icon: "🚫",
         type: "error",
       });

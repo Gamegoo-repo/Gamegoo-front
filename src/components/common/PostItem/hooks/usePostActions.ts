@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 
 import { deletePost, pullUpPost } from "@/api";
+import ko from "@/constants/ko.json";
 import { notify } from "@/hooks";
 import { setRefresh } from "@/redux/slices/boardSlice";
 import {
@@ -78,7 +79,7 @@ export const usePostActions = ({
     dispatch(setRefresh());
 
     await notify({
-      text: "끌어올리기가 완료되었습니다",
+      text: ko["board.pullup.success"],
       icon: "👌🏼",
       type: "success",
     });

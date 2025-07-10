@@ -33,6 +33,7 @@ import {
   ReportModal,
   WinningRate,
 } from "@/components/readBoard";
+import ko from "@/constants/ko.json";
 import { notify, useMediaQueries } from "@/hooks";
 import { setRefresh } from "@/redux/slices/boardSlice";
 import {
@@ -360,7 +361,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     await dispatch(setRefresh());
     await dispatch(setCloseReadingModal());
     await notify({
-      text: "끌어올리기가 완료되었습니다",
+      text: ko["board.pullup.success"],
       icon: "👌🏼",
       type: "success",
     });
@@ -512,7 +513,7 @@ const ReadBoard = (props: ReadBoardProps) => {
 
     if (isPost?.isBlocked) {
       return notify({
-        text: "차단한 회원과는 채팅이 불가합니다",
+        text: ko["chat.blocked.error"],
         icon: "🚫",
         type: "error",
       });

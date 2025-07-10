@@ -1,9 +1,9 @@
 import axios from "axios";
 
-import { LOGIN } from "@/constants/messages";
+import ko from "@/constants/ko.json";
 import { notify } from "@/hooks/notify";
 import { connectSocket } from "@/socket";
-import { clearTokens, getAccessToken, getRefreshToken } from "@/utils/storage";
+import { clearTokens, getAccessToken } from "@/utils/storage";
 
 import { BASE_URL } from "./api";
 import { reissueToken } from "./reissue/reissue";
@@ -73,9 +73,9 @@ AuthAxios.interceptors.response.use(
         return axios(originRequest);
       } catch (reissueError: any) {
         if (reissueError.response && reissueError.response.status === 404) {
-          notify({ text: LOGIN.MESSAGE.EXPIRED, icon: "🚫", type: "error" });
+          notify({ text: ko["login.expired"], icon: "🚫", type: "error" });
         } else {
-          notify({ text: LOGIN.MESSAGE.ETC, icon: "🚫", type: "error" });
+          notify({ text: ko["common.error"], icon: "🚫", type: "error" });
         }
         // 토큰 재발급 실패 시 처리
         console.error("토큰 재발급 실패:", reissueError);

@@ -4,6 +4,7 @@ import emailjs from "@emailjs/browser";
 import { motion } from "framer-motion";
 import styled from "styled-components";
 
+import ko from "@/constants/ko.json";
 import { notify } from "@/hooks";
 import { theme } from "@/styles/theme";
 
@@ -32,7 +33,7 @@ function FeedBackInput() {
       )
       .then(() => {
         notify({
-          text: "GAMEGOO를 위한 소중한 피드백 감사합니다:)",
+          text: ko["feedback.success"],
           icon: "✨",
           type: "success",
         });
@@ -40,7 +41,7 @@ function FeedBackInput() {
       })
       .catch(() =>
         notify({
-          text: "전송에 실패했습니다. 다시 시도해주세요.",
+          text: ko["common.error"],
           icon: "❌",
           type: "error",
         })

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
 import { LoadingSpinner } from "@/components";
-import { LOGIN } from "@/constants";
+import ko from "@/constants/ko.json";
 import { STORAGE_KEY } from "@/constants/storage";
 import { notify } from "@/hooks";
 import {
@@ -34,7 +34,7 @@ const RsoCallback = () => {
       if (error === "signup_disabled") {
         // 소환사명이 없을 경우 오류 처리
         notify({
-          text: LOGIN.MESSAGE.RIOT_ERROR,
+          text: ko["login.riot.error"],
           icon: "🚫",
           type: "error",
         });

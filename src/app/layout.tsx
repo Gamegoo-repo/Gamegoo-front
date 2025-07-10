@@ -11,6 +11,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import styled, { ThemeProvider } from "styled-components";
 
 import { Footer, Header, SocketConnection } from "@/components";
+import ko from "@/constants/ko.json";
 import { STORAGE_KEY } from "@/constants/storage";
 import { notify } from "@/hooks";
 import StyledComponentsRegistry from "@/libs/registry";
@@ -77,7 +78,7 @@ export default function RootLayout({
       ) {
         sendMatchingQuitEvent();
         notify({
-          text: "화면 이탈로 매칭이 종료되었습니다.",
+          text: ko["matching.quit.default"],
           icon: "🚫",
           type: "error",
         });

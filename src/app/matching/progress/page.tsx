@@ -12,12 +12,7 @@ import {
   SquareProfile,
   WaitingBox,
 } from "@/components";
-import {
-  GAME_STYLE,
-  messagesWithoutN,
-  messagesWithTierN,
-  messagesWithTotalN,
-} from "@/constants";
+import { GAME_STYLE } from "@/constants";
 import { useMediaQueries } from "@/hooks";
 import { setBoardFilters } from "@/redux/slices/boardSlice";
 import { setOpenPostingModal } from "@/redux/slices/modalSlice";
@@ -47,6 +42,25 @@ interface User {
   mike: Mike;
   gameStyleList: string[];
 }
+
+const messagesWithTierN = Object.freeze([
+  "나와 같은 티어의 n명이 매칭 중이에요!",
+]);
+
+const messagesWithTotalN = Object.freeze([
+  "지금 n명이 매칭을 기다리고 있어요!",
+  "n명의 플레이어가 매칭을 기다리고 있어요!",
+  "n명의 플레이어가 매칭 중입니다!",
+]);
+
+const messagesWithoutN = Object.freeze([
+  "어떤 플레이어와 매칭될지 기대해보세요!",
+  "매칭이 완료 되면 10초 후에 새로운 채팅방이 열려요!",
+  "누가 팀원이 될지 설레지 않나요?",
+  "매칭 지연 중? 게시판에서 친구를 찾아보세요!",
+  "어떤 플레이어와 팀을 이룰지 기대하세요!",
+  "매칭이 늦어지면 게시판을 활용해보세요!",
+]);
 
 const Progress = () => {
   /* 모달창 */

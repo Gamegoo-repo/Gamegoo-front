@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 import { changePassword, checkPassword } from "@/api";
 import { Button, FormModal, Input } from "@/components/common";
+import ko from "@/constants/ko.json";
 import { notify } from "@/hooks";
 import { theme } from "@/styles/theme";
 
@@ -43,7 +44,7 @@ const PasswordModal = (props: PasswordModalProps) => {
       if (validation) {
         await changePassword(newPassword);
         notify({
-          text: "비밀번호가 성공적으로 변경되었습니다.",
+          text: ko["password.success"],
           type: "success",
         });
         onClose();

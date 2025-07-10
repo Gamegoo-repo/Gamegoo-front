@@ -18,6 +18,7 @@ import {
   Table,
 } from "@/components";
 import { BOARD_TITLE, GAME_MODE, MIC, TIER } from "@/constants";
+import ko from "@/constants/ko.json";
 import { notify, useMediaQueries } from "@/hooks";
 import { resetBoardFilters, setRefresh } from "@/redux/slices/boardSlice";
 import {
@@ -376,7 +377,11 @@ const BoardPage = () => {
       setMyRecentPost(myPost.data.myBoards[0].boardId);
       setIsPullUpConfirmOpen(true);
     } else {
-      notify({ text: "작성한 글이 없어요", icon: "🚫", type: "error" });
+      notify({
+        text: ko["board.pullup.noPost"],
+        icon: "🚫",
+        type: "error",
+      });
     }
   };
 
@@ -388,7 +393,7 @@ const BoardPage = () => {
       await dispatch(setRefresh());
     }
     await notify({
-      text: "끌어올리기가 완료되었습니다",
+      text: ko["board.pullup.success"],
       icon: "👌🏼",
       type: "success",
     });

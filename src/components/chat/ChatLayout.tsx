@@ -24,6 +24,7 @@ import {
   postMannerValue,
 } from "@/api/manner/manner";
 import { reportMember } from "@/api/report/report";
+import ko from "@/constants/ko.json";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants/mannerLevel";
 import { REPORT_REASON } from "@/constants/report";
 import { notify } from "@/hooks/notify";
@@ -297,7 +298,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
     try {
       await postMannerValue(params);
       await notify({
-        text: "매너 평가가 완료되었습니다",
+        text: ko["chat.manner.success"],
         icon: "👌🏼",
         type: "success",
       });
@@ -321,7 +322,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
     try {
       await postBadMannerValue(params);
       await notify({
-        text: "비매너 평가가 완료되었습니다",
+        text: ko["chat.bad_manner.success"],
         icon: "👌🏼",
         type: "success",
       });
@@ -350,7 +351,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
           mannerKeywordIdList: params.mannerKeywordIdList,
         });
         await notify({
-          text: "매너 평가 수정이 완료되었습니다",
+          text: ko["chat.manner.edit.success"],
           icon: "👌🏼",
           type: "success",
         });
@@ -364,7 +365,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
           mannerKeywordIdList: params.mannerKeywordIdList,
         });
         await notify({
-          text: "비매너 평가 수정이 완료되었습니다",
+          text: ko["chat.bad_manner.edit.success"],
           icon: "👌🏼",
           type: "success",
         });

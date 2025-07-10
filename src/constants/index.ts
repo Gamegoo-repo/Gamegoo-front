@@ -1,7 +1,6 @@
 export * from "./board";
 export * from "./mannerLevel";
 export * from "./match";
-export * from "./messages";
 export * from "./modal";
 export * from "./position";
 export * from "./profile";
