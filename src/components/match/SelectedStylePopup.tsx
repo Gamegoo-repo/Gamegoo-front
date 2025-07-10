@@ -35,30 +35,36 @@ const SelectedStylePopup: React.FC<SelectedStylePopupProps> = ({
   const [containerTop, setContainerTop] = useState(0);
   const [tailLeft, setTailLeft] = useState(0);
 
-useEffect(() => {
-  const setUIOffset = () => {
-    if (gameBoxRef?.current && addGameStyleRef?.current) {
-      const rect = gameBoxRef.current.getBoundingClientRect();
-      const addGameStyleRect = addGameStyleRef?.current?.getBoundingClientRect();
+  useEffect(() => {
+    const setUIOffset = () => {
+      if (gameBoxRef?.current && addGameStyleRef?.current) {
+        const rect = gameBoxRef.current.getBoundingClientRect();
+        const addGameStyleRect =
+          addGameStyleRef?.current?.getBoundingClientRect();
 
-      setContainerTop(rect.height);
-      setTailLeft((addGameStyleRect.left - rect.left) + (addGameStyleRect.width /2) - 9);
-    }
-  }
+        setContainerTop(rect.height);
+        setTailLeft(
+          addGameStyleRect.left - rect.left + addGameStyleRect.width / 2 - 9
+        );
+      }
+    };
 
-  setUIOffset();
+    setUIOffset();
 
-  window.addEventListener('resize', setUIOffset);
+    window.addEventListener("resize", setUIOffset);
 
-  return () => {
-    window.removeEventListener('resize', setUIOffset);
-  }
-}, [gameBoxRef,addGameStyleRef, selectedStyles]); 
-
-
+    return () => {
+      window.removeEventListener("resize", setUIOffset);
+    };
+  }, [gameBoxRef, addGameStyleRef, selectedStyles]);
 
   return (
-    <Container $position={position} $profileType={profileType} $containerTop={containerTop} $tailLeft={tailLeft}>
+    <Container
+      $position={position}
+      $profileType={profileType}
+      $containerTop={containerTop}
+      $tailLeft={tailLeft}
+    >
       <Top $position={position}>
         게임 스타일 선택 *최대 3개
         <CloseImage
@@ -110,7 +116,6 @@ const Container = styled.div<{
   left: 0;
   z-index: 100;
 
-
   /* Background Blur */
   box-shadow: 0 4px 8.9px 0 rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(7.5px);
@@ -138,15 +143,13 @@ const Container = styled.div<{
     left: ${({ $tailLeft }) => $tailLeft}px;
   }
 
-
   @media (max-width: 1200px) {
     padding: 20px;
     gap: 12px;
-  } 
+  }
   @media (max-width: 700px) {
     width: 85vw;
     border-radius: 10px;
-
   }
 `;
 

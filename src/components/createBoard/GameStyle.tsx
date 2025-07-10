@@ -23,9 +23,8 @@ const GameStyle = (props: GameStyleProps) => {
   const gameBoxRef = useRef<HTMLDivElement>(null);
   const addGameStyleRef = useRef<HTMLDivElement>(null);
   const [styledPopup, setStyledPopup] = useState(false);
-  const [selectedStyles, setSelectedStyles] = useState<number[]>(
-    selectedStyleIds
-  );
+  const [selectedStyles, setSelectedStyles] =
+    useState<number[]>(selectedStyleIds);
   const handleStylePopup = () => {
     setStyledPopup((prevState) => !prevState);
   };
@@ -54,10 +53,9 @@ const GameStyle = (props: GameStyleProps) => {
     setSelectedStyleIds(selectedStyles);
   }, [selectedStyles, setSelectedStyleIds]);
 
-    const selectedGameStyles = selectedStyles
-      .map((styleId) => GAME_STYLE.find((style) => style.gameStyleId === styleId))
-      .filter((style): style is GameStyle => Boolean(style));
-
+  const selectedGameStyles = selectedStyles
+    .map((styleId) => GAME_STYLE.find((style) => style.gameStyleId === styleId))
+    .filter((style): style is GameStyle => Boolean(style));
 
   return (
     <>
@@ -66,18 +64,17 @@ const GameStyle = (props: GameStyleProps) => {
           <Content key={index}>{style.gameStyleName}</Content>
         ))}
 
-      <Div ref={addGameStyleRef}>
-        <AddGameStyle onClick={handleStylePopup}>
-          <Image
-            src="/assets/icons/plus_violet.svg"
-            width={14}
-            height={14}
-            alt="추가"
-          />
-        </AddGameStyle>
-        
-      </Div>
-      {styledPopup && (
+        <Div ref={addGameStyleRef}>
+          <AddGameStyle onClick={handleStylePopup}>
+            <Image
+              src="/assets/icons/plus_violet.svg"
+              width={14}
+              height={14}
+              alt="추가"
+            />
+          </AddGameStyle>
+        </Div>
+        {styledPopup && (
           <SelectedStylePopup
             profileType="none"
             onClose={handleClosePopup}
@@ -88,9 +85,7 @@ const GameStyle = (props: GameStyleProps) => {
             addGameStyleRef={addGameStyleRef}
           />
         )}
-
       </StylesWrapper>
-      
     </>
   );
 };
@@ -102,8 +97,7 @@ const StylesWrapper = styled.div`
   flex-wrap: wrap;
   gap: 11px;
   align-items: center;
-position: relative;
-
+  position: relative;
 `;
 
 const Content = styled.p`
