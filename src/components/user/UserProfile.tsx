@@ -201,9 +201,12 @@ const UserProfile = ({
                 <RecentInfo>
                   {formatDecimal(profile.memberRecentStats?.recAvgKills || 0)} /{" "}
                   <Emph>
-                    {formatDecimal(profile.memberRecentStats?.recAvgDeaths || 0)}
+                    {formatDecimal(
+                      profile.memberRecentStats?.recAvgDeaths || 0
+                    )}
                   </Emph>{" "}
-                  / {formatDecimal(profile.memberRecentStats?.recAvgAssists || 0)}
+                  /{" "}
+                  {formatDecimal(profile.memberRecentStats?.recAvgAssists || 0)}
                 </RecentInfo>
                 <DetailInfo>
                   KDA {formatDecimal(profile.memberRecentStats?.recAvgKDA || 0)}

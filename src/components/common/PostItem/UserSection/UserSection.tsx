@@ -1,5 +1,4 @@
-import { FC, useRef } from "react";
-import Image from "next/image";
+import { useRef } from "react";
 import styled from "styled-components";
 
 import { theme } from "@/styles/theme";
