@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { useRef } from "react";
 import styled from "styled-components";
 
 import { theme } from "@/styles/theme";
@@ -37,6 +37,8 @@ const UserSection: FC<UserSectionProps> = ({
   onMoreBoxClose,
   moreBoxMenuItems,
 }) => {
+  const moreAreaRef = useRef<HTMLDivElement>(null);
+
   return (
     <Wrapper>
       <UserLeft>
@@ -60,7 +62,7 @@ const UserSection: FC<UserSectionProps> = ({
 
       {showMoreButton && (
         <UserRight>
-          <More>
+          <More ref={moreAreaRef}>
             <MoreBoxButton onClick={onMoreBoxToggle} />
             {isMoreBoxOpen && (
               <MoreBox
@@ -68,6 +70,7 @@ const UserSection: FC<UserSectionProps> = ({
                 top={30}
                 right={10}
                 onClose={onMoreBoxClose}
+                moreAreaRef={moreAreaRef}
               />
             )}
           </More>
