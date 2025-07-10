@@ -4,7 +4,6 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useRouter, useSearchParams } from "next/navigation";
 import styled from "styled-components";
-import { theme } from "@/styles/theme";
 
 import { getBoardList } from "@/api";
 import {
@@ -18,6 +17,7 @@ import { useMediaQueryContext } from "@/hooks";
 import { setBoardFilters } from "@/redux/slices/boardSlice";
 import { setOpenPostingModal } from "@/redux/slices/modalSlice";
 import { socket } from "@/socket";
+import { theme } from "@/styles/theme";
 import {
   getEffectiveTier,
   getThresholdByGameMode,

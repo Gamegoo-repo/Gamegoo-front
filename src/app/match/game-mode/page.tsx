@@ -4,10 +4,11 @@ import { Suspense, useState } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import styled from "styled-components";
-import { theme } from "@/styles/theme";
+
 import { GraphicBox, HeaderTitle } from "@/components";
 import { GAME_MODE_PAGE_DATA } from "@/constants";
 import { useMediaQueryContext } from "@/hooks";
+import { theme } from "@/styles/theme";
 
 const GameModePage = () => {
   const { isMobile } = useMediaQueryContext();

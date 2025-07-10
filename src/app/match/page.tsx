@@ -4,11 +4,11 @@ import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
-import { theme } from "@/styles/theme";
 
 import { Alert, GraphicBox, HeaderTitle } from "@/components";
 import { MATCH_TYPE_PAGE_DATA, MO_MATCH_TYPE_PAGE_DATA } from "@/constants";
 import { useMediaQueryContext } from "@/hooks";
+import { theme } from "@/styles/theme";
 import { getAccessToken } from "@/utils";
 
 import ChevronRight from "../../../public/assets/icons/chevron_right.svg";

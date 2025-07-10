@@ -2,10 +2,10 @@
 
 import React from "react";
 import styled from "styled-components";
-import { theme } from "@/styles/theme";
 
 import MypageTab from "@/components/mypage/MypageTab";
 import { useMediaQueryContext } from "@/hooks";
+import { theme } from "@/styles/theme";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const { isMobile } = useMediaQueryContext();
