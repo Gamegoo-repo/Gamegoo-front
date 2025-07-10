@@ -11,6 +11,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import styled, { ThemeProvider } from "styled-components";
 
 import { Footer, Header, SocketConnection } from "@/components";
+import { STORAGE_KEY } from "@/constants/storage";
 import { notify } from "@/hooks";
 import StyledComponentsRegistry from "@/libs/registry";
 import { store as createStore } from "@/redux/store";
@@ -60,7 +61,7 @@ export default function RootLayout({
   useEffect(() => {
     if (!socket) {
       connectSocket();
-      sessionStorage.removeItem("logout");
+      sessionStorage.removeItem(STORAGE_KEY.logout);
     }
   }, []);
 

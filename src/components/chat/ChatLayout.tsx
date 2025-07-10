@@ -37,6 +37,7 @@ import { setCloseModal, setOpenModal } from "@/redux/slices/modalSlice";
 import { socket } from "@/socket";
 import { theme } from "@/styles/theme";
 import { getAccessToken } from "@/utils/storage";
+import { STORAGE_KEY } from "@/constants/storage";
 
 import { Button, Checkbox, ConfirmModal, FormModal, Input } from "../common";
 import MessageHeader from "./MessageHeader";
@@ -229,7 +230,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
 
   /* 읽은 채팅 채팅 버튼에 실시간으로 반영 */
   const removeUnreadUuid = (uuidToRemove: string) => {
-    const unreadUuids = sessionStorage.getItem("unreadChatUuids");
+    const unreadUuids = sessionStorage.getItem(STORAGE_KEY.unreadChatUuids);
     if (!unreadUuids || unreadUuids === "undefined") {
       return;
     }
@@ -240,7 +241,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
       );
 
       sessionStorage.setItem(
-        "unreadChatUuids",
+        STORAGE_KEY.unreadChatUuids,
         JSON.stringify(unreadUuidsArray)
       );
 

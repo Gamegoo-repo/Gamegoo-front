@@ -7,6 +7,7 @@ import styled from "styled-components";
 
 import { getUnreadNotificationCount, postLogout, socketLogout } from "@/api";
 import { HEADER_MODAL_TAB } from "@/constants";
+import { STORAGE_KEY } from "@/constants/storage";
 import { useMediaQueries } from "@/hooks";
 import { closeChat } from "@/redux/slices/chatSlice";
 import { setNotiCount } from "@/redux/slices/notiSlice";
@@ -308,14 +309,14 @@ const Header = () => {
                     if (data.id !== 6) {
                       router.push(`${data.url}`);
                     } else {
-                      sessionStorage.setItem("logout", "true");
+                      sessionStorage.setItem(STORAGE_KEY.logout, "true");
                       try {
                         await postLogout();
                         await clearTokens();
                         await socketLogout();
-                        localStorage.removeItem("gamegooSocketId");
+                        localStorage.removeItem(STORAGE_KEY.gamegooSocketId);
                         dispatch(clearUserProfile());
-                        sessionStorage.removeItem("unreadChatUuids");
+                        sessionStorage.removeItem(STORAGE_KEY.unreadChatUuids);
                         dispatch(closeChat());
                         router.push("/riot");
                       } catch {
