@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import styled, { css } from "styled-components";
 
@@ -18,6 +18,8 @@ interface SelectedStylePopupProps {
     event: React.MouseEvent<HTMLElement, MouseEvent>
   ) => void;
   position?: positionType;
+  gameBoxRef?: React.RefObject<HTMLDivElement>;
+  addGameStyleRef?: React.RefObject<HTMLDivElement>;
 }
 
 const SelectedStylePopup: React.FC<SelectedStylePopupProps> = ({
@@ -26,20 +28,52 @@ const SelectedStylePopup: React.FC<SelectedStylePopupProps> = ({
   selectedStyles,
   onSelectStyle,
   position,
+  gameBoxRef,
+  addGameStyleRef,
 }) => {
   const isMobile = useMediaQueries({ breakpoint: 700 });
+  const [containerTop, setContainerTop] = useState(0);
+  const [tailLeft, setTailLeft] = useState(0);
+
+  useEffect(() => {
+    const setUIOffset = () => {
+      if (gameBoxRef?.current && addGameStyleRef?.current) {
+        const rect = gameBoxRef.current.getBoundingClientRect();
+        const addGameStyleRect =
+          addGameStyleRef?.current?.getBoundingClientRect();
+
+        setContainerTop(rect.height);
+        setTailLeft(
+          addGameStyleRect.left - rect.left + addGameStyleRect.width / 2 - 9
+        );
+      }
+    };
+
+    setUIOffset();
+
+    window.addEventListener("resize", setUIOffset);
+
+    return () => {
+      window.removeEventListener("resize", setUIOffset);
+    };
+  }, [gameBoxRef, addGameStyleRef, selectedStyles]);
 
   return (
-    <Container $position={position} $profileType={profileType}>
+    <Container
+      $position={position}
+      $profileType={profileType}
+      $containerTop={containerTop}
+      $tailLeft={tailLeft}
+    >
       <Top $position={position}>
         게임 스타일 선택 *최대 3개
         <CloseImage
           src="/assets/icons/close_white.svg"
           width={
-            isMobile ? 16 : position ? 9 : profileType === "mini" ? 10 : 24
+            isMobile ? 16 : position ? 9 : profileType === "mini" ? 20 : 24
           }
           height={
-            isMobile ? 16 : position ? 9 : profileType === "mini" ? 10 : 24
+            isMobile ? 16 : position ? 9 : profileType === "mini" ? 20 : 24
           }
           alt="close"
           onClick={onClose}
@@ -67,6 +101,8 @@ export default SelectedStylePopup;
 const Container = styled.div<{
   $position: positionType | undefined;
   $profileType: profileType;
+  $containerTop: number;
+  $tailLeft: number;
 }>`
   width: ${({ $position }) => ($position ? "574px" : "666px")};
   padding: ${({ $position }) => ($position ? "13px 22px" : "28px")};
@@ -76,14 +112,14 @@ const Container = styled.div<{
   gap: 20px;
   border-radius: 20px;
   background: rgba(0, 0, 0, 0.64);
+  top: ${({ $containerTop }) => `${$containerTop + 18}px`};
+  left: -5px;
+  z-index: 100;
 
   /* Background Blur */
   box-shadow: 0 4px 8.9px 0 rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(7.5px);
   position: absolute;
-  top: ${({ $position }) => ($position ? "-3px" : "60px")};
-  left: ${({ $position }) => ($position ? "-2px" : "0")};
-  z-index: 100;
 
   /* 프로필 미니 */
   ${({ $profileType }) =>
@@ -91,14 +127,29 @@ const Container = styled.div<{
     css`
       width: 555px;
       height: auto;
-      padding: 13px 22px;
-      gap: 12px;
+      padding: 28px;
+      gap: 15px;
     `}
 
-  @media (max-width: 700px) {
-    width: 80vw;
+  /* 꼬리표 스타일 */
+  &:after {
+    border-top: 0 solid transparent;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-bottom: 18px solid rgba(0, 0, 0, 0.64);
+    content: "";
+    position: absolute;
+    top: -18px;
+    left: ${({ $tailLeft }) => $tailLeft+5}px;
+  }
+
+  @media (max-width: 1200px) {
     padding: 20px;
     gap: 12px;
+  }
+  @media (max-width: 700px) {
+    width: 85vw;
+    border-radius: 10px;
   }
 `;
 
@@ -149,7 +200,7 @@ const Box = styled.button<{
   $position: positionType | undefined;
   $profileType: profileType;
 }>`
-  height: ${({ $position }) => ($position ? "29px" : "48px")};
+  height: ${({ $position }) => ($position ? "unset" : "48px")};
   padding: 6px 20px;
   border-radius: 59.263px;
   border: 1px solid

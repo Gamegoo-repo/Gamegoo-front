@@ -422,7 +422,7 @@ const Profile: React.FC<Profile> = ({
             />
           );
         }
-      } else if (memberId === myId) {
+      } else if (memberId === myId || user.id === myId) {
         return null;
       }
       return (
