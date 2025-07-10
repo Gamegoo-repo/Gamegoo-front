@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
 import styled from "styled-components";
 
+import { STORAGE_KEY } from "@/constants/storage";
 import { useMediaQueries } from "@/hooks";
 import { toggleChat } from "@/redux/slices/chatSlice";
 import { theme } from "@/styles/theme";
@@ -24,7 +25,9 @@ const ChatButton = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const localUnreadChatUuids = sessionStorage.getItem("unreadChatUuids");
+    const localUnreadChatUuids = sessionStorage.getItem(
+      STORAGE_KEY.unreadChatUuids
+    );
     if (localUnreadChatUuids && localUnreadChatUuids !== "undefined") {
       setUnreadChatUuids(JSON?.parse(localUnreadChatUuids));
     }
@@ -37,7 +40,7 @@ const ChatButton = () => {
   /* sessionStorage가 변경되면 상태 업데이트 */
   useEffect(() => {
     const handleStorageChange = (event: StorageEvent) => {
-      if (event.key === "unreadChatUuids") {
+      if (event.key === STORAGE_KEY.unreadChatUuids) {
         const updatedUnreadUuids = event.newValue
           ? JSON.parse(event.newValue)
           : [];

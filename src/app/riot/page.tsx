@@ -10,6 +10,7 @@ import { encode as base64urlEncode } from "js-base64";
 import styled from "styled-components";
 
 import { Button, Checkbox } from "@/components";
+import { STORAGE_KEY } from "@/constants/storage";
 import { clearSignIn } from "@/redux/slices/signInSlice";
 import { clearUserProfile } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
@@ -34,7 +35,7 @@ const RiotLogin = () => {
   const handleLogin = async () => {
     // 라이엇 로그인으로 이동
     const csrfToken = crypto.lib.WordArray.random(16).toString();
-    sessionStorage.setItem("csrfToken", csrfToken);
+    sessionStorage.setItem(STORAGE_KEY.csrfToken, csrfToken);
 
     const redirect = process.env.NEXT_PUBLIC_RIOT_REDIRECT_AFTER_LOGIN!;
     const state = {

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 
 import { reissueToken } from "@/api/reissue/reissue";
+import { STORAGE_KEY } from "@/constants/storage";
 import { connectSocket, socket } from "@/socket";
 
 const useJwtError = () => {
@@ -18,12 +19,24 @@ const useJwtError = () => {
         const newToken = response.data.accessToken;
 
         // 로컬 또는 세션에 재발급된 토큰 저장
-        if (localStorage.getItem("accessToken")) {
-          localStorage.setItem("accessToken", response.data.accessToken);
-          localStorage.setItem("refreshToken", response.data.refreshToken);
+        if (localStorage.getItem(STORAGE_KEY.accessToken)) {
+          localStorage.setItem(
+            STORAGE_KEY.accessToken,
+            response.data.accessToken
+          );
+          localStorage.setItem(
+            STORAGE_KEY.refreshToken,
+            response.data.refreshToken
+          );
         } else {
-          sessionStorage.setItem("accessToken", response.data.accessToken);
-          sessionStorage.setItem("refreshToken", response.data.refreshToken);
+          sessionStorage.setItem(
+            STORAGE_KEY.accessToken,
+            response.data.accessToken
+          );
+          sessionStorage.setItem(
+            STORAGE_KEY.refreshToken,
+            response.data.refreshToken
+          );
         }
         socket?.emit(eventName, { ...eventData, token: newToken });
       } catch (error) {
@@ -37,12 +50,24 @@ const useJwtError = () => {
         const newToken = response.data.accessToken;
 
         // 로컬 또는 세션에 재발급된 토큰 저장
-        if (localStorage.getItem("accessToken")) {
-          localStorage.setItem("accessToken", response.data.accessToken);
-          localStorage.setItem("refreshToken", response.data.refreshToken);
+        if (localStorage.getItem(STORAGE_KEY.accessToken)) {
+          localStorage.setItem(
+            STORAGE_KEY.accessToken,
+            response.data.accessToken
+          );
+          localStorage.setItem(
+            STORAGE_KEY.refreshToken,
+            response.data.refreshToken
+          );
         } else {
-          sessionStorage.setItem("accessToken", response.data.accessToken);
-          sessionStorage.setItem("refreshToken", response.data.refreshToken);
+          sessionStorage.setItem(
+            STORAGE_KEY.accessToken,
+            response.data.accessToken
+          );
+          sessionStorage.setItem(
+            STORAGE_KEY.refreshToken,
+            response.data.refreshToken
+          );
         }
         socket?.emit("connection-update-token", { token: newToken });
       } catch (error) {

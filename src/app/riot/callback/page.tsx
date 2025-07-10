@@ -7,13 +7,14 @@ import styled from "styled-components";
 
 import { LoadingSpinner } from "@/components";
 import ko from "@/constants/ko.json";
+import { LOGIN } from "@/constants";
+import { STORAGE_KEY } from "@/constants/storage";
 import { notify } from "@/hooks";
 import {
   setUserId,
   setUserName,
   setUserProfileImg,
 } from "@/redux/slices/userSlice";
-import { setToken } from "@/utils";
 
 const RsoCallback = () => {
   const router = useRouter();
@@ -43,7 +44,8 @@ const RsoCallback = () => {
 
       if (accessToken && refreshToken && name && profileImage && id) {
         // 로그인 완료 처리
-        setToken(accessToken, refreshToken, true);
+        localStorage.setItem(STORAGE_KEY.accessToken, accessToken);
+        localStorage.setItem(STORAGE_KEY.refreshToken, refreshToken);
         dispatch(setUserName(name));
         dispatch(setUserProfileImg(Number(profileImage)));
         dispatch(setUserId(Number(id)));

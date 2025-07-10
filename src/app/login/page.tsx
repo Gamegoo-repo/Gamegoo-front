@@ -10,6 +10,7 @@ import styled from "styled-components";
 import { getUnreadUuid, postLogin, socketLogin } from "@/api";
 import { Button, Checkbox, Input } from "@/components";
 import { emailRegEx } from "@/constants";
+import { STORAGE_KEY } from "@/constants/storage";
 import { setUnreadUuid } from "@/redux/slices/chatSlice";
 import { clearSignIn } from "@/redux/slices/signInSlice";
 import {
@@ -19,13 +20,7 @@ import {
   setUserProfileImg,
 } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
-import {
-  clearTokens,
-  setId,
-  setName,
-  setProfileImg,
-  setToken,
-} from "@/utils/storage";
+import { clearTokens, setId } from "@/utils/storage";
 
 const Login = () => {
   const router = useRouter();
@@ -83,13 +78,18 @@ const Login = () => {
       const refreshToken = response.data.refreshToken;
 
       /* 자동 로그인 체크 여부에 따라 토큰 저장 위치 결정 */
-      setToken(accessToken, refreshToken, autoLogin);
+      const storage = autoLogin ? localStorage : sessionStorage;
+      storage.setItem(STORAGE_KEY.accessToken, accessToken);
+      storage.setItem(STORAGE_KEY.refreshToken, refreshToken);
 
       dispatch(setUserName(response.data.name));
       dispatch(setUserProfileImg(response.data.profileImage));
       dispatch(setUserId(response.data.id));
-      setName(response.data.name, autoLogin);
-      setProfileImg(response.data.profileImage, autoLogin);
+      storage.setItem(STORAGE_KEY.name, response.data.name);
+      storage.setItem(
+        STORAGE_KEY.profileImg,
+        response.data.profileImage.toString()
+      );
       setId(response.data.id, autoLogin);
 
       router.push("/");
@@ -103,7 +103,7 @@ const Login = () => {
         dispatch(setUnreadUuid(data.data.data));
         // 새로고침시 채팅방 수 가져오기 위함
         sessionStorage.setItem(
-          "unreadChatUuids",
+          STORAGE_KEY.unreadChatUuids,
           JSON.stringify(data.data.data)
         );
       }

@@ -125,6 +125,7 @@ const MyPostPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [isMobile]
   );
+
   const handleDeletePost = async (boardId: number) => {
     await deletePost(boardId);
     setPostList((prevPosts) =>

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { markChatAsRead } from "@/api/chat/chat";
+import { STORAGE_KEY } from "@/constants/storage";
 import { setUnreadUuid } from "@/redux/slices/chatSlice";
 import { connectSocket, socket } from "@/socket";
 
@@ -53,7 +54,7 @@ const useChatMessage = () => {
         dispatch(setUnreadUuid(updatedUnreadUuids));
         // 새로고침시 채팅방 수 가져오기 위함
         sessionStorage.setItem(
-          "unreadChatUuids",
+          STORAGE_KEY.unreadChatUuids,
           JSON.stringify(updatedUnreadUuids)
         );
       }
@@ -97,7 +98,7 @@ const useChatMessage = () => {
         dispatch(setUnreadUuid(updatedUnreadUuids));
         // 새로고침시 채팅방 수 가져오기 위함
         sessionStorage.setItem(
-          "unreadChatUuids",
+          STORAGE_KEY.unreadChatUuids,
           JSON.stringify(updatedUnreadUuids)
         );
       }

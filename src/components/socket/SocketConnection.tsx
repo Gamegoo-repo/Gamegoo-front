@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
+import { STORAGE_KEY } from "@/constants/storage";
 import { useChatFriend, useChatMessage, useJwtError } from "@/hooks";
 import { socket } from "@/socket";
 
@@ -16,7 +17,7 @@ const SocketConnection: React.FC = () => {
   useEffect(() => {
     const onConnect = () => {
       const socketId = socket?.id || "";
-      sessionStorage.setItem("gamegooSocketId", socketId);
+      sessionStorage.setItem(STORAGE_KEY.gamegooSocketId, socketId);
     };
 
     const onDisconnect = () => {
