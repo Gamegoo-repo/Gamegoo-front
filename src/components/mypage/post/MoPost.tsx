@@ -113,9 +113,13 @@ const MoPost: React.FC<PostProps> = ({
     }
   };
 
-  useEffect(() => {
-    getPostData();
-  }, [isUser, boardId]);
+  useEffect(
+    () => {
+      getPostData();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isUser, boardId]
+  );
 
   const postItemData: PostItemData = {
     boardId,

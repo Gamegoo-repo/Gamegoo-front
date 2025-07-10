@@ -67,54 +67,67 @@ const MyPostPage = () => {
     }
   };
 
-  useEffect(() => {
-    if (isMobile === undefined) return;
+  useEffect(
+    () => {
+      if (isMobile === undefined) return;
 
-    if (isMobile) {
-      fetchGetMyPostCursor(cursor);
-    } else {
-      fetchGetMyPost();
-    }
-  }, [currentPage, currentPost, boardRefresh, isMobile]);
+      if (isMobile) {
+        fetchGetMyPostCursor(cursor);
+      } else {
+        fetchGetMyPost();
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentPage, currentPost, boardRefresh, isMobile]
+  );
 
   /* mobile 무한스크롤 페이지네이션 */
-  useEffect(() => {
-    if (!isMobile || !cursor) return;
+  useEffect(
+    () => {
+      if (!isMobile || !cursor) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && hasNext && !isLoading) {
-            fetchGetMyPostCursor(cursor);
-          }
-        });
-      },
-      {
-        rootMargin: "100px", // 미리 로드
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && hasNext && !isLoading) {
+              fetchGetMyPostCursor(cursor);
+            }
+          });
+        },
+        {
+          rootMargin: "100px", // 미리 로드
+        }
+      );
+
+      if (sentinelRef.current) {
+        observer.observe(sentinelRef.current);
       }
-    );
 
-    if (sentinelRef.current) {
-      observer.observe(sentinelRef.current);
-    }
+      return () => {
+        observer.disconnect();
+      };
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [cursor, isMobile, hasNext, isLoading]
+  );
 
-    return () => {
-      observer.disconnect();
-    };
-  }, [cursor, isMobile, hasNext, isLoading]);
+  useEffect(
+    () => {
+      const fetchProfile = async () => {
+        try {
+          const response = await getMyProfile();
+          dispatch(setUserProfile(response.data));
+        } catch (error) {
+          console.error(error);
+        }
+      };
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await getMyProfile();
-        dispatch(setUserProfile(response.data));
-      } catch (error) {
-        console.error(error);
-      }
-    };
+      isMobile && fetchProfile();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isMobile]
+  );
 
-    isMobile && fetchProfile();
-  }, [isMobile]);
   const handleDeletePost = async (boardId: number) => {
     await deletePost(boardId);
     setPostList((prevPosts) =>

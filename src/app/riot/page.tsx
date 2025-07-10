@@ -21,11 +21,15 @@ const RiotLogin = () => {
   const dispatch = useDispatch();
   const [autoLogin, setAutoLogin] = useState(false);
 
-  useEffect(() => {
-    dispatch(clearSignIn());
-    dispatch(clearUserProfile());
-    clearTokens();
-  }, []);
+  useEffect(
+    () => {
+      dispatch(clearSignIn());
+      dispatch(clearUserProfile());
+      clearTokens();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   /* 로그인 */
   const handleLogin = async () => {

@@ -114,21 +114,25 @@ const Profile: React.FC<Profile> = ({
     setSelectedImageIndex(user.profileImg);
   }, [user]);
 
-  useEffect(() => {
-    const gameStyleIds = user.gameStyleResponseList.map(
-      (style) => style.gameStyleId
-    );
+  useEffect(
+    () => {
+      const gameStyleIds = user.gameStyleResponseList.map(
+        (style) => style.gameStyleId
+      );
 
-    dispatch(
-      setMatchInfo({
-        mike: isMike,
-        mainP: positionValue.main ?? "ANY",
-        subP: positionValue.sub ?? "ANY",
-        wantP: positionValue.want ?? [],
-        gameStyleResponseDTOList: gameStyleIds,
-      })
-    );
-  }, [isMike, positionValue, dispatch]);
+      dispatch(
+        setMatchInfo({
+          mike: isMike,
+          mainP: positionValue.main ?? "ANY",
+          subP: positionValue.sub ?? "ANY",
+          wantP: positionValue.want ?? [],
+          gameStyleResponseDTOList: gameStyleIds,
+        })
+      );
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isMike, positionValue, dispatch]
+  );
 
   /* 프로필 이미지 리스트 중 클릭시*/
   const handleImageClick = async (index: number) => {

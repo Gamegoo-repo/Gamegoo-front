@@ -28,35 +28,40 @@ const MyAlertPage = () => {
 
   const notiCount = useSelector((state: RootState) => state.noti.count);
 
-  useEffect(() => {
-    const fetchNotiList = async () => {
-      try {
-        const response = await getTotalNotification(currentPage);
-        if (response.data) {
-          const { notificationList, totalPage, totalElements } = response.data;
-          setNotiList(notificationList);
-          setTotalPages(totalPage);
-          setTotalItems(totalElements);
-        } else {
-          console.error(response.message);
+  useEffect(
+    () => {
+      const fetchNotiList = async () => {
+        try {
+          const response = await getTotalNotification(currentPage);
+          if (response.data) {
+            const { notificationList, totalPage, totalElements } =
+              response.data;
+            setNotiList(notificationList);
+            setTotalPages(totalPage);
+            setTotalItems(totalElements);
+          } else {
+            console.error(response.message);
+          }
+        } catch (error) {
+          console.error(error);
         }
-      } catch (error) {
-        console.error(error);
-      }
-    };
+      };
 
-    const fetchNotiCount = async () => {
-      try {
-        const response = await getUnreadNotificationCount();
-        dispatch(setNotiCount(response.data));
-      } catch (error) {
-        console.error(error);
-      }
-    };
+      const fetchNotiCount = async () => {
+        try {
+          const response = await getUnreadNotificationCount();
+          dispatch(setNotiCount(response.data));
+        } catch (error) {
+          console.error(error);
+        }
+      };
 
-    fetchNotiList();
-    fetchNotiCount();
-  }, [currentPage]);
+      fetchNotiList();
+      fetchNotiCount();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentPage]
+  );
 
   useEffect(() => {}, [totalPages, totalItems, notiCount]);
 

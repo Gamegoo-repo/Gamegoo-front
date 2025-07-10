@@ -284,51 +284,59 @@ const BoardPage = () => {
     }
   };
 
-  useEffect(() => {
-    if (isMobile === undefined) return;
-    console.log("boardRefresh", boardRefresh);
+  useEffect(
+    () => {
+      if (isMobile === undefined) return;
+      console.log("boardRefresh", boardRefresh);
 
-    if (isMobile) {
-      getInitialListByCursor();
-    } else {
-      getList();
-    }
-  }, [
-    currentPage,
-    selectedGameMode,
-    selectedTier,
-    isPosition,
-    selectedMic,
-    isPostStatus,
-    boardRefresh,
-    isMobile,
-  ]);
+      if (isMobile) {
+        getInitialListByCursor();
+      } else {
+        getList();
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [
+      currentPage,
+      selectedGameMode,
+      selectedTier,
+      isPosition,
+      selectedMic,
+      isPostStatus,
+      boardRefresh,
+      isMobile,
+    ]
+  );
 
   /* mobile 무한스크롤 페이지네이션 */
-  useEffect(() => {
-    if (!isMobile || !cursor) return;
+  useEffect(
+    () => {
+      if (!isMobile || !cursor) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && hasNext && !isLoading) {
-            getListByCursor(cursor);
-          }
-        });
-      },
-      {
-        rootMargin: "100px", // 미리 로드
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && hasNext && !isLoading) {
+              getListByCursor(cursor);
+            }
+          });
+        },
+        {
+          rootMargin: "100px", // 미리 로드
+        }
+      );
+
+      if (sentinelRef.current) {
+        observer.observe(sentinelRef.current);
       }
-    );
 
-    if (sentinelRef.current) {
-      observer.observe(sentinelRef.current);
-    }
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [cursor, isMobile, hasNext, isLoading]);
+      return () => {
+        observer.disconnect();
+      };
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [cursor, isMobile, hasNext, isLoading]
+  );
 
   /* 페이지네이션 이전 클릭 */
   const handlePrevPage = () => {

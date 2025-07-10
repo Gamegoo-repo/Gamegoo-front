@@ -61,17 +61,21 @@ const Header = () => {
 
   const isFirstRender = useRef(true);
 
-  useEffect(() => {
-    if (storedName) {
-      dispatch(setUserName(storedName));
-    }
-    if (storedProfileImg) {
-      dispatch(setUserProfileImg(storedProfileImg));
-    }
-    if (storedUserId) {
-      dispatch(setUserId(storedUserId));
-    }
-  }, []);
+  useEffect(
+    () => {
+      if (storedName) {
+        dispatch(setUserName(storedName));
+      }
+      if (storedProfileImg) {
+        dispatch(setUserProfileImg(storedProfileImg));
+      }
+      if (storedUserId) {
+        dispatch(setUserId(storedUserId));
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   /* 알림창 열고 닫는 함수 */
   const handleAlertWindow = (event: React.MouseEvent) => {

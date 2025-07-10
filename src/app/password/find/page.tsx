@@ -25,12 +25,16 @@ const Find = () => {
   const emailRedux = useSelector((state: RootState) => state.password.email);
 
   /* redux 업데이트 */
-  useEffect(() => {
-    setEmail(emailRedux);
-    if (emailRedux.length !== 0) {
-      validateEmail(emailRedux);
-    }
-  }, [emailRedux]);
+  useEffect(
+    () => {
+      setEmail(emailRedux);
+      if (emailRedux.length !== 0) {
+        validateEmail(emailRedux);
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [emailRedux]
+  );
 
   const emailRegEx =
     /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;

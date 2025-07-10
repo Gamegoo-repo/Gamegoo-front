@@ -21,15 +21,19 @@ const MyReviewPage = () => {
   const myId = useSelector((state: RootState) => state.user.id);
   const [myManner, setMyManner] = useState<Manner>();
 
-  useEffect(() => {
-    const fetchGetMyManner = async () => {
-      const response_level = await getMemberMannerLevel(myId || 0);
-      const response_keywords = await getMemberMannerKeyword(myId || 0);
-      setMyManner({ ...response_level.data, ...response_keywords.data });
-    };
+  useEffect(
+    () => {
+      const fetchGetMyManner = async () => {
+        const response_level = await getMemberMannerLevel(myId || 0);
+        const response_keywords = await getMemberMannerKeyword(myId || 0);
+        setMyManner({ ...response_level.data, ...response_keywords.data });
+      };
 
-    fetchGetMyManner();
-  }, []);
+      fetchGetMyManner();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   const goodMannerEvaluations =
     myManner?.mannerKeywords

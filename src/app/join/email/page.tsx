@@ -41,15 +41,19 @@ const Email = () => {
     (state: RootState) => state.signIn.authStatus
   );
 
-  const handlePopState = useCallback(() => {
-    setAuthCode("");
-    setEmailValid(undefined);
-    setAuthCodeValid(undefined);
-    setIsSendClick(false);
-    setIsSend(false);
-    dispatch(updateEmailAuth(""));
-    dispatch(updateAuthStatus(false));
-  }, [dispatch, isSendClick, authStatusRedux]);
+  const handlePopState = useCallback(
+    () => {
+      setAuthCode("");
+      setEmailValid(undefined);
+      setAuthCodeValid(undefined);
+      setIsSendClick(false);
+      setIsSend(false);
+      dispatch(updateEmailAuth(""));
+      dispatch(updateAuthStatus(false));
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [dispatch, isSendClick, authStatusRedux]
+  );
 
   /* 뒤로가기 이벤트 감지 */
   useEffect(() => {
