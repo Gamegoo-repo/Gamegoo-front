@@ -34,7 +34,7 @@ export default QueueType;
 const Queue = styled.div`
   width: 234px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: auto;
   }
 `;
@@ -44,7 +44,7 @@ const Title = styled.p`
   color: ${theme.colors.gray800};
   margin-bottom: 6px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.medium11};
   }
 `;
@@ -57,7 +57,7 @@ const Type = styled.div`
   align-items: center;
   gap: 2px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 8px;
   }
 `;
@@ -66,7 +66,7 @@ const P = styled.p`
   ${(props) => props.theme.fonts.medium16};
   color: ${theme.colors.gray800};
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.bold12};
   }
 `;

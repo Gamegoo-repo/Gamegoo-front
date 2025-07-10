@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import styled from "styled-components";
 
-import { useMediaQueries } from "@/hooks";
+import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 import { getProfileBgColor } from "@/utils";
 
@@ -40,7 +40,7 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
   isToggleUI = false,
   user,
 }) => {
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
   const [mannerPopup, setMannerPopup] = useState<boolean>(false);
   const [isOpened, setToggleOpen] = useState<boolean>(false);
 
@@ -185,7 +185,7 @@ const ContainerWrap = styled.div<{ $opponent: boolean; $isOpened: boolean }>`
 
   /* 그림자 */
   box-shadow: 0px 0px 21.3px 0px rgba(0, 0, 0, 0.15);
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: ${({ $isOpened }) =>
       $isOpened ? `10px 20px 28px 20px` : `10px 20px`};
     border-radius: 8px;
@@ -216,7 +216,7 @@ const Column = styled.div`
   justify-content: flex-start;
   align-items: center;
   gap: 24px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     gap: 15px;
   }
 `;
@@ -227,7 +227,7 @@ const AccountInfo = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     /* gap: 15px; */
   }
 `;
@@ -246,7 +246,7 @@ const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
   height: 144px;
   background: ${(props) => props.$bgColor};
   border-radius: 50%;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 84px;
     height: 84px;
   }
@@ -274,7 +274,7 @@ const LevelTag = styled.button`
   line-height: 13px;
   backdrop-filter: blur(7.5px);
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     background: ${theme.colors.gray900};
     ${theme.fonts.bold11}
     padding: 1px 8px;
@@ -362,7 +362,7 @@ const SecondRow = styled.div`
   ${(props) => props.theme.fonts.bold25};
   margin-bottom: 16px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     flex-direction: row;
     ${(props) => props.theme.fonts.bold16};
     gap: 4px;
@@ -400,7 +400,7 @@ const Position = styled.div<{ $opponent: boolean }>`
   ${theme.fonts.semiBold13};
   color: ${theme.colors.gray800};
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     border-radius: 6px;
     padding: 12px 20px 8px 20px;
     gap: ${({ $opponent }) => ($opponent ? "13px" : "33px")};
@@ -414,7 +414,7 @@ const Posi = styled.div<{ $opponent: boolean }>`
   align-items: center;
   white-space: nowrap;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) =>
       props.$opponent ? props.theme.fonts.medium11 : props.theme.fonts.bold12};
   }

@@ -19,7 +19,7 @@ import {
 } from "@/components";
 import { BOARD_TITLE, GAME_MODE, MIC, TIER } from "@/constants";
 import ko from "@/constants/ko.json";
-import { notify, useMediaQueries } from "@/hooks";
+import { notify, useMediaQueryContext } from "@/hooks";
 import { resetBoardFilters, setRefresh } from "@/redux/slices/boardSlice";
 import {
   setClosePostingModal,
@@ -62,7 +62,7 @@ const BoardPage = () => {
   const tierRef = useRef<HTMLDivElement>(null);
   const micRef = useRef<HTMLDivElement>(null);
   const [isRotating, setIsRotating] = useState(false);
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
 
   const [isPullUpConfirmOpen, setIsPullUpConfirmOpen] = useState(false);
   const [myRecentPost, setMyRecentPost] = useState<number | null>(null);
@@ -646,7 +646,7 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 140px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding-top: 12px;
   }
 `;
@@ -655,7 +655,7 @@ const BoardContent = styled.div`
   max-width: 1440px;
   width: 100%;
   padding: 0 80px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 0 20px;
   }
 `;
@@ -666,7 +666,7 @@ const FirstRow = styled.div`
   align-items: center;
   justify-content: space-between;
   margin-bottom: 38px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     margin-bottom: 12px;
   }
 `;
@@ -674,7 +674,7 @@ const FirstRow = styled.div`
 const Title = styled.p`
   color: ${theme.colors.gray700};
   ${theme.fonts.bold32};
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${theme.fonts.bold20};
   }
 `;
@@ -725,7 +725,7 @@ const SecondRow = styled.div`
   justify-content: space-between;
   margin-bottom: 25px;
   gap: 30px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     margin-bottom: 8px;
     gap: 0px;
   }
@@ -764,7 +764,7 @@ const PullUpButton = styled.button`
   -webkit-text-fill-color: transparent;
   white-space: nowrap;
   ${theme.fonts.bold14};
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     justify-content: center;
     background: ${theme.colors.gradientMobile};
     width: 38px;
@@ -784,7 +784,7 @@ const MsgConfirm = styled.div`
   ${(props) => props.theme.fonts.regular25};
   margin: 80px 0;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.medium14};
     margin: 32px 0;
   }

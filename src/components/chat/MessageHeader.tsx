@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import { useMediaQueries } from "@/hooks";
+import { useMediaQueryContext } from "@/hooks";
 import {
   closeChat,
   closeChatRoom,
@@ -38,7 +38,7 @@ const MessageHeader = (props: MessageHeaderProps) => {
     setIsMoreBoxOpen,
   } = props;
 
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
   const dispatch = useDispatch();
   const router = useRouter();
   const [showAlert, setShowAlert] = useState<boolean>(false);
@@ -186,7 +186,7 @@ const TitleWrap = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 12px 16px;
   }
 `;
@@ -199,7 +199,7 @@ const CloseButton = styled.p`
   display: flex;
   margin-bottom: 1px;
   padding: 12px 13px 0 0;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 0;
   }
 `;
@@ -213,7 +213,7 @@ const ChatHeader = styled.header`
   display: flex;
   align-items: center;
   padding: 11px 27px 20px 12px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 12px 16px;
   }
 `;
@@ -265,7 +265,7 @@ const OnlineStatus = styled.p`
   ${(props) => props.theme.fonts.medium11};
   color: ${theme.colors.gray600};
   cursor: default;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     text-align: left;
   }
 `;

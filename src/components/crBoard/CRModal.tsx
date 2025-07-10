@@ -101,7 +101,7 @@ const Wrapper = styled.div<{
     background: transparent;
   }
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 20.5px 20px;
     border-radius: 8px;
     max-width: 336px;
@@ -110,7 +110,7 @@ const Wrapper = styled.div<{
 `;
 
 const Header = styled.header<{ $type: string }>`
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding-top: 26px;
   }
 `;

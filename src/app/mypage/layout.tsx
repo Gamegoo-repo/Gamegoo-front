@@ -2,12 +2,13 @@
 
 import React from "react";
 import styled from "styled-components";
+import { theme } from "@/styles/theme";
 
 import MypageTab from "@/components/mypage/MypageTab";
-import useMediaQueries from "@/hooks/useMediaQueries";
+import { useMediaQueryContext } from "@/hooks";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
 
   return !isMobile ? (
     <Section>
@@ -37,7 +38,7 @@ const Wrapper = styled.div`
   justify-content: center;
   gap: 191px;
 
-  @media (max-width: 1200px) {
+  @media (max-width: ${theme.breakpoints.desktop}) {
     gap: 80px;
   }
 

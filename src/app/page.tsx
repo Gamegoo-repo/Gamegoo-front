@@ -6,12 +6,12 @@ import styled from "styled-components";
 
 import { Banner } from "@/components";
 import { MATCH_PAGE_DATA } from "@/constants";
-import { useMediaQueries } from "@/hooks";
+import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 
 const HomePage = () => {
   const router = useRouter();
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
 
   return (
     <Wrapper>
@@ -58,7 +58,7 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 100px;
-  @media (max-width: 1200px) {
+  @media (max-width: ${theme.breakpoints.desktop}) {
     padding-top: 24px;
   }
 `;
@@ -67,7 +67,7 @@ const HomeContent = styled.div`
   max-width: 1440px;
   width: 100%;
   padding: 0px 80px;
-  @media (max-width: 1200px) {
+  @media (max-width: ${theme.breakpoints.desktop}) {
     padding: 0 20px;
   }
 `;
@@ -80,7 +80,7 @@ const Main = styled.main`
   gap: 59px;
   margin-bottom: 37px;
 
-  @media (max-width: 1200px) {
+  @media (max-width: ${theme.breakpoints.desktop}) {
     flex-direction: column;
     gap: 40px;
   }
@@ -90,7 +90,7 @@ const ContentWrapper = styled.div`
   max-width: 600px;
   position: relative;
   cursor: pointer;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     min-width: 100%;
   }
 `;
@@ -112,7 +112,7 @@ const ContentTitle = styled.p`
   ${(props) => props.theme.fonts.bold32};
   color: ${theme.colors.white};
   white-space: nowrap;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.bold16};
   }
 `;

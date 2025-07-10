@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import styled from "styled-components";
 
-import useMediaQueries from "@/hooks/useMediaQueries";
+import { useMediaQueryContext } from "@/hooks";
 import useTooltipTransformOffset from "@/hooks/useTooltipTransformOffset";
 import { theme } from "@/styles/theme";
 
@@ -17,7 +17,7 @@ interface ChampionProps {
 
 const Champion = (props: ChampionProps) => {
   const { list, font = "semiBold18", color, title = false } = props;
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   const tooltipWrapperRef = useRef<HTMLDivElement>(null);
@@ -172,7 +172,7 @@ const ChampionWrapper = styled.div`
   height: 62px;
   position: relative;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     height: 45px;
   }
 `;
@@ -183,7 +183,7 @@ const ImageWrapper = styled.div`
   border-radius: 50%;
   overflow: hidden;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 33px;
     height: 33px;
   }
@@ -205,7 +205,7 @@ const Percentage = styled.div`
   left: 50%;
   transform: translateX(-50%);
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 33px;
     height: 17px;
     padding: 0px 4px;
@@ -242,7 +242,7 @@ const Tooltip = styled.div`
   text-align: left;
   z-index: 9999;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     height: 150px;
     bottom: -165px;
     border-radius: 10px;
@@ -261,7 +261,7 @@ const TooltipTail = styled.div`
   border-right: 6px solid transparent;
   border-bottom: 6px solid rgba(0, 0, 0, 0.7);
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     bottom: -16px;
   }
 `;
@@ -270,7 +270,7 @@ const ChampionName = styled.div`
   color: ${theme.colors.gray100};
   ${theme.fonts.regular18};
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${theme.fonts.regular16};
   }
 `;
@@ -292,7 +292,7 @@ const Head = styled.div`
 const Rate = styled.div`
   color: ${theme.colors.gray100};
   ${theme.fonts.bold14};
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${theme.fonts.semiBold14};
   }
 `;

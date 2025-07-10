@@ -94,7 +94,7 @@ const BubbleWrapper = styled.div<{
     0.5s ease-out;
   animation-fill-mode: forwards;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     bottom: ${({ $position }) =>
       $position === "top" ? "45px" : $position === "board" ? "50px" : "10px"};
     right: ${({ $position }) =>
@@ -180,7 +180,7 @@ const ClickArea = styled.div`
   justify-content: center;
   align-items: center;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 28px;
     height: 14px;
   }
@@ -190,7 +190,7 @@ const Text = styled.p`
   ${(props) => props.theme.fonts.bold14};
   color: ${theme.colors.violet300};
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.bold9};
   }
 `;

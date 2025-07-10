@@ -1,5 +1,6 @@
 import styled from "styled-components";
 
+import { theme } from "@/styles/theme";
 import { getProfileBgColor, setCustomProfileImg } from "@/utils";
 
 interface ProfileImageProps {
@@ -19,7 +20,7 @@ const ProfileImage = (props: ProfileImageProps) => {
 export default ProfileImage;
 
 const Wrapper = styled.div<{ $bgColor: string }>`
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     position: relative;
     background: ${(props) => props.$bgColor};
     width: 44px;

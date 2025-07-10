@@ -123,7 +123,7 @@ const StyledButton = styled.button<{
     ${(props) => props.theme.fonts.bold14};
   }
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     height: ${({ $height }) => $height || "45px"};
     border-radius: 6px;
   }

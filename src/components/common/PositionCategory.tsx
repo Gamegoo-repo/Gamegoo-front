@@ -3,7 +3,7 @@ import Image from "next/image";
 import styled, { css } from "styled-components";
 
 import { POSITION } from "@/constants";
-import { useMediaQueries } from "@/hooks";
+import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 
 import All from "../../../public/assets/images/position/position_all_unclicked.svg";
@@ -32,7 +32,7 @@ const PositionCategory = (props: PositionComponentProps) => {
     onClose,
     usedPositions = [],
   } = props;
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
   const boxRef = React.useRef<HTMLDivElement>(null);
 
   const handlePositionCategory = (positionName: Position | null) => {
@@ -151,7 +151,7 @@ const Wrapper = styled.div<{ $isWant: boolean }>`
   box-shadow: 0 4px 8.9px 0 rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(7.5px);
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 224px;
     padding: 20px;
     border-radius: 10px;
@@ -175,7 +175,7 @@ const Title = styled.div`
   ${theme.fonts.bold20}
   color: ${theme.colors.white};
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${theme.fonts.bold16}
   }
 `;
@@ -198,7 +198,7 @@ const Box = styled.div<{ $isWant: boolean }>`
     top: -18px;
     left: 27px;
 
-    @media (max-width: 700px) {
+    @media (max-width: ${theme.breakpoints.mobile}) {
       ${({ $isWant }) =>
         $isWant &&
         css`
@@ -207,7 +207,7 @@ const Box = styled.div<{ $isWant: boolean }>`
     }
   }
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 184px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);

@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import { useMediaQueries } from "@/hooks";
+import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 
 import Alert from "./Alert";
@@ -15,7 +15,7 @@ interface FooterProps {
 }
 
 const Footer = (props: FooterProps) => {
-  const isMobile = useMediaQueries({ breakpoint: 800 });
+  const { isMobile } = useMediaQueryContext();
   const { isShowChat } = props;
   const router = useRouter();
   const [showAlert, setShowAlert] = useState(false);
@@ -105,7 +105,7 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     height: unset;
     padding: 20px;
   }
@@ -117,7 +117,7 @@ const LeftWrapper = styled.div`
   align-items: end;
   gap: 170px;
 
-  @media (max-width: 1200px) {
+  @media (max-width: ${theme.breakpoints.desktop}) {
     gap: 130px;
   }
 
@@ -125,7 +125,7 @@ const LeftWrapper = styled.div`
     gap: 100px;
   }
 
-  @media (max-width: 900px) {
+  @media (max-width: ${theme.breakpoints.tablet}) {
     gap: 70px;
   }
 `;
@@ -139,14 +139,14 @@ const LeftDiv = styled.div`
   ${theme.fonts.regular13};
   color: ${theme.colors.gray500};
   white-space: nowrap;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${theme.fonts.regular12};
   }
 `;
 
 const TermsTextWrap = styled.div`
   margin: 28px 0 20px 0;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     margin: 28px 0 10px 0;
   }
 `;
@@ -158,7 +158,7 @@ const TermsButton = styled.button`
   margin-right: 16px;
 `;
 const FeedbackWrapper = styled.div`
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     margin-top: 25px;
     ${theme.fonts.bold12};
   }

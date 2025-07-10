@@ -3,7 +3,7 @@ import Image from "next/image";
 import styled from "styled-components";
 
 import { STEPS } from "@/constants";
-import { useMediaQueries } from "@/hooks";
+import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 
 interface StepNavigationProps {
@@ -11,7 +11,7 @@ interface StepNavigationProps {
 }
 
 const StepNavigation = ({ title }: StepNavigationProps) => {
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
   const [activeStep, setActiveStep] = useState<number | null>(null);
 
   // title과 일치하는 Step 찾기
@@ -59,7 +59,7 @@ const NavContainer = styled.nav`
     bottom: 0;
     width: 100%;
   }
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.semiBold13};
   }
 `;

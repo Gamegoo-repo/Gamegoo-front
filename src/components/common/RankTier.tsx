@@ -65,7 +65,7 @@ const Container = styled.div<{ $direct: string }>`
       gap: 6px;
     `}
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${({ $direct }) =>
       $direct === "row" &&
       css`
@@ -87,7 +87,7 @@ const RankName = styled.div<{
     css`
       ${theme.fonts.bold13}
     `}
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${theme.fonts.medium11}
     ${({ $direct }) =>
       $direct === "row" &&
@@ -114,7 +114,7 @@ const Tier = styled.div<{
       color: ${theme.colors.gray600};
       ${theme.fonts.bold14}
     `}
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${theme.fonts.bold14}
 
     ${({ $direct }) =>

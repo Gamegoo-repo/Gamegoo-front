@@ -4,16 +4,17 @@ import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
+import { theme } from "@/styles/theme";
 
 import { Alert, GraphicBox, HeaderTitle } from "@/components";
 import { MATCH_TYPE_PAGE_DATA, MO_MATCH_TYPE_PAGE_DATA } from "@/constants";
-import { useMediaQueries } from "@/hooks";
+import { useMediaQueryContext } from "@/hooks";
 import { getAccessToken } from "@/utils";
 
 import ChevronRight from "../../../public/assets/icons/chevron_right.svg";
 
 const MatchTypePage = () => {
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
   const router = useRouter();
 
   const accesssToken = getAccessToken(); // 로그인 유무 결정
@@ -127,7 +128,7 @@ const Wrapper = styled.div`
   text-align: center;
   padding-top: 110px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding-top: 0px;
   }
 `;
@@ -136,7 +137,7 @@ const MatchContent = styled.div`
   max-width: 1440px;
   width: 100%;
   padding: 60px 80px 0px 80px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 24px 20px;
   }
 `;
@@ -149,11 +150,11 @@ const Main = styled.main`
   gap: 59px;
   margin: 72px 0 150px;
 
-  @media screen and (max-width: 1300px) {
+  @media (max-width: 1300px) {
     flex-direction: column;
     gap: 40px;
   }
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     margin-top: 15px;
   }
 `;

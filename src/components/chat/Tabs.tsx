@@ -53,7 +53,7 @@ const TabButton = styled.div<{ $isActive: boolean }>`
     transform: translateX(-50%);
     transition: width 0.3s ease;
 
-    @media (max-width: 700px) {
+    @media (max-width: ${theme.breakpoints.mobile}) {
       background-color: ${theme.colors.gray800};
       border-radius: 0;
       height: 3px;

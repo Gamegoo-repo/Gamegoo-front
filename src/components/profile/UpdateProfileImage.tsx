@@ -1,7 +1,7 @@
 import Image from "next/image";
 import styled, { css } from "styled-components";
 
-import { useMediaQueries } from "@/hooks";
+import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 import { getProfileBgColor } from "@/utils";
 
@@ -20,7 +20,7 @@ interface FileInputProps {
 }
 
 const UpdateProfileImage = (props: FileInputProps) => {
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
   const {
     type,
     setIsProfileListOpen,

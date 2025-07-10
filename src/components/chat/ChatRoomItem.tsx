@@ -1,7 +1,7 @@
 import Image from "next/image";
 import styled from "styled-components";
 
-import useMediaQueries from "@/hooks/useMediaQueries";
+import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 import { getProfileBgColor } from "@/utils/profile";
 import { setChatRoomDateFormatter } from "@/utils/timeFormat";
@@ -34,7 +34,7 @@ const ChatRoomItem = (props: ChatRoomItemProps) => {
     setIsMoreBoxOpen,
   } = props;
 
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
 
   const handleUnreadMsgCount = (unread: number) => {
     return unread > 99 ? "99+" : unread;
@@ -148,7 +148,7 @@ const ProfileImage = styled.object`
 const Middle = styled.div`
   min-width: 300px;
   margin-left: 14px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     min-width: unset;
   }
 `;
@@ -186,7 +186,7 @@ const Msg = styled.p`
   text-overflow: ellipsis;
   width: 215px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: initial;
   }
 `;

@@ -77,7 +77,7 @@ const MenuWrapper = styled.div<{
   background: ${theme.colors.white};
   border-radius: 10px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) =>
       props.$left !== undefined &&
       css`
@@ -96,7 +96,7 @@ const MenuItem = styled.div`
   &:last-child {
     border-bottom: none;
   }
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     text-align: left;
   }
 `;

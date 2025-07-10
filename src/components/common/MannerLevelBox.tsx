@@ -4,7 +4,7 @@ import styled, { css } from "styled-components";
 
 import { getMemberMannerKeyword } from "@/api";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants";
-import { useMediaQueries } from "@/hooks";
+import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 
 import type { MannerKeyword } from "@/types";
@@ -30,7 +30,7 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
     onClose,
   } = props;
 
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
 
   const [positiveKeywords, setPositiveKeywords] = useState<MannerKeyword[]>([]);
   const [negativeKeywords, setNegativeKeywords] = useState<MannerKeyword[]>([]);
@@ -173,7 +173,7 @@ const Wrapper = styled.div<{
       }
     `}
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 20px;
     ${({ $tail, $tailPosition, $top, $right }) =>
       $tail && $tailPosition === "top"
@@ -201,7 +201,7 @@ const Title = styled.div`
   ${(props) => props.theme.fonts.bold20};
   color: ${theme.colors.white};
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.bold14};
   }
 `;
@@ -224,7 +224,7 @@ const SubTitle = styled.p`
   color: ${theme.colors.white};
   margin-bottom: 16px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.medium11};
     margin-bottom: 6px;
   }
@@ -239,7 +239,7 @@ const MannerListBox = styled.div`
   &:last-child {
     margin-bottom: unset;
   }
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 126px;
     margin-bottom: 6px;
   }
@@ -260,7 +260,7 @@ const Value = styled.p`
     color: ${theme.colors.red400};
   }
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.bold12};
   }
 `;
@@ -279,7 +279,7 @@ const Type = styled.p`
     color: ${theme.colors.red400};
   }
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.bold12};
   }
 `;

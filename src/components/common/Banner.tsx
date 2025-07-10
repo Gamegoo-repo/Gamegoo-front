@@ -1,10 +1,10 @@
 import styled from "styled-components";
 
-import { useMediaQueries } from "@/hooks";
+import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 
 const Banner = () => {
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
 
   return (
     <BannerWrapper>
@@ -31,7 +31,7 @@ const BannerWrapper = styled.div`
   padding: 40px;
   position: relative;
   margin-bottom: 32px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     height: unset;
     padding: 20px;
     border-radius: 8px;
@@ -45,7 +45,7 @@ const TextContainer = styled.div`
 const HighlightText = styled.span`
   color: ${theme.colors.violet600};
   ${theme.fonts.bold16}
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${theme.fonts.bold13}
   }
 `;
@@ -54,7 +54,7 @@ const Description = styled.p`
   margin-top: 4px;
   ${theme.fonts.regular20}
   color: ${theme.colors.gray800};
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${theme.fonts.regular14}
   }
 `;

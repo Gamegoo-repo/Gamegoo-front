@@ -31,7 +31,7 @@ const Wrapper = styled.div<{ $gameType: GameMode }>`
 `;
 
 const Memo = styled.div`
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 100%;
     height: 52px;
     padding: 11px 20px;
@@ -45,7 +45,7 @@ const Memo = styled.div`
 `;
 
 const MemoData = styled.p`
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     display: -webkit-box;
     word-wrap: break-word;
     -webkit-line-clamp: 2;

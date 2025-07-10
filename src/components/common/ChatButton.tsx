@@ -4,7 +4,7 @@ import Image from "next/image";
 import styled from "styled-components";
 
 import { STORAGE_KEY } from "@/constants/storage";
-import { useMediaQueries } from "@/hooks";
+import { useMediaQueryContext } from "@/hooks";
 import { toggleChat } from "@/redux/slices/chatSlice";
 import { theme } from "@/styles/theme";
 
@@ -14,7 +14,7 @@ import Alert from "./Alert";
 import type { RootState } from "@/redux/store";
 
 const ChatButton = () => {
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
   const [showAlert, setShowAlert] = useState(false);
   const [unreadChatUuids, setUnreadChatUuids] = useState<string[]>([]);
   const [chatCount, setChatCount] = useState<number>(0);

@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
-import { useMediaQueries } from "@/hooks";
+import { useMediaQueryContext } from "@/hooks";
+import { theme } from "@/styles/theme";
 import { getProfileBgColor, setCustomProfileImg } from "@/utils";
 
 interface ProfileImageProps {
@@ -9,7 +10,7 @@ interface ProfileImageProps {
 
 const ProfileImage = (props: ProfileImageProps) => {
   const { image } = props;
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
 
   return (
     <Wrapper $bgColor={getProfileBgColor(image)}>
@@ -32,7 +33,7 @@ const Wrapper = styled.div<{ $bgColor: string }>`
   border-radius: 50%;
   margin-right: 12px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 48px;
     height: 48px;
     margin-right: 0px;

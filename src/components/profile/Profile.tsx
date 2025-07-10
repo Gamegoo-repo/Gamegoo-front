@@ -33,7 +33,7 @@ import {
   UpdateProfileImage,
 } from "@/components";
 import { POSITIONS, REPORT_REASON } from "@/constants";
-import useMediaQueries from "@/hooks/useMediaQueries";
+import { useMediaQueryContext } from "@/hooks";
 import { setMatchInfo, updateMike } from "@/redux/slices/matchInfo";
 import { setUserProfileImg } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
@@ -71,8 +71,7 @@ const Profile: React.FC<Profile> = ({
   backgroundColor,
   isDefault = false,
 }) => {
-  const isMobileButton = useMediaQueries({ breakpoint: 950 });
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile, isTablet } = useMediaQueryContext();
   const dispatch = useDispatch();
   const { id } = useParams();
   const memberId = Number(id);
@@ -715,7 +714,7 @@ const Profile: React.FC<Profile> = ({
               handleMike={handleMike}
             />
           )}
-          {!isDefault && isMobileButton && !isMobile && (
+          {!isDefault && isTablet && !isMobile && (
             <Admit>{renderFriendsButton()}</Admit>
           )}
           {(profileType === "normal" || profileType === "wind") && (
@@ -743,9 +742,7 @@ const Profile: React.FC<Profile> = ({
 
       {profileType === "other" && (
         <More>
-          {!isDefault && !isMobileButton && (
-            <Admit>{renderFriendsButton()}</Admit>
-          )}
+          {!isDefault && !isTablet && <Admit>{renderFriendsButton()}</Admit>}
           {/* 더보기 버튼 */}
           {memberId !== myId && (
             <MoreDiv ref={moreBoxRef}>
@@ -874,14 +871,14 @@ const Container = styled.div<{ $backgroundColor?: string }>`
   &.other {
     padding: 42px 41px;
 
-    @media (max-width: 700px) {
+    @media (max-width: ${theme.breakpoints.mobile}) {
       min-width: 300px;
       padding: 20px;
       border-radius: 8px;
     }
   }
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 20px;
     border-radius: 8px;
 
@@ -897,7 +894,7 @@ const Row = styled.div<{ $profileType: string }>`
   justify-content: flex-start;
   gap: 62px;
 
-  @media (max-width: 900px) {
+  @media (max-width: ${theme.breakpoints.tablet}) {
     flex-direction: column;
     align-items: flex-start;
     gap: 24px;
@@ -928,7 +925,7 @@ const UnderRow = styled.div`
 const ImageContainer = styled.div`
   position: relative;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     display: flex;
   }
 `;
@@ -940,7 +937,7 @@ const StyledBox = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 36px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     gap: 16px;
   }
 `;
@@ -959,7 +956,7 @@ const TopContainer = styled.div<{ $isMatching: boolean }>`
       margin-top: 21px;
     `}
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     margin-top: 0;
     margin-left: 8px;
     gap: 16px;
@@ -974,7 +971,7 @@ const Top = styled.div`
   color: ${theme.colors.gray800};
   white-space: nowrap;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     flex-direction: column;
     align-items: flex-start;
     ${(props) => props.theme.fonts.bold16};
@@ -991,7 +988,7 @@ const Span = styled.span`
   margin-right: 5px;
   color: ${theme.colors.gray500};
   font-size: ${theme.fonts.bold20};
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.semiBold12};
   }
 `;
@@ -1060,7 +1057,7 @@ const Positions = styled.div`
   align-items: center;
   width: 412px;
   gap: 12px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 100%;
   }
 `;
@@ -1075,7 +1072,7 @@ const PosiWrap = styled.div`
   border-radius: 6px;
   padding: 16px 32px 12px 32px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     height: 69px;
     padding: 12px 20px 8px 20px;
   }
@@ -1090,7 +1087,7 @@ const Posi = styled.div<{ $isWantP: boolean }>`
   color: ${theme.colors.gray800};
   white-space: nowrap;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     font-size: ${theme.fonts.medium11};
     gap: 9px;
     ${({ $isWantP }) =>
@@ -1126,7 +1123,7 @@ const Plus = styled.div`
   border-radius: 999px;
   background: ${theme.colors.violet100};
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 32px;
     height: 24px;
   }
@@ -1140,7 +1137,7 @@ const Mike = styled.div`
   font-size: ${theme.fonts.semiBold14};
   color: ${theme.colors.gray600};
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     font-size: ${theme.fonts.medium11};
   }
 `;

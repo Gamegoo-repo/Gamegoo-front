@@ -13,6 +13,7 @@ import styled, { ThemeProvider } from "styled-components";
 import { Footer, Header, SocketConnection } from "@/components";
 import ko from "@/constants/ko.json";
 import { STORAGE_KEY } from "@/constants/storage";
+import { MediaQueryProvider } from "@/contexts/MediaQueryContext";
 import { notify } from "@/hooks";
 import StyledComponentsRegistry from "@/libs/registry";
 import { store as createStore } from "@/redux/store";
@@ -131,29 +132,31 @@ export default function RootLayout({
             />
           </Helmet>
           <StyledComponentsRegistry>
-            <div id="modal-root"></div>
-            <GlobalStyles />
-            <ThemeProvider theme={theme}>
-              <Toaster />
-              {persistor && (
-                <Provider store={storeRef.current}>
-                  <PersistGate loading={null} persistor={persistor}>
-                    <SocketConnection
-                      key={isLoggedIn ? "loggedIn" : "loggedOut"}
-                    />
-                    <Container>
-                      <Main>
-                        {isHeaderFooterShow && <Header />}
-                        {children}
-                      </Main>
-                      {isHeaderFooterShow && (
-                        <Footer isShowChat={isHeaderFooterShow} />
-                      )}
-                    </Container>
-                  </PersistGate>
-                </Provider>
-              )}
-            </ThemeProvider>
+            <MediaQueryProvider>
+              <div id="modal-root"></div>
+              <GlobalStyles />
+              <ThemeProvider theme={theme}>
+                <Toaster />
+                {persistor && (
+                  <Provider store={storeRef.current}>
+                    <PersistGate loading={null} persistor={persistor}>
+                      <SocketConnection
+                        key={isLoggedIn ? "loggedIn" : "loggedOut"}
+                      />
+                      <Container>
+                        <Main>
+                          {isHeaderFooterShow && <Header />}
+                          {children}
+                        </Main>
+                        {isHeaderFooterShow && (
+                          <Footer isShowChat={isHeaderFooterShow} />
+                        )}
+                      </Container>
+                    </PersistGate>
+                  </Provider>
+                )}
+              </ThemeProvider>
+            </MediaQueryProvider>
           </StyledComponentsRegistry>
         </HelmetProvider>
       </body>

@@ -35,7 +35,7 @@ const Div = styled.div`
   display: grid;
   grid-gap: 11px;
   grid-template-columns: repeat(3, minmax(100px, auto));
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     display: flex;
     flex-wrap: wrap;
   }
@@ -50,7 +50,7 @@ const Content = styled.p`
   white-space: nowrap;
   text-align: center;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 4px 12px;
     ${(props) => props.theme.fonts.bold12};
   }

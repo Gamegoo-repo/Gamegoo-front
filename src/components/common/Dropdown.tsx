@@ -2,7 +2,7 @@ import { forwardRef, useState } from "react";
 import Image from "next/image";
 import styled from "styled-components";
 
-import { useMediaQueries } from "@/hooks";
+import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 
 import type { Dispatch } from "react";
@@ -39,7 +39,7 @@ const Dropdown = forwardRef(function Dropdown(
     defaultValue,
   } = props;
 
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
   const initialItem = list.find((item) => item.id === defaultValue) || list[0];
   const [selectedValue, setSelectedValue] = useState(initialItem.value);
 
@@ -109,7 +109,7 @@ const DropdownHeader = styled.div<{
   cursor: pointer;
 
   width: 100%;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${theme.fonts.regular13}
   }
 `;
@@ -176,7 +176,7 @@ const ListItem = styled.li<{ $type: string }>`
       background: ${theme.colors.violet100};
     }
   }
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${theme.fonts.regular13}
   }
 `;

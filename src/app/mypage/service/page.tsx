@@ -2,11 +2,11 @@
 
 import styled from "styled-components";
 
-import { useMediaQueries } from "@/hooks";
+import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 
 const MyServicePage = () => {
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
 
   return (
     <Wrapper>
@@ -67,7 +67,7 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 140px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 30px 20px;
   }
 `;
@@ -75,7 +75,7 @@ const Wrapper = styled.div`
 const MyServiceContent = styled.div`
   max-width: 1440px;
   width: 100%;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 0;
   }
 `;
@@ -86,7 +86,7 @@ const Service = styled.header`
   align-items: flex-start;
   width: 100%;
   margin-bottom: 76px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.semiBold18};
     margin-bottom: 20px;
   }
@@ -101,7 +101,7 @@ const Top = styled.div`
   padding-bottom: 13px;
   /* margin-bottom: 20px; */
   border-bottom: 1px solid ${theme.colors.gray300};
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.semiBold18};
   }
 `;
@@ -115,7 +115,7 @@ const Content = styled.div`
   color: ${theme.colors.gray800};
   ${theme.fonts.regular18};
   text-align: center;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     text-align: start;
     ${(props) => props.theme.fonts.regular14};
     align-items: flex-start;
@@ -125,7 +125,7 @@ const Content = styled.div`
 const BoxWrap = styled.div`
   display: flex;
   gap: 20px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 100%;
     flex-direction: column;
   }
@@ -145,7 +145,7 @@ const Box = styled.button<{ $bgColor: string }>`
   ${theme.fonts.bold25};
   border-radius: 12px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 100%;
     height: 200px;
     padding: 32px;
@@ -164,7 +164,7 @@ const GmailLogoWrapper = styled.div`
   background: ${theme.colors.white};
   width: 80px;
   height: 80px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 51px;
     height: 51px;
   }
@@ -186,7 +186,7 @@ const StyledLink = styled.a<{ $smallText?: boolean }>`
   ${({ $smallText }) => $smallText && theme.fonts.regular18};
 
   text-decoration: none;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${({ $smallText }) => $smallText && theme.fonts.regular16};
   }
 `;

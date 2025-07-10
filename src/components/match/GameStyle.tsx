@@ -5,7 +5,6 @@ import styled, { css } from "styled-components";
 
 import { putGameStyle, putMike } from "@/api";
 import { GAME_STYLE } from "@/constants";
-import { useMediaQueries } from "@/hooks";
 import { updateGameStyles } from "@/redux/slices/matchInfo";
 import { setUserMike } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
@@ -42,7 +41,6 @@ const GameStyle = (props: GameStyleProps) => {
     label = true,
   } = props;
 
-  const isMobile = useMediaQueries({ breakpoint: 700 });
   const dispatch = useDispatch();
   const [styledPopup, setStyledPopup] = useState(false);
   const [selectedStyles, setSelectedStyles] = useState<number[]>(
@@ -209,7 +207,7 @@ const LeftLabel = styled.div<{ $profileType: profileType }>`
       gap: 6px;
       ${theme.fonts.medium14};
     `}
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${theme.fonts.medium11};
   }
 `;
@@ -228,7 +226,7 @@ const GameBox = styled.div<{ $profileType: profileType }>`
       gap: 6px;
     `}
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     gap: 4px;
   }
 `;
@@ -237,7 +235,7 @@ const NoGameStyle = styled.div`
   color: ${theme.colors.gray500};
   ${theme.fonts.medium14};
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${theme.fonts.medium11};
   }
 `;
@@ -254,7 +252,7 @@ const Div = styled.div<{ $profileType: profileType }>`
       height: fit-content;
     `}
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 38px;
     height: 29px;
 
@@ -295,7 +293,7 @@ const AddGameStyle = styled.button<{ $profileType: profileType }>`
       font-size: 12px;
     `}
 
-    @media (max-width: 700px) {
+    @media (max-width: ${theme.breakpoints.mobile}) {
     width: 38px;
     height: 29px;
   }

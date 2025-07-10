@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import styled, { css } from "styled-components";
 
-import { useMediaQueries } from "@/hooks";
+import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 
 interface TooltipProps {
@@ -23,7 +23,7 @@ const Tooltip = (props: TooltipProps) => {
     size = "small",
     width,
   } = props;
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
   const [isHovered, setIsHovered] = useState(false);
 
   const handleClick = () => {

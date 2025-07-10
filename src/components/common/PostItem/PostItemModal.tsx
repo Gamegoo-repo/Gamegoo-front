@@ -100,7 +100,7 @@ const Msg = styled.div`
 const MsgConfirm = styled(Msg)`
   ${(props) => props.theme.fonts.regular25};
   margin: 80px 0;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.medium14};
     margin: 32px 0;
   }
