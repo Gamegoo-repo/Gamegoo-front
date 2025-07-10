@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { getMemberPost, pullUpPost } from "@/api";
 import { ConfirmModal, MoreBox } from "@/components/common";
 import Report from "@/components/readBoard/MoreBoxButton";
+import ko from "@/constants/ko.json";
 import { notify } from "@/hooks";
 import { setRefresh } from "@/redux/slices/boardSlice";
 import {
@@ -80,7 +81,7 @@ const Post: React.FC<PostProps> = ({
     await pullUpPost(boardId);
     await dispatch(setRefresh());
     await notify({
-      text: "끌어올리기가 완료되었습니다",
+      text: ko["board.pullup.success"],
       icon: "👌🏼",
       type: "success",
     });

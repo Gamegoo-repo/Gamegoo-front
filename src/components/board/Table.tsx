@@ -24,6 +24,7 @@ import {
   ReadBoard,
   ReportModal,
 } from "@/components";
+import ko from "@/constants/ko.json";
 import { notify } from "@/hooks/notify";
 import { setRefresh } from "@/redux/slices/boardSlice";
 import {
@@ -268,7 +269,7 @@ const Table = (props: TableProps) => {
     await dispatch(setRefresh());
 
     await notify({
-      text: "끌어올리기가 완료되었습니다",
+      text: ko["board.pullup.success"],
       icon: "👌🏼",
       type: "success",
     });

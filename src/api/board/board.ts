@@ -1,4 +1,4 @@
-import { BOARD } from "@/constants/messages";
+import ko from "@/constants/ko.json";
 import { notify } from "@/hooks/notify";
 
 import Axios from "../api";
@@ -45,7 +45,7 @@ export const postBoard = async (params: PostReq): Promise<PostsResponse> => {
     console.error("글쓰기 실패:", error);
     if (error.response.data.code === "BOARD_412") {
       notify({
-        text: BOARD.MESSAGE.COOLTIME,
+        text: ko["board.cooltime"],
         icon: "🚫",
         type: "error",
       });
