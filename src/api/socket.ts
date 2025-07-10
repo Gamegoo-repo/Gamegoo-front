@@ -2,12 +2,13 @@ import axios from "axios";
 import { SocketAxios } from ".";
 import { getAccessToken } from "@/utils/storage";
 import { connectSocket } from "@/socket";
+import { STORAGE_KEY } from "@/constants/storage";
 
 /* 소켓 로그인 */
 export const socketLogin = async () => {
   try {
     const jwtToken = getAccessToken();
-    const socketId = sessionStorage.getItem("gamegooSocketId");
+    const socketId = sessionStorage.getItem(STORAGE_KEY.gamegooSocketId);
 
     if (!jwtToken || !socketId) return;
 
@@ -39,9 +40,9 @@ export const socketLogin = async () => {
 /* 소켓 로그아웃 */
 export const socketLogout = async () => {
   try {
-    const jwtToken = sessionStorage.getItem("accessToken");
-    const socketId = sessionStorage.getItem("gamegooSocketId");
-    const isLogout = sessionStorage.getItem("logout");
+    const jwtToken = sessionStorage.getItem(STORAGE_KEY.accessToken);
+    const socketId = sessionStorage.getItem(STORAGE_KEY.gamegooSocketId);
+    const isLogout = sessionStorage.getItem(STORAGE_KEY.logout);
 
     if (!socketId) return;
 

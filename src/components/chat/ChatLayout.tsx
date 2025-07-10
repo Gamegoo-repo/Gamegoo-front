@@ -49,6 +49,7 @@ import {
 import { blockMember } from "@/api/block/block";
 import { reportMember } from "@/api/report/report";
 import { getAccessToken } from "@/utils/storage";
+import { STORAGE_KEY } from "@/constants/storage";
 
 interface System {
   flag: number;
@@ -217,15 +218,19 @@ const ChatLayout = (props: ChatLayoutProps) => {
     }
   };
 
-  useEffect(() => {
-    if (isChatUuid) {
-      handleChatEnter();
-    }
-  }, [isChatUuid]);
+  useEffect(
+    () => {
+      if (isChatUuid) {
+        handleChatEnter();
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isChatUuid]
+  );
 
   /* 읽은 채팅 채팅 버튼에 실시간으로 반영 */
   const removeUnreadUuid = (uuidToRemove: string) => {
-    const unreadUuids = sessionStorage.getItem("unreadChatUuids");
+    const unreadUuids = sessionStorage.getItem(STORAGE_KEY.unreadChatUuids);
     if (!unreadUuids || unreadUuids === "undefined") {
       return;
     }
@@ -236,7 +241,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
       );
 
       sessionStorage.setItem(
-        "unreadChatUuids",
+        STORAGE_KEY.unreadChatUuids,
         JSON.stringify(unreadUuidsArray)
       );
 

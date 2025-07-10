@@ -25,6 +25,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { store as createStore } from "@/redux/store";
 import { persistStore } from "redux-persist";
 import { pretendard, timeForSalad } from "@/styles/fonts";
+import { STORAGE_KEY } from "@/constants/storage";
 
 export default function RootLayout({
   children,
@@ -60,34 +61,38 @@ export default function RootLayout({
   useEffect(() => {
     if (!socket) {
       connectSocket();
-      sessionStorage.removeItem("logout");
+      sessionStorage.removeItem(STORAGE_KEY.logout);
     }
   }, []);
 
   const isCompleted = getIsCompleted();
 
-  useEffect(() => {
-    if (isCompleted === "true") {
-    } else if (
-      !pathname.includes("/matching/complete") &&
-      previousPathname.current !== pathname &&
-      previousPathname.current.includes("/matching")
-    ) {
-      sendMatchingQuitEvent();
-      notify({
-        text: "화면 이탈로 매칭이 종료되었습니다.",
-        icon: "🚫",
-        type: "error",
-      });
-    }
+  useEffect(
+    () => {
+      if (isCompleted === "true") {
+      } else if (
+        !pathname.includes("/matching/complete") &&
+        previousPathname.current !== pathname &&
+        previousPathname.current.includes("/matching")
+      ) {
+        sendMatchingQuitEvent();
+        notify({
+          text: "화면 이탈로 매칭이 종료되었습니다.",
+          icon: "🚫",
+          type: "error",
+        });
+      }
 
-    if (pathname.includes("/") || pathname.includes("/match")) {
-      setIsCompleted("false");
-    }
+      if (pathname.includes("/") || pathname.includes("/match")) {
+        setIsCompleted("false");
+      }
 
-    // 이전 경로 업데이트
-    previousPathname.current = pathname;
-  }, [pathname]);
+      // 이전 경로 업데이트
+      previousPathname.current = pathname;
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [pathname]
+  );
 
   /* 로그인 상태 변경 시 리렌더링 트리거 */
   /* 로그아웃 후 재로그인 시 SocketConnection 컴포넌트가 리렌더링되지 않아서 만듦 */

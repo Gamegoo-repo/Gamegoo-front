@@ -5,6 +5,7 @@ import { clearTokens, getAccessToken, getRefreshToken } from "@/utils/storage";
 import { notify } from "@/hooks/notify";
 import { connectSocket } from "@/socket";
 import { reissueToken } from "./reissue/reissue";
+import { STORAGE_KEY } from "@/constants/storage";
 
 /* AuthAxios 인스턴스 생성 */
 export const AuthAxios: AxiosInstance = axios.create({
@@ -50,12 +51,18 @@ AuthAxios.interceptors.response.use(
         const originRequest = config; // 이전 요청 저장
 
         // 로컬 또는 세션에 재발급된 토큰 저장
-        if (localStorage.getItem("accessToken")) {
-          localStorage.setItem("accessToken", newAccessToken);
-          localStorage.setItem("refreshToken", response.data.refreshToken);
+        if (localStorage.getItem(STORAGE_KEY.accessToken)) {
+          localStorage.setItem(STORAGE_KEY.accessToken, newAccessToken);
+          localStorage.setItem(
+            STORAGE_KEY.refreshToken,
+            response.data.refreshToken
+          );
         } else {
-          sessionStorage.setItem("accessToken", newAccessToken);
-          sessionStorage.setItem("refreshToken", response.data.refreshToken);
+          sessionStorage.setItem(STORAGE_KEY.accessToken, newAccessToken);
+          sessionStorage.setItem(
+            STORAGE_KEY.refreshToken,
+            response.data.refreshToken
+          );
         }
         connectSocket();
         originRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;

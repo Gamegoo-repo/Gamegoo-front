@@ -30,6 +30,7 @@ import { closeChat } from "@/redux/slices/chatSlice";
 import { postLogout } from "@/api/login/logout";
 import { getUnreadNotificationCount } from "@/api/notification/notification";
 import useMediaQueries from "@/hooks/useMediaQueries";
+import { STORAGE_KEY } from "@/constants/storage";
 
 interface HeaderProps {
   selected: boolean;
@@ -113,13 +114,17 @@ const Header = () => {
     }
   };
 
-  useEffect(() => {
-    // 첫 렌더에서만 API 호출
-    if (isFirstRender.current && storedName) {
-      fetchNotiCount();
-      isFirstRender.current = false;
-    }
-  }, [storedName]);
+  useEffect(
+    () => {
+      // 첫 렌더에서만 API 호출
+      if (isFirstRender.current && storedName) {
+        fetchNotiCount();
+        isFirstRender.current = false;
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [storedName]
+  );
 
   useEffect(() => {}, [notiCount]);
 
@@ -299,14 +304,14 @@ const Header = () => {
                     if (data.id !== 6) {
                       router.push(`${data.url}`);
                     } else {
-                      sessionStorage.setItem("logout", "true");
+                      sessionStorage.setItem(STORAGE_KEY.logout, "true");
                       try {
                         await postLogout();
                         await clearTokens();
                         await socketLogout();
-                        localStorage.removeItem("gamegooSocketId");
+                        localStorage.removeItem(STORAGE_KEY.gamegooSocketId);
                         dispatch(clearUserProfile());
-                        sessionStorage.removeItem("unreadChatUuids");
+                        sessionStorage.removeItem(STORAGE_KEY.unreadChatUuids);
                         dispatch(closeChat());
                         router.push("/riot");
                       } catch {

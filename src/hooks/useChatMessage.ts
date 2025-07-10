@@ -5,6 +5,7 @@ import { connectSocket, socket } from "@/socket";
 import { setUnreadUuid } from "@/redux/slices/chatSlice";
 import { markChatAsRead } from "@/api/chat/chat";
 import { SystemMessage, ChatMessageDto } from "@/interface/chat";
+import { STORAGE_KEY } from "@/constants/storage";
 
 const useChatMessage = () => {
   const dispatch = useDispatch();
@@ -51,7 +52,7 @@ const useChatMessage = () => {
         dispatch(setUnreadUuid(updatedUnreadUuids));
         // 새로고침시 채팅방 수 가져오기 위함
         sessionStorage.setItem(
-          "unreadChatUuids",
+          STORAGE_KEY.unreadChatUuids,
           JSON.stringify(updatedUnreadUuids)
         );
       }
@@ -95,7 +96,7 @@ const useChatMessage = () => {
         dispatch(setUnreadUuid(updatedUnreadUuids));
         // 새로고침시 채팅방 수 가져오기 위함
         sessionStorage.setItem(
-          "unreadChatUuids",
+          STORAGE_KEY.unreadChatUuids,
           JSON.stringify(updatedUnreadUuids)
         );
       }
