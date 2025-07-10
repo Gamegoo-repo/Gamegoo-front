@@ -10,17 +10,25 @@ interface MoreBoxProps {
   left?: number;
   right?: number;
   onClose?: (e: MouseEvent) => void;
+  moreAreaRef?: React.RefObject<HTMLDivElement>;
 }
 
-const MoreBox = ({ items, top, left, right, onClose }: MoreBoxProps) => {
+const MoreBox = ({
+  items,
+  top,
+  left,
+  right,
+  onClose,
+  moreAreaRef,
+}: MoreBoxProps) => {
   const moreBoxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
         onClose &&
-        moreBoxRef.current &&
-        !moreBoxRef.current.contains(event.target as Node)
+        moreAreaRef?.current &&
+        !moreAreaRef.current.contains(event.target as Node)
       ) {
         onClose(event);
       }
@@ -30,7 +38,7 @@ const MoreBox = ({ items, top, left, right, onClose }: MoreBoxProps) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [onClose]);
+  }, [onClose, moreAreaRef]);
 
   return (
     <MenuWrapper ref={moreBoxRef} $top={top} $left={left} $right={right}>
