@@ -7,7 +7,6 @@ import styled from "styled-components";
 
 import { LoadingSpinner } from "@/components";
 import ko from "@/constants/ko.json";
-import { LOGIN } from "@/constants";
 import { STORAGE_KEY } from "@/constants/storage";
 import { notify } from "@/hooks";
 import {
