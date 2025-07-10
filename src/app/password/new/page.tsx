@@ -1,16 +1,16 @@
 "use client";
 
-import { resetPassword } from "@/api/password/password";
-import Button from "@/components/common/Button";
-import Input from "@/components/common/Input";
-import { RootState } from "@/redux/store";
-import { getVerifyCode, setVerifyCode } from "@/utils/storage";
-import { verify } from "crypto";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import styled from "styled-components";
+
+import { resetPassword } from "@/api";
+import { Button, Input } from "@/components";
+import { getVerifyCode } from "@/utils";
+
+import type { RootState } from "@/redux/store";
 
 interface StyledValid {
   isLengthValid?: boolean;

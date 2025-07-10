@@ -1,14 +1,15 @@
 "use client";
 
-import Button from "@/components/common/Button";
-import Input from "@/components/common/Input";
-import { updatePassword } from "@/redux/slices/signInSlice";
-import { RootState } from "@/redux/store";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import styled from "styled-components";
+
+import { Button, Input } from "@/components";
+import { updatePassword } from "@/redux/slices/signInSlice";
+
+import type { RootState } from "@/redux/store";
 
 interface StyledValid {
   isLengthValid?: boolean;

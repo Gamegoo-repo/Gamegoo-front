@@ -1,7 +1,8 @@
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import Image from "next/image";
 import { createPortal } from "react-dom";
+import Image from "next/image";
+import styled from "styled-components";
+
+import { theme } from "@/styles/theme";
 
 interface BoardModalProps {
   type: "posting" | "reading";

@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+
 import { setPosition } from "@/redux/slices/chatPositionSlice";
 
 type Position = {
@@ -52,19 +53,23 @@ const useDrag = (
   };
 
   // 마우스 이동 이벤트 등록 및 해제
-  useEffect(() => {
-    if (isDragging) {
-      window.addEventListener("mousemove", handleDrag);
-      window.addEventListener("mouseup", handleDragEnd);
-    } else {
-      window.removeEventListener("mousemove", handleDrag);
-      window.removeEventListener("mouseup", handleDragEnd);
-    }
-    return () => {
-      window.removeEventListener("mousemove", handleDrag);
-      window.removeEventListener("mouseup", handleDragEnd);
-    };
-  }, [isDragging]);
+  useEffect(
+    () => {
+      if (isDragging) {
+        window.addEventListener("mousemove", handleDrag);
+        window.addEventListener("mouseup", handleDragEnd);
+      } else {
+        window.removeEventListener("mousemove", handleDrag);
+        window.removeEventListener("mouseup", handleDragEnd);
+      }
+      return () => {
+        window.removeEventListener("mousemove", handleDrag);
+        window.removeEventListener("mouseup", handleDragEnd);
+      };
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isDragging]
+  );
 
   return { handleDragStart };
 };

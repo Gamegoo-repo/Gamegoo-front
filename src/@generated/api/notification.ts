@@ -1,10 +1,11 @@
+import { Axios } from "@/api";
+
 import type {
   ApiResponse,
-  ReadNotificationResponse,
   NotificationCursorListResponse,
   NotificationPageListResponse,
+  ReadNotificationResponse,
 } from "../types";
-import Axios from "@/api";
 
 /* patchNotificationNotificationId - 업데이트 */
 export const patchNotificationNotificationId = async (

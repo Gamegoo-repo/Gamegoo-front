@@ -1,5 +1,6 @@
-import { GetBlockListResponse } from "@/types/api/block/get";
 import { AuthAxios } from "../auth";
+
+import type { GetBlockListResponse } from "@/types/api/block/get";
 
 /* 차단 목록 조회 */
 export const getBlockList = async (

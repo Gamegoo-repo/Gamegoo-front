@@ -1,12 +1,14 @@
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
 import Image from "next/image";
-import { getProfileBgColor } from "@/utils/profile";
-import { ChatroomList } from "@/interface/chat";
-import MoreBox from "../common/MoreBox";
-import { setChatRoomDateFormatter } from "@/utils/timeFormat";
-import { MoreBoxMenuItems } from "@/interface/moreBox";
+import styled from "styled-components";
+
 import useMediaQueries from "@/hooks/useMediaQueries";
+import { theme } from "@/styles/theme";
+import { getProfileBgColor } from "@/utils/profile";
+import { setChatRoomDateFormatter } from "@/utils/timeFormat";
+
+import MoreBox from "../common/MoreBox";
+
+import type { ChatroomList, MoreBoxMenuItems } from "@/types";
 
 interface ChatRoomItemProps {
   room: ChatroomList;

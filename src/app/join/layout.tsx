@@ -1,9 +1,10 @@
 "use client";
 
-import { theme } from "@/styles/theme";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import styled from "styled-components";
+
+import { theme } from "@/styles/theme";
 
 const Layout = (props: any) => {
   const router = useRouter();

@@ -1,4 +1,5 @@
 import fs from "fs-extra";
+
 import { SwaggerSchema } from "./types";
 
 export class SchemaProcessor {

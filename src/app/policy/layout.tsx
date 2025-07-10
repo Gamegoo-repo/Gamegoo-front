@@ -1,11 +1,11 @@
 "use client";
 
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import CategoryToggle from "@/components/common/CategoryToggle";
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
 import { Suspense } from "react";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import styled from "styled-components";
+
+import { CategoryToggle, LoadingSpinner } from "@/components";
+import { theme } from "@/styles/theme";
 
 const PolicyLayout = ({ children }: { children?: React.ReactNode }) => {
   const router = useRouter();

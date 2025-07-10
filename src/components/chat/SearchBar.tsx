@@ -1,9 +1,11 @@
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import Image from "next/image";
 import { useState } from "react";
-import { getSearchFriend } from "@/api/friend/get";
-import { FriendList } from "@/types/friend/friendList";
+import Image from "next/image";
+import styled from "styled-components";
+
+import { getSearchFriend } from "@/api";
+import { theme } from "@/styles/theme";
+
+import type { FriendList } from "@/types";
 
 interface SearchBarProps {
   onSearch: (friends: FriendList[] | null) => void;

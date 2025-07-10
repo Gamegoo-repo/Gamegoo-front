@@ -1,40 +1,56 @@
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import Image from "next/image";
-import { setAbbrevTier, setPositionImg, setProfileImg } from "@/utils/custom";
-import ReadBoard from "../readBoard/ReadBoard";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import styled from "styled-components";
+
+import {
+  blockMember,
+  cancelFriendRequest,
+  deleteFriend,
+  deletePost,
+  getMemberPost,
+  pullUpPost,
+  sendFriendRequest,
+  unblockMember,
+} from "@/api";
+import {
+  Alert,
+  Champion,
+  ConfirmModal,
+  Layout,
+  MoreBox,
+  MoreBoxButton,
+  ReadBoard,
+  ReportModal,
+} from "@/components";
+import { notify } from "@/hooks/notify";
+import { setRefresh } from "@/redux/slices/boardSlice";
 import {
   setCloseModal,
   setCloseReadingModal,
+  setOpenModal,
   setOpenPostingModal,
   setOpenReadingModal,
-  setOpenModal,
 } from "@/redux/slices/modalSlice";
-
-import { useRouter } from "next/navigation";
-import Alert from "../common/Alert";
-import ConfirmModal from "../common/ConfirmModal";
-import Champion from "../common/Champion";
-import { BoardListDetail, MemberPost } from "@/interface/board";
+import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
+import { theme } from "@/styles/theme";
+import {
+  setAbbrevTier,
+  setCustomProfileImg,
+  setPositionImg,
+} from "@/utils/custom";
 import { getProfileBgColor } from "@/utils/profile";
 import { toLowerCaseString } from "@/utils/string";
-import Layout from "../chat/Layout";
-import MoreBox from "../common/MoreBox";
-import MoreBoxButton from "../readBoard/MoreBoxButton";
-import { MoreBoxMenuItems } from "@/interface/moreBox";
-import { deletePost, getMemberPost, pullUpPost } from "@/api/board/board";
-import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
-import { setRefresh } from "@/redux/slices/boardSlice";
-import { notify } from "@/hooks/notify";
-import { deleteFriend } from "@/api/friend/delete";
-import { cancelFriendRequest, sendFriendRequest } from "@/api/friend/request";
-import { blockMember, unblockMember } from "@/api/block/block";
 import { setDateFormatter } from "@/utils/timeFormat";
-import { AlertProps } from "@/interface/modal";
-import ReportModal from "@/components/readBoard/ReportModal";
+
+import type { RootState } from "@/redux/store";
+import type {
+  AlertProps,
+  BoardListDetail,
+  MemberPost,
+  MoreBoxMenuItems,
+} from "@/types";
 
 interface TableTitleProps {
   id: number;
@@ -409,7 +425,7 @@ const Table = (props: TableProps) => {
                       onClick={(e) => handleMoveProfilePage(e, data.memberId)}
                     >
                       <ProfileImg
-                        data={setProfileImg(data.profileImage)}
+                        data={setCustomProfileImg(data.profileImage)}
                         width={35}
                         height={35}
                       />

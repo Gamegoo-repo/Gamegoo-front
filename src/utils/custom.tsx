@@ -1,6 +1,6 @@
-import { GameMode } from "@/types/game/gameMode";
-import { Position } from "@/types/position/position";
-import { Mike } from "@/types/user/mike";
+import type { GameMode } from "@/types/game/gameMode";
+import type { Position } from "@/types/position/position";
+import type { Mike } from "@/types/user/mike";
 
 export function setQueueType(gameMode: GameMode) {
   switch (gameMode) {
@@ -17,7 +17,7 @@ export function setQueueType(gameMode: GameMode) {
   }
 }
 
-export function setProfileImg(profile: number) {
+export function setCustomProfileImg(profile: number) {
   switch (profile) {
     case 1:
       return "/assets/images/profile/profile1.svg";

@@ -1,8 +1,10 @@
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import { setQueueType } from "@/utils/custom";
-import { GameMode } from "@/types/game/gameMode";
 import Image from "next/image";
+import styled from "styled-components";
+
+import { theme } from "@/styles/theme";
+import { setQueueType } from "@/utils";
+
+import type { GameMode } from "@/types";
 
 interface QueueTypeProps {
   value: GameMode;

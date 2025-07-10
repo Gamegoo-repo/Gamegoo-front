@@ -1,6 +1,7 @@
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
 import { Dispatch } from "react";
+import styled from "styled-components";
+
+import { theme } from "@/styles/theme";
 
 interface TabsProps {
   tabs: string[];

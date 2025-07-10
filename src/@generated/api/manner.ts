@@ -1,14 +1,15 @@
+import { AuthAxios } from "@/api";
+
 import type {
   ApiResponse,
-  MannerUpdateRequest,
-  MannerUpdateResponse,
-  MannerRatingResponse,
   MannerInsertRequest,
   MannerInsertResponse,
-  MannerResponse,
   MannerKeywordListResponse,
+  MannerRatingResponse,
+  MannerResponse,
+  MannerUpdateRequest,
+  MannerUpdateResponse,
 } from "../types";
-import { AuthAxios } from "@/api/auth";
 
 /* putMannerMannerId - 수정 */
 export const putMannerMannerId = async (

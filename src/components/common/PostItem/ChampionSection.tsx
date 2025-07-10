@@ -1,8 +1,11 @@
 import styled from "styled-components";
+
 import { theme } from "@/styles/theme";
-import { FC } from "react";
-import { PostItemData } from "./PostItem";
+
 import Champion from "../Champion";
+
+import type { FC } from "react";
+import type { PostItemData } from "./PostItem";
 
 interface ChampionSectionProps {
   data: PostItemData;

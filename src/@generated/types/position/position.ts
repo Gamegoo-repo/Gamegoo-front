@@ -1,4 +1,4 @@
-import { MainPEnum, SubPEnum, WantPEnum } from "../common";
+import type { MainPEnum, SubPEnum, WantPEnum } from "../common";
 
 // Request types
 /* tslint:disable */

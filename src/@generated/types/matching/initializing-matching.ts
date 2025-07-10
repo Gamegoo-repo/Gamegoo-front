@@ -1,7 +1,7 @@
-import {
-  MikeEnum,
+import type {
   GameModeEnum,
   MainPEnum,
+  MikeEnum,
   SubPEnum,
   WantPEnum,
 } from "../common";

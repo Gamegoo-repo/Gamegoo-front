@@ -1,6 +1,7 @@
-import { theme } from "@/styles/theme";
 import styled from "styled-components";
-import useMediaQueries from "@/hooks/useMediaQueries";
+
+import { useMediaQueries } from "@/hooks";
+import { theme } from "@/styles/theme";
 
 const Banner = () => {
   const isMobile = useMediaQueries({ breakpoint: 700 });
