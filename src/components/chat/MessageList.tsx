@@ -1,6 +1,3 @@
-import styled, { keyframes } from "styled-components";
-import { theme } from "@/styles/theme";
-import Image from "next/image";
 import {
   useCallback,
   useEffect,
@@ -8,23 +5,32 @@ import {
   useRef,
   useState,
 } from "react";
-import { Chat, DesignedSystemMessage, ChatMessageDto } from "@/interface/chat";
 import { useDispatch, useSelector } from "react-redux";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import dayjs from "dayjs";
+import styled, { keyframes } from "styled-components";
+
+import { getChatList, markChatAsRead } from "@/api";
+import { useChatMessage } from "@/hooks";
+import { closeChat, closeChatRoom } from "@/redux/slices/chatSlice";
 import {
   setCloseMannerStatusModal,
   setOpenMannerStatusModal,
   setOpenReadingModal,
 } from "@/redux/slices/modalSlice";
-import { RootState } from "@/redux/store";
-import ReadBoard from "../readBoard/ReadBoard";
-import { getChatList, markChatAsRead } from "@/api/chat/chat";
-import useChatMessage from "@/hooks/useChatMessage";
-import dayjs from "dayjs";
-import { setChatDateFormatter, setChatTimeFormatter } from "@/utils/timeFormat";
-import { getProfileBgColor } from "@/utils/profile";
-import ConfirmModal from "../common/ConfirmModal";
-import { useRouter } from "next/navigation";
-import { closeChat, closeChatRoom } from "@/redux/slices/chatSlice";
+import { theme } from "@/styles/theme";
+import {
+  getProfileBgColor,
+  setChatDateFormatter,
+  setChatTimeFormatter,
+} from "@/utils";
+
+import { ConfirmModal } from "../common";
+import { ReadBoard } from "../readBoard";
+
+import type { RootState } from "@/redux/store";
+import type { Chat, ChatMessageDto, DesignedSystemMessage } from "@/types";
 
 interface MessageListProps {
   chatEnterData: Chat;
@@ -82,73 +88,84 @@ const MessageList = (props: MessageListProps) => {
   const { newMessage, mannerSystemMessage } = useChatMessage();
 
   /* 매너 시스템 소켓 이벤트 리스닝 */
-  useEffect(() => {
-    if (chatEnterData.uuid !== currentChatUuid) return;
+  useEffect(
+    () => {
+      if (chatEnterData.uuid !== currentChatUuid) return;
 
-    if (mannerSystemMessage) {
-      const chatroomUuid = mannerSystemMessage?.chatroomUuid;
-      const newChatTimestamp = mannerSystemMessage.timestamp;
-      setMessageList((prevMessages) => {
-        const feedbackMessage: ChatMessageDto = {
-          senderId: 0,
-          senderName: null,
-          message: "",
-          createdAt: new Date().toISOString(),
-          systemType: 1,
-          timestamp: new Date().getTime(),
-          boardId: null,
-          senderProfileImg: null,
-        };
+      if (mannerSystemMessage) {
+        const chatroomUuid = mannerSystemMessage?.chatroomUuid;
+        const newChatTimestamp = mannerSystemMessage.timestamp;
+        setMessageList((prevMessages) => {
+          const feedbackMessage: ChatMessageDto = {
+            senderId: 0,
+            senderName: null,
+            message: "",
+            createdAt: new Date().toISOString(),
+            systemType: 1,
+            timestamp: new Date().getTime(),
+            boardId: null,
+            senderProfileImg: null,
+          };
 
-        return [...prevMessages, feedbackMessage];
-      });
+          return [...prevMessages, feedbackMessage];
+        });
 
-      /* 현재 보고 있는 채팅방 읽음 처리 */
-      if (currentChatUuid && chatroomUuid === currentChatUuid) {
-        markChatAsRead({ uuid: currentChatUuid, timestamp: newChatTimestamp });
+        /* 현재 보고 있는 채팅방 읽음 처리 */
+        if (currentChatUuid && chatroomUuid === currentChatUuid) {
+          markChatAsRead({
+            uuid: currentChatUuid,
+            timestamp: newChatTimestamp,
+          });
+        }
       }
-    }
-  }, [mannerSystemMessage]);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [mannerSystemMessage]
+  );
 
   /* 새로운 메시지 전에 시스템 메시지 보여주기 */
-  useEffect(() => {
-    if (chatEnterData.uuid !== currentChatUuid) return;
+  useEffect(
+    () => {
+      if (chatEnterData.uuid !== currentChatUuid) return;
 
-    if (chatEnterData.uuid === "guest") {
-      setMessageList((prevMessages) => {
-        if (systemMessage && !isSystemMessageShown) {
-          const systemMessageAsChatMessage: ChatMessageDto = {
-            ...systemMessage,
-            createdAt: new Date().toISOString(),
-            timestamp: new Date().getTime(),
-          };
-          // 시스템 메시지를 맨 앞에, 그 뒤에 이전 메시지들을 추가
-          return [systemMessageAsChatMessage, ...prevMessages];
+      if (chatEnterData.uuid === "guest") {
+        setMessageList((prevMessages) => {
+          if (systemMessage && !isSystemMessageShown) {
+            const systemMessageAsChatMessage: ChatMessageDto = {
+              ...systemMessage,
+              createdAt: new Date().toISOString(),
+              timestamp: new Date().getTime(),
+            };
+            // 시스템 메시지를 맨 앞에, 그 뒤에 이전 메시지들을 추가
+            return [systemMessageAsChatMessage, ...prevMessages];
+          }
+          return prevMessages;
+        });
+      } else if (newMessage) {
+        setMessageList((prevMessages) => {
+          let updatedMessages = [...prevMessages];
+
+          if (systemMessage && !isSystemMessageShown) {
+            // 기존 시스템 메시지와, 새로운 시스템 메시지 타입이 달라서, 타입 같게 변경
+            const systemMessageAsChatMessage: ChatMessageDto = {
+              ...systemMessage,
+              createdAt: new Date().toISOString(),
+              timestamp: new Date().getTime(),
+            };
+            updatedMessages.push(systemMessageAsChatMessage);
+          }
+
+          return updatedMessages;
+        });
+
+        if (!isSystemMessageShown) {
+          setIsSystemMessageShown(true);
         }
-        return prevMessages;
-      });
-    } else if (newMessage) {
-      setMessageList((prevMessages) => {
-        let updatedMessages = [...prevMessages];
-
-        if (systemMessage && !isSystemMessageShown) {
-          // 기존 시스템 메시지와, 새로운 시스템 메시지 타입이 달라서, 타입 같게 변경
-          const systemMessageAsChatMessage: ChatMessageDto = {
-            ...systemMessage,
-            createdAt: new Date().toISOString(),
-            timestamp: new Date().getTime(),
-          };
-          updatedMessages.push(systemMessageAsChatMessage);
-        }
-
-        return updatedMessages;
-      });
-
-      if (!isSystemMessageShown) {
-        setIsSystemMessageShown(true);
       }
-    }
-  }, [newMessage, systemMessage]);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [newMessage, systemMessage]
+  );
 
   /* 처음 채팅방 들어올 때 마지막 메시지로 스크롤 이동 */
   useEffect(() => {
@@ -159,14 +176,18 @@ const MessageList = (props: MessageListProps) => {
     }
   }, [chatRef, messageList, isInitialLoading]);
 
-  const handleScroll = useCallback(() => {
-    if (chatRef.current && !isInitialLoading) {
-      const { scrollTop } = chatRef.current;
-      if (scrollTop === 0 && hasMore && !isLoading) {
-        getMoreMessages();
+  const handleScroll = useCallback(
+    () => {
+      if (chatRef.current && !isInitialLoading) {
+        const { scrollTop } = chatRef.current;
+        if (scrollTop === 0 && hasMore && !isLoading) {
+          getMoreMessages();
+        }
       }
-    }
-  }, [chatRef, hasMore, isLoading, isInitialLoading]);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [chatRef, hasMore, isLoading, isInitialLoading]
+  );
 
   useEffect(() => {
     const chatElement = chatRef.current;

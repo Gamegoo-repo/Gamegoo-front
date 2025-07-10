@@ -12,10 +12,9 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-
 // May contain unused imports in some cases
 // @ts-ignore
-import type { FriendInfoResponse } from "./friend-info-response";
+import type { FriendInfoResponse } from "../friend/friend-info";
 
 /**
  *

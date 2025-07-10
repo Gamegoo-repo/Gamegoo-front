@@ -1,8 +1,10 @@
-import { GameStyleList } from "@/interface/profile";
-import { ChampionResponseDTO } from "@/types/api/champion/champion";
-import { Position } from "@/types/position/position";
-import { Mike } from "@/types/user/mike";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
+
+import type { PayloadAction } from "@reduxjs/toolkit";
+import type { ChampionResponseDTO } from "@/types/api/champion/champion";
+import type { GameStyleList } from "@/types/api/user/profile/profile";
+import type { Position } from "@/types/position/position";
+import type { Mike } from "@/types/user/mike";
 
 interface UserState {
   id?: number | undefined;

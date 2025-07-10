@@ -1,5 +1,6 @@
-import { FriendStatusResponse } from "@/types/api/friend/status";
 import { AuthAxios } from "../auth";
+
+import type { FriendStatusResponse } from "@/types/api/friend/status";
 
 /* 친구 삭제 */
 export const deleteFriend = async (

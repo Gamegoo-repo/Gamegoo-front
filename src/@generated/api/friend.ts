@@ -1,12 +1,13 @@
+import { AuthAxios } from "@/api";
+
 import type {
   ApiResponse,
+  DeleteFriendResponse,
+  FriendInfoResponse,
+  FriendListResponse,
   FriendRequestResponse,
   StarFriendResponse,
-  FriendListResponse,
-  FriendInfoResponse,
-  DeleteFriendResponse,
 } from "../types";
-import { AuthAxios } from "@/api/auth";
 
 /* postFriendRequestMemberId - 생성 */
 export const postFriendRequestMemberId = async (

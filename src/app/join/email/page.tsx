@@ -1,20 +1,21 @@
 "use client";
 
-import { sendJoinEmail, verifyEmailCode } from "@/api/email/email";
-import Button from "@/components/common/Button";
-import Input from "@/components/common/Input";
-import { emailRegEx } from "@/constants/regEx";
+import { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
+import styled from "styled-components";
+
+import { sendJoinEmail, verifyEmailCode } from "@/api";
+import { Button, Input } from "@/components";
+import { emailRegEx } from "@/constants";
 import {
   updateAuthStatus,
   updateEmail,
   updateEmailAuth,
 } from "@/redux/slices/signInSlice";
-import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components";
+
+import type { RootState } from "@/redux/store";
 
 const Email = () => {
   const router = useRouter();
@@ -41,15 +42,19 @@ const Email = () => {
     (state: RootState) => state.signIn.authStatus
   );
 
-  const handlePopState = useCallback(() => {
-    setAuthCode("");
-    setEmailValid(undefined);
-    setAuthCodeValid(undefined);
-    setIsSendClick(false);
-    setIsSend(false);
-    dispatch(updateEmailAuth(""));
-    dispatch(updateAuthStatus(false));
-  }, [dispatch, isSendClick, authStatusRedux]);
+  const handlePopState = useCallback(
+    () => {
+      setAuthCode("");
+      setEmailValid(undefined);
+      setAuthCodeValid(undefined);
+      setIsSendClick(false);
+      setIsSend(false);
+      dispatch(updateEmailAuth(""));
+      dispatch(updateAuthStatus(false));
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [dispatch, isSendClick, authStatusRedux]
+  );
 
   /* 뒤로가기 이벤트 감지 */
   useEffect(() => {

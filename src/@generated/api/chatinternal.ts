@@ -1,9 +1,10 @@
+import { AuthAxios } from "@/api";
+
 import type {
   ApiResponse,
   ChatCreateRequest,
   ChatCreateResponse,
 } from "../types";
-import { AuthAxios } from "@/api/auth";
 
 /* postInternalMemberIdChatChatroomUuid - 생성 */
 export const postInternalMemberIdChatChatroomUuid = async (

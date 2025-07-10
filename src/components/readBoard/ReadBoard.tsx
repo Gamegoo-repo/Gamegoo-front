@@ -1,62 +1,65 @@
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import CRModal from "../crBoard/CRModal";
-import Button from "../common/Button";
-import PositionBox from "../crBoard/PositionBox";
 import { useEffect, useRef, useState } from "react";
-import ProfileImage from "./ProfileImage";
-import MannerLevel from "../common/MannerLevel";
-import Mic from "../common/Mic";
-import MoreBoxButton from "./MoreBoxButton";
-import Champion from "../common/Champion";
-import QueueType from "./QueueType";
-import WinningRate from "./WinningRate";
-import MannerLevelBox from "../common/MannerLevelBox";
-import GameStyle from "./GameStyle";
-import { MoreBoxMenuItems } from "@/interface/moreBox";
-import MoreBox from "../common/MoreBox";
-import { MemberPost } from "@/interface/board";
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
+import styled from "styled-components";
+
 import {
+  blockMember,
+  cancelFriendRequest,
+  deleteFriend,
   deletePost,
   getMemberPost,
   getNonMemberPost,
   pullUpPost,
-} from "@/api/board/board";
-import LoadingSpinner from "../common/LoadingSpinner";
-import { reportMember } from "@/api/report/report";
-
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-import { AxiosError } from "axios";
+  sendFriendRequest,
+  unblockMember,
+} from "@/api";
 import {
-  setCloseModal,
-  setCloseReadingModal,
-  setOpenModal,
-  setOpenPostingModal,
-  setOpenReadingModal,
-} from "@/redux/slices/modalSlice";
-import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
-import Alert from "../common/Alert";
-import { AlertProps } from "@/interface/modal";
-import { useRouter } from "next/navigation";
+  Alert,
+  Button,
+  Champion,
+  ConfirmModal,
+  LoadingSpinner,
+  MannerLevel,
+  MannerLevelBox,
+  MoreBox,
+  RankTier,
+} from "@/components/common";
+import { CRModal, PositionBox, UserAccount } from "@/components/crBoard";
+import {
+  MoreBoxButton,
+  ProfileImage,
+  QueueType,
+  ReportModal,
+  WinningRate,
+} from "@/components/readBoard";
+import { notify, useMediaQueries } from "@/hooks";
+import { setRefresh } from "@/redux/slices/boardSlice";
 import {
   openChatRoom,
   setChatEnterType,
   setChatRoomUuid,
   setErrorMessage,
 } from "@/redux/slices/chatSlice";
-import { notify } from "@/hooks/notify";
-import ConfirmModal from "../common/ConfirmModal";
-import { cancelFriendRequest, sendFriendRequest } from "@/api/friend/request";
-import { deleteFriend } from "@/api/friend/delete";
-import { blockMember, unblockMember } from "@/api/block/block";
-import { GameMode } from "@/types/game/gameMode";
-import UserAccount from "../crBoard/UserAccount";
-import RankTier from "../common/RankTier";
-import { setRefresh } from "@/redux/slices/boardSlice";
-import { setPostingDateFormatter } from "@/utils/timeFormat";
-import ReportModal from "@/components/readBoard/ReportModal";
-import useMediaQueries from "@/hooks/useMediaQueries";
+import {
+  setCloseReadingModal,
+  setOpenModal,
+  setOpenPostingModal,
+} from "@/redux/slices/modalSlice";
+import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
+import { theme } from "@/styles/theme";
+import { setPostingDateFormatter } from "@/utils";
+
+import GameStyle from "./GameStyle";
+
+import type { AxiosError } from "axios";
+import type { RootState } from "@/redux/store";
+import type {
+  AlertProps,
+  GameMode,
+  MemberPost,
+  MoreBoxMenuItems,
+} from "@/types";
 
 interface ReadBoardProps {
   postId: number;
@@ -159,15 +162,23 @@ const ReadBoard = (props: ReadBoardProps) => {
     }
   };
 
-  useEffect(() => {
-    getPostData();
-  }, [isBlockedStatus, isFriendStatus, isUser, postId]);
+  useEffect(
+    () => {
+      getPostData();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isBlockedStatus, isFriendStatus, isUser, postId]
+  );
 
-  useEffect(() => {
-    return () => {
-      dispatch(setCloseReadingModal());
-    };
-  }, []);
+  useEffect(
+    () => {
+      return () => {
+        dispatch(setCloseReadingModal());
+      };
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   /* MannerLevelBox 외부 클릭 시 닫힘 */
   useEffect(() => {

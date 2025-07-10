@@ -1,6 +1,8 @@
-import { Position } from "@/types/position/position";
-import { Mike } from "@/types/user/mike";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
+
+import type { PayloadAction } from "@reduxjs/toolkit";
+import type { Position } from "@/types/position/position";
+import type { Mike } from "@/types/user/mike";
 
 export interface MatchInfoState {
   mike: Mike | null; // 마이크 사용 여부

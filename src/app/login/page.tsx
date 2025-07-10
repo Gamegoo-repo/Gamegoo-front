@@ -1,34 +1,31 @@
 "use client";
 
-import { getUnreadUuid } from "@/api/chat/chat";
-import { postLogin } from "@/api/login/login";
-import { socketLogin } from "@/api/socket";
-import Button from "@/components/common/Button";
-import Checkbox from "@/components/common/Checkbox";
-import Input from "@/components/common/Input";
-import { emailRegEx } from "@/constants/regEx";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import styled from "styled-components";
+
+import { getUnreadUuid, postLogin, socketLogin } from "@/api";
+import { Button, Checkbox, Input } from "@/components";
+import { emailRegEx } from "@/constants";
 import { setUnreadUuid } from "@/redux/slices/chatSlice";
 import { clearSignIn } from "@/redux/slices/signInSlice";
 import {
   clearUserProfile,
+  setUserId,
   setUserName,
   setUserProfileImg,
-  setUserId,
 } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
 import {
   clearTokens,
+  setId,
   setName,
   setProfileImg,
   setToken,
-  setId,
 } from "@/utils/storage";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import styled from "styled-components";
 
 const Login = () => {
   const router = useRouter();
@@ -42,11 +39,15 @@ const Login = () => {
   );
   const [autoLogin, setAutoLogin] = useState(false);
 
-  useEffect(() => {
-    dispatch(clearSignIn());
-    dispatch(clearUserProfile());
-    clearTokens();
-  }, []);
+  useEffect(
+    () => {
+      dispatch(clearSignIn());
+      dispatch(clearUserProfile());
+      clearTokens();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   const validateEmail = (email: string) => {
     setEmailValid(emailRegEx.test(email));

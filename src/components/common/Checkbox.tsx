@@ -1,6 +1,7 @@
-import { theme } from "@/styles/theme";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+
+import { theme } from "@/styles/theme";
 
 interface CheckboxProps {
   value: number | string;
@@ -32,10 +33,14 @@ const Checkbox = (props: CheckboxProps) => {
   } = props;
   const [checked, setChecked] = useState<boolean>(isChecked);
 
-  useEffect(() => {
-    if (typeof value === "number") return;
-    setChecked(isChecked);
-  }, [isChecked]);
+  useEffect(
+    () => {
+      if (typeof value === "number") return;
+      setChecked(isChecked);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isChecked]
+  );
 
   const handleChange = () => {
     const newValue = !checked;

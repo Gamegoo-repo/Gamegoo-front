@@ -1,10 +1,10 @@
-import { STEPS } from "@/constants/match";
 import { useEffect, useState } from "react";
-import styled from "styled-components";
 import Image from "next/image";
-import ChevronRightGray from "../../../public/assets/icons/chevron_right_gray.svg";
+import styled from "styled-components";
+
+import { STEPS } from "@/constants";
+import { useMediaQueries } from "@/hooks";
 import { theme } from "@/styles/theme";
-import useMediaQueries from "@/hooks/useMediaQueries";
 
 interface StepNavigationProps {
   title: string;

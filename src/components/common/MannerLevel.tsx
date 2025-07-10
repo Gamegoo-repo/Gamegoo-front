@@ -1,6 +1,7 @@
-import styled, { keyframes } from "styled-components";
-import { theme } from "@/styles/theme";
 import { useEffect, useState } from "react";
+import styled, { keyframes } from "styled-components";
+
+import { theme } from "@/styles/theme";
 
 type positionType = "top" | "right" | "board";
 interface MannerLevelProps {

@@ -1,11 +1,12 @@
 "use client";
 
-import Button from "@/components/common/Button";
-import { theme } from "@/styles/theme";
+import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React from "react";
 import styled from "styled-components";
+
+import { Button } from "@/components";
+import { theme } from "@/styles/theme";
 
 const NotFoundPage = () => {
   const router = useRouter();

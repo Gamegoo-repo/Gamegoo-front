@@ -1,19 +1,16 @@
 "use client";
 
-import styled from "styled-components";
-import GraphicBox from "@/components/match/GraphicBox";
-import {
-  MATCH_TYPE_PAGE_DATA,
-  MO_MATCH_TYPE_PAGE_DATA,
-} from "@/constants/match";
-import HeaderTitle from "@/components/common/HeaderTitle";
-import ChevronRight from "../../../public/assets/icons/chevron_right.svg";
-import { getAccessToken } from "@/utils/storage";
-import Alert from "@/components/common/Alert";
-import useMediaQueries from "@/hooks/useMediaQueries";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import styled from "styled-components";
+
+import { Alert, GraphicBox, HeaderTitle } from "@/components";
+import { MATCH_TYPE_PAGE_DATA, MO_MATCH_TYPE_PAGE_DATA } from "@/constants";
+import { useMediaQueries } from "@/hooks";
+import { getAccessToken } from "@/utils";
+
+import ChevronRight from "../../../public/assets/icons/chevron_right.svg";
 
 const MatchTypePage = () => {
   const isMobile = useMediaQueries({ breakpoint: 700 });

@@ -1,8 +1,10 @@
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
 import Image from "next/image";
-import { Mike } from "@/types/user/mike";
-import useMediaQueries from "@/hooks/useMediaQueries";
+import styled from "styled-components";
+
+import { useMediaQueries } from "@/hooks";
+import { theme } from "@/styles/theme";
+
+import type { Mike } from "@/types";
 
 interface MicProps {
   variant?: "chip" | "icon";

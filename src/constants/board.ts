@@ -1,5 +1,5 @@
-import { GameMode } from "@/types/game/gameMode";
-import { Mike } from "@/types/user/mike";
+import type { GameMode } from "@/types/game/gameMode";
+import type { Mike } from "@/types/user/mike";
 
 export const BOARD_TITLE = [
   { id: 1, name: "소환사" },

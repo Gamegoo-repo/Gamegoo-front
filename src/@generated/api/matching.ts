@@ -1,10 +1,11 @@
+import { Axios } from "@/api";
+
 import type {
   ApiResponse,
   InitializingMatchingRequest,
-  PriorityListResponse,
   MatchingFoundResponse,
+  PriorityListResponse,
 } from "../types";
-import Axios from "@/api";
 
 /* postInternalMatchingPriorityMemberId - 생성 */
 export const postInternalMatchingPriorityMemberId = async (

@@ -1,6 +1,7 @@
-import fs from "fs-extra";
 import path from "node:path";
 import chalk from "chalk";
+import fs from "fs-extra";
+
 import { SwaggerSchema } from "./types";
 
 interface ApiMethod {
@@ -439,11 +440,11 @@ export class ApiServiceGenerator {
     }
 
     if (hasAuth) {
-      imports.push(`import { AuthAxios } from '@/api/auth'`);
+      imports.push(`import { AuthAxios } from '@/api'`);
     }
 
     if (hasNonAuth) {
-      imports.push(`import Axios from '@/api'`);
+      imports.push(`import { Axios } from '@/api'`);
     }
 
     return imports.join("\n");
