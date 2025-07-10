@@ -1,9 +1,11 @@
 import styled from "styled-components";
+
 import { theme } from "@/styles/theme";
-import { FC } from "react";
-import { GameMode } from "@/types/game/gameMode";
-import { PostItemData } from "./PostItem";
-import { setDateFormatter } from "@/utils/timeFormat";
+import { setDateFormatter } from "@/utils";
+
+import type { FC } from "react";
+import type { GameMode } from "@/types";
+import type { PostItemData } from "./PostItem";
 
 interface MemoSectionProps {
   data: PostItemData;

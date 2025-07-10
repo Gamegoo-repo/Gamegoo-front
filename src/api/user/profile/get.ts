@@ -1,8 +1,9 @@
-import {
+import { AuthAxios } from "../../auth";
+
+import type {
   GetMyProfileResponse,
   GetOtherProfileResponse,
 } from "@/types/api/user/profile/get";
-import { AuthAxios } from "../../auth";
 
 export const getMyProfile = async (): Promise<GetMyProfileResponse> => {
   const endpoint = "/api/v2/profile";

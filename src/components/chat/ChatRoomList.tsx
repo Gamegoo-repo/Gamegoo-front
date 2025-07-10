@@ -1,23 +1,24 @@
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
 import { useEffect, useState } from "react";
-import { ChatroomList } from "@/interface/chat";
-import { MoreBoxMenuItems } from "@/interface/moreBox";
 import { useDispatch, useSelector } from "react-redux";
-import { setOpenModal } from "@/redux/slices/modalSlice";
-import { RootState } from "@/redux/store";
-import { getChatrooms } from "@/api/chat/chat";
-import ChatRoomItem from "./ChatRoomItem";
-import useChatMessage from "@/hooks/useChatMessage";
-import { setChatEnterType, setCurrentChatUuid } from "@/redux/slices/chatSlice";
-import useChatList from "@/hooks/useChatList";
+import styled from "styled-components";
+
 import {
   acceptFriendRequest,
   cancelFriendRequest,
+  deleteFriend,
+  getChatrooms,
   rejectFriendRequest,
   sendFriendRequest,
-} from "@/api/friend/request";
-import { deleteFriend } from "@/api/friend/delete";
+} from "@/api";
+import { useChatList, useChatMessage } from "@/hooks";
+import { setChatEnterType, setCurrentChatUuid } from "@/redux/slices/chatSlice";
+import { setOpenModal } from "@/redux/slices/modalSlice";
+import { theme } from "@/styles/theme";
+
+import ChatRoomItem from "./ChatRoomItem";
+
+import type { RootState } from "@/redux/store";
+import type { ChatroomList, MoreBoxMenuItems } from "@/types";
 
 interface ChatRoomListProps {
   onChatRoom: (id: string) => void;

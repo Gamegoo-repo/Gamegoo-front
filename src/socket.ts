@@ -1,9 +1,13 @@
 "use client";
 
-import { io, Socket } from "socket.io-client";
-import { SOCKET_URL } from "@/api";
+import { io } from "socket.io-client";
+
+import { SOCKET_URL } from "@/api/api";
+
 import { getAccessToken } from "./utils/storage";
 import { STORAGE_KEY } from "./constants/storage";
+
+import type { Socket } from "socket.io-client";
 
 let socket: Socket | null = null;
 let socketId: string | null = null;

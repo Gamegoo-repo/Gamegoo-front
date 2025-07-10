@@ -1,20 +1,18 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import Post from "@/components/mypage/post/Post";
-import MoPost from "@/components/mypage/post/MoPost";
-import PostBoard from "@/components/createBoard/PostBoard";
-import { useEffect, useState, useRef } from "react";
-import Pagination from "@/components/common/Pagination";
-import { deletePost, getMyPost, getMyPostCursor } from "@/api/board/board";
-import { RootState } from "@/redux/store";
-import { useSelector, useDispatch } from "react-redux";
-import { MyBoardDetail } from "@/types/api/board/board";
-import useMediaQueries from "@/hooks/useMediaQueries";
-import { getMyProfile } from "@/api/user/profile/get";
-import { setUserProfile } from "@/redux/slices/userSlice";
+
+import { deletePost, getMyPost, getMyPostCursor, getMyProfile } from "@/api";
+import { MoPost, Pagination, Post, PostBoard } from "@/components";
+import { useMediaQueries } from "@/hooks";
 import { setClosePostingModal } from "@/redux/slices/modalSlice";
+import { setUserProfile } from "@/redux/slices/userSlice";
+import { theme } from "@/styles/theme";
+
+import type { RootState } from "@/redux/store";
+import type { MyBoardDetail } from "@/types";
 
 const MyPostPage = () => {
   const isMobile = useMediaQueries({ breakpoint: 700 });

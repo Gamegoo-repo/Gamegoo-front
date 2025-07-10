@@ -1,14 +1,14 @@
-import styled from "styled-components";
-import Image from "next/image";
 import { useState } from "react";
-import { Position, PositionType } from "@/types/position/position";
+import Image from "next/image";
+import styled, { css } from "styled-components";
+
+import { PositionCategory } from "@/components/common";
+import { POSITIONS } from "@/constants";
+import { useMediaQueries } from "@/hooks";
 import { theme } from "@/styles/theme";
-import { POSITION } from "@/constants/position";
-import { POSITIONS } from "@/constants/profile";
-import useMediaQueries from "@/hooks/useMediaQueries";
-import { setPositionImg } from "@/utils/custom";
-import { css } from "styled-components";
-import PositionCategory from "@/components/common/PositionCategory";
+import { setPositionImg } from "@/utils";
+
+import type { Position } from "@/types";
 
 type Status = "reading" | "posting";
 

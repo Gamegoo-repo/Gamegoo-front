@@ -1,20 +1,20 @@
 "use client";
 
-import Button from "@/components/common/Button";
-import Checkbox from "@/components/common/Checkbox";
-import { clearSignIn } from "@/redux/slices/signInSlice";
-import { clearUserProfile } from "@/redux/slices/userSlice";
-import { theme } from "@/styles/theme";
-import { clearTokens } from "@/utils/storage";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import styled from "styled-components";
 import crypto from "crypto-js";
 import { encode as base64urlEncode } from "js-base64";
+import styled from "styled-components";
+
+import { Button, Checkbox } from "@/components";
 import { STORAGE_KEY } from "@/constants/storage";
+import { clearSignIn } from "@/redux/slices/signInSlice";
+import { clearUserProfile } from "@/redux/slices/userSlice";
+import { theme } from "@/styles/theme";
+import { clearTokens } from "@/utils";
 
 const RiotLogin = () => {
   const router = useRouter();

@@ -1,6 +1,7 @@
-import { theme } from "@/styles/theme";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+
+import { theme } from "@/styles/theme";
 
 interface CheckboxProps {
   value: number | string;

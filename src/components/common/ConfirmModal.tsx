@@ -1,12 +1,14 @@
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import Image from "next/image";
+import styled from "styled-components";
+
 import {
   setOpenEvaluationModal,
   setOpenModal,
 } from "@/redux/slices/modalSlice";
-import Image from "next/image";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import styled from "styled-components";
 import { theme } from "@/styles/theme";
+
 type ButtonText =
   | "취소"
   | "나가기"

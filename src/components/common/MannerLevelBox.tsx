@@ -1,12 +1,13 @@
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants/mannerLevel";
 import { useEffect, useState } from "react";
-import { MannerKeywords } from "@/interface/manner";
-import { getMemberMannerKeyword } from "@/api/manner/manner";
 import Image from "next/image";
-import { css } from "styled-components";
-import useMediaQueries from "@/hooks/useMediaQueries";
+import styled, { css } from "styled-components";
+
+import { getMemberMannerKeyword } from "@/api";
+import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants";
+import { useMediaQueries } from "@/hooks";
+import { theme } from "@/styles/theme";
+
+import type { MannerKeyword } from "@/types";
 
 interface MannerLevelBoxProps {
   memberId: number;
@@ -31,22 +32,18 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
 
   const isMobile = useMediaQueries({ breakpoint: 700 });
 
-  const [positiveKeywords, setPositiveKeywords] = useState<MannerKeywords[]>(
-    []
-  );
-  const [negativeKeywords, setNegativeKeywords] = useState<MannerKeywords[]>(
-    []
-  );
+  const [positiveKeywords, setPositiveKeywords] = useState<MannerKeyword[]>([]);
+  const [negativeKeywords, setNegativeKeywords] = useState<MannerKeyword[]>([]);
 
   useEffect(() => {
     const getManners = async () => {
       const manner = await getMemberMannerKeyword(memberId);
       const positive = manner.data.mannerKeywords.filter(
-        (keyword: MannerKeywords) =>
+        (keyword: MannerKeyword) =>
           keyword.mannerKeywordId >= 1 && keyword.mannerKeywordId <= 6
       );
       const negative = manner.data.mannerKeywords.filter(
-        (keyword: MannerKeywords) => keyword.mannerKeywordId >= 7
+        (keyword: MannerKeyword) => keyword.mannerKeywordId >= 7
       );
 
       setPositiveKeywords(positive);

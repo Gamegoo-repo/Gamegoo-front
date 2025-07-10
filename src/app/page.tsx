@@ -1,12 +1,13 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { MATCH_PAGE_DATA } from "@/constants/match";
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import Banner from "@/components/common/Banner";
 import Image from "next/image";
-import useMediaQueries from "@/hooks/useMediaQueries";
+import { useRouter } from "next/navigation";
+import styled from "styled-components";
+
+import { Banner } from "@/components";
+import { MATCH_PAGE_DATA } from "@/constants";
+import { useMediaQueries } from "@/hooks";
+import { theme } from "@/styles/theme";
 
 const HomePage = () => {
   const router = useRouter();

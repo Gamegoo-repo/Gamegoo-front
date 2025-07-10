@@ -1,11 +1,12 @@
 import chalk from "chalk";
 import fs from "fs-extra";
-import { API_CONSTANTS } from "./constants";
-import { checkServerStatus, downloadFile } from "./http";
-import { SchemaProcessor } from "./schema";
-import { ApiGenerator } from "./generator";
-import { PostProcessor } from "./post-processor";
+
 import { ApiServiceGenerator } from "./api-service-generator";
+import { API_CONSTANTS } from "./constants";
+import { ApiGenerator } from "./generator";
+import { checkServerStatus, downloadFile } from "./http";
+import { PostProcessor } from "./post-processor";
+import { SchemaProcessor } from "./schema";
 import { GenerationOptions } from "./types";
 
 export class ApiGenerationOrchestrator {

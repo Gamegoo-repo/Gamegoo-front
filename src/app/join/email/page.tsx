@@ -1,20 +1,21 @@
 "use client";
 
-import { sendJoinEmail, verifyEmailCode } from "@/api/email/email";
-import Button from "@/components/common/Button";
-import Input from "@/components/common/Input";
-import { emailRegEx } from "@/constants/regEx";
+import { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
+import styled from "styled-components";
+
+import { sendJoinEmail, verifyEmailCode } from "@/api";
+import { Button, Input } from "@/components";
+import { emailRegEx } from "@/constants";
 import {
   updateAuthStatus,
   updateEmail,
   updateEmailAuth,
 } from "@/redux/slices/signInSlice";
-import { RootState } from "@/redux/store";
 import { theme } from "@/styles/theme";
-import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components";
+
+import type { RootState } from "@/redux/store";
 
 const Email = () => {
   const router = useRouter();

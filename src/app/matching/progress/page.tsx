@@ -1,33 +1,34 @@
 "use client";
 
-import { Suspense } from "react";
-import styled, { keyframes } from "styled-components";
-import HeaderTitle from "@/components/common/HeaderTitle";
-import SquareProfile from "@/components/match/SquareProfile";
-import Image from "next/image";
-import { theme } from "@/styles/theme";
-import { useEffect, useRef, useState } from "react";
-import ConfirmModal from "@/components/common/ConfirmModal";
-import { socket } from "@/socket";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useRouter, useSearchParams } from "next/navigation";
+import styled from "styled-components";
+
+import { getBoardList } from "@/api";
 import {
+  ConfirmModal,
+  HeaderTitle,
+  SquareProfile,
+  WaitingBox,
+} from "@/components";
+import {
+  GAME_STYLE,
   messagesWithoutN,
   messagesWithTierN,
   messagesWithTotalN,
-} from "@/constants/messages";
-import { getBoardList } from "@/api/board/board";
-import { setOpenPostingModal } from "@/redux/slices/modalSlice";
-import { useDispatch } from "react-redux";
+} from "@/constants";
+import { useMediaQueries } from "@/hooks";
 import { setBoardFilters } from "@/redux/slices/boardSlice";
-import { setIsCompleted } from "@/utils/storage";
-import { Position } from "@/types/position/position";
-import { Mike } from "@/types/user/mike";
-import useMediaQueries from "@/hooks/useMediaQueries";
-import { getEffectiveTier } from "@/utils/matching/tier";
-import { GameMode } from "@/types/game/gameMode";
-import WaitingBox from "@/components/match/WaitingBox";
-import { GAME_STYLE } from "@/constants/profile";
-import { getThresholdByGameMode } from "@/utils/matching/threshold";
+import { setOpenPostingModal } from "@/redux/slices/modalSlice";
+import { socket } from "@/socket";
+import {
+  getEffectiveTier,
+  getThresholdByGameMode,
+  setIsCompleted,
+} from "@/utils";
+
+import type { GameMode, Mike, Position } from "@/types";
 
 interface User {
   memberId: number;

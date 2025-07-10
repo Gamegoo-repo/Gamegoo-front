@@ -1,18 +1,18 @@
 "use client";
 
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import MyPageProfile from "@/components/mypage/profile/MyPageProfile";
 import { useEffect, useState } from "react";
-import ConfirmModal from "@/components/common/ConfirmModal";
-import { setUserMike, setUserProfile } from "@/redux/slices/userSlice";
-import useMediaQueries from "@/hooks/useMediaQueries";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-import { clearTokens } from "@/utils/storage";
 import { useRouter } from "next/navigation";
-import { getMyProfile } from "@/api/user/profile/get";
-import { deleteMember } from "@/api/user/delete";
+import styled from "styled-components";
+
+import { deleteMember, getMyProfile } from "@/api";
+import { ConfirmModal, MyPageProfile } from "@/components";
+import { useMediaQueries } from "@/hooks";
+import { setUserMike, setUserProfile } from "@/redux/slices/userSlice";
+import { theme } from "@/styles/theme";
+import { clearTokens } from "@/utils";
+
+import type { RootState } from "@/redux/store";
 
 const passwordLength = 10;
 

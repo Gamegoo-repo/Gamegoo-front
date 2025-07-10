@@ -1,5 +1,6 @@
-import Axios from "..";
-import { LoginRequest, LoginResponse } from "@/types/api/login/login";
+import Axios from "../api";
+
+import type { LoginRequest, LoginResponse } from "@/types/api/login/login";
 
 export const postLogin = async ({
   email,

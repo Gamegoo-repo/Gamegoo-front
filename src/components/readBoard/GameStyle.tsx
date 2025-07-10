@@ -1,7 +1,9 @@
 import styled from "styled-components";
+
+import { GAME_STYLE } from "@/constants";
 import { theme } from "@/styles/theme";
-import { GAME_STYLE } from "@/constants/profile";
-import { gameStyleResponseDTOList } from "@/interface/board";
+
+import type { gameStyleResponseDTOList } from "@/types";
 
 interface GameStyleProps {
   styles: number[] | gameStyleResponseDTOList[];

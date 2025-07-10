@@ -1,9 +1,10 @@
+import { Axios } from "@/api";
+
 import type {
   ApiResponse,
-  RiotVerifyExistUserRequest,
   RiotJoinRequest,
+  RiotVerifyExistUserRequest,
 } from "../types";
-import Axios from "@/api";
 
 /* postRiotVerify - 생성 */
 export const postRiotVerify = async (

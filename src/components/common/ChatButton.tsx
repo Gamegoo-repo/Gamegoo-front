@@ -1,15 +1,17 @@
-import { theme } from "@/styles/theme";
-import Image from "next/image";
 import { useEffect, useState } from "react";
-import styled from "styled-components";
-import Alert from "./Alert";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-import { toggleChat } from "@/redux/slices/chatSlice";
-import Layout from "../chat/Layout";
-import { resetPosition } from "@/redux/slices/chatPositionSlice";
-import useMediaQueries from "@/hooks/useMediaQueries";
+import Image from "next/image";
+import styled from "styled-components";
+
 import { STORAGE_KEY } from "@/constants/storage";
+import { useMediaQueries } from "@/hooks";
+import { toggleChat } from "@/redux/slices/chatSlice";
+import { theme } from "@/styles/theme";
+
+import Layout from "../chat/Layout";
+import Alert from "./Alert";
+
+import type { RootState } from "@/redux/store";
 
 const ChatButton = () => {
   const isMobile = useMediaQueries({ breakpoint: 700 });

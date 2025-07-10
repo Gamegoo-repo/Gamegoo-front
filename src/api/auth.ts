@@ -1,11 +1,15 @@
-import axios, { AxiosInstance, InternalAxiosRequestConfig } from "axios";
+import axios from "axios";
+
 import { LOGIN } from "@/constants/messages";
-import { BASE_URL } from ".";
-import { clearTokens, getAccessToken, getRefreshToken } from "@/utils/storage";
 import { notify } from "@/hooks/notify";
 import { connectSocket } from "@/socket";
+import { clearTokens, getAccessToken, getRefreshToken } from "@/utils/storage";
+
+import { BASE_URL } from "./api";
 import { reissueToken } from "./reissue/reissue";
 import { STORAGE_KEY } from "@/constants/storage";
+
+import type { AxiosInstance, InternalAxiosRequestConfig } from "axios";
 
 /* AuthAxios 인스턴스 생성 */
 export const AuthAxios: AxiosInstance = axios.create({

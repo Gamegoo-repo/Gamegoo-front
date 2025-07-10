@@ -1,12 +1,13 @@
+import { Axios } from "@/api";
+
 import type {
   ApiResponse,
-  RefreshTokenRequest,
-  RefreshTokenResponse,
+  JoinRequest,
   LoginRequest,
   LoginResponse,
-  JoinRequest,
+  RefreshTokenRequest,
+  RefreshTokenResponse,
 } from "../types";
-import Axios from "@/api";
 
 /* postAuthRefresh - 생성 */
 export const postAuthRefresh = async (

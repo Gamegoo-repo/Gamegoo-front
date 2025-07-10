@@ -1,5 +1,6 @@
-import { useRef, useState, useCallback } from "react";
-import { AlertProps } from "@/interface/modal";
+import { useCallback, useRef, useState } from "react";
+
+import type { AlertProps } from "@/types";
 
 interface UseAlertReturn {
   showAlert: boolean;

@@ -1,5 +1,5 @@
-import { BlockList } from "@/types/friend/blockList";
-import { ApiResponse } from "../api";
+import type { BlockList } from "@/types/friend/blockList";
+import type { ApiResponse } from "../api";
 
 interface GetBlockListData {
   blockedMemberList: BlockList[];

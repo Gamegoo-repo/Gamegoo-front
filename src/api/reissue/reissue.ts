@@ -1,6 +1,8 @@
 import { getRefreshToken } from "@/utils/storage";
-import { ReissueResponse } from "@/types/api/reissue/reissue";
-import Axios from "..";
+
+import Axios from "../api";
+
+import type { ReissueResponse } from "@/types/api/reissue/reissue";
 
 export const reissueToken = async (): Promise<ReissueResponse> => {
   const endpoint = "/api/v2/auth/refresh";

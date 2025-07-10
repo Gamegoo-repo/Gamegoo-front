@@ -1,4 +1,4 @@
-import { GameMode } from "@/types/game/gameMode";
+import type { GameMode } from "@/types/game/gameMode";
 
 export const MATCH_PAGE_DATA = [
   {

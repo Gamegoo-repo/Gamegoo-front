@@ -1,18 +1,19 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
-import styled from "styled-components";
 import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
+import styled from "styled-components";
+
+import { LoadingSpinner } from "@/components";
+import { LOGIN } from "@/constants";
+import { STORAGE_KEY } from "@/constants/storage";
+import { notify } from "@/hooks";
 import {
   setUserId,
   setUserName,
   setUserProfileImg,
 } from "@/redux/slices/userSlice";
-import { notify } from "@/hooks/notify";
-import { LOGIN } from "@/constants/messages";
-import { STORAGE_KEY } from "@/constants/storage";
 
 const RsoCallback = () => {
   const router = useRouter();

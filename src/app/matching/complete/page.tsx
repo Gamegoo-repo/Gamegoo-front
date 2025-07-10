@@ -1,34 +1,42 @@
 "use client";
 
-import { Suspense, useCallback, useMemo } from "react";
-import styled from "styled-components";
-import Image from "next/image";
-import HeaderTitle from "@/components/common/HeaderTitle";
-import SquareProfile from "@/components/match/SquareProfile";
-import Button from "@/components/common/Button";
-import { theme } from "@/styles/theme";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import { sendMatchingQuitEvent, socket } from "@/socket";
-import ConfirmModal from "@/components/common/ConfirmModal";
-import ChatLayout from "@/components/chat/ChatLayout";
-import { RootState } from "@/redux/store";
-import useMediaQueries from "@/hooks/useMediaQueries";
+import {
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
+import styled from "styled-components";
+
+import { getMemberMannerLevel } from "@/api/manner/manner";
+import { getMyProfile } from "@/api/user/profile/get";
+import ChatLayout from "@/components/chat/ChatLayout";
+import Layout from "@/components/chat/Layout";
+import Button from "@/components/common/Button";
+import ConfirmModal from "@/components/common/ConfirmModal";
+import HeaderTitle from "@/components/common/HeaderTitle";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import SquareProfile from "@/components/match/SquareProfile";
+import useMediaQueries from "@/hooks/useMediaQueries";
 import {
   openChatRoom,
   setChatEnterType,
   setChatRoomUuid,
 } from "@/redux/slices/chatSlice";
 import { setComplete } from "@/redux/slices/matchingSlice";
+import { sendMatchingQuitEvent, socket } from "@/socket";
+import { theme } from "@/styles/theme";
 import { setIsCompleted } from "@/utils/storage";
-import { getMyProfile } from "@/api/user/profile/get";
-import { Position } from "@/types/position/position";
-import { Mike } from "@/types/user/mike";
-import Layout from "@/components/chat/Layout";
-import { GameMode } from "@/types/game/gameMode";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
-import { getMemberMannerLevel } from "@/api/manner/manner";
+
+import type { RootState } from "@/redux/store";
+import type { GameMode } from "@/types/game/gameMode";
+import type { Position } from "@/types/position/position";
+import type { Mike } from "@/types/user/mike";
 
 interface User {
   memberId: number;

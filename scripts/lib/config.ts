@@ -1,4 +1,5 @@
 import yaml from "js-yaml";
+
 import { GENERATOR_CONFIG } from "./constants";
 
 export interface GeneratorConfig {

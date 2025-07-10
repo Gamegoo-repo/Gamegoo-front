@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+
 import { setPosition } from "@/redux/slices/chatPositionSlice";
 
 type Position = {

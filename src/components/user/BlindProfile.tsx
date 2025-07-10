@@ -1,13 +1,8 @@
 import styled from "styled-components";
-import HeaderTitle from "@/components/common/HeaderTitle";
+
+import { HeaderTitle, MannerLevelBar } from "@/components/common";
+import { BAD_MANNER_TYPES, MANNER_TYPES, POSITIONS } from "@/constants";
 import { theme } from "@/styles/theme";
-import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants/mannerLevel";
-import MannerLevelBar from "@/components/common/MannerLevelBar";
-import Image from "next/image";
-import Toggle from "../common/Toggle";
-import { css } from "styled-components";
-import { POSITIONS } from "@/constants/profile";
-import { setPositionImg } from "@/utils/custom";
 
 const BlindProfile = () => {
   const goodMannerEvaluations =

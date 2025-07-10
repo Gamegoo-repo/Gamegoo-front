@@ -1,20 +1,21 @@
 "use client";
 
-import styled from "styled-components";
-import { theme } from "@/styles/theme";
-import AlertBox from "@/components/mypage/notification/AlertBox";
-import Pagination from "@/components/common/Pagination";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { setNotiCount } from "@/redux/slices/notiSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
+import { useRouter } from "next/navigation";
+import styled from "styled-components";
+
 import {
   getTotalNotification,
   getUnreadNotificationCount,
   patchReadNotification,
-} from "@/api/notification/notification";
-import { Notification } from "@/types/notification/notification";
+} from "@/api";
+import { AlertBox, Pagination } from "@/components";
+import { setNotiCount } from "@/redux/slices/notiSlice";
+import { theme } from "@/styles/theme";
+
+import type { RootState } from "@/redux/store";
+import type { Notification } from "@/types";
 
 const MyAlertPage = () => {
   const router = useRouter();

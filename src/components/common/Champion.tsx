@@ -1,10 +1,12 @@
-import styled from "styled-components";
-import Image from "next/image";
-import { theme } from "@/styles/theme";
 import { useEffect, useRef, useState } from "react";
-import { ChampionResponseDTO } from "@/types/api/champion/champion";
+import Image from "next/image";
+import styled from "styled-components";
+
 import useMediaQueries from "@/hooks/useMediaQueries";
 import useTooltipTransformOffset from "@/hooks/useTooltipTransformOffset";
+import { theme } from "@/styles/theme";
+
+import type { ChampionResponseDTO } from "@/types/api/champion/champion";
 
 interface ChampionProps {
   title?: boolean;

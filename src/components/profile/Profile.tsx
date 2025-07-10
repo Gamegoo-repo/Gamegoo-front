@@ -1,47 +1,54 @@
 import React, { useEffect, useRef, useState } from "react";
-import { theme } from "@/styles/theme";
-import Image from "next/image";
-import styled, { css } from "styled-components";
-import GameStyle from "../match/GameStyle";
-import { POSITIONS } from "@/constants/profile";
-import Champion from "../common/Champion";
-import Toggle from "../common/Toggle";
-import Button from "../common/Button";
-import MoreBoxButton from "../readBoard/MoreBoxButton";
-import FormModal from "../common/FormModal";
-import Checkbox from "../common/Checkbox";
-import { REPORT_REASON } from "@/constants/report";
-import Input from "../common/Input";
-import ConfirmModal from "../common/ConfirmModal";
-import PositionCategory from "../common/PositionCategory";
-import MoreBox from "../common/MoreBox";
-import { MoreBoxMenuItems } from "@/interface/moreBox";
-import { User } from "@/interface/profile";
-import { PositionState } from "../crBoard/PositionBox";
-import { setPositionImg } from "@/utils/custom";
-import { useParams } from "next/navigation";
-import { reportMember } from "@/api/report/report";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-import { setMatchInfo, updateMike } from "@/redux/slices/matchInfo";
-import { setUserProfileImg } from "@/redux/slices/userSlice";
-import { putPosition, putProfileImage } from "@/api/user/profile/put";
+import Image from "next/image";
+import { useParams } from "next/navigation";
+import styled, { css } from "styled-components";
+
 import {
   acceptFriendRequest,
+  blockMember,
   cancelFriendRequest,
+  deleteFriend,
+  putPosition,
+  putProfileImage,
   rejectFriendRequest,
+  reportMember,
   sendFriendRequest,
-} from "@/api/friend/request";
-import { deleteFriend } from "@/api/friend/delete";
-import { blockMember, unblockMember } from "@/api/block/block";
-import { Mike as MikeType } from "@/types/user/mike";
-import { Position } from "@/types/position/position";
-import RankTier from "../common/RankTier";
-import Alert from "../common/Alert";
+  unblockMember,
+} from "@/api";
+import {
+  Alert,
+  Button,
+  Champion,
+  Checkbox,
+  ConfirmModal,
+  FormModal,
+  Input,
+  Mic,
+  MoreBox,
+  MoreBoxButton,
+  PositionCategory,
+  RankTier,
+  Toggle,
+  UpdateProfileImage,
+} from "@/components";
+import { POSITIONS, REPORT_REASON } from "@/constants";
 import useMediaQueries from "@/hooks/useMediaQueries";
-import Mic from "../common/Mic";
-import { profile } from "console";
-import UpdateProfileImage from "./UpdateProfileImage";
+import { setMatchInfo, updateMike } from "@/redux/slices/matchInfo";
+import { setUserProfileImg } from "@/redux/slices/userSlice";
+import { theme } from "@/styles/theme";
+import { setPositionImg } from "@/utils/custom";
+
+import GameStyle from "../match/GameStyle";
+
+import type { RootState } from "@/redux/store";
+import type {
+  Mike as MikeType,
+  MoreBoxMenuItems,
+  Position as PositionType,
+  User,
+} from "@/types";
+import type { PositionState } from "../crBoard/PositionBox";
 
 type profileType = "normal" | "wind" | "other" | "me";
 
@@ -288,7 +295,7 @@ const Profile: React.FC<Profile> = ({
   };
 
   const handleCategoryButtonClick = (
-    selectedValue: Position | null,
+    selectedValue: PositionType | null,
     type: "main" | "sub" | "want",
     index: number = 0
   ) => {
@@ -641,7 +648,7 @@ const Profile: React.FC<Profile> = ({
                                   }
                                   usedPositions={
                                     positionValue.want?.filter(
-                                      (pos, i): pos is Position =>
+                                      (pos, i): pos is PositionType =>
                                         i !== index && pos !== null
                                     ) ?? []
                                   }

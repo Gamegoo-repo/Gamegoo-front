@@ -1,5 +1,6 @@
-import Axios from "..";
-import { RiotRequest, RiotResponse } from "@/types/api/join/riot";
+import Axios from "../api";
+
+import type { RiotRequest, RiotResponse } from "@/types/api/join/riot";
 
 export const verifyRiot = async ({
   gameName,

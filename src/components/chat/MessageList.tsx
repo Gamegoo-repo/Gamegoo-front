@@ -1,6 +1,3 @@
-import styled, { keyframes } from "styled-components";
-import { theme } from "@/styles/theme";
-import Image from "next/image";
 import {
   useCallback,
   useEffect,
@@ -8,23 +5,32 @@ import {
   useRef,
   useState,
 } from "react";
-import { Chat, DesignedSystemMessage, ChatMessageDto } from "@/interface/chat";
 import { useDispatch, useSelector } from "react-redux";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import dayjs from "dayjs";
+import styled, { keyframes } from "styled-components";
+
+import { getChatList, markChatAsRead } from "@/api";
+import { useChatMessage } from "@/hooks";
+import { closeChat, closeChatRoom } from "@/redux/slices/chatSlice";
 import {
   setCloseMannerStatusModal,
   setOpenMannerStatusModal,
   setOpenReadingModal,
 } from "@/redux/slices/modalSlice";
-import { RootState } from "@/redux/store";
-import ReadBoard from "../readBoard/ReadBoard";
-import { getChatList, markChatAsRead } from "@/api/chat/chat";
-import useChatMessage from "@/hooks/useChatMessage";
-import dayjs from "dayjs";
-import { setChatDateFormatter, setChatTimeFormatter } from "@/utils/timeFormat";
-import { getProfileBgColor } from "@/utils/profile";
-import ConfirmModal from "../common/ConfirmModal";
-import { useRouter } from "next/navigation";
-import { closeChat, closeChatRoom } from "@/redux/slices/chatSlice";
+import { theme } from "@/styles/theme";
+import {
+  getProfileBgColor,
+  setChatDateFormatter,
+  setChatTimeFormatter,
+} from "@/utils";
+
+import { ConfirmModal } from "../common";
+import { ReadBoard } from "../readBoard";
+
+import type { RootState } from "@/redux/store";
+import type { Chat, ChatMessageDto, DesignedSystemMessage } from "@/types";
 
 interface MessageListProps {
   chatEnterData: Chat;

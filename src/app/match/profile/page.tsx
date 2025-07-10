@@ -1,24 +1,21 @@
 "use client";
 
-import styled from "styled-components";
-import { useRouter, useSearchParams } from "next/navigation";
-import Profile from "@/components/profile/Profile";
-import Button from "@/components/common/Button";
-import HeaderTitle from "@/components/common/HeaderTitle";
-import { useEffect, useRef, useState } from "react";
-import { profileType } from "@/interface/profile";
-import { Suspense } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setUserProfile } from "@/redux/slices/userSlice";
-import { RootState } from "@/redux/store";
-import { sendMatchingQuitEvent, socket } from "@/socket";
-import ConfirmModal from "@/components/common/ConfirmModal";
-import { theme } from "@/styles/theme";
-import { closeChatRoom } from "@/redux/slices/chatSlice";
-import { getMyProfile } from "@/api/user/profile/get";
+import { useRouter, useSearchParams } from "next/navigation";
+import styled from "styled-components";
+
+import { getMyProfile } from "@/api";
+import { Button, ConfirmModal, HeaderTitle, Profile } from "@/components";
 import useMediaQueries from "@/hooks/useMediaQueries";
+import { closeChatRoom } from "@/redux/slices/chatSlice";
+import { setUserProfile } from "@/redux/slices/userSlice";
+import { sendMatchingQuitEvent, socket } from "@/socket";
+import { theme } from "@/styles/theme";
 import { getThresholdByGameMode } from "@/utils/matching/threshold";
-import { GameMode } from "@/types/game/gameMode";
+
+import type { RootState } from "@/redux/store";
+import type { GameMode, profileType } from "@/types";
 
 const ProfilePage = () => {
   const isMobile = useMediaQueries({ breakpoint: 700 });
