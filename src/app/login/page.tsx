@@ -229,6 +229,10 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    min-height: 700px;
+  }
 `;
 
 const Box = styled.div`

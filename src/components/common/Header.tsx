@@ -272,6 +272,7 @@ const Header = () => {
       {isMyPage &&
         createPortal(
           <MyPageModal ref={myPageRef}>
+            <Background>
             {isMobile && (
               <MyPageModalHeader>
                 <MyPageModalHeaderTitle>내정보</MyPageModalHeaderTitle>
@@ -350,6 +351,7 @@ const Header = () => {
                 </TabItemWrapper>
               ))}
             </TabMenu>
+            </Background>
           </MyPageModal>,
           modalRoot
         )}
@@ -510,7 +512,6 @@ const MyPageModal = styled.div`
     right: 0;
     bottom: 0;
     width: 100vw;
-    height: 100vh;
     box-shadow: none;
   }
 `;
@@ -559,6 +560,26 @@ const MyName = styled.div`
   white-space: nowrap;
 `;
 
+const Background = styled.div`
+  overflow-y: auto;
+
+  /* 스크롤바 */
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 66px;
+    background: ${theme.colors.gray500};
+  }
+  &::-webkit-scrollbar-track {
+    border-radius: 66px;
+    background: transparent;
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    height: calc(100vh - 64px);
+  }
+`;
 const TabMenu = styled.div`
   display: flex;
   flex-direction: column;
