@@ -963,6 +963,10 @@ const Text = styled.div`
   color: ${theme.colors.gray600};
   ${(props) => props.theme.fonts.regular20};
   margin: 28px 0;
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    margin: 28px 0 0 0;
+    ${(props) => props.theme.fonts.medium14};
+  }
 `;
 
 const SmallText = styled.div`
