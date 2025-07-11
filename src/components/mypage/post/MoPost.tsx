@@ -6,6 +6,8 @@ import { getMemberPost, getNonMemberPost } from "@/api";
 import { PostItem } from "@/components/common";
 import { setOpenAlertModal } from "@/redux/slices/modalSlice";
 
+import SkeletonPostItem from "../../common/PostItem/SkeletonPostItem";
+
 import type { AxiosError } from "axios";
 import type { PostItemData } from "@/components/common";
 import type { RootState } from "@/redux/store";
@@ -127,7 +129,7 @@ const MoPost: React.FC<PostProps> = ({
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <SkeletonPostItem />;
   }
 
   return (
