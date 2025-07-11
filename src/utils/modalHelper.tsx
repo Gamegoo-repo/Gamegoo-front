@@ -1,10 +1,10 @@
 import { type ModalState } from "@/redux/slices/modalSlice";
 
-const lockBodyScroll = () => {
+export const lockBodyScroll = () => {
   document.body.style.overflow = "hidden";
 };
 
-const unlockBodyScroll = () => {
+export const unlockBodyScroll = () => {
   document.body.style.overflow = "unset";
 };
 
