@@ -104,7 +104,8 @@ const Wrapper = styled.div<{
   @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 20.5px 20px;
     border-radius: 8px;
-    max-width: 336px;
+    min-width: 336px;
+    width: 90vw;
     margin: 50px 0;
   }
 `;
