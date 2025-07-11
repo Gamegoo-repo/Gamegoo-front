@@ -95,6 +95,9 @@ const Msg = styled.div`
   color: ${theme.colors.gray800};
   ${(props) => props.theme.fonts.regular25};
   margin: 28px 0;
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    ${(props) => props.theme.fonts.medium14};
+  }
 `;
 
 const MsgConfirm = styled(Msg)`
