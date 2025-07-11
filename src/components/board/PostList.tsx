@@ -34,7 +34,6 @@ const PostList = ({ content }: PostListProps) => {
   );
   const isModalType = useSelector((state: RootState) => state.modal.modalType);
 
-
   useEffect(() => {
     return () => {
       dispatch(setCloseReadingModal());
