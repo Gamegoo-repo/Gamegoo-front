@@ -11,6 +11,7 @@ import {
 import { theme } from "@/styles/theme";
 
 import { PostItem } from "../common";
+import SkeletonPostItem from "../common/PostItem/SkeletonPostItem";
 
 import type { RootState } from "@/redux/store";
 import type { AlertProps } from "@/types";
@@ -18,9 +19,10 @@ import type { BoardListDetail } from "@/types/api";
 
 interface PostListProps {
   content: BoardListDetail[];
+  isLoading?: boolean;
 }
 
-const PostList = ({ content }: PostListProps) => {
+const PostList = ({ content, isLoading = false }: PostListProps) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -92,7 +94,11 @@ const PostList = ({ content }: PostListProps) => {
 
       {isChatRoomOpen && <Layout />}
       <ListWrapper>
-        {content?.length > 0 ? (
+        {isLoading ? (
+          Array.from({ length: 3 }).map((_, index) => (
+            <SkeletonPostItem key={index} />
+          ))
+        ) : content?.length > 0 ? (
           content.map((data) => (
             <PostItem
               key={data.boardId}

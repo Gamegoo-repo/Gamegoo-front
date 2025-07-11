@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { getMemberPost, getNonMemberPost } from "@/api";
 import { Alert, PostItem } from "@/components/common";
 
+import SkeletonPostItem from "../../common/PostItem/SkeletonPostItem";
+
 import type { AxiosError } from "axios";
 import type { PostItemData } from "@/components/common";
 import type { RootState } from "@/redux/store";
@@ -145,7 +147,7 @@ const MoPost: React.FC<PostProps> = ({
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <SkeletonPostItem />;
   }
 
   return (
