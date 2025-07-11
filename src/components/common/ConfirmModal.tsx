@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import Image from "next/image";
 import styled from "styled-components";
@@ -8,6 +8,7 @@ import {
   setOpenModal,
 } from "@/redux/slices/modalSlice";
 import { theme } from "@/styles/theme";
+import { createPortal } from "react-dom";
 
 type ButtonText =
   | "취소"
@@ -44,8 +45,19 @@ const ConfirmModal = (props: ConfirmModalProps) => {
     onSecondaryClick,
   } = props;
 
+  const modalRoot = document.getElementById("modal-root") as HTMLElement;
   const dispatch = useDispatch();
+  useEffect(() => {
+    // 열릴 때
+    document.body.style.overflow = "hidden";
 
+    return () => {
+      // 닫힐 때
+      if(modalRoot && modalRoot.children.length === 0){
+        document.body.style.overflow = "unset";
+      }
+    };
+  }, [modalRoot]);
   let buttonClassName = "";
 
   if (type !== "manner") {
@@ -77,7 +89,7 @@ const ConfirmModal = (props: ConfirmModalProps) => {
       : dispatch(setOpenModal("badManner"));
   };
 
-  return (
+  return createPortal(
     <Overlay $type={type}>
       <Wrapper $width={width} $type={type} onClick={(e) => e.stopPropagation()}>
         <Main>
@@ -158,7 +170,7 @@ const ConfirmModal = (props: ConfirmModalProps) => {
         </Footer>
       </Wrapper>
     </Overlay>
-  );
+  ,modalRoot);
 };
 
 export default ConfirmModal;
