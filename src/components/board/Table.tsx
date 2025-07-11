@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
@@ -16,11 +15,8 @@ import {
 } from "@/api";
 import {
   Alert,
-  Champion,
   ConfirmModal,
   Layout,
-  MoreBox,
-  MoreBoxButton,
   ReadBoard,
   ReportModal,
 } from "@/components";
@@ -35,16 +31,11 @@ import {
   setOpenPostingModal,
   setOpenReadingModal,
 } from "@/redux/slices/modalSlice";
-import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
+import { setPostStatus } from "@/redux/slices/postSlice";
 import { theme } from "@/styles/theme";
-import {
-  setAbbrevTier,
-  setCustomProfileImg,
-  setPositionImg,
-} from "@/utils/custom";
-import { getProfileBgColor } from "@/utils/profile";
-import { toLowerCaseString } from "@/utils/string";
-import { setDateFormatter } from "@/utils/timeFormat";
+
+import TableHead from "./Table/TableHead";
+import TableRow from "./Table/TableRow";
 
 import type { RootState } from "@/redux/store";
 import type {
@@ -53,11 +44,7 @@ import type {
   MemberPost,
   MoreBoxMenuItems,
 } from "@/types";
-
-interface TableTitleProps {
-  id: number;
-  name: string;
-}
+import type { TableTitleProps } from "@/types/board/table";
 
 interface TableProps {
   title: TableTitleProps[];
@@ -383,144 +370,24 @@ const Table = (props: TableProps) => {
 
       {copiedAlert && <Copied>소환사명이 클립보드에 복사되었습니다.</Copied>}
       <TableWrapper>
-        <TableHead>
-          {title.map((data) => {
-            return (
-              <Title key={data.id} className="table_width">
-                {data.name}
-              </Title>
-            );
-          })}
-        </TableHead>
+        <TableHead title={title} />
         {content?.length > 0 ? (
           <TableContent>
-            {content?.map((data) => {
-              return (
-                <Row
-                  key={data.boardId}
-                  onClick={() => {
-                    setIsMoreBoxOpen(false);
-                    handlePostOpen(data.boardId);
-                  }}
-                >
-                  <First className="table_width">
-                    <ProfileImgWrapper
-                      $bgColor={getProfileBgColor(data.profileImage)}
-                      onClick={(e) => handleMoveProfilePage(e, data.memberId)}
-                    >
-                      <ProfileImg
-                        data={setCustomProfileImg(data.profileImage)}
-                        width={35}
-                        height={35}
-                      />
-                    </ProfileImgWrapper>
-                    <NameRow>
-                      <P>{data.gameName}</P>
-                      <CopyButton
-                        onClick={(e) =>
-                          handleTextClick(data.gameName, data.tag, e)
-                        }
-                      >
-                        복사
-                      </CopyButton>
-                    </NameRow>
-                  </First>
-                  <Second className="table_width">
-                    {data.mannerLevel && <p>LV.{data.mannerLevel}</p>}
-                  </Second>
-                  <Third className="table_width">
-                    <TierImage
-                      data={
-                        !data.tier
-                          ? "/assets/images/tier/unranked.svg"
-                          : `/assets/images/tier/${toLowerCaseString(
-                              data.tier
-                            )}.svg`
-                      }
-                      width={28}
-                      height={26}
-                    />
-                    <P>
-                      {setAbbrevTier(data.tier || "")}
-                      {data.tier !== "UNRANKED" && data.rank}
-                    </P>
-                  </Third>
-                  <Fourth className="table_width">
-                    <Image
-                      src={setPositionImg(data.mainP)}
-                      width={36}
-                      height={36}
-                      alt="메인 포지션"
-                    />
-                    <Image
-                      src={setPositionImg(data.subP)}
-                      width={36}
-                      height={36}
-                      alt="서브 포지션"
-                    />
-                  </Fourth>
-                  <Fifth className="table_width">
-                    {data.wantP?.length > 0 ? (
-                      data.wantP.map((posi, i) => (
-                        <Image
-                          key={`${posi}-${i}`}
-                          src={setPositionImg(posi || "ANY")}
-                          width={36}
-                          height={36}
-                          alt="찾는 포지션"
-                        />
-                      ))
-                    ) : (
-                      <Image
-                        src={setPositionImg("ANY")}
-                        width={35}
-                        height={28}
-                        alt="찾는 포지션"
-                      />
-                    )}
-                  </Fifth>
-                  <Sixth className="table_width">
-                    <Champion
-                      font="semiBold14"
-                      list={data?.championStatsResponseList || []}
-                    />
-                  </Sixth>
-                  <Seventh className="table_width">
-                    <P className={data.winRate >= 50 ? "emph" : "basic"}>
-                      {data.winRate === null ? "0%" : `${data.winRate}%`}
-                    </P>
-                  </Seventh>
-                  <Eighth className="table_width">
-                    <Content>{data.contents}</Content>
-                  </Eighth>
-                  <Ninth className="table_width">
-                    <P className="gray">
-                      {setDateFormatter(data.bumpTime || data.createdAt)}
-                    </P>
-                    {isUser.id ? (
-                      <More>
-                        <MoreBoxButton
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleMoreBoxToggle(data.boardId);
-                          }}
-                        />
-                        {isMoreBoxOpen && isBoardId === data.boardId && (
-                          <MoreBox
-                            items={MoreBoxMenuItems}
-                            top={0}
-                            left={-180}
-                            onClose={(e: any) => {
-                              setIsMoreBoxOpen(false);
-                            }}
-                          />
-                        )}
-                      </More>
-                    ) : null}
-                  </Ninth>
-                </Row>
-              );
-            })}
+            {content?.map((data) => (
+              <TableRow
+                key={data.boardId}
+                data={data}
+                isUser={isUser}
+                isBoardId={isBoardId}
+                isMoreBoxOpen={isMoreBoxOpen}
+                onRowClick={handlePostOpen}
+                onMoveProfile={handleMoveProfilePage}
+                onCopyText={handleTextClick}
+                onMoreBoxToggle={handleMoreBoxToggle}
+                onMoreBoxClose={handleMoreBoxClose}
+                menuItems={MoreBoxMenuItems}
+              />
+            ))}
           </TableContent>
         ) : (
           <NoData>게시된 글이 없습니다.</NoData>
@@ -633,179 +500,7 @@ const TableWrapper = styled.div`
   }
 `;
 
-const TableHead = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 21px;
-  ${(props) => props.theme.fonts.bold14};
-  background: ${theme.colors.gray700};
-  color: ${theme.colors.white};
-  border-radius: 8px;
-`;
-
-const Title = styled.p`
-  &:first-child {
-    text-align: left;
-  }
-`;
-
 const TableContent = styled.div``;
-
-const Row = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 22px 21px;
-  border-bottom: 1px solid #d4d4d4;
-  cursor: pointer;
-`;
-
-const First = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`;
-
-const Second = styled.div`
-  p {
-    color: ${theme.colors.violet600};
-    ${(props) => props.theme.fonts.bold16};
-  }
-`;
-
-const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
-  position: relative;
-  width: 50px;
-  height: 50px;
-  background: ${(props) => props.$bgColor};
-  border-radius: 50%;
-  aspect-ratio: 1;
-`;
-
-const ProfileImg = styled.object`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-`;
-
-const Third = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-`;
-
-const TierImage = styled.object`
-  pointer-events: none;
-`;
-
-const Fourth = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 21px;
-`;
-
-const Fifth = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const Sixth = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-`;
-
-const Seventh = styled.div``;
-
-const Eighth = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const Ninth = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  p {
-    width: 60px;
-  }
-`;
-
-const More = styled.div`
-  position: relative;
-`;
-
-const NameRow = styled.div`
-  display: flex;
-  align-items: center;
-  position: relative;
-
-  &:hover > button {
-    display: inline-flex;
-  }
-`;
-
-const P = styled.p`
-  ${(props) => props.theme.fonts.medium16};
-  color: ${theme.colors.gray800};
-  white-space: nowrap;
-  &.emph {
-    color: ${theme.colors.violet600};
-    ${(props) => props.theme.fonts.bold16};
-  }
-  &.gray {
-    color: ${theme.colors.gray500};
-    ${(props) => props.theme.fonts.medium16};
-  }
-`;
-
-const Content = styled.div`
-  display: -webkit-box;
-  width: 156px;
-  max-height: 52px;
-  padding: 8px;
-  text-align: center;
-  border-radius: 8px;
-  border: 1px solid ${theme.colors.gray400};
-  background: ${theme.colors.gray100};
-  color: ${theme.colors.gray700};
-  ${(props) => props.theme.fonts.regular13};
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
-
-const CopyButton = styled.button`
-  width: auto;
-  height: 20px;
-  margin-left: 10px;
-  border-radius: 2px;
-  padding: 0px 7px;
-  background: ${theme.colors.gray600};
-  color: ${theme.colors.white};
-  ${theme.fonts.medium11};
-  line-height: 11px;
-  white-space: nowrap;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  display: none;
-  &:hover {
-    color: ${theme.colors.violet300};
-  }
-`;
 
 const NoData = styled.p`
   color: ${theme.colors.gray800};
