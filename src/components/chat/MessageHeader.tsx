@@ -193,6 +193,7 @@ const TitleWrap = styled.div`
 
 const Title = styled.p`
   ${theme.fonts.bold20}
+  color: ${theme.colors.gray800};
 `;
 
 const CloseButton = styled.p`
