@@ -611,7 +611,10 @@ const BoardPage = () => {
                   />
                 </ThirdRow>
                 <Main>
-                    <PostList content={boardList} isLoading={isLoading}></PostList>
+                  <PostList
+                    content={boardList}
+                    isLoading={isLoading}
+                  ></PostList>
                 </Main>
                 <div ref={sentinelRef}></div>
                 {/* IntersectionObserver 를 위한 감지용 element */}
