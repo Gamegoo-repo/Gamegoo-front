@@ -1,12 +1,26 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { lockBodyScroll, unlockBodyScroll } from "@/utils";
 
-interface ModalState {
+import { decrementModalCount, incrementModalCount } from "@/utils";
+
+import type { PayloadAction } from "@reduxjs/toolkit";
+
+interface AlertPayload {
+  icon: string;
+  width: number;
+  height: number;
+  content: string;
+  alt: string;
+  buttonText: string;
+  onClose?: () => void;
+}
+export interface ModalState {
   isOpen: boolean;
   evaluationModal: boolean;
   modalType: string;
   readingModal: boolean;
   postingModal: boolean;
+  alertProps: AlertPayload | undefined;
+  openCount: number;
 }
 
 const initialState: ModalState = {
@@ -15,6 +29,8 @@ const initialState: ModalState = {
   modalType: "",
   readingModal: false,
   postingModal: false,
+  alertProps: undefined,
+  openCount: 0,
 };
 
 const modalSlice = createSlice({
@@ -24,46 +40,57 @@ const modalSlice = createSlice({
     /* 매너,비매너 선택 모달 */
     setOpenMannerStatusModal: (state) => {
       state.isOpen = true;
-      lockBodyScroll();
+      incrementModalCount(state);
     },
     setCloseMannerStatusModal: (state) => {
       state.isOpen = false;
-      unlockBodyScroll();
+      decrementModalCount(state);
     },
     /* 매너,비매너 평가하기 모달 */
     setOpenEvaluationModal: (state) => {
       state.evaluationModal = true;
-      lockBodyScroll();
+      incrementModalCount(state);
     },
     setCloseEvaluationModal: (state) => {
       state.evaluationModal = false;
-      unlockBodyScroll();
+      decrementModalCount(state);
     },
     setOpenModal: (state, action) => {
       state.modalType = action.payload;
-      lockBodyScroll();
+      incrementModalCount(state);
     },
     setCloseModal: (state) => {
       state.modalType = "";
-      unlockBodyScroll();
+      decrementModalCount(state);
     },
     /* 게시판 읽기 모달 */
     setOpenReadingModal: (state) => {
       state.readingModal = true;
-      lockBodyScroll();
+      incrementModalCount(state);
     },
     setCloseReadingModal: (state) => {
       state.readingModal = false;
-      unlockBodyScroll();
+      decrementModalCount(state);
     },
     /* 게시판 쓰기 모달 */
     setOpenPostingModal: (state) => {
       state.postingModal = true;
-      lockBodyScroll();
+      incrementModalCount(state);
     },
     setClosePostingModal: (state) => {
       state.postingModal = false;
-      unlockBodyScroll();
+      decrementModalCount(state);
+    },
+    /* Alert Component */
+    setOpenAlertModal: (state, action: PayloadAction<AlertPayload>) => {
+      state.isOpen = true;
+      state.alertProps = action.payload;
+      incrementModalCount(state);
+    },
+    setCloseAlertModal: (state) => {
+      state.isOpen = false;
+      state.alertProps = undefined;
+      decrementModalCount(state);
     },
   },
 });
@@ -79,6 +106,8 @@ export const {
   setCloseReadingModal,
   setOpenPostingModal,
   setClosePostingModal,
+  setOpenAlertModal,
+  setCloseAlertModal,
 } = modalSlice.actions;
 
 export default modalSlice.reducer;

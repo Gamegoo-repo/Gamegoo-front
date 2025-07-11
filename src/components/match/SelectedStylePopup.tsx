@@ -140,7 +140,7 @@ const Container = styled.div<{
     content: "";
     position: absolute;
     top: -18px;
-    left: ${({ $tailLeft }) => $tailLeft+5}px;
+    left: ${({ $tailLeft }) => $tailLeft + 5}px;
   }
 
   @media (max-width: ${theme.breakpoints.desktop}) {

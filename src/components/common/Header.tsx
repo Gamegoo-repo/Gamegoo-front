@@ -10,6 +10,7 @@ import { HEADER_MODAL_TAB } from "@/constants";
 import { STORAGE_KEY } from "@/constants/storage";
 import { useMediaQueryContext } from "@/hooks";
 import { closeChat } from "@/redux/slices/chatSlice";
+import { setOpenAlertModal } from "@/redux/slices/modalSlice";
 import { setNotiCount } from "@/redux/slices/notiSlice";
 import {
   clearUserProfile,
@@ -54,7 +55,6 @@ const Header = () => {
   const myPageDivRef = useRef<HTMLDivElement>(null);
 
   const myPageRef = useRef<HTMLDivElement>(null);
-  const [showAlert, setShowAlert] = useState(false);
 
   const storedName = getName();
   const storedProfileImg = Number(getProfileImg());
@@ -119,6 +119,18 @@ const Header = () => {
     }
   };
 
+  const showLoginAlert = () => {
+    dispatch(
+      setOpenAlertModal({
+        icon: "exclamation",
+        width: 68,
+        height: 58,
+        content: "로그인이 필요한 서비스입니다.",
+        alt: "경고",
+        buttonText: "확인",
+      })
+    );
+  };
   useEffect(
     () => {
       // 첫 렌더에서만 API 호출
@@ -135,18 +147,6 @@ const Header = () => {
 
   return (
     <Head>
-      {showAlert && (
-        <Alert
-          icon="exclamation"
-          width={68}
-          height={58}
-          content="로그인이 필요한 서비스입니다."
-          alt="경고"
-          onClose={() => setShowAlert(false)}
-          buttonText="확인"
-        />
-      )}
-
       <HeaderBar>
         <LogoButton>
           <Link href="/">
@@ -178,7 +178,7 @@ const Header = () => {
             selected={pathname.includes("/match")}
             onClick={() => {
               if (!accesssToken) {
-                setShowAlert(true);
+                showLoginAlert();
               } else {
                 router.push("/match");
               }

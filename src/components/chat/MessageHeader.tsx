@@ -11,10 +11,11 @@ import {
   openChat,
   setChatRoomUuid,
 } from "@/redux/slices/chatSlice";
+import { setOpenAlertModal } from "@/redux/slices/modalSlice";
 import { theme } from "@/styles/theme";
 import { getProfileBgColor } from "@/utils";
 
-import { Alert, MoreBox } from "../common";
+import { MoreBox } from "../common";
 
 import type { RootState } from "@/redux/store";
 import type { Chat, MoreBoxMenuItems } from "@/types";
@@ -41,8 +42,6 @@ const MessageHeader = (props: MessageHeaderProps) => {
   const { isMobile } = useMediaQueryContext();
   const dispatch = useDispatch();
   const router = useRouter();
-  const [showAlert, setShowAlert] = useState<boolean>(false);
-
   const onlineFriends = useSelector(
     (state: RootState) => state.chat.onlineFriends
   );
@@ -55,7 +54,7 @@ const MessageHeader = (props: MessageHeaderProps) => {
 
   const handleGoToPrevious = () => {
     if (disabled) {
-      setShowAlert(true);
+      showLoginAlert();
     } else {
       dispatch(setChatRoomUuid(null));
       dispatch(closeChatRoom());
@@ -65,25 +64,27 @@ const MessageHeader = (props: MessageHeaderProps) => {
 
   const handleMoreBoxOpen = () => {
     if (disabled) {
-      setShowAlert(true);
+      showLoginAlert();
     } else {
       onMoreBoxOpen();
     }
   };
 
+  const showLoginAlert = () => {
+    dispatch(
+      setOpenAlertModal({
+        icon: "exclamation",
+        width: 68,
+        height: 58,
+        content: "로그인이 필요한 서비스입니다.",
+        alt: "경고",
+        buttonText: "확인",
+      })
+    );
+  };
+
   return (
     <>
-      {showAlert && (
-        <Alert
-          icon="exclamation"
-          width={68}
-          height={58}
-          content="로그인이 필요한 서비스입니다."
-          alt="경고"
-          onClose={() => setShowAlert(false)}
-          buttonText="확인"
-        />
-      )}
       {isMoreBoxOpen && (
         <MoreBox
           items={menuItems}
