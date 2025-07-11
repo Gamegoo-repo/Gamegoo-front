@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { useDispatch } from "react-redux";
 import Image from "next/image";
 import styled from "styled-components";
@@ -8,7 +9,6 @@ import {
   setOpenModal,
 } from "@/redux/slices/modalSlice";
 import { theme } from "@/styles/theme";
-import { createPortal } from "react-dom";
 
 type ButtonText =
   | "취소"
@@ -53,7 +53,7 @@ const ConfirmModal = (props: ConfirmModalProps) => {
 
     return () => {
       // 닫힐 때
-      if(modalRoot && modalRoot.children.length === 0){
+      if (modalRoot && modalRoot.children.length === 0) {
         document.body.style.overflow = "unset";
       }
     };
@@ -169,8 +169,9 @@ const ConfirmModal = (props: ConfirmModalProps) => {
           </ButtonWrapper>
         </Footer>
       </Wrapper>
-    </Overlay>
-  ,modalRoot);
+    </Overlay>,
+    modalRoot
+  );
 };
 
 export default ConfirmModal;

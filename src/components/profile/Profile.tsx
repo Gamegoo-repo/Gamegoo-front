@@ -1048,11 +1048,18 @@ const Msg = styled.div`
   color: ${theme.colors.gray600};
   ${(props) => props.theme.fonts.regular20};
   margin: 28px 0;
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    ${(props) => props.theme.fonts.medium14};
+  }
 `;
 
 const MsgConfirm = styled(Msg)`
   ${(props) => props.theme.fonts.regular20};
   margin: 80px 0;
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    ${(props) => props.theme.fonts.medium14};
+    margin: 32px 0;
+  }
 `;
 
 const Positions = styled.div`

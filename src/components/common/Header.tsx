@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
 import Link from "next/link";
@@ -29,7 +30,6 @@ import {
 } from "@/utils";
 
 import AlertWindow from "../alert/AlertWindow";
-import Alert from "./Alert";
 import ChatButton from "./ChatButton";
 
 import type { RootState } from "@/redux/store";
@@ -61,6 +61,7 @@ const Header = () => {
   const storedUserId = Number(getUserId());
 
   const isFirstRender = useRef(true);
+  const modalRoot = document.getElementById("modal-root") as HTMLElement;
 
   useEffect(
     () => {
@@ -103,6 +104,16 @@ const Header = () => {
       document.addEventListener("mousedown", handleClickOutside);
     }
   }, [isMyPage]);
+
+  useEffect(() => {
+    if (!isMobile) return;
+
+    if (isMyPage) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+  }, [isMobile, isMyPage]);
 
   /* 페이지 이동 시 팝업창 닫음 */
   useEffect(() => {
@@ -218,11 +229,6 @@ const Header = () => {
               ref={myPageDivRef}
               className="profile"
               onClick={() => {
-                // if (isMobile) {
-                //   router.push("/mypage/profile");
-                //   return;
-                // }
-
                 setIsMyPage(!isMyPage);
               }}
             >
@@ -259,86 +265,90 @@ const Header = () => {
           alertButtonRef={alertButtonRef}
         />
       )}
-      {isMyPage && (
-        <MyPageModal ref={myPageRef}>
-          {isMobile && (
-            <MyPageModalHeader>
-              <MyPageModalHeaderTitle>내정보</MyPageModalHeaderTitle>
-              <button>
-                <Image
-                  src="/assets/icons/close_modal.svg"
-                  width={16}
-                  height={16}
-                  alt="닫기"
-                  onClick={() => setIsMyPage(false)}
-                  style={{ cursor: "pointer" }}
-                />
-              </button>
-            </MyPageModalHeader>
-          )}
-
-          <MyProfile>
-            {profileImg && (
-              <ProfileImgWrapper $bgColor={getProfileBgColor(profileImg)}>
-                <ProfileImg
-                  data={`/assets/images/profile/profile${profileImg}.svg`}
-                  width={52}
-                  height={62}
-                />
-              </ProfileImgWrapper>
-            )}
-            <MyName>{name}</MyName>
-            <Image
-              src={`/assets/icons/noti_${notiCount > 0 ? "on" : "off"}.svg`}
-              width={24}
-              height={30}
-              alt="noti"
-              onClick={() => {
-                router.push("/mypage/notification");
-                setIsMyPage(false);
-              }}
-              style={{ cursor: "pointer" }}
-            />
-          </MyProfile>
-          <TabMenu>
-            {HEADER_MODAL_TAB.map((data, index) => (
-              <TabItemWrapper key={data.id}>
-                <Line
-                  onClick={async () => {
-                    setIsMyPage(false);
-                    if (data.id !== 6) {
-                      router.push(`${data.url}`);
-                    } else {
-                      sessionStorage.setItem(STORAGE_KEY.logout, "true");
-                      try {
-                        await postLogout();
-                        await clearTokens();
-                        await socketLogout();
-                        localStorage.removeItem(STORAGE_KEY.gamegooSocketId);
-                        dispatch(clearUserProfile());
-                        sessionStorage.removeItem(STORAGE_KEY.unreadChatUuids);
-                        dispatch(closeChat());
-                        router.push("/riot");
-                      } catch {
-                        console.error("소켓 로그아웃 오류");
-                      }
-                    }
-                  }}
-                >
+      {isMyPage &&
+        createPortal(
+          <MyPageModal ref={myPageRef}>
+            {isMobile && (
+              <MyPageModalHeader>
+                <MyPageModalHeaderTitle>내정보</MyPageModalHeaderTitle>
+                <button>
                   <Image
-                    src={`/assets/icons/${data.icon}.svg`}
-                    width={20}
-                    height={20}
-                    alt={`${data.icon}`}
+                    src="/assets/icons/close_modal.svg"
+                    width={16}
+                    height={16}
+                    alt="닫기"
+                    onClick={() => setIsMyPage(false)}
+                    style={{ cursor: "pointer" }}
                   />
-                  {data.menu}
-                </Line>
-                {index === 3 && <Divider />}
-              </TabItemWrapper>
-            ))}
-          </TabMenu>
-        </MyPageModal>
-      )}
+                </button>
+              </MyPageModalHeader>
+            )}
+
+            <MyProfile>
+              {profileImg && (
+                <ProfileImgWrapper $bgColor={getProfileBgColor(profileImg)}>
+                  <ProfileImg
+                    data={`/assets/images/profile/profile${profileImg}.svg`}
+                    width={52}
+                    height={62}
+                  />
+                </ProfileImgWrapper>
+              )}
+              <MyName>{name}</MyName>
+              <Image
+                src={`/assets/icons/noti_${notiCount > 0 ? "on" : "off"}.svg`}
+                width={24}
+                height={30}
+                alt="noti"
+                onClick={() => {
+                  router.push("/mypage/notification");
+                  setIsMyPage(false);
+                }}
+                style={{ cursor: "pointer" }}
+              />
+            </MyProfile>
+            <TabMenu>
+              {HEADER_MODAL_TAB.map((data, index) => (
+                <TabItemWrapper key={data.id}>
+                  <Line
+                    onClick={async () => {
+                      setIsMyPage(false);
+                      if (data.id !== 6) {
+                        router.push(`${data.url}`);
+                      } else {
+                        sessionStorage.setItem(STORAGE_KEY.logout, "true");
+                        try {
+                          await postLogout();
+                          await clearTokens();
+                          await socketLogout();
+                          localStorage.removeItem(STORAGE_KEY.gamegooSocketId);
+                          dispatch(clearUserProfile());
+                          sessionStorage.removeItem(
+                            STORAGE_KEY.unreadChatUuids
+                          );
+                          dispatch(closeChat());
+                          router.push("/riot");
+                        } catch {
+                          console.error("소켓 로그아웃 오류");
+                        }
+                      }
+                    }}
+                  >
+                    <Image
+                      src={`/assets/icons/${data.icon}.svg`}
+                      width={20}
+                      height={20}
+                      alt={`${data.icon}`}
+                    />
+                    {data.menu}
+                  </Line>
+                  {index === 3 && <Divider />}
+                </TabItemWrapper>
+              ))}
+            </TabMenu>
+          </MyPageModal>,
+          modalRoot
+        )}
     </Head>
   );
 };

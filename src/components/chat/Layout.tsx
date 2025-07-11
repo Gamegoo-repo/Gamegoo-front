@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
 import styled from "styled-components";
@@ -43,8 +44,6 @@ const Layout = () => {
   /* 채팅창 위치 관련 상태 */
   const position = useSelector((state: RootState) => state.chatPosition);
   const activeTab = useSelector((state: RootState) => state.chat.activeTab);
-  // const [isDragging, setIsDragging] = useState(false);
-  // const [offset, setOffset] = useState({ x: 0, y: 0 });
 
   const [friends, setFriends] = useState<FriendList[]>([]);
   const [favoriteFriends, setFavoriteFriends] = useState<FriendList[]>([]);
@@ -74,6 +73,7 @@ const Layout = () => {
     (state: RootState) => state.chat.isChatRoomUuid
   );
   const isModalType = useSelector((state: RootState) => state.modal.modalType);
+  const modalRoot = document.getElementById("modal-root") as HTMLElement;
 
   /* 채팅창 위치 관련 함수 */
   // 경계 제한 로직
@@ -142,17 +142,23 @@ const Layout = () => {
     setFavoriteFriends(likedFriends);
   }, [friends]);
 
-  useEffect(() => {
-    const likedFriends = friends.filter((friend) => friend.liked);
-    setFavoriteFriends(likedFriends);
-  }, [friends]);
-
   /* 검색 중이 아닐 때만 전체 목록을 가져오기. */
   useEffect(() => {
     if (!isSearching) {
       handleFetchFriendsList();
     }
   }, [activeTab, isSearching]);
+
+  useEffect(() => {
+    if (!isMobile) return;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      if (modalRoot && modalRoot.children.length === 0) {
+        document.body.style.overflow = "unset";
+      }
+    };
+  }, [modalRoot, isMobile]);
 
   /* 친구 검색 */
   const handleSearch = (searchResults: FriendList[] | null) => {
@@ -458,7 +464,7 @@ const Layout = () => {
     !isEditMode &&
     isBadMannerValue?.mannerKeywordIdList.length !== 0;
 
-  return (
+  return createPortal(
     <>
       <Overlay $top={position.top} $left={position.left}>
         <Wrapper onClick={handleOutsideModalClick}>
@@ -727,7 +733,8 @@ const Layout = () => {
           </ModalSubmitBtn>
         </FormModal>
       )}
-    </>
+    </>,
+    modalRoot
   );
 };
 
