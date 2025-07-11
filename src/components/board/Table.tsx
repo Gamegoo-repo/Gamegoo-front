@@ -30,6 +30,7 @@ import { setRefresh } from "@/redux/slices/boardSlice";
 import {
   setCloseModal,
   setCloseReadingModal,
+  setOpenAlertModal,
   setOpenModal,
   setOpenPostingModal,
   setOpenReadingModal,
@@ -70,8 +71,6 @@ const Table = (props: TableProps) => {
 
   const [isBoardId, setIsBoardId] = useState(0);
   const [isPost, setIsPost] = useState<MemberPost>();
-  const [showAlert, setShowAlert] = useState(false);
-  const [alertContent, setAlertContent] = useState("");
   const isChatRoomOpen = useSelector(
     (state: RootState) => state.chat.isChatRoomOpen
   );
@@ -89,15 +88,6 @@ const Table = (props: TableProps) => {
   const [isBlockBoxOpen, setIsBlockBoxOpen] = useState(false);
   const [isBlockConfirmOpen, setIsBlockConfrimOpen] = useState(false);
   const [isPullUpConfirmOpen, setIsPullUpConfirmOpen] = useState(false);
-  const [alertProps, setAlertProps] = useState<AlertProps>({
-    icon: "",
-    width: 0,
-    height: 0,
-    content: "",
-    alt: "",
-    onClose: () => {},
-    buttonText: "",
-  });
 
   /* 로그아웃 시, 비회원 접근 시 알럿 props 설정 함수 */
   const logoutMessage = "로그아웃 되었습니다. 다시 로그인 해주세요.";
@@ -109,8 +99,16 @@ const Table = (props: TableProps) => {
     const exists = content.some((board) => board.boardId === boardId);
 
     if (!exists) {
-      setAlertContent("해당 글은 삭제된 글입니다.");
-      return setShowAlert(true);
+      return dispatch(
+        setOpenAlertModal({
+          icon: "trash",
+          width: 45,
+          height: 50,
+          content: deletedMessage,
+          alt: deletedMessage,
+          buttonText: "확인",
+        })
+      );
     }
 
     dispatch(setOpenReadingModal());
@@ -123,16 +121,17 @@ const Table = (props: TableProps) => {
     handleAlertClose: () => void,
     btnText: string
   ) => {
-    setAlertProps({
-      icon: icon,
-      width: 68,
-      height: 58,
-      content: content,
-      alt: "경고",
-      onClose: handleAlertClose,
-      buttonText: btnText,
-    });
-    setShowAlert(true);
+    dispatch(
+      setOpenAlertModal({
+        icon,
+        width: 68,
+        height: 58,
+        content,
+        alt: "경고",
+        buttonText: btnText,
+        onClose: handleAlertClose,
+      })
+    );
   };
 
   useEffect(() => {
@@ -279,8 +278,8 @@ const Table = (props: TableProps) => {
   const handleEdit = async () => {
     setIsMoreBoxOpen((prevState) => !prevState);
     if (isBoardId) {
-      await dispatch(setOpenPostingModal());
       await dispatch(setCloseReadingModal());
+      await dispatch(setOpenPostingModal());
       dispatch(setPostStatus(""));
     }
   };
@@ -378,22 +377,6 @@ const Table = (props: TableProps) => {
 
   return (
     <>
-      {showAlert && (
-        <Alert
-          icon={
-            alertContent === "로그인이 필요한 서비스입니다."
-              ? "exclamation"
-              : "trash"
-          }
-          width={45}
-          height={50}
-          content={alertContent}
-          alt={alertContent}
-          onClose={() => setShowAlert(false)}
-          buttonText="확인"
-        />
-      )}
-
       {isReadingModal && !isChatRoomOpen && <ReadBoard postId={isBoardId} />}
 
       {isChatRoomOpen && <Layout />}

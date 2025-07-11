@@ -3,9 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import { Alert, Layout, ReadBoard, ReportModal } from "@/components";
+import { Layout, ReadBoard, ReportModal } from "@/components";
 import {
   setCloseReadingModal,
+  setOpenAlertModal,
   setOpenReadingModal,
 } from "@/redux/slices/modalSlice";
 import { theme } from "@/styles/theme";
@@ -13,7 +14,6 @@ import { theme } from "@/styles/theme";
 import { PostItem } from "../common";
 
 import type { RootState } from "@/redux/store";
-import type { AlertProps } from "@/types";
 import type { BoardListDetail } from "@/types/api";
 
 interface PostListProps {
@@ -25,8 +25,6 @@ const PostList = ({ content }: PostListProps) => {
   const router = useRouter();
 
   const [isBoardId, setIsBoardId] = useState(0);
-  const [showAlert, setShowAlert] = useState(false);
-  const [alertContent, setAlertContent] = useState("");
 
   const isChatRoomOpen = useSelector(
     (state: RootState) => state.chat.isChatRoomOpen
@@ -35,16 +33,6 @@ const PostList = ({ content }: PostListProps) => {
     (state: RootState) => state.modal.readingModal
   );
   const isModalType = useSelector((state: RootState) => state.modal.modalType);
-
-  const [alertProps, setAlertProps] = useState<AlertProps>({
-    icon: "",
-    width: 0,
-    height: 0,
-    content: "",
-    alt: "",
-    onClose: () => {},
-    buttonText: "",
-  });
 
   useEffect(() => {
     return () => {
@@ -57,8 +45,16 @@ const PostList = ({ content }: PostListProps) => {
     const exists = content.some((board) => board.boardId === boardId);
 
     if (!exists) {
-      setAlertContent("해당 글은 삭제된 글입니다.");
-      return setShowAlert(true);
+      return dispatch(
+        setOpenAlertModal({
+          icon: "trash",
+          width: 45,
+          height: 50,
+          content: "해당 글은 삭제된 글입니다.",
+          alt: "해당 글은 삭제된 글입니다.",
+          buttonText: "확인",
+        })
+      );
     }
 
     dispatch(setOpenReadingModal());
@@ -73,21 +69,6 @@ const PostList = ({ content }: PostListProps) => {
 
   return (
     <>
-      {showAlert && (
-        <Alert
-          icon={
-            alertContent === "로그인이 필요한 서비스입니다."
-              ? "exclamation"
-              : "trash"
-          }
-          width={45}
-          height={50}
-          content={alertContent}
-          alt={alertContent}
-          onClose={() => setShowAlert(false)}
-          buttonText="확인"
-        />
-      )}
       {isReadingModal && !isChatRoomOpen && <ReadBoard postId={isBoardId} />}
 
       {isChatRoomOpen && <Layout />}

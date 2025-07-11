@@ -22,6 +22,7 @@ export { default as MannerLevelBar } from "./MannerLevelBar";
 export { default as MannerLevelBox } from "./MannerLevelBox";
 export { default as Mic } from "./Mic";
 export { default as MoreBox } from "./MoreBox";
+export { default as ModalContainer } from "./ModalContainer";
 export { default as Pagination } from "./Pagination";
 export { default as PositionCategory } from "./PositionCategory";
 export { default as ProtectRoute } from "./ProtectRoute";

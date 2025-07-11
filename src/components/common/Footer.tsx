@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
@@ -6,7 +6,6 @@ import styled from "styled-components";
 import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 
-import Alert from "./Alert";
 import ChatButton from "./ChatButton";
 import FeedBackInput from "./FeedbackInput";
 
@@ -18,12 +17,6 @@ const Footer = (props: FooterProps) => {
   const { isMobile } = useMediaQueryContext();
   const { isShowChat } = props;
   const router = useRouter();
-  const [showAlert, setShowAlert] = useState(false);
-
-  /* 서비스 준비 중 경고창 */
-  const handleShowWarning = () => {
-    setShowAlert(!showAlert);
-  };
 
   const handleDirectPrivacy = () => {
     router.push("/policy?terms=privacy");
@@ -35,17 +28,6 @@ const Footer = (props: FooterProps) => {
 
   return (
     <Wrapper>
-      {showAlert && (
-        <Alert
-          icon="exclamation"
-          width={68}
-          height={58}
-          content="서비스 준비 중입니다."
-          alt="경고"
-          onClose={handleShowWarning}
-          buttonText="확인"
-        />
-      )}
       <Container>
         <LeftWrapper>
           <LeftDiv>

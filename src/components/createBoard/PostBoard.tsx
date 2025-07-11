@@ -12,7 +12,10 @@ import styled from "styled-components";
 
 import { editPost, getMyProfile, postBoard } from "@/api";
 import { GAME_MODE } from "@/constants";
-import { setClosePostingModal } from "@/redux/slices/modalSlice";
+import {
+  setClosePostingModal,
+  setOpenAlertModal,
+} from "@/redux/slices/modalSlice";
 import {
   clearCurrentPost,
   setPostStatus,
@@ -84,7 +87,6 @@ const PostBoard = (props: PostBoardProps) => {
     currentPost?.contents || ""
   );
   const [isFocused, setIsFocused] = useState<boolean>(false);
-  const [showAlert, setShowAlert] = useState(false);
 
   const fetchProfile = async () => {
     try {
@@ -203,11 +205,25 @@ const PostBoard = (props: PostBoardProps) => {
     }
   };
 
+  const showLoginAlert = () => {
+    dispatch(
+      setOpenAlertModal({
+        icon: "exclamation",
+        width: 68,
+        height: 58,
+        content: "로그아웃 되었습니다. 다시 로그인 해주세요.",
+        alt: "로그인 필요",
+        buttonText: "로그인하기",
+        onClose: () => router.push("/riot"),
+      })
+    );
+  };
+
   /* 글쓰기 */
   const handlePost = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!user.gameName) {
-      return setShowAlert(true);
+      return showLoginAlert();
     }
 
     const isARAM = selectedDropOption === "ARAM"; // 칼바람
@@ -279,18 +295,6 @@ const PostBoard = (props: PostBoardProps) => {
 
   return (
     <CRModal type="posting" onClose={handleModalClose}>
-      {showAlert && (
-        <Alert
-          icon="exclamation"
-          width={68}
-          height={58}
-          content="로그아웃 되었습니다. 다시 로그인 해주세요."
-          alt="로그인 필요"
-          onClose={() => router.push("/riot")}
-          buttonText="로그인하기"
-        />
-      )}
-
       {postStatus && (
         <ConfirmModal
           width="540px"

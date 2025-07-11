@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
@@ -6,6 +7,7 @@ import styled from "styled-components";
 import { getPopupNotification, patchReadNotification } from "@/api";
 import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
+import { lockBodyScroll, unlockBodyScroll } from "@/utils";
 
 import AlertBox from "../mypage/notification/AlertBox";
 
@@ -23,7 +25,7 @@ const AlertWindow = (props: AlertWindowProps) => {
   const { countFunc, onClose, alertButtonRef } = props;
 
   const alertWindowRef = useRef<HTMLDivElement>(null);
-
+  const modalRoot = document.getElementById("modal-root") as HTMLElement;
   const [notiList, setNotiList] = useState<Notification[]>([]);
   const [cursor, setCursor] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -102,6 +104,17 @@ const AlertWindow = (props: AlertWindowProps) => {
     []
   );
 
+  useEffect(() => {
+    if (!isMobile) return;
+    lockBodyScroll();
+
+    return () => {
+      if (modalRoot && modalRoot.children.length === 0) {
+        unlockBodyScroll();
+      }
+    };
+  }, [modalRoot, isMobile]);
+
   /* 알림 읽음으로 상태 변경 */
   const handleClickAlert = async (
     notificationId: number,
@@ -131,7 +144,7 @@ const AlertWindow = (props: AlertWindowProps) => {
     }
   };
 
-  return (
+  return createPortal(
     <>
       <Overlay>
         <Wrapper ref={alertWindowRef}>
@@ -188,7 +201,8 @@ const AlertWindow = (props: AlertWindowProps) => {
           </Background>
         </Wrapper>
       </Overlay>
-    </>
+    </>,
+    modalRoot
   );
 };
 

@@ -6,16 +6,15 @@ import styled from "styled-components";
 import { STORAGE_KEY } from "@/constants/storage";
 import { useMediaQueryContext } from "@/hooks";
 import { toggleChat } from "@/redux/slices/chatSlice";
+import { setOpenAlertModal } from "@/redux/slices/modalSlice";
 import { theme } from "@/styles/theme";
 
 import Layout from "../chat/Layout";
-import Alert from "./Alert";
 
 import type { RootState } from "@/redux/store";
 
 const ChatButton = () => {
   const { isMobile } = useMediaQueryContext();
-  const [showAlert, setShowAlert] = useState(false);
   const [unreadChatUuids, setUnreadChatUuids] = useState<string[]>([]);
   const [chatCount, setChatCount] = useState<number>(0);
 
@@ -57,25 +56,27 @@ const ChatButton = () => {
 
   const handleToggleChat = () => {
     if (!isUser.gameName) {
-      return setShowAlert(true);
+      return showLoginAlert();
     }
     dispatch(toggleChat());
     // dispatch(resetPosition());
   };
 
+  const showLoginAlert = () => {
+    dispatch(
+      setOpenAlertModal({
+        icon: "exclamation",
+        width: 68,
+        height: 58,
+        content: "로그인이 필요한 서비스입니다.",
+        alt: "경고",
+        buttonText: "확인",
+      })
+    );
+  };
+
   return (
     <>
-      {showAlert && (
-        <Alert
-          icon="exclamation"
-          width={68}
-          height={58}
-          content="로그인이 필요한 서비스입니다."
-          alt="경고"
-          onClose={() => setShowAlert(false)}
-          buttonText="확인"
-        />
-      )}
       {isChatOpen && <Layout />}
       {isMobile ? (
         <MoMsgIconWrapper onClick={handleToggleChat}>

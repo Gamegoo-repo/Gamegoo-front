@@ -1,14 +1,24 @@
+import { createPortal } from "react-dom";
+import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
 import styled from "styled-components";
 
+import { setCloseAlertModal } from "@/redux/slices/modalSlice";
 import { theme } from "@/styles/theme";
 
-import type { AlertProps } from "@/types";
+import type { RootState } from "@/redux/store";
 
-const Alert = (props: AlertProps) => {
-  const { icon, width, height, content, alt, onClose, buttonText } = props;
+const Alert = () => {
+  const dispatch = useDispatch();
+  const showAlert = useSelector((state: RootState) => state.modal.isOpen);
+  const alertProps = useSelector((state: RootState) => state.modal.alertProps);
+  const modalRoot = document.getElementById("modal-root") as HTMLElement;
+  const { icon, width, height, content, alt, onClose, buttonText } =
+    alertProps || {};
 
-  return (
+  if (!showAlert) return null;
+
+  return createPortal(
     <Overlay>
       <Wrapper>
         <TextWrapper>
@@ -16,15 +26,29 @@ const Alert = (props: AlertProps) => {
             src={`/assets/icons/${icon}.svg`}
             width={width}
             height={height}
-            alt={alt}
+            alt={alt || ""}
           />
           <Text>{content}</Text>
         </TextWrapper>
         <ButtonWrapper>
-          <Button onClick={onClose}>{buttonText}</Button>
+          <Button
+            onClick={
+              onClose
+                ? () => {
+                    dispatch(setCloseAlertModal());
+                    onClose();
+                  }
+                : () => {
+                    dispatch(setCloseAlertModal());
+                  }
+            }
+          >
+            {buttonText}
+          </Button>
         </ButtonWrapper>
       </Wrapper>
-    </Overlay>
+    </Overlay>,
+    modalRoot
   );
 };
 

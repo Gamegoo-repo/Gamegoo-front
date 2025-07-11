@@ -6,3 +6,4 @@ export * from "./storage";
 export * from "./string";
 export * from "./timeFormat";
 export * from "./matching";
+export * from "./modalHelper";

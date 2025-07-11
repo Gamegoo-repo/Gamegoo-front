@@ -429,6 +429,7 @@ const RecentBox = styled.div`
   gap: 56px;
 
   @media (max-width: ${theme.breakpoints.mobile}) {
+    height: unset;
     display: flex;
     flex-direction: column;
     align-items: flex-start;

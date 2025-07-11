@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
 import styled from "styled-components";
@@ -28,7 +29,7 @@ import {
 import { setCloseModal, setOpenModal } from "@/redux/slices/modalSlice";
 import { socket } from "@/socket";
 import { theme } from "@/styles/theme";
-import { getAccessToken } from "@/utils";
+import { getAccessToken, lockBodyScroll, unlockBodyScroll } from "@/utils";
 
 import { Button, Checkbox, ConfirmModal, FormModal, Input } from "../common";
 import { ChatFriendList, ChatLayout, ChatRoomList, SearchBar, Tabs } from "./";
@@ -43,8 +44,6 @@ const Layout = () => {
   /* 채팅창 위치 관련 상태 */
   const position = useSelector((state: RootState) => state.chatPosition);
   const activeTab = useSelector((state: RootState) => state.chat.activeTab);
-  // const [isDragging, setIsDragging] = useState(false);
-  // const [offset, setOffset] = useState({ x: 0, y: 0 });
 
   const [friends, setFriends] = useState<FriendList[]>([]);
   const [favoriteFriends, setFavoriteFriends] = useState<FriendList[]>([]);
@@ -74,6 +73,7 @@ const Layout = () => {
     (state: RootState) => state.chat.isChatRoomUuid
   );
   const isModalType = useSelector((state: RootState) => state.modal.modalType);
+  const modalRoot = document.getElementById("modal-root") as HTMLElement;
 
   /* 채팅창 위치 관련 함수 */
   // 경계 제한 로직
@@ -142,17 +142,23 @@ const Layout = () => {
     setFavoriteFriends(likedFriends);
   }, [friends]);
 
-  useEffect(() => {
-    const likedFriends = friends.filter((friend) => friend.liked);
-    setFavoriteFriends(likedFriends);
-  }, [friends]);
-
   /* 검색 중이 아닐 때만 전체 목록을 가져오기. */
   useEffect(() => {
     if (!isSearching) {
       handleFetchFriendsList();
     }
   }, [activeTab, isSearching]);
+
+  useEffect(() => {
+    if (!isMobile) return;
+    lockBodyScroll();
+
+    return () => {
+      if (modalRoot && modalRoot.children.length === 0) {
+        unlockBodyScroll();
+      }
+    };
+  }, [modalRoot, isMobile]);
 
   /* 친구 검색 */
   const handleSearch = (searchResults: FriendList[] | null) => {
@@ -458,7 +464,7 @@ const Layout = () => {
     !isEditMode &&
     isBadMannerValue?.mannerKeywordIdList.length !== 0;
 
-  return (
+  return createPortal(
     <>
       <Overlay $top={position.top} $left={position.left}>
         <Wrapper onClick={handleOutsideModalClick}>
@@ -561,7 +567,8 @@ const Layout = () => {
         >
           <div>
             <Text>
-              {`차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다. 차단하시겠습니까?`}
+              차단한 상대에게는 메시지를 받을 수 없으며 <br />
+              매칭이 이루어지지 않습니다. 차단하시겠습니까?
             </Text>
             <SmallText>{` 차단 해제는 마이페이지에서 가능합니다.`}</SmallText>
           </div>
@@ -726,7 +733,8 @@ const Layout = () => {
           </ModalSubmitBtn>
         </FormModal>
       )}
-    </>
+    </>,
+    modalRoot
   );
 };
 
@@ -871,6 +879,10 @@ const Text = styled.div`
   color: ${theme.colors.gray600};
   ${(props) => props.theme.fonts.regular20};
   margin: 28px 0;
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    margin: 28px 0 0 0;
+    ${(props) => props.theme.fonts.medium14};
+  }
 `;
 
 const SmallText = styled.div`
@@ -883,4 +895,8 @@ const SmallText = styled.div`
 const MsgConfirm = styled(Text)`
   ${(props) => props.theme.fonts.regular25};
   margin: 80px 0;
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    ${(props) => props.theme.fonts.medium14};
+    margin: 32px 0;
+  }
 `;
