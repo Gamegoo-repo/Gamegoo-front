@@ -383,8 +383,8 @@ const ReadBoard = (props: ReadBoardProps) => {
       await dispatch(
         setCurrentPost({ currentPost: isPost, currentPostId: postId })
       );
-      await dispatch(setOpenPostingModal());
       await dispatch(setCloseReadingModal());
+      await dispatch(setOpenPostingModal());
       dispatch(setPostStatus(""));
     }
     console.log("isPostModalOpen 상태:", isPostModalOpen);
@@ -923,9 +923,16 @@ const Msg = styled.div`
   color: ${theme.colors.gray800};
   ${(props) => props.theme.fonts.regular25};
   margin: 28px 0;
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    ${(props) => props.theme.fonts.medium14};
+  }
 `;
 
 const MsgConfirm = styled(Msg)`
   ${(props) => props.theme.fonts.regular25};
   margin: 80px 0;
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    ${(props) => props.theme.fonts.medium14};
+    margin: 32px 0;
+  }
 `;

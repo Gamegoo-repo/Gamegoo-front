@@ -97,8 +97,8 @@ const Post: React.FC<PostProps> = ({
       setCurrentPost({ currentPost: memberData.data, currentPostId: boardId })
     );
     setIsPost(memberData.data);
-    dispatch(setOpenPostingModal());
     dispatch(setCloseReadingModal());
+    dispatch(setOpenPostingModal());
     setIsMoreBoxOpen(false);
     dispatch(setPostStatus(""));
   };

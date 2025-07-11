@@ -279,8 +279,8 @@ const Table = (props: TableProps) => {
   const handleEdit = async () => {
     setIsMoreBoxOpen((prevState) => !prevState);
     if (isBoardId) {
-      await dispatch(setOpenPostingModal());
       await dispatch(setCloseReadingModal());
+      await dispatch(setOpenPostingModal());
       dispatch(setPostStatus(""));
     }
   };
