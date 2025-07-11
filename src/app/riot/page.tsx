@@ -135,6 +135,7 @@ const Layout = styled.div`
   align-items: center;
   @media (max-width: ${theme.breakpoints.mobile}) {
     width: 90%;
+    min-height: 600px;
   }
 `;
 
