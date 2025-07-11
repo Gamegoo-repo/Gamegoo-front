@@ -7,7 +7,7 @@ import styled from "styled-components";
 
 import { deleteMember, getMyProfile } from "@/api";
 import { ConfirmModal, MyPageProfile } from "@/components";
-import { useMediaQueries } from "@/hooks";
+import { useMediaQueryContext } from "@/hooks";
 import { setUserMike, setUserProfile } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
 import { clearTokens } from "@/utils";
@@ -17,7 +17,7 @@ import type { RootState } from "@/redux/store";
 const passwordLength = 10;
 
 const MyProfilePage = () => {
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
   const router = useRouter();
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user);
@@ -178,7 +178,7 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 140px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 30px 20px;
   }
 `;
@@ -187,7 +187,7 @@ const MyProfileContent = styled.div`
   width: 100%;
   max-width: 1440px;
   width: 100%;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 0;
   }
 `;
@@ -199,7 +199,7 @@ const Profile = styled.header`
   width: 100%;
   gap: 26px;
   margin-bottom: 53px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     margin-bottom: 28px;
   }
 `;
@@ -221,7 +221,7 @@ const Title = styled.div`
   ${(props) => props.theme.fonts.bold25};
   color: ${theme.colors.gray800};
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.semiBold18};
     gap: 9px;
   }
@@ -237,7 +237,7 @@ const RiotInfo = styled.span`
   padding: 4px 12px;
   border-radius: 999px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.bold11};
     padding: 4px 8px;
   }
@@ -309,7 +309,7 @@ const P = styled.button`
   background: ${theme.colors.red100};
   border-radius: 4px;
   padding: 12px 20px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     border-radius: 8px;
     padding: 16px;
   }
@@ -321,7 +321,7 @@ const ModalContent = styled.div`
   flex-direction: column;
   gap: 20px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 35px 0;
   }
 `;

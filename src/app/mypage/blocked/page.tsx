@@ -5,13 +5,13 @@ import styled from "styled-components";
 
 import { getBlockList } from "@/api";
 import { BlockedBox, Pagination } from "@/components";
-import { useMediaQueries } from "@/hooks";
+import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 
 import type { BlockList } from "@/types";
 
 const MyBlockedPage = () => {
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [myBlockedList, setMyBlockedList] = useState<BlockList[]>([]);
@@ -107,7 +107,7 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 140px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 30px 20px;
   }
 `;
@@ -115,7 +115,7 @@ const Wrapper = styled.div`
 const MyBlockedContent = styled.div`
   max-width: 1440px;
   width: 100%;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 0;
   }
 `;
@@ -137,7 +137,7 @@ const Top = styled.div`
   padding-bottom: 13px;
   border-bottom: 1px solid ${theme.colors.gray300};
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.semiBold18};
   }
 `;

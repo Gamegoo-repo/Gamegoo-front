@@ -6,7 +6,7 @@ import { getMyProfile, putProfileImage } from "@/api";
 import { RankTier } from "@/components/common";
 import GameStyle from "@/components/match/GameStyle";
 import { UpdateProfileImage } from "@/components/profile";
-import { useMediaQueries } from "@/hooks";
+import { useMediaQueryContext } from "@/hooks";
 import { setUserProfile, setUserProfileImg } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
 
@@ -15,7 +15,7 @@ import type { Profile } from "@/types";
 
 const MyPageProfile: React.FC<Profile> = ({ user }) => {
   const dispatch = useDispatch();
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
   const [isProfileListOpen, setIsProfileListOpen] = useState(false);
   const userRedux = useSelector((state: RootState) => state.user);
 
@@ -122,7 +122,7 @@ const Container = styled.div`
   gap: 26px;
   white-space: nowrap;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 100%;
     border-radius: 20px;
     padding: 20px;
@@ -132,7 +132,7 @@ const Container = styled.div`
 
 const ImageContainer = styled.div`
   position: relative;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     display: flex;
     gap: 8px;
     align-items: center;
@@ -156,7 +156,7 @@ const Name = styled.div`
   ${(props) => props.theme.fonts.bold25};
   color: ${theme.colors.gray800};
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.bold16};
   }
 `;
@@ -164,7 +164,7 @@ const Name = styled.div`
 const Tag = styled.div`
   color: ${theme.colors.gray500};
   ${(props) => props.theme.fonts.bold20}
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.bold12};
   }
 `;

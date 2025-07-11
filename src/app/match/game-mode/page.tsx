@@ -7,10 +7,11 @@ import styled from "styled-components";
 
 import { GraphicBox, HeaderTitle } from "@/components";
 import { GAME_MODE_PAGE_DATA } from "@/constants";
-import { useMediaQueries } from "@/hooks";
+import { useMediaQueryContext } from "@/hooks";
+import { theme } from "@/styles/theme";
 
 const GameModePage = () => {
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
   const router = useRouter();
   const [displayedData, setDisplayedData] = useState(GAME_MODE_PAGE_DATA);
   const searchParams = useSearchParams();
@@ -96,7 +97,7 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 110px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding-top: 0px;
   }
 `;
@@ -105,7 +106,7 @@ const MatchContent = styled.div`
   max-width: 1440px;
   width: 100%;
   padding: 60px 80px 0px 80px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 24px 20px;
   }
 `;
@@ -117,7 +118,7 @@ const Main = styled.main`
   gap: 27px;
   margin-top: 185px;
   margin-bottom: 65px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     flex-direction: column;
     margin-top: 15px;
   }

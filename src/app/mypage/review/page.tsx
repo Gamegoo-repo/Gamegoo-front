@@ -152,7 +152,7 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 140px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 30px 20px;
   }
 `;
@@ -160,7 +160,7 @@ const Wrapper = styled.div`
 const MyReviewContent = styled.div`
   max-width: 1440px;
   width: 100%;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 0;
   }
 `;
@@ -191,7 +191,7 @@ const Box = styled.div`
   border-radius: 20px;
   background: ${theme.colors.gray100};
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     border-radius: 8px;
     padding: 24px 20px;
   }
@@ -204,7 +204,7 @@ const Top = styled.div`
   color: ${theme.colors.gray800};
   ${(props) => props.theme.fonts.medium16};
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     flex-direction: column;
     align-items: start;
     ${(props) => props.theme.fonts.medium14};
@@ -224,7 +224,7 @@ const Title = styled.div`
   color: ${theme.colors.gray800};
   ${(props) => props.theme.fonts.bold25};
   margin-bottom: 20px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.semiBold18};
     justify-content: flex-start;
     align-items: center;
@@ -236,7 +236,7 @@ const Row = styled.div`
   display: flex;
   justify-content: space-between;
   gap: 9px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     flex-direction: column;
   }
 `;
@@ -260,7 +260,7 @@ const MannerBox = styled.div`
   padding: 32px;
   background: ${theme.colors.gray800};
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     height: unset;
     border-radius: 8px;
     padding: 24px 20px;
@@ -283,7 +283,7 @@ const ValueWrapper = styled.div`
   align-items: center;
   margin-right: 11px;
   justify-content: space-between;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     gap: 14px;
   }
 `;
@@ -303,7 +303,7 @@ const Value = styled.p`
     color: ${theme.colors.red500};
   }
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.medium14};
   }
 `;
@@ -313,7 +313,7 @@ const TypeWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     gap: 14px;
   }
 `;
@@ -333,7 +333,7 @@ const Type = styled.p`
     color: ${theme.colors.gray100};
   }
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.medium14};
   }
 `;

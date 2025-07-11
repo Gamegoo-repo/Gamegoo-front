@@ -66,7 +66,7 @@ const ToggleContainer = styled.div<{
       css`
         background-color: ${theme.colors.gray200};
       `} */
-    @media (max-width: 700px) {
+    @media (max-width: ${theme.breakpoints.mobile}) {
       width: 54px;
       height: 32px;
     }
@@ -106,7 +106,7 @@ const ToggleContainer = styled.div<{
       css`
         background-color: ${theme.colors.gray300};
       `} */
-    @media (max-width: 700px) {
+    @media (max-width: ${theme.breakpoints.mobile}) {
       width: 22px;
       height: 22px;
       left: 25px;
@@ -115,7 +115,7 @@ const ToggleContainer = styled.div<{
   > .unchecked {
     left: 8px;
     transition: 0.5s;
-    @media (max-width: 700px) {
+    @media (max-width: ${theme.breakpoints.mobile}) {
       left: 8px;
     }
   }

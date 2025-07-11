@@ -52,7 +52,7 @@ const StyledBox = styled.div<{ $shape: ShapeType; $profiletype?: profileType }>`
       ${(props) => props.theme.fonts.semiBold13}
       background: ${theme.colors.white};
       color: ${theme.colors.gray700};
-      @media (max-width: 700px) {
+      @media (max-width: ${theme.breakpoints.mobile}) {
         ${theme.fonts.semiBold13};
       }
     `}
@@ -66,7 +66,7 @@ const StyledBox = styled.div<{ $shape: ShapeType; $profiletype?: profileType }>`
       color: ${theme.colors.gray800};
       ${(props) => props.theme.fonts.semiBold14}
 
-      @media (max-width: 700px) {
+      @media (max-width: ${theme.breakpoints.mobile}) {
         ${theme.fonts.semiBold13};
         height: 29px;
         padding: 8px 12px;
@@ -83,7 +83,7 @@ const StyledBox = styled.div<{ $shape: ShapeType; $profiletype?: profileType }>`
       background: ${theme.colors.white};
       color: ${theme.colors.gray700};
       height: 36px;
-      @media (max-width: 700px) {
+      @media (max-width: ${theme.breakpoints.mobile}) {
         ${(props) => props.theme.fonts.semiBold13}
         padding: 8px 12px;
         height: 29px;

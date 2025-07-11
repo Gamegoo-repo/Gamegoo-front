@@ -6,7 +6,7 @@ import styled from "styled-components";
 
 import { deletePost, getMyPost, getMyPostCursor, getMyProfile } from "@/api";
 import { MoPost, Pagination, Post, PostBoard } from "@/components";
-import { useMediaQueries } from "@/hooks";
+import { useMediaQueryContext } from "@/hooks";
 import { setClosePostingModal } from "@/redux/slices/modalSlice";
 import { setUserProfile } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
@@ -15,7 +15,7 @@ import type { RootState } from "@/redux/store";
 import type { MyBoardDetail } from "@/types";
 
 const MyPostPage = () => {
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
   const [currentPage, setCurrentPage] = useState(1);
   const [postList, setPostList] = useState<MyBoardDetail[]>([]);
   const [hasMoreItems, setHasMoreItems] = useState(true);
@@ -259,7 +259,7 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 140px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 30px 20px;
   }
 `;
@@ -267,7 +267,7 @@ const Wrapper = styled.div`
 const MyPostContent = styled.div`
   max-width: 1440px;
   width: 100%;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 0;
   }
 `;
@@ -287,7 +287,7 @@ const Top = styled.div`
   color: ${theme.colors.gray700};
   ${(props) => props.theme.fonts.bold25};
   margin-bottom: 38px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.semiBold18}
     margin-bottom: 13px;
   }

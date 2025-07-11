@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
 import { getPopupNotification, patchReadNotification } from "@/api";
-import { useMediaQueries } from "@/hooks";
+import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 
 import AlertBox from "../mypage/notification/AlertBox";
@@ -17,7 +17,7 @@ interface AlertWindowProps {
   alertButtonRef: React.RefObject<HTMLButtonElement>;
 }
 const AlertWindow = (props: AlertWindowProps) => {
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
 
   const router = useRouter();
   const { countFunc, onClose, alertButtonRef } = props;
@@ -201,7 +201,7 @@ const Overlay = styled.div`
   top: 60px;
   right: 80px;
   z-index: 100;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     position: fixed;
     top: 0;
     left: 0;
@@ -220,7 +220,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   box-shadow: 0 4px 46.7px 0 #0000001a;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 100%;
     height: 100%;
     border-radius: 0px;
@@ -231,7 +231,7 @@ const Header = styled.header`
   border-radius: 20px 20px 0 0;
   background: ${theme.colors.white};
   box-shadow: 0 -1px 10.7px 0 #00000026;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     border-radius: 0px;
     background: ${theme.colors.gray100};
   }
@@ -241,7 +241,7 @@ const Top = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 25px 23px 40px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 17px 20px;
   }
 `;
@@ -307,7 +307,7 @@ const Background = styled.div`
     background: transparent;
   }
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     height: calc(100vh - 64px);
     border-radius: 0;
   }

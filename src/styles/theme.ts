@@ -226,6 +226,11 @@ const fonts = {
     size: 32,
   }),
 };
+const breakpoints = {
+  mobile: "700px",
+  tablet: "950px",
+  desktop: "1200px",
+};
 
 export type ColorsTypes = typeof colors;
 export type FontsTypes = typeof fonts;
@@ -233,4 +238,5 @@ export type FontsTypes = typeof fonts;
 export const theme: DefaultTheme = {
   colors,
   fonts,
+  breakpoints,
 };

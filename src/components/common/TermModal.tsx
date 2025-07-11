@@ -73,7 +73,7 @@ const Container = styled.div`
   justify-content: flex-start;
   gap: 20px;
 
-  @media (max-width: 420px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 90%;
     height: 90%;
     min-width: 300px;
@@ -105,7 +105,7 @@ const Content = styled.div`
   overflow-y: auto;
   overflow-x: clip;
 
-  @media (max-width: 420px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.medium11};
     padding: 13px;
     border-radius: 8px;
@@ -130,7 +130,7 @@ const Content = styled.div`
 
 const Title = styled.div`
   position: relative;
-  @media (max-width: 420px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.bold16};
   }
   span {

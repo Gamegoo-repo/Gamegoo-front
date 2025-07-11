@@ -66,7 +66,7 @@ const Container = styled.div<{ $read: boolean; size: string }>`
       padding: 22px 10px;
     `}
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 12px 20px;
   }
 `;
@@ -144,7 +144,7 @@ const Text = styled.div<{ size: string }>`
       ${(props) => props.theme.fonts.semiBold14};
     `}
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.semiBold14};
   }
 `;
@@ -159,7 +159,7 @@ const Time = styled.div<{ size: string }>`
       ${(props) => props.theme.fonts.medium11};
     `}
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.medium11};
   }
 `;

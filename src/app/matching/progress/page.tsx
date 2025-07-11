@@ -13,10 +13,11 @@ import {
   WaitingBox,
 } from "@/components";
 import { GAME_STYLE } from "@/constants";
-import { useMediaQueries } from "@/hooks";
+import { useMediaQueryContext } from "@/hooks";
 import { setBoardFilters } from "@/redux/slices/boardSlice";
 import { setOpenPostingModal } from "@/redux/slices/modalSlice";
 import { socket } from "@/socket";
+import { theme } from "@/styles/theme";
 import {
   getEffectiveTier,
   getThresholdByGameMode,
@@ -73,7 +74,7 @@ const Progress = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const searchParams = useSearchParams();
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
   const type = searchParams.get("matchingType");
   const rank = searchParams.get("gameRank") as GameMode;
   const retry = searchParams.get("retry");
@@ -476,7 +477,7 @@ const Wrapper = styled.div`
   justify-content: center;
   padding-top: 110px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding-top: 0px;
   }
 `;
@@ -485,7 +486,7 @@ const MatchContent = styled.div`
   max-width: 1440px;
   width: 100%;
   padding: 0 80px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 24px 20px;
   }
 `;
@@ -505,7 +506,7 @@ const Main = styled.main`
   width: 100%;
   gap: 72px;
   margin-bottom: 37px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     display: flex;
     flex-direction: column;
     gap: 8px;

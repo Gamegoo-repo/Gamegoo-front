@@ -4,7 +4,7 @@ import styled, { css } from "styled-components";
 
 import { PositionCategory } from "@/components/common";
 import { POSITIONS } from "@/constants";
-import { useMediaQueries } from "@/hooks";
+import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 import { setPositionImg } from "@/utils";
 
@@ -29,7 +29,7 @@ export interface PositionState {
 const PositionBox = (props: PositionBoxProps) => {
   const { status, onPositionChange, main, sub, want } = props;
 
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
   const [positionValue, setPositionValue] = useState<PositionState>({
     main: main || "ANY",
     sub: sub || "ANY",
@@ -210,7 +210,7 @@ const PosiWrap = styled.div`
   border-radius: 6px;
   padding: 16px 43px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     height: 69px;
     padding: 12px 20px 8px 20px;
     gap: 12px;
@@ -224,7 +224,7 @@ const Posi = styled.div<{ $isWantP: boolean }>`
   font-size: ${theme.fonts.bold12};
   color: ${theme.colors.gray700};
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     font-size: ${theme.fonts.medium11};
     ${({ $isWantP }) =>
       $isWantP &&
@@ -259,7 +259,7 @@ const Plus = styled.div`
   border-radius: 999px;
   background: ${theme.colors.violet100};
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 32px;
     height: 24px;
   }

@@ -436,7 +436,7 @@ const Title = styled.p`
     margin-bottom: 5px;
   }
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.medium11};
   }
 `;

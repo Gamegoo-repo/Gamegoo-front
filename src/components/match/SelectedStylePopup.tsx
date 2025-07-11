@@ -3,7 +3,7 @@ import Image from "next/image";
 import styled, { css } from "styled-components";
 
 import { GAME_STYLE } from "@/constants";
-import { useMediaQueries } from "@/hooks";
+import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 
 type profileType = "me" | "other" | "none" | "mini";
@@ -31,7 +31,7 @@ const SelectedStylePopup: React.FC<SelectedStylePopupProps> = ({
   gameBoxRef,
   addGameStyleRef,
 }) => {
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
   const [containerTop, setContainerTop] = useState(0);
   const [tailLeft, setTailLeft] = useState(0);
 
@@ -143,11 +143,11 @@ const Container = styled.div<{
     left: ${({ $tailLeft }) => $tailLeft+5}px;
   }
 
-  @media (max-width: 1200px) {
+  @media (max-width: ${theme.breakpoints.desktop}) {
     padding: 20px;
     gap: 12px;
   }
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 85vw;
     border-radius: 10px;
   }
@@ -162,7 +162,7 @@ const Top = styled.div<{ $position: positionType | undefined }>`
   font-size: ${({ $position }) =>
     $position ? theme.fonts.regular14 : theme.fonts.bold20};
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${theme.fonts.bold16}
   }
 `;
@@ -190,7 +190,7 @@ const Boxs = styled.div<{
       gap: 9px;
     `}
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     gap: 8px;
   }
 `;
@@ -212,7 +212,7 @@ const Box = styled.button<{
     $position ? theme.fonts.medium14 : theme.fonts.semiBold18};
   font-family: "Pretendard";
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 6px 16px;
     height: 33px;
     font-size: ${theme.fonts.semiBold14};

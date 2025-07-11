@@ -4,8 +4,8 @@ import { io } from "socket.io-client";
 
 import { SOCKET_URL } from "@/api/api";
 
-import { getAccessToken } from "./utils/storage";
 import { STORAGE_KEY } from "./constants/storage";
+import { getAccessToken } from "./utils/storage";
 
 import type { Socket } from "socket.io-client";
 

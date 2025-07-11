@@ -1,7 +1,7 @@
 import Image from "next/image";
 import styled, { css } from "styled-components";
 
-import { useMediaQueries } from "@/hooks";
+import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 
 import ChevronDownIcon from "../../../public/assets/icons/chevron_down.svg";
@@ -23,7 +23,7 @@ interface MannerLevelBarProps {
 const MannerLevelBar = (props: MannerLevelBarProps) => {
   const { recentLevel, mannerRank, isBlind = false } = props;
 
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
 
   return (
     <Container>
@@ -122,7 +122,7 @@ const Container = styled.div`
   display: flex;
   justify-content: flex-end;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     height: 70px;
   }
 `;
@@ -137,7 +137,7 @@ const Bar = styled.div`
   bottom: 17px;
   left: 15px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     bottom: 9px;
   }
 `;
@@ -206,7 +206,7 @@ const Percentage = styled.div`
   ${(props) => props.theme.fonts.bold12};
   height: 11px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.bold9};
   }
 `;
@@ -231,7 +231,7 @@ const Level = styled.div<{ bold: boolean; $isBlind: boolean }>`
       color: ${theme.colors.gray700};
     `}
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) =>
       props.bold ? props.theme.fonts.bold13 : props.theme.fonts.regular13};
     margin-bottom: 0px;
@@ -245,7 +245,7 @@ const ImageWrapper = styled.div`
   justify-content: center;
   align-items: center;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 20px;
     height: 20px;
   }

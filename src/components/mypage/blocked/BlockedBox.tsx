@@ -4,7 +4,7 @@ import styled, { css } from "styled-components";
 
 import { blockMember, deleteBlockMember, unblockMember } from "@/api";
 import { ConfirmModal, MoreBox } from "@/components/common";
-import { useMediaQueries } from "@/hooks";
+import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 import { getProfileBgColor } from "@/utils";
 
@@ -18,7 +18,7 @@ const BlockedBox: React.FC<BlockList> = ({
   name,
   blind,
 }) => {
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
 
   const router = useRouter();
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState<boolean>(false);
@@ -168,7 +168,7 @@ const Container = styled.div<{ $isBlind: boolean }>`
       background: #f0f0f01c;
     `}
 
-    @media (max-width: 700px) {
+    @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 10px 0;
     ${(props) => props.theme.fonts.semiBold16}
   }

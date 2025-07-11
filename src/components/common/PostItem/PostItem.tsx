@@ -200,7 +200,7 @@ const Wrapper = styled.div`
     cursor: pointer;
   }
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     background: ${theme.colors.gray100};
     border-radius: 8px;
     padding: 16px;

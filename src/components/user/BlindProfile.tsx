@@ -137,7 +137,7 @@ const Wrapper = styled.div`
   justify-content: center;
   padding-top: 62px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding-top: 24px;
   }
 `;
@@ -152,7 +152,7 @@ const MatchContent = styled.div`
   width: 100%;
   padding: 0 80px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 0 20px;
   }
 `;
@@ -185,7 +185,7 @@ const Title = styled.div`
   ${(props) => props.theme.fonts.regular25};
   color: ${theme.colors.gray800};
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.semiBold18};
   }
 `;
@@ -197,7 +197,7 @@ const LevelBox = styled.div`
   padding: 24px 26px;
   background: ${theme.colors.gray100};
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     height: 156px;
     padding: 20px;
     display: flex;
@@ -214,7 +214,7 @@ const MannerBox = styled.div`
   padding: 28px 24px;
   background: ${theme.colors.gray800};
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     height: 196px;
     padding: 20.5px 20px;
     border-radius: 8px;
@@ -226,7 +226,7 @@ const Text = styled.div`
   color: ${theme.colors.gray800};
   margin-bottom: 66px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     margin-bottom: 0px;
   }
 `;
@@ -247,7 +247,7 @@ const TypeWrapper = styled.div`
   flex-direction: column;
   row-gap: 12px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     row-gap: 6.5px;
   }
 `;
@@ -256,7 +256,7 @@ const Type = styled.p`
   ${(props) => props.theme.fonts.medium16};
   color: ${theme.colors.gray500};
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.medium14};
   }
 `;
@@ -267,7 +267,7 @@ const ValueWrapper = styled.div`
   align-items: center;
   row-gap: 12px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     row-gap: 6.5px;
   }
 `;
@@ -276,7 +276,7 @@ const Value = styled.p`
   ${(props) => props.theme.fonts.bold16};
   color: ${theme.colors.gray500};
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.bold14};
   }
 `;
@@ -294,7 +294,7 @@ const Container = styled.div`
   justify-content: flex-start;
   gap: 15px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 20px;
     border-radius: 8px;
   }
@@ -333,7 +333,7 @@ const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
   align-items: center;
   justify-content: center;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 100px;
     height: 100px;
   }
@@ -356,7 +356,7 @@ const Top = styled.div`
   color: ${theme.colors.gray800};
   white-space: nowrap;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.bold16};
   }
 `;
@@ -381,7 +381,7 @@ const Element = styled.div`
   color: ${theme.colors.gray600};
   position: relative;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     gap: 5px;
   }
 

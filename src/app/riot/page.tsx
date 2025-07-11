@@ -120,7 +120,7 @@ const Logo = styled.button`
   height: 87px;
   border-radius: 8px;
   margin-bottom: 16px;
-  @media (max-width: 420px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 234px;
     height: 40px;
     margin-bottom: 12px;
@@ -133,7 +133,7 @@ const Layout = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  @media (max-width: 420px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 90%;
   }
 `;
@@ -158,7 +158,7 @@ const P = styled.p`
   color: ${theme.colors.gray500};
   ${theme.fonts.regular16};
   margin-bottom: 100px;
-  @media (max-width: 420px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     font-size: 13px;
     margin-bottom: 70px;
   }
@@ -171,7 +171,7 @@ const Title = styled.div`
   padding: 0 40px;
   margin-bottom: 36px;
   text-align: center;
-  @media (max-width: 420px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     font-size: 18px;
     margin-bottom: 30px;
     letter-spacing: -1px;
@@ -184,7 +184,7 @@ const Content = styled.div`
 
 const LoginButton = styled.div`
   width: 374px;
-  @media (max-width: 420px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 272px;
     margin: 0 auto;
   }
@@ -197,7 +197,7 @@ const Check = styled.div`
   margin-top: 28px;
   color: ${theme.colors.gray800};
   ${theme.fonts.regular16};
-  @media (max-width: 420px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     font-size: 14px;
   }
 `;

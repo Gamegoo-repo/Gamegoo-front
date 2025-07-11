@@ -92,7 +92,7 @@ const AllButton = styled.button`
       stroke: ${theme.colors.white};
     }
   }
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 42px;
     height: 44px;
     padding: 10px;
@@ -126,7 +126,7 @@ const TopButton = styled.button`
       fill: ${theme.colors.white};
     }
   }
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 42px;
     height: 44px;
     padding: 10px;
@@ -154,7 +154,7 @@ const JungleButton = styled.button`
       fill: ${theme.colors.white};
     }
   }
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 42px;
     height: 44px;
     padding: 10px;
@@ -188,7 +188,7 @@ const MidButton = styled.button`
       fill: ${theme.colors.white};
     }
   }
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 42px;
     height: 44px;
     padding: 10px;
@@ -222,7 +222,7 @@ const OneDealButton = styled.button`
       fill: ${theme.colors.white};
     }
   }
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 42px;
     height: 44px;
     padding: 10px;
@@ -250,7 +250,7 @@ const SupporterButton = styled.button`
       fill: ${theme.colors.white};
     }
   }
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 42px;
     height: 44px;
     padding: 10px;

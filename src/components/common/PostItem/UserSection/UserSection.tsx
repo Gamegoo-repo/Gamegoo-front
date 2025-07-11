@@ -83,7 +83,7 @@ const UserSection: FC<UserSectionProps> = ({
 export default UserSection;
 
 const Wrapper = styled.div`
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -93,7 +93,7 @@ const Wrapper = styled.div`
 `;
 
 const UserLeft = styled.div`
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -101,7 +101,7 @@ const UserLeft = styled.div`
 `;
 
 const UserProfileWrapper = styled.div`
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     position: relative;
     z-index: 2;
     cursor: pointer;
@@ -123,7 +123,7 @@ const UserAccount = styled.p`
   ${(props) => props.theme.fonts.bold20};
   color: ${theme.colors.gray700};
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.bold16};
   }
 `;
@@ -132,7 +132,7 @@ const UserAccountTag = styled.p`
   ${(props) => props.theme.fonts.semiBold14};
   color: ${theme.colors.gray500};
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.semiBold12};
   }
 `;

@@ -8,7 +8,7 @@ import {
 } from "@/components/common";
 import { Profile } from "@/components/profile";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants";
-import { useMediaQueries } from "@/hooks";
+import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 import { formatDecimal, getUserId } from "@/utils";
 
@@ -39,7 +39,7 @@ const UserProfile = ({
   }) => void;
   isDefault?: boolean; // 비회원용 default 프로필 여부
 }) => {
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
   const goodMannerEvaluations =
     manner.mannerKeywords
       .filter(
@@ -246,7 +246,7 @@ const Wrapper = styled.div`
   justify-content: center;
   padding-top: 62px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     min-width: 0px;
     padding-top: 24px;
   }
@@ -262,7 +262,7 @@ const MatchContent = styled.div`
   width: 100%;
   padding: 0 80px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 0 20px;
   }
 `;
@@ -283,7 +283,7 @@ const Content = styled.div`
   gap: 15px;
   margin-top: 37px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     display: flex;
     flex-direction: column;
     gap: 36px;
@@ -295,7 +295,7 @@ const Title = styled.div`
   ${(props) => props.theme.fonts.regular25};
   color: ${theme.colors.gray800};
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.semiBold18};
   }
 `;
@@ -307,7 +307,7 @@ const LevelBox = styled.div`
   padding: 24px 26px;
   background: ${theme.colors.gray100};
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     height: 156px;
     padding: 20px;
     display: flex;
@@ -324,7 +324,7 @@ const MannerBox = styled.div`
   padding: 28px 24px;
   background: ${theme.colors.gray800};
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     height: 196px;
     padding: 20.5px 20px;
     border-radius: 8px;
@@ -336,7 +336,7 @@ const Text = styled.div`
   color: ${theme.colors.gray800};
   margin-bottom: 66px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     margin-bottom: 0px;
   }
 `;
@@ -357,7 +357,7 @@ const TypeWrapper = styled.div`
   flex-direction: column;
   row-gap: 12px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     row-gap: 6.5px;
   }
 `;
@@ -377,7 +377,7 @@ const Type = styled.p`
     color: ${theme.colors.gray100};
   }
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.medium14};
   }
 `;
@@ -388,7 +388,7 @@ const ValueWrapper = styled.div`
   align-items: center;
   row-gap: 12px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     row-gap: 6.5px;
   }
 `;
@@ -408,7 +408,7 @@ const Value = styled.p`
     color: ${theme.colors.red500};
   }
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.bold14};
   }
 `;
@@ -428,7 +428,7 @@ const RecentBox = styled.div`
   align-items: center;
   gap: 56px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -442,7 +442,7 @@ const Column = styled.div`
   display: flex;
   flex-direction: column;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     flex-direction: row;
     align-items: center;
     gap: 8px;
@@ -451,7 +451,7 @@ const Column = styled.div`
 const RecentInfo = styled.div`
   color: ${theme.colors.gray700};
   ${theme.fonts.bold20};
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${theme.fonts.bold16};
   }
 `;
@@ -459,7 +459,7 @@ const RecentInfo = styled.div`
 const DetailInfo = styled.div`
   color: ${theme.colors.gray500};
   ${theme.fonts.semiBold14};
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${theme.fonts.bold12};
   }
 `;

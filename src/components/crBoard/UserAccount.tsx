@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import { useMediaQueries } from "@/hooks";
+import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 import { formatTextOverNumber } from "@/utils";
 
@@ -20,7 +20,7 @@ interface UserAccountProps {
 const UserAccount = (props: UserAccountProps) => {
   const { account, memberId, mike, tag } = props;
   const router = useRouter();
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
   // const [isAccountTouch, setIsAccountTouch] = useState(false);
   const [isTagTouch, setIsTagTouch] = useState(false);
 
@@ -92,7 +92,7 @@ const Account = styled.button`
   ${(props) => props.theme.fonts.bold20};
   color: ${theme.colors.gray700};
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.bold16};
   }
 `;
@@ -142,7 +142,7 @@ const Tag = styled.p`
   ${(props) => props.theme.fonts.semiBold14};
   color: ${theme.colors.gray500};
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.semiBold12};
   }
 `;

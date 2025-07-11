@@ -55,7 +55,7 @@ const Waiting = styled.div`
   animation: ${fadeIn} 0.5s ease-in forwards;
   transition: opacity 0.5s ease-in-out;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     height: 376px;
     padding: 80px 20px;
     border-radius: 8px;
@@ -66,7 +66,7 @@ const Waiting = styled.div`
 const AnimatedImage = styled(Image)`
   animation: ${growShrink} 1.8s ease-in-out infinite;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     margin-bottom: 20px;
   }
 `;
@@ -76,7 +76,7 @@ const AnimatedText = styled.div<{ $visible: boolean }>`
   animation: ${({ $visible }) => ($visible ? fadeIn : fadeOut)} 1s ease-in-out
     forwards;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.medium16};
     margin-bottom: 6px;
   }
@@ -90,7 +90,7 @@ const Time = styled.div`
 const Span = styled.span`
   color: ${theme.colors.violet600};
   ${(props) => props.theme.fonts.bold32}
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.bold32}
   }
 `;

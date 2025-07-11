@@ -22,7 +22,7 @@ import ConfirmModal from "@/components/common/ConfirmModal";
 import HeaderTitle from "@/components/common/HeaderTitle";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import SquareProfile from "@/components/match/SquareProfile";
-import useMediaQueries from "@/hooks/useMediaQueries";
+import { useMediaQueryContext } from "@/hooks";
 import {
   openChatRoom,
   setChatEnterType,
@@ -57,7 +57,7 @@ interface User {
 }
 
 const Complete = () => {
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
   const [timeLeft, setTimeLeft] = useState(10);
   const [showFailModal, setShowFailModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -480,7 +480,7 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 110px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding-top: 0px;
   }
 `;
@@ -489,7 +489,7 @@ const MatchContent = styled.div`
   max-width: 1440px;
   width: 100%;
   padding: 0 80px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 24px 20px;
   }
 `;
@@ -501,7 +501,7 @@ const Main = styled.main`
   width: 100%;
   gap: 72px;
   margin-bottom: 37px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -513,7 +513,7 @@ const Oppnent = styled.div`
   flex-direction: column;
   align-items: flex-end;
   gap: 17px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 100%;
   }
 `;
@@ -521,7 +521,7 @@ const Oppnent = styled.div`
 const Text = styled.div`
   color: ${theme.colors.violet600};
   ${(props) => props.theme.fonts.regular18};
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     display: flex;
     width: 100%;
     align-items: center;

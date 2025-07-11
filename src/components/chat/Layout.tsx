@@ -17,7 +17,7 @@ import {
 } from "@/api";
 import { BAD_MANNER_TYPES, MANNER_TYPES, REPORT_REASON } from "@/constants";
 import ko from "@/constants/ko.json";
-import { notify, useDrag, useMediaQueries } from "@/hooks";
+import { notify, useDrag, useMediaQueryContext } from "@/hooks";
 import {
   closeChat,
   closeChatRoom,
@@ -38,7 +38,7 @@ import type { BaseMannerData, ChatroomList, FriendList } from "@/types";
 
 const Layout = () => {
   const dispatch = useDispatch();
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
 
   /* 채팅창 위치 관련 상태 */
   const position = useSelector((state: RootState) => state.chatPosition);
@@ -739,7 +739,7 @@ const Overlay = styled.div<{ $top: string; $left: string }>`
   top: calc(${(props) => props.$top});
   left: calc(${(props) => props.$left});
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     top: 0;
     left: 0;
   }
@@ -753,7 +753,7 @@ const Wrapper = styled.div`
   background: ${theme.colors.white};
   border-radius: 20px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 100vw;
     height: 100vh;
     box-shadow: unset;
@@ -770,7 +770,7 @@ const Header = styled.div`
   margin-bottom: 10px;
   user-select: auto;
   cursor: move;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     cursor: initial;
     padding: 16px 20px;
   }
@@ -796,7 +796,7 @@ const ChatMain = styled.div`
   background: ${theme.colors.white};
   box-shadow: inset 0 0 4.7px 0 #00000026;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     border-radius: 0;
     box-shadow: none;
     border-top: 1px solid ${theme.colors.gray300};
@@ -807,14 +807,14 @@ const Content = styled.main`
   &.friend {
     height: 508px;
 
-    @media (max-width: 700px) {
+    @media (max-width: ${theme.breakpoints.mobile}) {
       padding: 20px 0 30px 0;
       height: calc(100vh - 70px - 29px - 68px);
     }
   }
   &.chat {
     height: 590px;
-    @media (max-width: 700px) {
+    @media (max-width: ${theme.breakpoints.mobile}) {
       padding-bottom: 30px;
       height: calc(100vh - 70px - 29px);
     }

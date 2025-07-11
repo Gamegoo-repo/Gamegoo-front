@@ -180,14 +180,14 @@ const Wrapper = styled.div<{ $width: string; $type: string | undefined }>`
   border-radius: ${({ $type }) => ($type === "manner" ? "10px" : "20px")};
   box-shadow: 0 0 14.76px 0 rgba(0, 0, 0, 0.15);
   overflow: hidden;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 90vw;
   }
 `;
 
 const Main = styled.main`
   padding: 0 4px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 0;
   }
 `;
@@ -206,7 +206,7 @@ const TextTop = styled.div`
   ${(props) => props.theme.fonts.regular25};
   color: ${theme.colors.gray800};
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     min-height: 124px;
     ${theme.fonts.medium14}
   }
@@ -302,7 +302,7 @@ const Button = styled.button<{
     }
   }
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 20px 0;
     ${theme.fonts.semiBold14}
     height: unset

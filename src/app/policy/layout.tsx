@@ -57,7 +57,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 24px 20px;
   }
 `;

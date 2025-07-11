@@ -157,7 +157,7 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 140px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding-top: 20px;
   }
 `;
@@ -165,7 +165,7 @@ const Wrapper = styled.div`
 const MyAlertContent = styled.div`
   max-width: 1440px;
   width: 100%;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 0 20px;
   }
 `;
@@ -186,7 +186,7 @@ const Top = styled.div`
   ${(props) => props.theme.fonts.bold25};
   padding-bottom: 13px;
   border-bottom: 1px solid ${theme.colors.gray300};
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.semiBold18};
     border-bottom: none;
     padding-bottom: 0;
@@ -200,7 +200,7 @@ const AlertList = styled.div`
   gap: 11px;
   margin-top: 32px;
   margin-bottom: 60px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     margin-top: 20px;
   }
 `;

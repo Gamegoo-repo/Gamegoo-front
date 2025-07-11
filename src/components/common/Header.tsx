@@ -8,7 +8,7 @@ import styled from "styled-components";
 import { getUnreadNotificationCount, postLogout, socketLogout } from "@/api";
 import { HEADER_MODAL_TAB } from "@/constants";
 import { STORAGE_KEY } from "@/constants/storage";
-import { useMediaQueries } from "@/hooks";
+import { useMediaQueryContext } from "@/hooks";
 import { closeChat } from "@/redux/slices/chatSlice";
 import { setNotiCount } from "@/redux/slices/notiSlice";
 import {
@@ -40,7 +40,7 @@ interface HeaderProps {
 const Header = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
   const pathname = usePathname();
   const [isAlertWindow, setIsAlertWindow] = useState<Boolean>(false);
   const [isMyPage, setIsMyPage] = useState<Boolean>(false);
@@ -354,7 +354,7 @@ const Head = styled.div`
   box-sizing: border-box;
   ${(props) => props.theme.fonts.regular14};
   position: relative;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     margin-top: 20px;
     justify-content: space-between;
   }
@@ -370,7 +370,7 @@ const HeaderBar = styled.div`
   justify-content: space-between;
   white-space: nowrap;
 
-  @media screen and (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 0;
     display: grid;
     grid-template-columns: auto 1fr auto;
@@ -380,7 +380,7 @@ const HeaderBar = styled.div`
 `;
 
 const LogoButton = styled.button`
-  @media screen and (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     margin-left: 20px;
     grid-column: 1;
     justify-self: start;
@@ -394,7 +394,7 @@ const Menus = styled.div`
   justify-content: flex-start;
   margin-left: 70px;
 
-  @media screen and (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 100%;
     grid-column: 1 / span 2;
     display: flex;
@@ -409,7 +409,7 @@ const Menu = styled.button<HeaderProps>`
   ${(props) => props.theme.fonts.regular20};
   font-weight: ${({ selected }) => (selected ? "700" : "400")};
   color: ${theme.colors.gray800};
-  @media screen and (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.semiBold14};
     padding: 10px 0;
     border-bottom: ${({ selected }) =>
@@ -421,7 +421,7 @@ const Right = styled.div`
   display: flex;
   align-items: center;
   gap: 20px;
-  @media screen and (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     grid-column: 2;
     grid-row: 1;
     justify-self: end;
@@ -466,7 +466,7 @@ const Login = styled.button`
   padding: 8px 24px;
   border-radius: 6px;
   ${(props) => props.theme.fonts.bold18}
-  @media screen and (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     background: none;
     color: ${theme.colors.violet600};
     ${(props) => props.theme.fonts.bold14}
@@ -489,7 +489,7 @@ const MyPageModal = styled.div`
   right: 80px;
   z-index: 100;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     position: fixed;
     top: 0;
     left: 0;

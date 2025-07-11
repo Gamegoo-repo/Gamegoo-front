@@ -156,7 +156,7 @@ const FavoritesTitle = styled.p`
   ${theme.fonts.medium11};
   color: ${theme.colors.gray500};
   padding: 6px 18px 7px 18px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     text-align: left;
   }
 `;
@@ -165,7 +165,7 @@ const FriendsTitle = styled.p`
   ${theme.fonts.medium11};
   color: ${theme.colors.gray500};
   padding: 6px 18px 7px 18px;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     text-align: left;
   }
 `;

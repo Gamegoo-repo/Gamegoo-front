@@ -109,7 +109,7 @@ const Content = styled.p`
   white-space: nowrap;
   text-align: center;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 4px 12px;
     ${(props) => props.theme.fonts.bold12};
   }

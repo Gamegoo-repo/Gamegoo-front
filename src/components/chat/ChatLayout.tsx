@@ -27,6 +27,7 @@ import { reportMember } from "@/api/report/report";
 import ko from "@/constants/ko.json";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants/mannerLevel";
 import { REPORT_REASON } from "@/constants/report";
+import { STORAGE_KEY } from "@/constants/storage";
 import { notify } from "@/hooks/notify";
 import {
   closeChatRoom,
@@ -38,7 +39,6 @@ import { setCloseModal, setOpenModal } from "@/redux/slices/modalSlice";
 import { socket } from "@/socket";
 import { theme } from "@/styles/theme";
 import { getAccessToken } from "@/utils/storage";
-import { STORAGE_KEY } from "@/constants/storage";
 
 import { Button, Checkbox, ConfirmModal, FormModal, Input } from "../common";
 import MessageHeader from "./MessageHeader";
@@ -911,7 +911,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   width: 100%;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     border-radius: 0;
     height: 100vh;
   }
@@ -920,7 +920,7 @@ const Wrapper = styled.div`
 const HeaderWrapper = styled.div`
   user-select: auto;
   cursor: move;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     cursor: default;
     border-bottom: 1px solid ${theme.colors.violet300};
   }

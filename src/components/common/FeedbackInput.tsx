@@ -95,7 +95,7 @@ const FeedBack = styled.div`
   span {
     ${theme.fonts.medium14};
     margin-left: 10px;
-    @media (max-width: 700px) {
+    @media (max-width: ${theme.breakpoints.mobile}) {
       ${theme.fonts.bold12};
       color: ${theme.colors.gray800};
       margin-left: 0;
@@ -108,7 +108,7 @@ const FeedBack = styled.div`
 
     input {
       width: 379px;
-      @media (max-width: 700px) {
+      @media (max-width: ${theme.breakpoints.mobile}) {
         width: 288px;
       }
     }

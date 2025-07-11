@@ -1,7 +1,7 @@
 import Image from "next/image";
 import styled from "styled-components";
 
-import { useMediaQueries } from "@/hooks";
+import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 
 import type { Mike } from "@/types";
@@ -13,7 +13,7 @@ interface MicProps {
 
 const Mic = (props: MicProps) => {
   const { variant = "chip", status } = props;
-  const isMobile = useMediaQueries({ breakpoint: 700 });
+  const { isMobile } = useMediaQueryContext();
 
   const isAvailable = status === "AVAILABLE";
 
@@ -92,7 +92,7 @@ const IconText = styled.p`
     color: ${theme.colors.gray600};
   }
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${theme.fonts.bold12};
   }
 `;

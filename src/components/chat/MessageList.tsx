@@ -516,7 +516,7 @@ const ChatMain = styled.main`
     display: none;
   }
   scrollbar-width: none;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 10px 8px 138px;
     height: calc(100vh - 54px - 71px);
     border-top: none;

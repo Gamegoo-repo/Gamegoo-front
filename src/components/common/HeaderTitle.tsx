@@ -81,7 +81,7 @@ const HeaderWrap = styled.header<{
     $isMatchProgressOrComplete ? "unset" : "space-between"};
   margin-bottom: ${({ $marginBottom }) =>
     $marginBottom ? $marginBottom : "32px"};
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     display: ${({ $isMatchProgressOrComplete }) =>
       $isMatchProgressOrComplete ? "flex" : "unset"};
     justify-content: ${({ $isMatchProgressOrComplete }) =>
@@ -100,7 +100,7 @@ const HeaderWrap = styled.header<{
 const Header = styled.div<{ $isMatchProgressOrComplete?: boolean }>`
   display: flex;
   align-items: center;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     /* display: unset; */
     margin-bottom: ${({ $isMatchProgressOrComplete }) =>
       $isMatchProgressOrComplete ? "0px" : "17px"};
@@ -110,7 +110,7 @@ const Header = styled.div<{ $isMatchProgressOrComplete?: boolean }>`
 const StyledImage = styled(Image)`
   margin-right: 12px;
   cursor: pointer;
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 20px;
     height: 20px;
   }
@@ -126,7 +126,7 @@ const Title = styled.div`
   &.regular {
     ${(props) => props.theme.fonts.regular25};
   }
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     &.bold {
       ${(props) => props.theme.fonts.semiBold18};
     }
@@ -137,7 +137,7 @@ const Sub = styled.div`
   margin-left: 14px;
   color: ${theme.colors.gray600};
   ${(props) => props.theme.fonts.regular20};
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     margin-left: 10px;
     ${(props) => props.theme.fonts.regular14};
   }

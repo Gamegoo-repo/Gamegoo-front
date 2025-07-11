@@ -34,7 +34,7 @@ import {
   WinningRate,
 } from "@/components/readBoard";
 import ko from "@/constants/ko.json";
-import { notify, useMediaQueries } from "@/hooks";
+import { notify } from "@/hooks";
 import { setRefresh } from "@/redux/slices/boardSlice";
 import {
   openChatRoom,
@@ -68,7 +68,6 @@ interface ReadBoardProps {
 
 const ReadBoard = (props: ReadBoardProps) => {
   const { postId } = props;
-  const isMobile = useMediaQueries({ breakpoint: 700 });
   const dispatch = useDispatch();
   const router = useRouter();
   const mannerLevelBoxRef = useRef<HTMLDivElement>(null);
@@ -753,7 +752,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   gap: 30px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     gap: 20px;
   }
 `;
@@ -770,7 +769,7 @@ const UserLeft = styled.div`
   align-items: center;
   gap: 12px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     gap: 8px;
   }
 `;
@@ -781,7 +780,7 @@ const UserProfileWrapper = styled.div`
   position: relative;
   z-index: 100;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     width: 52px;
     height: 52px;
   }
@@ -814,7 +813,7 @@ const Title = styled.p`
   color: ${theme.colors.gray800};
   margin-bottom: 5px;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.medium11};
     margin-bottom: 4px;
   }
@@ -864,7 +863,7 @@ const Memo = styled.div`
     background: transparent;
   }
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     border-radius: 6px;
     padding: 8px 10px;
   }
@@ -874,7 +873,7 @@ const MemoData = styled.p`
   color: ${theme.colors.gray700};
   ${(props) => props.theme.fonts.regular18}
 
-  @media (max-width: 700px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.regular12};
   }
 `;
