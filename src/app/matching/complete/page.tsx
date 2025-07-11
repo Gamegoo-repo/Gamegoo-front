@@ -469,7 +469,7 @@ const Complete = () => {
 
 export default function CompletePaging() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingSpinner />}>
       <Complete />
     </Suspense>
   );

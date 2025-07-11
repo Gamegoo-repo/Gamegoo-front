@@ -9,6 +9,7 @@ import { getBoardList } from "@/api";
 import {
   ConfirmModal,
   HeaderTitle,
+  LoadingSpinner,
   SquareProfile,
   WaitingBox,
 } from "@/components";
@@ -465,7 +466,7 @@ const Progress = () => {
 
 export default function ProgressPaging() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingSpinner />}>
       <Progress />
     </Suspense>
   );

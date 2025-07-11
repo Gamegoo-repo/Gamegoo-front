@@ -32,6 +32,7 @@ const SkeletonWrapper = styled.div`
 export const SkeletonBox = styled(SkeletonWrapper)<SkeletonProps>`
   width: ${(props) => props.width || "100%"};
   height: ${(props) => props.height || "100px"};
+  border-radius: ${(props) => props.borderRadius || "5px"};
 `;
 
 export const SkeletonCircle = styled(SkeletonWrapper)<SkeletonProps>`
