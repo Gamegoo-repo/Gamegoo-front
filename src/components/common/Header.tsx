@@ -27,6 +27,8 @@ import {
   getProfileBgColor,
   getProfileImg,
   getUserId,
+  lockBodyScroll,
+  unlockBodyScroll,
 } from "@/utils";
 
 import AlertWindow from "../alert/AlertWindow";
@@ -106,14 +108,14 @@ const Header = () => {
   }, [isMyPage]);
 
   useEffect(() => {
-    document.body.style.overflow = "unset";
+    unlockBodyScroll();
 
     if (!isMobile) return;
 
     if (isMyPage) {
-      document.body.style.overflow = "hidden";
+      lockBodyScroll();
     } else {
-      document.body.style.overflow = "unset";
+      unlockBodyScroll();
     }
   }, [isMobile, isMyPage]);
 

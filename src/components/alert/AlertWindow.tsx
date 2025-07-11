@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { getPopupNotification, patchReadNotification } from "@/api";
 import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
+import { lockBodyScroll, unlockBodyScroll } from "@/utils";
 
 import AlertBox from "../mypage/notification/AlertBox";
 
@@ -105,11 +106,11 @@ const AlertWindow = (props: AlertWindowProps) => {
 
   useEffect(() => {
     if (!isMobile) return;
-    document.body.style.overflow = "hidden";
+    lockBodyScroll();
 
     return () => {
       if (modalRoot && modalRoot.children.length === 0) {
-        document.body.style.overflow = "unset";
+        unlockBodyScroll();
       }
     };
   }, [modalRoot, isMobile]);

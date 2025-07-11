@@ -29,7 +29,7 @@ import {
 import { setCloseModal, setOpenModal } from "@/redux/slices/modalSlice";
 import { socket } from "@/socket";
 import { theme } from "@/styles/theme";
-import { getAccessToken } from "@/utils";
+import { getAccessToken, lockBodyScroll, unlockBodyScroll } from "@/utils";
 
 import { Button, Checkbox, ConfirmModal, FormModal, Input } from "../common";
 import { ChatFriendList, ChatLayout, ChatRoomList, SearchBar, Tabs } from "./";
@@ -151,11 +151,11 @@ const Layout = () => {
 
   useEffect(() => {
     if (!isMobile) return;
-    document.body.style.overflow = "hidden";
+    lockBodyScroll();
 
     return () => {
       if (modalRoot && modalRoot.children.length === 0) {
-        document.body.style.overflow = "unset";
+        unlockBodyScroll();
       }
     };
   }, [modalRoot, isMobile]);

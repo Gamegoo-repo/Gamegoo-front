@@ -9,6 +9,7 @@ import {
   setOpenModal,
 } from "@/redux/slices/modalSlice";
 import { theme } from "@/styles/theme";
+import { lockBodyScroll, unlockBodyScroll } from "@/utils";
 
 type ButtonText =
   | "취소"
@@ -49,12 +50,12 @@ const ConfirmModal = (props: ConfirmModalProps) => {
   const dispatch = useDispatch();
   useEffect(() => {
     // 열릴 때
-    document.body.style.overflow = "hidden";
+    lockBodyScroll();
 
     return () => {
       // 닫힐 때
       if (modalRoot && modalRoot.children.length === 0) {
-        document.body.style.overflow = "unset";
+        unlockBodyScroll();
       }
     };
   }, [modalRoot]);
