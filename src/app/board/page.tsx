@@ -7,7 +7,6 @@ import styled from "styled-components";
 
 import { getBoardList, getBoardListCursor, getMyPost, pullUpPost } from "@/api";
 import {
-  Alert,
   Button,
   ConfirmModal,
   Dropdown,
@@ -23,6 +22,7 @@ import { notify, useMediaQueryContext } from "@/hooks";
 import { resetBoardFilters, setRefresh } from "@/redux/slices/boardSlice";
 import {
   setClosePostingModal,
+  setOpenAlertModal,
   setOpenModal,
   setOpenPostingModal,
 } from "@/redux/slices/modalSlice";
@@ -39,6 +39,8 @@ const BUTTONS_PER_PAGE = 5;
 
 const BoardPage = () => {
   const dispatch = useDispatch();
+  const { isMobile } = useMediaQueryContext();
+
   const [boardList, setBoardList] = useState<BoardListDetail[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
@@ -52,8 +54,12 @@ const BoardPage = () => {
   );
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
   const [selectedMic, setSelectedMic] = useState<Mike | null>(null);
-  const [showAlert, setShowAlert] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isPullUpConfirmOpen, setIsPullUpConfirmOpen] = useState(false);
+  const [myRecentPost, setMyRecentPost] = useState<number | null>(null);
+  const [cursor, setCursor] = useState<string | null>(null);
+  const [hasNext, setHasNext] = useState<boolean>(true);
+  const [isRotating, setIsRotating] = useState(false);
 
   // 게시판 글 새로고침
   const boardRefresh = useSelector((state: RootState) => state.board.refresh);
@@ -61,21 +67,13 @@ const BoardPage = () => {
   const gameModeRef = useRef<HTMLDivElement>(null);
   const tierRef = useRef<HTMLDivElement>(null);
   const micRef = useRef<HTMLDivElement>(null);
-  const [isRotating, setIsRotating] = useState(false);
-  const { isMobile } = useMediaQueryContext();
-
-  const [isPullUpConfirmOpen, setIsPullUpConfirmOpen] = useState(false);
-  const [myRecentPost, setMyRecentPost] = useState<number | null>(null);
+  const sentinelRef = useRef(null); // IntersectionObserver 를 위한 감지용 element
 
   const isPostingModal = useSelector(
     (state: RootState) => state.modal.postingModal
   );
   const isPostStatus = useSelector((state: RootState) => state.post.postStatus);
   const isUser = useSelector((state: RootState) => state.user);
-  const [cursor, setCursor] = useState<string | null>(null);
-  const [hasNext, setHasNext] = useState<boolean>(true);
-  const sentinelRef = useRef(null);
-
   /* redux 필터 상태 가져오기 */
   const boardFilters = useSelector((state: RootState) => state.board);
 
@@ -156,7 +154,16 @@ const BoardPage = () => {
   /* 글쓰기 모달 오픈 */
   const handlePostingOpen = () => {
     if (!isUser.gameName) {
-      return setShowAlert(true);
+      return dispatch(
+        setOpenAlertModal({
+          icon: "exclamation",
+          width: 68,
+          height: 58,
+          content: "로그인이 필요한 서비스입니다.",
+          alt: "로그인 필요",
+          buttonText: "확인",
+        })
+      );
     }
 
     dispatch(setOpenPostingModal());
@@ -401,17 +408,6 @@ const BoardPage = () => {
 
   return (
     <>
-      {showAlert && (
-        <Alert
-          icon="exclamation"
-          width={68}
-          height={58}
-          content="로그인이 필요한 서비스입니다."
-          alt="로그인 필요"
-          onClose={() => setShowAlert(false)}
-          buttonText="확인"
-        />
-      )}
       {isPostingModal && (
         <PostBoard
           onClose={handlePostingClose}

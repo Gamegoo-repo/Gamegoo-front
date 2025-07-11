@@ -35,6 +35,7 @@ import {
 import { POSITIONS, REPORT_REASON } from "@/constants";
 import { useMediaQueryContext } from "@/hooks";
 import { setMatchInfo, updateMike } from "@/redux/slices/matchInfo";
+import { setOpenAlertModal } from "@/redux/slices/modalSlice";
 import { setUserProfileImg } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
 import { setPositionImg } from "@/utils/custom";
@@ -481,25 +482,27 @@ const Profile: React.FC<Profile> = ({
 
   const handleMoreBoxOpen = () => {
     if (isDefault) {
-      setShowAlert(true);
+      showLoginAlert();
     } else {
       setIsMoreBoxOpen((prevState) => !prevState);
     }
   };
 
+  const showLoginAlert = () => {
+    dispatch(
+      setOpenAlertModal({
+        icon: "exclamation",
+        width: 68,
+        height: 58,
+        content: "로그인이 필요한 서비스입니다.",
+        alt: "경고",
+        buttonText: "확인",
+      })
+    );
+  };
+
   return (
     <Container className={profileType} $backgroundColor={backgroundColor}>
-      {showAlert && (
-        <Alert
-          icon="exclamation"
-          width={68}
-          height={58}
-          content="로그인이 필요한 서비스입니다."
-          alt="경고"
-          onClose={() => setShowAlert(false)}
-          buttonText="확인"
-        />
-      )}
       <Row $profileType={profileType}>
         <ImageContainer>
           <UpdateProfileImage

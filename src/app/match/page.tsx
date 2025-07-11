@@ -1,39 +1,43 @@
 "use client";
 
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import { Alert, GraphicBox, HeaderTitle } from "@/components";
+import { GraphicBox, HeaderTitle } from "@/components";
 import { MATCH_TYPE_PAGE_DATA, MO_MATCH_TYPE_PAGE_DATA } from "@/constants";
 import { useMediaQueryContext } from "@/hooks";
+import { setOpenAlertModal } from "@/redux/slices/modalSlice";
 import { theme } from "@/styles/theme";
 import { getAccessToken } from "@/utils";
 
 import ChevronRight from "../../../public/assets/icons/chevron_right.svg";
 
 const MatchTypePage = () => {
+  const dispatch = useDispatch();
   const { isMobile } = useMediaQueryContext();
   const router = useRouter();
 
   const accesssToken = getAccessToken(); // 로그인 유무 결정
-  const [showAlert, setShowAlert] = useState(false);
   const [hoveredBox, setHoveredBox] = useState<number | null>(null);
+
+  const showLoginAlert = () => {
+    dispatch(
+      setOpenAlertModal({
+        icon: "exclamation",
+        width: 68,
+        height: 58,
+        content: "로그인이 필요한 서비스입니다.",
+        alt: "경고",
+        buttonText: "확인",
+      })
+    );
+  };
 
   return (
     <Wrapper>
-      {showAlert && (
-        <Alert
-          icon="exclamation"
-          width={68}
-          height={58}
-          content="로그인이 필요한 서비스입니다."
-          alt="경고"
-          onClose={() => setShowAlert(false)}
-          buttonText="확인"
-        />
-      )}
       <MatchContent>
         <HeaderTitle title="매칭 종류 선택" />
         <Main>
@@ -62,7 +66,7 @@ const MatchTypePage = () => {
                                   ? `${box.pathname}?type=${box.type}`
                                   : box.pathname
                               )
-                          : () => setShowAlert(true)
+                          : () => showLoginAlert()
                       }
                     >
                       선택
@@ -94,9 +98,7 @@ const MatchTypePage = () => {
                     } // Hover 시 배경 변경
                     onMouseEnter={() => setHoveredBox(box.id)}
                     onMouseLeave={() => setHoveredBox(null)}
-                    onClick={
-                      accesssToken ? undefined : () => setShowAlert(true)
-                    }
+                    onClick={accesssToken ? undefined : () => showLoginAlert()}
                   >
                     <GraphicBoxTitle>
                       <GraphicBoxTitleMain>

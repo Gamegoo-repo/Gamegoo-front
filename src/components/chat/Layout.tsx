@@ -561,7 +561,8 @@ const Layout = () => {
         >
           <div>
             <Text>
-              차단한 상대에게는 메시지를 받을 수 없으며 <br />매칭이 이루어지지 않습니다. 차단하시겠습니까?
+              차단한 상대에게는 메시지를 받을 수 없으며 <br />
+              매칭이 이루어지지 않습니다. 차단하시겠습니까?
             </Text>
             <SmallText>{` 차단 해제는 마이페이지에서 가능합니다.`}</SmallText>
           </div>
@@ -882,7 +883,6 @@ const SmallText = styled.div`
   color: ${theme.colors.gray200};
   ${(props) => props.theme.fonts.regular14};
   margin-top: 13px;
-  
 `;
 
 const MsgConfirm = styled(Text)`

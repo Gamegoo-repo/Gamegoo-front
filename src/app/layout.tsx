@@ -10,7 +10,7 @@ import { persistStore } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
 import styled, { ThemeProvider } from "styled-components";
 
-import { Footer, Header, SocketConnection } from "@/components";
+import { Footer, Header, ModalContainer, SocketConnection } from "@/components";
 import ko from "@/constants/ko.json";
 import { STORAGE_KEY } from "@/constants/storage";
 import { MediaQueryProvider } from "@/contexts/MediaQueryContext";
@@ -143,6 +143,7 @@ export default function RootLayout({
                       <SocketConnection
                         key={isLoggedIn ? "loggedIn" : "loggedOut"}
                       />
+                      <ModalContainer />
                       <Container>
                         <Main>
                           {isHeaderFooterShow && <Header />}

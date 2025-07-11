@@ -3,12 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 
 import { getMemberPost, getNonMemberPost } from "@/api";
-import { Alert, PostItem } from "@/components/common";
+import { PostItem } from "@/components/common";
+import { setOpenAlertModal } from "@/redux/slices/modalSlice";
 
 import type { AxiosError } from "axios";
 import type { PostItemData } from "@/components/common";
 import type { RootState } from "@/redux/store";
-import type { AlertProps, MemberPost, User } from "@/types";
+import type { MemberPost, User } from "@/types";
 
 export interface PostProps {
   user: User;
@@ -46,17 +47,6 @@ const MoPost: React.FC<PostProps> = ({
 
   const [isPost, setIsPost] = useState<MemberPost>();
   const [loading, setLoading] = useState(true);
-  const [showAlert, setShowAlert] = useState(false);
-  const [alertProps, setAlertProps] = useState<AlertProps>({
-    icon: "",
-    width: 0,
-    height: 0,
-    content: "",
-    alt: "",
-    onClose: () => {},
-    buttonText: "",
-  });
-
   const isUser = useSelector((state: RootState) => state.user);
 
   const deletedMessage = "해당 글은 삭제된 글입니다.";
@@ -64,19 +54,18 @@ const MoPost: React.FC<PostProps> = ({
   const showAlertWithContent = (
     icon: string,
     content: string,
-    handleAlertClose: () => void,
     btnText: string
   ) => {
-    setAlertProps({
-      icon: icon,
-      width: 68,
-      height: 58,
-      content: content,
-      alt: "경고",
-      onClose: handleAlertClose,
-      buttonText: btnText,
-    });
-    setShowAlert(true);
+    dispatch(
+      setOpenAlertModal({
+        icon: icon,
+        width: 68,
+        height: 58,
+        content: content,
+        alt: "경고",
+        buttonText: btnText,
+      })
+    );
   };
 
   /* 게시글 api */
@@ -96,14 +85,7 @@ const MoPost: React.FC<PostProps> = ({
       if (
         axiosError?.response?.data?.message === "해당 글은 삭제된 글입니다."
       ) {
-        return showAlertWithContent(
-          "trash",
-          deletedMessage,
-          () => {
-            setShowAlert(false);
-          },
-          "확인"
-        );
+        return showAlertWithContent("trash", deletedMessage, "확인");
       } else {
         console.error(error);
       }
@@ -150,8 +132,6 @@ const MoPost: React.FC<PostProps> = ({
 
   return (
     <>
-      {showAlert ? <Alert {...alertProps} /> : null}
-
       <PostItem
         data={postItemData}
         variant="mypage"
