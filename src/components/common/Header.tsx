@@ -106,6 +106,8 @@ const Header = () => {
   }, [isMyPage]);
 
   useEffect(() => {
+    document.body.style.overflow = "unset";
+
     if (!isMobile) return;
 
     if (isMyPage) {
