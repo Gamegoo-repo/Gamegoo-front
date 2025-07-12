@@ -72,6 +72,7 @@ const MessageList = (props: MessageListProps) => {
   const [isUnregisterAlert, setIsUnregisterAlert] = useState(false);
   const [isBlockedAlert, setIsBlockedAlert] = useState(false);
   const [isMyMsgSent, setIsMyMsgSent] = useState(false);
+  const [innerHeight, setInnerHeight] = useState(window.innerHeight);
 
   const chatRef = useRef<HTMLDivElement>(null);
   const isReadingModal = useSelector(
@@ -259,6 +260,18 @@ const MessageList = (props: MessageListProps) => {
     }
   }, [newMessage]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setInnerHeight(window.innerHeight);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [innerHeight]);
+
   /* 채팅 날짜 표시 */
   const handleDisplayDate = (
     messages: ChatMessageDto[],
@@ -390,7 +403,7 @@ const MessageList = (props: MessageListProps) => {
         ))}
       <ChatBorder>
         {chatEnterData.uuid === currentChatUuid && (
-          <ChatMain ref={chatRef}>
+          <ChatMain $innerHeight={innerHeight} ref={chatRef}>
             {messageList.map((message, index) => {
               const showProfileImage = handleDisplayProfileImage(
                 messageList,
@@ -506,7 +519,7 @@ const ChatBorder = styled.div`
   padding: 0 12px;
 `;
 
-const ChatMain = styled.main`
+const ChatMain = styled.main<{ $innerHeight: number }>`
   border-top: 1px solid ${theme.colors.violet300};
   padding: 10px 8px;
   height: 471px;
@@ -518,7 +531,7 @@ const ChatMain = styled.main`
   scrollbar-width: none;
   @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 10px 8px 138px;
-    height: calc(100vh - 54px - 71px);
+    height: calc(${(props) => props.$innerHeight}px - 54px - 71px);
     border-top: none;
   }
 `;

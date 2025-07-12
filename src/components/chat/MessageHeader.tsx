@@ -154,8 +154,8 @@ const MessageHeader = (props: MessageHeaderProps) => {
                         height={5}
                         style={{
                           position: "absolute",
-                          top: "19%",
-                          right: "-4%",
+                          top: "0%",
+                          right: "-10px",
                         }}
                       />
                     </>

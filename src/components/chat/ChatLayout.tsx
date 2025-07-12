@@ -913,7 +913,7 @@ const Wrapper = styled.div`
 
   @media (max-width: ${theme.breakpoints.mobile}) {
     border-radius: 0;
-    height: 100vh;
+    /* height: 100vh; */
   }
 `;
 
