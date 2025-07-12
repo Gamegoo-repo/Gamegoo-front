@@ -710,9 +710,6 @@ const Profile: React.FC<Profile> = ({
               />
             )}
         </StyledBox>
-        {/* {isMobile &&
-          (profileType === "me" || profileType === "other") &&
-          renderFriendsButton()} */}
         {isMobile && renderFriendsButton()}
       </Row>
 
