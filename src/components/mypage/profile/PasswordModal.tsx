@@ -175,7 +175,7 @@ const Content = styled.div`
 const Valid = styled.div`
   color: #737373;
   font-size: ${theme.fonts.semiBold14};
-  z-index: 10;
+  z-index: ${theme.zIndex.popup};;
 `;
 
 const Span = styled.div<{ $selected: boolean }>`

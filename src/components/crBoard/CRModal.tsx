@@ -50,7 +50,7 @@ const Overlay = styled.div<{ $hideContent: boolean | undefined }>`
   position: fixed;
   top: 50%;
   left: 50%;
-  z-index: 100;
+  z-index: ${theme.zIndex.popup};;
   background: ${({ $hideContent }) => ($hideContent ? "unset" : "#0000009c")};
   overflow-y: ${({ $hideContent }) => ($hideContent ? "unset" : "scroll")};
   overflow-x: hidden;
@@ -120,7 +120,7 @@ const Header = styled.header<{ $type: string }>`
   }
 `;
 
-const CloseButton = styled.p<{ $type: string }>`
+const CloseButton = styled.button<{ $type: string }>`
   position: absolute;
   top: 17px;
   right: 14px;

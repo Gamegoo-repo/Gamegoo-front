@@ -186,7 +186,7 @@ const Overlay = styled.div<{ $type: string | undefined }>`
   background: #0000009c;
   border-radius: ${({ $type }) => ($type === "manner" ? "20px" : "unset")};
   inset: 0;
-  z-index: 101;
+  z-index: ${theme.zIndex.popup + 1};
 
   @media (max-width: ${theme.breakpoints.mobile}) {
     border-radius: 0px;

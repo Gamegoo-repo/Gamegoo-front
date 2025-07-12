@@ -216,7 +216,7 @@ const Percentage = styled.div`
 
 const TooltipWrapper = styled.div`
   position: absolute;
-  z-index: 9999;
+  z-index: ${theme.zIndex.baseFloating};;
   top: 40px;
   left: 0;
   width: 100%;
@@ -241,7 +241,7 @@ const Tooltip = styled.div`
   backdrop-filter: blur(5.3px);
   pointer-events: none;
   text-align: left;
-  z-index: 9999;
+  z-index: ${theme.zIndex.baseFloating};;
 
   @media (max-width: ${theme.breakpoints.mobile}) {
     height: 150px;

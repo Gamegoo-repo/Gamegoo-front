@@ -741,7 +741,7 @@ export default Layout;
 
 const Overlay = styled.div<{ $top: string; $left: string }>`
   position: fixed;
-  z-index: 100;
+  z-index: ${theme.zIndex.popup};
 
   top: calc(${(props) => props.$top});
   left: calc(${(props) => props.$left});

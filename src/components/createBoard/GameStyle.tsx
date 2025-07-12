@@ -119,7 +119,7 @@ const Div = styled.div`
   position: relative;
 `;
 
-const AddGameStyle = styled.p`
+const AddGameStyle = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;

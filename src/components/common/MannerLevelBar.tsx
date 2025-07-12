@@ -48,7 +48,7 @@ const MannerLevelBar = (props: MannerLevelBarProps) => {
                       %
                     </Percentage>
 
-                    <DownIconWrapper level={level - 1}>
+                    <DownIconWrapper $level={level - 1}>
                       <ChevronDownIcon />
                     </DownIconWrapper>
                   </>
@@ -56,7 +56,7 @@ const MannerLevelBar = (props: MannerLevelBarProps) => {
               </Recent>
             )}
             <Level
-              bold={recentLevel === level}
+              $bold={recentLevel === level}
               $isBlind={isBlind}
             >{`Lv ${level}`}</Level>
             <ImageWrapper>
@@ -154,7 +154,7 @@ const PurpleBar = styled.div<{ $recentLevel: number; $isBlind: boolean }>`
       background: ${theme.colors.gray700};
     `}
   position: absolute;
-  z-index: 10;
+  z-index: ${theme.zIndex.base};;
 `;
 
 const BlackBar = styled.div<{ $isBlind: boolean }>`
@@ -191,7 +191,7 @@ const LevelBox = styled.div<{ $isColor: boolean }>`
   color: ${({ theme, $isColor }) =>
     $isColor ? theme.colors.violet600 : theme.colors.gray700};
   position: relative;
-  z-index: 20;
+  z-index: ${theme.zIndex.base};;
 `;
 
 const Recent = styled.div`
@@ -210,7 +210,7 @@ const Percentage = styled.div`
   }
 `;
 
-const DownIconWrapper = styled.div<{ level: number }>`
+const DownIconWrapper = styled.div<{ $level: number }>`
   width: 10px;
   height: 12px;
   margin-bottom: 4px;
@@ -220,10 +220,10 @@ const DownIconWrapper = styled.div<{ level: number }>`
   }
 `;
 
-const Level = styled.div<{ bold: boolean; $isBlind: boolean }>`
+const Level = styled.div<{ $bold: boolean; $isBlind: boolean }>`
   ${(props) =>
-    props.bold ? props.theme.fonts.bold14 : props.theme.fonts.regular14};
-  margin-bottom: ${(props) => (props.bold ? "15px" : "5px")};
+    props.$bold ? props.theme.fonts.bold14 : props.theme.fonts.regular14};
+  margin-bottom: ${(props) => (props.$bold ? "15px" : "5px")};
   ${({ $isBlind }) =>
     $isBlind &&
     css`
@@ -232,7 +232,7 @@ const Level = styled.div<{ bold: boolean; $isBlind: boolean }>`
 
   @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) =>
-      props.bold ? props.theme.fonts.bold13 : props.theme.fonts.regular13};
+      props.$bold ? props.theme.fonts.bold13 : props.theme.fonts.regular13};
     margin-bottom: 0px;
   }
 `;
