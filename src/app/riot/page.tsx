@@ -10,6 +10,7 @@ import { encode as base64urlEncode } from "js-base64";
 import styled from "styled-components";
 
 import { Button, Checkbox } from "@/components";
+import Icon from "@/components/common/Icon";
 import { STORAGE_KEY } from "@/constants/storage";
 import { clearSignIn } from "@/redux/slices/signInSlice";
 import { clearUserProfile } from "@/redux/slices/userSlice";
@@ -99,11 +100,10 @@ const RiotLogin = () => {
           <Line />
           <Join href="https://signup.kr.riotgames.com">
             라이엇 계정 만들기
-            <Image
-              src="/assets/icons/chevron_right.svg"
+            <Icon
+              backgroundUrl="/assets/icons/chevron_right_black.svg"
               width={16}
               height={16}
-              alt=""
             />
           </Join>
         </Box>

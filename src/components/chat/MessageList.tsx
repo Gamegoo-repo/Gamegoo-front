@@ -12,6 +12,7 @@ import dayjs from "dayjs";
 import styled, { keyframes } from "styled-components";
 
 import { getChatList, markChatAsRead } from "@/api";
+import Icon from "@/components/common/Icon";
 import { useChatMessage } from "@/hooks";
 import { closeChat, closeChatRoom } from "@/redux/slices/chatSlice";
 import {
@@ -78,7 +79,7 @@ const MessageList = (props: MessageListProps) => {
     (state: RootState) => state.modal.readingModal
   );
   const isFeedbackModalOpen = useSelector(
-    (state: RootState) => state.modal.isOpen
+    (state: RootState) => state.modal.mannerStatusModal
   );
   const currentChatUuid = useSelector(
     (state: RootState) => state.chat.currentChatUuid
@@ -414,11 +415,11 @@ const MessageList = (props: MessageListProps) => {
                     <FeedbackDiv>
                       <FeedbackContainer>
                         <Feedback>
-                          <SmileImage
-                            src="/assets/icons/clicked_smile.svg"
+                          <Icon
+                            backgroundUrl="/assets/icons/clicked_smile.svg"
                             width={22}
                             height={22}
-                            alt="스마일 이모티콘"
+                            style={{ marginBottom: "7px" }}
                           />
                           <Text>매칭은 어떠셨나요?</Text>
                           <Text>상대방의 매너를 평가해주세요!</Text>
@@ -682,10 +683,6 @@ const Feedback = styled.div`
   border: 1px solid ${theme.colors.violet300};
   background: ${theme.colors.violet100};
   border-radius: 13px;
-`;
-
-const SmileImage = styled(Image)`
-  margin-bottom: 7px;
 `;
 
 const Text = styled.p`

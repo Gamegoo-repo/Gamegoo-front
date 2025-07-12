@@ -1,7 +1,7 @@
 import React from "react";
-import Image from "next/image";
 import styled from "styled-components";
 
+import Icon from "@/components/common/Icon";
 import { BOTTOM_MODAL } from "@/constants";
 import { theme } from "@/styles/theme";
 
@@ -25,11 +25,10 @@ const BottomModal: React.FC<BottomModalProps> = (props) => {
     <Background>
       <ModalContainer>
         <Modal>
-          <Image
-            src={modalData.icon}
+          <Icon
+            backgroundUrl={modalData.icon}
             width={modalData.width}
             height={modalData.height}
-            alt="icon"
           />
           {modalData.message}
         </Modal>

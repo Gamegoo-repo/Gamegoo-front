@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import styled from "styled-components";
 
 import { GraphicBox, HeaderTitle } from "@/components";
+import Icon from "@/components/common/Icon";
 import { GAME_MODE_PAGE_DATA } from "@/constants";
 import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
@@ -43,12 +44,13 @@ const GameModePage = () => {
                       }
                     >
                       선택
-                      <Image
-                        src={"/assets/icons/chevron_right.svg"}
+                      <Icon
+                        backgroundUrl="/assets/icons/chevron_right.svg"
                         width={12}
                         height={12}
-                        style={{ marginLeft: "4px" }}
-                        alt="go"
+                        style={{
+                          marginLeft: "4px",
+                        }}
                       />
                     </BoxButton>
                   </Box>
@@ -67,12 +69,13 @@ const GameModePage = () => {
                       backgroundColor="#2E3032"
                     >
                       {box.title}
-                      <Image
-                        src={"/assets/icons/chevron_right.svg"}
+                      <Icon
+                        backgroundUrl="/assets/icons/chevron_right.svg"
                         width={20}
                         height={20}
-                        style={{ marginLeft: "8px" }}
-                        alt="go"
+                        style={{
+                          marginLeft: "8px",
+                        }}
                       />
                     </GraphicBox>
                   </BoxWrapper>

@@ -1,9 +1,9 @@
 import { useState } from "react";
-import Image from "next/image";
 import styled from "styled-components";
 
 import { changePassword, checkPassword } from "@/api";
 import { Button, FormModal, Input } from "@/components/common";
+import Icon from "@/components/common/Icon";
 import ko from "@/constants/ko.json";
 import { notify } from "@/hooks";
 import { theme } from "@/styles/theme";
@@ -106,36 +106,32 @@ const PasswordModal = (props: PasswordModalProps) => {
             비밀번호 요구사항
             <Span $selected={isLengthValid}>
               {isLengthValid ? (
-                <Image
-                  src="/assets/icons/valid_check_purple.svg"
+                <Icon
+                  backgroundUrl="/assets/icons/valid_check_purple.svg"
                   width={8}
                   height={5}
-                  alt="check"
                 />
               ) : (
-                <Image
-                  src="/assets/icons/valid_check_gray.svg"
+                <Icon
+                  backgroundUrl="/assets/icons/valid_check_gray.svg"
                   width={8}
                   height={5}
-                  alt="check"
                 />
               )}
               8자리 이상 ~ 16자리 이하
             </Span>
             <Span $selected={hasSpecialChar}>
               {hasSpecialChar ? (
-                <Image
-                  src="/assets/icons/valid_check_purple.svg"
+                <Icon
+                  backgroundUrl="/assets/icons/valid_check_purple.svg"
                   width={8}
                   height={5}
-                  alt="check"
                 />
               ) : (
-                <Image
-                  src="/assets/icons/valid_check_gray.svg"
+                <Icon
+                  backgroundUrl="/assets/icons/valid_check_gray.svg"
                   width={8}
                   height={5}
-                  alt="check"
                 />
               )}
               영어, 숫자, 특수문자 포함 (대/소문자 구분)

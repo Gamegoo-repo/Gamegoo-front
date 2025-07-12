@@ -1,6 +1,6 @@
-import Image from "next/image";
 import styled from "styled-components";
 
+import Icon from "@/components/common/Icon";
 import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 
@@ -20,11 +20,10 @@ const Mic = (props: MicProps) => {
   if (variant === "icon") {
     return (
       <IconTextWrapper>
-        <Image
-          src={`/assets/icons/mic_${isAvailable ? "on" : "off"}_no_bg.svg`}
+        <Icon
+          backgroundUrl={`/assets/icons/mic_${isAvailable ? "on" : "off"}_no_bg.svg`}
           width={isMobile ? 24 : 32}
           height={isMobile ? 24 : 32}
-          alt={`mic ${isAvailable ? "on" : "off"}`}
         />
         <IconText className={isAvailable ? "on" : "off"}>
           마이크 {isAvailable ? "ON" : "OFF"}
@@ -35,11 +34,10 @@ const Mic = (props: MicProps) => {
 
   return (
     <ChipWrapper className={isAvailable ? "on" : "off"}>
-      <Image
-        src={`/assets/icons/mic_${isAvailable ? "on" : "off"}_no_bg.svg`}
-        width={12}
+      <Icon
+        backgroundUrl={`/assets/icons/mic_${isAvailable ? "on" : "off"}_no_bg.svg`}
+        width={10}
         height={12}
-        alt={`mic ${isAvailable ? "on" : "off"}`}
       />
       <ChipText className={isAvailable ? "on" : "off"}>
         마이크 {isAvailable ? "ON" : "OFF"}

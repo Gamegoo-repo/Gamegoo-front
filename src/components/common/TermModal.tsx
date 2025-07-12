@@ -1,7 +1,7 @@
 import React from "react";
-import Image from "next/image";
 import styled from "styled-components";
 
+import Icon from "@/components/common/Icon";
 import { theme } from "@/styles/theme";
 
 interface TermModalProps {
@@ -26,14 +26,13 @@ const TermModal = (props: TermModalProps) => {
               <UnRequiredText>(선택)</UnRequiredText>
             )}
           </Title>
-          <Image
-            src="/assets/icons/close_modal.svg"
-            width={16}
-            height={16}
-            alt="닫기"
-            onClick={onClose}
-            style={{ cursor: "pointer" }}
-          />
+          <button onClick={onClose}>
+            <Icon
+              backgroundUrl={"/assets/icons/close_modal.svg"}
+              width={16}
+              height={16}
+            />
+          </button>
         </Top>
         <Content>
           {content}

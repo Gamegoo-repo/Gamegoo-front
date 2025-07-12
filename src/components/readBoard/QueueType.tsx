@@ -1,6 +1,7 @@
 import Image from "next/image";
 import styled from "styled-components";
 
+import Icon from "@/components/common/Icon";
 import { theme } from "@/styles/theme";
 import { setQueueType } from "@/utils";
 
@@ -17,11 +18,10 @@ const QueueType = (props: QueueTypeProps) => {
     <Queue>
       <Title>선호 게임 모드</Title>
       <Type>
-        <Image
-          src="/assets/icons/mini_check.svg"
+        <Icon
+          backgroundUrl="/assets/icons/mini_check.svg"
           width={20}
           height={20}
-          alt=""
         />
         <P>{setQueueType(value)}</P>
       </Type>

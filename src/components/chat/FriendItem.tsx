@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux";
 import Image from "next/image";
 import styled from "styled-components";
 
+import Icon from "@/components/common/Icon";
 import { setChatEnterType } from "@/redux/slices/chatSlice";
 import { theme } from "@/styles/theme";
 import { getProfileBgColor } from "@/utils";
@@ -74,17 +75,17 @@ const FriendItem = (props: FriendItemProps) => {
         )}
       </Left>
       {!friend.blind && (
-        <Image
-          onClick={(e) => onFavoriteToggle(e, friend.memberId)}
-          src={
-            friend.liked
-              ? "/assets/icons/favorites.svg"
-              : "/assets/icons/non_favorites.svg"
-          }
-          width={36}
-          height={36}
-          alt="즐겨찾기 버튼"
-        />
+        <button onClick={(e) => onFavoriteToggle(e, friend.memberId)}>
+          <Icon
+            backgroundUrl={
+              friend.liked
+                ? "/assets/icons/favorites.svg"
+                : "/assets/icons/non_favorites.svg"
+            }
+            width={36}
+            height={36}
+          />
+        </button>
       )}
     </UserContent>
   );

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import styled from "styled-components";
 
+import Icon from "@/components/common/Icon";
 import { STEPS } from "@/constants";
 import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
@@ -29,12 +29,13 @@ const StepNavigation = ({ title }: StepNavigationProps) => {
           <StepItem key={index} $active={step === title}>
             {step}
             {index !== STEPS.length - 1 && (
-              <Image
-                src={"/assets/icons/chevron_right_gray.svg"}
-                width={20}
-                height={20}
-                alt="go"
-              />
+              <StepIconWrapper>
+                <Icon
+                  backgroundUrl={"/assets/icons/chevron_right_gray.svg"}
+                  width={10}
+                  height={10}
+                />
+              </StepIconWrapper>
             )}
           </StepItem>
         ))}
@@ -88,17 +89,17 @@ const StepItem = styled.div<{ $active?: boolean }>`
       content: "";
       display: none; /* 기존 스타일 숨김 */
     }
-
-    & > img {
-      margin-left: 10px;
-      padding: 5px;
-      border: #b5c1d2;
-      background-color: ${theme.colors.gray200};
-      border-radius: 50%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
   }
+`;
+
+const StepIconWrapper = styled.div`
+  margin-left: 10px;
+  padding: 5px;
+  border: #b5c1d2;
+  background-color: ${theme.colors.gray200};
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 `;

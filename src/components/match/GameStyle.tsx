@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import Image from "next/image";
 import styled, { css } from "styled-components";
 
 import { putGameStyle, putMike } from "@/api";
+import Icon from "@/components/common/Icon";
 import { GAME_STYLE } from "@/constants";
 import { updateGameStyles } from "@/redux/slices/matchInfo";
 import { setUserMike } from "@/redux/slices/userSlice";
@@ -141,8 +141,8 @@ const GameStyle = (props: GameStyleProps) => {
                 $profileType={profileType}
                 onClick={handleStylePopup}
               >
-                <Image
-                  src={"/assets/icons/plus_violet.svg"}
+                <Icon
+                  backgroundUrl="/assets/icons/plus_violet.svg"
                   width={
                     profileType === "mini"
                       ? 11
@@ -157,7 +157,6 @@ const GameStyle = (props: GameStyleProps) => {
                         ? 14
                         : 21
                   }
-                  alt="추가"
                 />
               </AddGameStyle>
             </Div>

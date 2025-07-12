@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
 import { Banner } from "@/components";
+import Icon from "@/components/common/Icon";
 import { MATCH_PAGE_DATA } from "@/constants";
 import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
@@ -34,12 +35,11 @@ const HomePage = () => {
                 />
                 <TitleWrap>
                   <ContentTitle>{content.title}</ContentTitle>
-                  <Image
-                    src={"/assets/icons/chevron_right.svg"}
-                    width={!isMobile ? 24 : 14}
-                    height={!isMobile ? 24 : 14}
+                  <Icon
+                    backgroundUrl={"/assets/icons/chevron_right.svg"}
+                    width={isMobile ? 14 : 24}
+                    height={isMobile ? 14 : 24}
                     style={{ marginLeft: "10px" }}
-                    alt="go"
                   />
                 </TitleWrap>
               </ContentWrapper>

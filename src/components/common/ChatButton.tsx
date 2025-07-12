@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Image from "next/image";
 import styled from "styled-components";
 
+import Icon from "@/components/common/Icon";
 import { STORAGE_KEY } from "@/constants/storage";
 import { useMediaQueryContext } from "@/hooks";
 import { toggleChat } from "@/redux/slices/chatSlice";
@@ -80,11 +80,10 @@ const ChatButton = () => {
       {isChatOpen && <Layout />}
       {isMobile ? (
         <MoMsgIconWrapper onClick={handleToggleChat}>
-          <Image
-            src="/assets/icons/chat.svg"
+          <Icon
+            backgroundUrl={`/assets/icons/chat.svg`}
             width={30}
             height={30}
-            alt="logo"
           />
           <MoMsgCount>
             <MoCount>{chatCount}</MoCount>
@@ -92,11 +91,16 @@ const ChatButton = () => {
         </MoMsgIconWrapper>
       ) : (
         <MsgButton onClick={handleToggleChat}>
-          <Image
-            src="/assets/icons/chat_box.svg"
+          <Icon
+            backgroundUrl={`/assets/icons/chat_box.svg`}
             width={36}
             height={34}
-            alt="채팅"
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, calc(-50% + 2px))",
+            }}
           />
           <MsgCount>
             <Count>{chatCount}</Count>
@@ -116,7 +120,7 @@ const MoMsgIconWrapper = styled.div`
 const MoMsgCount = styled.div`
   position: absolute;
   top: 0;
-  right: 5px;
+  right: 0px;
   width: 14px;
   height: 14px;
   line-height: 0%;
@@ -139,12 +143,6 @@ const MsgButton = styled.button`
   bottom: 34px;
   right: 134px;
   margin-left: auto;
-  img {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, calc(-50% + 2px));
-  }
 `;
 
 const MsgCount = styled.div`

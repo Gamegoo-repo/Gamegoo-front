@@ -1,8 +1,8 @@
 import { createPortal } from "react-dom";
 import { useDispatch, useSelector } from "react-redux";
-import Image from "next/image";
 import styled from "styled-components";
 
+import Icon from "@/components/common/Icon";
 import { setCloseAlertModal } from "@/redux/slices/modalSlice";
 import { theme } from "@/styles/theme";
 
@@ -13,8 +13,15 @@ const Alert = () => {
   const showAlert = useSelector((state: RootState) => state.modal.isOpen);
   const alertProps = useSelector((state: RootState) => state.modal.alertProps);
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
-  const { icon, width, height, content, alt, onClose, buttonText } =
-    alertProps || {};
+  const {
+    icon,
+    width = 68,
+    height = 58,
+    content,
+    alt,
+    onClose,
+    buttonText,
+  } = alertProps ?? {};
 
   if (!showAlert) return null;
 
@@ -22,11 +29,10 @@ const Alert = () => {
     <Overlay>
       <Wrapper>
         <TextWrapper>
-          <Image
-            src={`/assets/icons/${icon}.svg`}
+          <Icon
+            backgroundUrl={`/assets/icons/${icon}.svg`}
             width={width}
             height={height}
-            alt={alt || ""}
           />
           <Text>{content}</Text>
         </TextWrapper>
@@ -89,6 +95,10 @@ const TextWrapper = styled.div`
   margin-bottom: 10px;
   text-align: center;
   padding: 17px 0 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 
   @media (max-width: ${theme.breakpoints.mobile}) {
     border-radius: 14px;

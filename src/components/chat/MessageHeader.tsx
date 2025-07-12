@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
+import Icon from "@/components/common/Icon";
 import { useMediaQueryContext } from "@/hooks";
 import {
   closeChat,
@@ -94,25 +95,21 @@ const MessageHeader = (props: MessageHeaderProps) => {
         />
       )}
       {!isMobile ? (
-        <CloseButton>
-          <CloseImage
-            onClick={() => dispatch(closeChatRoom())}
-            src="/assets/icons/close.svg"
+        <CloseButton onClick={() => dispatch(closeChatRoom())}>
+          <Icon
+            backgroundUrl="/assets/icons/close.svg"
             width={11}
             height={11}
-            alt="닫기"
           />
         </CloseButton>
       ) : (
         <TitleWrap>
           <Title>채팅</Title>
-          <CloseButton>
-            <CloseImage
-              onClick={() => dispatch(closeChatRoom())}
-              src="/assets/icons/close_modal.svg"
+          <CloseButton onClick={() => dispatch(closeChatRoom())}>
+            <Icon
+              backgroundUrl="/assets/icons/close_modal.svg"
               width={11}
               height={11}
-              alt="닫기"
             />
           </CloseButton>
         </TitleWrap>
@@ -120,13 +117,13 @@ const MessageHeader = (props: MessageHeaderProps) => {
 
       {chatEnterData && (
         <ChatHeader>
-          <PrevImage
-            onClick={handleGoToPrevious}
-            src="/assets/icons/chevron_left.svg"
-            width={9}
-            height={18}
-            alt="뒤로가기"
-          />
+          <PrevButton onClick={handleGoToPrevious}>
+            <Icon
+              backgroundUrl="/assets/icons/chevron_left.svg"
+              width={16}
+              height={16}
+            />
+          </PrevButton>
           <Middle>
             <ImageWrapper
               $bgColor={getProfileBgColor(chatEnterData.memberProfileImg)}
@@ -168,11 +165,10 @@ const MessageHeader = (props: MessageHeaderProps) => {
             </Div>
           </Middle>
           <ThreeDotsButton onClick={handleMoreBoxOpen}>
-            <ThreeDotsImage
-              src="/assets/icons/three_dots_button.svg"
-              width={30}
+            <Icon
+              backgroundUrl="/assets/icons/three_dots_button.svg"
+              width={15}
               height={15}
-              alt="상세보기"
             />
           </ThreeDotsButton>
         </ChatHeader>
@@ -197,7 +193,8 @@ const Title = styled.p`
   color: ${theme.colors.gray800};
 `;
 
-const CloseButton = styled.p`
+const CloseButton = styled.button`
+  margin-left: auto;
   display: flex;
   margin-bottom: 1px;
   padding: 12px 13px 0 0;
@@ -220,7 +217,7 @@ const ChatHeader = styled.header`
   }
 `;
 
-const PrevImage = styled(Image)`
+const PrevButton = styled.button`
   margin-right: 18px;
   cursor: pointer;
 `;
@@ -276,6 +273,7 @@ const OnlineImage = styled(Image)`
   position: absolute;
   top: 1%;
   right: -11%;
+  pointer-events: none;
 `;
 
 const ThreeDotsButton = styled.button`

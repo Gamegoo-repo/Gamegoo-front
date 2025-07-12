@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import Image from "next/image";
 import styled, { css } from "styled-components";
 
+import Icon from "@/components/common/Icon";
 import { POSITION } from "@/constants";
 import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
@@ -105,11 +106,10 @@ const PositionCategory = (props: PositionComponentProps) => {
           포지션 선택
         </Title>
         <CloseButton onClick={() => handleClose()}>
-          <Image
-            src={"/assets/icons/close_white.svg"}
+          <Icon
+            backgroundUrl={"/assets/icons/close_white.svg"}
             width={16}
             height={16}
-            alt="go"
           />
         </CloseButton>
       </Header>

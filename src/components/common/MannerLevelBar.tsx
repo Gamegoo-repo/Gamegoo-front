@@ -1,6 +1,7 @@
 import Image from "next/image";
 import styled, { css } from "styled-components";
 
+import Icon from "@/components/common/Icon";
 import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 
@@ -60,8 +61,8 @@ const MannerLevelBar = (props: MannerLevelBarProps) => {
               $isBlind={isBlind}
             >{`Lv ${level}`}</Level>
             <ImageWrapper>
-              <Image
-                src={
+              <Icon
+                backgroundUrl={
                   isBlind
                     ? level <= 1
                       ? "/assets/icons/check_level_blind.svg"
@@ -72,7 +73,6 @@ const MannerLevelBar = (props: MannerLevelBarProps) => {
                         ? `/assets/icons/check_level_ring${level}.svg`
                         : `/assets/icons/check_level_ring.svg`
                 }
-                alt={`check_level${level}`}
                 width={
                   isBlind
                     ? level > 1

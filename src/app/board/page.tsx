@@ -16,6 +16,7 @@ import {
   PostList,
   Table,
 } from "@/components";
+import Icon from "@/components/common/Icon";
 import { BOARD_TITLE, GAME_MODE, MIC, TIER } from "@/constants";
 import ko from "@/constants/ko.json";
 import { notify, useMediaQueryContext } from "@/hooks";
@@ -484,11 +485,11 @@ const BoardPage = () => {
                   <SecondBlock>
                     {boardList?.length > 0 && isUser?.id ? (
                       <PullUpButton onClick={handlePullUp}>
-                        <Image
-                          src="/assets/icons/chevron_double_up.svg"
+                        {/* <PullUpIcon $backgroundUrl="/assets/icons/chevron_double_up.svg" /> */}
+                        <Icon
+                          backgroundUrl="/assets/icons/chevron_double_up.svg"
                           width={15}
                           height={15}
-                          alt=""
                         />
                         최근 글 끌어올리기
                       </PullUpButton>
@@ -529,11 +530,10 @@ const BoardPage = () => {
                   <FirstRowRight>
                     {boardList?.length > 0 && isUser?.id ? (
                       <PullUpButton onClick={handlePullUp}>
-                        <Image
-                          src={"/assets/icons/chevron_double_up_white.svg"}
+                        <Icon
+                          backgroundUrl="/assets/icons/chevron_double_up_white.svg"
                           width={15}
                           height={15}
-                          alt=""
                         />
                       </PullUpButton>
                     ) : null}

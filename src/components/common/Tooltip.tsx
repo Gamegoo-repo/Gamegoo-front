@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import Image from "next/image";
 import styled, { css } from "styled-components";
 
+import Icon from "@/components/common/Icon";
 import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 
@@ -38,11 +38,10 @@ const Tooltip = (props: TooltipProps) => {
     >
       <IconWrapper>
         {children || (
-          <Image
-            src={"/assets/icons/info.svg"}
+          <Icon
+            backgroundUrl={"/assets/icons/info.svg"}
             width={16}
             height={16}
-            alt="info"
           />
         )}
       </IconWrapper>

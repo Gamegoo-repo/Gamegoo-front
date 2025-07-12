@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
 import { getPopupNotification, patchReadNotification } from "@/api";
+import Icon from "@/components/common/Icon";
 import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 import { lockBodyScroll, unlockBodyScroll } from "@/utils";
@@ -153,25 +154,21 @@ const AlertWindow = (props: AlertWindowProps) => {
               <HeaderTitle>알림</HeaderTitle>
               {isMobile ? (
                 <>
-                  <button>
-                    <Image
-                      src="/assets/icons/close_modal.svg"
+                  <button onClick={onClose}>
+                    <Icon
+                      backgroundUrl="/assets/icons/close_modal.svg"
                       width={16}
                       height={16}
-                      alt="닫기"
-                      onClick={onClose}
-                      style={{ cursor: "pointer" }}
                     />
                   </button>
                 </>
               ) : (
                 <AllButton onClick={handleShowAll}>
                   전체보기
-                  <Image
-                    src="/assets/icons/move.svg"
+                  <Icon
+                    backgroundUrl="/assets/icons/move.svg"
                     width={11}
                     height={11}
-                    alt="move button"
                   />
                 </AllButton>
               )}

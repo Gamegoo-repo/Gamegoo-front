@@ -50,6 +50,7 @@ const Overlay = styled.div<{ $hideContent: boolean | undefined }>`
   z-index: 100;
   background: ${({ $hideContent }) => ($hideContent ? "unset" : "#0000009c")};
   overflow-y: ${({ $hideContent }) => ($hideContent ? "unset" : "scroll")};
+  overflow-x: hidden;
   inset: ${({ $hideContent }) => ($hideContent ? "unset" : 0)};
 
   /* 스크롤바 */

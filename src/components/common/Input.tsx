@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import styled from "styled-components";
 
+import Icon from "@/components/common/Icon";
 import { theme } from "@/styles/theme";
 
 interface InputProps {
@@ -98,11 +99,10 @@ const Input = (props: InputProps) => {
           {isvalid !== undefined && (
             <Valid>
               {isvalid === true && checkIcon === true && (
-                <Image
-                  src="/assets/icons/check.svg"
+                <Icon
+                  backgroundUrl="/assets/icons/check.svg"
                   width={19}
                   height={13}
-                  alt="check"
                 />
               )}
               {isvalid === false && <Error>{errorMsg}</Error>}
