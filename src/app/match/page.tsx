@@ -8,6 +8,7 @@ import styled from "styled-components";
 
 import { GraphicBox, HeaderTitle } from "@/components";
 import Icon from "@/components/common/Icon";
+
 import { MATCH_TYPE_PAGE_DATA, MO_MATCH_TYPE_PAGE_DATA } from "@/constants";
 import { useMediaQueryContext } from "@/hooks";
 import { setOpenAlertModal } from "@/redux/slices/modalSlice";

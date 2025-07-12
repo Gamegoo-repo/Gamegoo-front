@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 import Icon from "@/components/common/Icon";
+
 import { setCloseAlertModal } from "@/redux/slices/modalSlice";
 import { theme } from "@/styles/theme";
 
@@ -22,6 +23,7 @@ const Alert = () => {
     onClose,
     buttonText,
   } = alertProps ?? {};
+
 
   if (!showAlert) return null;
 
