@@ -20,6 +20,7 @@ import Layout from "@/components/chat/Layout";
 import Button from "@/components/common/Button";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import HeaderTitle from "@/components/common/HeaderTitle";
+import Icon from "@/components/common/Icon";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import SquareProfile from "@/components/match/SquareProfile";
 import { useMediaQueryContext } from "@/hooks";
@@ -422,11 +423,10 @@ const Complete = () => {
                   <>
                     <Text>
                       {timeLeft}초 뒤 자동으로 대화방이 생성됩니다
-                      <Image
-                        src="/assets/icons/arrow-right-violet.svg"
+                      <Icon
+                        backgroundUrl="/assets/icons/arrow-right-violet.svg"
                         width={14}
                         height={14}
-                        alt="10초 뒤 자동으로 대화방이 생성됩니다"
                       />
                     </Text>
                     <Button

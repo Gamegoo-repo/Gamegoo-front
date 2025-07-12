@@ -1,6 +1,6 @@
-import Image from "next/image";
 import styled from "styled-components";
 
+import Icon from "@/components/common/Icon";
 import { theme } from "@/styles/theme";
 
 interface PaginationProps {
@@ -43,15 +43,14 @@ const Pagination = (props: PaginationProps) => {
           disabled={currentPage === 1}
           $isDisabled={currentPage === 1}
         >
-          <Image
-            src={
+          <Icon
+            backgroundUrl={
               currentPage === 1
                 ? "/assets/icons/paging_disabled_left_arrow.svg"
                 : "/assets/icons/paging_left_arrow.svg"
             }
             width={14}
             height={26}
-            alt="이전 페이지"
           />
         </Button>
         <PageList>
@@ -70,15 +69,14 @@ const Pagination = (props: PaginationProps) => {
           disabled={currentPage === totalPage}
           $isDisabled={currentPage === totalPage || totalPage === 0}
         >
-          <Image
-            src={
+          <Icon
+            backgroundUrl={
               currentPage === totalPage || totalPage === 0
                 ? "/assets/icons/paging_disabled_right_arrow.svg"
                 : "/assets/icons/paging_right_arrow.svg"
             }
             width={14}
             height={26}
-            alt="다음 페이지"
           />
         </Button>
       </Wrapper>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import styled from "styled-components";
 
+import Icon from "@/components/common/Icon";
 import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 import { getProfileBgColor } from "@/utils";
@@ -71,15 +71,14 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
       {isToggleUI && isMobile && (
         <ToggleProfile $isOpened={isOpened} onClick={handleToggleOpen}>
           <span>내 프로필</span>
-          <Image
-            src={
+          <Icon
+            backgroundUrl={
               isOpened
                 ? "/assets/icons/toggle_arrow_up.svg"
                 : "/assets/icons/toggle_arrow_down.svg"
             }
             width={16}
             height={16}
-            alt="toggle-profile"
           />
         </ToggleProfile>
       )}

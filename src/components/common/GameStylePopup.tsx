@@ -1,6 +1,6 @@
-import Image from "next/image";
 import styled from "styled-components";
 
+import Icon from "@/components/common/Icon";
 import { GAME_STYLE } from "@/constants/profile";
 import { theme } from "@/styles/theme";
 
@@ -14,14 +14,13 @@ const GameStylePopup: React.FC<GameStylePopupProps> = ({ onClose }) => {
     <Container>
       <Top>
         3개까지 선택 가능
-        <Image
-          onClick={onClose}
-          src="/assets/icons/close.svg"
-          width={10}
-          height={10}
-          alt="close button"
-          style={{ cursor: "pointer" }}
-        />
+        <button onClick={onClose}>
+          <Icon
+            backgroundUrl="/assets/icons/close.svg"
+            width={10}
+            height={10}
+          />
+        </button>
       </Top>
       <StyledBox>
         {GAME_STYLE.map((data) => (

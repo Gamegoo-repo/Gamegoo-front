@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import Image from "next/image";
 import styled from "styled-components";
 
+import Icon from "@/components/common/Icon";
 import {
   setOpenEvaluationModal,
   setOpenModal,
@@ -96,40 +97,41 @@ const ConfirmModal = (props: ConfirmModalProps) => {
         <Main>
           {type === "manner" ? (
             <ImageTop>
-              <CloseButton>
-                <Image
-                  onClick={onPrimaryClick}
-                  src="/assets/icons/close.svg"
+              <CloseButton onClick={onPrimaryClick}>
+                <Icon
+                  backgroundUrl="/assets/icons/close.svg"
                   width={10}
                   height={10}
-                  alt="닫기"
+                  style={{
+                    marginLeft: "auto",
+                  }}
                 />
               </CloseButton>
               <ImageWrapper>
                 <ClickArea onClick={handleMannerEvaluate}>
-                  <Image
-                    src={
+                  <Icon
+                    backgroundUrl={
                       mannerStatusClicked
                         ? "/assets/icons/clicked_smile.svg"
                         : "/assets/icons/smile.svg"
                     }
                     width={33}
                     height={33}
-                    alt="매너"
                   />
+
                   <MannerText>매너 평가하기</MannerText>
                 </ClickArea>
                 <ClickArea onClick={handleBadMannerEvaluate}>
-                  <Image
-                    src={
+                  <Icon
+                    backgroundUrl={
                       badMannerStatusClicked
                         ? "/assets/icons/clicked_sad.svg"
                         : "/assets/icons/sad.svg"
                     }
                     width={33}
                     height={33}
-                    alt="비매너"
                   />
+
                   <MannerText>비매너 평가하기</MannerText>
                 </ClickArea>
               </ImageWrapper>
@@ -186,6 +188,10 @@ const Overlay = styled.div<{ $type: string | undefined }>`
   border-radius: ${({ $type }) => ($type === "manner" ? "20px" : "unset")};
   inset: 0;
   z-index: 101;
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    border-radius: 0px;
+  }
 `;
 
 const Wrapper = styled.div<{ $width: string; $type: string | undefined }>`
@@ -207,6 +213,8 @@ const Main = styled.main`
 `;
 
 const ImageTop = styled.div`
+  display: flex;
+  flex-direction: column;
   border-bottom: 0.58px solid rgba(197, 197, 199, 1);
 `;
 
@@ -226,14 +234,10 @@ const TextTop = styled.div`
   }
 `;
 
-const CloseButton = styled.p`
+const CloseButton = styled.button`
   display: flex;
   padding: 13px 15px 0;
   margin-bottom: 5px;
-  img {
-    margin-left: auto;
-    cursor: pointer;
-  }
 `;
 
 const ImageWrapper = styled.div`

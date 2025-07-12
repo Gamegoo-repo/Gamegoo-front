@@ -15,6 +15,7 @@ interface AlertPayload {
 }
 export interface ModalState {
   isOpen: boolean;
+  mannerStatusModal: boolean;
   evaluationModal: boolean;
   modalType: string;
   readingModal: boolean;
@@ -25,6 +26,7 @@ export interface ModalState {
 
 const initialState: ModalState = {
   isOpen: false,
+  mannerStatusModal: false,
   evaluationModal: false,
   modalType: "",
   readingModal: false,
@@ -39,11 +41,11 @@ const modalSlice = createSlice({
   reducers: {
     /* 매너,비매너 선택 모달 */
     setOpenMannerStatusModal: (state) => {
-      state.isOpen = true;
+      state.mannerStatusModal = true;
       incrementModalCount(state);
     },
     setCloseMannerStatusModal: (state) => {
-      state.isOpen = false;
+      state.mannerStatusModal = false;
       decrementModalCount(state);
     },
     /* 매너,비매너 평가하기 모달 */

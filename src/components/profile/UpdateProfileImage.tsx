@@ -1,6 +1,6 @@
-import Image from "next/image";
 import styled, { css } from "styled-components";
 
+import Icon from "@/components/common/Icon";
 import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 import { getProfileBgColor } from "@/utils";
@@ -111,11 +111,10 @@ const UpdateProfileImage = (props: FileInputProps) => {
               {`프로필 이미지 ${type === "matching" ? "선택" : "변경"}`}
             </Text>
             <button onClick={() => setIsProfileListOpen(false)}>
-              <Image
-                src="/assets/icons/close_white.svg"
+              <Icon
+                backgroundUrl="/assets/icons/close_white.svg"
                 width={isLarge ? 24 : 16}
                 height={isLarge ? 24 : 16}
-                alt="닫기"
               />
             </button>
           </Top>

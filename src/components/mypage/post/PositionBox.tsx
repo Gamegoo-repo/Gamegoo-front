@@ -1,8 +1,8 @@
 import { useState } from "react";
-import Image from "next/image";
 import styled, { css } from "styled-components";
 
 import { PositionCategory } from "@/components/common";
+import Icon from "@/components/common/Icon";
 import { POSITIONS } from "@/constants";
 import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
@@ -107,15 +107,14 @@ const PositionBox = (props: PositionBoxProps) => {
               <Posi key={index} $isWantP={false}>
                 {position.label}
                 <PosiItem>
-                  <Image
-                    src={setPositionImg(
+                  <Icon
+                    backgroundUrl={setPositionImg(
                       type === "main"
                         ? (positionValue.main ?? "ANY")
                         : (positionValue.sub ?? "ANY")
                     )}
                     width={!isMobile ? 48 : 32}
                     height={!isMobile ? 48 : 32}
-                    alt="포지션"
                     onClick={() => handlePosition(type)}
                   />
                   {isPositionOpen[type] && (
@@ -140,20 +139,18 @@ const PositionBox = (props: PositionBoxProps) => {
               {positionValue?.want?.map((posi, index) => (
                 <PosiItem key={index}>
                   {posi ? (
-                    <Image
-                      src={setPositionImg(posi)}
+                    <Icon
+                      backgroundUrl={setPositionImg(posi)}
                       width={!isMobile ? 48 : 32}
                       height={!isMobile ? 48 : 32}
-                      alt="포지션"
                       onClick={() => handlePosition("want", index)}
                     />
                   ) : (
                     <Plus onClick={() => handlePosition("want", index)}>
-                      <Image
-                        src="/assets/icons/plus_violet.svg"
+                      <Icon
+                        backgroundUrl="/assets/icons/plus_violet.svg"
                         width={!isMobile ? 16 : 14}
                         height={!isMobile ? 16 : 14}
-                        alt=""
                       />
                     </Plus>
                   )}

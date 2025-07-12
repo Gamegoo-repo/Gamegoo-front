@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Image from "next/image";
 import { useParams } from "next/navigation";
 import styled, { css } from "styled-components";
 
@@ -17,7 +16,6 @@ import {
   unblockMember,
 } from "@/api";
 import {
-  Alert,
   Button,
   Champion,
   Checkbox,
@@ -32,6 +30,7 @@ import {
   Toggle,
   UpdateProfileImage,
 } from "@/components";
+import Icon from "@/components/common/Icon";
 import { POSITIONS, REPORT_REASON } from "@/constants";
 import { useMediaQueryContext } from "@/hooks";
 import { setMatchInfo, updateMike } from "@/redux/slices/matchInfo";
@@ -571,15 +570,14 @@ const Profile: React.FC<Profile> = ({
                       >
                         {position.label}
                         <PosiItem>
-                          <Image
-                            src={setPositionImg(
+                          <Icon
+                            backgroundUrl={setPositionImg(
                               type === "main"
                                 ? (positionValue.main ?? "ANY")
                                 : (positionValue.sub ?? "ANY")
                             )}
                             width={!isMobile ? 55 : 22}
                             height={!isMobile ? 40 : 22}
-                            alt="포지션"
                             onClick={() => handlePosition(type)}
                           />
                           {isPositionOpen[type] && (
@@ -610,11 +608,10 @@ const Profile: React.FC<Profile> = ({
                           .map((posi, index) => (
                             <PosiItem key={index}>
                               {posi ? (
-                                <Image
-                                  src={setPositionImg(posi)}
+                                <Icon
+                                  backgroundUrl={setPositionImg(posi)}
                                   width={!isMobile ? 48 : 22}
                                   height={!isMobile ? 40 : 22}
-                                  alt="포지션"
                                   onClick={() => handlePosition("want", index)}
                                 />
                               ) : (
@@ -624,11 +621,10 @@ const Profile: React.FC<Profile> = ({
                                       handlePosition("want", index)
                                     }
                                   >
-                                    <Image
-                                      src="/assets/icons/plus_violet.svg"
+                                    <Icon
+                                      backgroundUrl="/assets/icons/plus_violet.svg"
                                       width={!isMobile ? 16 : 14}
                                       height={!isMobile ? 16 : 14}
-                                      alt=""
                                     />
                                   </Plus>
                                 )
@@ -662,11 +658,10 @@ const Profile: React.FC<Profile> = ({
                       ["wind", "normal"].includes(profileType) ? (
                         <PosiItem key="default-plus">
                           <Plus onClick={() => handlePosition("want", 0)}>
-                            <Image
-                              src="/assets/icons/plus_violet.svg"
+                            <Icon
+                              backgroundUrl="/assets/icons/plus_violet.svg"
                               width={!isMobile ? 16 : 14}
                               height={!isMobile ? 16 : 14}
-                              alt=""
                             />
                           </Plus>
                           {isPositionOpen.want[0] && (
@@ -683,11 +678,10 @@ const Profile: React.FC<Profile> = ({
                         </PosiItem>
                       ) : (
                         <PosiItem key="any-position">
-                          <Image
-                            src={setPositionImg("ANY")}
+                          <Icon
+                            backgroundUrl={setPositionImg("ANY")}
                             width={!isMobile ? 48 : 22}
                             height={!isMobile ? 40 : 22}
-                            alt="포지션"
                           />
                         </PosiItem>
                       )}

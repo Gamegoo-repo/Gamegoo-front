@@ -4,6 +4,7 @@ import emailjs from "@emailjs/browser";
 import { motion } from "framer-motion";
 import styled from "styled-components";
 
+import Icon from "@/components/common/Icon";
 import ko from "@/constants/ko.json";
 import { notify } from "@/hooks";
 import { theme } from "@/styles/theme";
@@ -71,12 +72,7 @@ function FeedBackInput() {
           disabled={disabled}
           $feedbacklength={feedback.length}
         >
-          <Image
-            src={`/assets/icons/send.svg`}
-            width={24}
-            height={24}
-            alt="전송"
-          />
+          <Icon backgroundUrl="/assets/icons/send.svg" width={24} height={24} />
         </SendIcon>
       </div>
     </FeedBack>

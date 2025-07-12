@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
 import { GraphicBox, HeaderTitle } from "@/components";
+import Icon from "@/components/common/Icon";
+
 import { MATCH_TYPE_PAGE_DATA, MO_MATCH_TYPE_PAGE_DATA } from "@/constants";
 import { useMediaQueryContext } from "@/hooks";
 import { setOpenAlertModal } from "@/redux/slices/modalSlice";
@@ -70,12 +72,13 @@ const MatchTypePage = () => {
                       }
                     >
                       선택
-                      <Image
-                        src={"/assets/icons/chevron_right.svg"}
+                      <Icon
+                        backgroundUrl="/assets/icons/chevron_right.svg"
                         width={12}
                         height={12}
-                        style={{ marginLeft: "4px" }}
-                        alt="go"
+                        style={{
+                          marginLeft: "4px",
+                        }}
                       />
                     </BoxButton>
                   </Box>

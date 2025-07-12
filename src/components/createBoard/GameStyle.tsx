@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import styled from "styled-components";
 
+import Icon from "@/components/common/Icon";
 import { GAME_STYLE } from "@/constants";
 import { theme } from "@/styles/theme";
 
@@ -66,11 +66,10 @@ const GameStyle = (props: GameStyleProps) => {
 
         <Div ref={addGameStyleRef}>
           <AddGameStyle onClick={handleStylePopup}>
-            <Image
-              src="/assets/icons/plus_violet.svg"
+            <Icon
+              backgroundUrl="/assets/icons/plus_violet.svg"
               width={14}
               height={14}
-              alt="추가"
             />
           </AddGameStyle>
         </Div>

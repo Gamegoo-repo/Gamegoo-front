@@ -59,6 +59,18 @@ const FONT = ({ weight, size }: Font): string => {
     `;
 };
 
+const ICON = () => {
+  return `
+  background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    `;
+};
+
+const icon = {
+  backgroundSetting: ICON(),
+};
+
 const fonts = {
   /*Bold*/
   bold45: FONT({
@@ -238,5 +250,6 @@ export type FontsTypes = typeof fonts;
 export const theme: DefaultTheme = {
   colors,
   fonts,
+  icon,
   breakpoints,
 };

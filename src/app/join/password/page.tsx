@@ -7,7 +7,9 @@ import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
 import { Button, Input } from "@/components";
+import Icon from "@/components/common/Icon";
 import { updatePassword } from "@/redux/slices/signInSlice";
+import { theme } from "@/styles/theme";
 
 import type { RootState } from "@/redux/store";
 
@@ -83,28 +85,26 @@ const Password = () => {
       <Valid>
         비밀번호 요구사항
         <Conditon isLengthValid={isLengthValid}>
-          <Image
-            src={
+          <Icon
+            backgroundUrl={
               isLengthValid
                 ? "/assets/icons/valid_check_purple.svg"
                 : "/assets/icons/valid_check_gray.svg"
             }
-            width={8}
-            height={5}
-            alt="check"
+            width={12}
+            height={12}
           />
           8자리 이상 ~ 16자리 이하
         </Conditon>
         <Conditon isMixValid={isMixValid}>
-          <Image
-            src={
+          <Icon
+            backgroundUrl={
               isMixValid
                 ? "/assets/icons/valid_check_purple.svg"
                 : "/assets/icons/valid_check_gray.svg"
             }
-            width={8}
-            height={5}
-            alt="check"
+            width={12}
+            height={12}
           />
           영어, 숫자, 특수문자 포함 (대/소문자 구분)
         </Conditon>

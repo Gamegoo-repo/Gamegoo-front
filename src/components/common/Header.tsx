@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import styled from "styled-components";
 
 import { getUnreadNotificationCount, postLogout, socketLogout } from "@/api";
+import Icon from "@/components/common/Icon";
 import { HEADER_MODAL_TAB } from "@/constants";
 import { STORAGE_KEY } from "@/constants/storage";
 import { useMediaQueryContext } from "@/hooks";
@@ -176,7 +177,7 @@ const Header = () => {
         </LogoButton>
 
         <Menus>
-          {isMobile ? (
+          {isMobile && (
             <Menu
               selected={pathname === "/"}
               onClick={() => {
@@ -185,8 +186,6 @@ const Header = () => {
             >
               홈
             </Menu>
-          ) : (
-            <></>
           )}
 
           <Menu
@@ -212,21 +211,17 @@ const Header = () => {
         </Menus>
         {accesssToken && name && profileImg ? (
           <Right>
-            <IconButton>
-              <Image
-                src={`/assets/icons/noti_${notiCount > 0 ? "on" : "off"}.svg`}
+            <IconButton onClick={handleAlertWindow}>
+              <Icon
+                backgroundUrl={`/assets/icons/noti_${notiCount > 0 ? "on" : "off"}.svg`}
                 width={24}
                 height={30}
-                alt="noti"
-                onClick={handleAlertWindow}
               />
             </IconButton>
-            {isMobile ? (
+            {isMobile && (
               <IconButton>
                 <ChatButton />
               </IconButton>
-            ) : (
-              <></>
             )}
 
             <Profile
@@ -243,16 +238,13 @@ const Header = () => {
                   height={25}
                 />
               </HeaderProfileImgWrapper>
-              {isMobile ? (
-                <></>
-              ) : (
+              {!isMobile && (
                 <>
                   {name}
-                  <Image
-                    src="/assets/icons/chevron_down.svg"
+                  <Icon
+                    backgroundUrl={`/assets/icons/chevron_down.svg`}
                     width={7}
                     height={7}
-                    alt="more"
                   />
                 </>
               )}
@@ -272,84 +264,83 @@ const Header = () => {
       {isMyPage &&
         createPortal(
           <MyPageModal ref={myPageRef}>
-            {isMobile && (
-              <MyPageModalHeader>
-                <MyPageModalHeaderTitle>내정보</MyPageModalHeaderTitle>
-                <button>
-                  <Image
-                    src="/assets/icons/close_modal.svg"
-                    width={16}
-                    height={16}
-                    alt="닫기"
-                    onClick={() => setIsMyPage(false)}
-                    style={{ cursor: "pointer" }}
-                  />
-                </button>
-              </MyPageModalHeader>
-            )}
-
-            <MyProfile>
-              {profileImg && (
-                <ProfileImgWrapper $bgColor={getProfileBgColor(profileImg)}>
-                  <ProfileImg
-                    data={`/assets/images/profile/profile${profileImg}.svg`}
-                    width={52}
-                    height={62}
-                  />
-                </ProfileImgWrapper>
-              )}
-              <MyName>{name}</MyName>
-              <Image
-                src={`/assets/icons/noti_${notiCount > 0 ? "on" : "off"}.svg`}
-                width={24}
-                height={30}
-                alt="noti"
-                onClick={() => {
-                  router.push("/mypage/notification");
-                  setIsMyPage(false);
-                }}
-                style={{ cursor: "pointer" }}
-              />
-            </MyProfile>
-            <TabMenu>
-              {HEADER_MODAL_TAB.map((data, index) => (
-                <TabItemWrapper key={data.id}>
-                  <Line
-                    onClick={async () => {
-                      setIsMyPage(false);
-                      if (data.id !== 6) {
-                        router.push(`${data.url}`);
-                      } else {
-                        sessionStorage.setItem(STORAGE_KEY.logout, "true");
-                        try {
-                          await postLogout();
-                          await clearTokens();
-                          await socketLogout();
-                          localStorage.removeItem(STORAGE_KEY.gamegooSocketId);
-                          dispatch(clearUserProfile());
-                          sessionStorage.removeItem(
-                            STORAGE_KEY.unreadChatUuids
-                          );
-                          dispatch(closeChat());
-                          router.push("/riot");
-                        } catch {
-                          console.error("소켓 로그아웃 오류");
-                        }
-                      }
-                    }}
-                  >
-                    <Image
-                      src={`/assets/icons/${data.icon}.svg`}
-                      width={20}
-                      height={20}
-                      alt={`${data.icon}`}
+            <Background>
+              {isMobile && (
+                <MyPageModalHeader>
+                  <MyPageModalHeaderTitle>내정보</MyPageModalHeaderTitle>
+                  <button onClick={() => setIsMyPage(false)}>
+                    <Icon
+                      backgroundUrl={`/assets/icons/close_modal.svg`}
+                      width={10}
+                      height={10}
                     />
-                    {data.menu}
-                  </Line>
-                  {index === 3 && <Divider />}
-                </TabItemWrapper>
-              ))}
-            </TabMenu>
+                  </button>
+                </MyPageModalHeader>
+              )}
+
+              <MyProfile>
+                {profileImg && (
+                  <ProfileImgWrapper $bgColor={getProfileBgColor(profileImg)}>
+                    <ProfileImg
+                      data={`/assets/images/profile/profile${profileImg}.svg`}
+                      width={52}
+                      height={62}
+                    />
+                  </ProfileImgWrapper>
+                )}
+                <MyName>{name}</MyName>
+                <Icon
+                  backgroundUrl={`/assets/icons/noti_${notiCount > 0 ? "on" : "off"}.svg`}
+                  width={24}
+                  height={30}
+                  onClick={() => {
+                    router.push("/mypage/notification");
+                    setIsMyPage(false);
+                  }}
+                  style={{ cursor: "pointer" }}
+                />
+              </MyProfile>
+              <TabMenu>
+                {HEADER_MODAL_TAB.map((data, index) => (
+                  <TabItemWrapper key={data.id}>
+                    <Line
+                      onClick={async () => {
+                        setIsMyPage(false);
+                        if (data.id !== 6) {
+                          router.push(`${data.url}`);
+                        } else {
+                          sessionStorage.setItem(STORAGE_KEY.logout, "true");
+                          try {
+                            await postLogout();
+                            await clearTokens();
+                            await socketLogout();
+                            localStorage.removeItem(
+                              STORAGE_KEY.gamegooSocketId
+                            );
+                            dispatch(clearUserProfile());
+                            sessionStorage.removeItem(
+                              STORAGE_KEY.unreadChatUuids
+                            );
+                            dispatch(closeChat());
+                            router.push("/riot");
+                          } catch {
+                            console.error("소켓 로그아웃 오류");
+                          }
+                        }
+                      }}
+                    >
+                      <Icon
+                        backgroundUrl={`/assets/icons/${data.icon}.svg`}
+                        width={20}
+                        height={20}
+                      />
+                      {data.menu}
+                    </Line>
+                    {index === 3 && <Divider />}
+                  </TabItemWrapper>
+                ))}
+              </TabMenu>
+            </Background>
           </MyPageModal>,
           modalRoot
         )}
@@ -447,6 +438,9 @@ const IconButton = styled.button`
   width: 40px;
   height: 40px;
   border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   &:active {
     background-color: ${theme.colors.violet100};
   }
