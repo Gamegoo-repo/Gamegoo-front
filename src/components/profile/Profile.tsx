@@ -30,13 +30,14 @@ import GameStyle from "../match/GameStyle";
 import { useBlock } from "./Profile/hooks/useBlock";
 import { useFriend } from "./Profile/hooks/useFriend";
 import { useMike } from "./Profile/hooks/useMike";
+import { useMoreBoxOutsideClick } from "./Profile/hooks/useMoreBoxOutsideClick";
 import { usePosition } from "./Profile/hooks/usePosition";
 import { useProfileImage } from "./Profile/hooks/useProfileImage";
 import { useReport } from "./Profile/hooks/useReport";
 
 import type { RootState } from "@/redux/store";
 import type {
-  Mike as MikeType,
+  Mike,
   MoreBoxMenuItems,
   Position as PositionType,
   User,
@@ -68,7 +69,6 @@ const Profile: React.FC<Profile> = ({
   const { id } = useParams();
   const memberId = Number(id);
   const myId = useSelector((state: RootState) => state.user.id);
-  const moreBoxRef = useRef<HTMLDivElement | null>(null);
 
   /// hooks
   /* 마이크 상태 */
@@ -116,9 +116,12 @@ const Profile: React.FC<Profile> = ({
     setIsBlockConfirmOpen,
     handleRunBlock,
   } = useBlock(user, memberId, updateFriendState);
-  ///
 
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
+  const moreBoxRef = useMoreBoxOutsideClick(isMoreBoxOpen, () =>
+    setIsMoreBoxOpen(false)
+  );
+  ///
 
   /* 포지션 */
   const [isPositionOpen, setIsPositionOpen] = useState({
@@ -126,9 +129,6 @@ const Profile: React.FC<Profile> = ({
     sub: false,
     want: [false, false], // 최대 2개의 want 포지션
   });
-  const [selectedBox, setSelectedBox] = useState("");
-  const [showAlert, setShowAlert] = useState(false);
-  const matchInfo = useSelector((state: RootState) => state.matchInfo);
 
   // 상위 컴포넌트에서 user 변경 시 업데이트
   useEffect(() => {
@@ -179,8 +179,6 @@ const Profile: React.FC<Profile> = ({
   // 포지션 선택창 열기 (포지션 클릭시 동작)
   const handlePosition = (type: "main" | "sub" | "want", index: number = 0) => {
     if (profileType === "other") return;
-
-    setSelectedBox(type);
 
     setIsPositionOpen((prev) => {
       if (type === "want") {
@@ -308,28 +306,6 @@ const Profile: React.FC<Profile> = ({
     setIsMoreBoxOpen(false);
     setCheckedItems([]);
   };
-
-  // 더보기 외부 클릭
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        moreBoxRef.current &&
-        !moreBoxRef.current.contains(event.target as Node)
-      ) {
-        setIsMoreBoxOpen(false);
-      }
-    };
-
-    if (isMoreBoxOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isMoreBoxOpen]);
 
   const handleMoreBoxOpen = () => {
     if (isDefault) {
