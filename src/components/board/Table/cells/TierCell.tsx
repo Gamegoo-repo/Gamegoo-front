@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 import { theme } from "@/styles/theme";
-import { setAbbrevTier, toLowerCaseString } from "@/utils";
+import { setTierAbbr, toLowerCaseString } from "@/utils";
 
 export const TierCell = ({ tier, rank }: { tier: string; rank?: number }) => (
   <Third className="table_width">
@@ -15,7 +15,7 @@ export const TierCell = ({ tier, rank }: { tier: string; rank?: number }) => (
       height={26}
     />
     <P>
-      {setAbbrevTier(tier || "")}
+      {setTierAbbr(tier || "")}
       {tier !== "UNRANKED" && rank}
     </P>
   </Third>

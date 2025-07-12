@@ -59,7 +59,7 @@ export function setPositionImg(position: Position) {
   }
 }
 
-export function setAbbrevTier(tier: string) {
+export function setTierAbbr(tier: string) {
   switch (tier) {
     case "IRON":
       return "I";
