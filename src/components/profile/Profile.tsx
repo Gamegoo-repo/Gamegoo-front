@@ -8,7 +8,6 @@ import {
   blockMember,
   cancelFriendRequest,
   deleteFriend,
-  putPosition,
   rejectFriendRequest,
   reportMember,
   sendFriendRequest,
@@ -39,6 +38,7 @@ import { setPositionImg } from "@/utils/custom";
 
 import GameStyle from "../match/GameStyle";
 import { useMike } from "./Profile/hooks/useMike";
+import { usePosition } from "./Profile/hooks/usePosition";
 import { useProfileImage } from "./Profile/hooks/useProfileImage";
 
 import type { RootState } from "@/redux/store";
@@ -48,7 +48,6 @@ import type {
   Position as PositionType,
   User,
 } from "@/types";
-import type { PositionState } from "../crBoard/PositionBox";
 
 type profileType = "normal" | "wind" | "other" | "me";
 
@@ -91,6 +90,12 @@ const Profile: React.FC<Profile> = ({
     handleImageClick,
   } = useProfileImage(user);
 
+  /* 포지션 */
+  const { positionValue, setPositionValue, handlePositionChange } = usePosition(
+    user,
+    profileType
+  );
+
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
   const [isReportBoxOpen, setIsReportBoxOpen] = useState(false);
   const [isBlockBoxOpen, setIsBlockBoxOpen] = useState(false);
@@ -109,13 +114,6 @@ const Profile: React.FC<Profile> = ({
   const [selectedBox, setSelectedBox] = useState("");
   const [showAlert, setShowAlert] = useState(false);
   const matchInfo = useSelector((state: RootState) => state.matchInfo);
-
-  /* user부터 가져오는 상태들 */
-  const [positionValue, setPositionValue] = useState<PositionState>({
-    main: user.mainP,
-    sub: user.subP,
-    want: user.wantP,
-  });
 
   // 상위 컴포넌트에서 user 변경 시 업데이트
   useEffect(() => {
@@ -248,38 +246,6 @@ const Profile: React.FC<Profile> = ({
         return { ...prev, [type]: false };
       }
     });
-  };
-
-  // 포지션 선택해 변경하기
-  const handlePositionChange = async (newPositionValue: PositionState) => {
-    if (
-      profileType !== "other" &&
-      newPositionValue.main &&
-      newPositionValue.sub
-    ) {
-      try {
-        // 포지션 변경 API 호출
-        await putPosition({
-          mainP: newPositionValue.main,
-          subP: newPositionValue.sub,
-          wantP: newPositionValue.want || [],
-        });
-
-        // 포지션 상태 업데이트
-        setPositionValue(newPositionValue);
-      } catch (error) {
-        console.error("포지션 변경 실패:", error);
-      }
-    } else if (profileType === "normal" || profileType === "wind") {
-      dispatch(
-        setMatchInfo({
-          ...matchInfo,
-          mainP: newPositionValue.main ?? "ANY",
-          subP: newPositionValue.sub ?? "ANY",
-          wantP: newPositionValue.want ?? ["ANY", "ANY"],
-        })
-      );
-    }
   };
 
   const handleCategoryButtonClick = (
