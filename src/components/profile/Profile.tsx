@@ -364,75 +364,58 @@ const Profile: React.FC<Profile> = ({
     }
   };
 
-  // 친구 추가
   const renderFriendsButton = () => {
-    // 친구 추가
-    // 친구 삭제 (끊기)
-    // 친구 요청 전송 (나)
-    // 친구 요청 취소 (나)
-    // 친구 수락/거절 (상대)
-    // 자기 자신 프로필
-    if (user.blocked) {
+    if (isDefault || user.blocked) return null;
+    if (memberId === myId || user.id === myId) return null;
+
+    const width = isMobile ? "100%" : "218px";
+
+    // 친구 요청 수락/거절 버튼만 예외적으로 두 개라서 따로 처리
+    if (user.friendRequestMemberId === memberId) {
       return (
-        // <Button
-        //   buttonType="secondary"
-        //   width="218px"
-        //   text="차단된 유저"
-        //   disabled={true}
-        // />
-        null
-      );
-    }
-    if (user.friend) {
-      return (
-        <Button
-          buttonType="secondary"
-          width={isMobile ? "100%" : "218px"}
-          text="친구 삭제"
-          onClick={() => handleFriendState("delete")}
-        />
-      );
-    } else {
-      if (user.friendRequestMemberId) {
-        if (user.friendRequestMemberId === memberId) {
-          return (
-            <FriendRow>
-              <Button
-                buttonType="secondary"
-                width={isMobile ? "100%" : "163px"}
-                text="친구 거절"
-                onClick={() => handleFriendState("reject")}
-              />
-              <Button
-                buttonType="primary"
-                width={isMobile ? "100%" : "163px"}
-                text="친구 수락"
-                onClick={() => handleFriendState("accept")}
-              />
-            </FriendRow>
-          );
-        } else {
-          return (
+        <Admit>
+          <FriendRow>
             <Button
               buttonType="secondary"
-              width={isMobile ? "100%" : "218px"}
-              text="친구 요청 취소"
-              onClick={() => handleFriendState("cancel")}
+              width={width}
+              text="친구 거절"
+              onClick={() => handleFriendState("reject")}
             />
-          );
-        }
-      } else if (memberId === myId || user.id === myId) {
-        return null;
-      }
-      return (
-        <Button
-          buttonType="secondary"
-          width={isMobile ? "100%" : "218px"}
-          text="친구 추가"
-          onClick={() => handleFriendState("add")}
-        />
+            <Button
+              buttonType="primary"
+              width="163px"
+              text="친구 수락"
+              onClick={() => handleFriendState("accept")}
+            />
+          </FriendRow>
+        </Admit>
       );
     }
+
+    let text = "";
+    let onClick: () => void;
+
+    if (user.friend) {
+      text = "친구 삭제";
+      onClick = () => handleFriendState("delete");
+    } else if (user.friendRequestMemberId) {
+      text = "친구 요청 취소";
+      onClick = () => handleFriendState("cancel");
+    } else {
+      text = "친구 추가";
+      onClick = () => handleFriendState("add");
+    }
+
+    return (
+      <Admit>
+        <Button
+          buttonType="secondary"
+          width={width}
+          text={text}
+          onClick={onClick}
+        />
+      </Admit>
+    );
   };
 
   // 더보기 버튼 메뉴
@@ -539,7 +522,6 @@ const Profile: React.FC<Profile> = ({
               </Top>
             </TopContainer>
           )}
-
           <RankTierWrapper>
             <RankTier type="solo" tier={user.soloTier} rank={user.soloRank} />
             <RankTier type="free" tier={user.freeTier} rank={user.freeRank} />
@@ -711,9 +693,7 @@ const Profile: React.FC<Profile> = ({
               handleMike={handleMike}
             />
           )}
-          {!isDefault && isTablet && !isMobile && (
-            <Admit>{renderFriendsButton()}</Admit>
-          )}
+          {isTablet && !isMobile && renderFriendsButton()}
           {(profileType === "normal" || profileType === "wind") && (
             <Mike>
               마이크
@@ -730,16 +710,15 @@ const Profile: React.FC<Profile> = ({
               />
             )}
         </StyledBox>
-        {!isDefault &&
-          isMobile &&
-          (profileType === "me" || profileType === "other") && (
-            <Admit>{renderFriendsButton()}</Admit>
-          )}
+        {/* {isMobile &&
+          (profileType === "me" || profileType === "other") &&
+          renderFriendsButton()} */}
+        {isMobile && renderFriendsButton()}
       </Row>
 
       {profileType === "other" && (
         <More>
-          {!isDefault && !isTablet && <Admit>{renderFriendsButton()}</Admit>}
+          {!isTablet && renderFriendsButton()}
           {/* 더보기 버튼 */}
           {memberId !== myId && (
             <MoreDiv ref={moreBoxRef}>
