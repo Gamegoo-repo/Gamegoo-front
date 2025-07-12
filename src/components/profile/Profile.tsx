@@ -9,7 +9,6 @@ import {
   cancelFriendRequest,
   deleteFriend,
   putPosition,
-  putProfileImage,
   rejectFriendRequest,
   reportMember,
   sendFriendRequest,
@@ -33,13 +32,14 @@ import {
 import Icon from "@/components/common/Icon";
 import { POSITIONS, REPORT_REASON } from "@/constants";
 import { useMediaQueryContext } from "@/hooks";
-import { setMatchInfo, updateMike } from "@/redux/slices/matchInfo";
+import { setMatchInfo } from "@/redux/slices/matchInfo";
 import { setOpenAlertModal } from "@/redux/slices/modalSlice";
-import { setUserProfileImg } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
 import { setPositionImg } from "@/utils/custom";
 
 import GameStyle from "../match/GameStyle";
+import { useMike } from "./Profile/hooks/useMike";
+import { useProfileImage } from "./Profile/hooks/useProfileImage";
 
 import type { RootState } from "@/redux/store";
 import type {
@@ -78,11 +78,24 @@ const Profile: React.FC<Profile> = ({
   const myId = useSelector((state: RootState) => state.user.id);
   const moreBoxRef = useRef<HTMLDivElement | null>(null);
 
+  // hooks
+  /* 마이크 상태 */
+  const { isMike, handleMike, setIsMike } = useMike(user);
+
+  /* 프로필 이미지 */
+  const {
+    selectedImageIndex,
+    setSelectedImageIndex,
+    isProfileListOpen,
+    setIsProfileListOpen,
+    handleImageClick,
+  } = useProfileImage(user);
+
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
   const [isReportBoxOpen, setIsReportBoxOpen] = useState(false);
   const [isBlockBoxOpen, setIsBlockBoxOpen] = useState(false);
   const [isBlockConfirmOpen, setIsBlockConfrimOpen] = useState(false);
-  const [isProfileListOpen, setIsProfileListOpen] = useState(false);
+
   /* 신고 input */
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
   const [reportDetail, setReportDetail] = useState<string>("");
@@ -98,16 +111,11 @@ const Profile: React.FC<Profile> = ({
   const matchInfo = useSelector((state: RootState) => state.matchInfo);
 
   /* user부터 가져오는 상태들 */
-  const [isMike, setIsMike] = useState<MikeType>(user.mike);
   const [positionValue, setPositionValue] = useState<PositionState>({
     main: user.mainP,
     sub: user.subP,
     want: user.wantP,
   });
-  /* 선택된 현재 프로필 이미지 */
-  const [selectedImageIndex, setSelectedImageIndex] = useState<number>(
-    user.profileImg
-  );
 
   // 상위 컴포넌트에서 user 변경 시 업데이트
   useEffect(() => {
@@ -140,28 +148,9 @@ const Profile: React.FC<Profile> = ({
     [isMike, positionValue, dispatch]
   );
 
-  /* 프로필 이미지 리스트 중 클릭시*/
-  const handleImageClick = async (index: number) => {
-    setSelectedImageIndex(index);
-
-    await putProfileImage(index);
-    // const newUserData = await getProfile();
-    dispatch(setUserProfileImg(index));
-    localStorage.setItem("profileImg", index + "");
-
-    setTimeout(() => {
-      setIsProfileListOpen(false);
-    }, 300); // 300ms 후에 창이 닫히도록 설정
-  };
-
   useEffect(() => {
     setIsMike(isMike);
   }, [isMike]);
-
-  const handleMike = () => {
-    setIsMike(isMike === "AVAILABLE" ? "UNAVAILABLE" : "AVAILABLE");
-    dispatch(updateMike(isMike));
-  };
 
   const handleReport = () => {
     setIsReportBoxOpen(!isReportBoxOpen);
