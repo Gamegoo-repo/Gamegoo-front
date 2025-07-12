@@ -191,11 +191,7 @@ const Header = () => {
           <Menu
             selected={pathname.includes("/match")}
             onClick={() => {
-              if (!accesssToken) {
-                showLoginAlert();
-              } else {
-                router.push("/match");
-              }
+              router.push("/match");
             }}
           >
             바로 매칭
