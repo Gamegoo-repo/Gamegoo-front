@@ -6,7 +6,14 @@ import { useRouter, useSearchParams } from "next/navigation";
 import styled from "styled-components";
 
 import { getMyProfile } from "@/api";
-import { Button, ConfirmModal, HeaderTitle, Profile } from "@/components";
+import {
+  Button,
+  ConfirmModal,
+  HeaderTitle,
+  LoadingSpinner,
+  Profile,
+} from "@/components";
+import { SkeletonBox } from "@/components/common/Skeleton";
 import { useMediaQueryContext } from "@/hooks";
 import { closeChatRoom } from "@/redux/slices/chatSlice";
 import { setUserProfile } from "@/redux/slices/userSlice";
@@ -213,7 +220,11 @@ const ProfilePage = () => {
               backgroundColor={theme.colors.violet100}
             />
           ) : (
-            <p>Loading...</p>
+            <SkeletonBox
+              width="100%"
+              height={!isMobile ? "615px" : "400px"}
+              borderRadius={!isMobile ? "30px" : "8px"}
+            />
           )}
           <Button
             buttonType="primary"
@@ -241,7 +252,7 @@ const ProfilePage = () => {
 
 export default function ProfilePaging() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingSpinner />}>
       <ProfilePage />
     </Suspense>
   );
