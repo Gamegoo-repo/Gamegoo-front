@@ -72,7 +72,7 @@ const FriendItem = (props: FriendItemProps) => {
             style={{
               position: "absolute",
               top: "19%",
-              right: "-4%",
+              right: "-10px",
             }}
           />
         )}
@@ -135,5 +135,3 @@ const UserName = styled.p`
   ${(props) => props.theme.fonts.semiBold14};
   color: ${theme.colors.gray800};
 `;
-
-

@@ -48,24 +48,26 @@ const MessageInput = (props: MessageInputProps) => {
       <Form onSubmit={sendMessage}>
         {chatEnterData && (
           <>
-            <Textarea
-              maxLength={1000}
-              value={message}
-              onChange={(event) => {
-                if (message.length < 1000) {
-                  setMessage(event.target.value);
+            <TextareaWrapper>
+              <Textarea
+                maxLength={1000}
+                value={message}
+                onChange={(event) => {
+                  if (message.length < 1000) {
+                    setMessage(event.target.value);
+                  }
+                }}
+                onKeyDown={handlePressEnterKey}
+                disabled={
+                  disabled || !!chatEnterData.blocked || !!chatEnterData.blind
                 }
-              }}
-              onKeyDown={handlePressEnterKey}
-              disabled={
-                disabled || !!chatEnterData.blocked || !!chatEnterData.blind
-              }
-              placeholder={
-                disabled
-                  ? "로그인이 필요한 서비스입니다.\n지금 로그인하고 게임 친구와 대화를 시작해보세요!"
-                  : getPlaceholderText()
-              }
-            />
+                placeholder={
+                  disabled
+                    ? "로그인이 필요한 서비스입니다.\n지금 로그인하고 게임 친구와 대화를 시작해보세요!"
+                    : getPlaceholderText()
+                }
+              />
+            </TextareaWrapper>
             <Row>
               <TextCount $color={message.length > 0}>
                 {message.length}
@@ -114,12 +116,16 @@ const Form = styled.form`
     box-shadow: none;
   }
 `;
-
+const TextareaWrapper = styled.div`
+  width: 100%;
+  padding: 14px 17px;
+`;
 const Textarea = styled.textarea`
   border: none;
   width: 100%;
-  padding: 14px 17px;
-  ${(props) => props.theme.fonts.regular14};
+  ${(props) => props.theme.fonts.regular16};
+  transform: scale(0.875);
+  transform-origin: top left;
   color: ${theme.colors.gray800};
   resize: none;
   &:focus {
