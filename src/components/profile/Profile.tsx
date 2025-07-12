@@ -4,15 +4,6 @@ import { useParams } from "next/navigation";
 import styled, { css } from "styled-components";
 
 import {
-  acceptFriendRequest,
-  blockMember,
-  cancelFriendRequest,
-  deleteFriend,
-  rejectFriendRequest,
-  sendFriendRequest,
-  unblockMember,
-} from "@/api";
-import {
   Button,
   Champion,
   Checkbox,
@@ -36,6 +27,8 @@ import { theme } from "@/styles/theme";
 import { setPositionImg } from "@/utils/custom";
 
 import GameStyle from "../match/GameStyle";
+import { useBlock } from "./Profile/hooks/useBlock";
+import { useFriend } from "./Profile/hooks/useFriend";
 import { useMike } from "./Profile/hooks/useMike";
 import { usePosition } from "./Profile/hooks/usePosition";
 import { useProfileImage } from "./Profile/hooks/useProfileImage";
@@ -108,11 +101,24 @@ const Profile: React.FC<Profile> = ({
     handleRunReport,
   } = useReport(memberId, myId || 0);
 
+  const { handleFriendState } = useFriend(
+    user,
+    myId || 0,
+    memberId,
+    updateFriendState
+  );
+
+  /* 차단 상태 */
+  const {
+    isBlockBoxOpen,
+    setIsBlockBoxOpen,
+    isBlockConfirmOpen,
+    setIsBlockConfirmOpen,
+    handleRunBlock,
+  } = useBlock(user, memberId, updateFriendState);
   ///
 
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
-  const [isBlockBoxOpen, setIsBlockBoxOpen] = useState(false);
-  const [isBlockConfirmOpen, setIsBlockConfrimOpen] = useState(false);
 
   /* 포지션 */
   const [isPositionOpen, setIsPositionOpen] = useState({
@@ -167,27 +173,6 @@ const Profile: React.FC<Profile> = ({
   const handleBlock = async () => {
     setIsBlockBoxOpen(!isBlockBoxOpen);
     setIsMoreBoxOpen(false);
-  };
-
-  const handleRunBlock = async () => {
-    // 차단하기 api
-    setIsBlockBoxOpen(false);
-    if (user.blocked) {
-      await unblockMember(memberId);
-      updateFriendState?.({
-        friend: user.friend,
-        friendRequestMemberId: user.friendRequestMemberId,
-        blocked: false,
-      });
-    } else {
-      await blockMember(memberId);
-      updateFriendState?.({
-        friend: user.friend,
-        friendRequestMemberId: user.friendRequestMemberId,
-        blocked: true,
-      });
-    }
-    setIsBlockConfrimOpen(true);
   };
 
   /* 포지션 선택창 관련 함수*/
@@ -255,57 +240,6 @@ const Profile: React.FC<Profile> = ({
 
     setPositionValue(newPositionValue);
     handlePositionChange(newPositionValue);
-  };
-
-  const handleFriendState = async (state: string) => {
-    try {
-      switch (state) {
-        case "add":
-          await sendFriendRequest(memberId);
-          updateFriendState?.({
-            friend: false,
-            friendRequestMemberId: myId || null,
-            blocked: user.blocked,
-          });
-          break;
-        case "cancel":
-          await cancelFriendRequest(memberId);
-          updateFriendState?.({
-            friend: false,
-            friendRequestMemberId: null,
-            blocked: user.blocked,
-          });
-          break;
-        case "accept":
-          await acceptFriendRequest(memberId);
-          updateFriendState?.({
-            friend: true,
-            friendRequestMemberId: memberId,
-            blocked: user.blocked,
-          });
-          break;
-        case "reject":
-          await rejectFriendRequest(memberId);
-          updateFriendState?.({
-            friend: false,
-            friendRequestMemberId: null,
-            blocked: user.blocked,
-          });
-          break;
-        case "delete":
-          await deleteFriend(memberId);
-          updateFriendState?.({
-            friend: false,
-            friendRequestMemberId: null,
-            blocked: user.blocked,
-          });
-          break;
-        default:
-          throw new Error("존재하지 않는 친구 상태입니다.");
-      }
-    } catch (error) {
-      console.error("Error handling friend state:", error);
-    }
   };
 
   const renderFriendsButton = () => {
@@ -745,7 +679,7 @@ const Profile: React.FC<Profile> = ({
               width="540px"
               primaryButtonText="확인"
               onPrimaryClick={() => {
-                setIsBlockConfrimOpen(false);
+                setIsBlockConfirmOpen(false);
               }}
             >
               <MsgConfirm>{`${
