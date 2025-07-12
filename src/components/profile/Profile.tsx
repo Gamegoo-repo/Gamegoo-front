@@ -9,7 +9,6 @@ import {
   cancelFriendRequest,
   deleteFriend,
   rejectFriendRequest,
-  reportMember,
   sendFriendRequest,
   unblockMember,
 } from "@/api";
@@ -40,6 +39,7 @@ import GameStyle from "../match/GameStyle";
 import { useMike } from "./Profile/hooks/useMike";
 import { usePosition } from "./Profile/hooks/usePosition";
 import { useProfileImage } from "./Profile/hooks/useProfileImage";
+import { useReport } from "./Profile/hooks/useReport";
 
 import type { RootState } from "@/redux/store";
 import type {
@@ -77,7 +77,7 @@ const Profile: React.FC<Profile> = ({
   const myId = useSelector((state: RootState) => state.user.id);
   const moreBoxRef = useRef<HTMLDivElement | null>(null);
 
-  // hooks
+  /// hooks
   /* 마이크 상태 */
   const { isMike, handleMike, setIsMike } = useMike(user);
 
@@ -96,14 +96,23 @@ const Profile: React.FC<Profile> = ({
     profileType
   );
 
+  /* 신고 상태 */
+  const {
+    isReportBoxOpen,
+    setIsReportBoxOpen,
+    handleCheckboxChange,
+    checkedItems,
+    setCheckedItems,
+    reportDetail,
+    setReportDetail,
+    handleRunReport,
+  } = useReport(memberId, myId || 0);
+
+  ///
+
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
-  const [isReportBoxOpen, setIsReportBoxOpen] = useState(false);
   const [isBlockBoxOpen, setIsBlockBoxOpen] = useState(false);
   const [isBlockConfirmOpen, setIsBlockConfrimOpen] = useState(false);
-
-  /* 신고 input */
-  const [checkedItems, setCheckedItems] = useState<number[]>([]);
-  const [reportDetail, setReportDetail] = useState<string>("");
 
   /* 포지션 */
   const [isPositionOpen, setIsPositionOpen] = useState({
@@ -153,26 +162,6 @@ const Profile: React.FC<Profile> = ({
   const handleReport = () => {
     setIsReportBoxOpen(!isReportBoxOpen);
     setIsMoreBoxOpen(false);
-  };
-
-  const handleRunReport = async () => {
-    // 신고하기 api
-    if (myId === memberId) return;
-
-    const params = {
-      memberId: memberId,
-      reportCodeList: checkedItems,
-      contents: reportDetail,
-      pathCode: 3, // PROFILE
-    };
-
-    setIsMoreBoxOpen(false);
-    try {
-      await reportMember(params);
-      setIsReportBoxOpen(!isReportBoxOpen);
-    } catch (error) {
-      console.error("에러:", error);
-    }
   };
 
   const handleBlock = async () => {
@@ -378,15 +367,6 @@ const Profile: React.FC<Profile> = ({
     { text: "신고하기", onClick: handleReport },
     { text: user.blocked ? "차단 해제" : "차단하기", onClick: handleBlock },
   ];
-
-  // 신고하기 체크
-  const handleCheckboxChange = (checked: number) => {
-    setCheckedItems((prev) =>
-      prev.includes(checked)
-        ? prev.filter((c) => c !== checked)
-        : [...prev, checked]
-    );
-  };
 
   // 신고하기 모달 닫기
   const handleReportBoxClose = () => {
