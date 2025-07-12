@@ -8,10 +8,11 @@ interface IconProps {
   height: number;
   style?: React.CSSProperties;
   onClick?: (e: React.MouseEvent) => void;
+  className?: string;
 }
 
 const Icon = (props: IconProps) => {
-  const { backgroundUrl, width, height, onClick, style } = props;
+  const { backgroundUrl, width, height, onClick, style, className } = props;
 
   return (
     <StyledIcon
@@ -20,6 +21,7 @@ const Icon = (props: IconProps) => {
       $height={height}
       onClick={onClick}
       style={style}
+      className={className}
     />
   );
 };

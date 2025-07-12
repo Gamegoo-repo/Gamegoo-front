@@ -148,10 +148,15 @@ const MessageHeader = (props: MessageHeaderProps) => {
                   {onlineFriends.includes(chatEnterData.memberId) ? (
                     <>
                       <OnlineStatus>온라인</OnlineStatus>
-                      <OnlineImage
+                      <Icon
                         backgroundUrl="/assets/icons/online.svg"
                         width={5}
                         height={5}
+                        style={{
+                          position: "absolute",
+                          top: "19%",
+                          right: "-4%",
+                        }}
                       />
                     </>
                   ) : (
@@ -255,12 +260,6 @@ const OnlineStatus = styled.p`
   @media (max-width: ${theme.breakpoints.mobile}) {
     text-align: left;
   }
-`;
-
-const OnlineImage = styled(Icon)`
-  position: absolute;
-  top: 1%;
-  right: -11%;
 `;
 
 const ThreeDotsButton = styled.button`
