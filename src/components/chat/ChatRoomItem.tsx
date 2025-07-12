@@ -1,6 +1,6 @@
-import Image from "next/image";
 import styled from "styled-components";
 
+import Icon from "@/components/common/Icon";
 import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 import { getProfileBgColor } from "@/utils/profile";
@@ -98,11 +98,10 @@ const ChatRoomItem = (props: ChatRoomItemProps) => {
       <Right
         onClick={(e) => handleMoreBoxOpen(room.chatroomId, room.uuid, room, e)}
       >
-        <MoreImage
-          src="/assets/icons/three_dots_button.svg"
+        <Icon
+          backgroundUrl="/assets/icons/three_dots_button.svg"
           width={10}
           height={15}
-          alt="상세보기"
         />
       </Right>
     </UserContent>
@@ -199,8 +198,4 @@ const Date = styled.p`
 
 const Right = styled.div`
   padding: 0 7px 0 12px;
-`;
-
-const MoreImage = styled(Image)`
-  cursor: pointer;
 `;

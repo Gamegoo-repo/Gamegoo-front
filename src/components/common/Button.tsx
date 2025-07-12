@@ -1,6 +1,6 @@
-import Image from "next/image";
 import styled from "styled-components";
 
+import Icon from "@/components/common/Icon";
 import { theme } from "@/styles/theme";
 
 interface ButtonProps {
@@ -44,7 +44,7 @@ const Button = (props: ButtonProps) => {
       $height={height}
       $borderradius={borderRadius}
     >
-      {icon && <Icon src={icon} width={24} height={24} alt="" />}
+      {icon && <Icon backgroundUrl={icon} width={24} height={24} />}
       {text}
     </StyledButton>
   );
@@ -128,5 +128,3 @@ const StyledButton = styled.button<{
     border-radius: 6px;
   }
 `;
-
-const Icon = styled(Image)``;

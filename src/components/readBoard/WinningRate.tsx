@@ -1,4 +1,3 @@
-import Image from "next/image";
 import ProgressBar from "@ramonak/react-progress-bar";
 import styled from "styled-components";
 
@@ -120,8 +119,6 @@ const History = styled.p`
   ${(props) => props.theme.fonts.medium11};
   color: ${theme.colors.gray500};
 `;
-
-const InfoIcon = styled(Image)``;
 
 const TextModal = styled.div`
   color: ${theme.colors.white};

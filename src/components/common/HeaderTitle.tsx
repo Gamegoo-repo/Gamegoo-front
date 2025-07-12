@@ -1,8 +1,9 @@
 import React from "react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import styled, { css } from "styled-components";
 
+import Icon from "@/components/common/Icon";
+import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 
 import StepNavigation from "./StepNavigation";
@@ -32,6 +33,7 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({
   isColumn = false,
   isMatchProgressOrComplete = false, // 매칭중인지에 대한 여부
 }) => {
+  const { isMobile } = useMediaQueryContext();
   const router = useRouter();
   const handleBackClick = () => {
     if (isDoubleBack) {
@@ -48,12 +50,15 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({
       $marginBottom={marginBottom}
     >
       <Header $isMatchProgressOrComplete={isMatchProgressOrComplete}>
-        <StyledImage
+        <Icon
           onClick={handleBackClick}
-          src="/assets/icons/arrow_left.svg"
-          width={40}
-          height={40}
-          alt="뒤로가기"
+          backgroundUrl="/assets/icons/arrow_left.svg"
+          width={isMobile ? 20 : 40}
+          height={isMobile ? 20 : 40}
+          style={{
+            marginRight: "12px",
+            cursor: "pointer",
+          }}
         />
         <Title className={size}>{title}</Title>
       </Header>
@@ -104,15 +109,6 @@ const Header = styled.div<{ $isMatchProgressOrComplete?: boolean }>`
     /* display: unset; */
     margin-bottom: ${({ $isMatchProgressOrComplete }) =>
       $isMatchProgressOrComplete ? "0px" : "17px"};
-  }
-`;
-
-const StyledImage = styled(Image)`
-  margin-right: 12px;
-  cursor: pointer;
-  @media (max-width: ${theme.breakpoints.mobile}) {
-    width: 20px;
-    height: 20px;
   }
 `;
 

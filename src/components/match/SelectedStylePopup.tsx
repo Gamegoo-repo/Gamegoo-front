@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import styled, { css } from "styled-components";
 
+import Icon from "@/components/common/Icon";
 import { GAME_STYLE } from "@/constants";
 import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
@@ -67,15 +67,14 @@ const SelectedStylePopup: React.FC<SelectedStylePopupProps> = ({
     >
       <Top $position={position}>
         게임 스타일 선택 *최대 3개
-        <CloseImage
-          src="/assets/icons/close_white.svg"
+        <Icon
+          backgroundUrl="/assets/icons/close_white.svg"
           width={
             isMobile ? 16 : position ? 9 : profileType === "mini" ? 20 : 24
           }
           height={
             isMobile ? 16 : position ? 9 : profileType === "mini" ? 20 : 24
           }
-          alt="close"
           onClick={onClose}
         />
       </Top>
@@ -165,10 +164,6 @@ const Top = styled.div<{ $position: positionType | undefined }>`
   @media (max-width: ${theme.breakpoints.mobile}) {
     ${theme.fonts.bold16}
   }
-`;
-
-const CloseImage = styled(Image)`
-  cursor: pointer;
 `;
 
 const Boxs = styled.div<{

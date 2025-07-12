@@ -1,5 +1,6 @@
-import Image from "next/image";
 import styled from "styled-components";
+
+import Icon from "@/components/common/Icon";
 
 interface MoreBoxButtonProps {
   onClick: (e: React.MouseEvent) => void;
@@ -10,12 +11,14 @@ const MoreBoxButton = (props: MoreBoxButtonProps) => {
 
   return (
     <Wrapper>
-      <ThreeDotsImage
+      <Icon
         onClick={onClick}
-        src="/assets/icons/three_dots_button.svg"
+        backgroundUrl="/assets/icons/three_dots_button.svg"
         width={16}
         height={16}
-        alt="더보기 버튼"
+        style={{
+          cursor: "pointer",
+        }}
       />
     </Wrapper>
   );
@@ -29,8 +32,4 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-`;
-
-const ThreeDotsImage = styled(Image)`
-  cursor: pointer;
 `;

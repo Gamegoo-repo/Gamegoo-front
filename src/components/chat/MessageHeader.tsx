@@ -1,6 +1,4 @@
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
@@ -150,11 +148,15 @@ const MessageHeader = (props: MessageHeaderProps) => {
                   {onlineFriends.includes(chatEnterData.memberId) ? (
                     <>
                       <OnlineStatus>온라인</OnlineStatus>
-                      <OnlineImage
-                        src="/assets/icons/online.svg"
+                      <Icon
+                        backgroundUrl="/assets/icons/online.svg"
                         width={5}
                         height={5}
-                        alt="온라인"
+                        style={{
+                          position: "absolute",
+                          top: "19%",
+                          right: "-4%",
+                        }}
                       />
                     </>
                   ) : (
@@ -203,11 +205,6 @@ const CloseButton = styled.button`
   }
 `;
 
-const CloseImage = styled(Image)`
-  margin-left: auto;
-  cursor: pointer;
-`;
-
 const ChatHeader = styled.header`
   display: flex;
   align-items: center;
@@ -245,10 +242,6 @@ const ProfileImage = styled.object`
   pointer-events: none;
 `;
 
-const ThreeDotsImage = styled(Image)`
-  cursor: pointer;
-`;
-
 const Div = styled.div`
   position: relative;
   margin-left: 9px;
@@ -267,13 +260,6 @@ const OnlineStatus = styled.p`
   @media (max-width: ${theme.breakpoints.mobile}) {
     text-align: left;
   }
-`;
-
-const OnlineImage = styled(Image)`
-  position: absolute;
-  top: 1%;
-  right: -11%;
-  pointer-events: none;
 `;
 
 const ThreeDotsButton = styled.button`

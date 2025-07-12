@@ -78,6 +78,7 @@ const Champion = (props: ChampionProps) => {
                   style={{
                     transform: "scale(1.2)", // 120% 확대
                     objectFit: "cover",
+                    pointerEvents: "none",
                   }}
                   onError={handleImageError}
                 />

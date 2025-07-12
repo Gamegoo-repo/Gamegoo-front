@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useDispatch, useSelector } from "react-redux";
-import Image from "next/image";
 import styled from "styled-components";
 
 import {
@@ -16,6 +15,7 @@ import {
   postMannerValue,
   reportMember,
 } from "@/api";
+import Icon from "@/components/common/Icon";
 import { BAD_MANNER_TYPES, MANNER_TYPES, REPORT_REASON } from "@/constants";
 import ko from "@/constants/ko.json";
 import { notify, useDrag, useMediaQueryContext } from "@/hooks";
@@ -487,15 +487,14 @@ const Layout = () => {
                     e.stopPropagation();
                   }}
                 >
-                  <CloseImage
-                    src={
+                  <Icon
+                    backgroundUrl={
                       isMobile
                         ? "/assets/icons/close_modal.svg"
                         : "/assets/icons/close.svg"
                     }
                     width={12}
                     height={12}
-                    alt="닫기"
                   />
                 </CloseButton>
               </Header>
@@ -793,10 +792,6 @@ const CloseButton = styled.button`
   display: flex;
   width: 12px;
   height: 12px;
-`;
-
-const CloseImage = styled(Image)`
-  margin-left: auto;
 `;
 
 const ChatMain = styled.div`

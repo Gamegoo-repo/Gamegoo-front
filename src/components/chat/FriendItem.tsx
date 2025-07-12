@@ -1,5 +1,4 @@
 import { useDispatch } from "react-redux";
-import Image from "next/image";
 import styled from "styled-components";
 
 import Icon from "@/components/common/Icon";
@@ -66,11 +65,15 @@ const FriendItem = (props: FriendItemProps) => {
         </ImageWrapper>
         <UserName>{friend.name}</UserName>
         {onlineFriends.includes(friend.memberId) && (
-          <Online
-            src="/assets/icons/online.svg"
+          <Icon
+            backgroundUrl="/assets/icons/online.svg"
             width={5}
             height={5}
-            alt="온라인"
+            style={{
+              position: "absolute",
+              top: "19%",
+              right: "-4%",
+            }}
           />
         )}
       </Left>
@@ -133,8 +136,4 @@ const UserName = styled.p`
   color: ${theme.colors.gray800};
 `;
 
-const Online = styled(Image)`
-  position: absolute;
-  top: 19%;
-  right: -4%;
-`;
+

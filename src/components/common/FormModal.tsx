@@ -1,6 +1,6 @@
-import Image from "next/image";
 import styled from "styled-components";
 
+import Icon from "@/components/common/Icon";
 import { theme } from "@/styles/theme";
 
 interface FormModalProps {
@@ -42,12 +42,15 @@ const FormModal = (props: FormModalProps) => {
         <Header $type={type}>
           {type === "checkbox" && <CheckboxTitle>{title}</CheckboxTitle>}
           <CloseButton>
-            <CloseImage
+            <Icon
               onClick={onClose}
-              src="/assets/icons/close.svg"
+              backgroundUrl="/assets/icons/close.svg"
               width={closeButtonWidth}
               height={closeButtonHeight}
-              alt="close button"
+              style={{
+                marginLeft: "auto",
+                cursor: "pointer",
+              }}
             />
           </CloseButton>
         </Header>
@@ -111,11 +114,6 @@ const CheckboxTitle = styled.p`
 
 const CloseButton = styled.p`
   display: flex;
-`;
-
-const CloseImage = styled(Image)`
-  margin-left: auto;
-  cursor: pointer;
 `;
 
 const Main = styled.main``;

@@ -1,8 +1,8 @@
 import { useState } from "react";
-import Image from "next/image";
 import styled from "styled-components";
 
 import { getSearchFriend } from "@/api";
+import Icon from "@/components/common/Icon";
 import { theme } from "@/styles/theme";
 
 import type { FriendList } from "@/types";
@@ -35,11 +35,11 @@ const SearchBar = (props: SearchBarProps) => {
   return (
     <SearchWrapper>
       <Search>
-        <SearchImage
-          src="/assets/icons/search.svg"
+        <Icon
+          backgroundUrl="/assets/icons/search.svg"
           width={17}
           height={16}
-          alt="검색하기"
+          style={{ position: "absolute", top: "13px", left: "15px" }}
         />
         <SearchInput
           type="text"
@@ -62,13 +62,6 @@ const SearchWrapper = styled.div`
 const Search = styled.div`
   position: relative;
   width: 100%;
-`;
-
-const SearchImage = styled(Image)`
-  position: absolute;
-  top: 13px;
-  left: 15px;
-  margin: 0;
 `;
 
 const SearchInput = styled.input`

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import styled, { css } from "styled-components";
 
 import { getMemberMannerKeyword } from "@/api";
+import Icon from "@/components/common/Icon";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants";
 import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
@@ -74,11 +74,10 @@ const MannerLevelBox = (props: MannerLevelBoxProps) => {
     >
       <TitleWrap>
         <Title>매너 레벨 LV. {level}</Title>
-        <CloseImage
-          src="/assets/icons/close_white.svg"
+        <Icon
+          backgroundUrl="/assets/icons/close_white.svg"
           width={!isMobile ? 24 : 16}
           height={!isMobile ? 24 : 16}
-          alt="close"
           onClick={onClose}
         />
       </TitleWrap>
@@ -204,10 +203,6 @@ const Title = styled.div`
   @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.bold14};
   }
-`;
-
-const CloseImage = styled(Image)`
-  cursor: pointer;
 `;
 
 const MannerEvaluations = styled.div`
