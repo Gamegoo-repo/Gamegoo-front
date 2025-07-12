@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Image from "next/image";
 import emailjs from "@emailjs/browser";
 import { motion } from "framer-motion";
 import styled from "styled-components";

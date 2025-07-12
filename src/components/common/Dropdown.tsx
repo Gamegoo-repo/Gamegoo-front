@@ -1,7 +1,7 @@
 import { forwardRef, useState } from "react";
-import Image from "next/image";
 import styled from "styled-components";
 
+import Icon from "@/components/common/Icon";
 import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 
@@ -58,12 +58,15 @@ const Dropdown = forwardRef(function Dropdown(
     <Wrapper $width={width} ref={ref}>
       <DropdownHeader onClick={toggling} $type={type} $padding={padding}>
         <Title>{selectedValue}</Title>
-        <ArrowImage
-          src="/assets/icons/down_arrow.svg"
+        <Icon
+          backgroundUrl="/assets/icons/down_arrow.svg"
           width={isMobile ? 7 : 16}
           height={isMobile ? 4 : 9}
-          alt="화살표"
-          className={open ? "open" : ""}
+          style={{
+            cursor: "pointer",
+            transition: "transform 0.3s ease",
+            transform: open ? "rotate(180deg)" : "rotate(0deg)",
+          }}
         />
       </DropdownHeader>
       {open && (
@@ -116,14 +119,6 @@ const DropdownHeader = styled.div<{
 
 const Title = styled.p``;
 
-const ArrowImage = styled(Image)`
-  cursor: pointer;
-  transition: transform 0.3s ease;
-
-  &.open {
-    transform: rotate(180deg);
-  }
-`;
 const DropBox = styled.div<{ $width: string }>`
   position: absolute;
   z-index: 101;

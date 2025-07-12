@@ -1,7 +1,7 @@
 import { createPortal } from "react-dom";
-import Image from "next/image";
 import styled from "styled-components";
 
+import Icon from "@/components/common/Icon";
 import { theme } from "@/styles/theme";
 
 interface BoardModalProps {
@@ -21,12 +21,15 @@ const CRModal = (props: BoardModalProps) => {
       <Wrapper $type={type} $hideContent={hideContent}>
         <Header $type={type}>
           <CloseButton $type={type}>
-            <CloseImage
-              onClick={onClose}
-              src="/assets/icons/close.svg"
+            <Icon
+              backgroundUrl="/assets/icons/close.svg"
               width={24}
               height={24}
-              alt="close button"
+              onClick={onClose}
+              style={{
+                marginLeft: "auto",
+                cursor: "pointer",
+              }}
             />
           </CloseButton>
         </Header>
@@ -123,11 +126,6 @@ const CloseButton = styled.p<{ $type: string }>`
   right: 14px;
   display: flex;
   margin-bottom: ${({ $type }) => ($type === "reading" ? "1px" : "8px")};
-`;
-
-const CloseImage = styled(Image)`
-  margin-left: auto;
-  cursor: pointer;
 `;
 
 const Main = styled.main``;

@@ -1,7 +1,6 @@
 "use client";
 
 import { Suspense, useState } from "react";
-import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import styled from "styled-components";
 

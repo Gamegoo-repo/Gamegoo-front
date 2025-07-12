@@ -1,6 +1,4 @@
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
@@ -151,10 +149,9 @@ const MessageHeader = (props: MessageHeaderProps) => {
                     <>
                       <OnlineStatus>온라인</OnlineStatus>
                       <OnlineImage
-                        src="/assets/icons/online.svg"
+                        backgroundUrl="/assets/icons/online.svg"
                         width={5}
                         height={5}
-                        alt="온라인"
                       />
                     </>
                   ) : (
@@ -203,11 +200,6 @@ const CloseButton = styled.button`
   }
 `;
 
-const CloseImage = styled(Image)`
-  margin-left: auto;
-  cursor: pointer;
-`;
-
 const ChatHeader = styled.header`
   display: flex;
   align-items: center;
@@ -245,10 +237,6 @@ const ProfileImage = styled.object`
   pointer-events: none;
 `;
 
-const ThreeDotsImage = styled(Image)`
-  cursor: pointer;
-`;
-
 const Div = styled.div`
   position: relative;
   margin-left: 9px;
@@ -269,11 +257,10 @@ const OnlineStatus = styled.p`
   }
 `;
 
-const OnlineImage = styled(Image)`
+const OnlineImage = styled(Icon)`
   position: absolute;
   top: 1%;
   right: -11%;
-  pointer-events: none;
 `;
 
 const ThreeDotsButton = styled.button`

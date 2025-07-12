@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Image from "next/image";
 import styled from "styled-components";
 
 import { getBoardList, getBoardListCursor, getMyPost, pullUpPost } from "@/api";
@@ -426,10 +425,9 @@ const BoardPage = () => {
                   <RefreshButton onClick={handleRefresh}>
                     <RefreshImage
                       onClick={handleRefresh}
-                      src="/assets/icons/redo.svg"
+                      backgroundUrl="/assets/icons/redo.svg"
                       width={20}
                       height={20}
-                      alt="새로고침"
                       $isrotating={isRotating}
                     />
                   </RefreshButton>
@@ -559,10 +557,9 @@ const BoardPage = () => {
                   <RefreshImageWrap>
                     <RefreshImage
                       onClick={handleRefresh}
-                      src="/assets/icons/redo.svg"
+                      backgroundUrl="/assets/icons/redo.svg"
                       width={20}
                       height={20}
-                      alt="새로고침"
                       $isrotating={isRotating}
                     />
                   </RefreshImageWrap>
@@ -697,7 +694,9 @@ const RefreshButton = styled.button`
 `;
 
 const RefreshImageWrap = styled.button`
-  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 44px;
   height: 44px;
   background: ${theme.colors.violet100};
@@ -705,15 +704,7 @@ const RefreshImageWrap = styled.button`
   border: 1px solid ${theme.colors.violet200};
 `;
 
-// const RefreshImage = styled(Image)<RefreshImageProps>`
-//   position: absolute;
-//   top: 50%;
-//   left: 50%;
-//   transform: translate(-50%, -50%);
-//   /* cursor: pointer; */
-//   /* animation: ${(props) =>
-//     props.$isrotating ? rotate : "none"} 1s linear; */
-const RefreshImage = styled(Image)<{ $isrotating: boolean }>`
+const RefreshImage = styled(Icon)<{ $isrotating: boolean }>`
   cursor: pointer;
   animation: ${(props) => (props.$isrotating ? rotate : "none")} 1s linear;
 `;

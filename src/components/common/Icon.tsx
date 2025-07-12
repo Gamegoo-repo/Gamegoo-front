@@ -7,7 +7,7 @@ interface IconProps {
   width: number;
   height: number;
   style?: React.CSSProperties;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent) => void;
 }
 
 const Icon = (props: IconProps) => {
