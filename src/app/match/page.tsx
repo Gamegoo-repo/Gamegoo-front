@@ -92,7 +92,7 @@ const MatchTypePage = () => {
                     height={box.height}
                     top={box.top}
                     left={box.left}
-                    $backgroundColor={
+                    backgroundColor={
                       hoveredBox === box.id
                         ? box.hoverBackground
                         : box.background

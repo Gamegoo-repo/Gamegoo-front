@@ -65,7 +65,7 @@ const GameModePage = () => {
                       height={box.height}
                       top={box.top}
                       left={box.left}
-                      $backgroundColor="#2E3032"
+                      backgroundColor="#2E3032"
                     >
                       {box.title}
                       <Icon
