@@ -329,9 +329,10 @@ const Progress = () => {
           page: 1,
           pageIdx: 1,
           gameMode: gameRank as GameMode,
-          /* TODO : 기획사항에 맞게 올바른 티어 전달하기 */
-          // tier: user.tier,
-          tier: user.soloTier, // 임시로 솔로티어로 전달
+          tier: getEffectiveTier(
+            { soloTier: user.soloTier, freeTier: user.freeTier },
+            user.gameMode
+          ),
           mainP: user.mainP,
           mike: user.mike,
         };

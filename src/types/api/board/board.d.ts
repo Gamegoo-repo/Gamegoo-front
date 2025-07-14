@@ -127,7 +127,7 @@ export interface MemberPostBoardData
   isFriend: boolean;
   friendRequestMemberId: number;
   createdAt: string;
-  bumpTime: string; // TODO: 서버 응답 추가 필요
+  bumpTime: string;
   mannerLevel: number;
   mannerKeywords: MannerKeywordDTO[];
 }
@@ -142,7 +142,7 @@ export interface NotMemberBoardData
   soloRank: number;
   freeRank: number;
   createdAt: string;
-  bumpTime: string; // TODO: 서버 응답 추가 필요
+  bumpTime: string;
   mannerLevel: number;
 }
 

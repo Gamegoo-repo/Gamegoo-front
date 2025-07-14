@@ -16,8 +16,8 @@ import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { setUserId } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
 import {
+  checkTierAbbr,
   getProfileBgColor,
-  setAbbrevTier,
   setDateFormatter,
   toLowerCaseString,
 } from "@/utils";
@@ -150,7 +150,7 @@ const Post: React.FC<PostProps> = ({
               height={26}
             />
             <span>
-              {setAbbrevTier(tier)}
+              {checkTierAbbr(tier)}
               {rank}
             </span>
           </Tier>

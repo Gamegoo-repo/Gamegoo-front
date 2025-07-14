@@ -97,7 +97,7 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
                 tier={user.soloTier}
                 rank={user.soloRank}
                 direct="row"
-                isAbbre={isMobile}
+                isTierAbbr={isMobile}
               />
               <Bar />
               <RankTier
@@ -105,7 +105,7 @@ const SquareProfile: React.FC<SquareProfileProps> = ({
                 tier={user.freeTier}
                 rank={user.freeRank}
                 direct="row"
-                isAbbre={isMobile}
+                isTierAbbr={isMobile}
               />
             </SecondRow>
           </AccountInfo>
