@@ -66,6 +66,10 @@ const Terms = () => {
           puuid,
           isAgree: terms[2],
         });
+        notify({
+          text: ko["join.riot.success"],
+          type: "success",
+        });
         dispatch(clearSignIn());
         router.push("/riot");
       } catch (err) {

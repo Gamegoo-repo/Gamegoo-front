@@ -1,13 +1,5 @@
 import { STORAGE_KEY } from "@/constants/storage";
 
-export const setId = (id: number, autoLogin: boolean) => {
-  if (typeof window !== "undefined") {
-    const storage = autoLogin ? localStorage : sessionStorage;
-    storage.setItem(STORAGE_KEY.userId, id.toString());
-  }
-  return null;
-};
-
 /* 토큰 사용 */
 export const getAccessToken = () => {
   if (typeof window !== "undefined") {
