@@ -47,7 +47,7 @@ const Tooltip = (props: TooltipProps) => {
       </IconWrapper>
       <TooltipContent
         $visible={isHovered}
-        position={position}
+        $position={position}
         size={size}
         $width={width}
       >
@@ -73,7 +73,7 @@ const IconWrapper = styled.div`
 `;
 
 const TooltipContent = styled.div<{
-  position: "top" | "bottom";
+  $position: "top" | "bottom";
   size: "small" | "large";
   $width?: string;
   $visible: boolean;
@@ -84,12 +84,12 @@ const TooltipContent = styled.div<{
   color: ${theme.colors.white};
   ${theme.fonts.regular14};
   position: absolute;
-  z-index: 10;
+  z-index: ${theme.zIndex.baseFloating};
   pointer-events: none;
   opacity: 0;
   transform: translate(
     -50%,
-    ${({ position }) => (position === "bottom" ? "5px" : "-5px")}
+    ${({ $position }) => ($position === "bottom" ? "5px" : "-5px")}
   );
   transition:
     opacity 0.3s ease,
@@ -103,8 +103,8 @@ const TooltipContent = styled.div<{
       transform: translate(-50%, 0);
     `}
 
-  ${({ position }) =>
-    position === "bottom"
+  ${({ $position }) =>
+    $position === "bottom"
       ? css`
           top: 100%;
           margin-top: 12px;
@@ -136,8 +136,8 @@ const TooltipContent = styled.div<{
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    ${({ position }) =>
-      position === "bottom"
+    ${({ $position }) =>
+      $position === "bottom"
         ? css`
             top: -10px;
             border-top: 0 solid transparent;

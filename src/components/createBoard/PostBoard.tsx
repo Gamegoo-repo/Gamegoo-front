@@ -489,7 +489,7 @@ const TextCount = styled.div<{ $isFocused: boolean }>`
   color: ${({ $isFocused, theme }) =>
     $isFocused ? theme.colors.violet300 : theme.colors.gray400};
   ${theme.fonts.regular12};
-  z-index: 99;
+  z-index: ${theme.zIndex.popup - 1};
 `;
 
 const ButtonContent = styled.p`

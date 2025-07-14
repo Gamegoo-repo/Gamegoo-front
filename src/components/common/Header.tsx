@@ -491,7 +491,7 @@ const MyPageModal = styled.div`
   position: absolute;
   top: 60px;
   right: 80px;
-  z-index: 100;
+  z-index: ${theme.zIndex.popup};
 
   @media (max-width: ${theme.breakpoints.mobile}) {
     position: fixed;

@@ -528,6 +528,7 @@ const Copied = styled.div`
   box-shadow: 0 0 25.3px 0 rgba(0, 0, 0, 0.15);
   border-radius: 10px;
   white-space: nowrap;
+  z-index: ${theme.zIndex.popup};
 `;
 
 const Msg = styled.div`

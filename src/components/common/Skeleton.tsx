@@ -3,7 +3,7 @@ import styled, { keyframes } from "styled-components";
 interface SkeletonProps {
   width?: string;
   height?: string;
-  marginBottom?: string;
+  $marginBottom?: string;
   borderRadius?: string;
 }
 
@@ -44,5 +44,5 @@ export const SkeletonCircle = styled(SkeletonWrapper)<SkeletonProps>`
 export const SkeletonText = styled(SkeletonWrapper)<SkeletonProps>`
   width: ${(props) => props.width || "100%"};
   height: ${(props) => props.height || "20px"};
-  margin-bottom: ${(props) => props.marginBottom || "0px"};
+  margin-bottom: ${(props) => props.$marginBottom || "0px"};
 `;
