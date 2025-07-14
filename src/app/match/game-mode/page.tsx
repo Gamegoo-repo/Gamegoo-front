@@ -29,7 +29,7 @@ const GameModePage = () => {
             ? filteredData.map((box) => {
                 const type = params || "";
                 return (
-                  <Box key={box.id} $backgroundColor="#2E3032">
+                  <Box key={box.id} $backgroundColor={theme.colors.gray800}>
                     <BoxTitle>{box.title}</BoxTitle>
                     <BoxButton
                       onClick={() =>
@@ -65,7 +65,7 @@ const GameModePage = () => {
                       height={box.height}
                       top={box.top}
                       left={box.left}
-                      backgroundColor="#2E3032"
+                      backgroundColor={theme.colors.gray800}
                     >
                       {box.title}
                       <Icon
