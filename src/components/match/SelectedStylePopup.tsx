@@ -113,7 +113,7 @@ const Container = styled.div<{
   background: rgba(0, 0, 0, 0.64);
   top: ${({ $containerTop }) => `${$containerTop + 18}px`};
   left: -5px;
-  z-index: ${theme.zIndex.popup};;
+  z-index: ${theme.zIndex.popup};
 
   /* Background Blur */
   box-shadow: 0 4px 8.9px 0 rgba(0, 0, 0, 0.25);

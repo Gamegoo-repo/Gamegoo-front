@@ -110,7 +110,7 @@ const TextModal = styled.div`
   color: ${theme.colors.white};
   ${(props) => props.theme.fonts.semiBold14};
   position: absolute;
-  z-index: ${theme.zIndex.base};;
+  z-index: ${theme.zIndex.base};
   top: 100%;
   left: 0;
   border-radius: 10px;

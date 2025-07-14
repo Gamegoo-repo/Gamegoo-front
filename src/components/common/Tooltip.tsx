@@ -84,7 +84,7 @@ const TooltipContent = styled.div<{
   color: ${theme.colors.white};
   ${theme.fonts.regular14};
   position: absolute;
-  z-index: ${theme.zIndex.baseFloating};;
+  z-index: ${theme.zIndex.baseFloating};
   pointer-events: none;
   opacity: 0;
   transform: translate(

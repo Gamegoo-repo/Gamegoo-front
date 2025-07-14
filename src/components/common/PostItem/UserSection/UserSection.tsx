@@ -103,7 +103,7 @@ const UserLeft = styled.div`
 const UserProfileWrapper = styled.div`
   @media (max-width: ${theme.breakpoints.mobile}) {
     position: relative;
-    z-index: ${theme.zIndex.base};;
+    z-index: ${theme.zIndex.base};
     cursor: pointer;
   }
 `;

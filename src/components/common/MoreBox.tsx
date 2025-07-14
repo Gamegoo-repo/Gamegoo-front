@@ -72,7 +72,7 @@ const MenuWrapper = styled.div<{
   ${(props) => props.$left !== undefined && `left: ${props.$left}px;`}
   ${(props) => props.$right !== undefined && `right: ${props.$right}px;`}
 
-  z-index: ${theme.zIndex.popup};;
+  z-index: ${theme.zIndex.popup};
   box-shadow: 0 0 21.3px 0 #00000026;
   background: ${theme.colors.white};
   border-radius: 10px;

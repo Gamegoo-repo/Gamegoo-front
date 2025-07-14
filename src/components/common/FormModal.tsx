@@ -80,7 +80,7 @@ const Overlay = styled.div<{ $position: "manner" | undefined }>`
   transform: ${({ $position }) =>
     $position === "manner" ? "translate(-50%,-50%)" : "unset"};
   inset: 0;
-  z-index: ${theme.zIndex.popup};;
+  z-index: ${theme.zIndex.popup};
   overflow: hidden;
 `;
 

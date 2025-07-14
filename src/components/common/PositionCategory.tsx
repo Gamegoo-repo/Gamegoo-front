@@ -141,7 +141,7 @@ const Wrapper = styled.div<{ $isWant: boolean }>`
   position: absolute;
   top: 80px;
   left: calc(50% - 35px);
-  z-index: ${theme.zIndex.baseFloating};;
+  z-index: ${theme.zIndex.baseFloating};
   border-radius: 20px;
   padding: 32px;
   background: rgba(0, 0, 0, 0.64);

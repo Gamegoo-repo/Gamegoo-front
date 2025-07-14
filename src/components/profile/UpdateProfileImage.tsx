@@ -238,7 +238,7 @@ const ProfileListBox = styled.div<{ $isLarge: boolean }>`
   display: flex;
   flex-direction: column;
   gap: ${(props) => (props.$isLarge ? "28px" : "18px")};
-  z-index: ${theme.zIndex.base};;
+  z-index: ${theme.zIndex.base};
 `;
 
 const Top = styled.div`
@@ -309,7 +309,7 @@ const CheckIcon = styled.object<{ $isLarge: boolean }>`
   background: ${theme.colors.violet600};
   border-radius: 50%;
   border: 3px solid ${theme.colors.white};
-  z-index: ${theme.zIndex.base};;
+  z-index: ${theme.zIndex.base};
 `;
 
 const ProfileImgInner = styled.object`

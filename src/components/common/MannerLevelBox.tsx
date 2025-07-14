@@ -137,7 +137,7 @@ const Wrapper = styled.div<{
   border-radius: 19px;
   background: #000000a3;
   width: fit-content;
-  z-index: ${theme.zIndex.popup};;
+  z-index: ${theme.zIndex.popup};
   white-space: nowrap;
 
   ${({ $tail, $tailPosition }) =>

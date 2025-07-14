@@ -154,7 +154,7 @@ const PurpleBar = styled.div<{ $recentLevel: number; $isBlind: boolean }>`
       background: ${theme.colors.gray700};
     `}
   position: absolute;
-  z-index: ${theme.zIndex.base};;
+  z-index: ${theme.zIndex.base};
 `;
 
 const BlackBar = styled.div<{ $isBlind: boolean }>`
@@ -191,7 +191,7 @@ const LevelBox = styled.div<{ $isColor: boolean }>`
   color: ${({ theme, $isColor }) =>
     $isColor ? theme.colors.violet600 : theme.colors.gray700};
   position: relative;
-  z-index: ${theme.zIndex.base};;
+  z-index: ${theme.zIndex.base};
 `;
 
 const Recent = styled.div`

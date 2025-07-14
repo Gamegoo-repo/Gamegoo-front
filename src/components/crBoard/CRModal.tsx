@@ -50,7 +50,7 @@ const Overlay = styled.div<{ $hideContent: boolean | undefined }>`
   position: fixed;
   top: 50%;
   left: 50%;
-  z-index: ${theme.zIndex.popup};;
+  z-index: ${theme.zIndex.popup};
   background: ${({ $hideContent }) => ($hideContent ? "unset" : "#0000009c")};
   overflow-y: ${({ $hideContent }) => ($hideContent ? "unset" : "scroll")};
   overflow-x: hidden;

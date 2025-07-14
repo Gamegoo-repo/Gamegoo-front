@@ -758,7 +758,7 @@ const UserProfileWrapper = styled.div`
   width: 80px;
   height: 80px;
   position: relative;
-  z-index: ${theme.zIndex.popup};;
+  z-index: ${theme.zIndex.popup};
 
   @media (max-width: ${theme.breakpoints.mobile}) {
     width: 52px;
