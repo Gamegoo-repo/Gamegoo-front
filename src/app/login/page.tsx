@@ -20,7 +20,7 @@ import {
   setUserProfileImg,
 } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
-import { clearTokens, setId } from "@/utils/storage";
+import { clearTokens } from "@/utils/storage";
 
 const Login = () => {
   const router = useRouter();
@@ -81,16 +81,16 @@ const Login = () => {
       const storage = autoLogin ? localStorage : sessionStorage;
       storage.setItem(STORAGE_KEY.accessToken, accessToken);
       storage.setItem(STORAGE_KEY.refreshToken, refreshToken);
-
-      dispatch(setUserName(response.data.name));
-      dispatch(setUserProfileImg(response.data.profileImage));
-      dispatch(setUserId(response.data.id));
       storage.setItem(STORAGE_KEY.name, response.data.name);
       storage.setItem(
         STORAGE_KEY.profileImg,
         response.data.profileImage.toString()
       );
-      setId(response.data.id, autoLogin);
+      storage.setItem(STORAGE_KEY.userId, response.data.id.toString());
+
+      dispatch(setUserName(response.data.name));
+      dispatch(setUserProfileImg(response.data.profileImage));
+      dispatch(setUserId(response.data.id));
 
       router.push("/");
 
