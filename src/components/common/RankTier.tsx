@@ -2,7 +2,7 @@ import React from "react";
 import styled, { css } from "styled-components";
 
 import { theme } from "@/styles/theme";
-import { setTierAbbr, toCapitalizedString, toLowerCaseString } from "@/utils";
+import { checkTierAbbr, toCapitalizedString, toLowerCaseString } from "@/utils";
 
 type RankType = "solo" | "free";
 
@@ -43,7 +43,7 @@ const RankTier = (props: RankTierProps) => {
           height={direct === "row" ? 24 : 32}
         />
         {isTierAbbr
-          ? setTierAbbr(tier) + (rank ? `${rank}` : "")
+          ? checkTierAbbr(tier) + (rank ? `${rank}` : "")
           : toCapitalizedString(tier || "UNRANK") + (rank ? ` ${rank}` : "")}
       </Tier>
     </Container>
