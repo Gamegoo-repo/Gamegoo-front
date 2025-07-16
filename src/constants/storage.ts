@@ -11,5 +11,5 @@ export const STORAGE_KEY = {
   unreadChatUuids: "@GAMEGOO_UNREAD_CHAT_UUIDS",
   csrfToken: "@GAMEGOO_CSRF_TOKEN",
   logout: "@GAMEGOO_LOGOUT",
-  autoLogin: "@GAMEGOO_AUTO_LOGIN"
+  autoLogin: "@GAMEGOO_AUTO_LOGIN",
 };
