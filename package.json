@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "generate": "tsx scripts/generate-api.ts && eslint --fix src/@generated && prettier --write src/@generated",
-    "format": "eslint --fix src && prettier --write ."
+    "format": "eslint --fix src && prettier --write .",
+    "postinstall": "git config core.hooksPath .githooks"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
