@@ -44,7 +44,6 @@
     "@types/react-dom": "^18",
     "@types/redux-persist": "^4.3.1",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
-    "babel-plugin-styled-components": "^2.1.4",
     "chalk": "^5.4.1",
     "dotenv": "^16.5.0",
     "eslint": "^8",
