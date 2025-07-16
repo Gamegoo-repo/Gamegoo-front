@@ -367,8 +367,13 @@ const Progress = () => {
               onSecondaryClick: () => {
                 router.push("/board");
               },
-              children:
-                "조건에 맞는 사람이 없습니다.<br />같은 조건으로 글을 올린 사람이 있어요!",
+              children: (
+                <>
+                  조건에 맞는 사람이 없습니다.
+                  <br />
+                  같은 조건으로 글을 올린 사람이 있어요!
+                </>
+              ),
             });
           } else {
             openSecondNoModal();
@@ -398,8 +403,13 @@ const Progress = () => {
         router.push("/board");
         dispatch(setOpenPostingModal());
       },
-      children:
-        "조건에 맞는 사람이 없습니다.<br />게시판에 글을 작성할 수 있어요!",
+      children: (
+        <>
+          조건에 맞는 사람이 없습니다.
+          <br />
+          게시판에 글을 작성할 수 있어요!
+        </>
+      ),
     });
   };
   const clearTimers = () => {
