@@ -14,7 +14,7 @@ import {
   WaitingBox,
 } from "@/components";
 import { GAME_STYLE } from "@/constants";
-import { useMediaQueryContext } from "@/hooks";
+import { useConfirmModalContext, useMediaQueryContext } from "@/hooks";
 import { setBoardFilters } from "@/redux/slices/boardSlice";
 import { setOpenPostingModal } from "@/redux/slices/modalSlice";
 import { socket } from "@/socket";
@@ -66,9 +66,7 @@ const messagesWithoutN = Object.freeze([
 
 const Progress = () => {
   /* 모달창 */
-  const [isFirstRetry, setIsFirstRetry] = useState<boolean>(false);
-  const [isSecondYes, setIsSecondYes] = useState<boolean>(false);
-  const [isSecondNo, setIsSecondNo] = useState<boolean>(false);
+  const { openConfirmModal } = useConfirmModalContext();
 
   const [timeLeft, setTimeLeft] = useState<number>(300);
   const [isRetrying, setIsRetrying] = useState<boolean>(false); // 매칭 재시도 여부
@@ -320,7 +318,21 @@ const Progress = () => {
   const handleRetry = async () => {
     setIsCompleted("true");
     if (type === "gamegoo" || !retry) {
-      setIsFirstRetry(true);
+      /* 즐겜모드, 빡겜모드 매칭 실패 */
+      openConfirmModal({
+        width: "540px",
+        primaryButtonText: "예",
+        secondaryButtonText: "아니요",
+        onPrimaryClick: () => {
+          router.push(`/match/profile?type=${type}&rank=${rank}&retry=true`);
+        },
+        onSecondaryClick: () => {
+          setTimeout(() => {
+            router.push("/");
+          }, 3000);
+        },
+        children: `계속해서 매칭을 시도하겠습니까?`,
+      });
     } else {
       if (type === "custom") {
         const gameRank = searchParams.get("gameRank");
@@ -340,18 +352,56 @@ const Progress = () => {
           const response = await getBoardList(params);
           if (response.data.totalCount > 0) {
             dispatch(setBoardFilters(params));
-            setIsSecondYes(true);
+            {
+              /* 빡겜모드 2번째 매칭 실패 시, 같은 조건으로 글을 올린 사람이 있을 때 */
+            }
+            openConfirmModal({
+              width: "540px",
+              primaryButtonText: "닫기",
+              secondaryButtonText: "글 보러하기",
+              onPrimaryClick: () => {
+                setTimeout(() => {
+                  router.push("/");
+                }, 3000);
+              },
+              onSecondaryClick: () => {
+                router.push("/board");
+              },
+              children:
+                "조건에 맞는 사람이 없습니다.<br />같은 조건으로 글을 올린 사람이 있어요!",
+            });
           } else {
-            setIsSecondNo(true);
+            openSecondNoModal();
           }
         } catch (error) {
           console.error("해당 조건의 게시글 목록이 없습니다.", error);
-          setIsSecondNo(true);
+          openSecondNoModal();
         }
       }
     }
   };
 
+  const openSecondNoModal = () => {
+    {
+      /* 빡겜모드 2번째 매칭 실패 시, 같은 조건으로 글을 쓴 사람이 없을 때 */
+    }
+    openConfirmModal({
+      width: "540px",
+      primaryButtonText: "닫기",
+      secondaryButtonText: "글 작성하기",
+      onPrimaryClick: () => {
+        setTimeout(() => {
+          router.push("/");
+        }, 3000);
+      },
+      onSecondaryClick: () => {
+        router.push("/board");
+        dispatch(setOpenPostingModal());
+      },
+      children:
+        "조건에 맞는 사람이 없습니다.<br />게시판에 글을 작성할 수 있어요!",
+    });
+  };
   const clearTimers = () => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
@@ -393,72 +443,6 @@ const Progress = () => {
               timeLeft={timeLeft}
             />
           </Main>
-          {/* 즐겜모드, 빡겜모드 매칭 실패 */}
-          {isFirstRetry && (
-            <ConfirmModal
-              width="540px"
-              primaryButtonText="예"
-              secondaryButtonText="아니요"
-              onPrimaryClick={() => {
-                router.push(
-                  `/match/profile?type=${type}&rank=${rank}&retry=true`
-                );
-              }}
-              onSecondaryClick={() => {
-                setIsFirstRetry(false);
-                setTimeout(() => {
-                  router.push("/");
-                }, 3000);
-              }}
-            >
-              계속해서 매칭을 시도하겠습니까?
-            </ConfirmModal>
-          )}
-          {/* 빡겜모드 2번째 매칭 실패 시, 같은 조건으로 글을 올린 사람이 있을 때 */}
-          {isSecondYes && (
-            <ConfirmModal
-              width="540px"
-              onPrimaryClick={() => {
-                setIsSecondYes(false);
-                setTimeout(() => {
-                  router.push("/");
-                }, 3000);
-              }}
-              onSecondaryClick={() => {
-                router.push("/board");
-                setIsSecondYes(false);
-              }}
-              primaryButtonText="닫기"
-              secondaryButtonText="글 보러하기"
-            >
-              조건에 맞는 사람이 없습니다.
-              <br />
-              같은 조건으로 글을 올린 사람이 있어요!
-            </ConfirmModal>
-          )}
-          {/* 빡겜모드 2번째 매칭 실패 시, 같은 조건으로 글을 쓴 사람이 없을 때 */}
-          {isSecondNo && (
-            <ConfirmModal
-              width="540px"
-              onPrimaryClick={() => {
-                setIsSecondNo(false);
-                setTimeout(() => {
-                  router.push("/");
-                }, 3000);
-              }}
-              onSecondaryClick={() => {
-                router.push("/board");
-                setIsSecondNo(false);
-                dispatch(setOpenPostingModal());
-              }}
-              primaryButtonText="닫기"
-              secondaryButtonText="글 작성하기"
-            >
-              조건에 맞는 사람이 없습니다.
-              <br />
-              게시판에 글을 작성할 수 있어요!
-            </ConfirmModal>
-          )}
         </MatchContent>
       </Wrapper>
     </Suspense>

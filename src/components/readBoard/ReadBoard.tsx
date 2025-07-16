@@ -34,7 +34,7 @@ import {
   WinningRate,
 } from "@/components/readBoard";
 import ko from "@/constants/ko.json";
-import { notify } from "@/hooks";
+import { notify, useConfirmModalContext } from "@/hooks";
 import { setRefresh } from "@/redux/slices/boardSlice";
 import {
   openChatRoom,
@@ -103,6 +103,7 @@ const ReadBoard = (props: ReadBoardProps) => {
   const isErrorMessage = useSelector(
     (state: RootState) => state.chat.errorMessage
   );
+  const { openConfirmModal, closeConfirmModal } = useConfirmModalContext();
 
   /* 로그아웃 시, 비회원 접근 시 알럿 props 설정 함수 */
   const logoutMessage = "로그아웃 되었습니다. 다시 로그인 해주세요.";
@@ -194,6 +195,24 @@ const ReadBoard = (props: ReadBoardProps) => {
     };
   }, []);
 
+  useEffect(() => {
+    // 차단하기 확인 팝업
+    if (isBlockConfirmOpen) {
+      openConfirmModal({
+        width: "540px",
+        primaryButtonText: "확인",
+        onPrimaryClick: () => {
+          closeConfirmModal();
+        },
+        children: (
+          <MsgConfirm>{`${
+            isBlockedStatus ? "차단이" : "차단 해제가"
+          } 완료되었습니다.`}</MsgConfirm>
+        ),
+      });
+    }
+  }, [isBlockConfirmOpen]);
+
   /* 신고하기 모달 오픈 */
   const handleReportModal = () => {
     // 신고하기 버튼 클릭 시점 토큰 만료
@@ -212,7 +231,24 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 차단하기 및 차단 해제 */
   const handleBlock = async () => {
-    setIsBlockBoxOpen(!isBlockBoxOpen);
+    /* 차단하기 팝업 */
+    openConfirmModal({
+      width: "540px",
+      primaryButtonText: "예",
+      secondaryButtonText: "아니요",
+      onPrimaryClick: () => {
+        handleRunBlock();
+      },
+      children: isBlockedStatus ? (
+        <MsgConfirm>{"차단을 해제 하시겠습니까?"}</MsgConfirm>
+      ) : (
+        <Msg>
+          {
+            "차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다.\n\n차단하시겠습니까?"
+          }
+        </Msg>
+      ),
+    });
     setIsMoreBoxOpen(false);
   };
 
@@ -229,7 +265,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     if (!isPost || isUser.id === isPost?.memberId) return;
 
     // 차단하기 api
-    setIsBlockBoxOpen(false);
+    closeConfirmModal();
     if (isPost) {
       if (isPost.isBlocked) {
         await unblockMember(isPost.memberId);
@@ -340,13 +376,23 @@ const ReadBoard = (props: ReadBoardProps) => {
     if (isUser?.id !== isPost?.memberId) return;
 
     if (isPost) {
-      setIsPullUpConfirmOpen(true);
+      /*끌어올리기 확인 팝업 */
+      openConfirmModal({
+        width: "540px",
+        primaryButtonText: "아니요",
+        secondaryButtonText: "예",
+        onPrimaryClick: () => {
+          closeConfirmModal();
+        },
+        onSecondaryClick: handlePullUpAction,
+        children: <MsgConfirm>{`본 게시글을 끌어올리시겠습니까?`}</MsgConfirm>,
+      });
     }
   };
 
   const handlePullUpAction = async () => {
     // 게시판 끌어올리기 API
-    await setIsPullUpConfirmOpen(false);
+    await closeConfirmModal();
     await pullUpPost(postId);
     await dispatch(setRefresh());
     await dispatch(setCloseReadingModal());
@@ -668,58 +714,6 @@ const ReadBoard = (props: ReadBoardProps) => {
 
       {isModalType === "report" && (
         <ReportModal isPost={isPost} postId={postId} />
-      )}
-      {/* 차단하기 팝업 */}
-      {isBlockBoxOpen && (
-        <ConfirmModal
-          width="540px"
-          primaryButtonText="예"
-          secondaryButtonText="아니요"
-          onPrimaryClick={() => {
-            handleRunBlock();
-          }}
-          onSecondaryClick={() => {
-            setIsBlockBoxOpen(false);
-          }}
-        >
-          {isBlockedStatus ? (
-            <MsgConfirm>{"차단을 해제 하시겠습니까?"}</MsgConfirm>
-          ) : (
-            <Msg>
-              {
-                "차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다.\n\n차단하시겠습니까?"
-              }
-            </Msg>
-          )}
-        </ConfirmModal>
-      )}
-      {/* 차단하기 확인 팝업 */}
-      {isBlockConfirmOpen && (
-        <ConfirmModal
-          width="540px"
-          primaryButtonText="확인"
-          onPrimaryClick={() => {
-            setIsBlockConfrimOpen(false);
-          }}
-        >
-          <MsgConfirm>{`${
-            isBlockedStatus ? "차단이" : "차단 해제가"
-          } 완료되었습니다.`}</MsgConfirm>
-        </ConfirmModal>
-      )}
-      {/* 끌어올리기 확인 팝업 */}
-      {isPullUpConfirmOpen && (
-        <ConfirmModal
-          width="540px"
-          primaryButtonText="아니요"
-          secondaryButtonText="예"
-          onPrimaryClick={() => {
-            setIsPullUpConfirmOpen(false);
-          }}
-          onSecondaryClick={handlePullUpAction}
-        >
-          <MsgConfirm>{`본 게시글을 끌어올리시겠습니까?`}</MsgConfirm>
-        </ConfirmModal>
       )}
     </>
   );

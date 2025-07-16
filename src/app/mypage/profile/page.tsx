@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
 import { deleteMember, getMyProfile } from "@/api";
-import { ConfirmModal, MyPageProfile } from "@/components";
-import { useMediaQueryContext } from "@/hooks";
+import { MyPageProfile } from "@/components";
+import { useConfirmModalContext, useMediaQueryContext } from "@/hooks";
 import { setUserMike, setUserProfile } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
 import { clearTokens } from "@/utils";
@@ -22,6 +22,7 @@ const MyProfilePage = () => {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user);
 
+  const { openConfirmModal } = useConfirmModalContext();
   const circles = Array.from({ length: passwordLength });
 
   const [isPasswordModify, setIsPasswordModify] = useState<boolean>(false);
@@ -29,10 +30,7 @@ const MyProfilePage = () => {
   // const [password, setPassword] = useState("");
   /* 현재 비밀번호 일치 여부 */
   // const [isPasswordValid, setIsPasswordValid] = useState<boolean | undefined>();
-
-  /* 회원탈퇴 모달 */
-  const [isWithdrawalCaution, setIsWithdrawalCaution] =
-    useState<boolean>(false);
+  /* 회원탈퇴완료 모달 */
   const [isWithdrawalComplete, setIsWithdrawalComplete] =
     useState<boolean>(false);
 
@@ -43,16 +41,26 @@ const MyProfilePage = () => {
       // setIsPasswordValid(true);
 
       await deleteMember();
-      setIsWithdrawalCaution(false);
       setIsWithdrawalComplete(true);
       clearTokens();
       setTimeout(() => {
+        setIsWithdrawalComplete(false);
         router.push("/riot");
       }, 2000);
     } catch (error) {
       // setIsPasswordValid(false);
     }
   };
+  useEffect(() => {
+    if (isWithdrawalComplete) {
+      openConfirmModal({
+        width: "540px",
+        primaryButtonText: "확인",
+        onPrimaryClick: () => {},
+        children: `회원탈퇴가 완료되었습니다.`,
+      });
+    }
+  }, [isWithdrawalComplete]);
 
   useEffect(
     () => {
@@ -123,49 +131,31 @@ const MyProfilePage = () => {
             )}
           </PrivateContent>
         </Private> */}
-        <P onClick={() => setIsWithdrawalCaution(true)}>회원탈퇴</P>
-        {/* 회원탈퇴 경고 */}
-        {isWithdrawalCaution && (
-          <ConfirmModal
-            width="540px"
-            primaryButtonText="회원 탈퇴"
-            secondaryButtonText="취소"
-            onPrimaryClick={handleWithdrawal}
-            onSecondaryClick={() => setIsWithdrawalCaution(false)}
-            type="withDrawer"
-          >
-            <ModalContent>
-              <div>
-                회원 탈퇴를 하시겠습니까?
-                <br />
-                탈퇴한 아이디로는 다시 가입할 수 없으며,
-                <br />
-                아이디 및 데이터는 복구할 수 없습니다.
-              </div>
-              {/* <Input
-                inputType="password"
-                value={password}
-                label="현재 비밀번호"
-                onChange={(value) => {
-                  setPassword(value);
-                  setIsPasswordValid(undefined);
-                }}
-                placeholder="현재 비밀번호 입력"
-                isvalid={isPasswordValid}
-              /> */}
-            </ModalContent>
-          </ConfirmModal>
-        )}
-        {/* 회원탈퇴 완료 */}
-        {isWithdrawalComplete && (
-          <ConfirmModal
-            width="540px"
-            primaryButtonText="확인"
-            onPrimaryClick={() => setIsWithdrawalComplete(false)}
-          >
-            회원탈퇴가 완료되었습니다.
-          </ConfirmModal>
-        )}
+        <P
+          onClick={() =>
+            openConfirmModal({
+              /* 회원탈퇴 경고 */
+              width: "540px",
+              primaryButtonText: "회원 탈퇴",
+              secondaryButtonText: "취소",
+              onPrimaryClick: handleWithdrawal,
+              type: "withDrawer",
+              children: (
+                <ModalContent>
+                  <div>
+                    회원 탈퇴를 하시겠습니까?
+                    <br />
+                    탈퇴한 아이디로는 다시 가입할 수 없으며,
+                    <br />
+                    아이디 및 데이터는 복구할 수 없습니다.
+                  </div>
+                </ModalContent>
+              ),
+            })
+          }
+        >
+          회원탈퇴
+        </P>
       </MyProfileContent>
     </Wrapper>
   );

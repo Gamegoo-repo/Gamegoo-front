@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import styled, { css } from "styled-components";
 
 import { blockMember, deleteBlockMember, unblockMember } from "@/api";
-import { ConfirmModal, MoreBox } from "@/components/common";
-import { useMediaQueryContext } from "@/hooks";
+import { MoreBox } from "@/components/common";
+import { useConfirmModalContext, useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 import { getProfileBgColor } from "@/utils";
 
@@ -19,19 +19,65 @@ const BlockedBox: React.FC<BlockList> = ({
   blind,
 }) => {
   const { isMobile } = useMediaQueryContext();
+  const { openConfirmModal, closeConfirmModal } = useConfirmModalContext();
 
   const router = useRouter();
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState<boolean>(false);
-  const [isBlockBoxOpen, setIsBlockBoxOpen] = useState<boolean>(false);
   const [isBlockConfirmOpen, setIsBlockConfrimOpen] = useState<boolean>(false);
   const [isBlocked, setIsBlocked] = useState<boolean>(true);
 
-  const handleBlock = () => {
-    setIsBlockBoxOpen(true);
+  useEffect(() => {
+    if (isBlockConfirmOpen) {
+      {
+        /* 차단하기 확인 팝업 */
+      }
+      openConfirmModal({
+        width: "540px",
+        primaryButtonText: "확인",
+        onPrimaryClick: () => {
+          setIsBlockConfrimOpen(false);
+          window.location.reload();
+        },
+        children: (
+          <MsgConfirm>{`${
+            isBlocked ? "차단이" : "차단 해제가"
+          } 완료되었습니다.`}</MsgConfirm>
+        ),
+      });
+    }
+  }, [isBlockConfirmOpen]);
+
+  const openBlockModal = () => {
+    /* 차단하기 팝업 */
+    openConfirmModal({
+      width: "540px",
+      primaryButtonText: "예",
+      secondaryButtonText: "아니요",
+      onPrimaryClick: () => {
+        if (blind) {
+          handleRunDelete();
+        } else {
+          handleRunBlock();
+        }
+      },
+      children: blind ? (
+        <MsgConfirm>
+          {"본 탈퇴 회원을 차단목록에서 삭제하시겠습니까?"}
+        </MsgConfirm>
+      ) : isBlocked ? (
+        <MsgConfirm>{"차단을 해제 하시겠습니까?"}</MsgConfirm>
+      ) : (
+        <Msg>
+          {
+            "차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다.\n\n차단하시겠습니까?"
+          }
+        </Msg>
+      ),
+    });
   };
 
   const handleRunBlock = async () => {
-    setIsBlockBoxOpen(false);
+    closeConfirmModal();
     if (isBlocked) {
       // 차단해제 api
       await unblockMember(memberId);
@@ -45,11 +91,11 @@ const BlockedBox: React.FC<BlockList> = ({
   };
 
   const handleDelete = () => {
-    setIsBlockBoxOpen(true);
+    openBlockModal();
   };
 
   const handleRunDelete = async () => {
-    setIsBlockBoxOpen(false);
+    closeConfirmModal();
     // 탈퇴 회원 차단목록 삭제 api
     await deleteBlockMember(memberId);
   };
@@ -88,7 +134,7 @@ const BlockedBox: React.FC<BlockList> = ({
                   if (blind) {
                     handleDelete();
                   } else {
-                    handleBlock();
+                    openBlockModal();
                   }
                 },
               },
@@ -98,53 +144,6 @@ const BlockedBox: React.FC<BlockList> = ({
           />
         )}
       </MoreDiv>
-      {/* 차단하기 팝업 */}
-      {isBlockBoxOpen && (
-        <ConfirmModal
-          width="540px"
-          primaryButtonText="예"
-          secondaryButtonText="아니요"
-          onPrimaryClick={() => {
-            if (blind) {
-              handleRunDelete();
-            } else {
-              handleRunBlock();
-            }
-          }}
-          onSecondaryClick={() => {
-            setIsBlockBoxOpen(false);
-          }}
-        >
-          {blind ? (
-            <MsgConfirm>
-              {"본 탈퇴 회원을 차단목록에서 삭제하시겠습니까?"}
-            </MsgConfirm>
-          ) : isBlocked ? (
-            <MsgConfirm>{"차단을 해제 하시겠습니까?"}</MsgConfirm>
-          ) : (
-            <Msg>
-              {
-                "차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다.\n\n차단하시겠습니까?"
-              }
-            </Msg>
-          )}
-        </ConfirmModal>
-      )}
-      {/* 차단하기 확인 팝업 */}
-      {isBlockConfirmOpen && (
-        <ConfirmModal
-          width="540px"
-          primaryButtonText="확인"
-          onPrimaryClick={() => {
-            setIsBlockConfrimOpen(false);
-            window.location.reload();
-          }}
-        >
-          <MsgConfirm>{`${
-            isBlocked ? "차단이" : "차단 해제가"
-          } 완료되었습니다.`}</MsgConfirm>
-        </ConfirmModal>
-      )}
     </Container>
   );
 };
