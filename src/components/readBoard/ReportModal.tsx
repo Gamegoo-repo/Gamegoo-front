@@ -4,7 +4,13 @@ import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
 import { reportMember } from "@/api";
-import { Button, Checkbox, FormModal, Input } from "@/components/common";
+import {
+  Button,
+  Checkbox,
+  ConfirmModal,
+  FormModal,
+  Input,
+} from "@/components/common";
 import { REPORT_REASON } from "@/constants/report";
 import { setCloseModal } from "@/redux/slices/modalSlice";
 import { theme } from "@/styles/theme";
@@ -24,6 +30,7 @@ const ReportModal = ({
   const dispatch = useDispatch();
   const isUser = useSelector((state: RootState) => state.user);
   const [showAlert, setShowAlert] = useState(false);
+  const [isError, setIsError] = useState(false);
   const [alertProps, setAlertProps] = useState<AlertProps>({
     icon: "",
     width: 0,
@@ -70,6 +77,7 @@ const ReportModal = ({
   const handleModalClose = () => {
     setCheckedItems([]);
     setReportDetail("");
+    setIsError(false);
     dispatch(setCloseModal());
   };
 
@@ -97,7 +105,10 @@ const ReportModal = ({
     try {
       await reportMember(params);
       await handleModalClose();
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response.data.code === "REPORT_404") {
+        setIsError(true);
+      }
       console.error(error);
     }
   };
@@ -156,6 +167,15 @@ const ReportModal = ({
           </ReportButton>
         </div>
       </FormModal>
+      {isError && (
+        <ConfirmModal
+          width="540px"
+          primaryButtonText="확인"
+          onPrimaryClick={() => setIsError(false)}
+        >
+          같은 유저에 대한 신고는 하루에 한 번만 가능합니다.
+        </ConfirmModal>
+      )}
     </>
   );
 };
