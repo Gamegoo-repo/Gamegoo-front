@@ -248,7 +248,7 @@ const zIndex = {
   base: 1,
   baseFloating: 10,
   popup: 100,
-  alertConfirm: 1000
+  alertConfirm: 1000,
 };
 
 export type ColorsTypes = typeof colors;
@@ -259,5 +259,5 @@ export const theme: DefaultTheme = {
   fonts,
   icon,
   breakpoints,
-  zIndex
+  zIndex,
 };

@@ -7,3 +7,4 @@ export { default as useJwtError } from "./useJwtError";
 export { default as useMediaQueries } from "./useMediaQueries";
 export { default as useTooltipTransformOffset } from "./useTooltipTransformOffset";
 export { default as useMediaQueryContext } from "./useMediaQueryContext";
+export { default as useInfiniteScroll } from "./useInfiniteScroll";
