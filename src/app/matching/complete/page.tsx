@@ -22,7 +22,7 @@ import HeaderTitle from "@/components/common/HeaderTitle";
 import Icon from "@/components/common/Icon";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import SquareProfile from "@/components/match/SquareProfile";
-import { useMediaQueryContext } from "@/hooks";
+import { useConfirmModalContext, useMediaQueryContext } from "@/hooks";
 import {
   openChatRoom,
   setChatEnterType,
@@ -58,8 +58,9 @@ interface User {
 
 const Complete = () => {
   const { isMobile } = useMediaQueryContext();
+  const { openConfirmModal } = useConfirmModalContext();
+
   const [timeLeft, setTimeLeft] = useState(10);
-  const [showFailModal, setShowFailModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
@@ -296,7 +297,7 @@ const Complete = () => {
   const startSecondaryTimer = () => {
     secondaryTimerRef.current = setTimeout(() => {
       socket?.emit("matching-fail");
-      setShowFailModal(true);
+      showFailModal();
     }, 5000);
 
     // 5초 이내 matching-success 혹은 matching-fail 수신 시 타이머 종료
@@ -321,7 +322,7 @@ const Complete = () => {
   const startFinalTimer = () => {
     finalTimerRef.current = setTimeout(() => {
       socket?.emit("matching-fail");
-      setShowFailModal(true);
+      showFailModal();
     }, 3000);
 
     // 3초 이내 matching-success 혹은 matching-fail 수신 시 타이머 종료 및 실행
@@ -359,9 +360,31 @@ const Complete = () => {
     clearAllTimers(); // 모든 타이머 정리
     setIsCompleted("true");
     // dispatch(setComplete(false));
-    setShowFailModal(true); // 매칭 실패 모달 표시
+    showFailModal(); // 매칭 실패 모달 표시
   };
 
+  const showFailModal = () => {
+    /* 매칭 실패 시 팝업 */
+    openConfirmModal({
+      width: "540px",
+      primaryButtonText: "예",
+      secondaryButtonText: "아니요",
+      onPrimaryClick: () => {
+        router.push(`/match/profile?type=${type}&rank=${rank}&retry=true`);
+      },
+      onSecondaryClick: () => {
+        setTimeout(() => {
+          router.push("/");
+        }, 3000);
+      },
+      children: (
+        <>
+          아쉽게도 상대방과 매칭이 성사되지 못했어요.
+          <br /> 계속해서 매칭을 시도할까요?
+        </>
+      ),
+    });
+  };
   // 모든 타이머 정리
   const clearAllTimers = () => {
     if (timerRef.current) clearInterval(timerRef.current);
@@ -438,29 +461,6 @@ const Complete = () => {
             </Oppnent>
           </Main>
         </MatchContent>
-        {/* 매칭 실패 시 팝업 */}
-        {showFailModal && (
-          <ConfirmModal
-            width="540px"
-            primaryButtonText="예"
-            secondaryButtonText="아니요"
-            onPrimaryClick={() => {
-              router.push(
-                `/match/profile?type=${type}&rank=${rank}&retry=true`
-              );
-            }}
-            onSecondaryClick={() => {
-              setShowFailModal(false);
-              setTimeout(() => {
-                router.push("/");
-              }, 3000);
-            }}
-          >
-            아쉽게도 상대방과 매칭이 성사되지 못했어요.
-            <br />
-            계속해서 매칭을 시도할까요?
-          </ConfirmModal>
-        )}
       </Wrapper>
     </Suspense>
   );

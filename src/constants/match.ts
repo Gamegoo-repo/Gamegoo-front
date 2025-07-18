@@ -1,9 +1,6 @@
 import { theme } from "@/styles/theme";
 
-
-
 import type { GameMode } from "@/types/game/gameMode";
-
 
 export const MATCH_PAGE_DATA = [
   {

@@ -18,7 +18,7 @@ import {
   UpdateProfileImage,
 } from "@/components";
 import { REPORT_REASON } from "@/constants";
-import { useMediaQueryContext } from "@/hooks";
+import { useConfirmModalContext, useMediaQueryContext } from "@/hooks";
 import { setMatchInfo } from "@/redux/slices/matchInfo";
 import { setOpenAlertModal } from "@/redux/slices/modalSlice";
 import { theme } from "@/styles/theme";
@@ -58,6 +58,7 @@ const Profile: React.FC<Profile> = ({
   isDefault = false,
 }) => {
   const { isMobile, isTablet } = useMediaQueryContext();
+  const { openConfirmModal, closeConfirmModal } = useConfirmModalContext();
   const dispatch = useDispatch();
   const { id } = useParams();
   const memberId = Number(id);
@@ -159,13 +160,46 @@ const Profile: React.FC<Profile> = ({
     setIsMike(isMike);
   }, [isMike]);
 
+  useEffect(() => {
+    if (isBlockConfirmOpen) {
+      openConfirmModal({
+        width: "540px",
+        primaryButtonText: "확인",
+        onPrimaryClick: () => {
+          setIsBlockConfirmOpen(false);
+        },
+        children: (
+          <MsgConfirm>{`${
+            user.blocked ? "차단이" : "차단 해제가"
+          } 완료되었습니다.`}</MsgConfirm>
+        ),
+      });
+    }
+  }, [isBlockConfirmOpen]);
+
   const handleReport = () => {
     setIsReportBoxOpen(!isReportBoxOpen);
     setIsMoreBoxOpen(false);
   };
 
   const handleBlock = async () => {
-    setIsBlockBoxOpen(!isBlockBoxOpen);
+    /* 차단하기 팝업 */
+    openConfirmModal({
+      width: "540px",
+      primaryButtonText: "예",
+      secondaryButtonText: "아니요",
+      onPrimaryClick: () => handleRunBlock(),
+      children: user.blocked ? (
+        <MsgConfirm>{"차단을 해제 하시겠습니까?"}</MsgConfirm>
+      ) : (
+        <Msg>
+          {
+            "차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다.\n\n차단하시겠습니까?"
+          }
+        </Msg>
+      ),
+    });
+
     setIsMoreBoxOpen(false);
   };
 
@@ -499,42 +533,6 @@ const Profile: React.FC<Profile> = ({
                 </ReportButton>
               </div>
             </FormModal>
-          )}
-          {/* 차단하기 팝업 */}
-          {isBlockBoxOpen && (
-            <ConfirmModal
-              width="540px"
-              primaryButtonText="예"
-              secondaryButtonText="아니요"
-              onPrimaryClick={() => handleRunBlock()}
-              onSecondaryClick={() => {
-                setIsBlockBoxOpen(false);
-              }}
-            >
-              {user.blocked ? (
-                <MsgConfirm>{"차단을 해제 하시겠습니까?"}</MsgConfirm>
-              ) : (
-                <Msg>
-                  {
-                    "차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다.\n\n차단하시겠습니까?"
-                  }
-                </Msg>
-              )}
-            </ConfirmModal>
-          )}
-          {/* 차단/차단 해제 확인 팝업 */}
-          {isBlockConfirmOpen && (
-            <ConfirmModal
-              width="540px"
-              primaryButtonText="확인"
-              onPrimaryClick={() => {
-                setIsBlockConfirmOpen(false);
-              }}
-            >
-              <MsgConfirm>{`${
-                user.blocked ? "차단이" : "차단 해제가"
-              } 완료되었습니다.`}</MsgConfirm>
-            </ConfirmModal>
           )}
         </More>
       )}
