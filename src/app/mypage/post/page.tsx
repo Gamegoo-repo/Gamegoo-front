@@ -33,6 +33,8 @@ const MyPostPage = () => {
   const isPostingModal = useSelector(
     (state: RootState) => state.modal.postingModal
   );
+  const [openedBoardId, setOpenedBoardId] = useState<number | null>(null);
+
   // 게시판 글 새로고침
   const boardRefresh = useSelector((state: RootState) => state.board.refresh);
 
@@ -114,6 +116,10 @@ const MyPostPage = () => {
     );
   };
 
+  const handleMoreBoxToggle = (boardId: number | null) => {
+    setOpenedBoardId((prevId) => (prevId === boardId ? null : boardId));
+  };
+
   /* 페이지네이션 이전 클릭 */
   const handlePrevPage = () => {
     setCurrentPage((prev) => Math.max(prev - 1, 1));
@@ -164,6 +170,7 @@ const MyPostPage = () => {
                     <Post
                       key={item.boardId}
                       boardId={item.boardId}
+                      openedBoardId={openedBoardId}
                       memberId={item.memberId}
                       profileImage={item.profileImage}
                       gameName={item.gameName}
@@ -175,6 +182,7 @@ const MyPostPage = () => {
                       bumpTime={item.bumpTime}
                       boardNumber={index + 1}
                       onDeletePost={handleDeletePost}
+                      onMoreBoxToggle={handleMoreBoxToggle}
                     />
                   ))}
                 </PostList>
@@ -214,7 +222,6 @@ const MyPostPage = () => {
                   ))}
                 </MoPostList>
                 <div ref={sentinelRef}></div>
-                {/* IntersectionObserver 를 위한 감지용 element */}
               </>
             )
           ) : (

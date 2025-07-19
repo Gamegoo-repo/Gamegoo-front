@@ -21,7 +21,6 @@ interface TableRowProps {
   onMoveProfile: (e: React.MouseEvent, memberId: number) => void;
   onCopyText: (gameName: string, tag: string, e: React.MouseEvent) => void;
   onMoreBoxToggle: (boardId: number | null) => void;
-  handleMoreBox: (state: boolean) => void;
   menuItems: MoreBoxMenuItems[];
   moreBoxRef: React.RefObject<HTMLDivElement>;
   ignoreRef: MutableRefObject<boolean>;
@@ -35,7 +34,6 @@ const TableRow = ({
   onMoveProfile,
   onCopyText,
   onMoreBoxToggle,
-  handleMoreBox,
   menuItems,
   moreBoxRef,
   ignoreRef,
