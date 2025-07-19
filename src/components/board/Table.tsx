@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
@@ -57,7 +57,7 @@ const Table = (props: TableProps) => {
   const router = useRouter();
   const { openConfirmModal, closeConfirmModal } = useConfirmModalContext();
 
-  const [isBoardId, setIsBoardId] = useState(0);
+  const [isBoardId, setIsBoardId] = useState<number | null>(null);
   const [isPost, setIsPost] = useState<MemberPost>();
   const isChatRoomOpen = useSelector(
     (state: RootState) => state.chat.isChatRoomOpen
@@ -80,6 +80,29 @@ const Table = (props: TableProps) => {
   const logoutMessage = "로그아웃 되었습니다. 다시 로그인 해주세요.";
   const loginRequiredMessage = "로그인이 필요한 서비스입니다.";
   const deletedMessage = "해당 글은 삭제된 글입니다.";
+
+  const moreBoxRef = useRef<HTMLDivElement | null>(null);
+  const ignoreRef = useRef(false);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (ignoreRef.current) {
+        ignoreRef.current = false; // 다음 이벤트부터 다시 감지
+        return;
+      }
+
+      if (
+        moreBoxRef.current &&
+        !moreBoxRef.current.contains(event.target as Node)
+      ) {
+        setIsMoreBoxOpen(false);
+        setIsBoardId(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isMoreBoxOpen]);
 
   /* 게시글 열기 */
   const handlePostOpen = (boardId: number) => {
@@ -248,13 +271,13 @@ const Table = (props: TableProps) => {
       if (isPost) {
         await sendFriendRequest(isPost.memberId);
       }
-      await handleMoreBoxClose();
+      await handleMoreBox(false);
       setIsFriendStatus(true);
     } catch (error) {
       console.error(error);
     }
 
-    handleMoreBoxClose();
+    handleMoreBox(false);
   };
 
   /* 친구 요청 취소 */
@@ -263,13 +286,13 @@ const Table = (props: TableProps) => {
       if (isPost) {
         await cancelFriendRequest(isPost.memberId);
       }
-      await handleMoreBoxClose();
+      await handleMoreBox(false);
       setIsFriendStatus(false);
     } catch (error) {
       console.error(error);
     }
 
-    handleMoreBoxClose();
+    handleMoreBox(false);
   };
 
   /* 친구 삭제 */
@@ -278,13 +301,13 @@ const Table = (props: TableProps) => {
       if (isPost) {
         await deleteFriend(isPost.memberId);
       }
-      await handleMoreBoxClose();
+      await handleMoreBox(false);
       setIsFriendStatus(false);
     } catch (error) {
       console.error(error);
     }
 
-    handleMoreBoxClose();
+    handleMoreBox(false);
   };
 
   /* 게시글 끌어올리기 */
@@ -311,7 +334,9 @@ const Table = (props: TableProps) => {
   const handlePullUpAction = async () => {
     // 게시판 끌어올리기 API
     dispatch(setCloseReadingModal());
-    await pullUpPost(isBoardId);
+    if (isBoardId) {
+      await pullUpPost(isBoardId);
+    }
     await dispatch(setRefresh());
 
     await notify({
@@ -335,7 +360,9 @@ const Table = (props: TableProps) => {
   const handleDelete = async () => {
     setIsMoreBoxOpen((prevState) => !prevState);
     try {
-      await deletePost(isBoardId);
+      if (isBoardId) {
+        await deletePost(isBoardId);
+      }
       await dispatch(setPostStatus("delete"));
       await dispatch(setCloseReadingModal());
       await dispatch(setPostStatus(""));
@@ -356,20 +383,33 @@ const Table = (props: TableProps) => {
     }
 
     dispatch(setOpenModal("report"));
-    handleMoreBoxClose();
+    handleMoreBox(false);
   };
 
   /* 더보기 버튼 토글 */
-  const handleMoreBoxToggle = async (boardId: number) => {
-    setIsBoardId(boardId);
-    const response = await getMemberPost(boardId);
-    setIsPost(response.data);
-    setIsMoreBoxOpen((prevState) => !prevState);
-  };
-
-  /* 더보기 버튼 닫기 */
-  const handleMoreBoxClose = () => {
+  const handleMoreBoxToggle = async (boardId: number | null) => {
+    if (boardId === isBoardId && isMoreBoxOpen) {
+      setIsMoreBoxOpen(false);
+      setIsBoardId(null);
+      return;
+    }
     setIsMoreBoxOpen(false);
+    setIsBoardId(null);
+
+    if (boardId) {
+      try {
+        const response = await getMemberPost(boardId);
+        setIsPost(response.data);
+        setIsBoardId(boardId);
+        setIsMoreBoxOpen(true);
+      } catch (e) {
+        console.error("더보기 메뉴 불러오기 실패:", e);
+      }
+    }
+  };
+  /* 더보기 버튼 닫기 */
+  const handleMoreBox = (state: boolean) => {
+    setIsMoreBoxOpen(state);
   };
 
   /* 더보기 버튼 메뉴 */
@@ -424,7 +464,9 @@ const Table = (props: TableProps) => {
 
   return (
     <>
-      {isReadingModal && !isChatRoomOpen && <ReadBoard postId={isBoardId} />}
+      {isReadingModal && !isChatRoomOpen && (
+        <ReadBoard postId={isBoardId || 0} />
+      )}
 
       {isChatRoomOpen && <Layout />}
 
@@ -438,14 +480,15 @@ const Table = (props: TableProps) => {
                 key={data.boardId}
                 data={data}
                 isUser={isUser}
-                isBoardId={isBoardId}
-                isMoreBoxOpen={isMoreBoxOpen}
+                openedBoardId={isMoreBoxOpen ? isBoardId : null}
                 onRowClick={handlePostOpen}
                 onMoveProfile={handleMoveProfilePage}
                 onCopyText={handleTextClick}
                 onMoreBoxToggle={handleMoreBoxToggle}
-                onMoreBoxClose={handleMoreBoxClose}
+                handleMoreBox={handleMoreBox}
                 menuItems={MoreBoxMenuItems}
+                moreBoxRef={moreBoxRef}
+                ignoreRef={ignoreRef}
               />
             ))}
           </TableContent>
@@ -456,7 +499,7 @@ const Table = (props: TableProps) => {
 
       {/* 신고하기 팝업 */}
       {isModalType === "report" && (
-        <ReportModal isPost={isPost} postId={isBoardId} />
+        <ReportModal isPost={isPost} postId={isBoardId || 0} />
       )}
     </>
   );

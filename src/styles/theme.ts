@@ -247,6 +247,7 @@ const breakpoints = {
 const zIndex = {
   base: 1,
   baseFloating: 10,
+  menu: 50,
   popup: 100,
   alertConfirm: 1000,
 };
