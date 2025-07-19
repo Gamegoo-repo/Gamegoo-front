@@ -16,6 +16,7 @@ import {
   setUserName,
   setUserProfileImg,
 } from "@/redux/slices/userSlice";
+import { connectSocket, socket } from "@/socket";
 
 const RsoCallback = () => {
   const router = useRouter();
@@ -60,9 +61,23 @@ const RsoCallback = () => {
         router.push("/");
         sessionStorage.removeItem(STORAGE_KEY.autoLogin);
 
-        socketLogin();
-
         /* 소켓 로그인 */
+        // 소켓이 없다면 연결
+        if (!socket) {
+          connectSocket();
+        }
+
+        const onSocketConnectedAndLogin = () => {
+          socketLogin();
+          socket?.off("connect", onSocketConnectedAndLogin);
+        };
+
+        if (socket?.connected) {
+          socketLogin();
+        } else {
+          socket?.on("connect", onSocketConnectedAndLogin);
+        }
+
         const data = await getUnreadUuid();
         if (data.status === 200) {
           // 실시간 안읽은 채팅방 수 가져오기 위함
@@ -80,7 +95,6 @@ const RsoCallback = () => {
         console.error("유효하지 않은 응답입니다.");
       }
     };
-
     fetchData();
   }, []);
 
