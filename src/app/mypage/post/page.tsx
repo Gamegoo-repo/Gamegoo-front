@@ -6,7 +6,7 @@ import styled from "styled-components";
 
 import { deletePost, getMyPost, getMyPostCursor, getMyProfile } from "@/api";
 import { MoPost, Pagination, Post, PostBoard } from "@/components";
-import { useMediaQueryContext } from "@/hooks";
+import { useInfiniteScroll, useMediaQueryContext } from "@/hooks";
 import { setClosePostingModal } from "@/redux/slices/modalSlice";
 import { setUserProfile } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
@@ -80,34 +80,15 @@ const MyPostPage = () => {
   );
 
   /* mobile 무한스크롤 페이지네이션 */
-  useEffect(
-    () => {
-      if (!isMobile || !cursor) return;
-
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting && hasNext && !isLoading) {
-              fetchGetMyPostCursor(cursor);
-            }
-          });
-        },
-        {
-          rootMargin: "100px", // 미리 로드
-        }
-      );
-
-      if (sentinelRef.current) {
-        observer.observe(sentinelRef.current);
-      }
-
-      return () => {
-        observer.disconnect();
-      };
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [cursor, isMobile, hasNext, isLoading]
-  );
+  useInfiniteScroll({
+    cursor,
+    hasNext,
+    isLoading,
+    sentinelRef,
+    onIntersect: fetchGetMyPostCursor,
+    enabled: isMobile,
+    rootMargin: "100px",
+  });
 
   useEffect(
     () => {

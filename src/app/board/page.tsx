@@ -17,7 +17,7 @@ import {
 import Icon from "@/components/common/Icon";
 import { BOARD_TITLE, GAME_MODE, MIC, TIER } from "@/constants";
 import ko from "@/constants/ko.json";
-import { notify, useConfirmModalContext, useMediaQueryContext } from "@/hooks";
+import { notify, useInfiniteScroll, useConfirmModalContext, useMediaQueryContext } from "@/hooks";
 import { resetBoardFilters, setRefresh } from "@/redux/slices/boardSlice";
 import {
   setClosePostingModal,
@@ -311,34 +311,15 @@ const BoardPage = () => {
   );
 
   /* mobile 무한스크롤 페이지네이션 */
-  useEffect(
-    () => {
-      if (!isMobile || !cursor) return;
-
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting && hasNext && !isLoading) {
-              getListByCursor(cursor);
-            }
-          });
-        },
-        {
-          rootMargin: "100px", // 미리 로드
-        }
-      );
-
-      if (sentinelRef.current) {
-        observer.observe(sentinelRef.current);
-      }
-
-      return () => {
-        observer.disconnect();
-      };
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [cursor, isMobile, hasNext, isLoading]
-  );
+  useInfiniteScroll({
+    cursor,
+    hasNext,
+    isLoading,
+    sentinelRef,
+    onIntersect: getListByCursor,
+    enabled: isMobile,
+    rootMargin: "100px",
+  });
 
   /* 페이지네이션 이전 클릭 */
   const handlePrevPage = () => {
