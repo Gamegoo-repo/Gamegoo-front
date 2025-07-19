@@ -485,7 +485,6 @@ const Table = (props: TableProps) => {
                 onMoveProfile={handleMoveProfilePage}
                 onCopyText={handleTextClick}
                 onMoreBoxToggle={handleMoreBoxToggle}
-                handleMoreBox={handleMoreBox}
                 menuItems={MoreBoxMenuItems}
                 moreBoxRef={moreBoxRef}
                 ignoreRef={ignoreRef}
