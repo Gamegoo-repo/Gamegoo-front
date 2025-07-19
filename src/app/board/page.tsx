@@ -7,7 +7,6 @@ import styled from "styled-components";
 import { getBoardList, getBoardListCursor, getMyPost, pullUpPost } from "@/api";
 import {
   Button,
-  ConfirmModal,
   Dropdown,
   Pagination,
   PositionFilter,
@@ -18,7 +17,7 @@ import {
 import Icon from "@/components/common/Icon";
 import { BOARD_TITLE, GAME_MODE, MIC, TIER } from "@/constants";
 import ko from "@/constants/ko.json";
-import { notify, useInfiniteScroll, useMediaQueryContext } from "@/hooks";
+import { notify, useInfiniteScroll, useConfirmModalContext, useMediaQueryContext } from "@/hooks";
 import { resetBoardFilters, setRefresh } from "@/redux/slices/boardSlice";
 import {
   setClosePostingModal,
@@ -40,6 +39,7 @@ const BUTTONS_PER_PAGE = 5;
 const BoardPage = () => {
   const dispatch = useDispatch();
   const { isMobile } = useMediaQueryContext();
+  const { openConfirmModal, closeConfirmModal } = useConfirmModalContext();
 
   const [boardList, setBoardList] = useState<BoardListDetail[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -55,7 +55,6 @@ const BoardPage = () => {
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
   const [selectedMic, setSelectedMic] = useState<Mike | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isPullUpConfirmOpen, setIsPullUpConfirmOpen] = useState(false);
   const [myRecentPost, setMyRecentPost] = useState<number | null>(null);
   const [cursor, setCursor] = useState<string | null>(null);
   const [hasNext, setHasNext] = useState<boolean>(true);
@@ -363,7 +362,20 @@ const BoardPage = () => {
     const myPost = await getMyPost(1);
     if (myPost.data.totalCount > 0) {
       setMyRecentPost(myPost.data.myBoards[0].boardId);
-      setIsPullUpConfirmOpen(true);
+
+      /* 끌어올리기 확인 팝업 */
+      openConfirmModal({
+        width: "540px",
+        primaryButtonText: "아니요",
+        secondaryButtonText: "예",
+        onPrimaryClick: () => {
+          setMyRecentPost(null);
+        },
+        onSecondaryClick: handlePullUpAction,
+        children: (
+          <MsgConfirm>{`최근 게시글을 끌어올리시겠습니까?`}</MsgConfirm>
+        ),
+      });
     } else {
       notify({
         text: ko["board.pullup.noPost"],
@@ -375,7 +387,6 @@ const BoardPage = () => {
 
   const handlePullUpAction = async () => {
     // 게시판 끌어올리기 API
-    await setIsPullUpConfirmOpen(false);
     if (myRecentPost) {
       await pullUpPost(myRecentPost);
       await dispatch(setRefresh());
@@ -596,21 +607,6 @@ const BoardPage = () => {
             )}
           </BoardContent>
         </Wrapper>
-      )}
-      {/* 끌어올리기 확인 팝업 */}
-      {isPullUpConfirmOpen && (
-        <ConfirmModal
-          width="540px"
-          primaryButtonText="아니요"
-          secondaryButtonText="예"
-          onPrimaryClick={() => {
-            setMyRecentPost(null);
-            setIsPullUpConfirmOpen(false);
-          }}
-          onSecondaryClick={handlePullUpAction}
-        >
-          <MsgConfirm>{`최근 게시글을 끌어올리시겠습니까?`}</MsgConfirm>
-        </ConfirmModal>
       )}
     </>
   );

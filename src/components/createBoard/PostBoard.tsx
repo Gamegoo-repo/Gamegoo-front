@@ -12,6 +12,7 @@ import styled from "styled-components";
 
 import { editPost, getMyProfile, postBoard } from "@/api";
 import { GAME_MODE } from "@/constants";
+import { useConfirmModalContext } from "@/hooks";
 import {
   setClosePostingModal,
   setOpenAlertModal,
@@ -52,6 +53,7 @@ const PostBoard = (props: PostBoardProps) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
+  const { openConfirmModal } = useConfirmModalContext();
   const postStatus = useSelector((state: RootState) => state.post.postStatus);
   const user = useSelector((state: RootState) => state.user);
   const currentPost = useSelector((state: RootState) => state.post.currentPost);
@@ -293,20 +295,22 @@ const PostBoard = (props: PostBoardProps) => {
     dispatch(setPostStatus(""));
   };
 
+  useEffect(() => {
+    if (postStatus) {
+      openConfirmModal({
+        width: "540px",
+        primaryButtonText: "확인",
+        onPrimaryClick: onCompletedPostingClose,
+        children:
+          postStatus === "complete"
+            ? "글 작성이 완료되었습니다."
+            : "글 수정이 완료되었습니다.",
+      });
+    }
+  }, [postStatus]);
+
   return (
     <CRModal type="posting" onClose={handleModalClose}>
-      {postStatus && (
-        <ConfirmModal
-          width="540px"
-          primaryButtonText="확인"
-          onPrimaryClick={onCompletedPostingClose}
-        >
-          {postStatus === "complete"
-            ? "글 작성이 완료되었습니다."
-            : "글 수정이 완료되었습니다."}
-        </ConfirmModal>
-      )}
-
       <Form onSubmit={handlePost}>
         {user.gameName && (
           <UserSection>

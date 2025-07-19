@@ -12,7 +12,7 @@ import styled, { keyframes } from "styled-components";
 
 import { getChatList, markChatAsRead } from "@/api";
 import Icon from "@/components/common/Icon";
-import { useChatMessage } from "@/hooks";
+import { useChatMessage, useConfirmModalContext } from "@/hooks";
 import { closeChat, closeChatRoom } from "@/redux/slices/chatSlice";
 import {
   setCloseMannerStatusModal,
@@ -53,6 +53,7 @@ const MessageList = (props: MessageListProps) => {
   } = props;
 
   const dispatch = useDispatch();
+  const { openConfirmModal } = useConfirmModalContext();
 
   const [messageList, setMessageList] = useState<ChatMessageDto[]>(
     chatEnterData?.chatMessageListResponse.chatMessageList || []
@@ -353,6 +354,16 @@ const MessageList = (props: MessageListProps) => {
     return () => clearTimeout(timer);
   }, [isUnregisterAlert, isBlockedAlert]);
 
+  useEffect(() => {
+    if (isFeedbackModalOpen) {
+      openConfirmModal({
+        type: "manner",
+        width: "315px",
+        primaryButtonText: "확인",
+        onPrimaryClick: () => dispatch(setCloseMannerStatusModal()),
+      });
+    }
+  }, [isFeedbackModalOpen]);
   const handleMoveProfile = async (memberId: number) => {
     await router.push(`/user/${memberId}`);
     await dispatch(closeChat());
@@ -497,14 +508,6 @@ const MessageList = (props: MessageListProps) => {
               <LoadingContainer>
                 <LoadingSpinner />
               </LoadingContainer>
-            )}
-            {isFeedbackModalOpen && (
-              <ConfirmModal
-                type="manner"
-                width="315px"
-                primaryButtonText="확인"
-                onPrimaryClick={() => dispatch(setCloseMannerStatusModal())}
-              />
             )}
           </ChatMain>
         )}

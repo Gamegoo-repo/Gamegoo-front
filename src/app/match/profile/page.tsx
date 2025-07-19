@@ -14,7 +14,7 @@ import {
   Profile,
 } from "@/components";
 import { SkeletonBox } from "@/components/common/Skeleton";
-import { useMediaQueryContext } from "@/hooks";
+import { useConfirmModalContext, useMediaQueryContext } from "@/hooks";
 import { closeChatRoom } from "@/redux/slices/chatSlice";
 import { setUserProfile } from "@/redux/slices/userSlice";
 import { sendMatchingQuitEvent, socket } from "@/socket";
@@ -26,6 +26,7 @@ import type { GameMode, profileType } from "@/types";
 
 const ProfilePage = () => {
   const { isMobile } = useMediaQueryContext();
+  const { openConfirmModal } = useConfirmModalContext();
   const router = useRouter();
   const [profileType, setProfileType] = useState<profileType | undefined>();
   const [isClient, setIsClient] = useState(false);
@@ -88,7 +89,19 @@ const ProfilePage = () => {
           errorData.data ===
             "You are already in the matching room for this game mode."
         ) {
-          setIsAlready(true);
+          openConfirmModal({
+            width: "540px",
+            primaryButtonText: "확인",
+            onPrimaryClick: () => {
+              setIsAlready(false);
+            },
+            children: (
+              <>
+                이미 매칭 중이에요!
+                <Warning>한 번에 하나의 매칭만 할 수 있어요</Warning>
+              </>
+            ),
+          });
         } else if (
           errorData.event === "error" &&
           errorData.data ===
@@ -234,18 +247,6 @@ const ProfilePage = () => {
           />
         </Main>
       </MatchContent>
-      {isAlready && (
-        <ConfirmModal
-          width="540px"
-          onPrimaryClick={() => setIsAlready(false)}
-          primaryButtonText="확인"
-        >
-          <Column>
-            이미 매칭 중이에요!
-            <Warning>한 번에 하나의 매칭만 할 수 있어요</Warning>
-          </Column>
-        </ConfirmModal>
-      )}
     </Wrapper>
   );
 };

@@ -28,7 +28,7 @@ import ko from "@/constants/ko.json";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants/mannerLevel";
 import { REPORT_REASON } from "@/constants/report";
 import { STORAGE_KEY } from "@/constants/storage";
-import { notify } from "@/hooks/notify";
+import { notify, useConfirmModalContext } from "@/hooks";
 import {
   closeChatRoom,
   setCurrentChatUuid,
@@ -65,6 +65,7 @@ interface ChatLayoutProps {
 const ChatLayout = (props: ChatLayoutProps) => {
   const { apiType, onDragStart } = props;
   const dispatch = useDispatch();
+  const { openConfirmModal } = useConfirmModalContext();
   const currentPost = useSelector((state: RootState) => state.post.currentPost);
 
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
@@ -228,6 +229,58 @@ const ChatLayout = (props: ChatLayoutProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [isChatUuid]
   );
+
+  useEffect(() => {
+    if (!isModalType) return;
+
+    /* 채팅창 나가기 팝업 */
+    if (isModalType === "leave" && chatEnterData) {
+      openConfirmModal({
+        width: "540px",
+        primaryButtonText: "취소",
+        secondaryButtonText: "나가기",
+        onPrimaryClick: handleModalClose,
+        onSecondaryClick: handleChatLeave,
+        children:
+          !!chatEnterData.friend || !!chatEnterData.blind ? (
+            <Text>{`채팅방을 나가시겠어요?`}</Text>
+          ) : (
+            <Text>
+              {`친구 추가 하지 않은 상대방입니다\n채팅방을 나가시겠어요?`}
+            </Text>
+          ),
+      });
+    }
+
+    /* 차단하기 팝업 */
+    if (isModalType === "block") {
+      openConfirmModal({
+        width: "540px",
+        primaryButtonText: "취소",
+        secondaryButtonText: "차단",
+        onPrimaryClick: handleModalClose,
+        onSecondaryClick: handleChatBlock,
+        children: (
+          <div>
+            <Text>
+              {`차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다. 차단하시겠습니까?`}
+            </Text>
+            <SmallText>{` 차단 해제는 마이페이지에서 가능합니다.`}</SmallText>
+          </div>
+        ),
+      });
+    }
+
+    /* 차단 완료 팝업 */
+    if (isModalType === "doneBlock") {
+      openConfirmModal({
+        width: "540px",
+        primaryButtonText: "확인",
+        onPrimaryClick: handleChatLeave,
+        children: <MsgConfirm>{`차단이 완료되었습니다.`}</MsgConfirm>,
+      });
+    }
+  }, [isModalType, chatEnterData]);
 
   /* 읽은 채팅 채팅 버튼에 실시간으로 반영 */
   const removeUnreadUuid = (uuidToRemove: string) => {
@@ -699,54 +752,6 @@ const ChatLayout = (props: ChatLayoutProps) => {
           </Wrapper>
         )}
       </Overlay>
-
-      {/* 채팅창 나가기 팝업 */}
-      {isModalType === "leave" && chatEnterData && (
-        <ConfirmModal
-          width="540px"
-          primaryButtonText="취소"
-          secondaryButtonText="나가기"
-          onPrimaryClick={handleModalClose}
-          onSecondaryClick={handleChatLeave}
-        >
-          {!!chatEnterData.friend || !!chatEnterData.blind ? (
-            <Text>{`채팅방을 나가시겠어요?`}</Text>
-          ) : (
-            <Text>
-              {`친구 추가 하지 않은 상대방입니다\n채팅방을 나가시겠어요?`}
-            </Text>
-          )}
-        </ConfirmModal>
-      )}
-
-      {/* 차단하기 팝업 */}
-      {isModalType === "block" && (
-        <ConfirmModal
-          width="540px"
-          primaryButtonText="취소"
-          secondaryButtonText="차단"
-          onPrimaryClick={handleModalClose}
-          onSecondaryClick={handleChatBlock}
-        >
-          <div>
-            <Text>
-              {`차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다. 차단하시겠습니까?`}
-            </Text>
-            <SmallText>{` 차단 해제는 마이페이지에서 가능합니다.`}</SmallText>
-          </div>
-        </ConfirmModal>
-      )}
-
-      {/* 차단 완료 팝업 */}
-      {isModalType === "doneBlock" && (
-        <ConfirmModal
-          width="540px"
-          primaryButtonText="확인"
-          onPrimaryClick={handleChatLeave}
-        >
-          <MsgConfirm>{`차단이 완료되었습니다.`}</MsgConfirm>
-        </ConfirmModal>
-      )}
 
       {/* 신고하기 팝업 */}
       {isModalType === "report" && (

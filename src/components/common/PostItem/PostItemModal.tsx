@@ -1,8 +1,8 @@
+import { useEffect } from "react";
 import styled from "styled-components";
 
+import { useConfirmModalContext } from "@/hooks";
 import { theme } from "@/styles/theme";
-
-import ConfirmModal from "../ConfirmModal";
 
 import type { FC } from "react";
 
@@ -32,17 +32,18 @@ const PostItemModal: FC<PostItemModalProps> = ({
   onPullUpConfirm,
   onPullUpCancel,
 }) => {
-  // 차단 확인 팝업
-  if (isBlockBoxOpen) {
-    return (
-      <ConfirmModal
-        width="540px"
-        primaryButtonText="예"
-        secondaryButtonText="아니요"
-        onPrimaryClick={onBlockConfirm}
-        onSecondaryClick={onBlockCancel}
-      >
-        {isBlockedStatus ? (
+  const { openConfirmModal } = useConfirmModalContext();
+
+  useEffect(() => {
+    // 차단 확인 팝업
+    if (isBlockBoxOpen) {
+      openConfirmModal({
+        width: "540px",
+        primaryButtonText: "예",
+        secondaryButtonText: "아니요",
+        onPrimaryClick: onBlockConfirm,
+        onSecondaryClick: onBlockCancel,
+        children: isBlockedStatus ? (
           <MsgConfirm>{"차단을 해제 하시겠습니까?"}</MsgConfirm>
         ) : (
           <Msg>
@@ -50,40 +51,40 @@ const PostItemModal: FC<PostItemModalProps> = ({
               "차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다.\n\n차단하시겠습니까?"
             }
           </Msg>
-        )}
-      </ConfirmModal>
-    );
-  }
+        ),
+      });
+    }
+  }, [isBlockBoxOpen]);
 
   // 차단 완료 팝업
-  if (isBlockConfirmOpen) {
-    return (
-      <ConfirmModal
-        width="540px"
-        primaryButtonText="확인"
-        onPrimaryClick={onBlockCompleteClose}
-      >
-        <MsgConfirm>{`${
-          isBlockedStatus ? "차단이" : "차단 해제가"
-        } 완료되었습니다.`}</MsgConfirm>
-      </ConfirmModal>
-    );
-  }
+  useEffect(() => {
+    if (isBlockConfirmOpen) {
+      openConfirmModal({
+        width: "540px",
+        primaryButtonText: "확인",
+        onPrimaryClick: onBlockCompleteClose,
+        children: (
+          <MsgConfirm>{`${
+            isBlockedStatus ? "차단이" : "차단 해제가"
+          } 완료되었습니다.`}</MsgConfirm>
+        ),
+      });
+    }
+  }, [isBlockConfirmOpen]);
 
   // 끌어올리기 확인 팝업
-  if (isPullUpConfirmOpen) {
-    return (
-      <ConfirmModal
-        width="540px"
-        primaryButtonText="아니요"
-        secondaryButtonText="예"
-        onPrimaryClick={onPullUpCancel}
-        onSecondaryClick={onPullUpConfirm}
-      >
-        <MsgConfirm>{`본 게시글을 끌어올리시겠습니까?`}</MsgConfirm>
-      </ConfirmModal>
-    );
-  }
+  useEffect(() => {
+    if (isPullUpConfirmOpen) {
+      openConfirmModal({
+        width: "540px",
+        primaryButtonText: "아니요",
+        secondaryButtonText: "예",
+        onPrimaryClick: onPullUpCancel,
+        onSecondaryClick: onPullUpConfirm,
+        children: <MsgConfirm>{`본 게시글을 끌어올리시겠습니까?`}</MsgConfirm>,
+      });
+    }
+  }, [isPullUpConfirmOpen]);
 
   return null;
 };

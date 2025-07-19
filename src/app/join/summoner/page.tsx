@@ -7,6 +7,7 @@ import styled from "styled-components";
 
 import { postJoin, verifyRiot } from "@/api";
 import { Button, ConfirmModal, Input } from "@/components";
+import { useConfirmModalContext } from "@/hooks";
 import { clearSignIn } from "@/redux/slices/signInSlice";
 import { theme } from "@/styles/theme";
 
@@ -36,6 +37,7 @@ const Summoner = () => {
   );
   const [isCheckRiotModal, setIsCheckRiotModal] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const { openConfirmModal } = useConfirmModalContext();
 
   const summonerNameRedux = useSelector(
     (state: RootState) => state.signIn.summonerName
@@ -54,7 +56,13 @@ const Summoner = () => {
   const handleCheckSummoner = async () => {
     try {
       await verifyRiot({ gameName: name, tag });
-      setIsCheckRiotModal(true);
+      openConfirmModal({
+        width: "540px",
+        primaryButtonText: "확인",
+        onPrimaryClick: () => {},
+        children: "소환사명 인증이 완료되었습니다.",
+      });
+
       setIsCheckRiot(true);
       setErrorMsg("");
     } catch (err) {
@@ -145,15 +153,6 @@ const Summoner = () => {
           onClick={handleCheckSummoner}
           disabled={!name || !tag}
         />
-      )}
-      {isCheckRiotModal && (
-        <ConfirmModal
-          width="540px"
-          primaryButtonText="확인"
-          onPrimaryClick={() => setIsCheckRiotModal(false)}
-        >
-          소환사명 인증이 완료되었습니다.
-        </ConfirmModal>
       )}
     </Div>
   );
