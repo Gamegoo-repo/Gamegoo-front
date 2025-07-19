@@ -41,7 +41,7 @@ export const MoreCell = ({
   return (
     <Ninth className="table_width">
       <P className="gray">{setDateFormatter(bumpTime || createdAt)}</P>
-      {isUserId && (
+      {isUserId > 0 && (
         <More ref={moreBoxRef}>
           <MoreBoxButton ref={buttonRef} onClick={handleButtonClick} />
           {isOpen && (
