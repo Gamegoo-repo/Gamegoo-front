@@ -80,7 +80,7 @@ AuthAxios.interceptors.response.use(
         // 토큰 재발급 실패 시 처리
         console.error("토큰 재발급 실패:", reissueError);
         clearTokens(); // 저장된 토큰 삭제
-        window.location.replace("/login"); // 로그인 페이지로 이동
+        window.location.replace("/riot"); // 로그인 페이지로 이동
       }
     }
     return Promise.reject(error);
