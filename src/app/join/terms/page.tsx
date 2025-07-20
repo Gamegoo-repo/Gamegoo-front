@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import { postRiotJoin } from "@/api";
+import { postRiotJoin } from "@/@generated/api";
 import { Button, Checkbox, TermModal } from "@/components";
 import ko from "@/constants/ko.json";
 import {

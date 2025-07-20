@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import { verifyEmailCode } from "@/api/email/email";
+import { postEmailVerify } from "@/@generated/api";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import {
@@ -83,7 +83,7 @@ const Auth = () => {
 
   const handleSendCode = async () => {
     try {
-      await verifyEmailCode({ email: emailRedux, code: auth });
+      await postEmailVerify({ email: emailRedux, code: auth });
       setAuthValid(true);
       dispatch(updateEmailAuth(auth));
       dispatch(updateAuthStatus(true));
