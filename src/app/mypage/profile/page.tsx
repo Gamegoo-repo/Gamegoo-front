@@ -39,7 +39,7 @@ const MyProfilePage = () => {
   const handleWithdrawal = async () => {
     // 회원탈퇴 API 연동
     try {
-      // await checkPassword(password);
+      // await postPasswordCheck({password});
       // setIsPasswordValid(true);
 
       await deleteAuth();

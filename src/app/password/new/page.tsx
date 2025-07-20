@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import { resetPassword } from "@/api";
+import { postPasswordReset } from "@/@generated/api";
 import { Button, Input } from "@/components";
 import Icon from "@/components/common/Icon";
 import { getVerifyCode } from "@/utils";
@@ -56,7 +56,7 @@ const New = () => {
     if (passwordValid && repasswordValid) {
       const verifyCode = getVerifyCode();
       try {
-        await resetPassword({
+        await postPasswordReset({
           email,
           newPassword: repassword,
           verifyCode: verifyCode || "",
