@@ -255,6 +255,7 @@ const zIndex = {
 export type ColorsTypes = typeof colors;
 export type FontsTypes = typeof fonts;
 export type BreakpointsType = typeof breakpoints;
+export type ZIndexType = typeof zIndex;
 
 export const theme: DefaultTheme = {
   colors,

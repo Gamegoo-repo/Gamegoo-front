@@ -1,6 +1,11 @@
 import "styled-components";
 
-import type { BreakpointsTypes, ColorsTypes, FontsTypes } from "./theme";
+import type {
+  BreakpointsTypes,
+  ColorsTypes,
+  FontsTypes,
+  ZIndexType,
+} from "./theme";
 
 declare module "styled-components" {
   export interface DefaultTheme {
@@ -8,5 +13,6 @@ declare module "styled-components" {
     fonts: FontsTypes;
     icon: typeof icon;
     breakpoints: BreakpointsType;
+    zIndex: ZIndexType;
   }
 }
