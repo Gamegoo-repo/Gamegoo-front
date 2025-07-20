@@ -121,7 +121,7 @@ const Title = styled.p``;
 
 const DropBox = styled.div<{ $width: string }>`
   position: absolute;
-  z-index: 101;
+  z-index: ${theme.zIndex.popup + 1};
   width: ${({ $width }) => $width};
 `;
 

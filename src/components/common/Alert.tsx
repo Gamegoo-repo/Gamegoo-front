@@ -67,7 +67,7 @@ const Overlay = styled.div`
   position: fixed;
   background: #0000009c;
   inset: 0;
-  z-index: 1000;
+  z-index: ${theme.zIndex.alertConfirm};
   top: 0;
   left: 0;
   right: 0;

@@ -21,7 +21,7 @@ import {
   ReportModal,
 } from "@/components";
 import ko from "@/constants/ko.json";
-import { notify } from "@/hooks/notify";
+import { notify, useConfirmModalContext } from "@/hooks";
 import { setRefresh } from "@/redux/slices/boardSlice";
 import {
   setCloseModal,
@@ -55,6 +55,7 @@ const Table = (props: TableProps) => {
   const { title, content } = props;
   const dispatch = useDispatch();
   const router = useRouter();
+  const { openConfirmModal, closeConfirmModal } = useConfirmModalContext();
 
   const [isBoardId, setIsBoardId] = useState(0);
   const [isPost, setIsPost] = useState<MemberPost>();
@@ -74,7 +75,6 @@ const Table = (props: TableProps) => {
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
   const [isBlockBoxOpen, setIsBlockBoxOpen] = useState(false);
   const [isBlockConfirmOpen, setIsBlockConfrimOpen] = useState(false);
-  const [isPullUpConfirmOpen, setIsPullUpConfirmOpen] = useState(false);
 
   /* 로그아웃 시, 비회원 접근 시 알럿 props 설정 함수 */
   const logoutMessage = "로그아웃 되었습니다. 다시 로그인 해주세요.";
@@ -122,6 +122,24 @@ const Table = (props: TableProps) => {
   };
 
   useEffect(() => {
+    /* 차단하기 확인 팝업 */
+    if (!isBlockConfirmOpen) return;
+
+    openConfirmModal({
+      width: "540px",
+      primaryButtonText: "확인",
+      onPrimaryClick: () => {
+        setIsBlockConfrimOpen(false);
+      },
+      children: (
+        <MsgConfirm>{`${
+          isBlockedStatus ? "차단이" : "차단 해제가"
+        } 완료되었습니다.`}</MsgConfirm>
+      ),
+    });
+  }, [isBlockConfirmOpen]);
+
+  useEffect(() => {
     if (isReadingModal) {
       document.body.style.overflow = "hidden";
     } else {
@@ -149,6 +167,19 @@ const Table = (props: TableProps) => {
     }
   };
 
+  /* 소환사명 복사 모달 */
+  useEffect(() => {
+    if (isModalType === "copied") {
+      openConfirmModal({
+        width: "540px",
+        primaryButtonText: "확인",
+        secondaryButtonText: "나가기",
+        onPrimaryClick: handleModalClose,
+        children: <Text>{`소환사명이 클립보드에 복사되었습니다.`}</Text>,
+      });
+    }
+  }, [isModalType]);
+
   /* 소환사명 복사 멘트 3초후 사라짐 */
   useEffect(() => {
     let timer: any;
@@ -174,7 +205,25 @@ const Table = (props: TableProps) => {
 
   /* 차단하기 및 차단 해제 */
   const handleBlock = async () => {
-    setIsBlockBoxOpen(!isBlockBoxOpen);
+    /* 차단하기 팝업 */
+    openConfirmModal({
+      width: "540px",
+      primaryButtonText: "예",
+      secondaryButtonText: "아니요",
+      onPrimaryClick: () => {
+        handleRunBlock();
+      },
+      children: isBlockedStatus ? (
+        <MsgConfirm>{"차단을 해제 하시겠습니까?"}</MsgConfirm>
+      ) : (
+        <Msg>
+          {
+            "차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다.\n\n차단하시겠습니까?"
+          }
+        </Msg>
+      ),
+    });
+
     setIsMoreBoxOpen(false);
   };
 
@@ -242,7 +291,19 @@ const Table = (props: TableProps) => {
   const handlePullUp = () => {
     setIsMoreBoxOpen((prevState) => !prevState);
     if (isBoardId) {
-      setIsPullUpConfirmOpen(true);
+      {
+        /* 끌어올리기 확인 팝업 */
+      }
+      openConfirmModal({
+        width: "540px",
+        primaryButtonText: "아니요",
+        secondaryButtonText: "예",
+        onPrimaryClick: () => {
+          closeConfirmModal();
+        },
+        onSecondaryClick: handlePullUpAction,
+        children: <MsgConfirm>{`본 게시글을 끌어올리시겠습니까?`}</MsgConfirm>,
+      });
       dispatch(setCloseReadingModal());
     }
   };
@@ -250,7 +311,6 @@ const Table = (props: TableProps) => {
   const handlePullUpAction = async () => {
     // 게시판 끌어올리기 API
     dispatch(setCloseReadingModal());
-    await setIsPullUpConfirmOpen(false);
     await pullUpPost(isBoardId);
     await dispatch(setRefresh());
 
@@ -393,69 +453,7 @@ const Table = (props: TableProps) => {
           <NoData>게시된 글이 없습니다.</NoData>
         )}
       </TableWrapper>
-      {/* 소환사명 복사 모달 */}
-      {isModalType === "copied" && (
-        <ConfirmModal
-          width="540px"
-          primaryButtonText="확인"
-          secondaryButtonText="나가기"
-          onPrimaryClick={handleModalClose}
-        >
-          <Text>{`소환사명이 클립보드에 복사되었습니다.`}</Text>
-        </ConfirmModal>
-      )}
-      {/* 차단하기 팝업 */}
-      {isBlockBoxOpen && (
-        <ConfirmModal
-          width="540px"
-          primaryButtonText="예"
-          secondaryButtonText="아니요"
-          onPrimaryClick={() => {
-            handleRunBlock();
-          }}
-          onSecondaryClick={() => {
-            setIsBlockBoxOpen(false);
-          }}
-        >
-          {isBlockedStatus ? (
-            <MsgConfirm>{"차단을 해제 하시겠습니까?"}</MsgConfirm>
-          ) : (
-            <Msg>
-              {
-                "차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다.\n\n차단하시겠습니까?"
-              }
-            </Msg>
-          )}
-        </ConfirmModal>
-      )}
-      {/* 차단하기 확인 팝업 */}
-      {isBlockConfirmOpen && (
-        <ConfirmModal
-          width="540px"
-          primaryButtonText="확인"
-          onPrimaryClick={() => {
-            setIsBlockConfrimOpen(false);
-          }}
-        >
-          <MsgConfirm>{`${
-            isBlockedStatus ? "차단이" : "차단 해제가"
-          } 완료되었습니다.`}</MsgConfirm>
-        </ConfirmModal>
-      )}
-      {/* 끌어올리기 확인 팝업 */}
-      {isPullUpConfirmOpen && (
-        <ConfirmModal
-          width="540px"
-          primaryButtonText="아니요"
-          secondaryButtonText="예"
-          onPrimaryClick={() => {
-            setIsPullUpConfirmOpen(false);
-          }}
-          onSecondaryClick={handlePullUpAction}
-        >
-          <MsgConfirm>{`본 게시글을 끌어올리시겠습니까?`}</MsgConfirm>
-        </ConfirmModal>
-      )}
+
       {/* 신고하기 팝업 */}
       {isModalType === "report" && (
         <ReportModal isPost={isPost} postId={isBoardId} />
@@ -528,6 +526,7 @@ const Copied = styled.div`
   box-shadow: 0 0 25.3px 0 rgba(0, 0, 0, 0.15);
   border-radius: 10px;
   white-space: nowrap;
+  z-index: ${theme.zIndex.popup};
 `;
 
 const Msg = styled.div`

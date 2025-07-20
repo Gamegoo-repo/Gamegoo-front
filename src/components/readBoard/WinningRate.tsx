@@ -114,36 +114,3 @@ const Percent = styled.p<{ $color: string }>`
     ${(props) => props.theme.fonts.bold12};
   }
 `;
-
-const History = styled.p`
-  ${(props) => props.theme.fonts.medium11};
-  color: ${theme.colors.gray500};
-`;
-
-const TextModal = styled.div`
-  color: ${theme.colors.white};
-  ${(props) => props.theme.fonts.semiBold14};
-  position: absolute;
-  z-index: 1;
-  top: 100%;
-  left: 0;
-  border-radius: 10px;
-  padding: 10px;
-  background: rgba(0, 0, 0, 0.7);
-  /* Background Blur */
-  box-shadow: 0 4px 8.9px 0 rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(7.5px);
-
-  &::after {
-    /* tail css */
-    content: "";
-    position: absolute;
-    top: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-top: 0 solid transparent;
-    border-left: 4.5px solid transparent;
-    border-right: 4.5px solid transparent;
-    border-bottom: 10px solid rgba(0, 0, 0, 0.64);
-  }
-`;

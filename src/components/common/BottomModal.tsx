@@ -49,7 +49,7 @@ const Background = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 100;
+  z-index: ${theme.zIndex.popup};
   background: rgba(0, 0, 0, 0.62);
 `;
 
@@ -62,7 +62,7 @@ const ModalContainer = styled.div`
   bottom: 28px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 100;
+  z-index: ${theme.zIndex.popup};
 `;
 
 const Modal = styled.div`

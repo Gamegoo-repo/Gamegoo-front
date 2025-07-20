@@ -14,6 +14,7 @@ interface InputProps {
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   placeholder?: string;
   isvalid?: null | boolean;
+  $isvalid?: null | boolean;
   disabled?: boolean;
   height?: string;
   errorMsg?: string;
@@ -85,7 +86,7 @@ const Input = (props: InputProps) => {
             onChange={handleChange}
             onKeyDown={onKeyDown}
             placeholder={placeholder}
-            isvalid={isvalid}
+            $isvalid={isvalid}
             disabled={disabled}
             $borderradius={borderRadius || "15px"}
             height={height}
@@ -135,10 +136,10 @@ const StyledInput = styled.input<InputProps>`
   padding: ${({ $hastag }) => ($hastag ? "11px 30px" : "11px 20px")};
   border-radius: ${({ $borderradius }) =>
     $borderradius ? $borderradius : "15px"};
-  border: ${({ isvalid }) =>
-    isvalid === undefined
+  border: ${({ $isvalid }) =>
+    $isvalid === undefined
       ? `1px solid ${theme.colors.gray400}`
-      : isvalid === true
+      : $isvalid === true
         ? `1px solid ${theme.colors.violet300}`
         : `1px solid ${theme.colors.red600}`};
   color: ${theme.colors.gray900};
@@ -146,8 +147,8 @@ const StyledInput = styled.input<InputProps>`
 
   &:focus {
     outline: none;
-    border: ${({ isvalid }) =>
-      isvalid === undefined && `1px solid ${theme.colors.violet300}`};
+    border: ${({ $isvalid }) =>
+      $isvalid === undefined && `1px solid ${theme.colors.violet300}`};
   }
 
   &:disabled {

@@ -1,3 +1,5 @@
+import { theme } from "@/styles/theme";
+
 import type { GameMode } from "@/types/game/gameMode";
 
 export const MATCH_PAGE_DATA = [
@@ -34,7 +36,7 @@ export const MATCH_TYPE_PAGE_DATA = [
     hoverTitle: "빠르게 게임을 시작하고 싶다면",
     sub: "간단한 조건으로 빠르게",
     hoverSub: "간단한 조건만 맞으면 바로 매칭돼요",
-    background: "#2E3032",
+    background: theme.colors.gray800,
     hoverBackground: "#5A42EE",
   },
   {
@@ -49,7 +51,7 @@ export const MATCH_TYPE_PAGE_DATA = [
     hoverTitle: "완벽한 게임 친구를 만나고 싶다면",
     sub: "원하는 조건에 딱 맞게",
     hoverSub: "원하는 조건에 맞는 친구를 찾아드려요 *매칭 시간 소요",
-    background: "#2E3032",
+    background: theme.colors.gray800,
     hoverBackground: "#5A42EE",
   },
 ];
@@ -65,7 +67,7 @@ export const MO_MATCH_TYPE_PAGE_DATA = [
     left: "50%",
     title: "겜구 매칭",
     sub: "간단한 조건만 맞으면 바로 매칭돼요",
-    background: "#2E3032",
+    background: theme.colors.gray800,
   },
   {
     id: 2,
@@ -78,7 +80,7 @@ export const MO_MATCH_TYPE_PAGE_DATA = [
     title: "맞춤 매칭",
     option: "*매칭 시간 소요",
     sub: "원하는 조건에 맞는 친구를 찾아줄게요",
-    background: "#2E3032",
+    background: theme.colors.gray800,
   },
 ];
 

@@ -191,11 +191,7 @@ const Header = () => {
           <Menu
             selected={pathname.includes("/match")}
             onClick={() => {
-              if (!accesssToken) {
-                showLoginAlert();
-              } else {
-                router.push("/match");
-              }
+              router.push("/match");
             }}
           >
             바로 매칭
@@ -495,7 +491,7 @@ const MyPageModal = styled.div`
   position: absolute;
   top: 60px;
   right: 80px;
-  z-index: 100;
+  z-index: ${theme.zIndex.popup};
 
   @media (max-width: ${theme.breakpoints.mobile}) {
     position: fixed;

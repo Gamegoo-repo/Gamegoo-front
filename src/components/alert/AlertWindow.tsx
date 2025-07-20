@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 import { getPopupNotification, patchReadNotification } from "@/api";
 import Icon from "@/components/common/Icon";
-import { useMediaQueryContext } from "@/hooks";
+import { useInfiniteScroll, useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 import { lockBodyScroll, unlockBodyScroll } from "@/utils";
 
@@ -30,6 +30,7 @@ const AlertWindow = (props: AlertWindowProps) => {
   const [cursor, setCursor] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [hasNext, setHasNext] = useState<boolean>(true);
+  const sentinelRef = useRef(null); // IntersectionObserver 를 위한 감지용 element
 
   const handleClickOutside = useCallback(
     (event: MouseEvent) => {
@@ -83,18 +84,6 @@ const AlertWindow = (props: AlertWindowProps) => {
     }
   };
 
-  /* 알림 팝업 - 스크롤이 끝에 도달하면 다음 페이지 가져오기 */
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    if (!cursor) return;
-
-    const bottom =
-      e.currentTarget.scrollTop + e.currentTarget.clientHeight >=
-      e.currentTarget.scrollHeight - 20;
-    if (hasNext && bottom && !isLoading) {
-      fetchNotiList(cursor);
-    }
-  };
-
   /* 초기 호출 */
   useEffect(
     () => {
@@ -103,6 +92,16 @@ const AlertWindow = (props: AlertWindowProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
+  /* 무한스크롤 페이지네이션 */
+  useInfiniteScroll({
+    cursor,
+    hasNext,
+    isLoading,
+    sentinelRef,
+    onIntersect: fetchNotiList,
+    enabled: true,
+    rootMargin: "100px",
+  });
 
   useEffect(() => {
     if (!isMobile) return;
@@ -176,21 +175,25 @@ const AlertWindow = (props: AlertWindowProps) => {
               <Tab>받은 알림</Tab>
             </TabContainer> */}
           </Header>
-          <Background onScroll={handleScroll}>
+          <Background>
             {notiList.length > 0 ? (
-              notiList.map((data, index) => (
-                <AlertBox
-                  key={`${data.notificationId}-${index}`}
-                  notificationId={data.notificationId}
-                  notificationtType={data.notificationType}
-                  pageUrl={data.pageUrl}
-                  content={data.content}
-                  createdAt={data.createdAt}
-                  read={data.read}
-                  size="small"
-                  onClick={handleClickAlert}
-                />
-              ))
+              <>
+                {notiList.map((data, index) => (
+                  <AlertBox
+                    key={`${data.notificationId}-${index}`}
+                    notificationId={data.notificationId}
+                    notificationtType={data.notificationType}
+                    pageUrl={data.pageUrl}
+                    content={data.content}
+                    createdAt={data.createdAt}
+                    read={data.read}
+                    size="small"
+                    onClick={handleClickAlert}
+                  />
+                ))}
+                <div ref={sentinelRef}></div>{" "}
+                {/* IntersectionObserver 를 위한 감지용 element */}
+              </>
             ) : (
               <NoData>새로운 알림이 없습니다.</NoData>
             )}
@@ -210,7 +213,7 @@ const Overlay = styled.div`
   position: absolute;
   top: 60px;
   right: 80px;
-  z-index: 100;
+  z-index: ${theme.zIndex.popup};
   @media (max-width: ${theme.breakpoints.mobile}) {
     position: fixed;
     top: 0;

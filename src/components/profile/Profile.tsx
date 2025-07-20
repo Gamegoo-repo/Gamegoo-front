@@ -4,18 +4,6 @@ import { useParams } from "next/navigation";
 import styled, { css } from "styled-components";
 
 import {
-  acceptFriendRequest,
-  blockMember,
-  cancelFriendRequest,
-  deleteFriend,
-  putPosition,
-  putProfileImage,
-  rejectFriendRequest,
-  reportMember,
-  sendFriendRequest,
-  unblockMember,
-} from "@/api";
-import {
   Button,
   Champion,
   Checkbox,
@@ -25,30 +13,28 @@ import {
   Mic,
   MoreBox,
   MoreBoxButton,
-  PositionCategory,
   RankTier,
   Toggle,
   UpdateProfileImage,
 } from "@/components";
-import Icon from "@/components/common/Icon";
-import { POSITIONS, REPORT_REASON } from "@/constants";
-import { useMediaQueryContext } from "@/hooks";
-import { setMatchInfo, updateMike } from "@/redux/slices/matchInfo";
+import { REPORT_REASON } from "@/constants";
+import { useConfirmModalContext, useMediaQueryContext } from "@/hooks";
+import { setMatchInfo } from "@/redux/slices/matchInfo";
 import { setOpenAlertModal } from "@/redux/slices/modalSlice";
-import { setUserProfileImg } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
-import { setPositionImg } from "@/utils/custom";
 
 import GameStyle from "../match/GameStyle";
+import { useBlock } from "./Profile/hooks/useBlock";
+import { useFriend } from "./Profile/hooks/useFriend";
+import { useMike } from "./Profile/hooks/useMike";
+import { useMoreBoxOutsideClick } from "./Profile/hooks/useMoreBoxOutsideClick";
+import { usePosition } from "./Profile/hooks/usePosition";
+import { useProfileImage } from "./Profile/hooks/useProfileImage";
+import { useReport } from "./Profile/hooks/useReport";
+import ProfilePositionSection from "./Profile/ProfilePositionSection";
 
 import type { RootState } from "@/redux/store";
-import type {
-  Mike as MikeType,
-  MoreBoxMenuItems,
-  Position as PositionType,
-  User,
-} from "@/types";
-import type { PositionState } from "../crBoard/PositionBox";
+import type { MoreBoxMenuItems, Position as PositionType, User } from "@/types";
 
 type profileType = "normal" | "wind" | "other" | "me";
 
@@ -72,20 +58,65 @@ const Profile: React.FC<Profile> = ({
   isDefault = false,
 }) => {
   const { isMobile, isTablet } = useMediaQueryContext();
+  const { openConfirmModal, closeConfirmModal } = useConfirmModalContext();
   const dispatch = useDispatch();
   const { id } = useParams();
   const memberId = Number(id);
   const myId = useSelector((state: RootState) => state.user.id);
-  const moreBoxRef = useRef<HTMLDivElement | null>(null);
+
+  /// hooks
+  /* 마이크 상태 */
+  const { isMike, handleMike, setIsMike } = useMike(user);
+
+  /* 프로필 이미지 */
+  const {
+    selectedImageIndex,
+    setSelectedImageIndex,
+    isProfileListOpen,
+    setIsProfileListOpen,
+    handleImageClick,
+  } = useProfileImage(user);
+
+  /* 포지션 */
+  const { positionValue, setPositionValue, handlePositionChange } = usePosition(
+    user,
+    profileType
+  );
+
+  /* 신고 상태 */
+  const {
+    isReportBoxOpen,
+    setIsReportBoxOpen,
+    handleCheckboxChange,
+    checkedItems,
+    setCheckedItems,
+    reportDetail,
+    setReportDetail,
+    handleRunReport,
+  } = useReport(memberId, myId || 0);
+
+  const { handleFriendState } = useFriend(
+    user,
+    myId || 0,
+    memberId,
+    updateFriendState
+  );
+
+  /* 차단 상태 */
+  const {
+    isBlockBoxOpen,
+    setIsBlockBoxOpen,
+    isBlockConfirmOpen,
+    setIsBlockConfirmOpen,
+    handleRunBlock,
+  } = useBlock(user, memberId, updateFriendState);
 
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
-  const [isReportBoxOpen, setIsReportBoxOpen] = useState(false);
-  const [isBlockBoxOpen, setIsBlockBoxOpen] = useState(false);
-  const [isBlockConfirmOpen, setIsBlockConfrimOpen] = useState(false);
-  const [isProfileListOpen, setIsProfileListOpen] = useState(false);
-  /* 신고 input */
-  const [checkedItems, setCheckedItems] = useState<number[]>([]);
-  const [reportDetail, setReportDetail] = useState<string>("");
+  const moreBoxRef = useMoreBoxOutsideClick(isMoreBoxOpen, () =>
+    setIsMoreBoxOpen(false)
+  );
+
+  ///
 
   /* 포지션 */
   const [isPositionOpen, setIsPositionOpen] = useState({
@@ -93,21 +124,6 @@ const Profile: React.FC<Profile> = ({
     sub: false,
     want: [false, false], // 최대 2개의 want 포지션
   });
-  const [selectedBox, setSelectedBox] = useState("");
-  const [showAlert, setShowAlert] = useState(false);
-  const matchInfo = useSelector((state: RootState) => state.matchInfo);
-
-  /* user부터 가져오는 상태들 */
-  const [isMike, setIsMike] = useState<MikeType>(user.mike);
-  const [positionValue, setPositionValue] = useState<PositionState>({
-    main: user.mainP,
-    sub: user.subP,
-    want: user.wantP,
-  });
-  /* 선택된 현재 프로필 이미지 */
-  const [selectedImageIndex, setSelectedImageIndex] = useState<number>(
-    user.profileImg
-  );
 
   // 상위 컴포넌트에서 user 변경 시 업데이트
   useEffect(() => {
@@ -140,86 +156,57 @@ const Profile: React.FC<Profile> = ({
     [isMike, positionValue, dispatch]
   );
 
-  /* 프로필 이미지 리스트 중 클릭시*/
-  const handleImageClick = async (index: number) => {
-    setSelectedImageIndex(index);
-
-    await putProfileImage(index);
-    // const newUserData = await getProfile();
-    dispatch(setUserProfileImg(index));
-    localStorage.setItem("profileImg", index + "");
-
-    setTimeout(() => {
-      setIsProfileListOpen(false);
-    }, 300); // 300ms 후에 창이 닫히도록 설정
-  };
-
   useEffect(() => {
     setIsMike(isMike);
   }, [isMike]);
 
-  const handleMike = () => {
-    setIsMike(isMike === "AVAILABLE" ? "UNAVAILABLE" : "AVAILABLE");
-    dispatch(updateMike(isMike));
-  };
+  useEffect(() => {
+    if (isBlockConfirmOpen) {
+      openConfirmModal({
+        width: "540px",
+        primaryButtonText: "확인",
+        onPrimaryClick: () => {
+          setIsBlockConfirmOpen(false);
+        },
+        children: (
+          <MsgConfirm>{`${
+            user.blocked ? "차단이" : "차단 해제가"
+          } 완료되었습니다.`}</MsgConfirm>
+        ),
+      });
+    }
+  }, [isBlockConfirmOpen]);
 
   const handleReport = () => {
     setIsReportBoxOpen(!isReportBoxOpen);
     setIsMoreBoxOpen(false);
   };
 
-  const handleRunReport = async () => {
-    // 신고하기 api
-    if (myId === memberId) return;
-
-    const params = {
-      memberId: memberId,
-      reportCodeList: checkedItems,
-      contents: reportDetail,
-      pathCode: 3, // PROFILE
-    };
-
-    setIsMoreBoxOpen(false);
-    try {
-      await reportMember(params);
-      setIsReportBoxOpen(!isReportBoxOpen);
-    } catch (error) {
-      console.error("에러:", error);
-    }
-  };
-
   const handleBlock = async () => {
-    setIsBlockBoxOpen(!isBlockBoxOpen);
-    setIsMoreBoxOpen(false);
-  };
+    /* 차단하기 팝업 */
+    openConfirmModal({
+      width: "540px",
+      primaryButtonText: "예",
+      secondaryButtonText: "아니요",
+      onPrimaryClick: () => handleRunBlock(),
+      children: user.blocked ? (
+        <MsgConfirm>{"차단을 해제 하시겠습니까?"}</MsgConfirm>
+      ) : (
+        <Msg>
+          {
+            "차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다.\n\n차단하시겠습니까?"
+          }
+        </Msg>
+      ),
+    });
 
-  const handleRunBlock = async () => {
-    // 차단하기 api
-    setIsBlockBoxOpen(false);
-    if (user.blocked) {
-      await unblockMember(memberId);
-      updateFriendState?.({
-        friend: user.friend,
-        friendRequestMemberId: user.friendRequestMemberId,
-        blocked: false,
-      });
-    } else {
-      await blockMember(memberId);
-      updateFriendState?.({
-        friend: user.friend,
-        friendRequestMemberId: user.friendRequestMemberId,
-        blocked: true,
-      });
-    }
-    setIsBlockConfrimOpen(true);
+    setIsMoreBoxOpen(false);
   };
 
   /* 포지션 선택창 관련 함수*/
   // 포지션 선택창 열기 (포지션 클릭시 동작)
   const handlePosition = (type: "main" | "sub" | "want", index: number = 0) => {
     if (profileType === "other") return;
-
-    setSelectedBox(type);
 
     setIsPositionOpen((prev) => {
       if (type === "want") {
@@ -261,38 +248,6 @@ const Profile: React.FC<Profile> = ({
     });
   };
 
-  // 포지션 선택해 변경하기
-  const handlePositionChange = async (newPositionValue: PositionState) => {
-    if (
-      profileType !== "other" &&
-      newPositionValue.main &&
-      newPositionValue.sub
-    ) {
-      try {
-        // 포지션 변경 API 호출
-        await putPosition({
-          mainP: newPositionValue.main,
-          subP: newPositionValue.sub,
-          wantP: newPositionValue.want || [],
-        });
-
-        // 포지션 상태 업데이트
-        setPositionValue(newPositionValue);
-      } catch (error) {
-        console.error("포지션 변경 실패:", error);
-      }
-    } else if (profileType === "normal" || profileType === "wind") {
-      dispatch(
-        setMatchInfo({
-          ...matchInfo,
-          mainP: newPositionValue.main ?? "ANY",
-          subP: newPositionValue.sub ?? "ANY",
-          wantP: newPositionValue.want ?? ["ANY", "ANY"],
-        })
-      );
-    }
-  };
-
   const handleCategoryButtonClick = (
     selectedValue: PositionType | null,
     type: "main" | "sub" | "want",
@@ -313,126 +268,58 @@ const Profile: React.FC<Profile> = ({
     handlePositionChange(newPositionValue);
   };
 
-  const handleFriendState = async (state: string) => {
-    try {
-      switch (state) {
-        case "add":
-          await sendFriendRequest(memberId);
-          updateFriendState?.({
-            friend: false,
-            friendRequestMemberId: myId || null,
-            blocked: user.blocked,
-          });
-          break;
-        case "cancel":
-          await cancelFriendRequest(memberId);
-          updateFriendState?.({
-            friend: false,
-            friendRequestMemberId: null,
-            blocked: user.blocked,
-          });
-          break;
-        case "accept":
-          await acceptFriendRequest(memberId);
-          updateFriendState?.({
-            friend: true,
-            friendRequestMemberId: memberId,
-            blocked: user.blocked,
-          });
-          break;
-        case "reject":
-          await rejectFriendRequest(memberId);
-          updateFriendState?.({
-            friend: false,
-            friendRequestMemberId: null,
-            blocked: user.blocked,
-          });
-          break;
-        case "delete":
-          await deleteFriend(memberId);
-          updateFriendState?.({
-            friend: false,
-            friendRequestMemberId: null,
-            blocked: user.blocked,
-          });
-          break;
-        default:
-          throw new Error("존재하지 않는 친구 상태입니다.");
-      }
-    } catch (error) {
-      console.error("Error handling friend state:", error);
-    }
-  };
-
-  // 친구 추가
   const renderFriendsButton = () => {
-    // 친구 추가
-    // 친구 삭제 (끊기)
-    // 친구 요청 전송 (나)
-    // 친구 요청 취소 (나)
-    // 친구 수락/거절 (상대)
-    // 자기 자신 프로필
-    if (user.blocked) {
+    if (isDefault || user.blocked) return null;
+    if (memberId === myId || user.id === myId) return null;
+
+    const width = isMobile ? "100%" : "218px";
+
+    // 친구 요청 수락/거절 버튼만 예외적으로 두 개라서 따로 처리
+    if (user.friendRequestMemberId === memberId) {
       return (
-        // <Button
-        //   buttonType="secondary"
-        //   width="218px"
-        //   text="차단된 유저"
-        //   disabled={true}
-        // />
-        null
-      );
-    }
-    if (user.friend) {
-      return (
-        <Button
-          buttonType="secondary"
-          width={isMobile ? "100%" : "218px"}
-          text="친구 삭제"
-          onClick={() => handleFriendState("delete")}
-        />
-      );
-    } else {
-      if (user.friendRequestMemberId) {
-        if (user.friendRequestMemberId === memberId) {
-          return (
-            <FriendRow>
-              <Button
-                buttonType="secondary"
-                width={isMobile ? "100%" : "163px"}
-                text="친구 거절"
-                onClick={() => handleFriendState("reject")}
-              />
-              <Button
-                buttonType="primary"
-                width={isMobile ? "100%" : "163px"}
-                text="친구 수락"
-                onClick={() => handleFriendState("accept")}
-              />
-            </FriendRow>
-          );
-        } else {
-          return (
+        <Admit>
+          <FriendRow>
             <Button
               buttonType="secondary"
-              width={isMobile ? "100%" : "218px"}
-              text="친구 요청 취소"
-              onClick={() => handleFriendState("cancel")}
+              width={width}
+              text="친구 거절"
+              onClick={() => handleFriendState("reject")}
             />
-          );
-        }
-      } else if (memberId === myId || user.id === myId) {
-        return null;
-      }
-      return (
-        <Button
-          buttonType="secondary"
-          width={isMobile ? "100%" : "218px"}
-          text="친구 추가"
-          onClick={() => handleFriendState("add")}
-        />
+            <Button
+              buttonType="primary"
+              width="163px"
+              text="친구 수락"
+              onClick={() => handleFriendState("accept")}
+            />
+          </FriendRow>
+        </Admit>
       );
     }
+
+    let text = "";
+    let onClick: () => void;
+
+    if (user.friend) {
+      text = "친구 삭제";
+      onClick = () => handleFriendState("delete");
+    } else if (user.friendRequestMemberId) {
+      text = "친구 요청 취소";
+      onClick = () => handleFriendState("cancel");
+    } else {
+      text = "친구 추가";
+      onClick = () => handleFriendState("add");
+    }
+
+    return (
+      <Admit>
+        <Button
+          buttonType="secondary"
+          width={width}
+          text={text}
+          onClick={onClick}
+        />
+      </Admit>
+    );
   };
 
   // 더보기 버튼 메뉴
@@ -441,43 +328,12 @@ const Profile: React.FC<Profile> = ({
     { text: user.blocked ? "차단 해제" : "차단하기", onClick: handleBlock },
   ];
 
-  // 신고하기 체크
-  const handleCheckboxChange = (checked: number) => {
-    setCheckedItems((prev) =>
-      prev.includes(checked)
-        ? prev.filter((c) => c !== checked)
-        : [...prev, checked]
-    );
-  };
-
   // 신고하기 모달 닫기
   const handleReportBoxClose = () => {
     setIsReportBoxOpen(!isReportBoxOpen);
     setIsMoreBoxOpen(false);
     setCheckedItems([]);
   };
-
-  // 더보기 외부 클릭
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        moreBoxRef.current &&
-        !moreBoxRef.current.contains(event.target as Node)
-      ) {
-        setIsMoreBoxOpen(false);
-      }
-    };
-
-    if (isMoreBoxOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isMoreBoxOpen]);
 
   const handleMoreBoxOpen = () => {
     if (isDefault) {
@@ -539,7 +395,6 @@ const Profile: React.FC<Profile> = ({
               </Top>
             </TopContainer>
           )}
-
           <RankTierWrapper>
             <RankTier type="solo" tier={user.soloTier} rank={user.soloRank} />
             <RankTier type="free" tier={user.freeTier} rank={user.freeRank} />
@@ -556,139 +411,18 @@ const Profile: React.FC<Profile> = ({
           ) : (
             <UnderRow>
               {/* 칼바람 제외 클릭 시 */}
-              <Positions>
-                {/* 주 포지션 + 부 포지션 */}
-                <PosiWrap>
-                  {POSITIONS.slice(0, 2).map((position, index) => {
-                    const type = index === 0 ? "main" : "sub";
-
-                    return (
-                      <Posi
-                        key={index}
-                        className={profileType}
-                        $isWantP={false}
-                      >
-                        {position.label}
-                        <PosiItem>
-                          <Icon
-                            backgroundUrl={setPositionImg(
-                              type === "main"
-                                ? (positionValue.main ?? "ANY")
-                                : (positionValue.sub ?? "ANY")
-                            )}
-                            width={!isMobile ? 55 : 22}
-                            height={!isMobile ? 40 : 22}
-                            onClick={() => handlePosition(type)}
-                          />
-                          {isPositionOpen[type] && (
-                            <PositionCategory
-                              selectedBox={type}
-                              value={positionValue[type] ?? "ANY"}
-                              onClose={() => handlePositionClose(type)}
-                              onSelect={(val) =>
-                                handleCategoryButtonClick(val, type)
-                              }
-                            />
-                          )}
-                        </PosiItem>
-                      </Posi>
-                    );
-                  })}
-                </PosiWrap>
-
-                {/* 내가 찾는 포지션 */}
-                <PosiWrap>
-                  <Posi key={2} className={profileType} $isWantP={true}>
-                    {POSITIONS[2].label}
-                    <PosiRow>
-                      {positionValue?.want && positionValue?.want.length > 0 ? (
-                        positionValue.want
-                          .concat(Array(2).fill(null))
-                          .slice(0, 2)
-                          .map((posi, index) => (
-                            <PosiItem key={index}>
-                              {posi ? (
-                                <Icon
-                                  backgroundUrl={setPositionImg(posi)}
-                                  width={!isMobile ? 48 : 22}
-                                  height={!isMobile ? 40 : 22}
-                                  onClick={() => handlePosition("want", index)}
-                                />
-                              ) : (
-                                ["wind", "normal"].includes(profileType) && (
-                                  <Plus
-                                    onClick={() =>
-                                      handlePosition("want", index)
-                                    }
-                                  >
-                                    <Icon
-                                      backgroundUrl="/assets/icons/plus_violet.svg"
-                                      width={!isMobile ? 16 : 14}
-                                      height={!isMobile ? 16 : 14}
-                                    />
-                                  </Plus>
-                                )
-                              )}
-                              {/* PositionCategory 열기 조건 */}
-                              {isPositionOpen.want[index] && (
-                                <PositionCategory
-                                  selectedBox="want"
-                                  value={posi}
-                                  onClose={() =>
-                                    handlePositionClose("want", index)
-                                  }
-                                  onSelect={(val) =>
-                                    handleCategoryButtonClick(
-                                      val,
-                                      "want",
-                                      index
-                                    )
-                                  }
-                                  usedPositions={
-                                    positionValue.want?.filter(
-                                      (pos, i): pos is PositionType =>
-                                        i !== index && pos !== null
-                                    ) ?? []
-                                  }
-                                />
-                              )}
-                            </PosiItem>
-                          ))
-                      ) : // 매칭 프로필 - 포지션 선택, 조회 프로필 - ANY(*) 지정
-                      ["wind", "normal"].includes(profileType) ? (
-                        <PosiItem key="default-plus">
-                          <Plus onClick={() => handlePosition("want", 0)}>
-                            <Icon
-                              backgroundUrl="/assets/icons/plus_violet.svg"
-                              width={!isMobile ? 16 : 14}
-                              height={!isMobile ? 16 : 14}
-                            />
-                          </Plus>
-                          {isPositionOpen.want[0] && (
-                            <PositionCategory
-                              selectedBox="want"
-                              value={null}
-                              onClose={() => handlePositionClose("want", 0)}
-                              onSelect={(val) =>
-                                handleCategoryButtonClick(val, "want", 0)
-                              }
-                              usedPositions={[]}
-                            />
-                          )}
-                        </PosiItem>
-                      ) : (
-                        <PosiItem key="any-position">
-                          <Icon
-                            backgroundUrl={setPositionImg("ANY")}
-                            width={!isMobile ? 48 : 22}
-                            height={!isMobile ? 40 : 22}
-                          />
-                        </PosiItem>
-                      )}
-                    </PosiRow>
-                  </Posi>
-                </PosiWrap>
-              </Positions>
+              <ProfilePositionSection
+                profileType={profileType}
+                isMobile={isMobile}
+                isPositionOpen={isPositionOpen}
+                positionValue={{
+                  ...positionValue,
+                  want: positionValue.want ?? [],
+                }}
+                handlePosition={handlePosition}
+                handlePositionClose={handlePositionClose}
+                handleCategoryButtonClick={handleCategoryButtonClick}
+              />
               {!isMobile &&
                 (profileType === "other" || profileType === "me") &&
                 user.championResponseList && (
@@ -711,9 +445,7 @@ const Profile: React.FC<Profile> = ({
               handleMike={handleMike}
             />
           )}
-          {!isDefault && isTablet && !isMobile && (
-            <Admit>{renderFriendsButton()}</Admit>
-          )}
+          {isTablet && !isMobile && renderFriendsButton()}
           {(profileType === "normal" || profileType === "wind") && (
             <Mike>
               마이크
@@ -730,16 +462,12 @@ const Profile: React.FC<Profile> = ({
               />
             )}
         </StyledBox>
-        {!isDefault &&
-          isMobile &&
-          (profileType === "me" || profileType === "other") && (
-            <Admit>{renderFriendsButton()}</Admit>
-          )}
+        {isMobile && renderFriendsButton()}
       </Row>
 
       {profileType === "other" && (
         <More>
-          {!isDefault && !isTablet && <Admit>{renderFriendsButton()}</Admit>}
+          {!isTablet && renderFriendsButton()}
           {/* 더보기 버튼 */}
           {memberId !== myId && (
             <MoreDiv ref={moreBoxRef}>
@@ -805,42 +533,6 @@ const Profile: React.FC<Profile> = ({
                 </ReportButton>
               </div>
             </FormModal>
-          )}
-          {/* 차단하기 팝업 */}
-          {isBlockBoxOpen && (
-            <ConfirmModal
-              width="540px"
-              primaryButtonText="예"
-              secondaryButtonText="아니요"
-              onPrimaryClick={() => handleRunBlock()}
-              onSecondaryClick={() => {
-                setIsBlockBoxOpen(false);
-              }}
-            >
-              {user.blocked ? (
-                <MsgConfirm>{"차단을 해제 하시겠습니까?"}</MsgConfirm>
-              ) : (
-                <Msg>
-                  {
-                    "차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다.\n\n차단하시겠습니까?"
-                  }
-                </Msg>
-              )}
-            </ConfirmModal>
-          )}
-          {/* 차단/차단 해제 확인 팝업 */}
-          {isBlockConfirmOpen && (
-            <ConfirmModal
-              width="540px"
-              primaryButtonText="확인"
-              onPrimaryClick={() => {
-                setIsBlockConfrimOpen(false);
-              }}
-            >
-              <MsgConfirm>{`${
-                user.blocked ? "차단이" : "차단 해제가"
-              } 완료되었습니다.`}</MsgConfirm>
-            </ConfirmModal>
           )}
         </More>
       )}
@@ -1053,83 +745,6 @@ const MsgConfirm = styled(Msg)`
   @media (max-width: ${theme.breakpoints.mobile}) {
     ${(props) => props.theme.fonts.medium14};
     margin: 32px 0;
-  }
-`;
-
-const Positions = styled.div`
-  display: flex;
-  align-items: center;
-  width: 412px;
-  gap: 12px;
-  @media (max-width: ${theme.breakpoints.mobile}) {
-    width: 100%;
-  }
-`;
-
-const PosiWrap = styled.div`
-  height: 104px;
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  background-color: ${theme.colors.white};
-  width: 100%;
-  border-radius: 6px;
-  padding: 16px 32px 12px 32px;
-
-  @media (max-width: ${theme.breakpoints.mobile}) {
-    height: 69px;
-    padding: 12px 20px 8px 20px;
-  }
-`;
-
-const Posi = styled.div<{ $isWantP: boolean }>`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: center;
-  font-size: ${theme.fonts.medium16};
-  color: ${theme.colors.gray800};
-  white-space: nowrap;
-
-  @media (max-width: ${theme.breakpoints.mobile}) {
-    font-size: ${theme.fonts.medium11};
-    gap: 9px;
-    ${({ $isWantP }) =>
-      $isWantP &&
-      css`
-        margin-left: 0px;
-      `};
-  }
-`;
-
-const PosiRow = styled.div`
-  height: 40px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-`;
-
-const PosiItem = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-`;
-
-const Plus = styled.div`
-  display: flex;
-  width: 48px;
-  height: 32px;
-  justify-content: center;
-  align-items: center;
-  border-radius: 999px;
-  background: ${theme.colors.violet100};
-
-  @media (max-width: ${theme.breakpoints.mobile}) {
-    width: 32px;
-    height: 24px;
   }
 `;
 

@@ -15,6 +15,7 @@ import styled, { ThemeProvider } from "styled-components";
 import { Footer, Header, ModalContainer, SocketConnection } from "@/components";
 import ko from "@/constants/ko.json";
 import { STORAGE_KEY } from "@/constants/storage";
+import { ConfirmModalProvider } from "@/contexts/ConfirmModalContext";
 import { MediaQueryProvider } from "@/contexts/MediaQueryContext";
 import { notify } from "@/hooks";
 import StyledComponentsRegistry from "@/libs/registry";
@@ -151,16 +152,18 @@ export default function RootLayout({
                       <SocketConnection
                         key={isLoggedIn ? "loggedIn" : "loggedOut"}
                       />
-                      <ModalContainer />
-                      <Container>
-                        <Main>
-                          {isHeaderFooterShow && <Header />}
-                          {children}
-                        </Main>
-                        {isHeaderFooterShow && (
-                          <Footer isShowChat={isHeaderFooterShow} />
-                        )}
-                      </Container>
+                      <ConfirmModalProvider>
+                        <ModalContainer />
+                        <Container>
+                          <Main>
+                            {isHeaderFooterShow && <Header />}
+                            {children}
+                          </Main>
+                          {isHeaderFooterShow && (
+                            <Footer isShowChat={isHeaderFooterShow} />
+                          )}
+                        </Container>
+                      </ConfirmModalProvider>
                     </PersistGate>
                   </Provider>
                 )}

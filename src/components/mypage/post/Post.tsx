@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 import { getMemberPost, pullUpPost } from "@/api";
-import { ConfirmModal, MoreBox } from "@/components/common";
+import { MoreBox } from "@/components/common";
 import Report from "@/components/readBoard/MoreBoxButton";
 import ko from "@/constants/ko.json";
-import { notify } from "@/hooks";
+import { notify, useConfirmModalContext } from "@/hooks";
 import { setRefresh } from "@/redux/slices/boardSlice";
 import {
   setCloseReadingModal,
@@ -16,8 +16,8 @@ import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { setUserId } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
 import {
+  checkTierAbbr,
   getProfileBgColor,
-  setAbbrevTier,
   setDateFormatter,
   toLowerCaseString,
 } from "@/utils";
@@ -55,7 +55,8 @@ const Post: React.FC<PostProps> = ({
   onDeletePost,
 }) => {
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
-  const [isPullUpConfirmOpen, setIsPullUpConfirmOpen] = useState(false);
+
+  const { openConfirmModal, closeConfirmModal } = useConfirmModalContext();
 
   const dispatch = useDispatch();
 
@@ -71,13 +72,25 @@ const Post: React.FC<PostProps> = ({
   const handlePullUp = () => {
     handleMoreBoxOpen();
     if (boardId) {
-      setIsPullUpConfirmOpen(true);
+      /* 끌어올리기 확인 팝업 */
+      openConfirmModal({
+        width: "540px",
+        primaryButtonText: "아니요",
+        secondaryButtonText: "예",
+        onPrimaryClick: () => {
+          closeConfirmModal();
+        },
+        onSecondaryClick: () => {
+          handlePullUpAction();
+        },
+        children: <MsgConfirm>{`본 게시글을 끌어올리시겠습니까?`}</MsgConfirm>,
+      });
     }
   };
 
   const handlePullUpAction = async () => {
     // 게시판 끌어올리기 API
-    await setIsPullUpConfirmOpen(false);
+    await closeConfirmModal();
     await pullUpPost(boardId);
     await dispatch(setRefresh());
     await notify({
@@ -150,7 +163,7 @@ const Post: React.FC<PostProps> = ({
               height={26}
             />
             <span>
-              {setAbbrevTier(tier)}
+              {checkTierAbbr(tier)}
               {rank}
             </span>
           </Tier>
@@ -170,20 +183,6 @@ const Post: React.FC<PostProps> = ({
           </More>
         </MoreContainer>
       </Container>
-      {/* 끌어올리기 확인 팝업 */}
-      {isPullUpConfirmOpen && (
-        <ConfirmModal
-          width="540px"
-          primaryButtonText="아니요"
-          secondaryButtonText="예"
-          onPrimaryClick={() => {
-            setIsPullUpConfirmOpen(false);
-          }}
-          onSecondaryClick={handlePullUpAction}
-        >
-          <MsgConfirm>{`본 게시글을 끌어올리시겠습니까?`}</MsgConfirm>
-        </ConfirmModal>
-      )}
     </>
   );
 };

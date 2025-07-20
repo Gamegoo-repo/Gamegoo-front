@@ -10,7 +10,7 @@ const SkeletonPostItem: React.FC = () => {
       <ProfileRow>
         <SkeletonCircle width="44px" height="44px" />
         <div style={{ flex: 1 }}>
-          <SkeletonText width="40%" height="24px" marginBottom="3px" />
+          <SkeletonText width="40%" height="24px" $marginBottom="3px" />
           <SkeletonText width="10%" height="15px" />
         </div>
       </ProfileRow>

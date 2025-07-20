@@ -36,6 +36,7 @@ const RiotLogin = () => {
   const handleLogin = async () => {
     // 라이엇 로그인으로 이동
     const csrfToken = crypto.lib.WordArray.random(16).toString();
+    sessionStorage.setItem(STORAGE_KEY.autoLogin, autoLogin.toString());
     sessionStorage.setItem(STORAGE_KEY.csrfToken, csrfToken);
 
     const redirect = process.env.NEXT_PUBLIC_RIOT_REDIRECT_AFTER_LOGIN!;

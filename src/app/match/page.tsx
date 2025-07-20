@@ -44,7 +44,7 @@ const MatchTypePage = () => {
           {isMobile
             ? MO_MATCH_TYPE_PAGE_DATA.map((box) => {
                 return (
-                  <Box key={box.id} backgroundColor={box.background}>
+                  <Box key={box.id} $backgroundColor={box.background}>
                     <BoxTitleWrap>
                       <BoxTitle>
                         {box.title}
@@ -161,12 +161,12 @@ const Main = styled.main`
     margin-top: 15px;
   }
 `;
-const Box = styled.div<{ backgroundColor: string }>`
+const Box = styled.div<{ $backgroundColor: string }>`
   width: 100%;
   height: 156px;
   border-radius: 12px;
   padding: 24px 28px;
-  background-color: ${(props) => props.backgroundColor};
+  background-color: ${(props) => props.$backgroundColor};
 `;
 const BoxTitleWrap = styled.div`
   display: flex;

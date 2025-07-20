@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# 현재 브랜치명 가져오기
+BRANCH_NAME=$(git branch --show-current)
+
+# 브랜치명에서 이슈번호 추출 (예: chore/#123 -> 123)
+ISSUE_NUMBER=$(echo "$BRANCH_NAME" | grep -oE '#[0-9]+' | sed 's/#//')
+
+# 이슈번호가 있는 경우만 처리
+if [ -n "$ISSUE_NUMBER" ]; then
+    # 커밋 메시지 파일 경로
+    COMMIT_MSG_FILE=$1
+    
+    # 현재 커밋 메시지 읽기
+    COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+    
+    # 이미 이슈번호가 포함되어 있는지 확인
+    if [[ ! "$COMMIT_MSG" =~ \(#[0-9]+\) ]]; then
+        # 커밋 메시지 패턴 확인 (예: feat:, fix:, chore: 등)
+        if [[ "$COMMIT_MSG" =~ ^([a-zA-Z]+):\ (.+)$ ]]; then
+            TYPE="${BASH_REMATCH[1]}"
+            MESSAGE="${BASH_REMATCH[2]}"
+            
+            # 새로운 커밋 메시지 생성
+            NEW_COMMIT_MSG="${TYPE}(#${ISSUE_NUMBER}): ${MESSAGE}"
+            
+            # 커밋 메시지 파일에 새 메시지 쓰기
+            echo "$NEW_COMMIT_MSG" > "$COMMIT_MSG_FILE"
+        fi
+    fi
+fi

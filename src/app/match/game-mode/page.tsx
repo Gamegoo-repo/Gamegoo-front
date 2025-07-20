@@ -29,7 +29,7 @@ const GameModePage = () => {
             ? filteredData.map((box) => {
                 const type = params || "";
                 return (
-                  <Box key={box.id} backgroundColor="#2E3032">
+                  <Box key={box.id} $backgroundColor={theme.colors.gray800}>
                     <BoxTitle>{box.title}</BoxTitle>
                     <BoxButton
                       onClick={() =>
@@ -65,7 +65,7 @@ const GameModePage = () => {
                       height={box.height}
                       top={box.top}
                       left={box.left}
-                      backgroundColor="#2E3032"
+                      backgroundColor={theme.colors.gray800}
                     >
                       {box.title}
                       <Icon
@@ -125,7 +125,7 @@ const Main = styled.main`
     margin-top: 15px;
   }
 `;
-const Box = styled.div<{ backgroundColor: string }>`
+const Box = styled.div<{ $backgroundColor: string }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -133,7 +133,7 @@ const Box = styled.div<{ backgroundColor: string }>`
   height: 89px;
   padding: 36px 33px;
   border-radius: 12px;
-  background-color: ${(props) => props.backgroundColor};
+  background-color: ${(props) => props.$backgroundColor};
   color: ${(props) => props.theme.colors.white};
 `;
 

@@ -50,7 +50,7 @@ const MenuContainer = styled.div<{ $top: number; $left: number }>`
   position: absolute;
   top: ${(props) => props.$top}px;
   left: ${(props) => props.$left}px;
-  z-index: 1000;
+  z-index: ${theme.zIndex.alertConfirm};
   max-width: 175px;
   width: 100%;
   background: ${theme.colors.white};
