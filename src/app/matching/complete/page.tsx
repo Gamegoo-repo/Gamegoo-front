@@ -1,23 +1,14 @@
 "use client";
 
-import {
-  Suspense,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter, useSearchParams } from "next/navigation";
 import styled from "styled-components";
 
+import { getProfile } from "@/@generated/api";
 import { getMemberMannerLevel } from "@/api/manner/manner";
-import { getMyProfile } from "@/api/user/profile/get";
-import ChatLayout from "@/components/chat/ChatLayout";
 import Layout from "@/components/chat/Layout";
 import Button from "@/components/common/Button";
-import ConfirmModal from "@/components/common/ConfirmModal";
 import HeaderTitle from "@/components/common/HeaderTitle";
 import Icon from "@/components/common/Icon";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
@@ -32,29 +23,12 @@ import { setComplete } from "@/redux/slices/matchingSlice";
 import { sendMatchingQuitEvent, socket } from "@/socket";
 import { theme } from "@/styles/theme";
 import { setIsCompleted } from "@/utils/storage";
+import { mapMyProfileResponseToMatchingUser } from "@/utils/user/mapMyProfileResponseToMatchingUser";
+import { mapMyProfileResponseToUserState } from "@/utils/user/mapMyProfileResponseToUserState";
 
 import type { RootState } from "@/redux/store";
 import type { GameMode } from "@/types/game/gameMode";
-import type { Position } from "@/types/position/position";
-import type { Mike } from "@/types/user/mike";
-
-interface User {
-  memberId: number;
-  gameName: string;
-  tag: string;
-  soloTier: string;
-  freeTier: string;
-  soloRank: number;
-  freeRank: number;
-  mannerLevel: number;
-  profileImg: number;
-  gameMode: GameMode;
-  mainP: Position;
-  subP: Position;
-  wantP: Position[];
-  mike: Mike;
-  gameStyleList: string[];
-}
+import type { MatchingUser } from "@/types/user/matching";
 
 const Complete = () => {
   const { isMobile } = useMediaQueryContext();
@@ -71,7 +45,7 @@ const Complete = () => {
   const type = searchParams.get("type");
   const rank = searchParams.get("rank") as GameMode;
   const matchingUuid = searchParams.get("uuid");
-  const [userMe, setUserMe] = useState<User>({
+  const [userMe, setUserMe] = useState<MatchingUser>({
     memberId: 0,
     gameName: "",
     tag: "",
@@ -89,7 +63,7 @@ const Complete = () => {
     gameStyleList: [],
   });
 
-  const [user, setUser] = useState<User>({
+  const [user, setUser] = useState<MatchingUser>({
     memberId: 0,
     gameName: "",
     tag: "",
@@ -188,7 +162,7 @@ const Complete = () => {
     if (userString) {
       try {
         const decodedUser = JSON.parse(decodeURIComponent(userString));
-        setUser(decodedUser as User);
+        setUser(decodedUser as MatchingUser);
         console.log("decodedUser", decodedUser);
       } catch (error) {
         console.error("Failed to parse user data:", error);
@@ -200,30 +174,41 @@ const Complete = () => {
     () => {
       const fetchUserMe = async () => {
         try {
-          const response1 = await getMyProfile();
-          const profileData = response1.data;
-          const response2 = await getMemberMannerLevel(profileData.id);
-          const mannerData = response2.data;
+          const profileRes = await getProfile();
+          if (!profileRes.data) {
+            throw new Error("내 프로필 조회 응답 데이터가 없습니다.");
+          }
 
-          const transformedUserMe: User = {
-            memberId: profileData.id,
-            gameName: profileData.gameName,
-            tag: profileData.tag,
-            soloTier: profileData.soloTier,
-            freeTier: profileData.freeTier,
-            soloRank: profileData.soloRank,
-            freeRank: profileData.freeRank,
-            mannerLevel: mannerData.mannerLevel,
-            profileImg: profileData.profileImg,
+          const userId = profileRes.data.id;
+          if (typeof userId !== "number") return;
+
+          const mannerRes = await getMemberMannerLevel(userId);
+
+          const transformedUserMe = mapMyProfileResponseToMatchingUser({
+            ...profileRes.data,
+            mannerLevel: mannerRes.data.mannerLevel,
             gameMode: rank,
-            mainP: profileData.mainP,
-            subP: profileData.subP,
-            wantP: profileData.wantP,
-            mike: profileData.mike,
-            gameStyleList: profileData.gameStyleResponseList.map(
-              (style: { gameStyleName: string }) => style.gameStyleName
-            ),
-          };
+          });
+
+          // const transformedUserMe: MatchingUser = {
+          //   memberId: profileData.id,
+          //   gameName: profileData.gameName,
+          //   tag: profileData.tag,
+          //   soloTier: profileData.soloTier,
+          //   freeTier: profileData.freeTier,
+          //   soloRank: profileData.soloRank,
+          //   freeRank: profileData.freeRank,
+          //   mannerLevel: mannerData.mannerLevel,
+          //   profileImg: profileData.profileImg,
+          //   gameMode: rank,
+          //   mainP: profileData.mainP,
+          //   subP: profileData.subP,
+          //   wantP: profileData.wantP,
+          //   mike: profileData.mike,
+          //   gameStyleList: profileData.gameStyleResponseList.map(
+          //     (style: { gameStyleName: string }) => style.gameStyleName
+          //   ),
+          // };
 
           setUserMe(transformedUserMe);
         } catch (error) {

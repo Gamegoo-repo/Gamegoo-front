@@ -6,7 +6,7 @@ import type { GameStyleList } from "@/types/api/user/profile/profile";
 import type { Position } from "@/types/position/position";
 import type { Mike } from "@/types/user/mike";
 
-interface UserState {
+export interface UserState {
   id?: number | undefined;
   profileImg: number;
   mike: Mike;
@@ -17,8 +17,6 @@ interface UserState {
   freeTier: string;
   soloRank: number;
   freeRank: number;
-  // mannerRank: number;
-  // mannerLevel: number;
   updatedAt: string;
   mainP: Position;
   subP: Position;
@@ -46,8 +44,6 @@ const initialState: UserState = {
   freeTier: "",
   soloRank: 0,
   freeRank: 0,
-  // mannerRank: 0,
-  // mannerLevel: 0,
   updatedAt: "",
   mainP: "ANY",
   subP: "ANY",

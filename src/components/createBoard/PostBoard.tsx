@@ -10,7 +10,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import { editPost, getMyProfile, postBoard } from "@/api";
+import { getProfile } from "@/@generated/api";
+import { editPost, postBoard } from "@/api";
 import { GAME_MODE } from "@/constants";
 import { useConfirmModalContext } from "@/hooks";
 import {
@@ -24,15 +25,9 @@ import {
 } from "@/redux/slices/postSlice";
 import { setUserProfile } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
+import { mapMyProfileResponseToUserState } from "@/utils/user/mapMyProfileResponseToUserState";
 
-import {
-  Alert,
-  Button,
-  ConfirmModal,
-  Dropdown,
-  Input,
-  Toggle,
-} from "../common";
+import { Button, Dropdown, Input, Toggle } from "../common";
 import { CRModal, PositionBox, UserAccount } from "../crBoard";
 import { UpdateProfileImage } from "../profile";
 import GameStyle from "./GameStyle";
@@ -92,8 +87,14 @@ const PostBoard = (props: PostBoardProps) => {
 
   const fetchProfile = async () => {
     try {
-      const response = await getMyProfile();
-      dispatch(setUserProfile(response.data));
+      const response = await getProfile();
+
+      if (!response.data) {
+        throw new Error("내 프로필 조회 응답 데이터가 없습니다.");
+      }
+
+      const profile = mapMyProfileResponseToUserState(response.data);
+      dispatch(setUserProfile(profile));
     } catch (error) {
       console.error(error);
     }

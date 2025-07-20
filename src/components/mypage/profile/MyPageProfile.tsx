@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
-import { putProfileProfileImage } from "@/@generated/api";
-import { getMyProfile } from "@/api";
+import { getProfile, putProfileProfileImage } from "@/@generated/api";
 import { RankTier } from "@/components/common";
 import GameStyle from "@/components/match/GameStyle";
 import { UpdateProfileImage } from "@/components/profile";
 import { useMediaQueryContext } from "@/hooks";
 import { setUserProfile, setUserProfileImg } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
+import { mapMyProfileResponseToUserState } from "@/utils/user/mapMyProfileResponseToUserState";
 
 import type { RootState } from "@/redux/store";
 import type { Profile } from "@/types";
@@ -30,10 +30,17 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
     setSelectedImageIndex(index);
 
     await putProfileProfileImage({ profileImage: index });
-    const newUserData = await getMyProfile();
     dispatch(setUserProfileImg(index));
     localStorage.setItem("profileImg", index + "");
-    dispatch(setUserProfile(newUserData.data));
+
+    const response = await getProfile();
+
+    if (!response.data) {
+      throw new Error("내 프로필 조회 응답 데이터가 없습니다.");
+    }
+
+    const profile = mapMyProfileResponseToUserState(response.data);
+    dispatch(setUserProfile(profile));
 
     setTimeout(() => {
       setIsProfileListOpen(false);
@@ -43,8 +50,14 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const userData = await getMyProfile();
-        dispatch(setUserProfile(userData.data));
+        const response = await getProfile();
+
+        if (!response.data) {
+          throw new Error("내 프로필 조회 응답 데이터가 없습니다.");
+        }
+
+        const profile = mapMyProfileResponseToUserState(response.data);
+        dispatch(setUserProfile(profile));
       } catch (error) {
         console.error("프로필 정보 불러오기 실패:", error);
       }
