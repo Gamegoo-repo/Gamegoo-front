@@ -1,6 +1,6 @@
 import fs from "fs-extra";
 
-import { SwaggerSchema } from "./types";
+import type { SwaggerSchema } from "./types";
 
 export class SchemaProcessor {
   private schema: SwaggerSchema;
