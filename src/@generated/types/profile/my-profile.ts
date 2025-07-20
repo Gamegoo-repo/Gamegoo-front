@@ -12,6 +12,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+
 // May contain unused imports in some cases
 // @ts-ignore
 import {
@@ -28,6 +29,9 @@ import type { ChampionStatsResponse } from "../champion/champion-stats";
 // May contain unused imports in some cases
 // @ts-ignore
 import type { GameStyleResponse } from "../game/game-style";
+// May contain unused imports in some cases
+// @ts-ignore
+import type { MemberRecentStatsResponse } from "../member/member-recent-stats";
 
 /**
  *
@@ -161,6 +165,12 @@ export interface MyProfileResponse {
    * @memberof MyProfileResponse
    */
   championStatsResponseList?: Array<ChampionStatsResponse>;
+  /**
+   *
+   * @type {MemberRecentStatsResponse}
+   * @memberof MyProfileResponse
+   */
+  memberRecentStats?: MemberRecentStatsResponse;
 }
 
 /**

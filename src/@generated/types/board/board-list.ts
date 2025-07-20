@@ -12,6 +12,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+
 // May contain unused imports in some cases
 // @ts-ignore
 import {
@@ -26,6 +27,9 @@ import {
 } from "../common";
 
 import type { ChampionStatsResponse } from "../champion/champion-stats";
+// May contain unused imports in some cases
+// @ts-ignore
+import type { MemberRecentStatsResponse } from "../member/member-recent-stats";
 
 /**
  *
@@ -147,6 +151,12 @@ export interface BoardListResponse {
    * @memberof BoardListResponse
    */
   championStatsResponseList?: Array<ChampionStatsResponse>;
+  /**
+   *
+   * @type {MemberRecentStatsResponse}
+   * @memberof BoardListResponse
+   */
+  memberRecentStats?: MemberRecentStatsResponse;
   /**
    *
    * @type {string}

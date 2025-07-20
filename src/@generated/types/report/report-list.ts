@@ -27,6 +27,12 @@ export interface ReportListResponse {
   reportId?: number;
   /**
    *
+   * @type {number}
+   * @memberof ReportListResponse
+   */
+  fromMemberId?: number;
+  /**
+   *
    * @type {string}
    * @memberof ReportListResponse
    */
@@ -36,7 +42,25 @@ export interface ReportListResponse {
    * @type {string}
    * @memberof ReportListResponse
    */
+  fromMemberTag?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof ReportListResponse
+   */
+  toMemberId?: number;
+  /**
+   *
+   * @type {string}
+   * @memberof ReportListResponse
+   */
   toMemberName?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ReportListResponse
+   */
+  toMemberTag?: string;
   /**
    *
    * @type {string}

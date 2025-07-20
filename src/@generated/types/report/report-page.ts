@@ -15,30 +15,36 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { MyBoardListResponse } from "../board/my-board-list";
+import type { ReportListResponse } from "../report/report-list";
 
 /**
  *
  * @export
- * @interface MyBoardResponse
+ * @interface ReportPageResponse
  */
-export interface MyBoardResponse {
+export interface ReportPageResponse {
+  /**
+   *
+   * @type {Array<ReportListResponse>}
+   * @memberof ReportPageResponse
+   */
+  reports?: Array<ReportListResponse>;
   /**
    *
    * @type {number}
-   * @memberof MyBoardResponse
+   * @memberof ReportPageResponse
    */
-  totalPage?: number;
+  totalPages?: number;
   /**
    *
    * @type {number}
-   * @memberof MyBoardResponse
+   * @memberof ReportPageResponse
    */
-  totalCount?: number;
+  totalElements?: number;
   /**
    *
-   * @type {Array<MyBoardListResponse>}
-   * @memberof MyBoardResponse
+   * @type {number}
+   * @memberof ReportPageResponse
    */
-  myBoards?: Array<MyBoardListResponse>;
+  currentPage?: number;
 }
