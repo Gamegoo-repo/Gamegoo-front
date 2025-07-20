@@ -1,15 +1,22 @@
 import axios from "axios";
 
+
+
+import { postAuthRefresh } from "@/@generated/api";
 import ko from "@/constants/ko.json";
 import { STORAGE_KEY } from "@/constants/storage";
 import { notify } from "@/hooks/notify";
 import { connectSocket } from "@/socket";
-import { clearTokens, getAccessToken } from "@/utils/storage";
+import { clearTokens, getAccessToken, getRefreshToken } from "@/utils/storage";
+
+
 
 import { BASE_URL } from "./api";
-import { reissueToken } from "./reissue/reissue";
+
+
 
 import type { AxiosInstance, InternalAxiosRequestConfig } from "axios";
+
 
 /* AuthAxios 인스턴스 생성 */
 export const AuthAxios: AxiosInstance = axios.create({
@@ -50,24 +57,27 @@ AuthAxios.interceptors.response.use(
 
       try {
         /* 토큰 재발급 요청 */
-        const response = await reissueToken();
-        const newAccessToken = response.data.accessToken;
+        const refreshToken = getRefreshToken();
+        if (!refreshToken) throw new Error("리프레시 토큰이 없습니다.");
+
+        const response = await postAuthRefresh({ refreshToken });
+        
+        if (!response.data) throw new Error("토큰 재발급 응답에 데이터가 없습니다.");
+
+        const {
+            accessToken: newAccessToken,
+            refreshToken: newRefreshToken,
+        } = response.data;
+
         const originRequest = config; // 이전 요청 저장
 
         // 로컬 또는 세션에 재발급된 토큰 저장
-        if (localStorage.getItem(STORAGE_KEY.accessToken)) {
-          localStorage.setItem(STORAGE_KEY.accessToken, newAccessToken);
-          localStorage.setItem(
-            STORAGE_KEY.refreshToken,
-            response.data.refreshToken
-          );
-        } else {
-          sessionStorage.setItem(STORAGE_KEY.accessToken, newAccessToken);
-          sessionStorage.setItem(
-            STORAGE_KEY.refreshToken,
-            response.data.refreshToken
-          );
-        }
+        const storage = localStorage.getItem(STORAGE_KEY.accessToken)
+          ? localStorage
+          : sessionStorage;
+        storage.setItem(STORAGE_KEY.accessToken, newAccessToken ?? "");
+        storage.setItem(STORAGE_KEY.refreshToken, newRefreshToken ?? "");
+
         connectSocket();
         originRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
         return axios(originRequest);

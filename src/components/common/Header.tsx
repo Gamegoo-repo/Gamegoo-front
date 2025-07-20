@@ -6,7 +6,8 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import { getUnreadNotificationCount, postLogout, socketLogout } from "@/api";
+import { postAuthLogout } from "@/@generated/api";
+import { getUnreadNotificationCount, socketLogout } from "@/api";
 import Icon from "@/components/common/Icon";
 import { HEADER_MODAL_TAB } from "@/constants";
 import { STORAGE_KEY } from "@/constants/storage";
@@ -307,7 +308,7 @@ const Header = () => {
                         } else {
                           sessionStorage.setItem(STORAGE_KEY.logout, "true");
                           try {
-                            await postLogout();
+                            await postAuthLogout();
                             await clearTokens();
                             await socketLogout();
                             localStorage.removeItem(

@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import { deleteMember, getMyProfile } from "@/api";
+import { deleteAuth } from "@/@generated/api";
+import { getMyProfile } from "@/api";
 import { MyPageProfile } from "@/components";
 import { useConfirmModalContext, useMediaQueryContext } from "@/hooks";
 import { setUserMike, setUserProfile } from "@/redux/slices/userSlice";
@@ -40,7 +41,7 @@ const MyProfilePage = () => {
       // await checkPassword(password);
       // setIsPasswordValid(true);
 
-      await deleteMember();
+      await deleteAuth();
       setIsWithdrawalComplete(true);
       clearTokens();
       setTimeout(() => {
