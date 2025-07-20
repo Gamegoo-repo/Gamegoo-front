@@ -53,7 +53,7 @@ export const getReportList = async (
   reportCountExact?: number,
   isDeleted?: boolean,
   banTypes?: string[],
-  pageable: any
+  // pageable: any // TODO
 ): Promise<ApiResponse<ReportPageResponse>> => {
   const endpoint = "/api/v2/report/list";
   try {
