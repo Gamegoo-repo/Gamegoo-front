@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
-import { getMyProfile, putProfileImage } from "@/api";
+import { putProfileProfileImage } from "@/@generated/api";
+import { getMyProfile } from "@/api";
 import { RankTier } from "@/components/common";
 import GameStyle from "@/components/match/GameStyle";
 import { UpdateProfileImage } from "@/components/profile";
@@ -28,7 +29,7 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
   const handleImageClick = async (index: number) => {
     setSelectedImageIndex(index);
 
-    await putProfileImage(index);
+    await putProfileProfileImage({ profileImage: index });
     const newUserData = await getMyProfile();
     dispatch(setUserProfileImg(index));
     localStorage.setItem("profileImg", index + "");
