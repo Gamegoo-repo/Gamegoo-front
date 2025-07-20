@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+@theme {
+  --color-white: #ffffff;
+  --color-yellow-100: #fffacc;
+  --color-blue-100: #e6effe;
+
+  --color-violet-100: #f0f0fc;
+  --color-violet-200: #dfdeff;
+  --color-violet-300: #c1b7ff;
+  --color-violet-400: #9f90f9;
+  --color-violet-500: #7b65ff;
+  --color-violet-600: #5a42ee;
+  --color-violet-700: #452aea;
+  --color-violet-800: #2811ba;
+  --color-violet-900: #1c0a88;
+
+  --color-gray-100: #f1f5fa;
+  --color-gray-200: #edf2f8;
+  --color-gray-300: #d7dfea;
+  --color-gray-400: #b5c1d2;
+  --color-gray-500: #9099a5;
+  --color-gray-600: #747a83;
+  --color-gray-700: #41454a;
+  --color-gray-800: #2e3032;
+  --color-gray-900: #191b1e;
+
+  --color-red-100: #fef2f2;
+  --color-red-400: #ff9090;
+  --color-red-500: #ff5252;
+  --color-red-600: #f52e2e;
+  --color-red-900: #5c0e0e;
+  --color-redViolet: #ca1fcf;
+
+  --font-pretendard: "Pretendard", sans-serif;
+
+  --breakpoint-mobile: 43.75rem; /* 700px */
+  --breakpoint-tablet: 59.375rem; /* 950px */
+  --breakpoint-desktop: 75rem; /* 1200px */
+}
+
+@font-face {
+  font-family: "Pretendard";
+  src: url("/assets/fonts/PretendardVariable.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
