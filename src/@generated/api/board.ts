@@ -1,22 +1,9 @@
 import { AuthAxios } from "@/api";
 
-import type {
-  ApiResponse,
-  BoardBumpResponse,
-  BoardByIdResponse,
-  BoardByIdResponseForMember,
-  BoardCursorResponse,
-  BoardInsertRequest,
-  BoardInsertResponse,
-  BoardResponse,
-  BoardUpdateRequest,
-  BoardUpdateResponse,
-  GuestBoardDeleteRequest,
-  GuestBoardInsertRequest,
-  GuestBoardUpdateRequest,
-  MyBoardCursorResponse,
-  MyBoardResponse,
-} from "../types";
+
+
+import type { ApiResponse, BoardBumpResponse, BoardByIdResponse, BoardByIdResponseForMember, BoardCursorResponse, BoardInsertRequest, BoardInsertResponse, BoardResponse, BoardUpdateRequest, BoardUpdateResponse, GuestBoardDeleteRequest, GuestBoardInsertRequest, GuestBoardUpdateRequest, MyBoardCursorResponse, MyBoardResponse } from "../types";
+
 
 /* putPostsBoardId - 수정 */
 export const putPostsBoardId = async (
@@ -69,7 +56,9 @@ export const deletePostsGuestBoardId = async (
 ): Promise<ApiResponse<string>> => {
   const endpoint = `/api/v2/posts/guest/${boardId}`;
   try {
-    const response = await AuthAxios.delete(endpoint, data);
+    const response = await AuthAxios.delete(endpoint, {
+      data: data,
+    });
     return response.data;
   } catch (error) {
     console.error("deletePostsGuestBoardId failed:", error);
