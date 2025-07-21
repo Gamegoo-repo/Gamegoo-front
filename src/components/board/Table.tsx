@@ -3,15 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
+import { deleteBlockMemberId, postBlockMemberId } from "@/@generated/api";
 import {
-  blockMember,
   cancelFriendRequest,
   deleteFriend,
   deletePost,
   getMemberPost,
   pullUpPost,
   sendFriendRequest,
-  unblockMember,
 } from "@/api";
 import {
   Alert,
@@ -232,10 +231,10 @@ const Table = (props: TableProps) => {
     setIsBlockBoxOpen(false);
     if (isPost) {
       if (isPost.isBlocked) {
-        await unblockMember(isPost.memberId);
+        await deleteBlockMemberId(isPost.memberId);
         setIsBlockedStatus(false);
       } else {
-        await blockMember(isPost.memberId);
+        await postBlockMemberId(isPost.memberId);
         setIsBlockedStatus(true);
       }
     }

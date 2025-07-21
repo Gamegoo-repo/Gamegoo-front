@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
-import { getBlockList } from "@/api";
+import { getBlock } from "@/@generated/api";
 import { BlockedBox, Pagination } from "@/components";
 import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
@@ -23,15 +23,15 @@ const MyBlockedPage = () => {
   useEffect(() => {
     const fetchGetMyBlocked = async () => {
       try {
-        const response = await getBlockList(currentPage);
-        if (response.data) {
-          const { blockedMemberList, totalPage, totalElements } = response.data;
-          setMyBlockedList(blockedMemberList);
-          setTotalPages(totalPage);
-          setTotalItems(totalElements);
-        } else {
-          console.error(response.message);
+        const response = await getBlock(currentPage);
+        if (!response.data) {
+          throw new Error("차단 목록 조회 데이터가 없습니다.");
         }
+
+        const { blockedMemberList, totalPage, totalElements } = response.data;
+        setMyBlockedList(blockedMemberList as BlockList[]);
+        setTotalPages(totalPage ?? 0);
+        setTotalItems(totalElements ?? 0);
       } catch (error) {
         console.error(error);
       }

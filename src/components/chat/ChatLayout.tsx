@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
-import { blockMember } from "@/api/block/block";
+import { postBlockMemberId } from "@/@generated/api";
 import {
   enterUsingBoardId,
   enterUsingMemberId,
@@ -328,7 +328,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
     if (!chatEnterData) return;
 
     try {
-      const response = await blockMember(chatEnterData.memberId);
+      const response = await postBlockMemberId(chatEnterData.memberId);
       if (response.data && socket) {
         socket.emit("exit-chatroom", { uuid: chatEnterData.uuid });
         await dispatch(setOpenModal("doneBlock"));

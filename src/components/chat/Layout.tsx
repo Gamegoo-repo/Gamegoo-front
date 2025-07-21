@@ -3,8 +3,8 @@ import { createPortal } from "react-dom";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
+import { postBlockMemberId } from "@/@generated/api";
 import {
-  blockMember,
   editManners,
   getBadMannerValues,
   getFriendsList,
@@ -365,7 +365,7 @@ const Layout = () => {
     if (!selectedChatroom) return;
 
     try {
-      const response = await blockMember(selectedChatroom.targetMemberId);
+      const response = await postBlockMemberId(selectedChatroom.targetMemberId);
       if (response.data && socket) {
         socket.emit("exit-chatroom", { uuid: selectedChatroom.uuid });
         await dispatch(setOpenModal("doneBlock"));
