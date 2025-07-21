@@ -52,24 +52,15 @@ const HomePage = () => {
 
 export default HomePage;
 
-const Wrapper = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  padding-top: 100px;
-  @media (max-width: ${theme.breakpoints.desktop}) {
-    padding-top: 24px;
-  }
-`;
+const Wrapper = ({ children }: { children: React.ReactNode }) => (
+  <div className="w-full flex justify-center">{children}</div>
+);
 
-const HomeContent = styled.div`
-  max-width: 1440px;
-  width: 100%;
-  padding: 0px 80px;
-  @media (max-width: ${theme.breakpoints.desktop}) {
-    padding: 0 20px;
-  }
-`;
+const HomeContent = ({ children }: { children: React.ReactNode }) => (
+  <div className="box-border max-w-[1440px] w-full px-5 desktop:px-20 pt-6 desktop:pt-[100px]">
+    {children}
+  </div>
+);
 
 const Main = styled.main`
   width: 100%;
