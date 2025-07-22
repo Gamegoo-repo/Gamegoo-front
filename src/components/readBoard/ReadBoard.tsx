@@ -3,16 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import { deleteBlockMemberId, postBlockMemberId } from "@/@generated/api";
 import {
-  cancelFriendRequest,
-  deleteFriend,
-  deletePost,
-  getMemberPost,
-  getNonMemberPost,
-  pullUpPost,
-  sendFriendRequest,
-} from "@/api";
+  deleteBlockMemberId,
+  deleteFriendMemberId,
+  deleteFriendRequestMemberId,
+  postBlockMemberId,
+  postFriendRequestMemberId,
+} from "@/@generated/api";
+import { deletePost, getMemberPost, getNonMemberPost, pullUpPost } from "@/api";
 import {
   Alert,
   Button,
@@ -291,15 +289,25 @@ const ReadBoard = (props: ReadBoardProps) => {
     if (!isPost || isUser.id === isPost?.memberId) return;
 
     try {
-      await sendFriendRequest(isPost.memberId);
+      await postFriendRequestMemberId(isPost.memberId);
       await handleMoreBoxClose();
       await getPostData();
       setIsFriendStatus(true);
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        notify({
+          text:
+            ko[`error.friend.${error.response.data.code}` as keyof typeof ko] ??
+            ko["error.friend.default"],
+          icon: "🚫",
+          type: "error",
+        });
+      } else {
+        console.error("친구 요청 실패:", error);
+      }
+    } finally {
+      handleMoreBoxClose();
     }
-
-    handleMoreBoxClose();
   };
 
   /* 친구 요청 취소 */
@@ -316,15 +324,31 @@ const ReadBoard = (props: ReadBoardProps) => {
     if (!isPost || isUser.id === isPost?.memberId) return;
 
     try {
-      await cancelFriendRequest(isPost.memberId);
+      await deleteFriendRequestMemberId(isPost.memberId);
       await handleMoreBoxClose();
       await getPostData();
       setIsFriendStatus(false);
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      if (error.response && error.response.status === 404) {
+        notify({
+          text: ko["error.friend.cancel.404"],
+          icon: "🚫",
+          type: "error",
+        });
+        throw error;
+      } else {
+        notify({
+          text:
+            ko[
+              `error.friend.cancel.${error.response.data.code}` as keyof typeof ko
+            ] ?? ko["error.friend.cancel.default"],
+          icon: "🚫",
+          type: "error",
+        });
+      }
+    } finally {
+      handleMoreBoxClose();
     }
-
-    handleMoreBoxClose();
   };
 
   /* 친구 삭제 */
@@ -341,7 +365,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     if (!isPost || isUser.id === isPost?.memberId) return;
 
     try {
-      await deleteFriend(isPost.memberId);
+      await deleteFriendMemberId(isPost.memberId);
       await handleMoreBoxClose();
       await getPostData();
       setIsFriendStatus(false);

@@ -3,14 +3,16 @@ import { createPortal } from "react-dom";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
-import { postBlockMemberId } from "@/@generated/api";
+import {
+  getFriend,
+  patchFriendMemberIdStar,
+  postBlockMemberId,
+} from "@/@generated/api";
 import {
   editManners,
   getBadMannerValues,
-  getFriendsList,
   getMannerValues,
   leaveChatroom,
-  patchFriendStar,
   postBadMannerValue,
   postMannerValue,
   reportMember,
@@ -123,13 +125,16 @@ const Layout = () => {
     if (!accessToken) return;
 
     try {
-      const response = await getFriendsList();
+      const response = await getFriend();
+      if (!response.data) {
+        throw new Error("친구 목록 조회 데이터 응답이 없습니다.");
+      }
       const friendsList = response.data.friendInfoList;
 
       if (Array.isArray(friendsList)) {
-        setFriends(friendsList);
+        setFriends(friendsList as FriendList[]);
         const likedFriends = friendsList.filter((friend) => friend.liked);
-        setFavoriteFriends(likedFriends);
+        setFavoriteFriends(likedFriends as FriendList[]);
       } else {
         setFriends([]);
         setFavoriteFriends([]);
@@ -242,7 +247,11 @@ const Layout = () => {
     event.stopPropagation();
 
     try {
-      const response = await patchFriendStar(friendId);
+      const response = await patchFriendMemberIdStar(friendId);
+      if (!response.data) {
+        throw new Error("즐겨찾기 상태 변경 응답이 없습니다.");
+      }
+
       console.log(response.data.friendMemberId);
       const updatedFriendId = response.data.friendMemberId;
       // friends 상태 업데이트
