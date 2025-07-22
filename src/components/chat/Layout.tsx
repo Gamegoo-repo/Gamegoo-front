@@ -7,6 +7,7 @@ import {
   getFriend,
   patchFriendMemberIdStar,
   postBlockMemberId,
+  postReportMemberId,
 } from "@/@generated/api";
 import {
   editManners,
@@ -15,7 +16,6 @@ import {
   leaveChatroom,
   postBadMannerValue,
   postMannerValue,
-  reportMember,
 } from "@/api";
 import Icon from "@/components/common/Icon";
 import { BAD_MANNER_TYPES, MANNER_TYPES, REPORT_REASON } from "@/constants";
@@ -388,15 +388,15 @@ const Layout = () => {
   const handleReport = async () => {
     if (!selectedChatroom) return;
 
+    const memberId = selectedChatroom.targetMemberId;
     const params = {
-      memberId: selectedChatroom.targetMemberId,
       reportCodeList: checkedReportItems,
       contents: reportDetail,
       pathCode: 2, // CHAT
     };
 
     try {
-      await reportMember(params);
+      await postReportMemberId(memberId, params);
       await handleModalClose();
     } catch (error) {
       console.error(error);

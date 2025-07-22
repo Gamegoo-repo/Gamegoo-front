@@ -9,6 +9,7 @@ import {
   patchFriendRequestMemberIdReject,
   postBlockMemberId,
   postFriendRequestMemberId,
+  postReportMemberId,
 } from "@/@generated/api";
 import {
   enterUsingBoardId,
@@ -23,7 +24,6 @@ import {
   postBadMannerValue,
   postMannerValue,
 } from "@/api/manner/manner";
-import { reportMember } from "@/api/report/report";
 import ko from "@/constants/ko.json";
 import { BAD_MANNER_TYPES, MANNER_TYPES } from "@/constants/mannerLevel";
 import { REPORT_REASON } from "@/constants/report";
@@ -518,15 +518,15 @@ const ChatLayout = (props: ChatLayoutProps) => {
   const handleReport = async () => {
     if (!chatEnterData) return;
 
+    const memberId = chatEnterData.memberId;
     const params = {
-      memberId: chatEnterData.memberId,
       reportCodeList: checkedReportItems,
       contents: reportDetail,
       pathCode: 2, // CHAT
     };
 
     try {
-      await reportMember(params);
+      await postReportMemberId(memberId, params);
       await handleModalClose();
     } catch (error) {
       console.error(error);
