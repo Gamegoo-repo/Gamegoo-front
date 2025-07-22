@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @theme {
+  /* 색상 */
   --color-white: #ffffff;
   --color-yellow-100: #fffacc;
   --color-blue-100: #e6effe;
@@ -32,11 +33,21 @@
   --color-red-900: #5c0e0e;
   --color-redViolet: #ca1fcf;
 
+  backgroundImage: {
+    gradient: linear-gradient(90deg, #5a42ee 0%, #e02fc8 100%);
+    gradientmobile: linear-gradient(50.55deg, #5a42ee -0.63%, #e02fc8 100.32%);
+  }
+
+  /* font */
   --font-pretendard: "Pretendard", sans-serif;
 
+  /* breakpoint */
   --breakpoint-mobile: 43.75rem; /* 700px */
   --breakpoint-tablet: 59.375rem; /* 950px */
   --breakpoint-desktop: 75rem; /* 1200px */
+
+  /* animation */
+  ----animate-rotate: rotate 1s linear;
 }
 
 @font-face {
@@ -44,4 +55,13 @@
   src: url("/assets/fonts/PretendardVariable.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
