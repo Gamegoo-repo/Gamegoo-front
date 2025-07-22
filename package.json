@@ -18,6 +18,7 @@
     "@ramonak/react-progress-bar": "^5.2.0",
     "@reduxjs/toolkit": "^2.2.3",
     "axios": "^1.7.2",
+    "clsx": "^2.1.1",
     "crypto-js": "^4.2.0",
     "dayjs": "^1.11.11",
     "framer-motion": "^11.11.17",
