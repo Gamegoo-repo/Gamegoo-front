@@ -5,23 +5,26 @@ import { theme } from "@/styles/theme";
 import { formatTimeAgo } from "@/utils";
 
 interface AlertBoxProps {
-  notificationId: number;
-  notificationtType: number;
-  pageUrl: string | null;
-  content: string;
-  createdAt: string;
-  read: boolean;
+  notificationId: number | undefined;
+  notificationtType: number | undefined;
+  pageUrl: string | null | undefined;
+  content: string | undefined;
+  createdAt: string | undefined;
+  read: boolean | undefined;
   size?: "small" | "medium";
-  onClick: (notificationId: number, pageUrl: string | null) => void;
+  onClick: (
+    notificationId: number | undefined,
+    pageUrl: string | null | undefined
+  ) => void;
 }
 
 const AlertBox: React.FC<AlertBoxProps> = ({
   notificationId,
   notificationtType,
-  pageUrl,
+  pageUrl = "/",
   content,
-  createdAt,
-  read,
+  createdAt = "",
+  read = false,
   size = "medium",
   onClick,
 }) => {
