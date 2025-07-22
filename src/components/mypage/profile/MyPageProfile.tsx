@@ -9,7 +9,6 @@ import { UpdateProfileImage } from "@/components/profile";
 import { useMediaQueryContext } from "@/hooks";
 import { setUserProfile, setUserProfileImg } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
-import { mapMyProfileResponseToUserState } from "@/utils/user/mapMyProfileResponseToUserState";
 
 import type { RootState } from "@/redux/store";
 import type { Profile } from "@/types";
@@ -39,7 +38,7 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
       throw new Error("내 프로필 조회 응답 데이터가 없습니다.");
     }
 
-    const profile = mapMyProfileResponseToUserState(response.data);
+    const profile = response.data;
     dispatch(setUserProfile(profile));
 
     setTimeout(() => {
@@ -56,7 +55,7 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
           throw new Error("내 프로필 조회 응답 데이터가 없습니다.");
         }
 
-        const profile = mapMyProfileResponseToUserState(response.data);
+        const profile = response.data;
         dispatch(setUserProfile(profile));
       } catch (error) {
         console.error("프로필 정보 불러오기 실패:", error);

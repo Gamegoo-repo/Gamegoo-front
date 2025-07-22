@@ -55,9 +55,11 @@ const UserProfilePage = () => {
             throw new Error("다른 유저 프로필 조회 응답 데이터가 없습니다.");
           }
 
-          const mappedData: User = mapOtherProfileToUser(response.data);
+          const otherUserMappedData: User = mapOtherProfileToUser(
+            response.data
+          );
 
-          setOtherProfile(mappedData);
+          setOtherProfile(otherUserMappedData);
           console.log(response);
         } catch (error) {
           console.error(error);

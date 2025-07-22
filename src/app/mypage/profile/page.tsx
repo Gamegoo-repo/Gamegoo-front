@@ -11,7 +11,6 @@ import { useConfirmModalContext, useMediaQueryContext } from "@/hooks";
 import { setUserMike, setUserProfile } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
 import { clearTokens } from "@/utils";
-import { mapMyProfileResponseToUserState } from "@/utils/user/mapMyProfileResponseToUserState";
 
 import type { MikeEnum } from "@/@generated/types";
 import type { RootState } from "@/redux/store";
@@ -74,7 +73,7 @@ const MyProfilePage = () => {
             throw new Error("내 프로필 조회 응답 데이터가 없습니다.");
           }
 
-          const profile = mapMyProfileResponseToUserState(response.data);
+          const profile = response.data;
           dispatch(setUserProfile(profile));
           dispatch(setUserMike(profile.mike as MikeEnum));
         } catch (error) {

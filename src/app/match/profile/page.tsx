@@ -20,9 +20,7 @@ import { setUserProfile } from "@/redux/slices/userSlice";
 import { sendMatchingQuitEvent, socket } from "@/socket";
 import { theme } from "@/styles/theme";
 import { getThresholdByGameMode } from "@/utils/matching/threshold";
-import { mapMyProfileResponseToUserState } from "@/utils/user/mapMyProfileResponseToUserState";
 
-import type { UserState } from "@/redux/slices/userSlice";
 import type { RootState } from "@/redux/store";
 import type { GameMode, profileType } from "@/types";
 
@@ -57,7 +55,7 @@ const ProfilePage = () => {
           throw new Error("내 프로필 조회 응답 데이터가 없습니다.");
         }
 
-        const profile = mapMyProfileResponseToUserState(response.data);
+        const profile = response.data;
         dispatch(setUserProfile(profile));
       } catch (error) {
         console.error(error);

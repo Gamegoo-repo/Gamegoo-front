@@ -19,12 +19,10 @@ import {
   setChatEnterType,
   setChatRoomUuid,
 } from "@/redux/slices/chatSlice";
-import { setComplete } from "@/redux/slices/matchingSlice";
-import { sendMatchingQuitEvent, socket } from "@/socket";
+import { socket } from "@/socket";
 import { theme } from "@/styles/theme";
 import { setIsCompleted } from "@/utils/storage";
 import { mapMyProfileResponseToMatchingUser } from "@/utils/user/mapMyProfileResponseToMatchingUser";
-import { mapMyProfileResponseToUserState } from "@/utils/user/mapMyProfileResponseToUserState";
 
 import type { RootState } from "@/redux/store";
 import type { GameMode } from "@/types/game/gameMode";
@@ -189,26 +187,6 @@ const Complete = () => {
             mannerLevel: mannerRes.data.mannerLevel,
             gameMode: rank,
           });
-
-          // const transformedUserMe: MatchingUser = {
-          //   memberId: profileData.id,
-          //   gameName: profileData.gameName,
-          //   tag: profileData.tag,
-          //   soloTier: profileData.soloTier,
-          //   freeTier: profileData.freeTier,
-          //   soloRank: profileData.soloRank,
-          //   freeRank: profileData.freeRank,
-          //   mannerLevel: mannerData.mannerLevel,
-          //   profileImg: profileData.profileImg,
-          //   gameMode: rank,
-          //   mainP: profileData.mainP,
-          //   subP: profileData.subP,
-          //   wantP: profileData.wantP,
-          //   mike: profileData.mike,
-          //   gameStyleList: profileData.gameStyleResponseList.map(
-          //     (style: { gameStyleName: string }) => style.gameStyleName
-          //   ),
-          // };
 
           setUserMe(transformedUserMe);
         } catch (error) {

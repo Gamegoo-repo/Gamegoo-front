@@ -25,7 +25,6 @@ import {
 } from "@/redux/slices/postSlice";
 import { setUserProfile } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
-import { mapMyProfileResponseToUserState } from "@/utils/user/mapMyProfileResponseToUserState";
 
 import { Button, Dropdown, Input, Toggle } from "../common";
 import { CRModal, PositionBox, UserAccount } from "../crBoard";
@@ -93,7 +92,7 @@ const PostBoard = (props: PostBoardProps) => {
         throw new Error("내 프로필 조회 응답 데이터가 없습니다.");
       }
 
-      const profile = mapMyProfileResponseToUserState(response.data);
+      const profile = response.data;
       dispatch(setUserProfile(profile));
     } catch (error) {
       console.error(error);
