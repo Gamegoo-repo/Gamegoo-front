@@ -1,6 +1,9 @@
 import { AuthAxios } from "@/api";
 
+
+
 import type { ApiResponse, BlockListResponse, BlockResponse } from "../types";
+
 
 /* postBlockMemberId - 생성 */
 export const postBlockMemberId = async (
@@ -36,7 +39,7 @@ export const getBlock = async (
 ): Promise<ApiResponse<BlockListResponse>> => {
   const endpoint = "/api/v2/block";
   try {
-    const response = await AuthAxios.get(endpoint);
+    const response = await AuthAxios.get(endpoint, { params: page });
     return response.data;
   } catch (error) {
     console.error("getBlock failed:", error);

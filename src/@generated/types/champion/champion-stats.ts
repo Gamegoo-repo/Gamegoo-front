@@ -60,6 +60,12 @@ export interface ChampionStatsResponse {
    * @type {number}
    * @memberof ChampionStatsResponse
    */
+  averageCs?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof ChampionStatsResponse
+   */
   kda?: number;
   /**
    *

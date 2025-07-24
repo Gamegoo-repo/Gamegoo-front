@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 
-import { changePassword, checkPassword } from "@/api";
+import { postPasswordCheck, putPasswordChange } from "@/@generated/api";
 import { Button, FormModal, Input } from "@/components/common";
 import Icon from "@/components/common/Icon";
 import ko from "@/constants/ko.json";
@@ -38,11 +38,11 @@ const PasswordModal = (props: PasswordModalProps) => {
   ) => {
     event.preventDefault();
     try {
-      await checkPassword(password);
+      await postPasswordCheck({ password });
       setIsPasswordValid(true);
 
       if (validation) {
-        await changePassword(newPassword);
+        await putPasswordChange({ newPassword });
         notify({
           text: ko["password.success"],
           type: "success",

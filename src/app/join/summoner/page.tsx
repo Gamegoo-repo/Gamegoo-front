@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import { postJoin, verifyRiot } from "@/api";
-import { Button, ConfirmModal, Input } from "@/components";
+import { postAuthJoin, postRiotVerify } from "@/@generated/api";
+import { Button, Input } from "@/components";
 import { useConfirmModalContext } from "@/hooks";
 import { clearSignIn } from "@/redux/slices/signInSlice";
 import { theme } from "@/styles/theme";
@@ -55,7 +55,7 @@ const Summoner = () => {
   /* 소환사명 조회 */
   const handleCheckSummoner = async () => {
     try {
-      await verifyRiot({ gameName: name, tag });
+      await postRiotVerify({ gameName: name, tag });
       openConfirmModal({
         width: "540px",
         primaryButtonText: "확인",
@@ -85,7 +85,7 @@ const Summoner = () => {
     if (isCheckRiot) {
       setIsLoading(true);
       try {
-        await postJoin({
+        await postAuthJoin({
           isAgree,
           email,
           password,

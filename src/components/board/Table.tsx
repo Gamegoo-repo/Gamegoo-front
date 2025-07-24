@@ -4,15 +4,13 @@ import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
 import {
-  blockMember,
-  cancelFriendRequest,
-  deleteFriend,
-  deletePost,
-  getMemberPost,
-  pullUpPost,
-  sendFriendRequest,
-  unblockMember,
-} from "@/api";
+  deleteBlockMemberId,
+  deleteFriendMemberId,
+  deleteFriendRequestMemberId,
+  postBlockMemberId,
+  postFriendRequestMemberId,
+} from "@/@generated/api";
+import { deletePost, getMemberPost, pullUpPost } from "@/api";
 import {
   Alert,
   ConfirmModal,
@@ -232,10 +230,10 @@ const Table = (props: TableProps) => {
     setIsBlockBoxOpen(false);
     if (isPost) {
       if (isPost.isBlocked) {
-        await unblockMember(isPost.memberId);
+        await deleteBlockMemberId(isPost.memberId);
         setIsBlockedStatus(false);
       } else {
-        await blockMember(isPost.memberId);
+        await postBlockMemberId(isPost.memberId);
         setIsBlockedStatus(true);
       }
     }
@@ -246,37 +244,63 @@ const Table = (props: TableProps) => {
   const handleFriendAdd = async () => {
     try {
       if (isPost) {
-        await sendFriendRequest(isPost.memberId);
+        await postFriendRequestMemberId(isPost.memberId);
       }
       await handleMoreBoxClose();
       setIsFriendStatus(true);
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        notify({
+          text:
+            ko[`error.friend.${error.response.data.code}` as keyof typeof ko] ??
+            ko["error.friend.default"],
+          icon: "🚫",
+          type: "error",
+        });
+      } else {
+        console.error("친구 요청 실패:", error);
+      }
+    } finally {
+      handleMoreBoxClose();
     }
-
-    handleMoreBoxClose();
   };
 
   /* 친구 요청 취소 */
   const handleCancelFriendReq = async () => {
     try {
       if (isPost) {
-        await cancelFriendRequest(isPost.memberId);
+        await deleteFriendRequestMemberId(isPost.memberId);
       }
       await handleMoreBoxClose();
       setIsFriendStatus(false);
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      if (error.response && error.response.status === 404) {
+        notify({
+          text: ko["error.friend.cancel.404"],
+          icon: "🚫",
+          type: "error",
+        });
+        throw error;
+      } else {
+        notify({
+          text:
+            ko[
+              `error.friend.cancel.${error.response.data.code}` as keyof typeof ko
+            ] ?? ko["error.friend.cancel.default"],
+          icon: "🚫",
+          type: "error",
+        });
+      }
+    } finally {
+      handleMoreBoxClose();
     }
-
-    handleMoreBoxClose();
   };
 
   /* 친구 삭제 */
   const handleFriendDelete = async () => {
     try {
       if (isPost) {
-        await deleteFriend(isPost.memberId);
+        await deleteFriendMemberId(isPost.memberId);
       }
       await handleMoreBoxClose();
       setIsFriendStatus(false);

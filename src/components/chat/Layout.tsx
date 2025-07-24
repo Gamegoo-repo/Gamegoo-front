@@ -4,16 +4,18 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 import {
-  blockMember,
+  getFriend,
+  patchFriendMemberIdStar,
+  postBlockMemberId,
+  postReportMemberId,
+} from "@/@generated/api";
+import {
   editManners,
   getBadMannerValues,
-  getFriendsList,
   getMannerValues,
   leaveChatroom,
-  patchFriendStar,
   postBadMannerValue,
   postMannerValue,
-  reportMember,
 } from "@/api";
 import Icon from "@/components/common/Icon";
 import { BAD_MANNER_TYPES, MANNER_TYPES, REPORT_REASON } from "@/constants";
@@ -123,13 +125,16 @@ const Layout = () => {
     if (!accessToken) return;
 
     try {
-      const response = await getFriendsList();
+      const response = await getFriend();
+      if (!response.data) {
+        throw new Error("친구 목록 조회 데이터 응답이 없습니다.");
+      }
       const friendsList = response.data.friendInfoList;
 
       if (Array.isArray(friendsList)) {
-        setFriends(friendsList);
+        setFriends(friendsList as FriendList[]);
         const likedFriends = friendsList.filter((friend) => friend.liked);
-        setFavoriteFriends(likedFriends);
+        setFavoriteFriends(likedFriends as FriendList[]);
       } else {
         setFriends([]);
         setFavoriteFriends([]);
@@ -242,7 +247,11 @@ const Layout = () => {
     event.stopPropagation();
 
     try {
-      const response = await patchFriendStar(friendId);
+      const response = await patchFriendMemberIdStar(friendId);
+      if (!response.data) {
+        throw new Error("즐겨찾기 상태 변경 응답이 없습니다.");
+      }
+
       console.log(response.data.friendMemberId);
       const updatedFriendId = response.data.friendMemberId;
       // friends 상태 업데이트
@@ -365,7 +374,7 @@ const Layout = () => {
     if (!selectedChatroom) return;
 
     try {
-      const response = await blockMember(selectedChatroom.targetMemberId);
+      const response = await postBlockMemberId(selectedChatroom.targetMemberId);
       if (response.data && socket) {
         socket.emit("exit-chatroom", { uuid: selectedChatroom.uuid });
         await dispatch(setOpenModal("doneBlock"));
@@ -379,15 +388,15 @@ const Layout = () => {
   const handleReport = async () => {
     if (!selectedChatroom) return;
 
+    const memberId = selectedChatroom.targetMemberId;
     const params = {
-      memberId: selectedChatroom.targetMemberId,
       reportCodeList: checkedReportItems,
       contents: reportDetail,
       pathCode: 2, // CHAT
     };
 
     try {
-      await reportMember(params);
+      await postReportMemberId(memberId, params);
       await handleModalClose();
     } catch (error) {
       console.error(error);

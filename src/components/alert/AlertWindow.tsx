@@ -3,7 +3,10 @@ import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import { getPopupNotification, patchReadNotification } from "@/api";
+import {
+  getNotification,
+  patchNotificationNotificationId,
+} from "@/@generated/api";
 import Icon from "@/components/common/Icon";
 import { useInfiniteScroll, useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
@@ -26,10 +29,10 @@ const AlertWindow = (props: AlertWindowProps) => {
 
   const alertWindowRef = useRef<HTMLDivElement>(null);
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
-  const [notiList, setNotiList] = useState<Notification[]>([]);
-  const [cursor, setCursor] = useState<number | null>(null);
+  const [notiList, setNotiList] = useState<Notification[] | undefined>([]);
+  const [cursor, setCursor] = useState<number | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [hasNext, setHasNext] = useState<boolean>(true);
+  const [hasNext, setHasNext] = useState<boolean | undefined>(true);
   const sentinelRef = useRef(null); // IntersectionObserver 를 위한 감지용 element
 
   const handleClickOutside = useCallback(
@@ -63,15 +66,18 @@ const AlertWindow = (props: AlertWindowProps) => {
   };
 
   /* 알림 목록 조회 */
-  const fetchNotiList = async (cursor: number | null) => {
+  const fetchNotiList = async (cursor: number | undefined) => {
     if (isLoading || !hasNext) return;
 
     setIsLoading(true);
     try {
-      const response = await getPopupNotification(cursor);
+      const response = await getNotification(cursor);
       if (response.data) {
         const { notificationList, nextCursor, hasNext } = response.data;
-        setNotiList((prevNotiList) => [...prevNotiList, ...notificationList]);
+        setNotiList((prevNotiList) => [
+          ...(prevNotiList ?? []),
+          ...(notificationList ?? []),
+        ]);
         setCursor(nextCursor);
         setHasNext(hasNext);
       } else {
@@ -116,23 +122,22 @@ const AlertWindow = (props: AlertWindowProps) => {
 
   /* 알림 읽음으로 상태 변경 */
   const handleClickAlert = async (
-    notificationId: number,
-    pageUrl: string | null
+    notificationId: number | undefined,
+    pageUrl: string | null | undefined
   ) => {
     /* 관련 페이지 이동 */
-    if (pageUrl !== null) {
-      router.push(pageUrl);
-    }
+    if (pageUrl === null || pageUrl === undefined) return;
+    router.push(pageUrl);
 
     /* 읽음 상태 업데이트 */
-    const notification = notiList.find(
+    const notification = notiList?.find(
       (n) => n.notificationId === notificationId
     );
-    if (notification && !notification.read) {
+    if (notification && !notification.read && notificationId) {
       try {
-        await patchReadNotification(notificationId);
+        await patchNotificationNotificationId(notificationId);
         setNotiList((prevNotiList) =>
-          prevNotiList.map((n) =>
+          prevNotiList?.map((n) =>
             n.notificationId === notificationId ? { ...n, read: true } : n
           )
         );
@@ -176,7 +181,7 @@ const AlertWindow = (props: AlertWindowProps) => {
             </TabContainer> */}
           </Header>
           <Background>
-            {notiList.length > 0 ? (
+            {notiList !== undefined && notiList.length > 0 ? (
               <>
                 {notiList.map((data, index) => (
                   <AlertBox

@@ -4,7 +4,7 @@ import type { RefObject } from "react";
 
 interface UseInfiniteScrollProps<T> {
   cursor: T | null;
-  hasNext: boolean;
+  hasNext: boolean | undefined;
   isLoading: boolean;
   sentinelRef: RefObject<Element>;
   onIntersect: (cursor: T) => void;
@@ -14,7 +14,7 @@ interface UseInfiniteScrollProps<T> {
 
 const useInfiniteScroll = <T>({
   cursor,
-  hasNext,
+  hasNext = false,
   isLoading,
   sentinelRef,
   onIntersect,

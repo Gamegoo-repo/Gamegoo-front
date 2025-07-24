@@ -1,8 +1,7 @@
 import { useEffect } from "react";
 
-import { reissueToken } from "@/api/reissue/reissue";
-import { STORAGE_KEY } from "@/constants/storage";
 import { connectSocket, socket } from "@/socket";
+import { refreshAndStoreToken } from "@/utils";
 
 const useJwtError = () => {
   useEffect(() => {
@@ -14,66 +13,20 @@ const useJwtError = () => {
     const handleJwtExpiredError = async (res: any) => {
       const { eventName, eventData } = res.data;
 
-      try {
-        const response = await reissueToken();
-        const newToken = response.data.accessToken;
+      const newAccessToken = await refreshAndStoreToken();
+      if (!newAccessToken) return;
 
-        // 로컬 또는 세션에 재발급된 토큰 저장
-        if (localStorage.getItem(STORAGE_KEY.accessToken)) {
-          localStorage.setItem(
-            STORAGE_KEY.accessToken,
-            response.data.accessToken
-          );
-          localStorage.setItem(
-            STORAGE_KEY.refreshToken,
-            response.data.refreshToken
-          );
-        } else {
-          sessionStorage.setItem(
-            STORAGE_KEY.accessToken,
-            response.data.accessToken
-          );
-          sessionStorage.setItem(
-            STORAGE_KEY.refreshToken,
-            response.data.refreshToken
-          );
-        }
-        socket?.emit(eventName, { ...eventData, token: newToken });
-      } catch (error) {
-        console.error("소켓 이벤트 전송 실패:", error);
-      }
+      socket?.emit(eventName, { ...eventData, token: newAccessToken });
+
     };
 
     const handleConnectionJwtError = async () => {
-      try {
-        const response = await reissueToken();
-        const newToken = response.data.accessToken;
+      const newAccessToken = await refreshAndStoreToken();
+      if (!newAccessToken) return;
 
-        // 로컬 또는 세션에 재발급된 토큰 저장
-        if (localStorage.getItem(STORAGE_KEY.accessToken)) {
-          localStorage.setItem(
-            STORAGE_KEY.accessToken,
-            response.data.accessToken
-          );
-          localStorage.setItem(
-            STORAGE_KEY.refreshToken,
-            response.data.refreshToken
-          );
-        } else {
-          sessionStorage.setItem(
-            STORAGE_KEY.accessToken,
-            response.data.accessToken
-          );
-          sessionStorage.setItem(
-            STORAGE_KEY.refreshToken,
-            response.data.refreshToken
-          );
-        }
-        socket?.emit("connection-update-token", { token: newToken });
-      } catch (error) {
-        console.error("연결 업데이트 실패:", error);
-      }
+      socket?.emit("connection-update-token", { token: newAccessToken });
     };
+
 
     socket?.on("connection-jwt-error", handleConnectionJwtError);
     socket?.on("jwt-expired-error", handleJwtExpiredError);

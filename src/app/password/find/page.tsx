@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import { sendPasswordEmail } from "@/api";
+import { postEmailSendPwd } from "@/@generated/api";
 import { Button, Input } from "@/components";
 import {
   updateAuthStatus,
@@ -48,7 +48,7 @@ const Find = () => {
     if (!isSending) {
       setIsSending(true); // 전송 중 상태
       try {
-        await sendPasswordEmail({ email });
+        await postEmailSendPwd({ email });
         dispatch(updateEmail(email));
         dispatch(updateEmailAuth(""));
         dispatch(updateAuthStatus(false));

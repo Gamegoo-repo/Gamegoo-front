@@ -1,8 +1,15 @@
 import { useCallback, useRef } from "react";
 
-import { cancelFriendRequest, deleteFriend, sendFriendRequest } from "@/api";
+
+
+import { deleteFriendMemberId, deleteFriendRequestMemberId, postFriendRequestMemberId } from "@/@generated/api";
+import ko from "@/constants/ko.json";
+import { notify } from "@/hooks";
+
+
 
 import type { MemberPost } from "@/types";
+
 
 interface UseFriendActionsProps {
   isPost: MemberPost | undefined;
@@ -25,11 +32,21 @@ export const useFriendActions = ({
   const handleFriendAdd = useCallback(async () => {
     try {
       if (isPost) {
-        await sendFriendRequest(isPost.memberId);
+        await postFriendRequestMemberId(isPost.memberId);
       }
-    } catch (error) {
-      console.error(error);
-    }
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        notify({
+          text:
+            ko[`error.friend.${error.response.data.code}` as keyof typeof ko] ??
+            ko["error.friend.default"],
+          icon: "🚫",
+          type: "error",
+        });
+      } else {
+        console.error("친구 요청 실패:", error);
+      }
+    } 
     onCloseMoreBox();
   }, [isPost, onCloseMoreBox]);
 
@@ -37,10 +54,26 @@ export const useFriendActions = ({
   const handleCancelFriendReq = useCallback(async () => {
     try {
       if (isPost) {
-        await cancelFriendRequest(isPost.memberId);
+        await deleteFriendRequestMemberId(isPost.memberId);
       }
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      if (error.response && error.response.status === 404) {
+        notify({
+          text: ko["error.friend.cancel.404"],
+          icon: "🚫",
+          type: "error",
+        });
+        throw error;
+      } else {
+        notify({
+          text:
+            ko[
+              `error.friend.cancel.${error.response.data.code}` as keyof typeof ko
+            ] ?? ko["error.friend.cancel.default"],
+          icon: "🚫",
+          type: "error",
+        });
+      }
     }
     onCloseMoreBox();
   }, [isPost, onCloseMoreBox]);
@@ -49,7 +82,7 @@ export const useFriendActions = ({
   const handleFriendDelete = useCallback(async () => {
     try {
       if (isPost) {
-        await deleteFriend(isPost.memberId);
+        await deleteFriendMemberId(isPost.memberId);
       }
     } catch (error) {
       console.error(error);

@@ -80,6 +80,34 @@ export const putProfileChampionStatsRefresh = async (): Promise<
   }
 };
 
+/* patchProfileAdminRevokeMemberId - 업데이트 */
+export const patchProfileAdminRevokeMemberId = async (
+  memberId: number | string
+): Promise<ApiResponse<string>> => {
+  const endpoint = `/api/v2/profile/admin/revoke/${memberId}`;
+  try {
+    const response = await AuthAxios.patch(endpoint);
+    return response.data;
+  } catch (error) {
+    console.error("patchProfileAdminRevokeMemberId failed:", error);
+    throw error;
+  }
+};
+
+/* patchProfileAdminGrantMemberId - 업데이트 */
+export const patchProfileAdminGrantMemberId = async (
+  memberId: number | string
+): Promise<ApiResponse<string>> => {
+  const endpoint = `/api/v2/profile/admin/grant/${memberId}`;
+  try {
+    const response = await AuthAxios.patch(endpoint);
+    return response.data;
+  } catch (error) {
+    console.error("patchProfileAdminGrantMemberId failed:", error);
+    throw error;
+  }
+};
+
 /* getProfile - 조회 */
 export const getProfile = async (): Promise<ApiResponse<MyProfileResponse>> => {
   const endpoint = "/api/v2/profile";

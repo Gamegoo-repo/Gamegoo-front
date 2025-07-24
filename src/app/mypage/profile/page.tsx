@@ -5,13 +5,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import { deleteMember, getMyProfile } from "@/api";
+import { deleteAuth, getProfile } from "@/@generated/api";
 import { MyPageProfile } from "@/components";
 import { useConfirmModalContext, useMediaQueryContext } from "@/hooks";
 import { setUserMike, setUserProfile } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
 import { clearTokens } from "@/utils";
 
+import type { MikeEnum } from "@/@generated/types";
 import type { RootState } from "@/redux/store";
 
 const passwordLength = 10;
@@ -37,10 +38,10 @@ const MyProfilePage = () => {
   const handleWithdrawal = async () => {
     // 회원탈퇴 API 연동
     try {
-      // await checkPassword(password);
+      // await postPasswordCheck({password});
       // setIsPasswordValid(true);
 
-      await deleteMember();
+      await deleteAuth();
       setIsWithdrawalComplete(true);
       clearTokens();
       setTimeout(() => {
@@ -66,9 +67,15 @@ const MyProfilePage = () => {
     () => {
       const fetchProfile = async () => {
         try {
-          const response = await getMyProfile();
-          dispatch(setUserProfile(response.data));
-          dispatch(setUserMike(response.data.mike));
+          const response = await getProfile();
+
+          if (!response.data) {
+            throw new Error("내 프로필 조회 응답 데이터가 없습니다.");
+          }
+
+          const profile = response.data;
+          dispatch(setUserProfile(profile));
+          dispatch(setUserMike(profile.mike as MikeEnum));
         } catch (error) {
           console.error(error);
         }

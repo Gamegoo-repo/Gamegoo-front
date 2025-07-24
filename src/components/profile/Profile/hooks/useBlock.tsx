@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { blockMember, unblockMember } from "@/api";
+import { deleteBlockMemberId, postBlockMemberId } from "@/@generated/api";
 
 import type { User } from "@/types";
 
@@ -22,7 +22,7 @@ export const useBlock = (
     try {
       if (user.blocked) {
         // 차단해제 api
-        await unblockMember(memberId);
+        await deleteBlockMemberId(memberId);
         updateFriendState?.({
           friend: user.friend,
           friendRequestMemberId: user.friendRequestMemberId,
@@ -30,7 +30,7 @@ export const useBlock = (
         });
       } else {
         // 차단하기 api
-        await blockMember(memberId);
+        await postBlockMemberId(memberId);
         updateFriendState?.({
           friend: user.friend,
           friendRequestMemberId: user.friendRequestMemberId,

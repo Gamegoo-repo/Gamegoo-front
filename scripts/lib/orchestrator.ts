@@ -7,7 +7,7 @@ import { ApiGenerator } from "./generator";
 import { checkServerStatus, downloadFile } from "./http";
 import { PostProcessor } from "./post-processor";
 import { SchemaProcessor } from "./schema";
-import { GenerationOptions } from "./types";
+import type { GenerationOptions } from "./types";
 
 export class ApiGenerationOrchestrator {
   private options: GenerationOptions;

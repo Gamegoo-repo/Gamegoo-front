@@ -53,7 +53,7 @@ export const getNotificationUnreadCount = async (): Promise<
 export const getNotificationTotal = async (
   page: number
 ): Promise<ApiResponse<NotificationPageListResponse>> => {
-  const endpoint = "/api/v2/notification/total";
+  const endpoint = `/api/v2/notification/total?page=${page}`;
   try {
     const response = await Axios.get(endpoint);
     return response.data;
