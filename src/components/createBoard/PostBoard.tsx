@@ -10,7 +10,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import { getProfile } from "@/@generated/api";
 import { editPost, postBoard } from "@/api";
 import { GAME_MODE } from "@/constants";
 import { useConfirmModalContext } from "@/hooks";
@@ -25,6 +24,7 @@ import {
 } from "@/redux/slices/postSlice";
 import { setUserProfile } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
+import { memberApi } from "@/utils/api";
 
 import { Button, Dropdown, Input, Toggle } from "../common";
 import { CRModal, PositionBox, UserAccount } from "../crBoard";
@@ -86,7 +86,7 @@ const PostBoard = (props: PostBoardProps) => {
 
   const fetchProfile = async () => {
     try {
-      const response = await getProfile();
+      const response = await memberApi.getMemberJWT();
 
       if (!response.data) {
         throw new Error("내 프로필 조회 응답 데이터가 없습니다.");

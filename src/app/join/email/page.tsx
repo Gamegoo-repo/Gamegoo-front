@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import { postEmailSendJoin, postEmailVerify } from "@/@generated/api";
 import { Button, Input } from "@/components";
 import { emailRegEx } from "@/constants";
 import {
@@ -14,6 +13,7 @@ import {
   updateEmailAuth,
 } from "@/redux/slices/signInSlice";
 import { theme } from "@/styles/theme";
+import { emailApi } from "@/utils/api";
 
 import type { RootState } from "@/redux/store";
 
@@ -87,7 +87,7 @@ const Email = () => {
       setIsSending(true); // 전송 중 상태
       setIsSendClick(true);
       try {
-        await postEmailSendJoin({ email });
+        await emailApi.sendEmail({ emailRequest: { email } });
         setAuthCode("");
         setAuthCodeValid(undefined);
         dispatch(updateEmailAuth(""));
@@ -137,7 +137,9 @@ const Email = () => {
       router.push("/join/password");
     } else {
       try {
-        await postEmailVerify({ email, code: authCode });
+        await emailApi.verifyEmail({
+          emailCodeRequest: { email, code: authCode },
+        });
 
         // Redux 상태 업데이트
         dispatch(updateEmail(email));

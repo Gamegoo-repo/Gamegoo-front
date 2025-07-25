@@ -3,13 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import {
-  deleteBlockMemberId,
-  deleteFriendMemberId,
-  deleteFriendRequestMemberId,
-  postBlockMemberId,
-  postFriendRequestMemberId,
-} from "@/@generated/api";
 import { deletePost, getMemberPost, getNonMemberPost, pullUpPost } from "@/api";
 import {
   Alert,
@@ -48,6 +41,7 @@ import {
 import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { theme } from "@/styles/theme";
 import { setPostingDateFormatter } from "@/utils";
+import { blockApi, friendApi } from "@/utils/api";
 
 import GameStyle from "./GameStyle";
 
@@ -265,10 +259,10 @@ const ReadBoard = (props: ReadBoardProps) => {
     closeConfirmModal();
     if (isPost) {
       if (isPost.isBlocked) {
-        await deleteBlockMemberId(isPost.memberId);
+        await blockApi.deleteBlockMember({ memberId: isPost.memberId });
         setIsBlockedStatus(false);
       } else {
-        await postBlockMemberId(isPost.memberId);
+        await blockApi.blockMember({ memberId: isPost.memberId });
         setIsBlockedStatus(true);
       }
     }
@@ -289,7 +283,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     if (!isPost || isUser.id === isPost?.memberId) return;
 
     try {
-      await postFriendRequestMemberId(isPost.memberId);
+      await friendApi.sendFriendRequest({ memberId: isPost.memberId });
       await handleMoreBoxClose();
       await getPostData();
       setIsFriendStatus(true);
@@ -324,7 +318,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     if (!isPost || isUser.id === isPost?.memberId) return;
 
     try {
-      await deleteFriendRequestMemberId(isPost.memberId);
+      await friendApi.cancelFriendRequest({ memberId: isPost.memberId });
       await handleMoreBoxClose();
       await getPostData();
       setIsFriendStatus(false);
@@ -365,7 +359,7 @@ const ReadBoard = (props: ReadBoardProps) => {
     if (!isPost || isUser.id === isPost?.memberId) return;
 
     try {
-      await deleteFriendMemberId(isPost.memberId);
+      await friendApi.deleteFriend({ memberId: isPost.memberId });
       await handleMoreBoxClose();
       await getPostData();
       setIsFriendStatus(false);

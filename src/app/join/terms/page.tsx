@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import { postRiotJoin } from "@/@generated/api";
 import { Button, Checkbox, TermModal } from "@/components";
 import ko from "@/constants/ko.json";
 import {
@@ -17,6 +16,7 @@ import { createTerms } from "@/data/terms";
 import { notify } from "@/hooks";
 import { clearSignIn, updateTerms } from "@/redux/slices/signInSlice";
 import { theme } from "@/styles/theme";
+import { riotApi } from "@/utils/api";
 
 import type { RootState } from "@/redux/store";
 
@@ -62,9 +62,11 @@ const Terms = () => {
     if (puuid) {
       setIsLoading(true);
       try {
-        await postRiotJoin({
-          puuid,
-          isAgree: terms[2],
+        await riotApi.joinByRSO({
+          riotJoinRequest: {
+            puuid,
+            isAgree: terms[2],
+          },
         });
         notify({
           text: ko["join.riot.success"],

@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
-import { getProfile, putProfileProfileImage } from "@/@generated/api";
+import { Mike } from "@/@generated";
 import { RankTier } from "@/components/common";
 import GameStyle from "@/components/match/GameStyle";
 import { UpdateProfileImage } from "@/components/profile";
 import { useMediaQueryContext } from "@/hooks";
 import { setUserProfile, setUserProfileImg } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
+import { memberApi } from "@/utils/api";
 
 import type { RootState } from "@/redux/store";
 import type { Profile } from "@/types";
@@ -28,11 +29,13 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
   const handleImageClick = async (index: number) => {
     setSelectedImageIndex(index);
 
-    await putProfileProfileImage({ profileImage: index });
+    await memberApi.modifyProfileImage({
+      profileImageRequest: { profileImage: index },
+    });
     dispatch(setUserProfileImg(index));
     localStorage.setItem("profileImg", index + "");
 
-    const response = await getProfile();
+    const response = await memberApi.getMemberJWT();
 
     if (!response.data) {
       throw new Error("내 프로필 조회 응답 데이터가 없습니다.");
@@ -49,7 +52,7 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await getProfile();
+        const response = await memberApi.getMemberJWT();
 
         if (!response.data) {
           throw new Error("내 프로필 조회 응답 데이터가 없습니다.");
@@ -114,7 +117,7 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
         <GameStyle
           gameStyleResponseDTOList={user.gameStyleResponseList}
           profileType="mini"
-          mike={user.mike}
+          mike={user.mike as Mike}
         />
       </Div>
     </Container>

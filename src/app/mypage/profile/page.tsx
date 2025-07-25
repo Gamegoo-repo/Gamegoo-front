@@ -5,14 +5,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import { deleteAuth, getProfile } from "@/@generated/api";
 import { MyPageProfile } from "@/components";
 import { useConfirmModalContext, useMediaQueryContext } from "@/hooks";
 import { setUserMike, setUserProfile } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
 import { clearTokens } from "@/utils";
+import { authApi, memberApi } from "@/utils/api";
 
-import type { MikeEnum } from "@/@generated/types";
+import type { Mike } from "@generated";
 import type { RootState } from "@/redux/store";
 
 const passwordLength = 10;
@@ -41,7 +41,7 @@ const MyProfilePage = () => {
       // await postPasswordCheck({password});
       // setIsPasswordValid(true);
 
-      await deleteAuth();
+      await authApi.blindMember();
       setIsWithdrawalComplete(true);
       clearTokens();
       setTimeout(() => {
@@ -67,7 +67,7 @@ const MyProfilePage = () => {
     () => {
       const fetchProfile = async () => {
         try {
-          const response = await getProfile();
+          const response = await memberApi.getMemberJWT();
 
           if (!response.data) {
             throw new Error("내 프로필 조회 응답 데이터가 없습니다.");
@@ -75,7 +75,7 @@ const MyProfilePage = () => {
 
           const profile = response.data;
           dispatch(setUserProfile(profile));
-          dispatch(setUserMike(profile.mike as MikeEnum));
+          dispatch(setUserMike(profile.mike as Mike));
         } catch (error) {
           console.error(error);
         }

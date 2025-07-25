@@ -5,14 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import {
-  getNotificationTotal,
-  getNotificationUnreadCount,
-  patchNotificationNotificationId,
-} from "@/@generated/api";
 import { AlertBox, Pagination } from "@/components";
 import { setNotiCount } from "@/redux/slices/notiSlice";
 import { theme } from "@/styles/theme";
+import { notificationApi } from "@/utils/api";
 
 import type { RootState } from "@/redux/store";
 import type { Notification } from "@/types";
@@ -33,7 +29,9 @@ const MyAlertPage = () => {
     () => {
       const fetchNotiList = async () => {
         try {
-          const response = await getNotificationTotal(currentPage);
+          const response = await notificationApi.getNotificationListByPage({
+            page: currentPage,
+          });
           if (response.data) {
             const { notificationList, totalPage, totalElements } =
               response.data;
@@ -50,7 +48,7 @@ const MyAlertPage = () => {
 
       const fetchNotiCount = async () => {
         try {
-          const response = await getNotificationUnreadCount();
+          const response = await notificationApi.getUnreadNotificationCount();
           if (!response.data)
             throw new Error("안 읽은 알림 개수 조회 데이터 응답이 없습니다.");
           dispatch(setNotiCount(response.data));
@@ -98,7 +96,9 @@ const MyAlertPage = () => {
     );
     if (notification && !notification.read) {
       try {
-        await patchNotificationNotificationId(notificationId || 0);
+        await notificationApi.readNotification({
+          notificationId: notificationId || 0,
+        });
         setNotiList((prevNotiList) =>
           prevNotiList?.map((n) =>
             n.notificationId === notificationId ? { ...n, read: true } : n

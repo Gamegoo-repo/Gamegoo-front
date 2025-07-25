@@ -4,12 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 import {
-  getFriend,
-  patchFriendMemberIdStar,
-  postBlockMemberId,
-  postReportMemberId,
-} from "@/@generated/api";
-import {
   editManners,
   getBadMannerValues,
   getMannerValues,
@@ -37,6 +31,7 @@ import { setCloseModal, setOpenModal } from "@/redux/slices/modalSlice";
 import { socket } from "@/socket";
 import { theme } from "@/styles/theme";
 import { getAccessToken, lockBodyScroll, unlockBodyScroll } from "@/utils";
+import { blockApi, friendApi, reportApi } from "@/utils/api";
 
 import { Button, Checkbox, ConfirmModal, FormModal, Input } from "../common";
 import { ChatFriendList, ChatLayout, ChatRoomList, SearchBar, Tabs } from "./";
@@ -125,7 +120,7 @@ const Layout = () => {
     if (!accessToken) return;
 
     try {
-      const response = await getFriend();
+      const response = await friendApi.getFriendList();
       if (!response.data) {
         throw new Error("친구 목록 조회 데이터 응답이 없습니다.");
       }
@@ -247,7 +242,9 @@ const Layout = () => {
     event.stopPropagation();
 
     try {
-      const response = await patchFriendMemberIdStar(friendId);
+      const response = await friendApi.reverseFriendLiked({
+        memberId: friendId,
+      });
       if (!response.data) {
         throw new Error("즐겨찾기 상태 변경 응답이 없습니다.");
       }
@@ -374,7 +371,9 @@ const Layout = () => {
     if (!selectedChatroom) return;
 
     try {
-      const response = await postBlockMemberId(selectedChatroom.targetMemberId);
+      const response = await blockApi.blockMember({
+        memberId: selectedChatroom.targetMemberId,
+      });
       if (response.data && socket) {
         socket.emit("exit-chatroom", { uuid: selectedChatroom.uuid });
         await dispatch(setOpenModal("doneBlock"));
@@ -396,7 +395,10 @@ const Layout = () => {
     };
 
     try {
-      await postReportMemberId(memberId, params);
+      await reportApi.addReport({
+        memberId,
+        reportRequest: params,
+      });
       await handleModalClose();
     } catch (error) {
       console.error(error);

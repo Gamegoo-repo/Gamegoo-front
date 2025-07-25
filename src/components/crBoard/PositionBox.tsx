@@ -9,7 +9,7 @@ import { setPositionImg } from "@/utils";
 
 import PositionCategory from "../common/PositionCategory";
 
-import type { Position, PositionType } from "@/types";
+import type { Position } from "@/types";
 
 type Status = "reading" | "posting" | "matching";
 

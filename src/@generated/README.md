@@ -5,13 +5,13 @@
 ## 사용법
 
 ```typescript
-import { Configuration, DefaultApi } from "./generated";
+import { Configuration, DefaultApi } from './generated';
 
 // API 클라이언트 설정
 const config = new Configuration({
-  basePath: "http://localhost:3000",
+  basePath: 'http://localhost:3000',
   // 인증이 필요한 경우
-  accessToken: "your-token",
+  accessToken: 'your-token'
 });
 
 const api = new DefaultApi(config);

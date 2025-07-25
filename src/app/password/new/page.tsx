@@ -5,10 +5,10 @@ import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import { postPasswordReset } from "@/@generated/api";
 import { Button, Input } from "@/components";
 import Icon from "@/components/common/Icon";
 import { getVerifyCode } from "@/utils";
+import { authApi, passwordApi } from "@/utils/api";
 
 import type { RootState } from "@/redux/store";
 
@@ -56,10 +56,12 @@ const New = () => {
     if (passwordValid && repasswordValid) {
       const verifyCode = getVerifyCode();
       try {
-        await postPasswordReset({
-          email,
-          newPassword: repassword,
-          verifyCode: verifyCode || "",
+        await passwordApi.resetPassword({
+          passwordResetWithVerifyRequest: {
+            email,
+            newPassword: repassword,
+            verifyCode: verifyCode || "",
+          },
         });
         router.push("/login");
       } catch {}

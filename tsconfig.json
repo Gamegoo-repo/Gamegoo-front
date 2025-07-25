@@ -18,7 +18,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@generated/*": ["./src/@generated/*"],
+      "@generated": ["./src/@generated"]
     }
   },
   "include": [

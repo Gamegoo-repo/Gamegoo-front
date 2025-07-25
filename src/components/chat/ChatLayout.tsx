@@ -3,15 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 import {
-  deleteFriendMemberId,
-  deleteFriendRequestMemberId,
-  patchFriendRequestMemberIdAccept,
-  patchFriendRequestMemberIdReject,
-  postBlockMemberId,
-  postFriendRequestMemberId,
-  postReportMemberId,
-} from "@/@generated/api";
-import {
   enterUsingBoardId,
   enterUsingMemberId,
   enterUsingUuid,
@@ -38,6 +29,7 @@ import {
 import { setCloseModal, setOpenModal } from "@/redux/slices/modalSlice";
 import { socket } from "@/socket";
 import { theme } from "@/styles/theme";
+import { blockApi, friendApi, reportApi } from "@/utils/api";
 import { getAccessToken } from "@/utils/storage";
 
 import { Button, Checkbox, ConfirmModal, FormModal, Input } from "../common";
@@ -328,7 +320,9 @@ const ChatLayout = (props: ChatLayoutProps) => {
     if (!chatEnterData) return;
 
     try {
-      const response = await postBlockMemberId(chatEnterData.memberId);
+      const response = await blockApi.blockMember({
+        memberId: chatEnterData.memberId,
+      });
       if (response.data && socket) {
         socket.emit("exit-chatroom", { uuid: chatEnterData.uuid });
         await dispatch(setOpenModal("doneBlock"));
@@ -526,7 +520,10 @@ const ChatLayout = (props: ChatLayoutProps) => {
     };
 
     try {
-      await postReportMemberId(memberId, params);
+      await reportApi.addReport({
+        memberId: memberId,
+        reportRequest: params,
+      });
       await handleModalClose();
     } catch (error) {
       console.error(error);
@@ -564,7 +561,9 @@ const ChatLayout = (props: ChatLayoutProps) => {
   const handleFriendAdd = async () => {
     if (!chatEnterData) return;
     try {
-      await postFriendRequestMemberId(chatEnterData.memberId);
+      await friendApi.sendFriendRequest({
+        memberId: chatEnterData.memberId,
+      });
       await handleChatEnter();
     } catch (error: any) {
       if (error.response && error.response.data) {
@@ -586,7 +585,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
     if (!chatEnterData) return;
 
     try {
-      await deleteFriendRequestMemberId(chatEnterData.memberId);
+      await friendApi.cancelFriendRequest({ memberId: chatEnterData.memberId });
       await handleChatEnter();
     } catch (error: any) {
       if (error.response && error.response.status === 404) {
@@ -614,7 +613,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
     if (!chatEnterData) return;
 
     try {
-      await patchFriendRequestMemberIdAccept(chatEnterData.memberId);
+      await friendApi.acceptFriendRequest({ memberId: chatEnterData.memberId });
       await handleChatEnter();
     } catch (error) {
       console.error(error);
@@ -626,7 +625,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
     if (!chatEnterData) return;
 
     try {
-      await patchFriendRequestMemberIdReject(chatEnterData.memberId);
+      await friendApi.rejectFriendRequest({ memberId: chatEnterData.memberId });
       await handleChatEnter();
     } catch (error) {
       console.error(error);
@@ -638,7 +637,7 @@ const ChatLayout = (props: ChatLayoutProps) => {
     if (!chatEnterData) return;
 
     try {
-      await deleteFriendMemberId(chatEnterData.memberId);
+      await friendApi.deleteFriend({ memberId: chatEnterData.memberId });
       await handleChatEnter();
     } catch (error) {
       console.error(error);
