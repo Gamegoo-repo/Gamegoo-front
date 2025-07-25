@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 
 // 환경변수 로드
-require("dotenv").config();
+import { spawn } from "child_process";
+import path from "path";
+import dotenv from "dotenv";
+import fs from "fs-extra";
 
-const fs = require("fs-extra");
-const path = require("path");
-const { spawn } = require("child_process");
+dotenv.config();
 
 const CONFIG = {
   // Swagger JSON 파일 경로 또는 URL (.env에서 API_BASE_URL 사용)
@@ -14,7 +15,7 @@ const CONFIG = {
     : "./swagger/swagger.json", // fallback to local file
 
   // 출력 디렉토리
-  outputDir: "./src/generated",
+  outputDir: "./src/@generated",
 
   // 프로젝트 루트
   projectRoot: process.cwd(),
@@ -258,11 +259,8 @@ const response = await api.someApiMethod();
 }
 
 // CLI에서 직접 실행되는 경우
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   generateApiClient();
 }
 
-module.exports = {
-  generateApiClient,
-  CONFIG,
-};
+export { generateApiClient, CONFIG };
