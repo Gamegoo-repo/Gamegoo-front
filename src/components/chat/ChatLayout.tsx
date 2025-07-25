@@ -222,57 +222,61 @@ const ChatLayout = (props: ChatLayoutProps) => {
     [isChatUuid]
   );
 
-  useEffect(() => {
-    if (!isModalType) return;
+  useEffect(
+    () => {
+      if (!isModalType) return;
 
-    /* 채팅창 나가기 팝업 */
-    if (isModalType === "leave" && chatEnterData) {
-      openConfirmModal({
-        width: "540px",
-        primaryButtonText: "취소",
-        secondaryButtonText: "나가기",
-        onPrimaryClick: handleModalClose,
-        onSecondaryClick: handleChatLeave,
-        children:
-          !!chatEnterData.friend || !!chatEnterData.blind ? (
-            <Text>{`채팅방을 나가시겠어요?`}</Text>
-          ) : (
-            <Text>
-              {`친구 추가 하지 않은 상대방입니다\n채팅방을 나가시겠어요?`}
-            </Text>
+      /* 채팅창 나가기 팝업 */
+      if (isModalType === "leave" && chatEnterData) {
+        openConfirmModal({
+          width: "540px",
+          primaryButtonText: "취소",
+          secondaryButtonText: "나가기",
+          onPrimaryClick: handleModalClose,
+          onSecondaryClick: handleChatLeave,
+          children:
+            !!chatEnterData.friend || !!chatEnterData.blind ? (
+              <Text>{`채팅방을 나가시겠어요?`}</Text>
+            ) : (
+              <Text>
+                {`친구 추가 하지 않은 상대방입니다\n채팅방을 나가시겠어요?`}
+              </Text>
+            ),
+        });
+      }
+
+      /* 차단하기 팝업 */
+      if (isModalType === "block") {
+        openConfirmModal({
+          width: "540px",
+          primaryButtonText: "취소",
+          secondaryButtonText: "차단",
+          onPrimaryClick: handleModalClose,
+          onSecondaryClick: handleChatBlock,
+          children: (
+            <div>
+              <Text>
+                {`차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다. 차단하시겠습니까?`}
+              </Text>
+              <SmallText>{` 차단 해제는 마이페이지에서 가능합니다.`}</SmallText>
+            </div>
           ),
-      });
-    }
+        });
+      }
 
-    /* 차단하기 팝업 */
-    if (isModalType === "block") {
-      openConfirmModal({
-        width: "540px",
-        primaryButtonText: "취소",
-        secondaryButtonText: "차단",
-        onPrimaryClick: handleModalClose,
-        onSecondaryClick: handleChatBlock,
-        children: (
-          <div>
-            <Text>
-              {`차단한 상대에게는 메시지를 받을 수 없으며\n매칭이 이루어지지 않습니다. 차단하시겠습니까?`}
-            </Text>
-            <SmallText>{` 차단 해제는 마이페이지에서 가능합니다.`}</SmallText>
-          </div>
-        ),
-      });
-    }
-
-    /* 차단 완료 팝업 */
-    if (isModalType === "doneBlock") {
-      openConfirmModal({
-        width: "540px",
-        primaryButtonText: "확인",
-        onPrimaryClick: handleChatLeave,
-        children: <MsgConfirm>{`차단이 완료되었습니다.`}</MsgConfirm>,
-      });
-    }
-  }, [isModalType, chatEnterData]);
+      /* 차단 완료 팝업 */
+      if (isModalType === "doneBlock") {
+        openConfirmModal({
+          width: "540px",
+          primaryButtonText: "확인",
+          onPrimaryClick: handleChatLeave,
+          children: <MsgConfirm>{`차단이 완료되었습니다.`}</MsgConfirm>,
+        });
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isModalType, chatEnterData]
+  );
 
   /* 읽은 채팅 채팅 버튼에 실시간으로 반영 */
   const removeUnreadUuid = (uuidToRemove: string) => {

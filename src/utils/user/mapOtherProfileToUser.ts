@@ -1,6 +1,5 @@
-import type { OtherProfileResponse } from "@/@generated/types";
+import type { OtherProfileResponse } from "@generated";
 import type { User } from "@/types";
-
 
 export const mapOtherProfileToUser = (data: OtherProfileResponse): User => {
   return {

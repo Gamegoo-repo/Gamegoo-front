@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
+import { Mike } from "@generated";
 import styled, { css } from "styled-components";
 
-import { Mike } from "@/@generated";
 import Icon from "@/components/common/Icon";
 import { GAME_STYLE } from "@/constants";
 import { updateGameStyles } from "@/redux/slices/matchInfo";

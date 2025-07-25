@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
-import { Mike } from "@/@generated";
 import { RankTier } from "@/components/common";
 import GameStyle from "@/components/match/GameStyle";
 import { UpdateProfileImage } from "@/components/profile";
@@ -11,6 +10,7 @@ import { setUserProfile, setUserProfileImg } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
 import { memberApi } from "@/utils/api";
 
+import type { Mike } from "@generated";
 import type { RootState } from "@/redux/store";
 import type { Profile } from "@/types";
 

@@ -33,6 +33,7 @@ import { useProfileImage } from "./Profile/hooks/useProfileImage";
 import { useReport } from "./Profile/hooks/useReport";
 import ProfilePositionSection from "./Profile/ProfilePositionSection";
 
+import type { Mike as MikeType } from "@generated";
 import type { RootState } from "@/redux/store";
 import type { MoreBoxMenuItems, Position as PositionType, User } from "@/types";
 
@@ -127,7 +128,7 @@ const Profile: React.FC<Profile> = ({
 
   // 상위 컴포넌트에서 user 변경 시 업데이트
   useEffect(() => {
-    setIsMike(user.mike);
+    setIsMike(user.mike as MikeType);
     setPositionValue({
       main: user.mainP,
       sub: user.subP,
@@ -404,7 +405,7 @@ const Profile: React.FC<Profile> = ({
               <GameStyle
                 profileType="none"
                 gameStyleResponseDTOList={user.gameStyleResponseList}
-                mike={isMike}
+                mike={isMike as MikeType}
                 handleMike={handleMike}
               />
             </StyledBox>
@@ -441,7 +442,7 @@ const Profile: React.FC<Profile> = ({
             <GameStyle
               profileType={profileType === "normal" ? "none" : profileType}
               gameStyleResponseDTOList={user.gameStyleResponseList}
-              mike={isMike}
+              mike={isMike as MikeType}
               handleMike={handleMike}
             />
           )}

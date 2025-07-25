@@ -113,23 +113,27 @@ const Table = (props: TableProps) => {
     );
   };
 
-  useEffect(() => {
-    /* 차단하기 확인 팝업 */
-    if (!isBlockConfirmOpen) return;
+  useEffect(
+    () => {
+      /* 차단하기 확인 팝업 */
+      if (!isBlockConfirmOpen) return;
 
-    openConfirmModal({
-      width: "540px",
-      primaryButtonText: "확인",
-      onPrimaryClick: () => {
-        setIsBlockConfrimOpen(false);
-      },
-      children: (
-        <MsgConfirm>{`${
-          isBlockedStatus ? "차단이" : "차단 해제가"
-        } 완료되었습니다.`}</MsgConfirm>
-      ),
-    });
-  }, [isBlockConfirmOpen]);
+      openConfirmModal({
+        width: "540px",
+        primaryButtonText: "확인",
+        onPrimaryClick: () => {
+          setIsBlockConfrimOpen(false);
+        },
+        children: (
+          <MsgConfirm>{`${
+            isBlockedStatus ? "차단이" : "차단 해제가"
+          } 완료되었습니다.`}</MsgConfirm>
+        ),
+      });
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isBlockConfirmOpen]
+  );
 
   useEffect(() => {
     if (isReadingModal) {
@@ -160,17 +164,21 @@ const Table = (props: TableProps) => {
   };
 
   /* 소환사명 복사 모달 */
-  useEffect(() => {
-    if (isModalType === "copied") {
-      openConfirmModal({
-        width: "540px",
-        primaryButtonText: "확인",
-        secondaryButtonText: "나가기",
-        onPrimaryClick: handleModalClose,
-        children: <Text>{`소환사명이 클립보드에 복사되었습니다.`}</Text>,
-      });
-    }
-  }, [isModalType]);
+  useEffect(
+    () => {
+      if (isModalType === "copied") {
+        openConfirmModal({
+          width: "540px",
+          primaryButtonText: "확인",
+          secondaryButtonText: "나가기",
+          onPrimaryClick: handleModalClose,
+          children: <Text>{`소환사명이 클립보드에 복사되었습니다.`}</Text>,
+        });
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isModalType]
+  );
 
   /* 소환사명 복사 멘트 3초후 사라짐 */
   useEffect(() => {

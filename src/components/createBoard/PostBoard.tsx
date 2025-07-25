@@ -295,19 +295,23 @@ const PostBoard = (props: PostBoardProps) => {
     dispatch(setPostStatus(""));
   };
 
-  useEffect(() => {
-    if (postStatus) {
-      openConfirmModal({
-        width: "540px",
-        primaryButtonText: "확인",
-        onPrimaryClick: onCompletedPostingClose,
-        children:
-          postStatus === "complete"
-            ? "글 작성이 완료되었습니다."
-            : "글 수정이 완료되었습니다.",
-      });
-    }
-  }, [postStatus]);
+  useEffect(
+    () => {
+      if (postStatus) {
+        openConfirmModal({
+          width: "540px",
+          primaryButtonText: "확인",
+          onPrimaryClick: onCompletedPostingClose,
+          children:
+            postStatus === "complete"
+              ? "글 작성이 완료되었습니다."
+              : "글 수정이 완료되었습니다.",
+        });
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [postStatus]
+  );
 
   return (
     <CRModal type="posting" onClose={handleModalClose}>
