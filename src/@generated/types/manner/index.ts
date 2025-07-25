@@ -1,6 +1,0 @@
-export * from "./manner";
-export * from "./manner-insert";
-export * from "./manner-keyword";
-export * from "./manner-keyword-list";
-export * from "./manner-rating";
-export * from "./manner-update";
