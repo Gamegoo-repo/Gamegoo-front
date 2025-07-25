@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "generate": "tsx scripts/generate-api.ts && eslint --fix src/@generated && prettier --write src/@generated",
+    "generate": "node scripts/generate-api.js && eslint --fix src/@generated && prettier --write src/@generated",
     "format": "eslint --fix src && prettier --write .",
     "postinstall": "git config core.hooksPath .githooks"
   },
@@ -55,7 +55,6 @@
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
     "tailwindcss": "^4.1.11",
-    "tsx": "^4.20.3",
     "typescript": "^5"
   }
 }
