@@ -88,7 +88,7 @@ const CopyButton = styled.button`
   height: 20px;
   margin-left: 10px;
   border-radius: 2px;
-  padding: 0px 7px;
+  padding: 5px 7px;
   background: ${(props) => props.theme.colors.gray600};
   color: ${(props) => props.theme.colors.white};
   ${(props) => props.theme.fonts.medium11};

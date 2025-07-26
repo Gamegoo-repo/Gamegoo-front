@@ -11,6 +11,6 @@ export const MannerLevelCell = ({ mannerLevel }: { mannerLevel?: number }) => (
 const Second = styled.div`
   p {
     color: ${theme.colors.violet600};
-    ${(props) => props.theme.fonts.bold16};
+    ${(props) => props.theme.fonts.medium16};
   }
 `;

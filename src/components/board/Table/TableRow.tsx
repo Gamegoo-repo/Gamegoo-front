@@ -10,32 +10,33 @@ import { TierCell } from "./cells/TierCell";
 import { WantPositionCell } from "./cells/WantPositionCell";
 import { WinRateCell } from "./cells/WinRateCell";
 
+import type { MutableRefObject } from "react";
 import type { BoardListDetail, MoreBoxMenuItems, User } from "@/types";
 
 interface TableRowProps {
   data: BoardListDetail;
   isUser: User;
-  isBoardId: number;
-  isMoreBoxOpen: boolean;
+  openedBoardId: number | null;
   onRowClick: (boardId: number) => void;
   onMoveProfile: (e: React.MouseEvent, memberId: number) => void;
   onCopyText: (gameName: string, tag: string, e: React.MouseEvent) => void;
-  onMoreBoxToggle: (boardId: number) => void;
-  onMoreBoxClose: () => void;
+  onMoreBoxToggle: (boardId: number | null) => void;
   menuItems: MoreBoxMenuItems[];
+  moreBoxRef: React.RefObject<HTMLDivElement>;
+  ignoreRef: MutableRefObject<boolean>;
 }
 
 const TableRow = ({
   data,
   isUser,
-  isBoardId,
-  isMoreBoxOpen,
+  openedBoardId,
   onRowClick,
   onMoveProfile,
   onCopyText,
   onMoreBoxToggle,
-  onMoreBoxClose,
   menuItems,
+  moreBoxRef,
+  ignoreRef,
 }: TableRowProps) => {
   return (
     <Row onClick={() => onRowClick(data.boardId)}>
@@ -57,13 +58,13 @@ const TableRow = ({
       <MoreCell
         isUserId={isUser.id || 0}
         boardId={data.boardId}
-        isMoreBoxOpen={isMoreBoxOpen}
-        isBoardId={isBoardId}
+        openedBoardId={openedBoardId}
         bumpTime={data.bumpTime}
         createdAt={data.createdAt}
-        onMoreBoxToggle={onMoreBoxToggle}
-        onMoreBoxClose={onMoreBoxClose}
         menuItems={menuItems}
+        onMoreBoxToggle={onMoreBoxToggle}
+        moreBoxRef={moreBoxRef}
+        ignoreRef={ignoreRef}
       />
     </Row>
   );

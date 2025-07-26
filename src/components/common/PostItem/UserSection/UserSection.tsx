@@ -23,6 +23,7 @@ interface UserSectionProps {
   onMoreBoxToggle: (e: React.MouseEvent) => void;
   onMoreBoxClose: () => void;
   moreBoxMenuItems: MoreBoxMenuItems[];
+  moreBoxRef: React.RefObject<HTMLDivElement>;
 }
 
 const UserSection: FC<UserSectionProps> = ({
@@ -36,8 +37,16 @@ const UserSection: FC<UserSectionProps> = ({
   onMoreBoxToggle,
   onMoreBoxClose,
   moreBoxMenuItems,
+  moreBoxRef,
 }) => {
-  const moreAreaRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const ignoreClickRef = useRef(false);
+
+  const handleButtonClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    ignoreClickRef.current = true;
+    onMoreBoxToggle(e);
+  };
 
   return (
     <Wrapper>
@@ -62,15 +71,15 @@ const UserSection: FC<UserSectionProps> = ({
 
       {showMoreButton && (
         <UserRight>
-          <More ref={moreAreaRef}>
-            <MoreBoxButton onClick={onMoreBoxToggle} />
+          <More ref={moreBoxRef}>
+            <MoreBoxButton ref={buttonRef} onClick={handleButtonClick} />
             {isMoreBoxOpen && (
               <MoreBox
                 items={moreBoxMenuItems}
                 top={30}
                 right={10}
                 onClose={onMoreBoxClose}
-                moreAreaRef={moreAreaRef}
+                moreAreaRef={moreBoxRef}
               />
             )}
           </More>
