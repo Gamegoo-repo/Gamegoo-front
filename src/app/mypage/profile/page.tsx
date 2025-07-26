@@ -52,20 +52,16 @@ const MyProfilePage = () => {
       // setIsPasswordValid(false);
     }
   };
-  useEffect(
-    () => {
-      if (isWithdrawalComplete) {
-        openConfirmModal({
-          width: "540px",
-          primaryButtonText: "확인",
-          onPrimaryClick: () => {},
-          children: `회원탈퇴가 완료되었습니다.`,
-        });
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [isWithdrawalComplete]
-  );
+  useEffect(() => {
+    if (isWithdrawalComplete) {
+      openConfirmModal({
+        width: "540px",
+        primaryButtonText: "확인",
+        onPrimaryClick: () => {},
+        children: `회원탈퇴가 완료되었습니다.`,
+      });
+    }
+  }, [isWithdrawalComplete, openConfirmModal]);
 
   useEffect(
     () => {

@@ -232,7 +232,7 @@ const Table = (props: TableProps) => {
     setIsBlockBoxOpen(false);
     if (isPost) {
       if (isPost.isBlocked) {
-        await blockApi.deleteBlockMember({ memberId: isPost.memberId });
+        await blockApi.unblockMember({ memberId: isPost.memberId });
         setIsBlockedStatus(false);
       } else {
         await blockApi.blockMember({ memberId: isPost.memberId });

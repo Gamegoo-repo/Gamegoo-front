@@ -85,42 +85,39 @@ const ProfilePage = () => {
     setIsClient(true);
   }, []);
 
-  useEffect(
-    () => {
-      if (socket) {
-        // 에러 이벤트 감지
-        socket.on("error", (errorData) => {
-          if (
-            errorData.event === "error" &&
-            errorData.data ===
-              "You are already in the matching room for this game mode."
-          ) {
-            openConfirmModal({
-              width: "540px",
-              primaryButtonText: "확인",
-              onPrimaryClick: () => {
-                setIsAlready(false);
-              },
-              children: (
-                <>
-                  이미 매칭 중이에요!
-                  <Warning>한 번에 하나의 매칭만 할 수 있어요</Warning>
-                </>
-              ),
-            });
-          } else if (
-            errorData.event === "error" &&
-            errorData.data ===
-              "Failed POST matching API: 서버 에러, 관리자에게 문의 바랍니다."
-          ) {
-            sendMatchingQuitEvent();
-          }
-        });
-      }
-    },
+  useEffect(() => {
+    if (socket) {
+      // 에러 이벤트 감지
+      socket.on("error", (errorData) => {
+        if (
+          errorData.event === "error" &&
+          errorData.data ===
+            "You are already in the matching room for this game mode."
+        ) {
+          openConfirmModal({
+            width: "540px",
+            primaryButtonText: "확인",
+            onPrimaryClick: () => {
+              setIsAlready(false);
+            },
+            children: (
+              <>
+                이미 매칭 중이에요!
+                <Warning>한 번에 하나의 매칭만 할 수 있어요</Warning>
+              </>
+            ),
+          });
+        } else if (
+          errorData.event === "error" &&
+          errorData.data ===
+            "Failed POST matching API: 서버 에러, 관리자에게 문의 바랍니다."
+        ) {
+          sendMatchingQuitEvent();
+        }
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
+  }, [openConfirmModal, socket]);
 
   useEffect(
     () => {

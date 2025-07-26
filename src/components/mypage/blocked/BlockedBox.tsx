@@ -80,7 +80,7 @@ const BlockedBox: React.FC<BlockList> = ({
     closeConfirmModal();
     if (isBlocked) {
       // 차단해제 api
-      await blockApi.deleteBlockMember({ memberId });
+      await blockApi.unblockMember({ memberId });
       setIsBlocked(false);
     } else {
       // 차단 api
