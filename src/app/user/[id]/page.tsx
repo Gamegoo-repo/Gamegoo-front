@@ -4,14 +4,12 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import styled from "styled-components";
 
-import {
-  getMemberMannerKeyword,
-  getMemberMannerLevel,
-  getOtherProfile,
-} from "@/api";
+import { getProfileOther } from "@/@generated/api";
+import { getMemberMannerKeyword, getMemberMannerLevel } from "@/api";
 import { BlindProfile, LoadingSpinner, UserProfile } from "@/components";
 import { DEFAULT_MANNER, DEFAULT_PROFILE } from "@/data/profile/default";
 import { getAccessToken } from "@/utils";
+import { mapOtherProfileToUser } from "@/utils/user/mapOtherProfileToUser";
 
 import type { Manner } from "@/components/user/UserProfile";
 import type { User } from "@/types";
@@ -52,15 +50,16 @@ const UserProfilePage = () => {
       // 토큰이 있을 때만 프로필, 매너 정보 불러오기
       const fetchOtherProfile = async () => {
         try {
-          const response = await getOtherProfile(Number(id));
-          const data = response.data;
+          const response = await getProfileOther(Number(id));
+          if (!response.data) {
+            throw new Error("다른 유저 프로필 조회 응답 데이터가 없습니다.");
+          }
 
-          const mappedData: User = {
-            ...data,
-            championResponseList: data.championStatsResponseList, // 필드명 매핑
-          };
+          const otherUserMappedData: User = mapOtherProfileToUser(
+            response.data
+          );
 
-          setOtherProfile(mappedData);
+          setOtherProfile(otherUserMappedData);
           console.log(response);
         } catch (error) {
           console.error(error);

@@ -1,19 +1,9 @@
 import { AuthAxios } from "@/api";
 
-import type {
-  ApiResponse,
-  BoardBumpResponse,
-  BoardByIdResponse,
-  BoardByIdResponseForMember,
-  BoardCursorResponse,
-  BoardInsertRequest,
-  BoardInsertResponse,
-  BoardResponse,
-  BoardUpdateRequest,
-  BoardUpdateResponse,
-  MyBoardCursorResponse,
-  MyBoardResponse,
-} from "../types";
+
+
+import type { ApiResponse, BoardBumpResponse, BoardByIdResponse, BoardByIdResponseForMember, BoardCursorResponse, BoardInsertRequest, BoardInsertResponse, BoardResponse, BoardUpdateRequest, BoardUpdateResponse, GuestBoardDeleteRequest, GuestBoardInsertRequest, GuestBoardUpdateRequest, MyBoardCursorResponse, MyBoardResponse } from "../types";
+
 
 /* putPostsBoardId - 수정 */
 export const putPostsBoardId = async (
@@ -44,6 +34,38 @@ export const deletePostsBoardId = async (
   }
 };
 
+/* putPostsGuestBoardId - 수정 */
+export const putPostsGuestBoardId = async (
+  boardId: number | string,
+  data: GuestBoardUpdateRequest
+): Promise<ApiResponse<BoardUpdateResponse>> => {
+  const endpoint = `/api/v2/posts/guest/${boardId}`;
+  try {
+    const response = await AuthAxios.put(endpoint, data);
+    return response.data;
+  } catch (error) {
+    console.error("putPostsGuestBoardId failed:", error);
+    throw error;
+  }
+};
+
+/* deletePostsGuestBoardId - 삭제 */
+export const deletePostsGuestBoardId = async (
+  boardId: number | string,
+  data: GuestBoardDeleteRequest
+): Promise<ApiResponse<string>> => {
+  const endpoint = `/api/v2/posts/guest/${boardId}`;
+  try {
+    const response = await AuthAxios.delete(endpoint, {
+      data: data,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("deletePostsGuestBoardId failed:", error);
+    throw error;
+  }
+};
+
 /* postPosts - 생성 */
 export const postPosts = async (
   data: BoardInsertRequest
@@ -68,6 +90,20 @@ export const postPostsBoardIdBump = async (
     return response.data;
   } catch (error) {
     console.error("postPostsBoardIdBump failed:", error);
+    throw error;
+  }
+};
+
+/* postPostsGuest - 생성 */
+export const postPostsGuest = async (
+  data: GuestBoardInsertRequest
+): Promise<ApiResponse<BoardInsertResponse>> => {
+  const endpoint = "/api/v2/posts/guest";
+  try {
+    const response = await AuthAxios.post(endpoint, data);
+    return response.data;
+  } catch (error) {
+    console.error("postPostsGuest failed:", error);
     throw error;
   }
 };

@@ -1,5 +1,7 @@
 "use client";
 
+import "./globals.css";
+
 import { useEffect, useRef, useState } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { Toaster } from "react-hot-toast";

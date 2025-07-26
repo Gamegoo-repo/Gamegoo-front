@@ -3,14 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 import {
-  acceptFriendRequest,
-  cancelFriendRequest,
-  deleteFriend,
-  getChatrooms,
-  rejectFriendRequest,
-  sendFriendRequest,
-} from "@/api";
-import { useChatList, useChatMessage } from "@/hooks";
+  deleteFriendMemberId,
+  deleteFriendRequestMemberId,
+  patchFriendRequestMemberIdAccept,
+  patchFriendRequestMemberIdReject,
+  postFriendRequestMemberId,
+} from "@/@generated/api";
+import { getChatrooms } from "@/api";
+import ko from "@/constants/ko.json";
+import { notify, useChatList, useChatMessage } from "@/hooks";
 import { setChatEnterType, setCurrentChatUuid } from "@/redux/slices/chatSlice";
 import { setOpenModal } from "@/redux/slices/modalSlice";
 import { theme } from "@/styles/theme";
@@ -205,7 +206,7 @@ const ChatRoomList = (props: ChatRoomListProps) => {
   const handleFriendAdd = async (e: React.MouseEvent, memberId: number) => {
     e.stopPropagation();
     try {
-      await sendFriendRequest(memberId);
+      await postFriendRequestMemberId(memberId);
       triggerReloadChatrooms();
     } catch (error) {
       console.error(error);
@@ -221,7 +222,7 @@ const ChatRoomList = (props: ChatRoomListProps) => {
     e.stopPropagation();
 
     try {
-      await deleteFriend(memberId);
+      await deleteFriendMemberId(memberId);
       triggerReloadChatrooms();
     } catch (error) {
       console.error(error);
@@ -236,10 +237,26 @@ const ChatRoomList = (props: ChatRoomListProps) => {
     e.stopPropagation();
 
     try {
-      await cancelFriendRequest(memberId);
+      await deleteFriendRequestMemberId(memberId);
       triggerReloadChatrooms();
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      if (error.response && error.response.status === 404) {
+        notify({
+          text: ko["error.friend.cancel.404"],
+          icon: "🚫",
+          type: "error",
+        });
+        throw error;
+      } else {
+        notify({
+          text:
+            ko[
+              `error.friend.cancel.${error.response.data.code}` as keyof typeof ko
+            ] ?? ko["error.friend.cancel.default"],
+          icon: "🚫",
+          type: "error",
+        });
+      }
     }
   };
 
@@ -251,7 +268,7 @@ const ChatRoomList = (props: ChatRoomListProps) => {
     e.stopPropagation();
 
     try {
-      await acceptFriendRequest(memberId);
+      await patchFriendRequestMemberIdAccept(memberId);
       triggerReloadChatrooms();
     } catch (error) {
       console.error(error);
@@ -266,7 +283,7 @@ const ChatRoomList = (props: ChatRoomListProps) => {
     e.stopPropagation();
 
     try {
-      await rejectFriendRequest(memberId);
+      await patchFriendRequestMemberIdReject(memberId);
       triggerReloadChatrooms();
     } catch (error) {
       console.error(error);

@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
-import { deletePost, getMyPost, getMyPostCursor, getMyProfile } from "@/api";
+import { getProfile } from "@/@generated/api";
+import { deletePost, getMyPost, getMyPostCursor } from "@/api";
 import { MoPost, Pagination, Post, PostBoard } from "@/components";
 import { useInfiniteScroll, useMediaQueryContext } from "@/hooks";
 import { setClosePostingModal } from "@/redux/slices/modalSlice";
@@ -96,8 +97,13 @@ const MyPostPage = () => {
     () => {
       const fetchProfile = async () => {
         try {
-          const response = await getMyProfile();
-          dispatch(setUserProfile(response.data));
+          const response = await getProfile();
+
+          if (!response.data) {
+            throw new Error("내 프로필 조회 응답 데이터가 없습니다.");
+          }
+          const profile = response.data;
+          dispatch(setUserProfile(profile));
         } catch (error) {
           console.error(error);
         }

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import styled, { css } from "styled-components";
 
-import { putGameStyle, putMike } from "@/api";
+import { putProfileGamestyle, putProfileMike } from "@/@generated/api";
 import Icon from "@/components/common/Icon";
 import { GAME_STYLE } from "@/constants";
 import { updateGameStyles } from "@/redux/slices/matchInfo";
@@ -13,6 +13,7 @@ import { Box, Toggle } from "../common";
 import SelectedStylePopup from "./SelectedStylePopup";
 
 import type { Dispatch } from "react";
+import type { MikeEnum } from "@/@generated/types";
 import type { Mike } from "@/types";
 
 type profileType = "me" | "other" | "none" | "mini" | "post";
@@ -89,7 +90,7 @@ const GameStyle = (props: GameStyleProps) => {
 
     setSelectedStyles(updatedStyles);
     if (profileType === "me" || profileType === "mini") {
-      await putGameStyle(updatedStyles);
+      await putProfileGamestyle({ gameStyleIdList: updatedStyles });
     } else if (profileType === "none") {
       dispatch(updateGameStyles(updatedStyles));
     } else if (profileType === "post") {
@@ -112,7 +113,7 @@ const GameStyle = (props: GameStyleProps) => {
     setMikeState(newMikeValue);
 
     try {
-      await putMike(newMikeValue);
+      await putProfileMike({ mike: newMikeValue as MikeEnum });
       dispatch(setUserMike(newMikeValue));
     } catch {}
   };

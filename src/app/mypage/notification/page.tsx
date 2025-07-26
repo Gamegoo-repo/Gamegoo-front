@@ -6,10 +6,10 @@ import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
 import {
-  getTotalNotification,
-  getUnreadNotificationCount,
-  patchReadNotification,
-} from "@/api";
+  getNotificationTotal,
+  getNotificationUnreadCount,
+  patchNotificationNotificationId,
+} from "@/@generated/api";
 import { AlertBox, Pagination } from "@/components";
 import { setNotiCount } from "@/redux/slices/notiSlice";
 import { theme } from "@/styles/theme";
@@ -21,7 +21,7 @@ const MyAlertPage = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const [currentPage, setCurrentPage] = useState(1);
-  const [notiList, setNotiList] = useState<Notification[]>([]);
+  const [notiList, setNotiList] = useState<Notification[] | undefined>([]);
   const [totalPages, setTotalPages] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
   const itemsPerPage = 10;
@@ -33,13 +33,13 @@ const MyAlertPage = () => {
     () => {
       const fetchNotiList = async () => {
         try {
-          const response = await getTotalNotification(currentPage);
+          const response = await getNotificationTotal(currentPage);
           if (response.data) {
             const { notificationList, totalPage, totalElements } =
               response.data;
             setNotiList(notificationList);
-            setTotalPages(totalPage);
-            setTotalItems(totalElements);
+            setTotalPages(totalPage || 0);
+            setTotalItems(totalElements || 0);
           } else {
             console.error(response.message);
           }
@@ -50,7 +50,9 @@ const MyAlertPage = () => {
 
       const fetchNotiCount = async () => {
         try {
-          const response = await getUnreadNotificationCount();
+          const response = await getNotificationUnreadCount();
+          if (!response.data)
+            throw new Error("안 읽은 알림 개수 조회 데이터 응답이 없습니다.");
           dispatch(setNotiCount(response.data));
         } catch (error) {
           console.error(error);
@@ -82,19 +84,23 @@ const MyAlertPage = () => {
     setCurrentPage(page);
   };
 
-  const handleClickAlert = async (notificationId: number, pageUrl: string) => {
+  const handleClickAlert = async (
+    notificationId: number | undefined,
+    pageUrl: string | undefined
+  ) => {
     // 관련 페이지 이동
+    if (pageUrl === undefined) return;
     router.push(pageUrl);
 
     // 읽음 상태 업데이트
-    const notification = notiList.find(
+    const notification = notiList?.find(
       (n) => n.notificationId === notificationId
     );
     if (notification && !notification.read) {
       try {
-        await patchReadNotification(notificationId);
+        await patchNotificationNotificationId(notificationId || 0);
         setNotiList((prevNotiList) =>
-          prevNotiList.map((n) =>
+          prevNotiList?.map((n) =>
             n.notificationId === notificationId ? { ...n, read: true } : n
           )
         );
@@ -110,7 +116,7 @@ const MyAlertPage = () => {
         <Alert>
           {/* <Top>알림 페이지 ({notiCount})</Top> */}
           <Top>알림</Top>
-          {notiList.length > 0 ? (
+          {notiList != undefined && notiList.length > 0 ? (
             <>
               <AlertList>
                 {notiList.map((data) => (

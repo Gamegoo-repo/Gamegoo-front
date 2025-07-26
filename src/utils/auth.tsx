@@ -1,3 +1,8 @@
+import { postAuthRefresh } from "@/@generated/api";
+import { STORAGE_KEY } from "@/constants/storage";
+
+import { getRefreshToken } from "./storage";
+
 export const isTokenExpired = (token: string): boolean => {
   if (!token) return true;
 
@@ -13,5 +18,31 @@ export const isTokenExpired = (token: string): boolean => {
   } catch (error) {
     console.error("Failed to parse token:", error);
     return true;
+  }
+};
+
+export const refreshAndStoreToken = async (): Promise<string | null> => {
+  try {
+    const refreshToken = getRefreshToken();
+    if (!refreshToken) throw new Error("리프레시 토큰이 없습니다.");
+
+    const response = await postAuthRefresh({ refreshToken });
+    if (!response.data)
+      throw new Error("토큰 재발급 응답에 데이터가 없습니다.");
+
+    const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
+      response.data;
+
+    const storage = localStorage.getItem(STORAGE_KEY.accessToken)
+      ? localStorage
+      : sessionStorage;
+
+    storage.setItem(STORAGE_KEY.accessToken, newAccessToken ?? "");
+    storage.setItem(STORAGE_KEY.refreshToken, newRefreshToken ?? "");
+
+    return newAccessToken ?? null;
+  } catch (error) {
+    console.error("토큰 재발급 실패:", error);
+    return null;
   }
 };

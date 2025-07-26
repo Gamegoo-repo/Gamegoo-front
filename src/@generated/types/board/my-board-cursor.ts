@@ -12,6 +12,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+
 // May contain unused imports in some cases
 // @ts-ignore
 import type { MyBoardListResponse } from "../board/my-board-list";

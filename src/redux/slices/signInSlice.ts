@@ -21,7 +21,7 @@ const initialState: SignInState = {
   authStatus: false,
   summonerName: "",
   summonerTag: "",
-  socketId: "" || undefined,
+  socketId: undefined,
 };
 
 export const signInSlice = createSlice({

@@ -1,8 +1,8 @@
 export interface Notification {
-  notificationId: number;
-  notificationType: number;
-  content: string;
-  pageUrl: string;
-  read: boolean;
-  createdAt: string;
+  notificationId?: number | undefined;
+  notificationType?: number | undefined;
+  content?: string | undefined;
+  pageUrl?: string | undefined;
+  read?: boolean | undefined;
+  createdAt?: string | undefined;
 }

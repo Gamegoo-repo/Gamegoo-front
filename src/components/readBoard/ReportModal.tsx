@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import { reportMember } from "@/api";
+import { postReportMemberId } from "@/@generated/api";
 import {
   Button,
   Checkbox,
@@ -94,8 +94,8 @@ const ReportModal = ({
 
     if (!isPost || isUser.id === isPost?.memberId) return;
 
+    const memberId = isPost.memberId;
     const params = {
-      memberId: isPost.memberId,
       reportCodeList: checkedItems,
       contents: reportDetail,
       pathCode: 1, // BOARD
@@ -103,7 +103,7 @@ const ReportModal = ({
     };
 
     try {
-      await reportMember(params);
+      await postReportMemberId(memberId, params);
       await handleModalClose();
     } catch (error: any) {
       if (error.response.data.code === "REPORT_404") {

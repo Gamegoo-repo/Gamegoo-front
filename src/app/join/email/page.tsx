@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import { sendJoinEmail, verifyEmailCode } from "@/api";
+import { postEmailSendJoin, postEmailVerify } from "@/@generated/api";
 import { Button, Input } from "@/components";
 import { emailRegEx } from "@/constants";
 import {
@@ -87,7 +87,7 @@ const Email = () => {
       setIsSending(true); // 전송 중 상태
       setIsSendClick(true);
       try {
-        await sendJoinEmail({ email });
+        await postEmailSendJoin({ email });
         setAuthCode("");
         setAuthCodeValid(undefined);
         dispatch(updateEmailAuth(""));
@@ -137,7 +137,7 @@ const Email = () => {
       router.push("/join/password");
     } else {
       try {
-        await verifyEmailCode({ email, code: authCode });
+        await postEmailVerify({ email, code: authCode });
 
         // Redux 상태 업데이트
         dispatch(updateEmail(email));

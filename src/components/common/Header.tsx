@@ -6,7 +6,8 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import { getUnreadNotificationCount, postLogout, socketLogout } from "@/api";
+import { getNotificationUnreadCount, postAuthLogout } from "@/@generated/api";
+import { socketLogout } from "@/api";
 import Icon from "@/components/common/Icon";
 import { HEADER_MODAL_TAB } from "@/constants";
 import { STORAGE_KEY } from "@/constants/storage";
@@ -128,7 +129,9 @@ const Header = () => {
 
   const fetchNotiCount = async () => {
     try {
-      const response = await getUnreadNotificationCount();
+      const response = await getNotificationUnreadCount();
+      if (!response.data)
+        throw new Error("안 읽은 알림 개수 조회 데이터 응답이 없습니다.");
       dispatch(setNotiCount(response.data));
     } catch (error) {
       console.error(error);
@@ -307,7 +310,7 @@ const Header = () => {
                         } else {
                           sessionStorage.setItem(STORAGE_KEY.logout, "true");
                           try {
-                            await postLogout();
+                            await postAuthLogout();
                             await clearTokens();
                             await socketLogout();
                             localStorage.removeItem(

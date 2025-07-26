@@ -7,7 +7,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import { getUnreadUuid, postLogin, socketLogin } from "@/api";
+import { postAuthLogin } from "@/@generated/api";
+import { getUnreadUuid, socketLogin } from "@/api";
 import { Button, Checkbox, Input } from "@/components";
 import { emailRegEx } from "@/constants";
 import { STORAGE_KEY } from "@/constants/storage";
@@ -73,24 +74,27 @@ const Login = () => {
   /* 로그인 */
   const handleLogin = async () => {
     try {
-      const response = await postLogin({ email, password });
-      const accessToken = response.data.accessToken;
-      const refreshToken = response.data.refreshToken;
+      const response = await postAuthLogin({ email, password });
+
+      if (!response.data) {
+        throw new Error("로그인 응답 데이터가 없습니다.");
+      }
+
+      const { accessToken, refreshToken, name, profileImage, id } =
+        response.data;
 
       /* 자동 로그인 체크 여부에 따라 토큰 저장 위치 결정 */
-      const storage = autoLogin ? localStorage : sessionStorage;
-      storage.setItem(STORAGE_KEY.accessToken, accessToken);
-      storage.setItem(STORAGE_KEY.refreshToken, refreshToken);
-      storage.setItem(STORAGE_KEY.name, response.data.name);
-      storage.setItem(
-        STORAGE_KEY.profileImg,
-        response.data.profileImage.toString()
-      );
-      storage.setItem(STORAGE_KEY.userId, response.data.id.toString());
 
-      dispatch(setUserName(response.data.name));
-      dispatch(setUserProfileImg(response.data.profileImage));
-      dispatch(setUserId(response.data.id));
+      const storage = autoLogin ? localStorage : sessionStorage;
+      storage.setItem(STORAGE_KEY.accessToken, accessToken ?? "");
+      storage.setItem(STORAGE_KEY.refreshToken, refreshToken ?? "");
+      storage.setItem(STORAGE_KEY.name, name ?? "");
+      storage.setItem(STORAGE_KEY.profileImg, profileImage?.toString() ?? "");
+      storage.setItem(STORAGE_KEY.userId, id?.toString() ?? "");
+
+      dispatch(setUserName(name ?? ""));
+      dispatch(setUserProfileImg(profileImage ?? 0));
+      dispatch(setUserId(id ?? 0));
 
       router.push("/");
 

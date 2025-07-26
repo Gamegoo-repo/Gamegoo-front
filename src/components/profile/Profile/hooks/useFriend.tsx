@@ -1,10 +1,10 @@
 import {
-  acceptFriendRequest,
-  cancelFriendRequest,
-  deleteFriend,
-  rejectFriendRequest,
-  sendFriendRequest,
-} from "@/api";
+  deleteFriendMemberId,
+  deleteFriendRequestMemberId,
+  patchFriendRequestMemberIdAccept,
+  patchFriendRequestMemberIdReject,
+  postFriendRequestMemberId,
+} from "@/@generated/api";
 
 import type { User } from "@/types";
 
@@ -37,23 +37,23 @@ export const useFriend = (
     try {
       switch (action) {
         case "add":
-          await sendFriendRequest(memberId);
+          await postFriendRequestMemberId(memberId);
           update({ friendRequestMemberId: myId });
           break;
         case "cancel":
-          await cancelFriendRequest(memberId);
+          await deleteFriendRequestMemberId(memberId);
           update({ friendRequestMemberId: null });
           break;
         case "accept":
-          await acceptFriendRequest(memberId);
+          await patchFriendRequestMemberIdAccept(memberId);
           update({ friend: true, friendRequestMemberId: memberId });
           break;
         case "reject":
-          await rejectFriendRequest(memberId);
+          await patchFriendRequestMemberIdReject(memberId);
           update({ friendRequestMemberId: null });
           break;
         case "delete":
-          await deleteFriend(memberId);
+          await deleteFriendMemberId(memberId);
           update({ friend: false, friendRequestMemberId: null });
           break;
         default:

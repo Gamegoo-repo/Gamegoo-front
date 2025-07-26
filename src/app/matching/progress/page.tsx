@@ -7,7 +7,6 @@ import styled from "styled-components";
 
 import { getBoardList } from "@/api";
 import {
-  ConfirmModal,
   HeaderTitle,
   LoadingSpinner,
   SquareProfile,
@@ -26,24 +25,7 @@ import {
 } from "@/utils";
 
 import type { GameMode, Mike, Position } from "@/types";
-
-interface User {
-  memberId: number;
-  gameName: string;
-  tag: string;
-  soloTier: string;
-  freeTier: string;
-  soloRank: number;
-  freeRank: number;
-  mannerLevel: number;
-  profileImg: number;
-  gameMode: GameMode;
-  mainP: Position;
-  subP: Position;
-  wantP: Position[];
-  mike: Mike;
-  gameStyleList: string[];
-}
+import type { MatchingUser } from "@/types/user/matching";
 
 const messagesWithTierN = Object.freeze([
   "나와 같은 티어의 n명이 매칭 중이에요!",
@@ -79,7 +61,7 @@ const Progress = () => {
   const retry = searchParams.get("retry");
 
   const gameStyleRaw = searchParams.get("gameStyleIdList");
-  const user: User = {
+  const user: MatchingUser = {
     memberId: parseInt(searchParams.get("memberId") || "0", 10),
     gameName: searchParams.get("gameName") || "",
     tag: searchParams.get("tag") || "",

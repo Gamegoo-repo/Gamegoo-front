@@ -1,13 +1,9 @@
 import { AuthAxios } from "@/api";
 
-import type {
-  ApiResponse,
-  DeleteFriendResponse,
-  FriendInfoResponse,
-  FriendListResponse,
-  FriendRequestResponse,
-  StarFriendResponse,
-} from "../types";
+
+
+import type { ApiResponse, DeleteFriendResponse, FriendInfoResponse, FriendListResponse, FriendRequestResponse, StarFriendResponse } from "../types";
+
 
 /* postFriendRequestMemberId - 생성 */
 export const postFriendRequestMemberId = async (
@@ -95,7 +91,7 @@ export const getFriend = async (): Promise<ApiResponse<FriendListResponse>> => {
 export const getFriendSearch = async (
   query: string
 ): Promise<ApiResponse<FriendInfoResponse[]>> => {
-  const endpoint = "/api/v2/friend/search";
+  const endpoint = `/api/v2/friend/search?query=${query}`;
   try {
     const response = await AuthAxios.get(endpoint);
     return response.data;

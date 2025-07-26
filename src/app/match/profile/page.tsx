@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter, useSearchParams } from "next/navigation";
 import styled from "styled-components";
 
-import { getMyProfile } from "@/api";
+import { getProfile } from "@/@generated/api";
 import {
   Button,
   ConfirmModal,
@@ -49,9 +49,14 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await getMyProfile();
-        console.log("Fetched profile:", response);
-        dispatch(setUserProfile(response.data));
+        const response = await getProfile();
+
+        if (!response.data) {
+          throw new Error("내 프로필 조회 응답 데이터가 없습니다.");
+        }
+
+        const profile = response.data;
+        dispatch(setUserProfile(profile));
       } catch (error) {
         console.error(error);
       }

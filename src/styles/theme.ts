@@ -242,11 +242,12 @@ const fonts = {
     size: 32,
   }),
 };
+
 const breakpoints = {
   mobile: "700px",
   tablet: "950px",
   desktop: "1200px",
-};
+} as const;
 
 const zIndex = {
   base: 1,
@@ -258,6 +259,8 @@ const zIndex = {
 
 export type ColorsTypes = typeof colors;
 export type FontsTypes = typeof fonts;
+export type BreakpointsType = typeof breakpoints;
+export type ZIndexType = typeof zIndex;
 
 export const theme: DefaultTheme = {
   colors,
