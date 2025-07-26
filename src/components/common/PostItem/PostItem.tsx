@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 
@@ -74,6 +74,7 @@ const PostItem: FC<PostItemProps> = ({
   onProfileClick,
 }) => {
   const isUser = useSelector((state: RootState) => state.user);
+  const moreBoxRef = useRef<HTMLDivElement>(null);
   const [isPost, setIsPost] = useState<MemberPost | undefined>(memberPost);
 
   // memberPost prop이 변경될 때 isPost 상태 업데이트
@@ -168,6 +169,7 @@ const PostItem: FC<PostItemProps> = ({
           onMoreBoxToggle={handleMoreBoxToggle}
           onMoreBoxClose={handleMoreBoxClose}
           moreBoxMenuItems={MoreBoxMenuItems}
+          moreBoxRef={moreBoxRef}
         />
         <UserTierSection data={data} showTierSection={showTierSection} />
         <PositionSection

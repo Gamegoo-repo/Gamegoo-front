@@ -69,6 +69,9 @@ const ReadBoard = (props: ReadBoardProps) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const mannerLevelBoxRef = useRef<HTMLDivElement>(null);
+  const moreBoxRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const ignoreClickRef = useRef(false);
 
   const [isPost, setIsPost] = useState<MemberPost>();
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
@@ -474,11 +477,13 @@ const ReadBoard = (props: ReadBoardProps) => {
   };
 
   /* 더보기 버튼 토글 */
-  const handleMoreBoxToggle = () => {
+  const handleMoreBoxToggle = (e: React.MouseEvent) => {
     if (!isUser.id) {
       return showAlertWithContent("exclamation", loginRequiredMessage, "확인");
     }
 
+    e.stopPropagation();
+    ignoreClickRef.current = true;
     setIsMoreBoxOpen((prevState) => !prevState);
   };
 
@@ -599,14 +604,6 @@ const ReadBoard = (props: ReadBoardProps) => {
       >
         {isPost && (
           <>
-            {isMoreBoxOpen && (
-              <MoreBox
-                items={MoreBoxMenuItems}
-                top={67}
-                right={45}
-                onClose={() => setIsMoreBoxOpen(false)}
-              />
-            )}
             <Wrapper>
               <UserSection>
                 <UserLeft>
@@ -644,8 +641,20 @@ const ReadBoard = (props: ReadBoardProps) => {
                     tag={isPost.tag}
                   />
                 </UserLeft>
-                <UserRight>
-                  <MoreBoxButton onClick={handleMoreBoxToggle} />
+                <UserRight ref={moreBoxRef}>
+                  <MoreBoxButton
+                    ref={buttonRef}
+                    onClick={handleMoreBoxToggle}
+                  />
+                  {isMoreBoxOpen && (
+                    <MoreBox
+                      items={MoreBoxMenuItems}
+                      top={67}
+                      right={45}
+                      onClose={() => setIsMoreBoxOpen(false)}
+                      moreAreaRef={moreBoxRef}
+                    />
+                  )}
                 </UserRight>
               </UserSection>
               <UserTierWrapper>

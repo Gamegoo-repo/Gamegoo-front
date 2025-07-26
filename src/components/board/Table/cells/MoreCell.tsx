@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import styled from "styled-components";
 
 import { MoreBox } from "@/components/common";
@@ -5,49 +6,57 @@ import { MoreBoxButton } from "@/components/readBoard";
 import { theme } from "@/styles/theme";
 import { setDateFormatter } from "@/utils";
 
+import type { MutableRefObject } from "react";
+
 export const MoreCell = ({
+  isUserId,
+  boardId,
+  openedBoardId,
   bumpTime,
   createdAt,
-  isUserId,
-  isBoardId,
-  boardId,
-  isMoreBoxOpen,
-  onMoreBoxToggle,
-  onMoreBoxClose,
   menuItems,
+  onMoreBoxToggle,
+  moreBoxRef,
+  ignoreRef,
 }: {
+  isUserId: number;
+  boardId: number;
+  openedBoardId: number | null;
   bumpTime: string;
   createdAt: string;
-  isUserId: number;
-  isBoardId: number;
-  boardId: number;
-  isMoreBoxOpen: boolean;
-  onMoreBoxToggle: (boardId: number) => void;
-  onMoreBoxClose: () => void;
   menuItems: any[];
-}) => (
-  <Ninth className="table_width">
-    <P className="gray">{setDateFormatter(bumpTime || createdAt)}</P>
-    {isUserId && (
-      <More>
-        <MoreBoxButton
-          onClick={(e) => {
-            e.stopPropagation();
-            onMoreBoxToggle(boardId);
-          }}
-        />
-        {isMoreBoxOpen && isBoardId === boardId && (
-          <MoreBox
-            items={menuItems}
-            top={0}
-            left={-180}
-            onClose={onMoreBoxClose}
-          />
-        )}
-      </More>
-    )}
-  </Ninth>
-);
+  onMoreBoxToggle: (boardId: number | null) => void;
+  moreBoxRef: React.RefObject<HTMLDivElement>;
+  ignoreRef: MutableRefObject<boolean>;
+}) => {
+  const isOpen = openedBoardId === boardId;
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const handleButtonClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    ignoreRef.current = true;
+    onMoreBoxToggle(boardId);
+  };
+
+  return (
+    <Ninth className="table_width">
+      <P className="gray">{setDateFormatter(bumpTime || createdAt)}</P>
+      {isUserId > 0 && (
+        <More ref={moreBoxRef}>
+          <MoreBoxButton ref={buttonRef} onClick={handleButtonClick} />
+          {isOpen && (
+            <MoreBox
+              items={menuItems}
+              top={0}
+              left={-180}
+              onClose={() => onMoreBoxToggle(null)}
+            />
+          )}
+        </More>
+      )}
+    </Ninth>
+  );
+};
 
 const Ninth = styled.div`
   display: flex;

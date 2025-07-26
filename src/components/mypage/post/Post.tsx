@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 import { getMemberPost, pullUpPost } from "@/api";
 import { MoreBox } from "@/components/common";
-import Report from "@/components/readBoard/MoreBoxButton";
+import { MoreBoxButton } from "@/components/readBoard";
 import ko from "@/constants/ko.json";
 import { notify, useConfirmModalContext } from "@/hooks";
 import { setRefresh } from "@/redux/slices/boardSlice";
@@ -27,6 +27,7 @@ import type { MemberPost, MoreBoxMenuItems } from "@/types";
 
 export interface PostProps {
   boardId: number;
+  openedBoardId: number | null;
   memberId: number;
   profileImage: number;
   gameName: string;
@@ -38,10 +39,12 @@ export interface PostProps {
   bumpTime: string;
   boardNumber: number;
   onDeletePost?: (boardId: number) => void;
+  onMoreBoxToggle?: (boardId: number | null) => void;
 }
 
 const Post: React.FC<PostProps> = ({
   boardId,
+  openedBoardId,
   memberId,
   profileImage,
   gameName,
@@ -53,39 +56,57 @@ const Post: React.FC<PostProps> = ({
   bumpTime,
   boardNumber,
   onDeletePost,
+  onMoreBoxToggle,
 }) => {
-  const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
+  const isOpen = openedBoardId === boardId;
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const moreBoxRef = useRef<HTMLDivElement>(null);
+  const ignoreClickRef = useRef(false);
 
   const { openConfirmModal, closeConfirmModal } = useConfirmModalContext();
 
   const dispatch = useDispatch();
-
-  const handleMoreBoxOpen = () => {
-    setIsMoreBoxOpen((prevState) => !prevState);
-  };
-
   const [isPost, setIsPost] = useState<MemberPost>();
-
   const isUser = useSelector((state: RootState) => state.user);
+
+  // 외부 클릭 시 닫기
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (ignoreClickRef.current) {
+        ignoreClickRef.current = false;
+        return;
+      }
+      if (
+        moreBoxRef.current &&
+        !moreBoxRef.current.contains(e.target as Node) &&
+        onMoreBoxToggle
+      ) {
+        onMoreBoxToggle(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [onMoreBoxToggle]);
+
+  const handleMoreButtonClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    ignoreClickRef.current = true;
+    onMoreBoxToggle?.(isOpen ? null : boardId);
+  };
 
   /* 게시글 끌어올리기 */
   const handlePullUp = () => {
-    handleMoreBoxOpen();
-    if (boardId) {
-      /* 끌어올리기 확인 팝업 */
-      openConfirmModal({
-        width: "540px",
-        primaryButtonText: "아니요",
-        secondaryButtonText: "예",
-        onPrimaryClick: () => {
-          closeConfirmModal();
-        },
-        onSecondaryClick: () => {
-          handlePullUpAction();
-        },
-        children: <MsgConfirm>{`본 게시글을 끌어올리시겠습니까?`}</MsgConfirm>,
-      });
-    }
+    onMoreBoxToggle?.(null);
+    openConfirmModal({
+      width: "540px",
+      primaryButtonText: "아니요",
+      secondaryButtonText: "예",
+      onPrimaryClick: () => closeConfirmModal(),
+      onSecondaryClick: () => handlePullUpAction(),
+      children: <MsgConfirm>본 게시글을 끌어올리시겠습니까?</MsgConfirm>,
+    });
   };
 
   const handlePullUpAction = async () => {
@@ -101,7 +122,7 @@ const Post: React.FC<PostProps> = ({
   };
 
   const handleModify = async () => {
-    handleMoreBoxOpen();
+    onMoreBoxToggle?.(null);
     // 수정하기 api
     dispatch(setUserId(memberId));
     const memberData = await getMemberPost(boardId);
@@ -112,17 +133,15 @@ const Post: React.FC<PostProps> = ({
     setIsPost(memberData.data);
     dispatch(setCloseReadingModal());
     dispatch(setOpenPostingModal());
-    setIsMoreBoxOpen(false);
     dispatch(setPostStatus(""));
   };
 
   const handleDelete = async () => {
-    handleMoreBoxOpen();
+    onMoreBoxToggle?.(null);
     // 삭제하기 api
     if (onDeletePost) {
       await onDeletePost(boardId);
     }
-    setIsMoreBoxOpen(false);
   };
 
   // 더보기 버튼 메뉴
@@ -175,10 +194,16 @@ const Post: React.FC<PostProps> = ({
           <Date>{setDateFormatter(bumpTime || createdAt)}</Date>
         </Content>
         <MoreContainer>
-          <More>
-            <Report onClick={handleMoreBoxOpen} />
-            {isMoreBoxOpen && (
-              <MoreBox items={MoreBoxMenuItems} top={-10} left={45} />
+          <More ref={moreBoxRef}>
+            <MoreBoxButton ref={buttonRef} onClick={handleMoreButtonClick} />
+            {isOpen && (
+              <MoreBox
+                items={MoreBoxMenuItems}
+                top={-10}
+                left={45}
+                onClose={() => onMoreBoxToggle?.(null)}
+                moreAreaRef={moreBoxRef}
+              />
             )}
           </More>
         </MoreContainer>

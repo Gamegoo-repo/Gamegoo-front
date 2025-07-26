@@ -178,6 +178,10 @@ const fonts = {
     weight: 500,
     size: 14,
   }),
+  medium12: FONT({
+    weight: 500,
+    size: 12,
+  }),
   medium11: FONT({
     weight: 500,
     size: 11,
@@ -248,6 +252,7 @@ const breakpoints = {
 const zIndex = {
   base: 1,
   baseFloating: 10,
+  menu: 50,
   popup: 100,
   alertConfirm: 1000,
 };
