@@ -1,6 +1,7 @@
 import {
   AuthControllerApi,
   BlockApi,
+  Configuration,
   FriendApi,
   MemberApi,
   NotificationApi,
@@ -10,20 +11,36 @@ import {
 } from "@generated";
 import { EmailApi } from "@generated/apis/EmailApi";
 
-export const emailApi = new EmailApi();
+import { getAccessToken } from "./storage";
 
-export const riotApi = new RiotApi();
+// API 클라이언트 공통 설정
+const apiConfig = new Configuration({
+  basePath: process.env.NEXT_PUBLIC_BASE_URL,
+  credentials: "include", // 쿠키 포함
+  headers: {
+    "Content-Type": "application/json",
+  },
+  // JWT 토큰 자동 포함
+  accessToken: () => {
+    const token = getAccessToken();
+    return token || "";
+  },
+});
 
-export const authApi = new AuthControllerApi();
+export const emailApi = new EmailApi(apiConfig);
 
-export const memberApi = new MemberApi();
+export const riotApi = new RiotApi(apiConfig);
 
-export const blockApi = new BlockApi();
+export const authApi = new AuthControllerApi(apiConfig);
 
-export const notificationApi = new NotificationApi();
+export const memberApi = new MemberApi(apiConfig);
 
-export const passwordApi = new PasswordControllerApi();
+export const blockApi = new BlockApi(apiConfig);
 
-export const friendApi = new FriendApi();
+export const notificationApi = new NotificationApi(apiConfig);
 
-export const reportApi = new ReportApi();
+export const passwordApi = new PasswordControllerApi(apiConfig);
+
+export const friendApi = new FriendApi(apiConfig);
+
+export const reportApi = new ReportApi(apiConfig);
