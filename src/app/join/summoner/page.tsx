@@ -5,11 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import { postAuthJoin, postRiotVerify } from "@/@generated/api";
 import { Button, Input } from "@/components";
 import { useConfirmModalContext } from "@/hooks";
 import { clearSignIn } from "@/redux/slices/signInSlice";
 import { theme } from "@/styles/theme";
+import { authApi, riotApi } from "@/utils/api";
 
 import type { AxiosError } from "axios";
 import type { RootState } from "@/redux/store";
@@ -55,7 +55,9 @@ const Summoner = () => {
   /* 소환사명 조회 */
   const handleCheckSummoner = async () => {
     try {
-      await postRiotVerify({ gameName: name, tag });
+      await riotApi.verifyRiot({
+        riotVerifyExistUserRequest: { gameName: name, tag },
+      });
       openConfirmModal({
         width: "540px",
         primaryButtonText: "확인",
@@ -85,12 +87,14 @@ const Summoner = () => {
     if (isCheckRiot) {
       setIsLoading(true);
       try {
-        await postAuthJoin({
-          isAgree,
-          email,
-          password,
-          gameName: name,
-          tag,
+        await authApi.join({
+          joinRequest: {
+            isAgree,
+            email,
+            password,
+            gameName: name,
+            tag,
+          },
         });
         dispatch(clearSignIn());
         router.push("/login");

@@ -354,16 +354,20 @@ const MessageList = (props: MessageListProps) => {
     return () => clearTimeout(timer);
   }, [isUnregisterAlert, isBlockedAlert]);
 
-  useEffect(() => {
-    if (isFeedbackModalOpen) {
-      openConfirmModal({
-        type: "manner",
-        width: "315px",
-        primaryButtonText: "확인",
-        onPrimaryClick: () => dispatch(setCloseMannerStatusModal()),
-      });
-    }
-  }, [isFeedbackModalOpen]);
+  useEffect(
+    () => {
+      if (isFeedbackModalOpen) {
+        openConfirmModal({
+          type: "manner",
+          width: "315px",
+          primaryButtonText: "확인",
+          onPrimaryClick: () => dispatch(setCloseMannerStatusModal()),
+        });
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isFeedbackModalOpen]
+  );
   const handleMoveProfile = async (memberId: number) => {
     await router.push(`/user/${memberId}`);
     await dispatch(closeChat());

@@ -1,15 +1,10 @@
 import { useCallback, useRef } from "react";
 
-
-
-import { deleteFriendMemberId, deleteFriendRequestMemberId, postFriendRequestMemberId } from "@/@generated/api";
 import ko from "@/constants/ko.json";
 import { notify } from "@/hooks";
-
-
+import { friendApi } from "@/utils/api";
 
 import type { MemberPost } from "@/types";
-
 
 interface UseFriendActionsProps {
   isPost: MemberPost | undefined;
@@ -32,7 +27,7 @@ export const useFriendActions = ({
   const handleFriendAdd = useCallback(async () => {
     try {
       if (isPost) {
-        await postFriendRequestMemberId(isPost.memberId);
+        await friendApi.sendFriendRequest({ memberId: isPost.memberId });
       }
     } catch (error: any) {
       if (error.response && error.response.data) {
@@ -46,7 +41,7 @@ export const useFriendActions = ({
       } else {
         console.error("친구 요청 실패:", error);
       }
-    } 
+    }
     onCloseMoreBox();
   }, [isPost, onCloseMoreBox]);
 
@@ -54,7 +49,7 @@ export const useFriendActions = ({
   const handleCancelFriendReq = useCallback(async () => {
     try {
       if (isPost) {
-        await deleteFriendRequestMemberId(isPost.memberId);
+        await friendApi.cancelFriendRequest({ memberId: isPost.memberId });
       }
     } catch (error: any) {
       if (error.response && error.response.status === 404) {
@@ -82,7 +77,7 @@ export const useFriendActions = ({
   const handleFriendDelete = useCallback(async () => {
     try {
       if (isPost) {
-        await deleteFriendMemberId(isPost.memberId);
+        await friendApi.deleteFriend({ memberId: isPost.memberId });
       }
     } catch (error) {
       console.error(error);

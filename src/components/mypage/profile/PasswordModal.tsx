@@ -1,12 +1,12 @@
 import { useState } from "react";
 import styled from "styled-components";
 
-import { postPasswordCheck, putPasswordChange } from "@/@generated/api";
 import { Button, FormModal, Input } from "@/components/common";
 import Icon from "@/components/common/Icon";
 import ko from "@/constants/ko.json";
 import { notify } from "@/hooks";
 import { theme } from "@/styles/theme";
+import { passwordApi } from "@/utils/api";
 
 interface PasswordModalProps {
   onClose: () => void;
@@ -38,11 +38,13 @@ const PasswordModal = (props: PasswordModalProps) => {
   ) => {
     event.preventDefault();
     try {
-      await postPasswordCheck({ password });
+      await passwordApi.checkPassword({ passwordCheckRequest: { password } });
       setIsPasswordValid(true);
 
       if (validation) {
-        await putPasswordChange({ newPassword });
+        await passwordApi.resetPasswordWithJWT({
+          passwordResetRequest: { newPassword },
+        });
         notify({
           text: ko["password.success"],
           type: "success",

@@ -7,7 +7,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import { postAuthLogin } from "@/@generated/api";
 import { getUnreadUuid, socketLogin } from "@/api";
 import { Button, Checkbox, Input } from "@/components";
 import { emailRegEx } from "@/constants";
@@ -21,6 +20,7 @@ import {
   setUserProfileImg,
 } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
+import { authApi } from "@/utils/api";
 import { clearTokens } from "@/utils/storage";
 
 const Login = () => {
@@ -74,7 +74,9 @@ const Login = () => {
   /* 로그인 */
   const handleLogin = async () => {
     try {
-      const response = await postAuthLogin({ email, password });
+      const response = await authApi.login({
+        loginRequest: { email, password },
+      });
 
       if (!response.data) {
         throw new Error("로그인 응답 데이터가 없습니다.");

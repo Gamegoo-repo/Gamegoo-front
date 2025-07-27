@@ -3,23 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import {
-  blockMember,
-  cancelFriendRequest,
-  deleteFriend,
-  deletePost,
-  getMemberPost,
-  pullUpPost,
-  sendFriendRequest,
-  unblockMember,
-} from "@/api";
-import {
-  Alert,
-  ConfirmModal,
-  Layout,
-  ReadBoard,
-  ReportModal,
-} from "@/components";
+import { deletePost, getMemberPost, pullUpPost } from "@/api";
+import { Layout, ReadBoard, ReportModal } from "@/components";
 import ko from "@/constants/ko.json";
 import { notify, useConfirmModalContext } from "@/hooks";
 import { setRefresh } from "@/redux/slices/boardSlice";
@@ -33,17 +18,13 @@ import {
 } from "@/redux/slices/modalSlice";
 import { setPostStatus } from "@/redux/slices/postSlice";
 import { theme } from "@/styles/theme";
+import { blockApi, friendApi } from "@/utils/api";
 
 import TableHead from "./Table/TableHead";
 import TableRow from "./Table/TableRow";
 
 import type { RootState } from "@/redux/store";
-import type {
-  AlertProps,
-  BoardListDetail,
-  MemberPost,
-  MoreBoxMenuItems,
-} from "@/types";
+import type { BoardListDetail, MemberPost, MoreBoxMenuItems } from "@/types";
 import type { TableTitleProps } from "@/types/board/table";
 
 interface TableProps {
@@ -144,23 +125,27 @@ const Table = (props: TableProps) => {
     );
   };
 
-  useEffect(() => {
-    /* 차단하기 확인 팝업 */
-    if (!isBlockConfirmOpen) return;
+  useEffect(
+    () => {
+      /* 차단하기 확인 팝업 */
+      if (!isBlockConfirmOpen) return;
 
-    openConfirmModal({
-      width: "540px",
-      primaryButtonText: "확인",
-      onPrimaryClick: () => {
-        setIsBlockConfrimOpen(false);
-      },
-      children: (
-        <MsgConfirm>{`${
-          isBlockedStatus ? "차단이" : "차단 해제가"
-        } 완료되었습니다.`}</MsgConfirm>
-      ),
-    });
-  }, [isBlockConfirmOpen]);
+      openConfirmModal({
+        width: "540px",
+        primaryButtonText: "확인",
+        onPrimaryClick: () => {
+          setIsBlockConfrimOpen(false);
+        },
+        children: (
+          <MsgConfirm>{`${
+            isBlockedStatus ? "차단이" : "차단 해제가"
+          } 완료되었습니다.`}</MsgConfirm>
+        ),
+      });
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isBlockConfirmOpen]
+  );
 
   useEffect(() => {
     if (isReadingModal) {
@@ -191,17 +176,21 @@ const Table = (props: TableProps) => {
   };
 
   /* 소환사명 복사 모달 */
-  useEffect(() => {
-    if (isModalType === "copied") {
-      openConfirmModal({
-        width: "540px",
-        primaryButtonText: "확인",
-        secondaryButtonText: "나가기",
-        onPrimaryClick: handleModalClose,
-        children: <Text>{`소환사명이 클립보드에 복사되었습니다.`}</Text>,
-      });
-    }
-  }, [isModalType]);
+  useEffect(
+    () => {
+      if (isModalType === "copied") {
+        openConfirmModal({
+          width: "540px",
+          primaryButtonText: "확인",
+          secondaryButtonText: "나가기",
+          onPrimaryClick: handleModalClose,
+          children: <Text>{`소환사명이 클립보드에 복사되었습니다.`}</Text>,
+        });
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isModalType]
+  );
 
   /* 소환사명 복사 멘트 3초후 사라짐 */
   useEffect(() => {
@@ -255,10 +244,10 @@ const Table = (props: TableProps) => {
     setIsBlockBoxOpen(false);
     if (isPost) {
       if (isPost.isBlocked) {
-        await unblockMember(isPost.memberId);
+        await blockApi.unblockMember({ memberId: isPost.memberId });
         setIsBlockedStatus(false);
       } else {
-        await blockMember(isPost.memberId);
+        await blockApi.blockMember({ memberId: isPost.memberId });
         setIsBlockedStatus(true);
       }
     }
@@ -269,7 +258,9 @@ const Table = (props: TableProps) => {
   const handleFriendAdd = async () => {
     try {
       if (isPost) {
-        await sendFriendRequest(isPost.memberId);
+        await friendApi.sendFriendRequest({
+          memberId: isPost.memberId,
+        });
       }
       await handleMoreBox(false);
       setIsFriendStatus(true);
@@ -284,7 +275,9 @@ const Table = (props: TableProps) => {
   const handleCancelFriendReq = async () => {
     try {
       if (isPost) {
-        await cancelFriendRequest(isPost.memberId);
+        await friendApi.cancelFriendRequest({
+          memberId: isPost.memberId,
+        });
       }
       await handleMoreBox(false);
       setIsFriendStatus(false);
@@ -299,7 +292,7 @@ const Table = (props: TableProps) => {
   const handleFriendDelete = async () => {
     try {
       if (isPost) {
-        await deleteFriend(isPost.memberId);
+        await friendApi.deleteFriend({ memberId: isPost.memberId });
       }
       await handleMoreBox(false);
       setIsFriendStatus(false);

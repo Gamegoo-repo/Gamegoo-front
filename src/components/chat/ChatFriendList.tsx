@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 
-import { deleteFriendMemberId } from "@/@generated/api";
 import { theme } from "@/styles/theme";
+import { friendApi } from "@/utils/api";
 
 import FriendItem from "./FriendItem";
 
@@ -60,7 +60,7 @@ const ChatFriendList = (props: FriendListProps) => {
 
     try {
       if (friendId) {
-        await deleteFriendMemberId(friendId);
+        await friendApi.deleteFriend({ memberId: friendId });
         await handleFetchFriendsList();
         await handleCloseDeletetMenu();
       }

@@ -2,15 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import styled, { css } from "styled-components";
 
-import {
-  deleteBlockDeleteMemberId,
-  deleteBlockMemberId,
-  postBlockMemberId,
-} from "@/@generated/api";
 import { MoreBox } from "@/components/common";
 import { useConfirmModalContext, useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 import { getProfileBgColor } from "@/utils";
+import { blockApi } from "@/utils/api";
 
 import MoreBoxButton from "../../readBoard/MoreBoxButton";
 
@@ -84,11 +80,11 @@ const BlockedBox: React.FC<BlockList> = ({
     closeConfirmModal();
     if (isBlocked) {
       // 차단해제 api
-      await deleteBlockMemberId(memberId);
+      await blockApi.unblockMember({ memberId });
       setIsBlocked(false);
     } else {
       // 차단 api
-      await postBlockMemberId(memberId);
+      await blockApi.blockMember({ memberId });
       setIsBlocked(true);
     }
     setIsBlockConfrimOpen(true);
@@ -101,7 +97,7 @@ const BlockedBox: React.FC<BlockList> = ({
   const handleRunDelete = async () => {
     closeConfirmModal();
     // 탈퇴 회원 차단목록 삭제 api
-    await deleteBlockDeleteMemberId(memberId);
+    await blockApi.deleteBlockMember({ memberId });
   };
 
   const handleShowProfile = () => {

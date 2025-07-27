@@ -1,10 +1,12 @@
-import type { MyProfileResponse } from "@/@generated/types";
+import type { MyProfileResponse } from "@generated";
 import type { GameMode } from "@/types";
 import type { MatchingUser } from "@/types/user/matching";
 
-
 export const mapMyProfileResponseToMatchingUser = (
-  data: MyProfileResponse & { mannerLevel: number; gameMode: GameMode }
+  data: MyProfileResponse & {
+    mannerLevel: number;
+    gameMode: GameMode;
+  }
 ): MatchingUser => {
   return {
     memberId: data.id ?? 0,
