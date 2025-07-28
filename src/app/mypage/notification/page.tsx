@@ -87,7 +87,7 @@ const MyAlertPage = () => {
     pageUrl: string | undefined
   ) => {
     // 관련 페이지 이동
-    if (pageUrl === undefined) return;
+    if (pageUrl === null || pageUrl === undefined) return;
     router.push(pageUrl);
 
     // 읽음 상태 업데이트
