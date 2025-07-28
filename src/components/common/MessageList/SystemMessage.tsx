@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+import { theme } from "@/styles/theme";
+
 interface SystemMessageProps {
   message: string;
   onClick?: () => void;
@@ -29,11 +31,11 @@ export default SystemMessage;
 const SystemMessageContainer = styled.div`
   width: 100%;
   text-align: center;
-  padding: 11px 0px;
-  background: #000000a3;
-  ${(props) => props.theme.fonts.regular12};
-  color: ${(props) => props.theme.colors.white};
-  border-radius: 14px;
+  padding: 4px 0px;
+  background: ${theme.colors.gray700};
+  ${theme.fonts.regular13};
+  color: ${theme.colors.white};
+  border-radius: 999px;
   margin-bottom: 11px;
 `;
 

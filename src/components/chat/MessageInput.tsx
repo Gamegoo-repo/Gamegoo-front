@@ -69,7 +69,7 @@ const MessageInput = (props: MessageInputProps) => {
               />
             </TextareaWrapper>
             <Row>
-              <TextCount $color={message.length > 0}>
+              <TextCount>
                 {message.length}
                 {` `}/{` `}1000
               </TextCount>
@@ -155,8 +155,8 @@ const Row = styled.div`
   margin: 0 20px 20px 20px;
 `;
 
-const TextCount = styled.div<{ $color: boolean }>`
-  color: ${({ $color }) => ($color ? theme.colors.violet300 : "#b5b5b5")};
+const TextCount = styled.div`
+  color: ${theme.colors.violet400};
   ${theme.fonts.regular9};
 `;
 
@@ -170,6 +170,7 @@ const SubmitButton = styled.button`
 
   &:disabled {
     background: ${theme.colors.gray300};
+    color: ${theme.colors.gray500};
     cursor: default;
   }
 `;

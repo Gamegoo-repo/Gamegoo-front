@@ -26,6 +26,7 @@ const YourMessage = ({
         profileImgNum={message.senderProfileImg}
         isBlind={isBlind}
         onClick={onProfileClick}
+        size={47}
       />
     )}
     <YourDiv $hasProfileImage={showProfileImage}>

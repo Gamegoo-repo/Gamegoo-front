@@ -88,18 +88,20 @@ const MessageHeader = (props: MessageHeaderProps) => {
         <MoreBox
           items={menuItems}
           top={35}
-          right={30}
+          right={40}
           onClose={() => setIsMoreBoxOpen(false)}
         />
       )}
       {!isMobile ? (
-        <CloseButton onClick={() => dispatch(closeChatRoom())}>
-          <Icon
-            backgroundUrl="/assets/icons/close_chat.svg"
-            width={12}
-            height={12}
-          />
-        </CloseButton>
+        <CloseButtonWrapper>
+          <CloseButton onClick={() => dispatch(closeChatRoom())}>
+            <Icon
+              backgroundUrl="/assets/icons/close_chat.svg"
+              width={12}
+              height={12}
+            />
+          </CloseButton>
+        </CloseButtonWrapper>
       ) : (
         <TitleWrap>
           <Title>채팅</Title>
@@ -118,8 +120,8 @@ const MessageHeader = (props: MessageHeaderProps) => {
           <PrevButton onClick={handleGoToPrevious}>
             <Icon
               backgroundUrl="/assets/icons/chevron_left.svg"
-              width={16}
-              height={16}
+              width={9}
+              height={18}
             />
           </PrevButton>
           <Middle>
@@ -127,6 +129,7 @@ const MessageHeader = (props: MessageHeaderProps) => {
               profileImgNum={chatEnterData.memberProfileImg}
               isBlind={chatEnterData.blind}
               onClick={() => handleMoveProfile(chatEnterData.memberId)}
+              size={47}
             />
             <Div>
               <UserName
@@ -159,8 +162,8 @@ const MessageHeader = (props: MessageHeaderProps) => {
           </Middle>
           <ThreeDotsButton onClick={handleMoreBoxOpen}>
             <Icon
-              backgroundUrl="/assets/icons/three_dots_button.svg"
-              width={15}
+              backgroundUrl="/assets/icons/three_dots_button_black.svg"
+              width={3}
               height={15}
             />
           </ThreeDotsButton>
@@ -186,11 +189,20 @@ const Title = styled.p`
   color: ${theme.colors.gray800};
 `;
 
-const CloseButton = styled.button`
-  margin-left: auto;
+const CloseButtonWrapper = styled.div`
+  width: 100%;
   display: flex;
-  margin-bottom: 1px;
-  padding: 12px 13px 0 0;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 10px 18px 0 0;
+`;
+
+const CloseButton = styled.button`
+  width: 25px;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 0;
   }
@@ -199,13 +211,15 @@ const CloseButton = styled.button`
 const ChatHeader = styled.header`
   display: flex;
   align-items: center;
-  padding: 11px 27px 20px 12px;
+  padding: 12px 20px;
   @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 12px 16px;
   }
 `;
 
 const PrevButton = styled.button`
+  width: 18px;
+  height: 18px;
   margin-right: 18px;
   cursor: pointer;
 `;
@@ -224,6 +238,7 @@ const Div = styled.div`
 const UserName = styled.p`
   ${(props) => props.theme.fonts.semiBold18};
   color: ${theme.colors.gray800};
+  margin-bottom: 3px;
   cursor: pointer;
 `;
 
@@ -239,4 +254,7 @@ const OnlineStatus = styled.p`
 const ThreeDotsButton = styled.button`
   width: 20px;
   height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

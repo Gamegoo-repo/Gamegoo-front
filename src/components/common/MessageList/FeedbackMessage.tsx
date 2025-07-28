@@ -49,10 +49,10 @@ const Text = styled.p`
 
 const StyledButton = styled.button`
   width: 119px;
-  border-radius: 53px;
+  height: 29px;
+  border-radius: 999px;
   margin-top: 12px;
   ${(props) => props.theme.fonts.semiBold13};
   background: ${(props) => props.theme.colors.violet600};
   color: ${(props) => props.theme.colors.white};
-  padding: 8px 24px;
 `;

@@ -13,25 +13,29 @@ const ProfileAvatar = ({
   profileImgNum,
   isBlind,
   onClick,
-  size = 33,
+  size = 45,
 }: ProfileAvatarProps) => {
   const imageUrl = isBlind
     ? "/assets/images/profile/profile_default.svg"
     : `/assets/images/profile/profile${profileImgNum}.svg`;
 
   return (
-    <ImageWrapper $bgColor={getProfileBgColor(profileImgNum)} onClick={onClick}>
-      <ProfileImage data={imageUrl} width={size} height={size} />
+    <ImageWrapper
+      $bgColor={getProfileBgColor(profileImgNum)}
+      onClick={onClick}
+      $size={size}
+    >
+      <ProfileImage data={imageUrl} width={size - 12} height={size - 12} />
     </ImageWrapper>
   );
 };
 
 export default ProfileAvatar;
 
-const ImageWrapper = styled.div<{ $bgColor: string }>`
+const ImageWrapper = styled.div<{ $bgColor: string; $size: number }>`
   position: relative;
-  width: 47px;
-  height: 47px;
+  width: ${(props) => props.$size}px;
+  height: ${(props) => props.$size}px;
   background: ${(props) => props.$bgColor};
   border-radius: 50%;
 `;

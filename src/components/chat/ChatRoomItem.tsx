@@ -88,15 +88,15 @@ const ChatRoomItem = (props: ChatRoomItemProps) => {
           )}
         </Middle>
       </Left>
-      <Right
+      <ThreeDotsButton
         onClick={(e) => handleMoreBoxOpen(room.chatroomId, room.uuid, room, e)}
       >
         <Icon
-          backgroundUrl="/assets/icons/three_dots_button.svg"
-          width={10}
+          backgroundUrl="/assets/icons/three_dots_button_black.svg"
+          width={3}
           height={15}
         />
-      </Right>
+      </ThreeDotsButton>
     </UserContent>
   );
 };
@@ -149,6 +149,7 @@ const Unread = styled.p`
 `;
 
 const Row = styled.div`
+  height: 17px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -168,11 +169,17 @@ const Msg = styled.p`
 `;
 
 const Date = styled.p`
+  display: flex;
+  align-items: center;
   ${theme.fonts.medium11};
-  color: ${theme.colors.gray300};
+  color: #c1c1c1;
   margin-right: 12px;
 `;
 
-const Right = styled.div`
-  padding: 0 7px 0 12px;
+const ThreeDotsButton = styled.button`
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

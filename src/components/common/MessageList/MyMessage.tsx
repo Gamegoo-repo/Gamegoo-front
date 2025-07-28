@@ -72,6 +72,6 @@ const MyMessageBubble = styled.div<{ $animation?: boolean; $isLast?: boolean }>`
 
 const MyDate = styled.p`
   margin-right: 5px;
-  ${(props) => props.theme.fonts.regular8};
-  color: ${(props) => props.theme.colors.gray700};
+  ${(props) => props.theme.fonts.regular9};
+  color: ${(props) => props.theme.colors.violet400};
 `;

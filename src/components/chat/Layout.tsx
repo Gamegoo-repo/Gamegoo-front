@@ -812,9 +812,14 @@ const HeaderTitle = styled.p`
 `;
 
 const CloseButton = styled.button`
+  width: 25px;
+  height: 25px;
   display: flex;
-  width: 12px;
-  height: 12px;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 12px;
+  right: 12px;
 `;
 
 const ChatMain = styled.div`
