@@ -29,6 +29,7 @@ interface UseMoreBoxMenuProps {
   handleCancelFriendReq: () => void;
   handleFriendDelete: () => void;
   handleBlock: () => void;
+  onReportModalOpen?: (boardId: number) => void;
 }
 
 interface UseMoreBoxMenuReturn {
@@ -54,6 +55,7 @@ export const useMoreBoxMenu = ({
   handleCancelFriendReq,
   handleFriendDelete,
   handleBlock,
+  onReportModalOpen,
 }: UseMoreBoxMenuProps) => {
   const _return = useRef<UseMoreBoxMenuReturn>();
   const dispatch = useDispatch();
@@ -96,9 +98,12 @@ export const useMoreBoxMenu = ({
       );
     }
 
+    if (onReportModalOpen && data.boardId) {
+      onReportModalOpen(data.boardId);
+    }
     dispatch(setOpenModal("report"));
     setIsMoreBoxOpen(false);
-  }, [isUser.gameName, showAlertWithContent, dispatch, router]);
+  }, [isUser.gameName, showAlertWithContent, dispatch, router, onReportModalOpen, data.boardId]);
 
   /* 더보기 메뉴 아이템 구성 */
   const MoreBoxMenuItems = useMemo((): MoreBoxMenuItems[] => {

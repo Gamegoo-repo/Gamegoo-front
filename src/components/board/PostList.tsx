@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
@@ -26,7 +26,7 @@ const PostList = ({ content, isLoading = false }: PostListProps) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const [isBoardId, setIsBoardId] = useState(0);
+  const isBoardIdRef = useRef(0);
 
   const isChatRoomOpen = useSelector(
     (state: RootState) => state.chat.isChatRoomOpen
@@ -60,7 +60,7 @@ const PostList = ({ content, isLoading = false }: PostListProps) => {
     }
 
     dispatch(setOpenReadingModal());
-    setIsBoardId(boardId);
+    isBoardIdRef.current = boardId;
   };
 
   /* 다른 사람 프로필 이동 */
@@ -69,9 +69,14 @@ const PostList = ({ content, isLoading = false }: PostListProps) => {
     router.push(`/user/${memberId}`);
   };
 
+  /* 신고 모달 열기 */
+  const handleReportModalOpen = (boardId: number) => {
+    isBoardIdRef.current = boardId;
+  };
+
   return (
     <>
-      {isReadingModal && !isChatRoomOpen && <ReadBoard postId={isBoardId} />}
+      {isReadingModal && !isChatRoomOpen && <ReadBoard postId={isBoardIdRef.current} />}
 
       {isChatRoomOpen && <Layout />}
       <ListWrapper>
@@ -90,6 +95,7 @@ const PostList = ({ content, isLoading = false }: PostListProps) => {
               showMoreButton={true}
               onPostClick={handlePostOpen}
               onProfileClick={handleMoveProfilePage}
+              onReportModalOpen={handleReportModalOpen}
             />
           ))
         ) : (
@@ -99,7 +105,7 @@ const PostList = ({ content, isLoading = false }: PostListProps) => {
 
       {/* 신고하기 팝업 */}
       {isModalType === "report" && (
-        <ReportModal isPost={undefined} postId={isBoardId} />
+        <ReportModal isPost={undefined} postId={isBoardIdRef.current} />
       )}
     </>
   );

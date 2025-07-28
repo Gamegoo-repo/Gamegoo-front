@@ -60,6 +60,7 @@ export interface PostItemProps {
   onPostClick?: (boardId: number) => void;
   onDeletePost?: (boardId: number) => void;
   onProfileClick?: (e: React.MouseEvent, memberId: number) => void;
+  onReportModalOpen?: (boardId: number) => void;
 }
 
 const PostItem: FC<PostItemProps> = ({
@@ -72,6 +73,7 @@ const PostItem: FC<PostItemProps> = ({
   onPostClick,
   onDeletePost,
   onProfileClick,
+  onReportModalOpen,
 }) => {
   const isUser = useSelector((state: RootState) => state.user);
   const moreBoxRef = useRef<HTMLDivElement>(null);
@@ -153,6 +155,7 @@ const PostItem: FC<PostItemProps> = ({
     handleCancelFriendReq,
     handleFriendDelete,
     handleBlock,
+    onReportModalOpen,
   });
 
   return (

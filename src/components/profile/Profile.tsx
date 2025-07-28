@@ -94,7 +94,7 @@ const Profile: React.FC<Profile> = ({
     reportDetail,
     setReportDetail,
     handleRunReport,
-  } = useReport(memberId, myId || 0);
+  } = useReport(memberId, myId);
 
   const { handleFriendState } = useFriend(
     user,
