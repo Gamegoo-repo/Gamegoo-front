@@ -16,7 +16,7 @@ interface ChampionProps {
 }
 
 const Champion = (props: ChampionProps) => {
-  const { list, font = "semiBold18", color, title = false } = props;
+  const { list = [], font = "semiBold18", color, title = false } = props;
   const { isMobile } = useMediaQueryContext();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
@@ -61,7 +61,7 @@ const Champion = (props: ChampionProps) => {
           최근 선호 챔피언
         </Title>
       )}
-      {list?.length !== 0 ? (
+      {list.length > 0 ? (
         <Champions>
           {list?.map((champion, key) => (
             <ChampionWrapper
@@ -143,7 +143,7 @@ const Champion = (props: ChampionProps) => {
           ))}
         </Champions>
       ) : (
-        <NoData />
+        <NoData>챔피언 정보가 없습니다.</NoData>
       )}
     </Wrapper>
   );
@@ -304,5 +304,9 @@ const More = styled.div`
 `;
 
 const NoData = styled.div`
+  display: flex;
+  align-items: center;
   height: 50px;
+  color: ${theme.colors.gray400};
+  ${theme.fonts.medium12};
 `;

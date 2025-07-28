@@ -1,19 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-
-
-import { postJoin } from "@/api/join/join";
-
-
+import { authApi } from "@/utils/api";
 
 import { updateEmail, updatePassword } from "../slices/signInSlice";
 
-
-
 import type { AxiosError } from "axios";
 import type { RootState } from "../store";
-import { postAuthJoin } from "@/@generated/api";
-
 
 interface SignInData {
   isAgree: boolean;
@@ -40,7 +32,9 @@ export const postSignIn = createAsyncThunk(
       };
 
       if (signInState.authStatus === true) {
-        const response = await postAuthJoin(joinData);
+        const response = await authApi.join({
+          joinRequest: joinData,
+        });
 
         /* 성공적으로 회원가입 완료 후, Redux 상태 초기화 */
         dispatch(updateEmail(""));

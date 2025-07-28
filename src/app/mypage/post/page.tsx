@@ -4,13 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
-import { getProfile } from "@/@generated/api";
 import { deletePost, getMyPost, getMyPostCursor } from "@/api";
 import { MoPost, Pagination, Post, PostBoard } from "@/components";
 import { useInfiniteScroll, useMediaQueryContext } from "@/hooks";
 import { setClosePostingModal } from "@/redux/slices/modalSlice";
 import { setUserProfile } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
+import { memberApi } from "@/utils/api";
 
 import type { RootState } from "@/redux/store";
 import type { MyBoardDetail } from "@/types";
@@ -34,6 +34,8 @@ const MyPostPage = () => {
   const isPostingModal = useSelector(
     (state: RootState) => state.modal.postingModal
   );
+  const [openedBoardId, setOpenedBoardId] = useState<number | null>(null);
+
   // 게시판 글 새로고침
   const boardRefresh = useSelector((state: RootState) => state.board.refresh);
 
@@ -95,7 +97,7 @@ const MyPostPage = () => {
     () => {
       const fetchProfile = async () => {
         try {
-          const response = await getProfile();
+          const response = await memberApi.getMemberJWT();
 
           if (!response.data) {
             throw new Error("내 프로필 조회 응답 데이터가 없습니다.");
@@ -118,6 +120,10 @@ const MyPostPage = () => {
     setPostList((prevPosts) =>
       prevPosts.filter((post) => post.boardId !== boardId)
     );
+  };
+
+  const handleMoreBoxToggle = (boardId: number | null) => {
+    setOpenedBoardId((prevId) => (prevId === boardId ? null : boardId));
   };
 
   /* 페이지네이션 이전 클릭 */
@@ -170,6 +176,7 @@ const MyPostPage = () => {
                     <Post
                       key={item.boardId}
                       boardId={item.boardId}
+                      openedBoardId={openedBoardId}
                       memberId={item.memberId}
                       profileImage={item.profileImage}
                       gameName={item.gameName}
@@ -181,6 +188,7 @@ const MyPostPage = () => {
                       bumpTime={item.bumpTime}
                       boardNumber={index + 1}
                       onDeletePost={handleDeletePost}
+                      onMoreBoxToggle={handleMoreBoxToggle}
                     />
                   ))}
                 </PostList>
@@ -220,7 +228,6 @@ const MyPostPage = () => {
                   ))}
                 </MoPostList>
                 <div ref={sentinelRef}></div>
-                {/* IntersectionObserver 를 위한 감지용 element */}
               </>
             )
           ) : (

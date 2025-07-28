@@ -1,6 +1,6 @@
-import { postAuthRefresh } from "@/@generated/api";
 import { STORAGE_KEY } from "@/constants/storage";
 
+import { authApi } from "./api";
 import { getRefreshToken } from "./storage";
 
 export const isTokenExpired = (token: string): boolean => {
@@ -26,7 +26,9 @@ export const refreshAndStoreToken = async (): Promise<string | null> => {
     const refreshToken = getRefreshToken();
     if (!refreshToken) throw new Error("리프레시 토큰이 없습니다.");
 
-    const response = await postAuthRefresh({ refreshToken });
+    const response = await authApi.updateToken({
+      refreshTokenRequest: { refreshToken },
+    });
     if (!response.data)
       throw new Error("토큰 재발급 응답에 데이터가 없습니다.");
 

@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { putProfilePosition } from "@/@generated/api";
-import { putPosition } from "@/api";
 import { setMatchInfo } from "@/redux/slices/matchInfo";
+import { memberApi } from "@/utils/api";
 
-import type { MainPEnum, SubPEnum, WantPEnum } from "@/@generated/types";
+import type { Position } from "@/@generated";
 import type { PositionState } from "@/components/crBoard/PositionBox";
 import type { RootState } from "@/redux/store";
 import type { User } from "@/types";
@@ -25,10 +24,12 @@ export const usePosition = (user: User, profileType: string) => {
     if (profileType !== "other" && newPosition.main && newPosition.sub) {
       try {
         // 포지션 변경 API 호출
-        await putProfilePosition({
-          mainP: newPosition.main as MainPEnum,
-          subP: newPosition.sub as SubPEnum,
-          wantP: (newPosition.want || []) as Array<WantPEnum>,
+        await memberApi.modifyPosition({
+          positionRequest: {
+            mainP: newPosition.main as Position,
+            subP: newPosition.sub as Position,
+            wantP: newPosition.want as Position[],
+          },
         });
         // 포지션 상태 업데이트
         setPositionValue(newPosition);

@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter, useSearchParams } from "next/navigation";
 import styled from "styled-components";
 
-import { getProfile } from "@/@generated/api";
 import {
   Button,
   ConfirmModal,
@@ -19,6 +18,7 @@ import { closeChatRoom } from "@/redux/slices/chatSlice";
 import { setUserProfile } from "@/redux/slices/userSlice";
 import { sendMatchingQuitEvent, socket } from "@/socket";
 import { theme } from "@/styles/theme";
+import { memberApi } from "@/utils/api";
 import { getThresholdByGameMode } from "@/utils/matching/threshold";
 
 import type { RootState } from "@/redux/store";
@@ -49,7 +49,7 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await getProfile();
+        const response = await memberApi.getMemberJWT();
 
         if (!response.data) {
           throw new Error("내 프로필 조회 응답 데이터가 없습니다.");
@@ -116,7 +116,8 @@ const ProfilePage = () => {
         }
       });
     }
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openConfirmModal, socket]);
 
   useEffect(
     () => {

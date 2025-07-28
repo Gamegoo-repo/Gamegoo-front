@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 
-import { putProfileProfileImage } from "@/@generated/api";
 import { STORAGE_KEY } from "@/constants/storage";
 import { setUserProfileImg } from "@/redux/slices/userSlice";
+import { memberApi } from "@/utils/api";
 
 import type { User } from "@/types";
 
@@ -16,7 +16,9 @@ export const useProfileImage = (user: User) => {
 
   const handleImageClick = async (index: number) => {
     setSelectedImageIndex(index);
-    await putProfileProfileImage({ profileImage: index });
+    await memberApi.modifyProfileImage({
+      profileImageRequest: { profileImage: index },
+    });
     dispatch(setUserProfileImg(index));
     localStorage.setItem(STORAGE_KEY.profileImg, String(index));
     setTimeout(() => setIsProfileListOpen(false), 300);

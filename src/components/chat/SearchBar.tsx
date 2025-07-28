@@ -1,10 +1,9 @@
 import { useState } from "react";
 import styled from "styled-components";
 
-import { getFriendSearch } from "@/@generated/api";
-import { getSearchFriend } from "@/api";
 import Icon from "@/components/common/Icon";
 import { theme } from "@/styles/theme";
+import { friendApi } from "@/utils/api";
 
 import type { FriendList } from "@/types";
 
@@ -23,7 +22,9 @@ const SearchBar = (props: SearchBarProps) => {
 
     if (value.trim() !== "") {
       try {
-        const response = await getFriendSearch(value);
+        const response = await friendApi.searchFriend({
+          query: value,
+        });
         if (!response.data) {
           throw new Error("친구 목록 검색 데이터 응답이 없습니다.");
         }

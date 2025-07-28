@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import { postEmailVerify } from "@/@generated/api";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import {
@@ -13,6 +12,7 @@ import {
   updateEmailAuth,
 } from "@/redux/slices/passwordSlice";
 import { theme } from "@/styles/theme";
+import { authApi, emailApi } from "@/utils/api";
 import { setVerifyCode } from "@/utils/storage";
 
 import type { RootState } from "@/redux/store";
@@ -83,7 +83,9 @@ const Auth = () => {
 
   const handleSendCode = async () => {
     try {
-      await postEmailVerify({ email: emailRedux, code: auth });
+      await emailApi.verifyEmail({
+        emailCodeRequest: { email: emailRedux, code: auth },
+      });
       setAuthValid(true);
       dispatch(updateEmailAuth(auth));
       dispatch(updateAuthStatus(true));

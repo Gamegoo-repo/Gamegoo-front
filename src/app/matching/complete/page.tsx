@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter, useSearchParams } from "next/navigation";
 import styled from "styled-components";
 
-import { getProfile } from "@/@generated/api";
 import { getMemberMannerLevel } from "@/api/manner/manner";
 import Layout from "@/components/chat/Layout";
 import Button from "@/components/common/Button";
@@ -21,6 +20,7 @@ import {
 } from "@/redux/slices/chatSlice";
 import { socket } from "@/socket";
 import { theme } from "@/styles/theme";
+import { memberApi } from "@/utils/api";
 import { setIsCompleted } from "@/utils/storage";
 import { mapMyProfileResponseToMatchingUser } from "@/utils/user/mapMyProfileResponseToMatchingUser";
 
@@ -172,7 +172,7 @@ const Complete = () => {
     () => {
       const fetchUserMe = async () => {
         try {
-          const profileRes = await getProfile();
+          const profileRes = await memberApi.getMemberJWT();
           if (!profileRes.data) {
             throw new Error("내 프로필 조회 응답 데이터가 없습니다.");
           }

@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import { postReportMemberId } from "@/@generated/api";
 import {
   Button,
   Checkbox,
@@ -14,6 +13,7 @@ import {
 import { REPORT_REASON } from "@/constants/report";
 import { setCloseModal } from "@/redux/slices/modalSlice";
 import { theme } from "@/styles/theme";
+import { reportApi } from "@/utils/api";
 
 import type { RootState } from "@/redux/store";
 import type { AlertProps, MemberPost } from "@/types";
@@ -94,16 +94,16 @@ const ReportModal = ({
 
     if (!isPost || isUser.id === isPost?.memberId) return;
 
-    const memberId = isPost.memberId;
-    const params = {
-      reportCodeList: checkedItems,
-      contents: reportDetail,
-      pathCode: 1, // BOARD
-      boardId: postId,
-    };
-
     try {
-      await postReportMemberId(memberId, params);
+      await reportApi.addReport({
+        memberId: isPost.memberId,
+        reportRequest: {
+          reportCodeList: checkedItems,
+          contents: reportDetail,
+          pathCode: 1, // BOARD
+          boardId: postId,
+        },
+      });
       await handleModalClose();
     } catch (error: any) {
       if (error.response.data.code === "REPORT_404") {

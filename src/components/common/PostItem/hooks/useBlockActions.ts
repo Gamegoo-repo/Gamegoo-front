@@ -1,14 +1,8 @@
 import { useCallback, useRef, useState } from "react";
 
-
-
-import { deleteBlockMemberId, postBlockMemberId } from "@/@generated/api";
-
-
-
+import { blockApi } from "@/utils/api";
 
 import type { MemberPost } from "@/types";
-
 
 interface UseBlockActionsProps {
   isPost: MemberPost | undefined;
@@ -45,10 +39,10 @@ export const useBlockActions = ({
     setIsBlockBoxOpen(false);
     if (isPost) {
       if (isPost.isBlocked) {
-        await deleteBlockMemberId(isPost.memberId);
+        await blockApi.deleteBlockMember({ memberId: isPost.memberId });
         setIsBlockedStatus(false);
       } else {
-        await postBlockMemberId(isPost.memberId);
+        await blockApi.blockMember({ memberId: isPost.memberId });
         setIsBlockedStatus(true);
       }
     }

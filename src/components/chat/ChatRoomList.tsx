@@ -2,19 +2,13 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
-import {
-  deleteFriendMemberId,
-  deleteFriendRequestMemberId,
-  patchFriendRequestMemberIdAccept,
-  patchFriendRequestMemberIdReject,
-  postFriendRequestMemberId,
-} from "@/@generated/api";
 import { getChatrooms } from "@/api";
 import ko from "@/constants/ko.json";
 import { notify, useChatList, useChatMessage } from "@/hooks";
 import { setChatEnterType, setCurrentChatUuid } from "@/redux/slices/chatSlice";
 import { setOpenModal } from "@/redux/slices/modalSlice";
 import { theme } from "@/styles/theme";
+import { friendApi } from "@/utils/api";
 
 import ChatRoomItem from "./ChatRoomItem";
 
@@ -206,7 +200,7 @@ const ChatRoomList = (props: ChatRoomListProps) => {
   const handleFriendAdd = async (e: React.MouseEvent, memberId: number) => {
     e.stopPropagation();
     try {
-      await postFriendRequestMemberId(memberId);
+      await friendApi.sendFriendRequest({ memberId });
       triggerReloadChatrooms();
     } catch (error) {
       console.error(error);
@@ -222,7 +216,7 @@ const ChatRoomList = (props: ChatRoomListProps) => {
     e.stopPropagation();
 
     try {
-      await deleteFriendMemberId(memberId);
+      await friendApi.deleteFriend({ memberId });
       triggerReloadChatrooms();
     } catch (error) {
       console.error(error);
@@ -237,7 +231,7 @@ const ChatRoomList = (props: ChatRoomListProps) => {
     e.stopPropagation();
 
     try {
-      await deleteFriendRequestMemberId(memberId);
+      await friendApi.cancelFriendRequest({ memberId });
       triggerReloadChatrooms();
     } catch (error: any) {
       if (error.response && error.response.status === 404) {
@@ -268,7 +262,7 @@ const ChatRoomList = (props: ChatRoomListProps) => {
     e.stopPropagation();
 
     try {
-      await patchFriendRequestMemberIdAccept(memberId);
+      await friendApi.acceptFriendRequest({ memberId });
       triggerReloadChatrooms();
     } catch (error) {
       console.error(error);
@@ -283,7 +277,7 @@ const ChatRoomList = (props: ChatRoomListProps) => {
     e.stopPropagation();
 
     try {
-      await patchFriendRequestMemberIdReject(memberId);
+      await friendApi.rejectFriendRequest({ memberId });
       triggerReloadChatrooms();
     } catch (error) {
       console.error(error);

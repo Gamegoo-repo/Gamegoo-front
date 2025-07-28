@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { postReportMemberId } from "@/@generated/api";
+import { reportApi } from "@/utils/api";
 
 export const useReport = (memberId: number, myId: number) => {
   const [isReportBoxOpen, setIsReportBoxOpen] = useState(false);
@@ -16,14 +16,16 @@ export const useReport = (memberId: number, myId: number) => {
 
   const handleRunReport = async () => {
     if (myId === memberId) return;
-    const params = {
-      reportCodeList: checkedItems,
-      contents: reportDetail,
-      pathCode: 3,
-    };
 
     try {
-      await postReportMemberId(memberId, params);
+      await reportApi.addReport({
+        memberId,
+        reportRequest: {
+          reportCodeList: checkedItems,
+          contents: reportDetail,
+          pathCode: 3,
+        },
+      });
       setIsReportBoxOpen(false);
     } catch (error) {
       console.error("Report failed", error);

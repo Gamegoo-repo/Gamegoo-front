@@ -3,14 +3,11 @@ import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import {
-  getNotification,
-  patchNotificationNotificationId,
-} from "@/@generated/api";
 import Icon from "@/components/common/Icon";
 import { useInfiniteScroll, useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
 import { lockBodyScroll, unlockBodyScroll } from "@/utils";
+import { notificationApi } from "@/utils/api";
 
 import AlertBox from "../mypage/notification/AlertBox";
 
@@ -71,7 +68,9 @@ const AlertWindow = (props: AlertWindowProps) => {
 
     setIsLoading(true);
     try {
-      const response = await getNotification(cursor);
+      const response = await notificationApi.getNotificationListByCursor({
+        cursor: cursor,
+      });
       if (response.data) {
         const { notificationList, nextCursor, hasNext } = response.data;
         setNotiList((prevNotiList) => [
@@ -135,7 +134,9 @@ const AlertWindow = (props: AlertWindowProps) => {
     );
     if (notification && !notification.read && notificationId) {
       try {
-        await patchNotificationNotificationId(notificationId);
+        await notificationApi.readNotification({
+          notificationId: notificationId,
+        });
         setNotiList((prevNotiList) =>
           prevNotiList?.map((n) =>
             n.notificationId === notificationId ? { ...n, read: true } : n

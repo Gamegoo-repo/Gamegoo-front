@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import styled from "styled-components";
 
-import { getProfileOther } from "@/@generated/api";
 import { getMemberMannerKeyword, getMemberMannerLevel } from "@/api";
 import { BlindProfile, LoadingSpinner, UserProfile } from "@/components";
 import { DEFAULT_MANNER, DEFAULT_PROFILE } from "@/data/profile/default";
 import { getAccessToken } from "@/utils";
+import { memberApi } from "@/utils/api";
 import { mapOtherProfileToUser } from "@/utils/user/mapOtherProfileToUser";
 
 import type { Manner } from "@/components/user/UserProfile";
@@ -50,7 +50,7 @@ const UserProfilePage = () => {
       // 토큰이 있을 때만 프로필, 매너 정보 불러오기
       const fetchOtherProfile = async () => {
         try {
-          const response = await getProfileOther(Number(id));
+          const response = await memberApi.getMember({ id: Number(id) });
           if (!response.data) {
             throw new Error("다른 유저 프로필 조회 응답 데이터가 없습니다.");
           }
