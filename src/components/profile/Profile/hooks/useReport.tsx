@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { reportApi } from "@/utils/api";
 
-export const useReport = (memberId: number, myId: number) => {
+export const useReport = (memberId?: number, myId?: number) => {
   const [isReportBoxOpen, setIsReportBoxOpen] = useState(false);
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
   const [reportDetail, setReportDetail] = useState<string>("");
@@ -15,7 +15,7 @@ export const useReport = (memberId: number, myId: number) => {
   };
 
   const handleRunReport = async () => {
-    if (myId === memberId) return;
+    if (!myId || !memberId || myId === memberId) return;
 
     try {
       await reportApi.addReport({

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
@@ -25,6 +25,7 @@ const ReportModal = ({
   isPost: MemberPost | undefined;
   postId: number;
 }) => {
+  const postIdRef = useRef(postId);
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
   const [reportDetail, setReportDetail] = useState<string>("");
   const dispatch = useDispatch();
@@ -41,6 +42,10 @@ const ReportModal = ({
     buttonText: "",
   });
   const router = useRouter();
+
+  if (postId !== 0) {
+    postIdRef.current = postId;
+  }
 
   /* 로그아웃 시, 비회원 접근 시 알럿 props 설정 함수 */
   const logoutMessage = "로그아웃 되었습니다. 다시 로그인 해주세요.";
@@ -101,7 +106,7 @@ const ReportModal = ({
           reportCodeList: checkedItems,
           contents: reportDetail,
           pathCode: 1, // BOARD
-          boardId: postId,
+          boardId: postIdRef.current,
         },
       });
       await handleModalClose();

@@ -112,7 +112,7 @@ const CheckboxTitle = styled.p`
   color: ${theme.colors.gray900};
 `;
 
-const CloseButton = styled.p`
+const CloseButton = styled.div`
   display: flex;
 `;
 
