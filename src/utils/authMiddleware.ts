@@ -34,8 +34,6 @@ export const authMiddleware: Middleware = {
   post: async (context: ResponseContext) => {
     // 401 에러 시 토큰 재발급 처리
     if (context.response.status === 401) {
-      console.log("Token expired, refreshing...");
-
       try {
         // 토큰 재발급 요청
         const newAccessToken = await refreshAndStoreToken();
@@ -53,7 +51,6 @@ export const authMiddleware: Middleware = {
           headers: retryHeaders,
         };
 
-        console.log("Retrying request with new token...");
         connectSocket();
 
         // 원래 요청을 새 토큰으로 재시도
