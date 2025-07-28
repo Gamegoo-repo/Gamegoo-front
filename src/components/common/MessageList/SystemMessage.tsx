@@ -15,8 +15,9 @@ const SystemMessage = ({ message, onClick }: SystemMessageProps) => {
     <SystemMessageContainer>
       {parts.length > 1 ? (
         <>
-          {parts[0]}
-          <UnderlinedText onClick={onClick}>{highlightedText}</UnderlinedText>
+          <UnderlinedText onClick={onClick}>
+            {`${parts[0]} ${highlightedText}`}
+          </UnderlinedText>
           {parts[1]}
         </>
       ) : (
