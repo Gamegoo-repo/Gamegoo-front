@@ -1,5 +1,3 @@
-;
-
 /* tslint:disable */
 /* eslint-disable */
 /**
@@ -16,61 +14,14 @@
 
 import * as runtime from "../runtime";
 
-
-
-import type { ApiResponseLoginResponse, ApiResponseRefreshTokenResponse, ApiResponseString, JoinRequest, LoginRequest, RefreshTokenRequest } from "../models/index";
-
-
-;
-
-
-
-
-
-
-
-
-
-
-
-
-;
-
-
-
-
-
-
-
-
-
-
-
-
-;
-
-
-
-
-
-
-
-
-
-
-
-
-;
-
-
-
-
-
-
-
-
-
-
+import type {
+  ApiResponseLoginResponse,
+  ApiResponseRefreshTokenResponse,
+  ApiResponseString,
+  JoinRequest,
+  LoginRequest,
+  RefreshTokenRequest,
+} from "../models/index";
 
 export interface GetTestAccessTokenRequest {
   memberId: number;
@@ -452,10 +403,8 @@ export class AuthControllerApi
     const headerParameters: runtime.HTTPHeaders = {};
 
     if (this.configuration && this.configuration.accessToken) {
-      const tokenString =
-        typeof this.configuration.accessToken === "function"
-          ? await this.configuration.accessToken("JWT TOKEN", [])
-          : this.configuration.accessToken;
+      const token = this.configuration.accessToken;
+      const tokenString = await token("JWT TOKEN", []);
 
       if (tokenString) {
         headerParameters["Authorization"] = `Bearer ${tokenString}`;
