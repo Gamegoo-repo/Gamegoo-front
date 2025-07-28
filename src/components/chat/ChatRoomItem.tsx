@@ -3,10 +3,10 @@ import styled from "styled-components";
 import Icon from "@/components/common/Icon";
 import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
-import { getProfileBgColor } from "@/utils/profile";
 import { setChatRoomDateFormatter } from "@/utils/timeFormat";
 
 import MoreBox from "../common/MoreBox";
+import ProfileAvatar from "./ProfileAvatar";
 
 import type { ChatroomList, MoreBoxMenuItems } from "@/types";
 
@@ -51,17 +51,10 @@ const ChatRoomItem = (props: ChatRoomItemProps) => {
         />
       )}
       <Left>
-        <ImageWrapper $bgColor={getProfileBgColor(room.targetMemberImg)}>
-          <ProfileImage
-            data={
-              room.blind
-                ? `/assets/images/profile/profile_default.svg`
-                : `/assets/images/profile/profile${room.targetMemberImg}.svg`
-            }
-            width={38}
-            height={38}
-          />
-        </ImageWrapper>
+        <ProfileAvatar
+          profileImgNum={room.targetMemberImg}
+          isBlind={room.blind}
+        />
         <Middle>
           {!isMobile ? (
             <>
@@ -126,22 +119,6 @@ const Left = styled.div`
   align-items: center;
   justify-content: space-between;
   padding-left: 21px;
-`;
-
-const ImageWrapper = styled.div<{ $bgColor: string }>`
-  position: relative;
-  width: 47px;
-  height: 47px;
-  background: ${(props) => props.$bgColor};
-  border-radius: 50%;
-`;
-
-const ProfileImage = styled.object`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
 `;
 
 const Middle = styled.div`

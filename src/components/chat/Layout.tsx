@@ -554,7 +554,6 @@ const Layout = () => {
                   onClick={(e) => {
                     e.stopPropagation();
                     dispatch(closeChat());
-                    // dispatch(resetPosition());
                   }}
                   onMouseDown={(e) => {
                     e.stopPropagation();
@@ -564,7 +563,7 @@ const Layout = () => {
                     backgroundUrl={
                       isMobile
                         ? "/assets/icons/close_modal.svg"
-                        : "/assets/icons/close.svg"
+                        : "/assets/icons/close_chat.svg"
                     }
                     width={12}
                     height={12}

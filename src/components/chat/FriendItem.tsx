@@ -4,9 +4,9 @@ import styled from "styled-components";
 import Icon from "@/components/common/Icon";
 import { setChatEnterType } from "@/redux/slices/chatSlice";
 import { theme } from "@/styles/theme";
-import { getProfileBgColor } from "@/utils";
 
 import DeleteFriend from "./DeleteFriend";
+import ProfileAvatar from "./ProfileAvatar";
 
 import type { FriendList } from "@/types";
 
@@ -52,17 +52,10 @@ const FriendItem = (props: FriendItemProps) => {
         />
       )}
       <Left>
-        <ImageWrapper $bgColor={getProfileBgColor(friend.profileImg)}>
-          <StyledImage
-            data={
-              friend.blind
-                ? `/assets/images/profile/profile_default.svg`
-                : `/assets/images/profile/profile${friend.profileImg}.svg`
-            }
-            width={38}
-            height={38}
-          />
-        </ImageWrapper>
+        <ProfileAvatar
+          profileImgNum={friend.profileImg}
+          isBlind={friend.blind}
+        />
         <UserName>{friend.name}</UserName>
         {onlineFriends.includes(friend.memberId) && (
           <Icon
@@ -117,8 +110,8 @@ const Left = styled.div`
 
 const ImageWrapper = styled.div<{ $bgColor: string }>`
   position: relative;
-  width: 47px;
-  height: 47px;
+  width: 45px;
+  height: 45px;
   background: ${(props) => props.$bgColor};
   border-radius: 50%;
 `;

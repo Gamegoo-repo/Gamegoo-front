@@ -1,5 +1,6 @@
 import styled from "styled-components";
 
+import ProfileAvatar from "@/components/chat/ProfileAvatar";
 import { getProfileBgColor, setChatTimeFormatter } from "@/utils";
 
 import type { ChatMessageDto } from "@/types";
@@ -21,20 +22,11 @@ const YourMessage = ({
 }: YourMessageProps) => (
   <YourMessageContainer>
     {showProfileImage && (
-      <ImageWrapper
-        $bgColor={getProfileBgColor(message.senderProfileImg)}
+      <ProfileAvatar
+        profileImgNum={message.senderProfileImg}
+        isBlind={isBlind}
         onClick={onProfileClick}
-      >
-        <ProfileImage
-          data={
-            isBlind
-              ? "/assets/images/profile/profile_default.svg"
-              : `/assets/images/profile/profile${message.senderProfileImg}.svg`
-          }
-          width={38}
-          height={38}
-        />
-      </ImageWrapper>
+      />
     )}
     <YourDiv $hasProfileImage={showProfileImage}>
       <YourMessageBubble>{message.message}</YourMessageBubble>
@@ -51,22 +43,6 @@ const YourMessageContainer = styled.div`
   display: flex;
   justify-content: flex-start;
   margin-bottom: 10px;
-`;
-
-const ImageWrapper = styled.div<{ $bgColor: string }>`
-  position: relative;
-  width: 47px;
-  height: 47px;
-  background: ${(props) => props.$bgColor};
-  border-radius: 50%;
-`;
-
-const ProfileImage = styled.object`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
 `;
 
 const YourDiv = styled.div<{ $hasProfileImage: boolean }>`

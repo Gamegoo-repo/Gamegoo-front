@@ -12,9 +12,9 @@ import {
 } from "@/redux/slices/chatSlice";
 import { setOpenAlertModal } from "@/redux/slices/modalSlice";
 import { theme } from "@/styles/theme";
-import { getProfileBgColor } from "@/utils";
 
 import { MoreBox } from "../common";
+import ProfileAvatar from "./ProfileAvatar";
 
 import type { RootState } from "@/redux/store";
 import type { Chat, MoreBoxMenuItems } from "@/types";
@@ -95,9 +95,9 @@ const MessageHeader = (props: MessageHeaderProps) => {
       {!isMobile ? (
         <CloseButton onClick={() => dispatch(closeChatRoom())}>
           <Icon
-            backgroundUrl="/assets/icons/close.svg"
-            width={11}
-            height={11}
+            backgroundUrl="/assets/icons/close_chat.svg"
+            width={12}
+            height={12}
           />
         </CloseButton>
       ) : (
@@ -123,20 +123,11 @@ const MessageHeader = (props: MessageHeaderProps) => {
             />
           </PrevButton>
           <Middle>
-            <ImageWrapper
-              $bgColor={getProfileBgColor(chatEnterData.memberProfileImg)}
+            <ProfileAvatar
+              profileImgNum={chatEnterData.memberProfileImg}
+              isBlind={chatEnterData.blind}
               onClick={() => handleMoveProfile(chatEnterData.memberId)}
-            >
-              <ProfileImage
-                data={
-                  chatEnterData.blind
-                    ? `/assets/images/profile/profile_default.svg`
-                    : `/assets/images/profile/profile${chatEnterData.memberProfileImg}.svg`
-                }
-                width={38}
-                height={38}
-              />
-            </ImageWrapper>
+            />
             <Div>
               <UserName
                 onClick={() => router.push(`/user/${chatEnterData.memberId}`)}
@@ -223,23 +214,6 @@ const Middle = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
-`;
-
-const ImageWrapper = styled.div<{ $bgColor: string }>`
-  position: relative;
-  width: 47px;
-  height: 47px;
-  background: ${(props) => props.$bgColor};
-  border-radius: 50%;
-  cursor: pointer;
-`;
-
-const ProfileImage = styled.object`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
 `;
 
 const Div = styled.div`
