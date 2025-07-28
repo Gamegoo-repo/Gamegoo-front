@@ -1,4 +1,4 @@
-export const getProfileBgColor = (id: number) => {
+export const getProfileBgColor = (id: number | null) => {
   const colors = [
     "#DFDEFF",
     "#FAF9FF",
@@ -9,5 +9,6 @@ export const getProfileBgColor = (id: number) => {
     "#FAF9FF",
     "#DFDEFF",
   ];
-  return colors[(id - 1) % colors.length];
+  if (id === null) return colors[0];
+  else return colors[(id - 1) % colors.length];
 };
