@@ -108,22 +108,6 @@ const Left = styled.div`
   gap: 16px;
 `;
 
-const ImageWrapper = styled.div<{ $bgColor: string }>`
-  position: relative;
-  width: 45px;
-  height: 45px;
-  background: ${(props) => props.$bgColor};
-  border-radius: 50%;
-`;
-
-const StyledImage = styled.object`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-`;
-
 const UserName = styled.p`
   ${(props) => props.theme.fonts.semiBold14};
   color: ${theme.colors.gray800};
