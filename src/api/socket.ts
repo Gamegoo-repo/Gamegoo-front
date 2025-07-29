@@ -42,7 +42,7 @@ export const socketLogin = async () => {
 /* 소켓 로그아웃 */
 export const socketLogout = async () => {
   try {
-    const jwtToken = sessionStorage.getItem(STORAGE_KEY.accessToken);
+    const jwtToken = getAccessToken(); // localStorage와 sessionStorage 모두 확인
     const socketId = sessionStorage.getItem(STORAGE_KEY.gamegooSocketId);
     const isLogout = sessionStorage.getItem(STORAGE_KEY.logout);
 
@@ -58,21 +58,38 @@ export const socketLogout = async () => {
         },
       }
     );
-    if (response.status === 200 && isLogout && !jwtToken) {
-      // 로그아웃 버튼 클릭해서 로그인 페이지 들어온 경우
-      // 소켓 연결 끊어진 이후 소켓 재연결 시키기
-      connectSocket();
+
+    if (response.status === 200) {
+      console.log("소켓 서버 로그아웃 성공");
+
+      // 로그아웃 버튼으로 로그아웃한 경우이고 토큰이 이미 삭제된 경우
+      if (isLogout && !jwtToken) {
+        // 소켓 재연결 (익명 연결)
+        connectSocket();
+      }
     } else {
       console.error("소켓 서버에 로그아웃 알림 실패:", response.statusText);
     }
   } catch (error: any) {
-    if (error.response) {
+    // 401 에러는 토큰이 이미 만료된 것이므로 정상적인 로그아웃으로 간주
+    if (error.response && error.response.status === 401) {
+      console.log("소켓 서버 로그아웃 완료 (토큰 이미 만료됨)");
+
+      const isLogout = sessionStorage.getItem(STORAGE_KEY.logout);
+      const jwtToken = getAccessToken();
+
+      // 로그아웃 버튼으로 로그아웃한 경우이고 토큰이 이미 삭제된 경우
+      if (isLogout && !jwtToken) {
+        // 소켓 재연결 (익명 연결)
+        connectSocket();
+      }
+    } else if (error.response) {
       console.error(
         "소켓 서버에 로그아웃 요청 실패:",
         error.response.statusText
       );
     } else {
-      console.error(error.message);
+      console.error("소켓 로그아웃 에러:", error.message);
     }
   }
 };
