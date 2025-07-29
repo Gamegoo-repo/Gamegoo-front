@@ -141,7 +141,7 @@ export default ChatFriendList;
 const List = styled.div``;
 
 const FavoritesWrapper = styled.div<{ $length: number }>`
-  padding: ${({ $length }) => ($length > 0 ? "6px 0 11px 0" : "none")};
+  padding: ${({ $length }) => ($length > 0 ? "6px 0" : "none")};
 `;
 
 const FriendsWrapper = styled.div<{ $length: number }>`
@@ -149,13 +149,14 @@ const FriendsWrapper = styled.div<{ $length: number }>`
     $length > 0 ? `1px solid ${theme.colors.gray200}` : "unset"};
   border-bottom: ${({ $length }) =>
     $length > 0 ? `1px solid ${theme.colors.gray200}` : "unset"};
-  padding: 6px 0 11px 0;
+  padding: 6px 0;
 `;
 
 const FavoritesTitle = styled.p`
   ${theme.fonts.medium11};
   color: ${theme.colors.gray500};
-  padding: 6px 18px 7px 18px;
+  padding: 0 19px;
+  margin-bottom: 3px;
   @media (max-width: ${theme.breakpoints.mobile}) {
     text-align: left;
   }
@@ -164,7 +165,8 @@ const FavoritesTitle = styled.p`
 const FriendsTitle = styled.p`
   ${theme.fonts.medium11};
   color: ${theme.colors.gray500};
-  padding: 6px 18px 7px 18px;
+  padding: 0 19px;
+  margin-bottom: 3px;
   @media (max-width: ${theme.breakpoints.mobile}) {
     text-align: left;
   }

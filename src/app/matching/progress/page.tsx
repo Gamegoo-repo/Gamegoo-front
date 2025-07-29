@@ -254,8 +254,7 @@ const Progress = () => {
         router.push(
           `/matching/complete?role=receiver&opponent=true&type=${type}&rank=${rank}&user=${encodeURIComponent(
             JSON.stringify(data.data.senderMatchingInfo)
-          )}&uuid=${encodeURIComponent(data.data.senderMatchingInfo.matchingUuid)}
-        )}`
+          )}&uuid=${encodeURIComponent(data.data.senderMatchingInfo.matchingUuid)}`
         );
       });
 
