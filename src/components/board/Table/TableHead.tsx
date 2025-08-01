@@ -1,5 +1,3 @@
-import styled from "styled-components";
-
 import type { TableTitleProps } from "@/types/board/table";
 
 interface TableHeadProps {
@@ -8,31 +6,17 @@ interface TableHeadProps {
 
 const TableHead = ({ title }: TableHeadProps) => {
   return (
-    <Wrapper>
-      {title.map((data) => (
-        <Title key={data.id} className="table_width">
+    <div className="flex items-center justify-between py-[13px] px-[20px] text-sm font-bold rounded-lg bg-gray-800 text-white">
+      {title.map((data, index) => (
+        <p
+          key={data.id}
+          className={`table_width ${index === 0 ? "text-left" : ""}`}
+        >
           {data.name}
-        </Title>
+        </p>
       ))}
-    </Wrapper>
+    </div>
   );
 };
 
 export default TableHead;
-
-const Wrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 21px;
-  ${(props) => props.theme.fonts.bold14};
-  background: ${(props) => props.theme.colors.gray700};
-  color: ${(props) => props.theme.colors.white};
-  border-radius: 8px;
-`;
-
-const Title = styled.p`
-  &:first-child {
-    text-align: left;
-  }
-`;
