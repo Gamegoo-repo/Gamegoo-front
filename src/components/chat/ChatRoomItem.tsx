@@ -3,10 +3,10 @@ import styled from "styled-components";
 import Icon from "@/components/common/Icon";
 import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
-import { getProfileBgColor } from "@/utils/profile";
 import { setChatRoomDateFormatter } from "@/utils/timeFormat";
 
 import MoreBox from "../common/MoreBox";
+import ProfileAvatar from "./ProfileAvatar";
 
 import type { ChatroomList, MoreBoxMenuItems } from "@/types";
 
@@ -51,17 +51,10 @@ const ChatRoomItem = (props: ChatRoomItemProps) => {
         />
       )}
       <Left>
-        <ImageWrapper $bgColor={getProfileBgColor(room.targetMemberImg)}>
-          <ProfileImage
-            data={
-              room.blind
-                ? `/assets/images/profile/profile_default.svg`
-                : `/assets/images/profile/profile${room.targetMemberImg}.svg`
-            }
-            width={38}
-            height={38}
-          />
-        </ImageWrapper>
+        <ProfileAvatar
+          profileImgNum={room.targetMemberImg}
+          isBlind={room.blind}
+        />
         <Middle>
           {!isMobile ? (
             <>
@@ -95,15 +88,15 @@ const ChatRoomItem = (props: ChatRoomItemProps) => {
           )}
         </Middle>
       </Left>
-      <Right
+      <ThreeDotsButton
         onClick={(e) => handleMoreBoxOpen(room.chatroomId, room.uuid, room, e)}
       >
         <Icon
-          backgroundUrl="/assets/icons/three_dots_button.svg"
-          width={10}
+          backgroundUrl="/assets/icons/three_dots_button_black.svg"
+          width={3}
           height={15}
         />
-      </Right>
+      </ThreeDotsButton>
     </UserContent>
   );
 };
@@ -126,22 +119,6 @@ const Left = styled.div`
   align-items: center;
   justify-content: space-between;
   padding-left: 21px;
-`;
-
-const ImageWrapper = styled.div<{ $bgColor: string }>`
-  position: relative;
-  width: 47px;
-  height: 47px;
-  background: ${(props) => props.$bgColor};
-  border-radius: 50%;
-`;
-
-const ProfileImage = styled.object`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
 `;
 
 const Middle = styled.div`
@@ -172,6 +149,7 @@ const Unread = styled.p`
 `;
 
 const Row = styled.div`
+  height: 17px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -191,11 +169,17 @@ const Msg = styled.p`
 `;
 
 const Date = styled.p`
+  display: flex;
+  align-items: center;
   ${theme.fonts.medium11};
-  color: ${theme.colors.gray300};
+  color: #c1c1c1;
   margin-right: 12px;
 `;
 
-const Right = styled.div`
-  padding: 0 7px 0 12px;
+const ThreeDotsButton = styled.button`
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

@@ -7,11 +7,9 @@ import {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
-import dayjs from "dayjs";
 import styled, { keyframes } from "styled-components";
 
 import { getChatList, markChatAsRead } from "@/api";
-import Icon from "@/components/common/Icon";
 import { useChatMessage, useConfirmModalContext } from "@/hooks";
 import { closeChat, closeChatRoom } from "@/redux/slices/chatSlice";
 import {
@@ -20,13 +18,17 @@ import {
   setOpenReadingModal,
 } from "@/redux/slices/modalSlice";
 import { theme } from "@/styles/theme";
-import {
-  getProfileBgColor,
-  setChatDateFormatter,
-  setChatTimeFormatter,
-} from "@/utils";
+import { setChatDateFormatter } from "@/utils";
 
-import { ConfirmModal } from "../common";
+import DateSeparator from "../common/MessageList/DateSeparator";
+import ErrorAlert from "../common/MessageList/ErrorAlert";
+import FeedbackMessage from "../common/MessageList/FeedbackMessage";
+import { useDisplayHelpers } from "../common/MessageList/hooks/useDisplayHelpers";
+import { useScrollToBottomOnInit } from "../common/MessageList/hooks/useScrollToBottomOnInit";
+import { useInfiniteScrollTop } from "../common/MessageList/hooks/useScrollToTopPagination";
+import MyMessage from "../common/MessageList/MyMessage";
+import SystemMessage from "../common/MessageList/SystemMessage";
+import YourMessage from "../common/MessageList/YourMessage";
 import { ReadBoard } from "../readBoard";
 
 import type { RootState } from "@/redux/store";
@@ -39,11 +41,6 @@ interface MessageListProps {
   onBadMannerValuesGet: (memberId: number) => void;
 }
 
-interface SystemMessageProps {
-  message: string;
-  onClick?: () => void;
-}
-
 const MessageList = (props: MessageListProps) => {
   const {
     chatEnterData,
@@ -52,6 +49,8 @@ const MessageList = (props: MessageListProps) => {
     onBadMannerValuesGet,
   } = props;
 
+  const { handleDisplayDate, handleDisplayTime, handleDisplayProfileImage } =
+    useDisplayHelpers();
   const dispatch = useDispatch();
   const { openConfirmModal } = useConfirmModalContext();
 
@@ -170,39 +169,9 @@ const MessageList = (props: MessageListProps) => {
   );
 
   /* 처음 채팅방 들어올 때 마지막 메시지로 스크롤 이동 */
-  useEffect(() => {
-    if (chatRef.current && isInitialLoading) {
-      const chatElement = chatRef.current;
-      chatElement.scrollTop = chatElement.scrollHeight;
-      setIsInitialLoading(false);
-    }
-  }, [chatRef, messageList, isInitialLoading]);
-
-  const handleScroll = useCallback(
-    () => {
-      if (chatRef.current && !isInitialLoading) {
-        const { scrollTop } = chatRef.current;
-        if (scrollTop === 0 && hasMore && !isLoading) {
-          getMoreMessages();
-        }
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [chatRef, hasMore, isLoading, isInitialLoading]
-  );
-
-  useEffect(() => {
-    const chatElement = chatRef.current;
-    if (chatElement) {
-      chatElement.addEventListener("scroll", handleScroll);
-    }
-
-    return () => {
-      if (chatElement) {
-        chatElement.removeEventListener("scroll", handleScroll);
-      }
-    };
-  }, [chatRef, handleScroll]);
+  useScrollToBottomOnInit(chatRef, messageList, isInitialLoading, () => {
+    setIsInitialLoading(false);
+  });
 
   /* 남은 메시지 보여주기(페이징) */
   const getMoreMessages = useCallback(async () => {
@@ -242,6 +211,13 @@ const MessageList = (props: MessageListProps) => {
     }
   }, [isLoading, hasMore, cursor, chatEnterData]);
 
+  /* 무한 스크롤(위로) */
+  useInfiniteScrollTop(
+    chatRef,
+    getMoreMessages,
+    hasMore && !isLoading && !isInitialLoading
+  );
+
   /* 새로운 메시지 입력 또는 새로운 메시지 입력 시 스크롤을 맨 아래로 이동시키는 함수 */
   const scrollToBottom = () => {
     if (chatRef.current) {
@@ -272,64 +248,6 @@ const MessageList = (props: MessageListProps) => {
       window.removeEventListener("resize", handleResize);
     };
   }, [innerHeight]);
-
-  /* 채팅 날짜 표시 */
-  const handleDisplayDate = (
-    messages: ChatMessageDto[],
-    index: number
-  ): boolean => {
-    if (index === 0) return true;
-
-    const currentDate = dayjs(messages[index].createdAt).format("YYYY-M-D");
-    const previousDate = dayjs(messages[index - 1].createdAt).format(
-      "YYYY-M-D"
-    );
-
-    return currentDate !== previousDate;
-  };
-
-  /* 메시지 시간 표시 (마지막 메시지에만 시간 표시, 상대방 메시지 중간에 오면 다시 표시) */
-  const handleDisplayTime = (
-    messages: ChatMessageDto[],
-    index: number
-  ): boolean => {
-    if (index === messages.length - 1) return true;
-
-    const currentTime = dayjs(messages[index].createdAt).format("A hh:mm");
-    const nextTime = dayjs(messages[index + 1].createdAt).format("A hh:mm");
-
-    const isSameTime = currentTime === nextTime;
-    const isSameSender =
-      messages[index].senderId === messages[index + 1].senderId;
-
-    // 시간이 같고, 보낸 사람도 같으면 마지막 메시지에만 시간 표시
-    if (isSameTime && isSameSender) {
-      return false;
-    }
-
-    return true;
-  };
-
-  /* 프로필 이미지 표시 (상대방만 보여주기, 같은 시간에 온 경우 첫번째 메시지만 이미지 표시F) */
-  const handleDisplayProfileImage = (
-    messages: ChatMessageDto[],
-    index: number
-  ): boolean => {
-    if (index === 0) return true;
-
-    const currentSenderId = messages[index].senderId;
-    const previousSenderId = messages[index - 1].senderId;
-
-    const currentTime = dayjs(messages[index].createdAt).format("A hh:mm");
-    const previousTime = dayjs(messages[index - 1].createdAt).format("A hh:mm");
-
-    // 보낸 사람이 다르거나, 시간이 다르면 프로필 이미지 표시
-    if (currentSenderId !== previousSenderId || currentTime !== previousTime) {
-      return true;
-    }
-
-    return false;
-  };
 
   /* 시스템 메시지 클릭 시 다음 스텝 */
   const handlePostOpen = (boardId: number) => {
@@ -368,6 +286,7 @@ const MessageList = (props: MessageListProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [isFeedbackModalOpen]
   );
+
   const handleMoveProfile = async (memberId: number) => {
     await router.push(`/user/${memberId}`);
     await dispatch(closeChat());
@@ -383,39 +302,12 @@ const MessageList = (props: MessageListProps) => {
     }
   };
 
-  /* 시스템 메시지를 처리하는 컴포넌트 */
-  const SystemMessage = (props: SystemMessageProps) => {
-    const { message, onClick } = props;
-
-    const highlightedText = "게시한 글";
-    const parts = message.split(highlightedText);
-
-    return (
-      <SystemMessageContainer>
-        {parts.length > 1 ? (
-          <>
-            {parts[0]}
-            <UnderlinedText onClick={onClick}>{highlightedText}</UnderlinedText>
-            {parts[1]}
-          </>
-        ) : (
-          message
-        )}
-      </SystemMessageContainer>
-    );
-  };
-
   return (
     <>
       {isReadingModal && !!isBoardId && <ReadBoard postId={isBoardId} />}
-      {isUnregisterAlert ||
-        (isBlockedAlert && (
-          <ErrorBox>
-            {isUnregisterAlert
-              ? "탈퇴한 회원의 글입니다."
-              : "차단한 회원의 글입니다."}
-          </ErrorBox>
-        ))}
+      {(isUnregisterAlert || isBlockedAlert) && (
+        <ErrorAlert isUnregister={isUnregisterAlert} />
+      )}
       <ChatBorder>
         {chatEnterData.uuid === currentChatUuid && (
           <ChatMain $innerHeight={innerHeight} ref={chatRef}>
@@ -425,89 +317,52 @@ const MessageList = (props: MessageListProps) => {
                 index
               );
               const showTime = handleDisplayTime(messageList, index);
+              const isLast = index === messageList.length - 1;
 
               return (
                 <MsgContainer key={index}>
                   {handleDisplayDate(messageList, index) && (
-                    <Timestamp>
-                      {setChatDateFormatter(message.createdAt)}
-                    </Timestamp>
+                    <DateSeparator
+                      date={setChatDateFormatter(message.createdAt)}
+                    />
                   )}
-                  {message.systemType === 0 ? (
+
+                  {message.systemType === 5 && (
+                    <FeedbackMessage onEvaluate={handleMannerEvaluate} />
+                  )}
+
+                  {message.systemType && message.systemType !== 5 && (
                     <SystemMessage
                       message={message.message}
                       onClick={() => handlePostOpen(message.boardId as number)}
                     />
-                  ) : message.systemType === 1 ? (
-                    <FeedbackDiv>
-                      <FeedbackContainer>
-                        <Feedback>
-                          <Icon
-                            backgroundUrl="/assets/icons/clicked_smile.svg"
-                            width={22}
-                            height={22}
-                            style={{ marginBottom: "7px" }}
-                          />
-                          <Text>매칭은 어떠셨나요?</Text>
-                          <Text>상대방의 매너를 평가해주세요!</Text>
-                          <StyledButton onClick={handleMannerEvaluate}>
-                            매너평가 하기
-                          </StyledButton>
-                        </Feedback>
-                      </FeedbackContainer>
-                    </FeedbackDiv>
-                  ) : message.senderId === chatEnterData?.memberId ? (
-                    <YourMessageContainer>
-                      {showProfileImage && message.senderProfileImg && (
-                        <ImageWrapper
-                          $bgColor={getProfileBgColor(message.senderProfileImg)}
-                          onClick={() =>
-                            handleMoveProfile(chatEnterData.memberId)
-                          }
-                        >
-                          <ProfileImage
-                            data={
-                              chatEnterData.blind
-                                ? `/assets/images/profile/profile_default.svg`
-                                : `/assets/images/profile/profile${message.senderProfileImg}.svg`
-                            }
-                            width={38}
-                            height={38}
-                          />
-                        </ImageWrapper>
-                      )}
-                      <YourDiv $hasProfileImage={showProfileImage}>
-                        <YourMessage>{message.message}</YourMessage>
-                        {showTime ? (
-                          <YourDate>
-                            {setChatTimeFormatter(message.createdAt)}
-                          </YourDate>
-                        ) : null}
-                      </YourDiv>
-                    </YourMessageContainer>
-                  ) : (
-                    message.senderId !== chatEnterData?.memberId &&
-                    message.senderId !== 0 && (
-                      <MyMessageContainer>
-                        <MyDiv>
-                          {showTime ? (
-                            <MyDate>
-                              {setChatTimeFormatter(message.createdAt)}
-                            </MyDate>
-                          ) : null}
-                          <MyMessage
-                            $animation={isMyMsgSent}
-                            $isLast={index === messageList.length - 1}
-                          >
-                            {message.message}
-                          </MyMessage>
-                        </MyDiv>
-                      </MyMessageContainer>
-                    )
                   )}
+
+                  {message.senderId === chatEnterData.memberId && (
+                    <YourMessage
+                      message={message}
+                      showTime={showTime}
+                      showProfileImage={showProfileImage}
+                      onProfileClick={() =>
+                        handleMoveProfile(chatEnterData.memberId)
+                      }
+                      isBlind={chatEnterData.blind}
+                    />
+                  )}
+
+                  {message.senderId !== chatEnterData.memberId &&
+                    message.senderId !== 0 && (
+                      <MyMessage
+                        message={message}
+                        showTime={showTime}
+                        isLast={isLast}
+                        isAnimated={isMyMsgSent}
+                      />
+                    )}
                 </MsgContainer>
               );
             })}
+
             {isLoading && (
               <LoadingContainer>
                 <LoadingSpinner />
@@ -570,168 +425,3 @@ const LoadingContainer = styled.div`
 `;
 
 const MsgContainer = styled.div``;
-
-const Timestamp = styled.p`
-  margin: 10px auto;
-  text-align: center;
-  border-radius: 14px;
-  ${(props) => props.theme.fonts.medium11};
-  color: ${theme.colors.gray700};
-  white-space: nowrap;
-`;
-
-const YourMessageContainer = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  margin-bottom: 10px;
-`;
-
-const ImageWrapper = styled.div<{ $bgColor: string }>`
-  position: relative;
-  width: 47px;
-  height: 47px;
-  background: ${(props) => props.$bgColor};
-  border-radius: 50%;
-`;
-
-const ProfileImage = styled.object`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-`;
-
-const YourDiv = styled.div<{ $hasProfileImage: boolean }>`
-  display: flex;
-  align-items: end;
-  margin-left: ${(props) => (props.$hasProfileImage ? "11px" : "58.43px")};
-`;
-
-const YourMessage = styled.div`
-  ${(props) => props.theme.fonts.regular14};
-  color: ${theme.colors.gray800};
-  background: ${theme.colors.white};
-  border-radius: 13px;
-  padding: 5px 13px;
-  max-width: 229px;
-  word-break: keep-all;
-  overflow-wrap: break-word;
-`;
-
-const YourDate = styled.p`
-  margin-left: 9px;
-  ${(props) => props.theme.fonts.regular9};
-  color: ${theme.colors.violet400};
-`;
-
-const MyMessageContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  margin-bottom: 10px;
-`;
-
-const MyDiv = styled.div`
-  display: flex;
-  align-items: end;
-`;
-
-const MyMessage = styled.div<{ $animation?: boolean; $isLast?: boolean }>`
-  ${(props) => props.theme.fonts.regular14};
-  color: ${theme.colors.gray800};
-  background: ${theme.colors.violet300};
-  border-radius: 13px;
-  padding: 5px 13px;
-  max-width: 196px;
-  word-break: keep-all;
-  overflow-wrap: break-word;
-  transition: all 0.3s ease-in-out;
-  ${({ $animation, $isLast }) =>
-    $animation &&
-    $isLast &&
-    `
-      animation: slideDown 0.3s ease-out;
-    `}
-  @keyframes slideDown {
-    0% {
-      margin-top: -3px;
-      opacity: 0;
-    }
-    100% {
-      margin-top: 0;
-      opacity: 1;
-    }
-  }
-`;
-
-const MyDate = styled.p`
-  margin-right: 5px;
-  ${(props) => props.theme.fonts.regular8};
-  color: ${theme.colors.gray700};
-`;
-
-const SystemMessageContainer = styled.div`
-  width: 100%;
-  text-align: center;
-  padding: 11px 0px;
-  background: #000000a3;
-  ${(props) => props.theme.fonts.regular12};
-  color: ${theme.colors.white};
-  border-radius: 14px;
-  margin-bottom: 11px;
-`;
-
-const UnderlinedText = styled.span`
-  text-decoration: underline;
-  cursor: pointer;
-`;
-
-const FeedbackDiv = styled.div`
-  margin: 35px auto;
-  width: 338px;
-`;
-
-const FeedbackContainer = styled.div``;
-
-const Feedback = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 16px 40px;
-  border: 1px solid ${theme.colors.violet300};
-  background: ${theme.colors.violet100};
-  border-radius: 13px;
-`;
-
-const Text = styled.p`
-  ${(props) => props.theme.fonts.regular13};
-  color: ${theme.colors.gray800};
-  &:first-child {
-    margin-bottom: 5px;
-  }
-`;
-
-const StyledButton = styled.button`
-  width: 119px;
-  border-radius: 53px;
-  margin-top: 12px;
-  ${(props) => props.theme.fonts.semiBold13};
-  background: ${theme.colors.violet600};
-  color: ${theme.colors.white};
-  padding: 8px 24px;
-`;
-
-const ErrorBox = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 10px 28px;
-  ${(props) => props.theme.fonts.regular14};
-  background: ${theme.colors.white};
-  color: rgba(45, 45, 45, 1);
-  box-shadow: 0 0 25.3px 0 rgba(0, 0, 0, 0.15);
-  border-radius: 10px;
-  white-space: nowrap;
-`;

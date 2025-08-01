@@ -1,3 +1,5 @@
+import { ResponseError } from "@generated/runtime";
+
 import ko from "@/constants/ko.json";
 import { notify } from "@/hooks/notify";
 import { connectSocket } from "@/socket";
@@ -32,10 +34,15 @@ export const authMiddleware: Middleware = {
 
   // 응답 후 처리 - 401 에러 시 토큰 재발급
   post: async (context: ResponseContext) => {
-    // 401 에러 시 토큰 재발급 처리
-    if (context.response.status === 401) {
-      console.log("Token expired, refreshing...");
+    // 로그아웃이나 토큰 재발급 API는 토큰 재발급을 하지 않음
+    const isLogoutOrTokenAPI =
+      context.url.includes("/logout") ||
+      context.url.includes("/token") ||
+      context.url.includes("/auth/logout") ||
+      context.url.includes("/auth/token");
 
+    // 401 에러 시 토큰 재발급 처리 (단, 로그아웃/토큰 API 제외)
+    if (context.response.status === 401 && !isLogoutOrTokenAPI) {
       try {
         // 토큰 재발급 요청
         const newAccessToken = await refreshAndStoreToken();
@@ -53,16 +60,18 @@ export const authMiddleware: Middleware = {
           headers: retryHeaders,
         };
 
-        console.log("Retrying request with new token...");
         connectSocket();
 
         // 원래 요청을 새 토큰으로 재시도
         const retryResponse = await fetch(context.url, retryInit);
         return retryResponse;
-      } catch (reissueError: any) {
+      } catch (reissueError: unknown) {
         console.error("Token refresh failed:", reissueError);
 
-        if (reissueError.response && reissueError.response.status === 404) {
+        if (
+          reissueError instanceof ResponseError &&
+          reissueError.response.status === 404
+        ) {
           notify({ text: ko["login.expired"], icon: "🚫", type: "error" });
         } else {
           notify({ text: ko["common.error"], icon: "🚫", type: "error" });

@@ -12,9 +12,9 @@ import {
 } from "@/redux/slices/chatSlice";
 import { setOpenAlertModal } from "@/redux/slices/modalSlice";
 import { theme } from "@/styles/theme";
-import { getProfileBgColor } from "@/utils";
 
 import { MoreBox } from "../common";
+import ProfileAvatar from "./ProfileAvatar";
 
 import type { RootState } from "@/redux/store";
 import type { Chat, MoreBoxMenuItems } from "@/types";
@@ -88,18 +88,20 @@ const MessageHeader = (props: MessageHeaderProps) => {
         <MoreBox
           items={menuItems}
           top={35}
-          right={30}
+          right={40}
           onClose={() => setIsMoreBoxOpen(false)}
         />
       )}
       {!isMobile ? (
-        <CloseButton onClick={() => dispatch(closeChatRoom())}>
-          <Icon
-            backgroundUrl="/assets/icons/close.svg"
-            width={11}
-            height={11}
-          />
-        </CloseButton>
+        <CloseButtonWrapper>
+          <CloseButton onClick={() => dispatch(closeChatRoom())}>
+            <Icon
+              backgroundUrl="/assets/icons/close_chat.svg"
+              width={12}
+              height={12}
+            />
+          </CloseButton>
+        </CloseButtonWrapper>
       ) : (
         <TitleWrap>
           <Title>채팅</Title>
@@ -118,25 +120,17 @@ const MessageHeader = (props: MessageHeaderProps) => {
           <PrevButton onClick={handleGoToPrevious}>
             <Icon
               backgroundUrl="/assets/icons/chevron_left.svg"
-              width={16}
-              height={16}
+              width={9}
+              height={18}
             />
           </PrevButton>
           <Middle>
-            <ImageWrapper
-              $bgColor={getProfileBgColor(chatEnterData.memberProfileImg)}
+            <ProfileAvatar
+              profileImgNum={chatEnterData.memberProfileImg}
+              isBlind={chatEnterData.blind}
               onClick={() => handleMoveProfile(chatEnterData.memberId)}
-            >
-              <ProfileImage
-                data={
-                  chatEnterData.blind
-                    ? `/assets/images/profile/profile_default.svg`
-                    : `/assets/images/profile/profile${chatEnterData.memberProfileImg}.svg`
-                }
-                width={38}
-                height={38}
-              />
-            </ImageWrapper>
+              size={47}
+            />
             <Div>
               <UserName
                 onClick={() => router.push(`/user/${chatEnterData.memberId}`)}
@@ -168,8 +162,8 @@ const MessageHeader = (props: MessageHeaderProps) => {
           </Middle>
           <ThreeDotsButton onClick={handleMoreBoxOpen}>
             <Icon
-              backgroundUrl="/assets/icons/three_dots_button.svg"
-              width={15}
+              backgroundUrl="/assets/icons/three_dots_button_black.svg"
+              width={3}
               height={15}
             />
           </ThreeDotsButton>
@@ -195,11 +189,20 @@ const Title = styled.p`
   color: ${theme.colors.gray800};
 `;
 
-const CloseButton = styled.button`
-  margin-left: auto;
+const CloseButtonWrapper = styled.div`
+  width: 100%;
   display: flex;
-  margin-bottom: 1px;
-  padding: 12px 13px 0 0;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 10px 18px 0 0;
+`;
+
+const CloseButton = styled.button`
+  width: 25px;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 0;
   }
@@ -208,13 +211,15 @@ const CloseButton = styled.button`
 const ChatHeader = styled.header`
   display: flex;
   align-items: center;
-  padding: 11px 27px 20px 12px;
+  padding: 12px 20px;
   @media (max-width: ${theme.breakpoints.mobile}) {
     padding: 12px 16px;
   }
 `;
 
 const PrevButton = styled.button`
+  width: 18px;
+  height: 18px;
   margin-right: 18px;
   cursor: pointer;
 `;
@@ -225,23 +230,6 @@ const Middle = styled.div`
   width: 100%;
 `;
 
-const ImageWrapper = styled.div<{ $bgColor: string }>`
-  position: relative;
-  width: 47px;
-  height: 47px;
-  background: ${(props) => props.$bgColor};
-  border-radius: 50%;
-  cursor: pointer;
-`;
-
-const ProfileImage = styled.object`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-`;
-
 const Div = styled.div`
   position: relative;
   margin-left: 9px;
@@ -250,6 +238,7 @@ const Div = styled.div`
 const UserName = styled.p`
   ${(props) => props.theme.fonts.semiBold18};
   color: ${theme.colors.gray800};
+  margin-bottom: 3px;
   cursor: pointer;
 `;
 
@@ -265,4 +254,7 @@ const OnlineStatus = styled.p`
 const ThreeDotsButton = styled.button`
   width: 20px;
   height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

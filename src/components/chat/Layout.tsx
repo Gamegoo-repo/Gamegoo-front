@@ -554,7 +554,6 @@ const Layout = () => {
                   onClick={(e) => {
                     e.stopPropagation();
                     dispatch(closeChat());
-                    // dispatch(resetPosition());
                   }}
                   onMouseDown={(e) => {
                     e.stopPropagation();
@@ -564,7 +563,7 @@ const Layout = () => {
                     backgroundUrl={
                       isMobile
                         ? "/assets/icons/close_modal.svg"
-                        : "/assets/icons/close.svg"
+                        : "/assets/icons/close_chat.svg"
                     }
                     width={12}
                     height={12}
@@ -813,9 +812,14 @@ const HeaderTitle = styled.p`
 `;
 
 const CloseButton = styled.button`
+  width: 25px;
+  height: 25px;
   display: flex;
-  width: 12px;
-  height: 12px;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 12px;
+  right: 12px;
 `;
 
 const ChatMain = styled.div`
