@@ -1,11 +1,18 @@
-import styled from "styled-components";
+import clsx from "clsx";
 
-import { theme } from "@/styles/theme";
 import { checkTierAbbr, toLowerCaseString } from "@/utils";
 
-export const TierCell = ({ tier, rank }: { tier: string; rank?: number }) => (
-  <Third className="table_width">
-    <TierImage
+export const TierCell = ({
+  tier,
+  rank,
+  className,
+}: {
+  tier: string;
+  rank?: number;
+  className?: string;
+}) => (
+  <div className="flex items-center justify-center gap-[3px] py-[14px] px-[21px] text-center table_width">
+    <object
       data={
         !tier
           ? "/assets/images/tier/unranked.svg"
@@ -13,35 +20,20 @@ export const TierCell = ({ tier, rank }: { tier: string; rank?: number }) => (
       }
       width={28}
       height={26}
+      className="pointer-events-none"
     />
-    <P>
+    <p
+      className={clsx(
+        "text-base whitespace-nowrap", // 기본 스타일
+        {
+          "text-gray-800 font-bold": !className, // 기본값
+          "text-violet-600 font-bold": className?.includes("emph"),
+          "text-gray-500 font-medium": className?.includes("gray"),
+        }
+      )}
+    >
       {checkTierAbbr(tier || "")}
       {tier !== "UNRANKED" && rank}
-    </P>
-  </Third>
+    </p>
+  </div>
 );
-
-const Third = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-`;
-
-const TierImage = styled.object`
-  pointer-events: none;
-`;
-
-const P = styled.p`
-  ${(props) => props.theme.fonts.medium16};
-  color: ${theme.colors.gray800};
-  white-space: nowrap;
-  &.emph {
-    color: ${theme.colors.violet600};
-    ${(props) => props.theme.fonts.bold16};
-  }
-  &.gray {
-    color: ${theme.colors.gray500};
-    ${(props) => props.theme.fonts.medium16};
-  }
-`;

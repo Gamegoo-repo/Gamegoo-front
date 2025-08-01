@@ -3,16 +3,10 @@ import styled from "styled-components";
 import { theme } from "@/styles/theme";
 
 export const ContentCell = ({ contents }: { contents: string }) => (
-  <Eighth className="table_width">
+  <div className="table_width flex justify-center items-center">
     <Content>{contents}</Content>
-  </Eighth>
+  </div>
 );
-
-const Eighth = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
 
 const Content = styled.div`
   display: -webkit-box;

@@ -1,35 +1,28 @@
 import Image from "next/image";
-import styled from "styled-components";
 
 import { setPositionImg } from "@/utils";
 
 import type { Position } from "@/types";
 
 export const WantPositionCell = ({ wantP }: { wantP: (Position | null)[] }) => (
-  <Fifth className="table_width">
+  <div className="table_width flex items-center justify-center py-[14px] px-[21px] text-center">
     {wantP?.length > 0 ? (
       wantP.map((posi, i) => (
         <Image
           key={`${posi}-${i}`}
           src={setPositionImg(posi || "ANY")}
-          width={36}
-          height={36}
+          width={32}
+          height={32}
           alt="찾는 포지션"
         />
       ))
     ) : (
       <Image
         src={setPositionImg("ANY")}
-        width={35}
-        height={28}
+        width={32}
+        height={32}
         alt="찾는 포지션"
       />
     )}
-  </Fifth>
+  </div>
 );
-
-const Fifth = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;

@@ -1,16 +1,7 @@
-import styled from "styled-components";
-
-import { theme } from "@/styles/theme";
-
 export const MannerLevelCell = ({ mannerLevel }: { mannerLevel?: number }) => (
-  <Second className="table_width">
-    {mannerLevel && <p>LV.{mannerLevel}</p>}
-  </Second>
+  <div className="table_width">
+    {mannerLevel && (
+      <p className="text-violet-600 font-bold text-base">LV.{mannerLevel}</p>
+    )}
+  </div>
 );
-
-const Second = styled.div`
-  p {
-    color: ${theme.colors.violet600};
-    ${(props) => props.theme.fonts.medium16};
-  }
-`;
