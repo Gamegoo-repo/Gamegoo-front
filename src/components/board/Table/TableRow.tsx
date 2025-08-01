@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import React, { Children } from "react";
 
 import { ChampionCell } from "./cells/ChampionCell";
 import { ContentCell } from "./cells/ContentCell";
@@ -10,7 +10,7 @@ import { TierCell } from "./cells/TierCell";
 import { WantPositionCell } from "./cells/WantPositionCell";
 import { WinRateCell } from "./cells/WinRateCell";
 
-import type { MutableRefObject } from "react";
+import type { MutableRefObject, ReactNode } from "react";
 import type { BoardListDetail, MoreBoxMenuItems, User } from "@/types";
 
 interface TableRowProps {
@@ -70,13 +70,20 @@ const TableRow = ({
   );
 };
 
+const Row = ({
+  children,
+  onClick,
+}: {
+  children: React.ReactNode;
+  onClick: () => void;
+}) => {
+  return (
+    <div
+      className="flex items-center justify-between h-16 px-2 border-b border-[#d4d4d4] cursor-pointer"
+      onClick={onClick}
+    >
+      {children}
+    </div>
+  );
+};
 export default TableRow;
-
-const Row = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 22px 21px;
-  border-bottom: 1px solid #d4d4d4;
-  cursor: pointer;
-`;
