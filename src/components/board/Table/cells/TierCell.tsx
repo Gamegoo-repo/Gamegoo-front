@@ -11,7 +11,7 @@ export const TierCell = ({
   rank?: number;
   className?: string;
 }) => (
-  <div className="flex items-center justify-center gap-[3px] py-[14px] px-[21px] text-center table_width">
+  <div className="flex items-center justify-center gap-[3px] text-center table_width">
     <object
       data={
         !tier

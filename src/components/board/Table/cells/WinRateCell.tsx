@@ -1,5 +1,5 @@
 export const WinRateCell = ({ winRate }: { winRate: number | null }) => (
-  <div className="table_width py-[14px] px-[21px] text-center">
+  <div className="table_width text-center">
     <p
       className={
         winRate && winRate >= 50

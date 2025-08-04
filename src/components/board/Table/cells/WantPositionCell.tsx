@@ -5,7 +5,7 @@ import { setPositionImg } from "@/utils";
 import type { Position } from "@/types";
 
 export const WantPositionCell = ({ wantP }: { wantP: (Position | null)[] }) => (
-  <div className="table_width flex items-center justify-center py-[14px] px-[21px] text-center">
+  <div className="table_width flex items-center justify-center  text-center">
     {wantP?.length > 0 ? (
       wantP.map((posi, i) => (
         <Image
