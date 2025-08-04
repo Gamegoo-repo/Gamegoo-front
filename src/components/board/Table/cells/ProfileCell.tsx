@@ -5,6 +5,8 @@ import Icon from "@/components/common/Icon";
 import { setCustomProfileImg } from "@/utils/custom";
 import { getProfileBgColor } from "@/utils/profile";
 
+import { ProfileImage } from "./ProfileImage";
+
 interface ProfileCellProps {
   profileImageId: number;
   gameName: string;
@@ -27,104 +29,30 @@ const ProfileCell = ({
   }
 
   return (
-    <Wrapper className="table_width">
-      <Container>
+    <div className="table_width flex items-center">
+      <div className="flex gap-2 items-center justify-start">
         <ProfileImage
           profileImageId={profileImageId}
           gameName={gameName}
           onClick={(e) => onMoveProfile(e, memberId)}
         />
-        <InfoContainer>
-          <NameRow>
-            <GameName>{gameName}</GameName>
-            <PunchIcon>
-              <Icon
-                backgroundUrl="/assets/icons/board/punch.svg"
-                width={9}
-                height={9}
-              />
-            </PunchIcon>
-          </NameRow>
+        <div className="flex flex-col gap-0.5 justify-center">
+          <div className="flex gap-1 items-center">
+            <span className="text-base font-semibold text-gray-800">
+              {gameName}
+            </span>
+          </div>
           <TagRow>
             <Tag>#{tag}</Tag>
             <CopyButton onClick={handleCopyClipBoard}>복사</CopyButton>
           </TagRow>
-        </InfoContainer>
-      </Container>
-    </Wrapper>
+        </div>
+      </div>
+    </div>
   );
 };
 
 export default ProfileCell;
-
-export const ProfileImage = ({
-  width = 35,
-  height = 35,
-  profileImageId,
-  gameName = "",
-  onClick,
-}: {
-  width?: number;
-  height?: number;
-  profileImageId: number;
-  gameName?: string;
-  onClick?: (e: React.MouseEvent) => void;
-}) => {
-  const bgColor = getProfileBgColor(profileImageId);
-  const profileSrc = setCustomProfileImg(profileImageId);
-
-  const imageScale = 0.69;
-
-  return (
-    <ProfileImageWrapper
-      $bgColor={bgColor}
-      $width={width}
-      $height={height}
-      onClick={onClick}
-    >
-      <Image
-        src={profileSrc}
-        width={width * imageScale}
-        height={height * imageScale}
-        alt={gameName === "" ? "프로필 이미지" : `${gameName}의 프로필 이미지`}
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          pointerEvents: "none",
-          objectFit: "contain",
-        }}
-      />
-    </ProfileImageWrapper>
-  );
-};
-
-const Wrapper = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-  align-items: center;
-  justify-content: flex-start;
-`;
-
-const InfoContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  justify-content: center;
-`;
-
-const NameRow = styled.div`
-  display: flex;
-  gap: 4px;
-  align-items: center;
-`;
 
 const GameName = styled.span`
   line-height: 1;
@@ -176,17 +104,4 @@ const CopyButton = styled.button`
   &:hover {
     background-color: ${(props) => props.theme.colors.gray200};
   }
-`;
-
-const ProfileImageWrapper = styled.div<{
-  $bgColor: string;
-  $width: number;
-  $height: number;
-}>`
-  position: relative;
-  border-radius: 50%;
-  cursor: pointer;
-  background-color: ${(props) => props.$bgColor};
-  width: ${(props) => props.$width}px;
-  height: ${(props) => props.$height}px;
 `;
