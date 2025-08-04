@@ -17,7 +17,12 @@ import {
 import Icon from "@/components/common/Icon";
 import { BOARD_TITLE, GAME_MODE, MIC, TIER } from "@/constants";
 import ko from "@/constants/ko.json";
-import { notify, useInfiniteScroll, useConfirmModalContext, useMediaQueryContext } from "@/hooks";
+import {
+  notify,
+  useConfirmModalContext,
+  useInfiniteScroll,
+  useMediaQueryContext,
+} from "@/hooks";
 import { resetBoardFilters, setRefresh } from "@/redux/slices/boardSlice";
 import {
   setClosePostingModal,
@@ -417,9 +422,9 @@ const BoardPage = () => {
                   <RefreshButton onClick={handleRefresh}>
                     <RefreshImage
                       onClick={handleRefresh}
-                      backgroundUrl="/assets/icons/redo.svg"
-                      width={20}
-                      height={20}
+                      backgroundUrl="/assets/icons/board/reload.svg"
+                      width={30}
+                      height={27}
                       $isrotating={isRotating}
                     />
                   </RefreshButton>
@@ -549,9 +554,9 @@ const BoardPage = () => {
                   <RefreshImageWrap>
                     <RefreshImage
                       onClick={handleRefresh}
-                      backgroundUrl="/assets/icons/redo.svg"
-                      width={20}
-                      height={20}
+                      backgroundUrl="/assets/icons/board/reload.svg"
+                      width={30}
+                      height={27}
                       $isrotating={isRotating}
                     />
                   </RefreshImageWrap>
@@ -664,10 +669,7 @@ const RefreshButton = styled.button`
   justify-content: center;
   align-items: center;
   gap: 10px;
-  padding: 10px;
   border-radius: 8px;
-  border: 1px solid ${theme.colors.violet200};
-  background: ${theme.colors.violet100};
 `;
 
 const RefreshImageWrap = styled.button`
@@ -676,9 +678,7 @@ const RefreshImageWrap = styled.button`
   align-items: center;
   width: 44px;
   height: 44px;
-  background: ${theme.colors.violet100};
   border-radius: 8px;
-  border: 1px solid ${theme.colors.violet200};
 `;
 
 const RefreshImage = styled(Icon)<{ $isrotating: boolean }>`
