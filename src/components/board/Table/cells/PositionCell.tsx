@@ -11,7 +11,7 @@ export const PositionCell = ({
   mainP: Position;
   subP: Position;
 }) => (
-  <div className="table_width flex items-center justify-center gap-[21px]">
+  <div className="table_width flex items-center justify-center ">
     <Image
       src={setPositionImg(mainP)}
       width={32}
