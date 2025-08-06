@@ -504,31 +504,31 @@ const TableWrapper = styled.div`
   text-align: center;
   .table_width {
     &:first-child {
-      width: 17%;
+      width: 16%;
     }
     &:nth-child(2) {
-      width: 13%;
+      width: 8%;
     }
     &:nth-child(3) {
-      width: 10%;
+      width: 8%;
     }
     &:nth-child(4) {
-      width: 12%;
-    }
-    &:nth-child(5) {
-      width: 13%;
-    }
-    &:nth-child(6) {
-      width: 20%;
-    }
-    &:nth-child(7) {
       width: 9%;
     }
+    &:nth-child(5) {
+      width: 10%;
+    }
+    &:nth-child(6) {
+      width: 16%;
+    }
+    &:nth-child(7) {
+      width: 8%;
+    }
     &:nth-child(8) {
-      width: 15%;
+      width: 13%;
     }
     &:last-child {
-      width: 11%;
+      width: 13%;
     }
   }
 `;

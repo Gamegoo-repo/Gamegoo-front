@@ -1,5 +1,4 @@
 import Image from "next/image";
-import styled from "styled-components";
 
 import { setPositionImg } from "@/utils";
 
@@ -12,25 +11,18 @@ export const PositionCell = ({
   mainP: Position;
   subP: Position;
 }) => (
-  <Fourth className="table_width">
+  <div className="table_width flex items-center justify-center ">
     <Image
       src={setPositionImg(mainP)}
-      width={36}
-      height={36}
+      width={32}
+      height={32}
       alt="메인 포지션"
     />
     <Image
       src={setPositionImg(subP)}
-      width={36}
-      height={36}
+      width={32}
+      height={32}
       alt="서브 포지션"
     />
-  </Fourth>
+  </div>
 );
-
-const Fourth = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 21px;
-`;

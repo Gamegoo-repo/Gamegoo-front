@@ -1,7 +1,11 @@
+import Image from "next/image";
 import styled from "styled-components";
 
+import Icon from "@/components/common/Icon";
 import { setCustomProfileImg } from "@/utils/custom";
 import { getProfileBgColor } from "@/utils/profile";
+
+import { ProfileImage } from "./ProfileImage";
 
 interface ProfileCellProps {
   profileImageId: number;
@@ -20,82 +24,84 @@ const ProfileCell = ({
   onMoveProfile,
   onCopyText,
 }: ProfileCellProps) => {
+  function handleCopyClipBoard(e: React.MouseEvent) {
+    onCopyText(gameName, tag, e);
+  }
+
   return (
-    <Wrapper className="table_width">
-      <ProfileImgWrapper
-        $bgColor={getProfileBgColor(profileImageId)}
-        onClick={(e) => onMoveProfile(e, memberId)}
-      >
-        <ProfileImg
-          data={setCustomProfileImg(profileImageId)}
-          width={35}
-          height={35}
+    <div className="table_width flex items-center">
+      <div className="flex gap-2 items-center justify-start">
+        <ProfileImage
+          profileImageId={profileImageId}
+          gameName={gameName}
+          onClick={(e) => onMoveProfile(e, memberId)}
         />
-      </ProfileImgWrapper>
-      <NameRow>
-        <P>{gameName}</P>
-        <CopyButton onClick={(e) => onCopyText(gameName, tag, e)}>
-          복사
-        </CopyButton>
-      </NameRow>
-    </Wrapper>
+        <div className="flex flex-col gap-0.5 justify-center">
+          <div className="flex gap-1 items-center">
+            <span className="text-base font-semibold text-gray-800">
+              {gameName}
+            </span>
+          </div>
+          <TagRow>
+            <Tag>#{tag}</Tag>
+            <CopyButton onClick={handleCopyClipBoard}>복사</CopyButton>
+          </TagRow>
+        </div>
+      </div>
+    </div>
   );
 };
 
 export default ProfileCell;
 
-const Wrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`;
-
-const ProfileImgWrapper = styled.div<{ $bgColor: string }>`
-  position: relative;
-  width: 50px;
-  height: 50px;
-  background: ${(props) => props.$bgColor};
-  border-radius: 50%;
-  aspect-ratio: 1;
-`;
-
-const ProfileImg = styled.object`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-`;
-
-const NameRow = styled.div`
-  display: flex;
-  align-items: center;
-  position: relative;
-
-  &:hover > button {
-    display: inline-flex;
-  }
-`;
-
-const P = styled.p`
-  ${(props) => props.theme.fonts.medium16};
+const GameName = styled.span`
+  line-height: 1;
+  font-size: 16px;
+  font-weight: 600;
   color: ${(props) => props.theme.colors.gray800};
   white-space: nowrap;
 `;
 
+const PunchIcon = styled.span`
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #b91c1c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const TagRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+`;
+
+const Tag = styled.span`
+  font-size: 13px;
+  font-weight: normal;
+  line-height: 1;
+  color: ${(props) => props.theme.colors.gray600};
+`;
+
 const CopyButton = styled.button`
-  width: auto;
-  height: 20px;
-  margin-left: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 19px;
+  line-height: 1;
+  background-color: ${(props) => props.theme.colors.gray100};
+  border: 1px solid ${(props) => props.theme.colors.gray300};
+  color: ${(props) => props.theme.colors.gray600};
+  font-weight: 500;
+  font-size: 11px;
   border-radius: 2px;
-  padding: 5px 7px;
-  background: ${(props) => props.theme.colors.gray600};
-  color: ${(props) => props.theme.colors.white};
-  ${(props) => props.theme.fonts.medium11};
-  line-height: 11px;
-  white-space: nowrap;
-  display: none;
+  cursor: pointer;
+
   &:hover {
-    color: ${(props) => props.theme.colors.violet300};
+    background-color: ${(props) => props.theme.colors.gray200};
   }
 `;

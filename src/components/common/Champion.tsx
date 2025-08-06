@@ -72,8 +72,8 @@ const Champion = (props: ChampionProps) => {
               <ImageWrapper>
                 <Image
                   src={`/assets/images/champion/${champion.championId}.png`}
-                  width={!isMobile ? 48 : 32}
-                  height={!isMobile ? 48 : 32}
+                  width={32}
+                  height={32}
                   alt={`champion-${champion.championId}`}
                   style={{
                     transform: "scale(1.2)", // 120% 확대
@@ -170,7 +170,7 @@ const Champions = styled.div`
 `;
 
 const ChampionWrapper = styled.div`
-  height: 62px;
+  height: 45px;
   position: relative;
 
   @media (max-width: ${theme.breakpoints.mobile}) {
@@ -179,8 +179,8 @@ const ChampionWrapper = styled.div`
 `;
 
 const ImageWrapper = styled.div`
-  width: 52px;
-  height: 52px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   overflow: hidden;
 
@@ -192,7 +192,7 @@ const ImageWrapper = styled.div`
 
 const Percentage = styled.div`
   display: flex;
-  padding: 0px 6px;
+  padding: 0px 4px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -200,11 +200,13 @@ const Percentage = styled.div`
   background: ${theme.colors.violet600};
   color: ${theme.colors.white};
   text-align: center;
-  ${theme.fonts.semiBold12};
+  ${theme.fonts.bold11};
   position: absolute;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
+  width: 32px;
+  height: 15px;
 
   @media (max-width: ${theme.breakpoints.mobile}) {
     width: 33px;
@@ -217,7 +219,7 @@ const Percentage = styled.div`
 const TooltipWrapper = styled.div`
   position: absolute;
   z-index: ${theme.zIndex.baseFloating};
-  top: 40px;
+  top: 17px;
   left: 0;
   width: 100%;
   display: flex;
