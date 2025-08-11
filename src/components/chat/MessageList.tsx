@@ -331,7 +331,7 @@ const MessageList = (props: MessageListProps) => {
                     <FeedbackMessage onEvaluate={handleMannerEvaluate} />
                   )}
 
-                  {message.systemType && message.systemType !== 5 && (
+                  {message.systemType !== null && message.systemType !== 5 && (
                     <SystemMessage
                       message={message.message}
                       onClick={() => handlePostOpen(message.boardId as number)}
