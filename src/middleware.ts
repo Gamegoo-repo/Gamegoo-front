@@ -6,6 +6,12 @@ export function middleware(request: NextRequest) {
   const token = request.headers.get("Authorization")?.split(" ")[1];
   const { pathname } = request.nextUrl;
 
+  // /member/profile 경로를 /user로 리다이렉트
+  if (pathname.startsWith("/member/profile/")) {
+    const userId = pathname.replace("/member/profile/", "");
+    return NextResponse.redirect(new URL(`/user/${userId}`, request.url));
+  }
+
   // 로그인하지 않은 상태
   if (
     token &&
@@ -32,5 +38,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/match/:path*", "/matching/:path*"],
+  matcher: ["/match/:path*", "/matching/:path*", "/member/:path*"],
 };
