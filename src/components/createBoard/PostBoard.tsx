@@ -297,7 +297,7 @@ const PostBoard = (props: PostBoardProps) => {
 
   useEffect(
     () => {
-      if (postStatus) {
+      if (postStatus === "complete" || postStatus === "edit") {
         openConfirmModal({
           width: "540px",
           primaryButtonText: "확인",
@@ -417,7 +417,7 @@ const PostBoard = (props: PostBoardProps) => {
           <Button
             type="submit"
             buttonType="primary"
-            text="작성 완료"
+            text={currentPost ? "수정 완료" : "작성 완료"}
             disabled={textareaValue.trim() == ""}
           />
         </ButtonContent>

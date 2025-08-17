@@ -16,6 +16,7 @@ import {
   RankTier,
 } from "@/components/common";
 import { CRModal, PositionBox, UserAccount } from "@/components/crBoard";
+import { PostBoard } from "@/components/createBoard";
 import {
   MoreBoxButton,
   ProfileImage,
@@ -33,12 +34,13 @@ import {
   setErrorMessage,
 } from "@/redux/slices/chatSlice";
 import {
+  setClosePostingModal,
   setCloseReadingModal,
   setOpenAlertModal,
   setOpenModal,
   setOpenPostingModal,
 } from "@/redux/slices/modalSlice";
-import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
+import { clearCurrentPost, setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { theme } from "@/styles/theme";
 import { setPostingDateFormatter } from "@/utils";
 import { blockApi, friendApi } from "@/utils/api";
@@ -443,12 +445,11 @@ const ReadBoard = (props: ReadBoardProps) => {
     if (isUser?.id !== isPost?.memberId) return;
 
     if (isPost) {
-      await dispatch(
+      dispatch(
         setCurrentPost({ currentPost: isPost, currentPostId: postId })
       );
-      await dispatch(setCloseReadingModal());
-      await dispatch(setOpenPostingModal());
-      dispatch(setPostStatus(""));
+      dispatch(setCloseReadingModal());
+      dispatch(setOpenPostingModal());
     }
   };
 
@@ -489,6 +490,19 @@ const ReadBoard = (props: ReadBoardProps) => {
   /* 더보기 버튼 닫기 */
   const handleMoreBoxClose = () => {
     setIsMoreBoxOpen(false);
+  };
+
+  /* 글쓰기 모달 닫기 */
+  const handlePostingClose = () => {
+    dispatch(setClosePostingModal());
+  };
+
+  /* 모달 닫기 */
+  const handleModalClose = () => {
+    dispatch(setClosePostingModal());
+    dispatch(setOpenModal(""));
+    dispatch(setPostStatus(""));
+    dispatch(clearCurrentPost());
   };
 
   /* 더보기 버튼 메뉴 */
@@ -769,6 +783,12 @@ const ReadBoard = (props: ReadBoardProps) => {
 
       {isModalType === "report" && (
         <ReportModal isPost={isPost} postId={postId} />
+      )}
+      {isPostModalOpen && (
+        <PostBoard
+          onClose={handlePostingClose}
+          onCompletedPostingClose={handleModalClose}
+        />
       )}
     </>
   );
