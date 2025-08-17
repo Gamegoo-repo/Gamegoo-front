@@ -51,11 +51,14 @@ const Table = (props: TableProps) => {
   const isModalType = useSelector((state: RootState) => state.modal.modalType);
   const isUser = useSelector((state: RootState) => state.user);
 
-  const [isBlockedStatus, setIsBlockedStatus] = useState(false);
-  const [isFriendStatus, setIsFriendStatus] = useState(false);
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
-  const [isBlockBoxOpen, setIsBlockBoxOpen] = useState(false);
   const [isBlockConfirmOpen, setIsBlockConfrimOpen] = useState(false);
+  const [blockActionResult, setBlockActionResult] = useState<'blocked' | 'unblocked' | null>(null);
+
+  const isFriend = isPost?.isFriend;
+  const isBlocked = isPost?.isBlocked;
+  const isMyPost = isUser?.id === isPost?.memberId;
+  const hasSentFriendRequest = isPost?.friendRequestMemberId === isUser.id;
 
   /* 로그아웃 시, 비회원 접근 시 알럿 props 설정 함수 */
   const logoutMessage = "로그아웃 되었습니다. 다시 로그인 해주세요.";
@@ -138,13 +141,13 @@ const Table = (props: TableProps) => {
         },
         children: (
           <MsgConfirm>{`${
-            isBlockedStatus ? "차단이" : "차단 해제가"
+            blockActionResult === 'unblocked' ? "차단 해제가" : "차단이"
           } 완료되었습니다.`}</MsgConfirm>
         ),
       });
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [isBlockConfirmOpen]
+    [isBlockConfirmOpen, blockActionResult]
   );
 
   useEffect(() => {
@@ -225,7 +228,7 @@ const Table = (props: TableProps) => {
       onPrimaryClick: () => {
         handleRunBlock();
       },
-      children: isBlockedStatus ? (
+      children: isBlocked ? (
         <MsgConfirm>{"차단을 해제 하시겠습니까?"}</MsgConfirm>
       ) : (
         <Msg>
@@ -241,14 +244,21 @@ const Table = (props: TableProps) => {
 
   const handleRunBlock = async () => {
     // 차단하기 api
-    setIsBlockBoxOpen(false);
     if (isPost) {
       if (isPost.isBlocked) {
         await blockApi.unblockMember({ memberId: isPost.memberId });
-        setIsBlockedStatus(false);
+        setBlockActionResult('unblocked');
       } else {
         await blockApi.blockMember({ memberId: isPost.memberId });
-        setIsBlockedStatus(true);
+        setBlockActionResult('blocked');
+      }
+      
+      // 차단/해제 후 최신 데이터로 업데이트
+      try {
+        const response = await getMemberPost(isPost.boardId);
+        setIsPost(response.data);
+      } catch (error) {
+        console.error("게시물 데이터 업데이트 실패:", error);
       }
     }
     setIsBlockConfrimOpen(true);
@@ -261,9 +271,16 @@ const Table = (props: TableProps) => {
         await friendApi.sendFriendRequest({
           memberId: isPost.memberId,
         });
+        
+        // 친구 요청 후 최신 데이터로 업데이트
+        try {
+          const response = await getMemberPost(isPost.boardId);
+          setIsPost(response.data);
+        } catch (error) {
+          console.error("게시물 데이터 업데이트 실패:", error);
+        }
       }
       await handleMoreBox(false);
-      setIsFriendStatus(true);
     } catch (error) {
       console.error(error);
     }
@@ -278,9 +295,16 @@ const Table = (props: TableProps) => {
         await friendApi.cancelFriendRequest({
           memberId: isPost.memberId,
         });
+        
+        // 친구 요청 취소 후 최신 데이터로 업데이트
+        try {
+          const response = await getMemberPost(isPost.boardId);
+          setIsPost(response.data);
+        } catch (error) {
+          console.error("게시물 데이터 업데이트 실패:", error);
+        }
       }
       await handleMoreBox(false);
-      setIsFriendStatus(false);
     } catch (error) {
       console.error(error);
     }
@@ -293,9 +317,16 @@ const Table = (props: TableProps) => {
     try {
       if (isPost) {
         await friendApi.deleteFriend({ memberId: isPost.memberId });
+        
+        // 친구 삭제 후 최신 데이터로 업데이트
+        try {
+          const response = await getMemberPost(isPost.boardId);
+          setIsPost(response.data);
+        } catch (error) {
+          console.error("게시물 데이터 업데이트 실패:", error);
+        }
       }
       await handleMoreBox(false);
-      setIsFriendStatus(false);
     } catch (error) {
       console.error(error);
     }
@@ -408,7 +439,7 @@ const Table = (props: TableProps) => {
   /* 더보기 버튼 메뉴 */
   const MoreBoxMenuItems: MoreBoxMenuItems[] = [];
 
-  if (isUser?.id === isPost?.memberId) {
+  if (isMyPost) {
     /* 내가 작성한 글 */
     MoreBoxMenuItems.push(
       { text: "끌어올리기", onClick: handlePullUp },
@@ -426,16 +457,16 @@ const Table = (props: TableProps) => {
     let friendText = "";
     let friendFunc = null;
 
-    if (!isBlockedStatus) {
-      if (isPost?.isFriend) {
+    if (!isBlocked) {
+      if (isFriend) {
         friendText = "친구 삭제";
         friendFunc = handleFriendDelete;
       } else {
-        if (!isPost?.isFriend && isPost?.friendRequestMemberId !== isUser.id) {
+        if (!isFriend && !hasSentFriendRequest) {
           friendText = "친구 추가";
           friendFunc = handleFriendAdd;
         }
-        if (!isPost?.isFriend && isPost?.friendRequestMemberId === isUser.id) {
+        if (!isFriend && hasSentFriendRequest) {
           friendText = "친구 요청 취소";
           friendFunc = handleCancelFriendReq;
         }
@@ -448,7 +479,7 @@ const Table = (props: TableProps) => {
 
     MoreBoxMenuItems.push(
       {
-        text: isPost?.isBlocked ? "차단 해제" : "차단하기",
+        text: isBlocked ? "차단 해제" : "차단하기",
         onClick: handleBlock,
       },
       { text: "신고하기", onClick: handleReportModal }

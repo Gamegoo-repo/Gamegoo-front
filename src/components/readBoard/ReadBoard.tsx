@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
@@ -71,8 +71,6 @@ const ReadBoard = (props: ReadBoardProps) => {
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
   const [isMannerLevelBoxOpen, setIsMannerLevelBoxOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [isBlockedStatus, setIsBlockedStatus] = useState(false);
-  const [isFriendStatus, setIsFriendStatus] = useState(false);
 
   const [gameMode, setGameMode] = useState<GameMode>("FAST");
   const [showAlert, setShowAlert] = useState(false);
@@ -87,6 +85,9 @@ const ReadBoard = (props: ReadBoardProps) => {
   });
   const [isBlockBoxOpen, setIsBlockBoxOpen] = useState(false);
   const [isBlockConfirmOpen, setIsBlockConfrimOpen] = useState(false);
+  const [blockActionResult, setBlockActionResult] = useState<
+    "blocked" | "unblocked" | null
+  >(null);
   const [isPullUpConfirmOpen, setIsPullUpConfirmOpen] = useState(false);
 
   const isModalType = useSelector((state: RootState) => state.modal.modalType);
@@ -132,7 +133,6 @@ const ReadBoard = (props: ReadBoardProps) => {
         const memberData = await getMemberPost(postId);
         setIsPost(memberData.data);
         setGameMode(memberData.data.gameMode);
-        setIsBlockedStatus(memberData.data.isBlocked);
       } else if (!isUser.id && postId) {
         const nonMember = await getNonMemberPost(postId);
         setIsPost(nonMember.data);
@@ -158,7 +158,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       getPostData();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [isBlockedStatus, isFriendStatus, isUser, postId]
+    [isUser, postId]
   );
 
   useEffect(
@@ -200,12 +200,12 @@ const ReadBoard = (props: ReadBoardProps) => {
         },
         children: (
           <MsgConfirm>{`${
-            isBlockedStatus ? "차단이" : "차단 해제가"
+            blockActionResult === "unblocked" ? "차단 해제가" : "차단이"
           } 완료되었습니다.`}</MsgConfirm>
         ),
       });
     }
-  }, [isBlockConfirmOpen]);
+  }, [isBlockConfirmOpen, blockActionResult]);
 
   /* 신고하기 모달 오픈 */
   const handleReportModal = () => {
@@ -233,7 +233,7 @@ const ReadBoard = (props: ReadBoardProps) => {
       onPrimaryClick: () => {
         handleRunBlock();
       },
-      children: isBlockedStatus ? (
+      children: isBlocked ? (
         <MsgConfirm>{"차단을 해제 하시겠습니까?"}</MsgConfirm>
       ) : (
         <Msg>
@@ -258,18 +258,27 @@ const ReadBoard = (props: ReadBoardProps) => {
 
     if (!isPost || isUser.id === isPost?.memberId) return;
 
-    // 차단하기 api
+    // 차단하기
     closeConfirmModal();
     if (isPost) {
-      if (isPost.isBlocked) {
-        await blockApi.deleteBlockMember({ memberId: isPost.memberId });
-        setIsBlockedStatus(false);
+      const wasBlocked = isPost.isBlocked;
+
+      if (wasBlocked) {
+        await blockApi.unblockMember({ memberId: isPost.memberId });
+        setBlockActionResult("unblocked");
+        setIsPost((prev) => (prev ? { ...prev, isBlocked: false } : prev));
       } else {
         await blockApi.blockMember({ memberId: isPost.memberId });
-        setIsBlockedStatus(true);
+        setBlockActionResult("blocked");
+        setIsPost((prev) => (prev ? { ...prev, isBlocked: true } : prev));
       }
+
+      setIsMoreBoxOpen(false);
+
+      await getPostData();
+
+      setIsBlockConfrimOpen(true);
     }
-    setIsBlockConfrimOpen(true);
   };
 
   /* 친구 추가 */
@@ -289,7 +298,6 @@ const ReadBoard = (props: ReadBoardProps) => {
       await friendApi.sendFriendRequest({ memberId: isPost.memberId });
       await handleMoreBoxClose();
       await getPostData();
-      setIsFriendStatus(true);
     } catch (error: any) {
       if (error.response && error.response.data) {
         notify({
@@ -324,7 +332,6 @@ const ReadBoard = (props: ReadBoardProps) => {
       await friendApi.cancelFriendRequest({ memberId: isPost.memberId });
       await handleMoreBoxClose();
       await getPostData();
-      setIsFriendStatus(false);
     } catch (error: any) {
       if (error.response && error.response.status === 404) {
         notify({
@@ -365,7 +372,6 @@ const ReadBoard = (props: ReadBoardProps) => {
       await friendApi.deleteFriend({ memberId: isPost.memberId });
       await handleMoreBoxClose();
       await getPostData();
-      setIsFriendStatus(false);
     } catch (error) {
       console.error(error);
     }
@@ -444,7 +450,6 @@ const ReadBoard = (props: ReadBoardProps) => {
       await dispatch(setOpenPostingModal());
       dispatch(setPostStatus(""));
     }
-    console.log("isPostModalOpen 상태:", isPostModalOpen);
   };
 
   /* 게시글 삭제 */
@@ -487,54 +492,82 @@ const ReadBoard = (props: ReadBoardProps) => {
   };
 
   /* 더보기 버튼 메뉴 */
-  const MoreBoxMenuItems: MoreBoxMenuItems[] = [];
+  const {
+    MoreBoxMenuItems,
+    isFriend,
+    isBlocked,
+    isMyPost,
+    hasSentFriendRequest,
+  } = useMemo(() => {
+    const isFriend = isPost?.isFriend;
+    const isBlocked = isPost?.isBlocked;
+    const isMyPost = isUser?.id === isPost?.memberId;
+    const hasSentFriendRequest = isPost?.friendRequestMemberId === isUser.id;
 
-  if (isUser?.id === isPost?.memberId) {
-    /* 내가 작성한 글 */
-    MoreBoxMenuItems.push(
-      { text: "끌어올리기", onClick: handlePullUp },
-      { text: "수정", onClick: handleEdit },
-      { text: "삭제", onClick: handleDelete }
-    );
-  } else {
-    /* 다른 사람이 작성한 글 */
-    //친구 삭제 - 차단되어있을 때, 친구일 때, 친구 추가 요청 중일 때
-    //친구 추가(친구 요청) - 친구가 아닐 때, 차단되어있지 않을 때, 친구 추가 요청 중이 아닐 때
-    //친구 요청 취소 - 친구 추가 요청 중일 떄
-    //차단하기 - 친구 추가 요청 중일 때, 친구 삭제된 상태일 때, 차단되어있지 않을 때
-    //차단해제 - 차단되어 있을 때,
+    const MoreBoxMenuItems: MoreBoxMenuItems[] = [];
 
-    let friendText = "";
-    let friendFunc = null;
+    if (isMyPost) {
+      /* 내가 작성한 글 */
+      MoreBoxMenuItems.push(
+        { text: "끌어올리기", onClick: handlePullUp },
+        { text: "수정", onClick: handleEdit },
+        { text: "삭제", onClick: handleDelete }
+      );
+    } else {
+      /* 다른 사람이 작성한 글 */
+      //친구 삭제 - 차단되어있을 때, 친구일 때, 친구 추가 요청 중일 때
+      //친구 추가(친구 요청) - 친구가 아닐 때, 차단되어있지 않을 때, 친구 추가 요청 중이 아닐 때
+      //친구 요청 취소 - 친구 추가 요청 중일 떄
+      //차단하기 - 친구 추가 요청 중일 때, 친구 삭제된 상태일 때, 차단되어있지 않을 때
+      //차단해제 - 차단되어 있을 때,
 
-    if (!isBlockedStatus) {
-      if (isPost?.isFriend) {
-        friendText = "친구 삭제";
-        friendFunc = handleFriendDelete;
-      } else {
-        if (!isPost?.isFriend && isPost?.friendRequestMemberId !== isUser.id) {
-          friendText = "친구 추가";
-          friendFunc = handleFriendAdd;
-        }
-        if (!isPost?.isFriend && isPost?.friendRequestMemberId === isUser.id) {
-          friendText = "친구 요청 취소";
-          friendFunc = handleCancelFriendReq;
+      let friendText = "";
+      let friendFunc = null;
+
+      if (!isBlocked) {
+        if (isFriend) {
+          friendText = "친구 삭제";
+          friendFunc = handleFriendDelete;
+        } else {
+          if (!isFriend && !hasSentFriendRequest) {
+            friendText = "친구 추가";
+            friendFunc = handleFriendAdd;
+          }
+          if (!isFriend && hasSentFriendRequest) {
+            friendText = "친구 요청 취소";
+            friendFunc = handleCancelFriendReq;
+          }
         }
       }
+
+      if (friendText && friendFunc) {
+        MoreBoxMenuItems.push({ text: friendText, onClick: friendFunc });
+      }
+
+      MoreBoxMenuItems.push(
+        {
+          text: isBlocked ? "차단 해제" : "차단하기",
+          onClick: handleBlock,
+        },
+        { text: "신고하기", onClick: handleReportModal }
+      );
     }
 
-    if (friendText && friendFunc) {
-      MoreBoxMenuItems.push({ text: friendText, onClick: friendFunc });
-    }
-
-    MoreBoxMenuItems.push(
-      {
-        text: isPost?.isBlocked ? "차단 해제" : "차단하기",
-        onClick: handleBlock,
-      },
-      { text: "신고하기", onClick: handleReportModal }
-    );
-  }
+    return {
+      MoreBoxMenuItems,
+      isFriend,
+      isBlocked,
+      isMyPost,
+      hasSentFriendRequest,
+    };
+  }, [
+    isPost?.isBlocked,
+    isPost?.isFriend,
+    isPost?.friendRequestMemberId,
+    isPost?.memberId,
+    isUser?.id,
+    isPost,
+  ]);
 
   /* 로딩 스피너 */
   if (loading) {
@@ -547,16 +580,12 @@ const ReadBoard = (props: ReadBoardProps) => {
 
   /* 채팅방 연결 */
   const handleChatStart = async () => {
-    console.log("0");
     if (!isUser.id) {
       // 비회원 게스트용
-      console.log("1");
       if (isPost) {
-        console.log("2");
         await dispatch(
           setCurrentPost({ currentPost: isPost, currentPostId: postId })
         );
-        console.log("3");
         dispatch(setChatRoomUuid(isPost.boardId));
         dispatch(setCloseReadingModal());
         dispatch(openChatRoom());
