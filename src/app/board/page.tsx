@@ -60,7 +60,7 @@ const BoardPage = () => {
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
   const [selectedMic, setSelectedMic] = useState<Mike | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [myRecentPost, setMyRecentPost] = useState<number | null>(null);
+  const myRecentPostRef = useRef<number | null>(null);
   const [cursor, setCursor] = useState<string | null>(null);
   const [hasNext, setHasNext] = useState<boolean>(true);
   const [isRotating, setIsRotating] = useState(false);
@@ -366,7 +366,7 @@ const BoardPage = () => {
     // 내가 쓴 글로부터 최신글 정보 조회
     const myPost = await getMyPost(1);
     if (myPost.data.totalCount > 0) {
-      setMyRecentPost(myPost.data.myBoards[0].boardId);
+      myRecentPostRef.current = myPost.data.myBoards[0].boardId;
 
       /* 끌어올리기 확인 팝업 */
       openConfirmModal({
@@ -374,7 +374,7 @@ const BoardPage = () => {
         primaryButtonText: "아니요",
         secondaryButtonText: "예",
         onPrimaryClick: () => {
-          setMyRecentPost(null);
+          myRecentPostRef.current = null;
         },
         onSecondaryClick: handlePullUpAction,
         children: (
@@ -392,10 +392,11 @@ const BoardPage = () => {
 
   const handlePullUpAction = async () => {
     // 게시판 끌어올리기 API
-    if (myRecentPost) {
-      await pullUpPost(myRecentPost);
+    if (myRecentPostRef.current) {
+      await pullUpPost(myRecentPostRef.current);
       await dispatch(setRefresh());
     }
+    closeConfirmModal();
     await notify({
       text: ko["board.pullup.success"],
       icon: "👌🏼",
