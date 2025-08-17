@@ -53,6 +53,7 @@ const Table = (props: TableProps) => {
 
   const [isMoreBoxOpen, setIsMoreBoxOpen] = useState(false);
   const [isBlockConfirmOpen, setIsBlockConfrimOpen] = useState(false);
+  const [blockActionResult, setBlockActionResult] = useState<'blocked' | 'unblocked' | null>(null);
 
   const isFriend = isPost?.isFriend;
   const isBlocked = isPost?.isBlocked;
@@ -140,13 +141,13 @@ const Table = (props: TableProps) => {
         },
         children: (
           <MsgConfirm>{`${
-            isBlocked ? "차단 해제가" : "차단이"
+            blockActionResult === 'unblocked' ? "차단 해제가" : "차단이"
           } 완료되었습니다.`}</MsgConfirm>
         ),
       });
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [isBlockConfirmOpen]
+    [isBlockConfirmOpen, blockActionResult]
   );
 
   useEffect(() => {
@@ -246,8 +247,18 @@ const Table = (props: TableProps) => {
     if (isPost) {
       if (isPost.isBlocked) {
         await blockApi.unblockMember({ memberId: isPost.memberId });
+        setBlockActionResult('unblocked');
       } else {
         await blockApi.blockMember({ memberId: isPost.memberId });
+        setBlockActionResult('blocked');
+      }
+      
+      // 차단/해제 후 최신 데이터로 업데이트
+      try {
+        const response = await getMemberPost(isPost.boardId);
+        setIsPost(response.data);
+      } catch (error) {
+        console.error("게시물 데이터 업데이트 실패:", error);
       }
     }
     setIsBlockConfrimOpen(true);
@@ -260,6 +271,14 @@ const Table = (props: TableProps) => {
         await friendApi.sendFriendRequest({
           memberId: isPost.memberId,
         });
+        
+        // 친구 요청 후 최신 데이터로 업데이트
+        try {
+          const response = await getMemberPost(isPost.boardId);
+          setIsPost(response.data);
+        } catch (error) {
+          console.error("게시물 데이터 업데이트 실패:", error);
+        }
       }
       await handleMoreBox(false);
     } catch (error) {
@@ -276,6 +295,14 @@ const Table = (props: TableProps) => {
         await friendApi.cancelFriendRequest({
           memberId: isPost.memberId,
         });
+        
+        // 친구 요청 취소 후 최신 데이터로 업데이트
+        try {
+          const response = await getMemberPost(isPost.boardId);
+          setIsPost(response.data);
+        } catch (error) {
+          console.error("게시물 데이터 업데이트 실패:", error);
+        }
       }
       await handleMoreBox(false);
     } catch (error) {
@@ -290,6 +317,14 @@ const Table = (props: TableProps) => {
     try {
       if (isPost) {
         await friendApi.deleteFriend({ memberId: isPost.memberId });
+        
+        // 친구 삭제 후 최신 데이터로 업데이트
+        try {
+          const response = await getMemberPost(isPost.boardId);
+          setIsPost(response.data);
+        } catch (error) {
+          console.error("게시물 데이터 업데이트 실패:", error);
+        }
       }
       await handleMoreBox(false);
     } catch (error) {
