@@ -16,7 +16,7 @@ import {
   setOpenPostingModal,
   setOpenReadingModal,
 } from "@/redux/slices/modalSlice";
-import { setPostStatus } from "@/redux/slices/postSlice";
+import { setCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { theme } from "@/styles/theme";
 import { blockApi, friendApi } from "@/utils/api";
 
@@ -373,10 +373,11 @@ const Table = (props: TableProps) => {
   /* 게시글 수정 */
   const handleEdit = async () => {
     setIsMoreBoxOpen((prevState) => !prevState);
-    if (isBoardId) {
-      await dispatch(setCloseReadingModal());
-      await dispatch(setOpenPostingModal());
-      dispatch(setPostStatus(""));
+    if (isBoardId && isPost) {
+      dispatch(
+        setCurrentPost({ currentPost: isPost, currentPostId: isBoardId })
+      );
+      dispatch(setOpenPostingModal());
     }
   };
 
