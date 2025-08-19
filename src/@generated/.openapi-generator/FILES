@@ -7,7 +7,7 @@ apis/ChatInternalApi.ts
 apis/EmailApi.ts
 apis/FriendApi.ts
 apis/FriendInternalApi.ts
-apis/HomeControllerApi.ts
+apis/HomeApi.ts
 apis/MannerApi.ts
 apis/MatchingApi.ts
 apis/MemberApi.ts
