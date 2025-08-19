@@ -90,7 +90,10 @@ const Champion = (props: ChampionProps) => {
                   }}
                   onError={handleImageError}
                 />
-                <Percentage $isSmall={isSmall} $winRate={Math.round(champion.winRate)}>
+                <Percentage
+                  $isSmall={isSmall}
+                  $winRate={Math.round(champion.winRate)}
+                >
                   {Math.round(champion.winRate)}%
                 </Percentage>
               </ImageWrapper>
@@ -203,7 +206,7 @@ const Percentage = styled.div<{ $isSmall: boolean; $winRate: number }>`
   align-items: center;
   border-radius: 100px;
   background: ${({ $winRate, theme }) => {
-    if ($winRate >= 70) return theme.colors.green600;
+    if ($winRate >= 70) return theme.colors.redViolet;
     if ($winRate >= 50) return theme.colors.violet600;
     return theme.colors.gray700;
   }};
