@@ -17,7 +17,13 @@ interface ChampionProps {
 }
 
 const Champion = (props: ChampionProps) => {
-  const { list = [], font = "semiBold18", color, title = false, variant } = props;
+  const {
+    list = [],
+    font = "semiBold18",
+    color,
+    title = false,
+    variant,
+  } = props;
   const { isMobile } = useMediaQueryContext();
   const isSmall = isMobile || variant === "table";
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -84,7 +90,9 @@ const Champion = (props: ChampionProps) => {
                   }}
                   onError={handleImageError}
                 />
-                <Percentage $isSmall={isSmall}>{Math.round(champion.winRate)}%</Percentage>
+                <Percentage $isSmall={isSmall} $winRate={Math.round(champion.winRate)}>
+                  {Math.round(champion.winRate)}%
+                </Percentage>
               </ImageWrapper>
               {hoveredIndex === key && (
                 <TooltipWrapper ref={tooltipWrapperRef}>
@@ -187,16 +195,21 @@ const ImageWrapper = styled.div<{ $isSmall: boolean }>`
   overflow: hidden;
 `;
 
-const Percentage = styled.div<{ $isSmall: boolean }>`
+const Percentage = styled.div<{ $isSmall: boolean; $winRate: number }>`
   display: flex;
   padding: 0px 4px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   border-radius: 100px;
-  background: ${theme.colors.violet600};
+  background: ${({ $winRate, theme }) => {
+    if ($winRate >= 70) return theme.colors.green600;
+    if ($winRate >= 50) return theme.colors.violet600;
+    return theme.colors.gray700;
+  }};
   color: ${theme.colors.white};
   text-align: center;
+  line-height: 1 !important;
   ${theme.fonts.bold11};
   position: absolute;
   bottom: ${({ $isSmall }) => ($isSmall ? "0" : "-10px")};
