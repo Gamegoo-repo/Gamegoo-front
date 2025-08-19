@@ -9,6 +9,7 @@ import { theme } from "@/styles/theme";
 import type { ChampionResponseDTO } from "@/types/api/champion/champion";
 
 interface ChampionProps {
+  variant?: string;
   title?: boolean;
   list?: ChampionResponseDTO[];
   font?: string;
@@ -16,8 +17,9 @@ interface ChampionProps {
 }
 
 const Champion = (props: ChampionProps) => {
-  const { list = [], font = "semiBold18", color, title = false } = props;
+  const { list = [], font = "semiBold18", color, title = false, variant } = props;
   const { isMobile } = useMediaQueryContext();
+  const isSmall = isMobile || variant === "table";
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   const tooltipWrapperRef = useRef<HTMLDivElement>(null);
@@ -63,17 +65,17 @@ const Champion = (props: ChampionProps) => {
       )}
       {list.length > 0 ? (
         <Champions>
-          {list?.map((champion, key) => (
+          {list?.slice(0, 4).map((champion, key) => (
             <ChampionWrapper
               key={key}
               onMouseEnter={(e) => handleMouseEnter(key, e)}
               onMouseLeave={handleMouseLeave}
             >
-              <ImageWrapper>
+              <ImageWrapper $isSmall={isSmall}>
                 <Image
                   src={`/assets/images/champion/${champion.championId}.png`}
-                  width={32}
-                  height={32}
+                  width={isSmall ? 32 : 48}
+                  height={isSmall ? 32 : 48}
                   alt={`champion-${champion.championId}`}
                   style={{
                     transform: "scale(1.2)", // 120% 확대
@@ -82,7 +84,7 @@ const Champion = (props: ChampionProps) => {
                   }}
                   onError={handleImageError}
                 />
-                <Percentage>{Math.round(champion.winRate)}%</Percentage>
+                <Percentage $isSmall={isSmall}>{Math.round(champion.winRate)}%</Percentage>
               </ImageWrapper>
               {hoveredIndex === key && (
                 <TooltipWrapper ref={tooltipWrapperRef}>
@@ -178,19 +180,14 @@ const ChampionWrapper = styled.div`
   }
 `;
 
-const ImageWrapper = styled.div`
-  width: 32px;
-  height: 32px;
+const ImageWrapper = styled.div<{ $isSmall: boolean }>`
+  width: ${({ $isSmall }) => ($isSmall ? "33px" : "48px")};
+  height: ${({ $isSmall }) => ($isSmall ? "33px" : "48px")};
   border-radius: 50%;
   overflow: hidden;
-
-  @media (max-width: ${theme.breakpoints.mobile}) {
-    width: 33px;
-    height: 33px;
-  }
 `;
 
-const Percentage = styled.div`
+const Percentage = styled.div<{ $isSmall: boolean }>`
   display: flex;
   padding: 0px 4px;
   flex-direction: column;
@@ -202,18 +199,11 @@ const Percentage = styled.div`
   text-align: center;
   ${theme.fonts.bold11};
   position: absolute;
-  bottom: 0;
+  bottom: ${({ $isSmall }) => ($isSmall ? "0" : "-10px")};
   left: 50%;
   transform: translateX(-50%);
-  width: 32px;
-  height: 15px;
-
-  @media (max-width: ${theme.breakpoints.mobile}) {
-    width: 33px;
-    height: 17px;
-    padding: 0px 4px;
-    ${theme.fonts.bold11};
-  }
+  width: ${({ $isSmall }) => ($isSmall ? "33px" : "32px")};
+  height: ${({ $isSmall }) => ($isSmall ? "17px" : "15px")};
 `;
 
 const TooltipWrapper = styled.div`
