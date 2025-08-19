@@ -55,6 +55,12 @@ const UserProfilePage = () => {
             throw new Error("다른 유저 프로필 조회 응답 데이터가 없습니다.");
           }
 
+          if (response.data.canRefresh) {
+            memberApi.refreshChampionStats({ memberId: Number(id) }).catch(refreshError => {
+              console.error("프로필 업데이트 실패", refreshError);
+            });
+          }
+
           const otherUserMappedData: User = mapOtherProfileToUser(
             response.data
           );

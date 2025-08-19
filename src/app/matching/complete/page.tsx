@@ -177,6 +177,14 @@ const Complete = () => {
             throw new Error("내 프로필 조회 응답 데이터가 없습니다.");
           }
 
+          if (profileRes.data.canRefresh) {
+            memberApi.refreshChampionStats({
+              memberId: profileRes.data.id,
+            }).catch(refreshError => {
+              console.error("프로필 업데이트 실패", refreshError);
+            });
+          }
+
           const userId = profileRes.data.id;
           if (typeof userId !== "number") return;
 

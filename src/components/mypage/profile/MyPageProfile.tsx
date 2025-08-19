@@ -58,6 +58,14 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
           throw new Error("내 프로필 조회 응답 데이터가 없습니다.");
         }
 
+        if (response.data.canRefresh) {
+          memberApi.refreshChampionStats({
+            memberId: response.data.id,
+          }).catch(refreshError => {
+            console.error("프로필 업데이트 실패", refreshError);
+          });
+        }
+
         const profile = response.data;
         dispatch(setUserProfile(profile));
       } catch (error) {
