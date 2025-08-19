@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { RankTier } from "@/components/common";
 import GameStyle from "@/components/match/GameStyle";
 import { UpdateProfileImage } from "@/components/profile";
+import { STORAGE_KEY } from "@/constants/storage";
 import { useMediaQueryContext } from "@/hooks";
 import { setUserProfile, setUserProfileImg } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
@@ -33,7 +34,7 @@ const MyPageProfile: React.FC<Profile> = ({ user }) => {
       profileImageRequest: { profileImage: index },
     });
     dispatch(setUserProfileImg(index));
-    localStorage.setItem("profileImg", index + "");
+    localStorage.setItem(STORAGE_KEY.profileImg, index + "");
 
     const response = await memberApi.getMemberJWT();
 
