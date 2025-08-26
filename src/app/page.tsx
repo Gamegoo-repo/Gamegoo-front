@@ -1,9 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
 import { Banner } from "@/components";
+import GuideModal from "@/components/common/GuideModal";
 import Icon from "@/components/common/Icon";
 import { MATCH_PAGE_DATA } from "@/constants";
 import { useMediaQueryContext } from "@/hooks";
@@ -12,6 +14,27 @@ import { theme } from "@/styles/theme";
 const HomePage = () => {
   const router = useRouter();
   const { isMobile } = useMediaQueryContext();
+  const [showGuideModal, setShowGuideModal] = useState(false);
+
+  const getCookie = (name: string): string | null => {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+  };
+
+  useEffect(() => {
+    const hideGuideModalToday = getCookie("hideGuideModalToday");
+    
+    // 24시간 쿠키가 없으면 모달 표시 (다시보지 않기 체크했을 때만 쿠키 저장됨)
+    if (!hideGuideModalToday) {
+      setShowGuideModal(true);
+    }
+  }, []);
 
   return (
     <Wrapper>
@@ -46,6 +69,10 @@ const HomePage = () => {
           })}
         </Main>
       </HomeContent>
+      <GuideModal
+        isOpen={showGuideModal}
+        onClose={() => setShowGuideModal(false)}
+      />
     </Wrapper>
   );
 };
