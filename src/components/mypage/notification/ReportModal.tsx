@@ -83,8 +83,8 @@ const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose, content }) =
 			<InfoSection>
 				<ContentTitle>{getReasonLabel()}</ContentTitle>
 				<div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-					<Value>{reason}</Value>
-					<Chip>{result}</Chip>
+					<Value style={{flex: 3}}>{reason}</Value>
+					<Chip style={{flex: 1}}>{result}</Chip>
 				</div>
 			</InfoSection>
 		);
@@ -135,8 +135,7 @@ const ModalWrapper = styled.div`
   overflow: hidden;
 
   @media (max-width: ${theme.breakpoints.mobile}) {
-    width: 90vw;
-    max-width: 480px;
+    width: 320px;
   }
 `;
 
@@ -149,6 +148,11 @@ const Content = styled.div`
 	gap: 24px;
 	align-self: stretch;
 	border-bottom: 1px solid ${theme.colors.gray400};
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    padding: 32px 20px;
+		gap: 8px;
+  }
 `;
 
 const MainMessage = styled.div`
@@ -156,6 +160,9 @@ const MainMessage = styled.div`
   color: ${theme.colors.gray800};
   text-align: center;
   line-height: 1.5;
+	@media (max-width: ${theme.breakpoints.mobile}) {
+		${theme.fonts.regular14}
+	}
 `;
 
 const InfoSection = styled.div`
@@ -173,12 +180,20 @@ const InfoSection = styled.div`
 const ContentTitle = styled.div`
   ${theme.fonts.medium16};
   color: ${theme.colors.red600};
+
+	@media (max-width: ${theme.breakpoints.mobile}) {
+		${theme.fonts.medium14}
+	}
 `;
 
 const Value = styled.div`
   ${theme.fonts.bold20};
   color: ${theme.colors.gray800};
 	tex-align: center;
+
+	@media (max-width: ${theme.breakpoints.mobile}) {
+		${theme.fonts.bold16}
+	}
 `;
 
 const BottomMessage = styled.div`
@@ -186,6 +201,10 @@ const BottomMessage = styled.div`
   color: ${theme.colors.gray800};
   text-align: center;
   white-space: pre-line;
+
+	@media (max-width: ${theme.breakpoints.mobile}) {
+		${theme.fonts.regular13}
+	}
 `;
 
 const ConfirmButton = styled.button`
@@ -208,5 +227,9 @@ const Chip = styled.div`
 	align-items: center;
 	border-radius: 6px;
 	border: 1px solid ${theme.colors.gray700};
-	${theme.fonts.medium16}; 
+	${theme.fonts.medium16};
+	
+	@media (max-width: ${theme.breakpoints.mobile}) {
+		${theme.fonts.medium13}
+	}
 `;
