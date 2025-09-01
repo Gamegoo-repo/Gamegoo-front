@@ -53,19 +53,8 @@ const GuideModal: React.FC<GuideModalProps> = ({ isOpen, onClose }) => {
 
   const setCookie = (name: string, value: string, hours: number) => {
     const expires = new Date();
-    expires.setTime(expires.getTime() + (hours * 60 * 60 * 1000));
+    expires.setTime(expires.getTime() + hours * 60 * 60 * 1000);
     document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
-  };
-
-  const getCookie = (name: string): string | null => {
-    const nameEQ = name + "=";
-    const ca = document.cookie.split(';');
-    for (let i = 0; i < ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-    }
-    return null;
   };
 
   const handleClose = () => {
@@ -149,19 +138,19 @@ const GuideModal: React.FC<GuideModalProps> = ({ isOpen, onClose }) => {
           <ContentSection>
             <Title>{currentData.title}</Title>
             <Description>{currentData.description}</Description>
-            <CheckboxSection>
-              <CheckboxWrapper>
-                <Checkbox
-                  type="checkbox"
-                  id="dontShowAgain"
-                  checked={dontShowAgain}
-                  onChange={(e) => setDontShowAgain(e.target.checked)}
-                />
-                <CheckboxLabel htmlFor="dontShowAgain">
-                  {currentData.checkbox}
-                </CheckboxLabel>
-              </CheckboxWrapper>
-            </CheckboxSection>
+          </ContentSection>
+          <BottomSection>
+            <CheckboxWrapper>
+              <Checkbox
+                type="checkbox"
+                id="dontShowAgain"
+                checked={dontShowAgain}
+                onChange={(e) => setDontShowAgain(e.target.checked)}
+              />
+              <CheckboxLabel htmlFor="dontShowAgain">
+                {currentData.checkbox}
+              </CheckboxLabel>
+            </CheckboxWrapper>
             <ButtonSection>
               {currentIndex === guideData.length - 1 ? (
                 <ActionButton $primary onClick={handleClose}>
@@ -176,7 +165,7 @@ const GuideModal: React.FC<GuideModalProps> = ({ isOpen, onClose }) => {
                 </>
               )}
             </ButtonSection>
-          </ContentSection>
+          </BottomSection>
         </CardContainer>
       </ModalWrapper>
     </Overlay>,
@@ -203,8 +192,7 @@ const ModalWrapper = styled.div`
   overflow: hidden;
 
   @media (max-width: ${theme.breakpoints.mobile}) {
-    width: 90vw;
-    max-width: 480px;
+    width: 320px;
   }
 `;
 
@@ -247,13 +235,13 @@ const LottieWrapper = styled.div`
 const NavigationButton = styled.button<{ $position: "left" | "right" }>`
   position: absolute;
   top: 50%;
-  ${({ $position }) => $position}: 20px;
+  ${({ $position }) => $position}: 17px;
   transform: translateY(-50%);
   background: rgba(0, 0, 0, 0.15);
   border: none;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -268,31 +256,40 @@ const NavigationButton = styled.button<{ $position: "left" | "right" }>`
   svg {
     filter: brightness(0) invert(1);
   }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    ${({ $position }) => $position}: 12px;
+  }
 `;
 
 const ContentSection = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 32px 24px;
-  text-align: center;
+  padding: 28px;
+  gap: 8px;
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    padding: 20px;
+  }
 `;
 
 const Title = styled.h2`
   ${theme.fonts.bold20};
-  color: ${theme.colors.gray800};
-  margin-bottom: 12px;
+  color: ${theme.colors.gray900};
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    ${theme.fonts.semiBold18};
+  }
 `;
 
 const Description = styled.p`
-  ${theme.fonts.regular16};
-  color: ${theme.colors.gray600};
-  margin-bottom: 24px;
-  line-height: 1.5;
-`;
+  ${theme.fonts.regular20};
+  color: ${theme.colors.gray900};
 
-const CheckboxSection = styled.div`
-  margin-bottom: 24px;
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    ${theme.fonts.regular18};
+  }
 `;
 
 const CheckboxWrapper = styled.div`
@@ -309,8 +306,8 @@ const Checkbox = styled.input`
 `;
 
 const CheckboxLabel = styled.label`
-  ${theme.fonts.regular14};
-  color: ${theme.colors.gray600};
+  ${theme.fonts.regular16};
+  color: ${theme.colors.gray800};
   cursor: pointer;
 `;
 
@@ -324,28 +321,31 @@ const ButtonSection = styled.div`
 const ActionButton = styled.button<{ $primary?: boolean }>`
   padding: 12px 24px;
   border-radius: 14px;
-  border: none;
-  ${theme.fonts.semiBold16};
+  ${theme.fonts.semiBold18};
   cursor: pointer;
   width: 100%;
-  transition: all 0.2s;
 
   ${({ $primary }) =>
     $primary
       ? `
     background: ${theme.colors.violet600};
     color: ${theme.colors.white};
-    
-    &:hover {
-      background: ${theme.colors.violet700};
-    }
   `
       : `
-    background: ${theme.colors.gray200};
+		border: 1px solid ${theme.colors.gray300};
     color: ${theme.colors.gray700};
-    
-    &:hover {
-      background: ${theme.colors.gray300};
-    }
   `}
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    ${theme.fonts.medium16};
+  }
+`;
+
+const BottomSection = styled.div`
+  display: flex;
+  padding: 28px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  align-self: stretch;
 `;
