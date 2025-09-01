@@ -188,7 +188,7 @@ const AlertWindow = (props: AlertWindowProps) => {
                   <AlertBox
                     key={`${data.notificationId}-${index}`}
                     notificationId={data.notificationId}
-                    notificationtType={data.notificationType}
+                    notificationType={data.notificationType}
                     pageUrl={data.pageUrl}
                     content={data.content}
                     createdAt={data.createdAt}

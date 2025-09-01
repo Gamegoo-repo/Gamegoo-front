@@ -123,7 +123,7 @@ const MyAlertPage = () => {
                   <AlertBox
                     key={data.notificationId}
                     notificationId={data.notificationId}
-                    notificationtType={data.notificationType}
+                    notificationType={data.notificationType}
                     pageUrl={data.pageUrl}
                     content={data.content}
                     createdAt={data.createdAt}

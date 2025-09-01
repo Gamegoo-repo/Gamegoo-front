@@ -6,7 +6,7 @@ import { formatTimeAgo } from "@/utils";
 
 interface AlertBoxProps {
   notificationId: number | undefined;
-  notificationtType: number | undefined;
+  notificationType: number | undefined;
   pageUrl: string | null | undefined;
   content: string | undefined;
   createdAt: string | undefined;
@@ -20,7 +20,7 @@ interface AlertBoxProps {
 
 const AlertBox: React.FC<AlertBoxProps> = ({
   notificationId,
-  notificationtType,
+  notificationType,
   pageUrl = "/",
   content,
   createdAt = "",
@@ -35,15 +35,15 @@ const AlertBox: React.FC<AlertBoxProps> = ({
     <Container $read={read} onClick={handleChangeRead} size={size}>
       <AlertImage size={size}>
         <StyledObject
-          data={`/assets/images/notification/noti_${notificationtType}.svg`}
+          data={`/assets/images/notification/noti_${notificationType}.svg`}
           width={46}
           height={46}
           size={size}
         />
-        <Read $read={read} size={size}></Read>
+        <Read $read={read} size={size} type={notificationType || 0}></Read>
       </AlertImage>
       <Div>
-        <Text size={size}>{content}</Text>
+        <Text size={size}>{notificationType === 4 ? "신고 및 제재 조치" : content}</Text>
         <Time size={size}>{formatTimeAgo(createdAt)}</Time>
       </Div>
     </Container>
@@ -112,10 +112,10 @@ const StyledObject = styled.object<{ size: string }>`
     `}
 `;
 
-const Read = styled.div<{ $read: boolean; size: string }>`
+const Read = styled.div<{ $read: boolean; size: string; type: number }>`
   width: 10px;
   height: 10px;
-  background: ${theme.colors.violet600};
+  background: ${props => props.type === 4 ? theme.colors.red600 : theme.colors.violet600 };
   opacity: ${(props) => (props.$read ? 0 : 1)};
   border-radius: 100px;
   position: absolute;
