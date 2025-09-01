@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import styled, { css } from "styled-components";
 
 import { theme } from "@/styles/theme";
 import { formatTimeAgo } from "@/utils";
+import ReportModal from "./ReportModal";
 
 interface AlertBoxProps {
   notificationId: number | undefined;
@@ -28,25 +29,45 @@ const AlertBox: React.FC<AlertBoxProps> = ({
   size = "medium",
   onClick,
 }) => {
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+
   const handleChangeRead = () => {
-    onClick(notificationId, pageUrl);
+    if (notificationType === 4) {
+      setIsReportModalOpen(true);
+    } else {
+      onClick(notificationId, pageUrl);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setIsReportModalOpen(false);
+    onClick(notificationId, null);
   };
   return (
-    <Container $read={read} onClick={handleChangeRead} size={size}>
-      <AlertImage size={size}>
-        <StyledObject
-          data={`/assets/images/notification/noti_${notificationType}.svg`}
-          width={46}
-          height={46}
-          size={size}
+    <>
+      <Container $read={read} onClick={handleChangeRead} size={size}>
+        <AlertImage size={size}>
+          <StyledObject
+            data={`/assets/images/notification/noti_${notificationType}.svg`}
+            width={46}
+            height={46}
+            size={size}
+          />
+          <Read $read={read} size={size} type={notificationType || 0}></Read>
+        </AlertImage>
+        <Div>
+          <Text size={size}>{notificationType === 4 ? "신고 및 제재 조치" : content}</Text>
+          <Time size={size}>{formatTimeAgo(createdAt)}</Time>
+        </Div>
+      </Container>
+      {notificationType === 4 && (
+        <ReportModal
+          isOpen={isReportModalOpen}
+          onClose={handleCloseModal}
+          content={content || ""}
         />
-        <Read $read={read} size={size} type={notificationType || 0}></Read>
-      </AlertImage>
-      <Div>
-        <Text size={size}>{notificationType === 4 ? "신고 및 제재 조치" : content}</Text>
-        <Time size={size}>{formatTimeAgo(createdAt)}</Time>
-      </Div>
-    </Container>
+      )}
+    </>
   );
 };
 
