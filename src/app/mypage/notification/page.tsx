@@ -82,15 +82,7 @@ const MyAlertPage = () => {
     setCurrentPage(page);
   };
 
-  const handleClickAlert = async (
-    notificationId: number | undefined,
-    pageUrl: string | undefined
-  ) => {
-    // 관련 페이지 이동
-    if (pageUrl === null || pageUrl === undefined) return;
-    router.push(pageUrl);
-
-    // 읽음 상태 업데이트
+  const handleReadStatusUpdate = async (notificationId: number | undefined) => {
     const notification = notiList?.find(
       (n) => n.notificationId === notificationId
     );
@@ -110,6 +102,16 @@ const MyAlertPage = () => {
     }
   };
 
+  const handleClickAlert = async (
+    notificationId: number | undefined,
+    pageUrl: string | undefined
+  ) => {
+    if (pageUrl === null || pageUrl === undefined) return;
+    router.push(pageUrl);
+
+    await handleReadStatusUpdate(notificationId);
+  };
+
   return (
     <Wrapper>
       <MyAlertContent>
@@ -123,14 +125,22 @@ const MyAlertPage = () => {
                   <AlertBox
                     key={data.notificationId}
                     notificationId={data.notificationId}
-                    notificationtType={data.notificationType}
+                    notificationType={data.notificationType}
                     pageUrl={data.pageUrl}
                     content={data.content}
                     createdAt={data.createdAt}
                     read={data.read}
                     onClick={() => {
                       handleClickAlert(data.notificationId, data.pageUrl);
-                      dispatch(setNotiCount(notiCount - 1));
+                      if (!data.read) {
+                        dispatch(setNotiCount(notiCount - 1));
+                      }
+                    }}
+                    onReadStatusUpdate={async (notificationId) => {
+                      await handleReadStatusUpdate(notificationId);
+                      if (!data.read) {
+                        dispatch(setNotiCount(notiCount - 1));
+                      }
                     }}
                   />
                 ))}
