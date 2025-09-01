@@ -18,6 +18,7 @@ interface AlertBoxProps {
     notificationId: number | undefined,
     pageUrl: string | null | undefined
   ) => void;
+  onReadStatusUpdate?: (notificationId: number | undefined) => void;
 }
 
 const AlertBox: React.FC<AlertBoxProps> = ({
@@ -29,12 +30,16 @@ const AlertBox: React.FC<AlertBoxProps> = ({
   read = false,
   size = "medium",
   onClick,
+  onReadStatusUpdate,
 }) => {
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
 
   const handleChangeRead = () => {
     if (notificationType === 4) {
       setIsReportModalOpen(true);
+      if (!read && onReadStatusUpdate) {
+        onReadStatusUpdate(notificationId);
+      }
     } else {
       onClick(notificationId, pageUrl);
     }
@@ -42,7 +47,6 @@ const AlertBox: React.FC<AlertBoxProps> = ({
 
   const handleCloseModal = () => {
     setIsReportModalOpen(false);
-    onClick(notificationId, null);
   };
   return (
     <>

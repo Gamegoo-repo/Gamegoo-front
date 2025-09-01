@@ -105,8 +105,20 @@ const ReportModal: React.FC<ReportModalProps> = ({
   if (!isOpen) return null;
 
   return createPortal(
-    <Overlay onClick={onClose}>
-      <ModalWrapper onClick={(e) => e.stopPropagation()}>
+    <Overlay 
+      className="report-modal-overlay"
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }}
+    >
+      <ModalWrapper 
+        className="report-modal-wrapper"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+      >
         <Content>
           <MainMessage>{getMainMessage()}</MainMessage>
           {type === "report"
@@ -114,7 +126,15 @@ const ReportModal: React.FC<ReportModalProps> = ({
             : renderRestrictionContent()}
           <BottomMessage>{getBottomMessage()}</BottomMessage>
         </Content>
-        <ConfirmButton onClick={onClose}>확인</ConfirmButton>
+        <ConfirmButton 
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onClose();
+          }}
+        >
+          확인
+        </ConfirmButton>
       </ModalWrapper>
     </Overlay>,
     modalRoot

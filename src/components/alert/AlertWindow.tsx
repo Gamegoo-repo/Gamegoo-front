@@ -34,6 +34,12 @@ const AlertWindow = (props: AlertWindowProps) => {
 
   const handleClickOutside = useCallback(
     (event: MouseEvent) => {
+      // ReportModal이 열려있으면 AlertWindow 닫지 않기
+      const target = event.target as Element;
+      if (target.closest('.report-modal-overlay') || target.closest('.report-modal-wrapper')) {
+        return;
+      }
+      
       if (
         alertWindowRef.current &&
         !alertWindowRef.current.contains(event.target as Node) &&
@@ -119,16 +125,8 @@ const AlertWindow = (props: AlertWindowProps) => {
     };
   }, [modalRoot, isMobile]);
 
-  /* 알림 읽음으로 상태 변경 */
-  const handleClickAlert = async (
-    notificationId: number | undefined,
-    pageUrl: string | null | undefined
-  ) => {
-    /* 관련 페이지 이동 */
-    if (pageUrl === null || pageUrl === undefined) return;
-    router.push(pageUrl);
-
-    /* 읽음 상태 업데이트 */
+  /* 알림 읽음 상태 업데이트 */
+  const handleReadStatusUpdate = async (notificationId: number | undefined) => {
     const notification = notiList?.find(
       (n) => n.notificationId === notificationId
     );
@@ -147,6 +145,19 @@ const AlertWindow = (props: AlertWindowProps) => {
         console.error(error);
       }
     }
+  };
+
+  /* 알림 읽음으로 상태 변경 */
+  const handleClickAlert = async (
+    notificationId: number | undefined,
+    pageUrl: string | null | undefined
+  ) => {
+    /* 관련 페이지 이동 */
+    if (pageUrl === null || pageUrl === undefined) return;
+    router.push(pageUrl);
+
+    /* 읽음 상태 업데이트 */
+    await handleReadStatusUpdate(notificationId);
   };
 
   return createPortal(
@@ -177,9 +188,6 @@ const AlertWindow = (props: AlertWindowProps) => {
                 </AllButton>
               )}
             </Top>
-            {/* <TabContainer>
-              <Tab>받은 알림</Tab>
-            </TabContainer> */}
           </Header>
           <Background>
             {notiList !== undefined && notiList.length > 0 ? (
@@ -195,6 +203,7 @@ const AlertWindow = (props: AlertWindowProps) => {
                     read={data.read}
                     size="small"
                     onClick={handleClickAlert}
+                    onReadStatusUpdate={handleReadStatusUpdate}
                   />
                 ))}
                 <div ref={sentinelRef}></div>{" "}
