@@ -3,8 +3,16 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
+  const { hostname, pathname } = request.nextUrl;
+  
+  // gamegoo.co.kr을 www.gamegoo.co.kr로 리다이렉트
+  if (hostname === 'gamegoo.co.kr') {
+    return NextResponse.redirect(
+      new URL(`https://www.gamegoo.co.kr${pathname}${request.nextUrl.search}`)
+    );
+  }
+
   const token = request.headers.get("Authorization")?.split(" ")[1];
-  const { pathname } = request.nextUrl;
 
   // /member/profile 경로를 /user로 리다이렉트
   if (pathname.startsWith("/member/profile/")) {
@@ -38,5 +46,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/match/:path*", "/matching/:path*", "/member/:path*"],
+  matcher: ["/match/:path*", "/matching/:path*", "/member/:path*", "/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };
