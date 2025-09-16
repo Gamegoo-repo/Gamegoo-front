@@ -157,11 +157,11 @@ const Login = () => {
                 value={email}
                 onChange={(value) => {
                   setEmail(value);
-                  validateEmail(value);
+                  // validateEmail(value);
                 }}
                 errorMsg="정보 불일치"
                 placeholder="이메일 주소"
-                isvalid={emailValid}
+                // isvalid={emailValid}
               />
               <Input
                 inputType="password"
