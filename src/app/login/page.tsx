@@ -180,7 +180,7 @@ const Login = () => {
               buttonType="primary"
               text="이메일로 시작하기"
               onClick={handleLogin}
-              disabled={!email || !password || !emailValid || !passwordValid}
+              disabled={!email || !password}
             />
           </Div>
           <Check>
