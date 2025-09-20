@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Icon from "@/components/common/Icon";
 import { setChatEnterType } from "@/redux/slices/chatSlice";
 import { theme } from "@/styles/theme";
+import { trackButtonClick } from "@/utils/analytics";
 
 import DeleteFriend from "./DeleteFriend";
 import ProfileAvatar from "./ProfileAvatar";
@@ -39,6 +40,7 @@ const FriendItem = (props: FriendItemProps) => {
     <UserContent
       onContextMenu={(event) => onContextMenu(event, friend.memberId)}
       onClick={() => {
+        trackButtonClick("친구 채팅방 입장", "chat", "sidebar", { friendId: friend.memberId });
         onChatRoom(friend.memberId);
         dispatch(setChatEnterType(0)); // 친구목록에서 채팅방 입장
       }}
@@ -71,7 +73,10 @@ const FriendItem = (props: FriendItemProps) => {
         )}
       </Left>
       {!friend.blind && (
-        <button onClick={(e) => onFavoriteToggle(e, friend.memberId)}>
+        <button onClick={(e) => {
+          trackButtonClick("친구 즐겨찾기", "chat", "sidebar", { friendId: friend.memberId, liked: !friend.liked });
+          onFavoriteToggle(e, friend.memberId);
+        }}>
           <Icon
             backgroundUrl={
               friend.liked

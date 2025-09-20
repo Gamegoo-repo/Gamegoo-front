@@ -9,6 +9,7 @@ import {
   setOpenModal,
 } from "@/redux/slices/modalSlice";
 import { theme } from "@/styles/theme";
+import { trackButtonClick } from "@/utils/analytics";
 import { lockBodyScroll, unlockBodyScroll } from "@/utils";
 
 type ButtonText =
@@ -83,6 +84,7 @@ const ConfirmModal = (props: ConfirmModalProps) => {
   };
 
   const handleCheck = () => {
+    trackButtonClick("매너 평가 확인", "modal", "main", { mannerType: mannerStatusClicked ? "manner" : "badManner" });
     dispatch(setOpenEvaluationModal());
     onPrimaryClick();
     mannerStatusClicked
@@ -96,7 +98,10 @@ const ConfirmModal = (props: ConfirmModalProps) => {
         <Main>
           {type === "manner" ? (
             <ImageTop>
-              <CloseButton onClick={onPrimaryClick}>
+              <CloseButton onClick={() => {
+                trackButtonClick("모달 닫기", "modal", "main");
+                onPrimaryClick();
+              }}>
                 <Icon
                   backgroundUrl="/assets/icons/close.svg"
                   width={10}
@@ -142,7 +147,10 @@ const ConfirmModal = (props: ConfirmModalProps) => {
         <Footer>
           <ButtonWrapper>
             <Button
-              onClick={type ? handleCheck : onPrimaryClick}
+              onClick={() => {
+                trackButtonClick("모달 " + primaryButtonText, "modal", "main", { buttonType: "primary" });
+                type ? handleCheck() : onPrimaryClick();
+              }}
               className={buttonClassName}
               disabled={
                 type === "manner" &&
@@ -156,7 +164,10 @@ const ConfirmModal = (props: ConfirmModalProps) => {
             </Button>
             {secondaryButtonText && onSecondaryClick && (
               <Button
-                onClick={onSecondaryClick}
+                onClick={() => {
+                  trackButtonClick("모달 " + secondaryButtonText, "modal", "main", { buttonType: "secondary" });
+                  onSecondaryClick();
+                }}
                 className="rightButton"
                 $type={type}
                 disabled={

@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 import { theme } from "@/styles/theme";
+import { trackButtonClick } from "@/utils/analytics";
 
 import type { Chat } from "@/types";
 
@@ -45,7 +46,10 @@ const MessageInput = (props: MessageInputProps) => {
 
   return (
     <TextareaContainer>
-      <Form onSubmit={sendMessage}>
+      <Form onSubmit={(e) => {
+        trackButtonClick("메시지 전송", "chat", "main");
+        sendMessage(e);
+      }}>
         {chatEnterData && (
           <>
             <TextareaWrapper>

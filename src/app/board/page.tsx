@@ -34,6 +34,7 @@ import { clearCurrentPost, setPostStatus } from "@/redux/slices/postSlice";
 import { rotate } from "@/styles/animation";
 import { theme } from "@/styles/theme";
 import { mikeBooleanToId, tierStringToId } from "@/utils";
+import { trackButtonClick } from "@/utils/analytics";
 
 import type { RootState } from "@/redux/store";
 import type { BoardListDetail, GameMode, Mike, Position } from "@/types";
@@ -83,29 +84,29 @@ const BoardPage = () => {
 
   /* 게임모드 드롭 */
   const handleGameModeDropValue = (id: number | null) => {
-    dispatch(resetBoardFilters());
-
     const selectedGameModeObj = GAME_MODE.find(
       (gameMode) => gameMode.id === id
     );
+    trackButtonClick("게임모드 필터", "board", "main", { gameMode: selectedGameModeObj?.value });
+    dispatch(resetBoardFilters());
     setSelectedGameMode(selectedGameModeObj ? selectedGameModeObj.key : null);
     setIsGameModeDropdownOpen(false);
   };
 
   /* 티어 드롭 */
   const handleTierDropValue = (id: number | null) => {
-    dispatch(resetBoardFilters());
-
     const selectedTierObj = TIER.find((tier) => tier.id === id);
+    trackButtonClick("티어 필터", "board", "main", { tier: selectedTierObj?.value });
+    dispatch(resetBoardFilters());
     setSelectedTier(selectedTierObj ? selectedTierObj.key : null);
     setIsTierDropdownOpen(false);
   };
 
   /* 마이크 드롭 */
   const handleMicDropValue = (id: number | null) => {
-    dispatch(resetBoardFilters());
-
     const selectedMicObj = MIC.find((mic) => mic.id === id);
+    trackButtonClick("마이크 필터", "board", "main", { mic: selectedMicObj?.value });
+    dispatch(resetBoardFilters());
     setSelectedMic(selectedMicObj ? selectedMicObj.key : null);
     setIsMicDropdownOpen(false);
   };
@@ -157,6 +158,7 @@ const BoardPage = () => {
 
   /* 글쓰기 모달 오픈 */
   const handlePostingOpen = () => {
+    trackButtonClick("글 작성하기", "board", "main");
     if (!isUser.gameName) {
       return dispatch(
         setOpenAlertModal({
@@ -353,6 +355,7 @@ const BoardPage = () => {
   };
 
   const handleRefresh = () => {
+    trackButtonClick("게시판 새로고침", "board", "main");
     setIsRotating(true);
     dispatch(setRefresh());
 
@@ -363,6 +366,7 @@ const BoardPage = () => {
 
   /* 게시글 끌어올리기 */
   const handlePullUp = async () => {
+    trackButtonClick("최근 글 끌어올리기", "board", "main");
     // 내가 쓴 글로부터 최신글 정보 조회
     const myPost = await getMyPost(1);
     if (myPost.data.totalCount > 0) {

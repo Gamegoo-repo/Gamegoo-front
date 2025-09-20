@@ -9,6 +9,7 @@ import ProfileCell from "./cells/ProfileCell";
 import { TierCell } from "./cells/TierCell";
 import { WantPositionCell } from "./cells/WantPositionCell";
 import { WinRateCell } from "./cells/WinRateCell";
+import { trackButtonClick } from "@/utils/analytics";
 
 import type { MutableRefObject, ReactNode } from "react";
 import type { BoardListDetail, MoreBoxMenuItems, User } from "@/types";
@@ -39,7 +40,10 @@ const TableRow = ({
   ignoreRef,
 }: TableRowProps) => {
   return (
-    <Row onClick={() => onRowClick(data.boardId)}>
+    <Row onClick={() => {
+      trackButtonClick("게시글 상세보기", "board", "main", { boardId: data.boardId });
+      onRowClick(data.boardId);
+    }}>
       <ProfileCell
         gameName={data.gameName}
         tag={data.tag}

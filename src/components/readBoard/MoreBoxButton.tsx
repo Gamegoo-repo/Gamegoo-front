@@ -2,6 +2,7 @@ import { forwardRef } from "react";
 import styled from "styled-components";
 
 import Icon from "@/components/common/Icon";
+import { trackButtonClick } from "@/utils/analytics";
 
 interface MoreBoxButtonProps {
   onClick: (e: React.MouseEvent) => void;
@@ -9,9 +10,14 @@ interface MoreBoxButtonProps {
 
 const MoreBoxButton = forwardRef<HTMLButtonElement, MoreBoxButtonProps>(
   ({ onClick }, ref) => {
+    const handleClick = (e: React.MouseEvent) => {
+      trackButtonClick("더보기", "board", "post_detail");
+      onClick(e);
+    };
+
     return (
       <Wrapper>
-        <Button ref={ref} onClick={onClick}>
+        <Button ref={ref} onClick={handleClick}>
           <Icon
             backgroundUrl="/assets/icons/three_dots_button.svg"
             width={16}

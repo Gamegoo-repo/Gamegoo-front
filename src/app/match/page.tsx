@@ -12,6 +12,7 @@ import { useMediaQueryContext } from "@/hooks";
 import { setOpenAlertModal } from "@/redux/slices/modalSlice";
 import { theme } from "@/styles/theme";
 import { getAccessToken } from "@/utils";
+import { trackButtonClick } from "@/utils/analytics";
 
 import ChevronRight from "../../../public/assets/icons/chevron_right.svg";
 
@@ -60,13 +61,18 @@ const MatchTypePage = () => {
                     <BoxButton
                       onClick={
                         accesssToken
-                          ? () =>
+                          ? () => {
+                              trackButtonClick("매칭 종류 선택", "match", "main", { matchType: box.title });
                               router.push(
                                 box.type
                                   ? `${box.pathname}?type=${box.type}`
                                   : box.pathname
-                              )
-                          : () => showLoginAlert()
+                              );
+                            }
+                          : () => {
+                              trackButtonClick("매칭 로그인 필요", "match", "main");
+                              showLoginAlert();
+                            }
                       }
                     >
                       선택

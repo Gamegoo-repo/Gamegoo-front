@@ -16,6 +16,7 @@ import { clearSignIn } from "@/redux/slices/signInSlice";
 import { clearUserProfile } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
 import { clearTokens } from "@/utils";
+import { trackButtonClick } from "@/utils/analytics";
 
 const RiotLogin = () => {
   const router = useRouter();
@@ -34,6 +35,7 @@ const RiotLogin = () => {
 
   /* 로그인 */
   const handleLogin = async () => {
+    trackButtonClick("라이엇 계정으로 시작하기", "auth", "main");
     // 라이엇 로그인으로 이동
     const csrfToken = crypto.lib.WordArray.random(16).toString();
     sessionStorage.setItem(STORAGE_KEY.autoLogin, autoLogin.toString());
@@ -62,6 +64,7 @@ const RiotLogin = () => {
   };
 
   const handleDirectMain = () => {
+    trackButtonClick("로고", "navigation", "main");
     router.push("/");
   };
 
@@ -90,7 +93,10 @@ const RiotLogin = () => {
               <Checkbox
                 value="autoLogin"
                 isChecked={autoLogin}
-                onChange={(isChecked) => setAutoLogin(isChecked)}
+                onChange={(isChecked) => {
+                  trackButtonClick("자동 로그인", "auth", "main", { checked: isChecked });
+                  setAutoLogin(isChecked);
+                }}
                 gap="0px"
               />
               자동 로그인
@@ -99,7 +105,7 @@ const RiotLogin = () => {
         </Box>
         <Box>
           <Line />
-          <Join href="https://signup.kr.riotgames.com">
+          <Join href="https://signup.kr.riotgames.com" onClick={() => trackButtonClick("라이엇 계정 만들기", "auth", "main")}>
             라이엇 계정 만들기
             <Icon
               backgroundUrl="/assets/icons/chevron_right_black.svg"

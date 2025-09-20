@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Icon from "@/components/common/Icon";
 import { useMediaQueryContext } from "@/hooks";
 import { theme } from "@/styles/theme";
+import { trackButtonClick } from "@/utils/analytics";
 import { setChatRoomDateFormatter } from "@/utils/timeFormat";
 
 import MoreBox from "../common/MoreBox";
@@ -41,7 +42,10 @@ const ChatRoomItem = (props: ChatRoomItemProps) => {
   };
 
   return (
-    <UserContent onClick={() => onChatRoom(room.uuid)} key={room.chatroomId}>
+    <UserContent onClick={() => {
+      trackButtonClick("채팅방 입장", "chat", "sidebar", { roomId: room.chatroomId });
+      onChatRoom(room.uuid);
+    }} key={room.chatroomId}>
       {isMoreBoxOpen === room.chatroomId && (
         <MoreBox
           items={moreMenuItems(room)}

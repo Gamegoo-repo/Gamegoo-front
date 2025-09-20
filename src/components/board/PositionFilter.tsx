@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 import { theme } from "@/styles/theme";
+import { trackButtonClick } from "@/utils/analytics";
 
 import All from "../../../public/assets/images/position/default/default_all.svg";
 import Jungle from "../../../public/assets/images/position/default/default_jungle.svg";
@@ -22,37 +23,55 @@ const PositionFilter = (props: SvgProps) => {
   return (
     <Wrapper>
       <AllButton
-        onClick={() => onPositionFilter("ANY")}
+        onClick={() => {
+          trackButtonClick("전체 포지션", "board", "main", { position: "ANY" });
+          onPositionFilter("ANY");
+        }}
         className={isPosition === "ANY" ? "clicked" : ""}
       >
         <All />
       </AllButton>
       <TopButton
-        onClick={() => onPositionFilter("TOP")}
+        onClick={() => {
+          trackButtonClick("탑 포지션", "board", "main", { position: "TOP" });
+          onPositionFilter("TOP");
+        }}
         className={isPosition === "TOP" ? "clicked" : ""}
       >
         <Top />
       </TopButton>
       <JungleButton
-        onClick={() => onPositionFilter("JUNGLE")}
+        onClick={() => {
+          trackButtonClick("정글 포지션", "board", "main", { position: "JUNGLE" });
+          onPositionFilter("JUNGLE");
+        }}
         className={isPosition === "JUNGLE" ? "clicked" : ""}
       >
         <Jungle />
       </JungleButton>
       <MidButton
-        onClick={() => onPositionFilter("MID")}
+        onClick={() => {
+          trackButtonClick("미드 포지션", "board", "main", { position: "MID" });
+          onPositionFilter("MID");
+        }}
         className={isPosition === "MID" ? "clicked" : ""}
       >
         <Mid />
       </MidButton>
       <OneDealButton
-        onClick={() => onPositionFilter("ADC")}
+        onClick={() => {
+          trackButtonClick("ADC 포지션", "board", "main", { position: "ADC" });
+          onPositionFilter("ADC");
+        }}
         className={isPosition === "ADC" ? "clicked" : ""}
       >
         <OneDeal />
       </OneDealButton>
       <SupporterButton
-        onClick={() => onPositionFilter("SUP")}
+        onClick={() => {
+          trackButtonClick("서포터 포지션", "board", "main", { position: "SUP" });
+          onPositionFilter("SUP");
+        }}
         className={isPosition === "SUP" ? "clicked" : ""}
       >
         <Supporter />

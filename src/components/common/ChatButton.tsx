@@ -8,6 +8,7 @@ import { useMediaQueryContext } from "@/hooks";
 import { toggleChat } from "@/redux/slices/chatSlice";
 import { setOpenAlertModal } from "@/redux/slices/modalSlice";
 import { theme } from "@/styles/theme";
+import { trackButtonClick } from "@/utils/analytics";
 
 import Layout from "../chat/Layout";
 
@@ -56,8 +57,12 @@ const ChatButton = () => {
 
   const handleToggleChat = () => {
     if (!isUser.gameName) {
+      trackButtonClick("채팅", "chat", "header", { action: "login_required" });
       return showLoginAlert();
     }
+    trackButtonClick("채팅", "chat", isMobile ? "mobile_header" : "floating", { 
+      action: isChatOpen ? "close" : "open" 
+    });
     dispatch(toggleChat());
     // dispatch(resetPosition());
   };

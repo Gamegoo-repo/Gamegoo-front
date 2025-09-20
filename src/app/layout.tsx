@@ -121,12 +121,16 @@ export default function RootLayout({
         <link rel="icon" href="/icon.png" />
       </head>
       <body>
-        <GoogleTagManager
-          gtmId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER || ""}
-        />
-        <GoogleAnalytics
-          gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS || ""}
-        />
+        {process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER && (
+          <GoogleTagManager
+            gtmId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER}
+          />
+        )}
+        {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS && (
+          <GoogleAnalytics
+            gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}
+          />
+        )}
         <HelmetProvider>
           <Helmet>
             <link

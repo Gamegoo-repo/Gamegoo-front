@@ -20,6 +20,7 @@ import {
   setUserProfileImg,
 } from "@/redux/slices/userSlice";
 import { theme } from "@/styles/theme";
+import { trackButtonClick } from "@/utils/analytics";
 import { authApi } from "@/utils/api";
 import { clearTokens } from "@/utils/storage";
 
@@ -73,6 +74,7 @@ const Login = () => {
 
   /* 로그인 */
   const handleLogin = async () => {
+    trackButtonClick("이메일로 시작하기", "auth", "main");
     try {
       const response = await authApi.login({
         loginRequest: { email, password },
@@ -137,6 +139,7 @@ const Login = () => {
       <Box>
         <button
           onClick={() => {
+            trackButtonClick("로고", "navigation", "main");
             router.push("/");
           }}
         >
@@ -188,12 +191,15 @@ const Login = () => {
               <Checkbox
                 value="autoLogin"
                 isChecked={autoLogin}
-                onChange={(isChecked) => setAutoLogin(isChecked)}
+                onChange={(isChecked) => {
+                  trackButtonClick("자동 로그인", "auth", "main", { checked: isChecked });
+                  setAutoLogin(isChecked);
+                }}
                 gap="0px"
               />
               자동 로그인
               <Bar />
-              <Link href="/password/find">비밀번호 찾기</Link>
+              <Link href="/password/find" onClick={() => trackButtonClick("비밀번호 찾기", "auth", "main")}>비밀번호 찾기</Link>
             </P>
           </Check>
         </Content>
@@ -220,7 +226,7 @@ const Login = () => {
         </SocialIcons> */}
         <P>
           아직 GAMEGOO 회원이 아니신가요?{`   `}
-          <Join href="/join/terms">회원가입</Join>
+          <Join href="/join/terms" onClick={() => trackButtonClick("회원가입", "auth", "main")}>회원가입</Join>
         </P>
       </Box>
     </Container>

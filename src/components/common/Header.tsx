@@ -31,6 +31,7 @@ import {
   lockBodyScroll,
   unlockBodyScroll,
 } from "@/utils";
+import { trackButtonClick } from "@/utils/analytics";
 import { authApi, notificationApi } from "@/utils/api";
 
 import AlertWindow from "../alert/AlertWindow";
@@ -86,6 +87,7 @@ const Header = () => {
   /* 알림창 열고 닫는 함수 */
   const handleAlertWindow = (event: React.MouseEvent) => {
     event.stopPropagation();
+    trackButtonClick("알림", "navigation", "header");
     setIsAlertWindow((prev) => !prev);
   };
 
@@ -168,7 +170,7 @@ const Header = () => {
     <Head>
       <HeaderBar>
         <LogoButton>
-          <Link href="/">
+          <Link href="/" onClick={() => trackButtonClick("로고", "navigation", "header")}>
             <Image
               src="/assets/icons/logo.svg"
               width={102}
@@ -184,6 +186,7 @@ const Header = () => {
             <Menu
               selected={pathname === "/"}
               onClick={() => {
+                trackButtonClick("홈", "navigation", "header");
                 router.push("/");
               }}
             >
@@ -194,6 +197,7 @@ const Header = () => {
           <Menu
             selected={pathname.includes("/match")}
             onClick={() => {
+              trackButtonClick("바로 매칭", "navigation", "header");
               router.push("/match");
             }}
           >
@@ -202,6 +206,7 @@ const Header = () => {
           <Menu
             selected={pathname === "/board"}
             onClick={() => {
+              trackButtonClick("게시판", "navigation", "header");
               router.push("/board");
             }}
           >
@@ -227,6 +232,7 @@ const Header = () => {
               ref={myPageDivRef}
               className="profile"
               onClick={() => {
+                trackButtonClick("프로필 메뉴", "navigation", "header");
                 setIsMyPage(!isMyPage);
               }}
             >
@@ -250,7 +256,10 @@ const Header = () => {
             </Profile>
           </Right>
         ) : (
-          <Login onClick={() => router.push("/riot")}>로그인</Login>
+          <Login onClick={() => {
+            trackButtonClick("로그인", "auth", "header");
+            router.push("/riot");
+          }}>로그인</Login>
         )}
       </HeaderBar>
       {isAlertWindow && (
@@ -267,7 +276,10 @@ const Header = () => {
               {isMobile && (
                 <MyPageModalHeader>
                   <MyPageModalHeaderTitle>내정보</MyPageModalHeaderTitle>
-                  <button onClick={() => setIsMyPage(false)}>
+                  <button onClick={() => {
+                    trackButtonClick("모달 닫기", "navigation", "header");
+                    setIsMyPage(false);
+                  }}>
                     <Icon
                       backgroundUrl={`/assets/icons/close_modal.svg`}
                       width={10}
@@ -293,6 +305,7 @@ const Header = () => {
                   width={24}
                   height={30}
                   onClick={() => {
+                    trackButtonClick("알림 페이지", "navigation", "header");
                     router.push("/mypage/notification");
                     setIsMyPage(false);
                   }}
@@ -304,6 +317,7 @@ const Header = () => {
                   <TabItemWrapper key={data.id}>
                     <Line
                       onClick={async () => {
+                        trackButtonClick(data.menu, "navigation", "header", { tabId: data.id });
                         setIsMyPage(false);
                         if (data.id !== 6) {
                           router.push(`${data.url}`);
