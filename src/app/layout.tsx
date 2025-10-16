@@ -111,14 +111,37 @@ export default function RootLayout({
       className={`${pretendard.variable} ${timeForSalad.variable}`}
     >
       <head>
-        <title>롤 실시간 듀오 매칭 - GAMEGOO</title>
+        <title>겜구 - 롤 실시간 듀오 매칭 | GAMEGOO</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta
           name="description"
-          content="리그 오브 레전드 유저를 위한 실시간 듀오 매칭 서비스입니다.
-듀오 찾기 게시판, 실시간 채팅, 친구 추가 기능을 통해 원하는 게임 친구를 바로 찾아보세요."
+          content="겜구(GAMEGOO)는 리그 오브 레전드 유저를 위한 실시간 듀오 매칭 서비스입니다. 롤 듀오 찾기, 게임 친구 매칭, 실시간 채팅으로 원하는 파트너를 바로 찾아보세요."
         />
+        <meta
+          name="keywords"
+          content="겜구, gamegoo, 롤 듀오, 리그오브레전드, 롤 매칭, 게임 친구, 듀오 찾기, 롤 파트너, 게임 매칭, 롤 실시간 매칭"
+        />
+        <meta name="author" content="겜구(GAMEGOO)" />
+        <meta name="robots" content="index, follow" />
+        <meta name="googlebot" content="index, follow" />
+
+        <meta
+          property="og:title"
+          content="겜구 - 롤 실시간 듀오 매칭 | GAMEGOO"
+        />
+        <meta
+          property="og:description"
+          content="겜구(GAMEGOO)는 리그 오브 레전드 유저를 위한 실시간 듀오 매칭 서비스입니다. 롤 듀오 찾기, 게임 친구 매칭, 실시간 채팅으로 원하는 파트너를 바로 찾아보세요."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="겜구(GAMEGOO)" />
+        <meta property="og:locale" content="ko_KR" />
+
         <link rel="icon" href="/icon.png" />
+        <meta
+          name="naver-site-verification"
+          content="ffa0048fc4e837b7019446343a3dba2234c400bc"
+        />
       </head>
       <body>
         {process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER && (
@@ -127,9 +150,7 @@ export default function RootLayout({
           />
         )}
         {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS && (
-          <GoogleAnalytics
-            gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}
-          />
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
         )}
         <HelmetProvider>
           <Helmet>

@@ -1,0 +1,21 @@
+User-agent: *
+Allow: /
+
+# 홈페이지 외 다른 페이지들은 크롤링 제한
+Disallow: /board
+Disallow: /match
+Disallow: /matching
+Disallow: /mypage
+Disallow: /user
+Disallow: /login
+Disallow: /join
+Disallow: /password
+Disallow: /riot
+Disallow: /oauth
+
+# 정적 리소스는 허용
+Allow: /assets/
+Allow: /icon.png
+
+# 검색엔진 크롤링 허용
+Crawl-delay: 1
