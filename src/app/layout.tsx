@@ -129,6 +129,7 @@ export default function RootLayout({
           property="og:title"
           content="겜구 - 롤 실시간 듀오 매칭 | GAMEGOO"
         />
+        <meta name="google-adsense-account" content="ca-pub-5702098734359773" />
         <meta
           property="og:description"
           content="겜구(GAMEGOO)는 리그 오브 레전드 유저를 위한 실시간 듀오 매칭 서비스입니다. 롤 듀오 찾기, 게임 친구 매칭, 실시간 채팅으로 원하는 파트너를 바로 찾아보세요."
